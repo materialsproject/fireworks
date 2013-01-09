@@ -164,6 +164,7 @@ def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     l_logger.info('Created new block {}'.format(full_path))
     return full_path
     
+#TODO: make rocket launcher a script in the distutils distribution so it is more easily run
     
 if __name__ == '__main__':
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job \
