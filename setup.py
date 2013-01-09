@@ -18,8 +18,8 @@ def readme():
     with open('README.md') as f:
         return f.read()
     
-setup(name='fireworks',
-      version='0.1',
+setup(name='FireWorks',
+      version='0.1dev',
       # TODO: better descriptions
       description='FireWorks workflow software',
       long_description='FireWorks workflow software.',
