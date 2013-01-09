@@ -13,6 +13,7 @@ __date__ = "Jan 9, 2013"
 
 from unittest import TestCase
 
+#TODO: add test of FireworkSerializers
 
 class TestUnitTest(TestCase):
     def test_unittest(self):

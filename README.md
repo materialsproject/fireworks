@@ -2,6 +2,10 @@
 
 The FireWorks Workflow Management Repo.
 
+# Installation and tests
+* Use pip-install
+* run python setup.py nosetests
+
 # Setup on clusters
 1. Create a subclass of QueueAdapter that handles queue issues
 - an example is PBSAdapterNersc
