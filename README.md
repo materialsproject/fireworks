@@ -1,4 +1,3 @@
-fireworks
-=========
+# FireWorks
 
-The Fireworks Workflow Management Repo.
+The FireWorks Workflow Management Repo.
