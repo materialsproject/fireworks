@@ -1,0 +1,17 @@
+params:
+  exe: echo 'howdy, your job launched successfully!'
+  ncores: 1
+  walltime: '00:02:00'
+  queue: debug
+  account: matdat
+  pbs_options:
+    gres: project%scratch2
+  pbs_tags:
+  - V
+  modules:
+  - python/2.7.1
+  - vasp/5.2.11
+
+logging_dir: .
+
+qa_name: PBSAdapter (NERSC)

@@ -31,7 +31,7 @@ setup(name='FireWorks',
       license='MIT',
       packages=['fireworks'],
       zip_safe=False,
-      install_requires=[],
+      install_requires=['pyyaml'],
       classifiers=[
         "Programming Language :: Python :: 2.7",
         "Development Status :: 2 - Pre-Alpha",
