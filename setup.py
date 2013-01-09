@@ -41,5 +41,7 @@ setup(name='fireworks',
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Topic :: Other/Nonlisted Topic",
-        "Topic :: Scientific/Engineering"
-    ])
+        "Topic :: Scientific/Engineering"],
+        test_suite='nose.collector',
+        tests_require=['nose']
+        )
