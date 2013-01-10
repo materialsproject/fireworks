@@ -32,6 +32,8 @@ import inspect
 import json
 import importlib
 
+# TODO: remember the module and class of objects so you don't need to search through all the user packages
+# every single time...
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
