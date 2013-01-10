@@ -19,7 +19,7 @@ def readme():
         return f.read()
     
 setup(name='FireWorks',
-      version='0.1dev',
+      version='0.1dev1',
       description='FireWorks workflow software',
       long_description=open('README.txt').read(),
       
