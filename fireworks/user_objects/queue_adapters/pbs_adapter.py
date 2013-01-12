@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 '''
-Created on Dec 12, 2012
+TODO: add docs!
 '''
+
 from fireworks.core.queue_adapter_base import QueueAdapterBase
 import os
 import subprocess
@@ -38,6 +39,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
             - job_name: the name of the job to run
             - modules: a list of modules to load
             - exe: the executable to run, after moving to the launch_dir
+        
+        :param launch_dir: A (string) directory to launch in
+        :param job_parameters: a JobParameters() instance
         '''
         
         p = job_parameters.params

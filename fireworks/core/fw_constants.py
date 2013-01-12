@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 '''
-Created on Dec 12, 2012
-
-A set of global constants for FireWorks
-(Python code as a config file)
+A set of global constants for FireWorks (Python code as a config file)
 '''
 
 import logging

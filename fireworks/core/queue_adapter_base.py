@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-Created on Dec 12, 2012
+TODO: add docs!!
 '''
 
 
@@ -19,10 +19,10 @@ __date__ = 'Dec 12, 2012'
 
 class QueueAdapterBase(FWSerializable):
     '''
-    The QueueAdapter is responsible for all interactions with a specific
-    queue management system.
+    The QueueAdapter is responsible for all interactions with a specific \
+    queue management system. \
     
-    This includes writing and submitting the queue script (e.g., PBS script)
+    This includes writing and submitting the queue script (e.g., PBS script) \
     as well as querying for the number of jobs left in the queue. 
     '''
     
@@ -30,10 +30,9 @@ class QueueAdapterBase(FWSerializable):
     
     def get_script_str(self, launch_dir, job_parameters):
         '''
-        returns a (multi-line) String representing the queue
-        script, e.g. PBS script.
-        This string will be written to a file and submitted, for example
-        using the qsub command
+        returns a (multi-line) String representing the queue script, e.g. PBS script. \
+        This string will be written to a file and submitted, for example using the qsub \
+        command
         
         :param launch_dir: The directory the job will be launched in
         :param job_parameters: A JobParameters() instance
@@ -48,7 +47,7 @@ class QueueAdapterBase(FWSerializable):
 
     def get_njobs_in_queue(self, job_parameters, username=None):
         '''
-        returns the number of jobs in the queue, probably using subprocess or shutil to
+        returns the number of jobs in the queue, probably using subprocess or shutil to \
         call a command like 'qstat'. returns None when the number of jobs cannot be determined.
         
         :param job_parameters: a JobParameters() instance

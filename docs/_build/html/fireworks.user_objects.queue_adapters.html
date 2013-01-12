@@ -1,0 +1,161 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>queue_adapters Package &mdash; FireWorks 0.1dev1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1dev1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FireWorks 0.1dev1 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="queue-adapters-package">
+<h1>queue_adapters Package<a class="headerlink" href="#queue-adapters-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-fireworks.user_objects.queue_adapters.pbs_adapter">
+<span id="pbs-adapter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">pbs_adapter</span></tt> Module<a class="headerlink" href="#module-fireworks.user_objects.queue_adapters.pbs_adapter" title="Permalink to this headline">¶</a></h2>
+<p>TODO: add docs!</p>
+<dl class="class">
+<dt id="fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC">
+<em class="property">class </em><tt class="descclassname">fireworks.user_objects.queue_adapters.pbs_adapter.</tt><tt class="descname">PBSAdapterNERSC</tt><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.queue_adapter_base.QueueAdapterBase" title="fireworks.core.queue_adapter_base.QueueAdapterBase"><tt class="xref py py-class docutils literal"><span class="pre">fireworks.core.queue_adapter_base.QueueAdapterBase</span></tt></a></p>
+<dl class="method">
+<dt id="fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC.get_njobs_in_queue">
+<tt class="descname">get_njobs_in_queue</tt><big>(</big><em>job_parameters</em>, <em>username=None</em><big>)</big><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC.get_njobs_in_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>for documentation, see parent object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC.get_script_str">
+<tt class="descname">get_script_str</tt><big>(</big><em>launch_dir</em>, <em>job_parameters</em><big>)</big><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC.get_script_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a NERSC-style PBS script.</p>
+<dl class="docutils">
+<dt>Supported JobParameters.params are:</dt>
+<dd><ul class="first last simple">
+<li>ncores: number of cores</li>
+<li>walltime: looks like &#8220;hh:mm:ss&#8221;</li>
+<li>queue: the queue to run on</li>
+<li>account: the account to charge</li>
+<li>pbs_options: a dict that sets the PBS -l key-value pairs</li>
+<li>pbs_tags: a list of PBS tags</li>
+<li>job_name: the name of the job to run</li>
+<li>modules: a list of modules to load</li>
+<li>exe: the executable to run, after moving to the launch_dir</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launch_dir</strong> &#8211; A (string) directory to launch in</li>
+<li><strong>job_parameters</strong> &#8211; a JobParameters() instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC.submit_to_queue">
+<tt class="descname">submit_to_queue</tt><big>(</big><em>script_file</em>, <em>job_parameters</em><big>)</big><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_adapter.PBSAdapterNERSC.submit_to_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>for documentation, see parent object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">queue_adapters Package</a><ul>
+<li><a class="reference internal" href="#module-fireworks.user_objects.queue_adapters.pbs_adapter"><tt class="docutils literal"><span class="pre">pbs_adapter</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/fireworks.user_objects.queue_adapters.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

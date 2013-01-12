@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>core Package &mdash; FireWorks 0.1dev1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1dev1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FireWorks 0.1dev1 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-package">
+<h1>core Package<a class="headerlink" href="#core-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-fireworks.core.fw_constants">
+<span id="fw-constants-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">fw_constants</span></tt> Module<a class="headerlink" href="#module-fireworks.core.fw_constants" title="Permalink to this headline">¶</a></h2>
+<p>A set of global constants for FireWorks (Python code as a config file)</p>
+</div>
+<div class="section" id="module-fireworks.core.queue_adapter_base">
+<span id="queue-adapter-base-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">queue_adapter_base</span></tt> Module<a class="headerlink" href="#module-fireworks.core.queue_adapter_base" title="Permalink to this headline">¶</a></h2>
+<p>TODO: add docs!!</p>
+<dl class="class">
+<dt id="fireworks.core.queue_adapter_base.JobParameters">
+<em class="property">class </em><tt class="descclassname">fireworks.core.queue_adapter_base.</tt><tt class="descname">JobParameters</tt><big>(</big><em>queue_adapter</em>, <em>params</em>, <em>logging_dir='.'</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.JobParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><tt class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></tt></a></p>
+<dl class="classmethod">
+<dt id="fireworks.core.queue_adapter_base.JobParameters.from_dict">
+<em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>m_dict</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.JobParameters.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.queue_adapter_base.JobParameters.to_dict">
+<tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.JobParameters.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.queue_adapter_base.QueueAdapterBase">
+<em class="property">class </em><tt class="descclassname">fireworks.core.queue_adapter_base.</tt><tt class="descname">QueueAdapterBase</tt><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><tt class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></tt></a></p>
+<p>The QueueAdapter is responsible for all interactions with a specific     queue management system.     
+This includes writing and submitting the queue script (e.g., PBS script)     as well as querying for the number of jobs left in the queue.</p>
+<dl class="classmethod">
+<dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.from_dict">
+<em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>m_dict</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.get_njobs_in_queue">
+<tt class="descname">get_njobs_in_queue</tt><big>(</big><em>job_parameters</em>, <em>username=None</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.get_njobs_in_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of jobs in the queue, probably using subprocess or shutil to         call a command like &#8216;qstat&#8217;. returns None when the number of jobs cannot be determined.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_parameters</strong> &#8211; a JobParameters() instance</li>
+<li><strong>username</strong> &#8211; the username of the jobs to count (default is to autodetect)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.get_script_str">
+<tt class="descname">get_script_str</tt><big>(</big><em>launch_dir</em>, <em>job_parameters</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.get_script_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a (multi-line) String representing the queue script, e.g. PBS script.         This string will be written to a file and submitted, for example using the qsub         command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launch_dir</strong> &#8211; The directory the job will be launched in</li>
+<li><strong>job_parameters</strong> &#8211; A JobParameters() instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.submit_to_queue">
+<tt class="descname">submit_to_queue</tt><big>(</big><em>script_file</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.submit_to_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>submits the job to the queue, probably using subprocess or shutil</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.to_dict">
+<tt class="descname">to_dict</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.core.rocket_launcher">
+<span id="rocket-launcher-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rocket_launcher</span></tt> Module<a class="headerlink" href="#module-fireworks.core.rocket_launcher" title="Permalink to this headline">¶</a></h2>
+<p>This module is used to submit jobs to a queue on a cluster. It can submit a single job, or if used in &#8220;rapid-fire&#8221; mode, can submit multiple jobs within a directory structure.</p>
+<p>The details of job submission and queue communication are handled using JobParameters.</p>
+<p>You can directly run this module from the command line on your cluster. See docs of the __main__ method for details.</p>
+<dl class="function">
+<dt id="fireworks.core.rocket_launcher.launch_rocket">
+<tt class="descclassname">fireworks.core.rocket_launcher.</tt><tt class="descname">launch_rocket</tt><big>(</big><em>job_params</em>, <em>launch_dir='.'</em>, <em>script_filename='submit.script'</em><big>)</big><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a single job to the queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_params</strong> &#8211; A JobParameters instance</li>
+<li><strong>launch_dir</strong> &#8211; The directory where to submit the job</li>
+<li><strong>script_filename</strong> &#8211; desired name for script file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket_launcher.rapid_fire">
+<tt class="descclassname">fireworks.core.rocket_launcher.</tt><tt class="descname">rapid_fire</tt><big>(</big><em>job_params</em>, <em>launch_dir='.'</em>, <em>script_filename='submit.script'</em>, <em>njobs_queue=10</em>, <em>njobs_block=500</em>, <em>n_loops=1</em>, <em>t_sleep=3600</em><big>)</big><a class="headerlink" href="#fireworks.core.rocket_launcher.rapid_fire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to submit many jobs to the queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_params</strong> &#8211; A JobParameters instance</li>
+<li><strong>launch_dir</strong> &#8211; directory where we want to write the blocks</li>
+<li><strong>script_filename</strong> &#8211; desired name for script file</li>
+<li><strong>njobs_queue</strong> &#8211; stops submitting jobs when njobs_queue jobs are in the queue</li>
+<li><strong>njobs_block</strong> &#8211; automatically write a new block when njobs_block jobs are in a single block</li>
+<li><strong>n_loops</strong> &#8211; number of times to loop rapid-fire mode to maintain njobs_queue</li>
+<li><strong>t_sleep</strong> &#8211; sleep time between loops in rapid-fire mode</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">core Package</a><ul>
+<li><a class="reference internal" href="#module-fireworks.core.fw_constants"><tt class="docutils literal"><span class="pre">fw_constants</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.queue_adapter_base"><tt class="docutils literal"><span class="pre">queue_adapter_base</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.rocket_launcher"><tt class="docutils literal"><span class="pre">rocket_launcher</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/fireworks.core.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

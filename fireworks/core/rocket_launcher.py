@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
 '''
-Created on Dec 12, 2012
-
-This module is used to submit jobs to a queue on a cluster. It can submit a single job,
+This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
 or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure.
 
 The details of job submission and queue communication are handled using JobParameters.
 
-You can directly run this module from the command line on your cluster. See docs of
+You can directly run this module from the command line on your cluster. See docs of \
 the __main__ method for details.
 '''
 
@@ -69,6 +67,7 @@ def launch_rocket(job_params, launch_dir='.', script_filename='submit.script'):
 def rapid_fire(job_params, launch_dir='.', script_filename='submit.script', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
     '''
     Used to submit many jobs to the queue.
+    
     :param job_params: A JobParameters instance
     :param launch_dir: directory where we want to write the blocks
     :param script_filename: desired name for script file
@@ -125,7 +124,7 @@ def _njobs_in_dir(block_dir):
 
 def _get_number_of_jobs_in_queue(job_params, njobs_queue, l_logger):
     '''
-    Internal method to get the number of jobs in the queue using the given job params.
+    Internal method to get the number of jobs in the queue using the given job params. \
     In case of failure, automatically retries at certain intervals...
     
     :param job_params: a JobParameters() instance
@@ -150,7 +149,7 @@ def _get_number_of_jobs_in_queue(job_params, njobs_queue, l_logger):
     
 def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     '''
-    Internal method to create a new block or launcher directory
+    Internal method to create a new block or launcher directory. \
     The dir name is based on the time and the FW_BLOCK_FORMAT
     :param root_dir: directory to create the new dir in
     :param l_logger: the logger to use

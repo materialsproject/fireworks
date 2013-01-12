@@ -1,26 +1,24 @@
 #!/usr/bin/env python
 
 '''
-Created on Dec 13, 2012
-
 This module aids in serializing and deserializing objects.
 
-To serialize a FW object, refer to the documentation for the FWSerializable class.
-To de-serialize an object, refer to the documentation for the FWSerializable class and load_object() method
+To serialize a FW object, refer to the documentation for the FWSerializable class. \
+To de-serialize an object, refer to the documentation for the FWSerializable class and load_object() method.
     - you can de-serialize explicitly, e.g. FWObject.from_dict() to enforce a FWObject instance as the result
     - you can de-serialize implicitly, e.g. load_object() to search for the correct Class dynamically
 
-The implicit method is especially useful if you don't know in advance which subclass of a base class your
-serialization might point to. e.g. if you require some type of Quadrilateral, a serialization from your
-collaborator might point to a Square, Rhombus, or Rectangle, and you might know which one in advance...
+The implicit method is especially useful if you don't know in advance which subclass of a base class your \
+serialization might point to. e.g. if you require some type of Quadrilateral, a serialization from your \
+collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...
     
 Some advantages:
-- Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines.
-- Simple to allow a superclass define all the serializations for its subclasses, removing code repetition
-- Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
-- Both JSON and YAML file import/export are naturally and concisely supported within the framework.
+    - Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines.
+    - Simple to allow a superclass define all the serializations for its subclasses, removing code repetition
+    - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
+    - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
 
-The FW serialization is compatible with pymatgen's MSONable interface when the serialize_fw
+The FW serialization is compatible with pymatgen's MSONable interface when the serialize_fw \
 decorator is used on the to_dict() methods.
 '''
 

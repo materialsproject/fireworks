@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-'''
-Created on Dec 12, 2012
-'''
-
 import logging
 import sys
 import os

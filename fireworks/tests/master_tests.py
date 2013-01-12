@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 '''
-Created on Jan 9, 2013
+TODO: add docs!
 '''
+
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
