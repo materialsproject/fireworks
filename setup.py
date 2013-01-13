@@ -11,7 +11,7 @@ from setuptools import setup
 
 
 def readme():
-    with open('README.txt') as f:
+    with open('README.rst') as f:
         return f.read()
     
 setup(name='FireWorks',
