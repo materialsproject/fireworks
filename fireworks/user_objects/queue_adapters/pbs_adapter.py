@@ -76,8 +76,8 @@ class PBSAdapterNERSC(QueueAdapterBase):
         if p.get('jobname', None):
             job_name = p['jobname']
         outs.append('#PBS -N {}'.format(job_name))
-        outs.append('#PBS -o {}'.format(os.path.join(launch_dir, job_name + '.out')))
-        outs.append('#PBS -e {}'.format(os.path.join(launch_dir, job_name + '.error')))
+        outs.append('#PBS -o {}'.format(job_name + '.out'))
+        outs.append('#PBS -e {}'.format(job_name + '.error'))
         
         outs.append('')
         outs.append('# loading modules')
