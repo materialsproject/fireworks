@@ -121,6 +121,7 @@ def rapid_fire(job_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_lo
                 # launch a single job
                 launch_rocket(job_params, launcher_dir)
                 # wait for the queue system to update
+                l_logger.info('Sleeping for {} seconds...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue = _get_number_of_jobs_in_queue(job_params, qa, l_logger)
     
