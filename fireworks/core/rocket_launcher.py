@@ -66,9 +66,9 @@ def launch_rocket(job_params, launch_dir='.'):
             if not queue_script:
                 raise RuntimeError('queue script could not be written, check job params and queue adapter!')
             f.write(queue_script)
-            l_logger.info('submitting queue script, {}'.format(SCRIPT_FILENAME))
-            if not qa.submit_to_queue(SCRIPT_FILENAME, job_params):
-                raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
+        l_logger.info('submitting queue script')
+        if not qa.submit_to_queue(SCRIPT_FILENAME, job_params):
+            raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
     
     except:
         log_exception(l_logger, 'Error launching rocket!')
