@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=m_description)
     parser.add_argument('job_params', help='The location of a file containing the job parameters (JobParams serialization)')
     parser.add_argument('-l', '--launch_dir', help='directory to launch the job / rapid-fire', default='.')
-    parser.add_argument('-s', '--script_filename', help='name of script file', default='submit.script')
+    # parser.add_argument('-s', '--script_filename', help='name of script file', default='submit.script')
     parser.add_argument('--rapidfire', help='use rapid-fire mode (launch multiple jobs)', action='store_true')
     parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user (rapid-fire mode only)', default=10)
     parser.add_argument('-b', '--njobs_block', help='maximum jobs to put in a block (rapid-fire mode only)', default=500)
@@ -37,6 +37,6 @@ if __name__ == '__main__':
     job_params = JobParameters.from_file(args.job_params)
 
     if args.rapidfire:
-        rapid_fire(job_params, args.launch_dir, args.script_filename, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
+        rapid_fire(job_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
     else:
-        launch_rocket(job_params, args.launch_dir, args.script_filename)
+        launch_rocket(job_params, args.launch_dir)
