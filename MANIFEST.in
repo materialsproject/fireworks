@@ -1,2 +1,3 @@
-include *.md LICENSE
-recursive-include user_objects *
+include LICENSE
+recursive-include fireworks *.py *.json *.yaml *.cfg
+recursive-include docs *
