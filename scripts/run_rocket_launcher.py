@@ -4,6 +4,7 @@
 TODO: add docs
 '''
 
+import os
 from argparse import ArgumentParser
 from fireworks.core.queue_adapter_base import JobParameters
 from fireworks.core.rocket_launcher import rapid_fire, launch_rocket
@@ -34,6 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--t_sleep', help='sleep time (seconds) between loops (rapid-fire mode only)', default=3600)
     args = parser.parse_args()
     job_params = JobParameters.from_file(args.job_params)
+
     if args.rapidfire:
         rapid_fire(job_params, args.launch_dir, args.script_filename, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
     else:

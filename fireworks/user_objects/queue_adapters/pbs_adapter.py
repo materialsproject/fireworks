@@ -43,6 +43,8 @@ class PBSAdapterNERSC(QueueAdapterBase):
         :param launch_dir: A (string) directory to launch in
         :param job_parameters: a JobParameters() instance
         '''
+        # convert launch_dir to absolute path
+        launch_dir = os.path.abspath(launch_dir)
         
         p = job_parameters.params
         

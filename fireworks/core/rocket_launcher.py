@@ -38,6 +38,9 @@ def launch_rocket(job_params, launch_dir='.', script_filename='submit.script'):
     :param script_filename: desired name for script file
     '''
     
+    # convert launch_dir to absolute path
+    launch_dir = os.path.abspath(launch_dir)
+    
     # initialize logger
     l_logger = get_fw_logger('rockets.launcher', job_params.logging_dir)
     
@@ -76,6 +79,9 @@ def rapid_fire(job_params, launch_dir='.', script_filename='submit.script', njob
     :param n_loops: number of times to loop rapid-fire mode to maintain njobs_queue
     :param t_sleep: sleep time between loops in rapid-fire mode
     '''
+    
+    # convert launch_dir to absolute path
+    launch_dir = os.path.abspath(launch_dir)
     
     # initialize logger
     l_logger = get_fw_logger('rockets.launcher', job_params.logging_dir)
