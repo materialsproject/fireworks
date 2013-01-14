@@ -11,13 +11,13 @@ from setuptools import setup
 
 
 def readme():
-    with open('README.rst') as f:
+    with open('README.txt') as f:
         return f.read()
     
 setup(name='FireWorks',
       version='0.1dev001',
       description='FireWorks workflow software',
-      long_description=open('README.rst').read(),
+      long_description=open('README.txt').read(),
       
       # TODO: PyPI link?
       url='https://github.com/materialsproject/fireworks',
