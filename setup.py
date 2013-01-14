@@ -8,6 +8,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
 from setuptools import setup, find_packages
+import os
 
 
 def readme():
@@ -38,5 +39,6 @@ setup(name='FireWorks',
         "Topic :: Other/Nonlisted Topic",
         "Topic :: Scientific/Engineering"],
         test_suite='nose.collector',
-        tests_require=['nose']
+        tests_require=['nose'],
+        scripts=[os.path.join("scripts", f) for f in os.listdir("scripts")]
         )
