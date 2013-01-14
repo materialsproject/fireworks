@@ -44,6 +44,10 @@ def launch_rocket(job_params, launch_dir='.', script_filename='submit.script'):
     # initialize logger
     l_logger = get_fw_logger('rockets.launcher', job_params.logging_dir)
     
+    # make sure launch_dir exists:
+    if not os.path.exists(launch_dir):
+        raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
+    
     try:
         # get the queue adapter
         l_logger.info('getting queue adapter')
@@ -86,6 +90,10 @@ def rapid_fire(job_params, launch_dir='.', script_filename='submit.script', njob
     # initialize logger
     l_logger = get_fw_logger('rockets.launcher', job_params.logging_dir)
     
+    # make sure launch_dir exists:
+    if not os.path.exists(launch_dir):
+        raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
+        
     try:
         l_logger.info('getting queue adapter')
         qa = job_params.qa
