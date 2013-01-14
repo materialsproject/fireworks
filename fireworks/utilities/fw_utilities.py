@@ -14,6 +14,9 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
+PREVIOUS_FW_LOGGERS = []  # contains the name of loggers that are piped to sys.stdout. Prevent duplicating them...
+
+
 def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER, clear_logs=False):
     '''
     Convenience method to return a logger.
@@ -38,11 +41,13 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
         fh.setFormatter(formatter)
         logger.addHandler(fh)
     
-    # add stream handler
-    sh = logging.StreamHandler(stream=sys.stdout)
-    sh.setLevel(getattr(logging, stream_level))
-    sh.setFormatter(formatter)
-    logger.addHandler(sh)
+    if name not in PREVIOUS_FW_LOGGERS:
+        # add stream handler
+        sh = logging.StreamHandler(stream=sys.stdout)
+        sh.setLevel(getattr(logging, stream_level))
+        sh.setFormatter(formatter)
+        logger.addHandler(sh)
+        PREVIOUS_FW_LOGGERS.append(name)
     
     return logger
 
