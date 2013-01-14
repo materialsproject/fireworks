@@ -7,7 +7,7 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def readme():
@@ -15,7 +15,7 @@ def readme():
         return f.read()
     
 setup(name='FireWorks',
-      version='0.1dev001',
+      version='0.1dev0.5',
       description='FireWorks workflow software',
       long_description=open('README.txt').read(),
       
@@ -24,7 +24,7 @@ setup(name='FireWorks',
       author='Anubhav Jain',
       author_email='anubhavster@gmail.com',
       license='MIT',
-      packages=['fireworks'],
+      packages=find_packages(),
       zip_safe=False,
       install_requires=['pyyaml'],
       classifiers=[
