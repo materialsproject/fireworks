@@ -12,13 +12,13 @@ import os
 
 
 def readme():
-    with open('README.txt') as f:
+    with open('README.rst') as f:
         return f.read()
     
 setup(name='FireWorks',
-      version='0.1dev0.5',
+      version='0.1dev0.6',
       description='FireWorks workflow software',
-      long_description=open('README.txt').read(),
+      long_description=open('README.rst').read(),
       url='https://github.com/materialsproject/fireworks',
       author='Anubhav Jain',
       author_email='anubhavster@gmail.com',
