@@ -19,8 +19,6 @@ setup(name='FireWorks',
       version='0.1dev0.5',
       description='FireWorks workflow software',
       long_description=open('README.txt').read(),
-      
-      # TODO: PyPI link?
       url='https://github.com/materialsproject/fireworks',
       author='Anubhav Jain',
       author_email='anubhavster@gmail.com',
