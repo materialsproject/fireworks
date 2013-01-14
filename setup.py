@@ -17,7 +17,7 @@ def readme():
 setup(name='FireWorks',
       version='0.1dev001',
       description='FireWorks workflow software',
-      long_description=open('README.txt').read(),
+      long_description=open('README.rst').read(),
       
       # TODO: PyPI link?
       url='https://github.com/materialsproject/fireworks',
