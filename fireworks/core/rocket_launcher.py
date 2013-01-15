@@ -103,6 +103,11 @@ def rapid_fire(job_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_lo
         block_dir = _create_datestamp_dir(launch_dir, l_logger)
         
         for i in range(n_loops):
+            if i > 0:
+                # sleep before new loop
+                l_logger.info('Sleeping for {} seconds before beginning new loop...zzz...'.format(t_sleep))
+                time.sleep(t_sleep)
+            
             l_logger.info('Beginning loop number {}'.format(i))
             
             # get number of jobs in queue
@@ -122,12 +127,10 @@ def rapid_fire(job_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_lo
                 # launch a single job
                 launch_rocket(job_params, launcher_dir)
                 # wait for the queue system to update
-                l_logger.info('Sleeping for {} seconds...'.format(QUEUE_UPDATE_INTERVAL))
+                l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue = _get_number_of_jobs_in_queue(job_params, njobs_queue, l_logger)
     
-            l_logger.info('Loop finished, sleeping for {} seconds...'.format(t_sleep))
-            time.sleep(t_sleep)
     except:
         log_exception(l_logger, 'Error with rapid fire!')
 
@@ -157,7 +160,7 @@ def _get_number_of_jobs_in_queue(job_params, njobs_queue, l_logger):
         if jobs_in_queue is not None:
             l_logger.info('{} jobs in queue. Desired: {}'.format(jobs_in_queue, njobs_queue))
             return jobs_in_queue
-        l_logger.warn('Could not get number of jobs in queue! Sleeping {} secs...'.format(RETRY_INTERVAL))
+        l_logger.warn('Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
         time.sleep(RETRY_INTERVAL)
         RETRY_INTERVAL = RETRY_INTERVAL * 2
         jobs_in_queue = job_params.qa.get_njobs_in_queue(job_params)
