@@ -83,4 +83,4 @@ def log_exception(m_logger, msgs):
     :param m_logger: The logger object
     :param msgs: An iterable of Strings, will be joined by newlines
     '''
-    return log_fancy(m_logger, "error", msgs, add_traceback=True)
+    return log_fancy(m_logger, 'error', msgs, add_traceback=True)

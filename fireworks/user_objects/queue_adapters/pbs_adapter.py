@@ -13,12 +13,12 @@ from fireworks.utilities.fw_utilities import get_fw_logger,\
     log_fancy, log_exception
 
 
-__author__ = "Anubhav Jain, Michael Kocher"
-__copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
-__maintainer__ = "Anubhav Jain"
-__email__ = "ajain@lbl.gov"
-__date__ = "Dec 12, 2012"
+__author__ = 'Anubhav Jain, Michael Kocher'
+__copyright__ = 'Copyright 2012, The Materials Project'
+__version__ = '0.1'
+__maintainer__ = 'Anubhav Jain'
+__email__ = 'ajain@lbl.gov'
+__date__ = 'Dec 12, 2012'
 
 
 class PBSAdapterNERSC(QueueAdapterBase):
@@ -96,7 +96,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         outs.append('')
         outs.append('# {f} completed writing Template'.format(f=self.__class__.__name__))
         outs.append('')
-        return "\n".join(outs)
+        return '\n'.join(outs)
     
     def submit_to_queue(self, script_file, job_parameters):
         '''
@@ -104,10 +104,10 @@ class PBSAdapterNERSC(QueueAdapterBase):
         '''
         
         if not os.path.exists(script_file):
-            raise ValueError("Cannot find script file located at: {}".format(script_file))
+            raise ValueError('Cannot find script file located at: {}'.format(script_file))
         
         # initialize logger
-        pbs_logger = get_fw_logger("rockets.pbs", job_parameters.logging_dir)
+        pbs_logger = get_fw_logger('rockets.pbs', job_parameters.logging_dir)
         
         # submit the job
         try:
@@ -146,7 +146,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # cmd = ['qstat', '-x']\n
 
         # initialize logger
-        pbs_logger = get_fw_logger("rockets.pbs", job_parameters.logging_dir)
+        pbs_logger = get_fw_logger('rockets.pbs', job_parameters.logging_dir)
         
         # initialize username
         if username is None:
