@@ -105,17 +105,18 @@ def rapid_fire(job_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_lo
         for i in range(n_loops):
             l_logger.info('Beginning loop number {}'.format(i))
             
-            # switch to new block dir if it got too big
-            if _njobs_in_dir(block_dir) >= njobs_block:
-                l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
-                block_dir = _create_datestamp_dir(launch_dir, l_logger)
-            
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(job_params, njobs_queue, l_logger)
                 
             # if too few jobs, launch some more!
             while jobs_in_queue < njobs_queue:
                 l_logger.info('Launching a rocket!')
+                
+                # switch to new block dir if it got too big
+                if _njobs_in_dir(block_dir) >= njobs_block:
+                    l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
+                    block_dir = _create_datestamp_dir(launch_dir, l_logger)
+                
                 # create launcher_dir
                 launcher_dir = _create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
