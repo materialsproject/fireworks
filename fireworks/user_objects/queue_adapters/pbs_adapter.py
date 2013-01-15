@@ -25,9 +25,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
     
     _fw_name = 'PBSAdapter (NERSC)'
     
-    def get_script_str(self, launch_dir, job_parameters):
+    def get_script_str(self, job_parameters, launch_dir):
         '''
-        Create a NERSC-style PBS script.
+        Create a NERSC-style PBS script. For more documentation, see parent object.
         
         Supported JobParameters.params are:
             - ncores: number of cores
@@ -39,9 +39,6 @@ class PBSAdapterNERSC(QueueAdapterBase):
             - job_name: the name of the job to run
             - modules: a list of modules to load
             - exe: the executable to run, after moving to the launch_dir
-        
-        :param launch_dir: A (string) directory to launch in
-        :param job_parameters: a JobParameters() instance
         '''
         # convert launch_dir to absolute path
         launch_dir = os.path.abspath(launch_dir)
@@ -98,7 +95,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         outs.append('')
         return '\n'.join(outs)
     
-    def submit_to_queue(self, script_file, job_parameters):
+    def submit_to_queue(self, job_parameters, script_file):
         '''
         for documentation, see parent object
         '''

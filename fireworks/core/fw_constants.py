@@ -22,7 +22,6 @@ FW_BLOCK_FORMAT = '%Y-%m-%d-%H-%M-%S-%f'  # date format for writing block direct
 FW_LOGGING_FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(message)s')  # format for loggers
 
 QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in certain cases
-QUEUE_UPDATE_INTERVAL = 30  # interval (seconds) needed for queue to update after submitting a job
+QUEUE_UPDATE_INTERVAL = 30  # max interval (seconds) needed for queue to update after submitting a job
 
-# TODO: implement below
-# QUEUE_RETRY_ATTEMPTS = 30  # number of retry attempts to communicate with queue service before failure
+SUBMIT_SCRIPT_NAME = 'submit.script'  # name of submit script

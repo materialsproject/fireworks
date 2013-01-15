@@ -28,22 +28,24 @@ class QueueAdapterBase(FWSerializable):
     
     _fw_name = 'QueueAdapterBase'
     
-    def get_script_str(self, launch_dir, job_parameters):
+    def get_script_str(self, job_parameters, launch_dir):
         '''
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
         This string will be written to a file and submitted, for example using the qsub \
         command
         
-        :param launch_dir: The directory the job will be launched in
         :param job_parameters: A JobParameters() instance
+        :param launch_dir: The directory the job will be launched in
         '''
-        raise NotImplementedError("get_script_str() not implemented for this queue adapter!")
+        raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
     
-    def submit_to_queue(self, script_file):
+    def submit_to_queue(self, job_parameters, script_file):
         '''
         submits the job to the queue, probably using subprocess or shutil
+        :param job_parameters: A JobParameters() instance
+        :param script_file: name of the script file to use
         '''
-        raise NotImplementedError("submit_to_queue() not implemented for this queue adapter!")
+        raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
 
     def get_njobs_in_queue(self, job_parameters, username=None):
         '''
@@ -53,7 +55,7 @@ class QueueAdapterBase(FWSerializable):
         :param job_parameters: a JobParameters() instance
         :param username: the username of the jobs to count (default is to autodetect)
         '''
-        raise NotImplementedError("get_njobs_in_queue() not implemented for this queue adapter!")
+        raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')
     
     @serialize_fw
     def to_dict(self):

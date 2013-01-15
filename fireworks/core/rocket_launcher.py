@@ -2,24 +2,18 @@
 
 '''
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
-or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure.
-
-The details of job submission and queue communication are handled using JobParameters.
-
-You can directly run this module from the command line on your cluster. See docs of \
-the __main__ method for details.
+or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure. \
+The details of job submission and queue communication are handled using JobParameters, \
+which specifies a QueueAdapter as well as desired properties of the submit script.
 '''
 
 import os
 import glob
 import datetime
 import time
-from fireworks.core.queue_adapter_base import JobParameters
-from argparse import ArgumentParser
-from fireworks.utilities.fw_utilities import get_fw_logger,\
-    log_exception
-from fireworks.core.fw_constants import FW_BLOCK_FORMAT,\
-    QUEUE_UPDATE_INTERVAL, QUEUE_RETRY_ATTEMPTS
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception
+from fireworks.core.fw_constants import FW_BLOCK_FORMAT, QUEUE_UPDATE_INTERVAL, \
+QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -27,9 +21,6 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
-
-
-SCRIPT_FILENAME = 'submit.script'
 
 
 def launch_rocket(job_params, launch_dir='.'):
@@ -61,13 +52,13 @@ def launch_rocket(job_params, launch_dir='.'):
         
         # write and submit the queue script using the queue adapter
         l_logger.info('writing queue script')
-        with open(SCRIPT_FILENAME, 'w') as f:
-            queue_script = qa.get_script_str(launch_dir, job_params)
+        with open(SUBMIT_SCRIPT_NAME, 'w') as f:
+            queue_script = qa.get_script_str(job_params, launch_dir)
             if not queue_script:
                 raise RuntimeError('queue script could not be written, check job params and queue adapter!')
             f.write(queue_script)
         l_logger.info('submitting queue script')
-        if not qa.submit_to_queue(SCRIPT_FILENAME, job_params):
+        if not qa.submit_to_queue(job_params, SUBMIT_SCRIPT_NAME):
             raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
     
     except:
