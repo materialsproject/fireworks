@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-TODO: add docs!!
+This module contains the QueueAdapterBase class.
 '''
 
 
@@ -20,25 +20,27 @@ __date__ = 'Dec 12, 2012'
 class QueueAdapterBase(FWSerializable):
     '''
     The QueueAdapter is responsible for all interactions with a specific \
-    queue management system. \
+    queue management system. This includes handling all details of queue \
+    script format as well as queue submission and management.
     
-    This includes writing and submitting the queue script (e.g., PBS script) \
-    as well as querying for the number of jobs left in the queue. 
+    A user should extend this class with implementations that work on \
+    specific queue systems.
     '''
     
     _fw_name = 'QueueAdapterBase'
     
+    #TODO: remove launch_dir from below?
     def get_script_str(self, job_parameters, launch_dir):
         '''
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
-        This string will be written to a file and submitted, for example using the qsub \
-        command
+        All details of the queue script must be specified in the JobParameters().
         
         :param job_parameters: A JobParameters() instance
         :param launch_dir: The directory the job will be launched in
         '''
         raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
     
+    #TODO: remove script_file from below?
     def submit_to_queue(self, job_parameters, script_file):
         '''
         submits the job to the queue, probably using subprocess or shutil
