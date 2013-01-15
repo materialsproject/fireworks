@@ -29,7 +29,6 @@ class QueueAdapterBase(FWSerializable):
     
     _fw_name = 'QueueAdapterBase'
     
-    #TODO: remove launch_dir from below?
     def get_script_str(self, job_parameters, launch_dir):
         '''
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
@@ -40,12 +39,11 @@ class QueueAdapterBase(FWSerializable):
         '''
         raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
     
-    #TODO: remove script_file from below?
     def submit_to_queue(self, job_parameters, script_file):
         '''
         submits the job to the queue, probably using subprocess or shutil
         :param job_parameters: A JobParameters() instance
-        :param script_file: name of the script file to use
+        :param script_file: name of the script file to use (String)
         '''
         raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
 
@@ -69,19 +67,38 @@ class QueueAdapterBase(FWSerializable):
     
     
 class JobParameters(FWSerializable):
+    '''
+    A JobParameters instance contains all the information needed to write a queue file \
+    and submit to a queue system. Details of the queue file format and queue submission \
+    commands should be included in the QueueAdapterBase object. Specific parameters used \
+    by the QueueAdapterBase should be included in the params variable.
+    '''
     def __init__(self, queue_adapter, params, logging_dir='.'):
+        '''
+        :param queue_adapter: An implementation of QueueAdapterBase()
+        :param params: Additional parameters (dict) that the QueueAdapter might need.
+        :param logging_dir: Directory (String) to write logs to
+        '''
         self.qa = queue_adapter
         self.params = params
         self.logging_dir = logging_dir
     
     def to_dict(self):
+        '''
+         Note: the QueueAdapter is being serialized using the FW name alone \
+         This keeps the serialization compact and easy to edit by humans. \
+         The from_dict() will dynamically find the correct QueueAdapter using its fw_name.
+         '''
         return {'qa_name': self.qa.fw_name, 'params': self.params, 'logging_dir': self.logging_dir}
             
     @classmethod
     def from_dict(self, m_dict):
-        # create a *fake* queueadapter to_dict() from the name alone
+        '''
+        Note: The QueueAdapter is loaded based on its fw_name alone
+        See the docs for to_dict() for more details
+        '''
         qa_dict = {'_fw_name': m_dict['qa_name']}
         
-        # load the queueadapter object dynamically
+        # load the QueueAdapter object dynamically
         qa = load_object(qa_dict)
         return JobParameters(qa, m_dict['params'], m_dict['logging_dir'])
