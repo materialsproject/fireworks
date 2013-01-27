@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 '''
-TODO: add docs!
+Master tests for FireWorks - generally used to ensure that installation was \
+completed properly.
 '''
 
 
@@ -12,10 +13,16 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
-from unittest import TestCase
+import unittest
 
-#TODO: add test of FireworkSerializers
 
-class TestUnitTest(TestCase):
-    def test_unittest(self):
-        self.assertTrue(True)
+class TestImports(unittest.TestCase):
+    '''
+    Make sure that required external libraries can be imported 
+    '''
+    def test_imports(self):
+        import yaml
+        import simplejson
+
+if __name__ == "__main__":
+    unittest.main()
