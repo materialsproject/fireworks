@@ -26,7 +26,7 @@ Some advantages:
 
 import yaml
 from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
-    FW_NAME_UPDATES
+    FW_NAME_UPDATES, FW_DATE_FORMAT
 import pkgutil
 import inspect
 import json
@@ -95,7 +95,7 @@ class FWSerializable():
         :param f_format: the format to output to (default json)
         '''
         if f_format == 'json':
-            dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+            dthandler = lambda obj: obj.strftime(FW_DATE_FORMAT) if isinstance(obj, datetime.datetime) else None
             return json.dumps(self.to_dict(), default=dthandler)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
