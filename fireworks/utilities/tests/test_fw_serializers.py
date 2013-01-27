@@ -17,9 +17,6 @@ __date__ = "Jan 26, 2013"
 
 import unittest
 import datetime
-import os
-
-# TODO: add implicit and one-line serialization tests
 
 
 class SerializationTest(unittest.TestCase):
