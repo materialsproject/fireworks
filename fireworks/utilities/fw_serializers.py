@@ -104,7 +104,7 @@ class FWSerializable():
             return json.dumps(self.to_dict(), default=dthandler)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_format(f_format='json'), default_flow_style=YAML_STYLE, allow_unicode=True)
+            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
     
@@ -116,7 +116,6 @@ class FWSerializable():
         :param f_format: serialization format of the String (default json)
         '''
         if f_format == 'json':
-            print _reconstitute_dates(json.loads(f_str))
             return self.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
             return self.from_dict(_reconstitute_dates(yaml.load(f_str)))
@@ -243,5 +242,5 @@ def _reconstitute_dates(obj_dict):
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
         except:
             pass
-
+        
     return obj_dict
