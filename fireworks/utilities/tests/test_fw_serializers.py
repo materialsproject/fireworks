@@ -17,11 +17,13 @@ __date__ = "Jan 26, 2013"
 
 import unittest
 import datetime
+import os
 
 
 class SerializationTest(unittest.TestCase):
 
     def setUp(self):
+        
         test_date = datetime.datetime.utcnow()
         # A basic datetime test serialized object
         self.obj_1 = TestSerializer("prop1", test_date)
@@ -39,10 +41,11 @@ class SerializationTest(unittest.TestCase):
         # A simpler test serialized object for testing implicit serialization
         self.obj_4 = ExportTestSerializer({"p1": {"p2": 3}})
 
+        self.module_dir = os.path.dirname(os.path.abspath(__file__))
+        
     def tearDown(self):
-        pass
-        #os.remove("test.json")
-        #os.remove('test.yaml')
+        os.remove("test.json")
+        os.remove('test.yaml')
         
     def test_sanity(self):
         self.assertEqual(self.obj_1, self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!")
@@ -80,14 +83,14 @@ class SerializationTest(unittest.TestCase):
         self.assertEqual(self.obj_3.from_format(obj3_yaml_string, 'yaml'), self.obj_3, 'Unicode YAML format export / import fails!')
     
     def test_unicode_json_file(self):
-        with open("test_reference.json") as f:
+        with open(os.path.join(self.module_dir, "test_reference.json")) as f:
             with open("test.json") as f2:
                 self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
         
         self.assertEqual(self.obj_3.from_file("test.json"), self.obj_3, 'Unicode JSON file import fails!')
         
     def test_unicode_yaml_file(self):
-        with open("test_reference.yaml") as f:
+        with open(os.path.join(self.module_dir, "test_reference.yaml")) as f:
             with open("test.yaml") as f2:
                 self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
         
