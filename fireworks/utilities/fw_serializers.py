@@ -13,7 +13,7 @@ serialization might point to. e.g. if you require some type of Quadrilateral, a 
 collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...
 
 Some advantages:
-    - Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines.
+    - Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines on fw_name.
     - Simple to allow a superclass to define all the serializations for its subclasses, removing code repetition
     (in particular, note that from_dict is a class method rather than a static method, allowing use of self)
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
@@ -22,6 +22,8 @@ Some advantages:
     - Proper JSON handling of datetime.
     - In some cases, objects can be serialized/deserialized extremely concisely, by knowledge of only their fw_name
 
+A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder, when the \
+serialize_fw() decorator is used.
 '''
 
 import yaml
