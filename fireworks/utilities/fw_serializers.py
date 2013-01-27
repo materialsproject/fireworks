@@ -11,15 +11,16 @@ To de-serialize an object, refer to the documentation for the FWSerializable cla
 The implicit method is especially useful if you don't know in advance which subclass of a base class your \
 serialization might point to. e.g. if you require some type of Quadrilateral, a serialization from your \
 collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...
-    
+
+The implicit method sometimes also allows for one-line serializations using the fw_name parameter.
+
 Some advantages:
     - Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines.
-    - Simple to allow a superclass define all the serializations for its subclasses, removing code repetition
+    - Simple to allow a superclass to define all the serializations for its subclasses, removing code repetition
+    (in particular, note that from_dict is a class method rather than a static method, allowing use of self)
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
 
-The FW serialization is compatible with pymatgen's MSONable interface when the serialize_fw \
-decorator is used on the to_dict() methods.
 '''
 
 import yaml
@@ -40,6 +41,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 13, 2012'
 
+#TODO: add default FW name
 
 def serialize_fw(func):
     '''

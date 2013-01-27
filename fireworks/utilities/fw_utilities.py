@@ -14,7 +14,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-PREVIOUS_FW_LOGGERS = []  # contains the name of loggers that are piped to sys.stdout. Prevent duplicating them...
+PREVIOUS_FW_LOGGERS = []  # contains the name of loggers that are piped to sys.stdout to prevent duplicating sys.stdout loggers
 
 
 def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER, clear_logs=False):
@@ -55,9 +55,9 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
 def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
     '''
     A wrapper around the logger messages useful for multi-line logs.
-    Just helps to group log messages by adding a fancy border around it,
-    which hopefully enhances readability of log lines meant to be
-    read together as a unit.
+    Helps to group log messages by adding a fancy border around it,
+    which enhances readability of log lines meant to be read
+    as a unit.
     
     :param m_logger: The logger object
     :param log_lvl: The level to log at
@@ -80,6 +80,7 @@ def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
 def log_exception(m_logger, msgs):
     '''
     A shortcut wrapper around log_fancy for exceptions
+    
     :param m_logger: The logger object
     :param msgs: An iterable of Strings, will be joined by newlines
     '''
