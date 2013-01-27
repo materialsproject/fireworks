@@ -19,7 +19,7 @@ Some advantages:
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
     - Auto-detect and proper loading of JSON and YAML files
-    - Proper JSON handling of datetime
+    - Proper JSON handling of datetime.
     - In some cases, objects can be serialized/deserialized extremely concisely, by knowledge of only their fw_name
 
 '''
@@ -36,6 +36,7 @@ import datetime
 # TODO: remember the module and class of objects so you don't need to search through all the user packages
 # every single time...
 
+
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
@@ -43,7 +44,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 13, 2012'
 
-#TODO: add default FW name
 
 def serialize_fw(func):
     '''
@@ -52,7 +52,7 @@ def serialize_fw(func):
     '''
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
-        m_dict['_fw_name'] = self._fw_name
+        m_dict['_fw_name'] = self.fw_name
         m_dict['@module'] = self.__class__.__module__
         m_dict['@class'] = self.__class__.__name__
         
@@ -79,7 +79,10 @@ class FWSerializable():
     
     @property
     def fw_name(self):
-        return self._fw_name
+        try:
+            return self._fw_name
+        except AttributeError:
+            return self.__class__.__name__
     
     @classmethod
     def to_dict(self):
@@ -111,9 +114,9 @@ class FWSerializable():
         :param f_format: serialization format of the String (default json)
         '''
         if f_format == 'json':
-            return self.from_dict(json.loads(f_str))
+            return self.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
-            return self.from_dict(yaml.load(f_str))
+            return self.from_dict(_reconstitute_dates(yaml.load(f_str)))
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -201,9 +204,9 @@ def load_object_from_file(filename, f_format='AUTO_DETECT'):
 
     with open(filename, 'r') as f:
         if f_format == 'json':
-            m_dict = json.loads(f.read())
+            m_dict = _reconstitute_dates(json.loads(f.read()))
         elif f_format == 'yaml':
-            m_dict = yaml.load(f.read())
+            m_dict = _reconstitute_dates(yaml.load(f.read()))
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
         return load_object(m_dict)
@@ -220,3 +223,14 @@ def _search_module_for_obj(m_module, obj_dict):
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
                                 getattr(obj, '_fw_name', None) == obj_name:
             return obj.from_dict(obj_dict)
+
+
+def _reconstitute_dates(obj_dict):
+    for k, v in obj_dict.items():
+        if isinstance(v, dict) or isinstance(v, list):
+            _reconstitute_dates(v, format)
+        elif isinstance(v, basestring):
+            try:
+                obj_dict[k] = datetime.datetime.strptime(v, FW_DATE_FORMAT)
+            except:
+                pass
