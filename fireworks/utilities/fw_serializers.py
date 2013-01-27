@@ -236,3 +236,5 @@ def _reconstitute_dates(obj_dict):
                 obj_dict[k] = datetime.datetime.strptime(v, FW_DATE_FORMAT)
             except:
                 pass
+    
+    return obj_dict
