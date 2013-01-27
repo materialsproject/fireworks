@@ -4,7 +4,7 @@
 TODO: add docs
 '''
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.user_objects.test_serializers.test_serializer import TestSerializer,\
+from fireworks.utilities.tests.test_serializer import TestSerializer,\
     ExportTestSerializer
 
 
@@ -56,7 +56,7 @@ class SerializationTest(unittest.TestCase):
         m_dict = self.obj_1.to_dict()
         self.assertEqual(m_dict['_fw_name'], 'TestSerializer Name')
         self.assertEqual(m_dict['@class'], 'TestSerializer')
-        self.assertEqual(m_dict['@module'], 'fireworks.user_objects.test_serializers.test_serializer')
+        self.assertEqual(m_dict['@module'], 'fireworks.utilities.tests.test_serializer')
         
     def test_json(self):
         obj1_json_string = str(self.obj_1.to_format())  # default format is JSON, make sure this is true
