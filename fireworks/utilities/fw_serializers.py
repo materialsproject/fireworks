@@ -100,7 +100,7 @@ class FWSerializable():
         :param f_format: the format to output to (default json)
         '''
         if f_format == 'json':
-            dthandler = lambda obj: obj.strftime(FW_DATE_FORMAT) if isinstance(obj, datetime.datetime) else None
+            dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
             return json.dumps(self.to_dict(), default=dthandler)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
@@ -116,6 +116,7 @@ class FWSerializable():
         :param f_format: serialization format of the String (default json)
         '''
         if f_format == 'json':
+            print _reconstitute_dates(json.loads(f_str))
             return self.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
             return self.from_dict(_reconstitute_dates(yaml.load(f_str)))
@@ -228,13 +229,19 @@ def _search_module_for_obj(m_module, obj_dict):
 
 
 def _reconstitute_dates(obj_dict):
-    for k, v in obj_dict.items():
-        if isinstance(v, dict) or isinstance(v, list):
-            _reconstitute_dates(v, format)
-        elif isinstance(v, basestring):
-            try:
-                obj_dict[k] = datetime.datetime.strptime(v, FW_DATE_FORMAT)
-            except:
-                pass
+    if obj_dict is None:
+        return None
     
+    if isinstance(obj_dict, dict):
+        return {k: _reconstitute_dates(v) for k, v in obj_dict.items()}
+    
+    if isinstance(obj_dict, list):
+        return [_reconstitute_dates(v) for v in obj_dict]
+    
+    if isinstance(obj_dict, basestring):
+        try:
+            return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
+        except:
+            pass
+
     return obj_dict
