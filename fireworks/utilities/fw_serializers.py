@@ -28,7 +28,7 @@ serialize_fw() decorator is used.
 
 import yaml
 from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
-    FW_NAME_UPDATES, FW_DATE_FORMAT
+    FW_NAME_UPDATES
 import pkgutil
 import inspect
 import simplejson as json  # note that ujson is faster, but at this time does not support "default" in dumps()
