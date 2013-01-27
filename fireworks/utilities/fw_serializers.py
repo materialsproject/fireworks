@@ -19,7 +19,7 @@ Some advantages:
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
     - Auto-detect and proper loading of JSON and YAML files
-    - Proper JSON handling of datetime.
+    - Proper JSON handling of datetime (both encoding and decoding) and UTF-8 strings
     - In some cases, objects can be serialized/deserialized extremely concisely, by knowledge of only their fw_name
 
 A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder, when the \

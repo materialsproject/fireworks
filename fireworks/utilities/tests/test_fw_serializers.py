@@ -4,6 +4,7 @@
 TODO: add docs
 '''
 from fireworks.utilities.tests.test_serializer import TestSerializer
+from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 
 
 __author__ = "Anubhav Jain"
@@ -15,19 +16,49 @@ __date__ = "Jan 26, 2013"
 
 import unittest
 import datetime
+import os
 
-# TODO: unicode TEST
-# TODO: add file import/export test
 # TODO: add implicit and one-line serialization tests
 
 
 class SerializationTest(unittest.TestCase):
 
     def setUp(self):
+        
+        class ExportTestSerializer(FWSerializable):
+            _fw_name = 'TestSerializer Export Name'
+            
+            def __init__(self, a):
+                self.a = a
+            
+            def __eq__(self, other):
+                return self.a == other.a
+            
+            @serialize_fw
+            def to_dict(self):
+                return {"a": self.a}
+            
+            @classmethod
+            def from_dict(self, m_dict):
+                return ExportTestSerializer(m_dict["a"])
+            
         test_date = datetime.datetime.utcnow()
+        # A basic datetime test serialized object
         self.obj_1 = TestSerializer("prop1", test_date)
         self.obj_1_copy = TestSerializer("prop1", test_date)
+        
+        # A nested test serialized object
         self.obj_2 = TestSerializer({"p1": 1234, "p2": 5.0, "p3": "Hi!", 'p4': datetime.datetime.utcnow()}, test_date)
+        
+        # A unicode test serialized object
+        unicode_str = unicode('\xc3\xa4\xc3\xb6\xc3\xbc', 'utf-8')
+        self.obj_3 = ExportTestSerializer({"p1": unicode_str, "p2": "abc"})
+        self.obj_3.to_file("test.json")
+        self.obj_3.to_file("test.yaml")
+
+    def tearDown(self):
+        os.remove("test.json")
+        os.remove('test.yaml')
         
     def test_sanity(self):
         self.assertEqual(self.obj_1, self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!")
@@ -55,6 +86,29 @@ class SerializationTest(unittest.TestCase):
     def test_complex_yaml(self):
         obj2_yaml_string = str(self.obj_2.to_format('yaml'))
         self.assertEqual(self.obj_2.from_format(obj2_yaml_string, 'yaml'), self.obj_2, 'Complex YAML format export / import fails!')
-                
+    
+    def test_unicode_json(self):
+        obj3_json_string = str(self.obj_3.to_format())  # default format is JSON, make sure this is true
+        self.assertEqual(self.obj_3.from_format(obj3_json_string), self.obj_3, 'Unicode JSON format export / import fails!')
+    
+    def test_unicode_yaml(self):
+        obj3_yaml_string = str(self.obj_3.to_format('yaml'))
+        self.assertEqual(self.obj_3.from_format(obj3_yaml_string, 'yaml'), self.obj_3, 'Unicode YAML format export / import fails!')
+    
+    def test_unicode_json_file(self):
+        with open("test_reference.json") as f:
+            with open("test.json") as f2:
+                self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
+        
+        self.assertEqual(self.obj_3.from_file("test.json"), self.obj_3, 'Unicode JSON file import fails!')
+        
+    def test_unicode_yaml_file(self):
+        with open("test_reference.yaml") as f:
+            with open("test.yaml") as f2:
+                self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
+        
+        self.assertEqual(self.obj_3.from_file("test.yaml"), self.obj_3, 'Unicode YAML file import fails!')
+        
+        
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,6 @@
+'@class': ExportTestSerializer
+'@module': __main__
+_fw_name: TestSerializer Export Name
+a:
+  p1: äöü
+  p2: abc
