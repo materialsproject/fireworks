@@ -20,6 +20,8 @@ Some advantages:
     (in particular, note that from_dict is a class method rather than a static method, allowing use of self)
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
+    - Auto-detect and proper loading of JSON and YAML files
+    - Proper JSON handling of datetime
 
 '''
 
@@ -30,6 +32,7 @@ import pkgutil
 import inspect
 import json
 import importlib
+import datetime
 
 # TODO: remember the module and class of objects so you don't need to search through all the user packages
 # every single time...
@@ -93,9 +96,11 @@ class FWSerializable():
         :param f_format: the format to output to (default json)
         '''
         if f_format == 'json':
-            return json.dumps(self.to_dict())    
+            dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+            return json.dumps(self.to_dict(), default=dthandler)
         elif f_format == 'yaml':
-            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
+            # start with the JSON format, and convert to YAML
+            return yaml.dump(self.to_format(f_format='json'), default_flow_style=YAML_STYLE, allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
     
