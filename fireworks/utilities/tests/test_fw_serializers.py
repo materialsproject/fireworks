@@ -3,8 +3,9 @@
 '''
 TODO: add docs
 '''
-from fireworks.utilities.tests.test_serializer import TestSerializer
-from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
+from fireworks.utilities.fw_serializers import load_object
+from fireworks.user_objects.test_serializers.test_serializer import TestSerializer,\
+    ExportTestSerializer
 
 
 __author__ = "Anubhav Jain"
@@ -24,24 +25,6 @@ import os
 class SerializationTest(unittest.TestCase):
 
     def setUp(self):
-        
-        class ExportTestSerializer(FWSerializable):
-            _fw_name = 'TestSerializer Export Name'
-            
-            def __init__(self, a):
-                self.a = a
-            
-            def __eq__(self, other):
-                return self.a == other.a
-            
-            @serialize_fw
-            def to_dict(self):
-                return {"a": self.a}
-            
-            @classmethod
-            def from_dict(self, m_dict):
-                return ExportTestSerializer(m_dict["a"])
-            
         test_date = datetime.datetime.utcnow()
         # A basic datetime test serialized object
         self.obj_1 = TestSerializer("prop1", test_date)
@@ -55,10 +38,14 @@ class SerializationTest(unittest.TestCase):
         self.obj_3 = ExportTestSerializer({"p1": unicode_str, "p2": "abc"})
         self.obj_3.to_file("test.json")
         self.obj_3.to_file("test.yaml")
+        
+        # A simpler test serialized object for testing implicit serialization
+        self.obj_4 = ExportTestSerializer({"p1": {"p2": 3}})
 
     def tearDown(self):
-        os.remove("test.json")
-        os.remove('test.yaml')
+        pass
+        #os.remove("test.json")
+        #os.remove('test.yaml')
         
     def test_sanity(self):
         self.assertEqual(self.obj_1, self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!")
@@ -69,7 +56,7 @@ class SerializationTest(unittest.TestCase):
         m_dict = self.obj_1.to_dict()
         self.assertEqual(m_dict['_fw_name'], 'TestSerializer Name')
         self.assertEqual(m_dict['@class'], 'TestSerializer')
-        self.assertEqual(m_dict['@module'], 'fireworks.utilities.tests.test_serializer')
+        self.assertEqual(m_dict['@module'], 'fireworks.user_objects.test_serializers.test_serializer')
         
     def test_json(self):
         obj1_json_string = str(self.obj_1.to_format())  # default format is JSON, make sure this is true
@@ -108,7 +95,9 @@ class SerializationTest(unittest.TestCase):
                 self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
         
         self.assertEqual(self.obj_3.from_file("test.yaml"), self.obj_3, 'Unicode YAML file import fails!')
-        
+    
+    def test_implicit_serialization(self):
+        self.assertEqual(load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}), self.obj_4, 'Implicit import fails!')
         
 if __name__ == "__main__":
     unittest.main()
