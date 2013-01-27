@@ -12,8 +12,6 @@ The implicit method is especially useful if you don't know in advance which subc
 serialization might point to. e.g. if you require some type of Quadrilateral, a serialization from your \
 collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...
 
-The implicit method sometimes also allows for one-line serializations using the fw_name parameter.
-
 Some advantages:
     - Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines.
     - Simple to allow a superclass to define all the serializations for its subclasses, removing code repetition
@@ -22,6 +20,7 @@ Some advantages:
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
     - Auto-detect and proper loading of JSON and YAML files
     - Proper JSON handling of datetime
+    - In some cases, objects can be serialized/deserialized extremely concisely, by knowledge of only their fw_name
 
 '''
 
