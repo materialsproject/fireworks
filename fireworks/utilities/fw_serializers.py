@@ -29,7 +29,7 @@ from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
     FW_NAME_UPDATES, FW_DATE_FORMAT
 import pkgutil
 import inspect
-import json
+import ujson as json
 import importlib
 import datetime
 
