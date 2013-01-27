@@ -31,7 +31,7 @@ from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
     FW_NAME_UPDATES, FW_DATE_FORMAT
 import pkgutil
 import inspect
-import ujson as json
+import simplejson as json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import importlib
 import datetime
 
