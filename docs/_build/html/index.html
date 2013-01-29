@@ -59,45 +59,78 @@ computers, usually through an external queuing system like PBS. The architecture
 <li>Define <em>dynamic</em> workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a workflow step (canceling a workflow, restarting the current step, or completely altering the workflow)</li>
 <li>Automatically detect duplicate sub-workflows - avoid re-running the duplicated sections of a workflow while still running unique sections</li>
 <li>Plug-and-play on several large supercomputing clusters and queueing systems <em>(future)</em></li>
-<li>Web-based monitoring of workflows <em>(future)</em></li>
-<li>Tools for packaging many small jobs into a single large job (useful for running on HPC machines that stipulate a small number of large-CPU jobs). <em>(future)</em></li>
+<li>Monitoring of workflows through a web service <em>(future)</em></li>
+<li>Package many small jobs into a single large job (useful for running on HPC machines that stipulate a small number of large-CPU jobs). <em>(future)</em></li>
 </ul>
 </div>
 <div class="section" id="limitations">
 <h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h1>
-<p>FireWorks is currently intended for applications where performance of the workflow software is not of utmost concern.</p>
+<p>FireWorks is currently intended for applications where performance of the workflow software is not of utmost concern:</p>
 <ul class="simple">
 <li>If you require steps in a workflow to execute within a few seconds of one another, the current version of FireWorks is not for you.</li>
 <li>FireWorks has only been tested for a few worker nodes running simultaneously, and has not been stress-tested for hundreds of worker nodes.</li>
 </ul>
 </div>
 <div class="section" id="contributing">
-<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<span id="contributing-label"></span><h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
 <p>Want to see something added or changed? There are many ways to help make that a reality. Some ways to get involved are:</p>
 <ul class="simple">
-<li>Send a note about how you&#8217;re using FireWorks, and features you might like to see.</li>
-<li>Send a note about how the documentation might be improved. If you&#8217;ve encountered a stumbling block, chances that are others are also getting stuck.</li>
-<li>Send a note about areas of the code that are difficult to understand. We want FireWorks to be easy to read, modify, and maintain.</li>
+<li>Help us improve the documentation - direct us to errors or areas that could be clearer. We want getting set up and using FireWorks to be a breeze for everyone.</li>
+<li>Point us to areas of the code that are difficult to understand or use. We hope to make FireWorks easy to understand, modify, and maintain.</li>
+<li>Tell us how you&#8217;re using FireWorks, and request new features.</li>
 <li>Develop adapters for your queuing system or computing center, and share them with the main repo.</li>
 <li>Share code on how FireWorks might be used within a specific application.</li>
 <li>Get in touch and contribute to the core codebase!</li>
 </ul>
 <p>The best way to submit questions, issues, and all other communication is through the FireWorks Github page: <a class="reference external" href="https://github.com/materialsproject/fireworks/issues">https://github.com/materialsproject/fireworks/issues</a></p>
-<p>The Github page is the preferred way of communication because it allows requests to be viewed by others and tracked. However, if you feel that e-mail is needed, you can contact the maintainer at: <img alt="developer contact" class="align-bottom" src="_images/mail.png" /></p>
+<p>The Github page is the preferred way of communication because it allows issues and requests to be tracked and shared. However, if you feel that e-mail is better suited for your purpose, you can contact: <img alt="developer contact" class="align-bottom" src="_images/mail.png" /></p>
 </div>
-<div class="section" id="getting-set-up">
-<h1>Getting Set Up<a class="headerlink" href="#getting-set-up" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Use pip-install</li>
-<li>run python setup.py nosetests</li>
-</ul>
+<div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p><em>Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.</em></p>
+<p><strong>Note:</strong> We suggest that you begin by installing FireWorks on one of your worker computers, as this more naturally follows the tutorial on FireWorks setup.</p>
+<div class="section" id="install-required-software">
+<h2>Install required software<a class="headerlink" href="#install-required-software" title="Permalink to this headline">¶</a></h2>
+<p>To prepare for installation, you should:</p>
+<ol class="arabic simple">
+<li>Install <a class="reference external" href="http://git-scm.com">git</a>, if not already packaged with your system. This will allow you to download the latest source code.</li>
+<li>Install <a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">pip</a>, if not already packaged with your system. This will allow you to download required dependencies.</li>
+</ol>
 </div>
-<div class="section" id="setup-on-clusters-tutorial-future">
-<h2>Setup on clusters / Tutorial (Future)<a class="headerlink" href="#setup-on-clusters-tutorial-future" title="Permalink to this headline">¶</a></h2>
-<p><em>TODO: link to another page...</em></p>
-<p><em>TODO: add proper docs</em></p>
+<div class="section" id="download-fireworks-and-dependencies">
+<h2>Download FireWorks and dependencies<a class="headerlink" href="#download-fireworks-and-dependencies" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Run the following code to download the FireWorks source:</p>
+<div class="highlight-python"><pre>git clone git@github.com:materialsproject/fireworks.git</pre>
+</div>
+</li>
+<li><p class="first">Navigate inside the FireWorks directory containing the file setup.py and run the following command (you might need administrator privileges, so pre-pend the word &#8216;sudo&#8217; as needed):</p>
+<div class="highlight-python"><pre>python setup.py develop</pre>
+</div>
+</li>
+<li><p class="first">Install the needed dependencies using pip with the following commands (with administrator privileges):</p>
+<div class="highlight-python"><pre>pip install nose
+pip install pyyaml
+pip install simplejson</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="run-unit-tests">
+<h2>Run unit tests<a class="headerlink" href="#run-unit-tests" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Staying in the directory containing setup.py, run the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nosetests</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see <a class="reference internal" href="#contributing-label"><em>Contributing</em></a>).</p>
+</li>
+</ol>
+</div>
+<div class="section" id="next-steps-set-up-workers-and-central-server">
+<h2>Next steps - set up workers and central server<a class="headerlink" href="#next-steps-set-up-workers-and-central-server" title="Permalink to this headline">¶</a></h2>
+<p>If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.</p>
 <ol class="arabic simple">
 <li>Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc</li>
 <li>Create an appropriate JobParameters file for your cluster - an example is provided.</li>
@@ -106,8 +139,8 @@ computers, usually through an external queuing system like PBS. The architecture
 </ol>
 </div>
 </div>
-<div class="section" id="thank-yous">
-<h1>Thank yous<a class="headerlink" href="#thank-yous" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="thank-yous-and-contributors">
+<h1>Thank yous and Contributors<a class="headerlink" href="#thank-yous-and-contributors" title="Permalink to this headline">¶</a></h1>
 <p>Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued &#8216;placeholder&#8217; scripts responsible for checking out jobs. Some of Michael&#8217;s code for pulling jobs onto nodes was refashioned for FireWorks.</p>
 <p>Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his <a class="reference external" href="http://packages.python.org/pymatgen/">pymatgen</a> library (which I also sometimes contribute to).</p>
 <div class="toctree-wrapper compound">
@@ -135,12 +168,14 @@ computers, usually through an external queuing system like PBS. The architecture
 <li><a class="reference internal" href="#">Features</a></li>
 <li><a class="reference internal" href="#limitations">Limitations</a></li>
 <li><a class="reference internal" href="#contributing">Contributing</a></li>
-<li><a class="reference internal" href="#getting-set-up">Getting Set Up</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#setup-on-clusters-tutorial-future">Setup on clusters / Tutorial (Future)</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li><a class="reference internal" href="#install-required-software">Install required software</a></li>
+<li><a class="reference internal" href="#download-fireworks-and-dependencies">Download FireWorks and dependencies</a></li>
+<li><a class="reference internal" href="#run-unit-tests">Run unit tests</a></li>
+<li><a class="reference internal" href="#next-steps-set-up-workers-and-central-server">Next steps - set up workers and central server</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#thank-yous">Thank yous</a><ul>
+<li><a class="reference internal" href="#thank-yous-and-contributors">Thank yous and Contributors</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

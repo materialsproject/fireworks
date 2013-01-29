@@ -27,54 +27,83 @@ FireWorks allows you to:
 
 * Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
 
-* Web-based monitoring of workflows *(future)*
+* Monitoring of workflows through a web service *(future)*
 
-* Tools for packaging many small jobs into a single large job (useful for running on HPC machines that stipulate a small number of large-CPU jobs). *(future)*
+* Package many small jobs into a single large job (useful for running on HPC machines that stipulate a small number of large-CPU jobs). *(future)*
 
 Limitations
 ===========
 
-FireWorks is currently intended for applications where performance of the workflow software is not of utmost concern.
+FireWorks is currently intended for applications where performance of the workflow software is not of utmost concern:
 
 * If you require steps in a workflow to execute within a few seconds of one another, the current version of FireWorks is not for you.
 
 * FireWorks has only been tested for a few worker nodes running simultaneously, and has not been stress-tested for hundreds of worker nodes.
+
+.. _contributing-label:
 
 Contributing
 ============
 
 Want to see something added or changed? There are many ways to help make that a reality. Some ways to get involved are:
 
-* Send a note about how you're using FireWorks, and features you might like to see. 
-* Send a note about how the documentation might be improved. If you've encountered a stumbling block, chances that are others are also getting stuck.
-* Send a note about areas of the code that are difficult to understand. We want FireWorks to be easy to read, modify, and maintain.
+* Help us improve the documentation - direct us to errors or areas that could be clearer. We want getting set up and using FireWorks to be a breeze for everyone.
+* Point us to areas of the code that are difficult to understand or use. We hope to make FireWorks easy to understand, modify, and maintain.
+* Tell us how you're using FireWorks, and request new features. 
 * Develop adapters for your queuing system or computing center, and share them with the main repo.
 * Share code on how FireWorks might be used within a specific application.
 * Get in touch and contribute to the core codebase!
 
 The best way to submit questions, issues, and all other communication is through the FireWorks Github page: https://github.com/materialsproject/fireworks/issues
 
-The Github page is the preferred way of communication because it allows requests to be viewed by others and tracked. However, if you feel that e-mail is needed, you can contact the maintainer at: |Mail|
+The Github page is the preferred way of communication because it allows issues and requests to be tracked and shared. However, if you feel that e-mail is better suited for your purpose, you can contact: |Mail|
 
 .. |Mail| image:: _static/mail.png
    :alt: developer contact
    :align: bottom
 
-Getting Set Up
+Getting Started
 ==============
-Installation
-------------
 
-* Use pip-install
-* run python setup.py nosetests
+*Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.*
 
+**Note:** We suggest that you begin by installing FireWorks on one of your worker computers, as this more naturally follows the tutorial on FireWorks setup.
 
-Setup on clusters / Tutorial (Future)
--------------------------------------
+Install required software
+-------------------------
+To prepare for installation, you should:
 
-*TODO: link to another page...*
+1. Install `git <http://git-scm.com>`_, if not already packaged with your system. This will allow you to download the latest source code.
+2. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
 
-*TODO: add proper docs*
+Download FireWorks and dependencies
+-----------------------------------
+1. Run the following code to download the FireWorks source::
+
+    git clone git@github.com:materialsproject/fireworks.git
+
+2. Navigate inside the FireWorks directory containing the file setup.py and run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
+
+    python setup.py develop
+
+3. Install the needed dependencies using pip with the following commands (with administrator privileges)::
+
+    pip install nose
+    pip install pyyaml
+    pip install simplejson
+
+Run unit tests
+--------------
+1. Staying in the directory containing setup.py, run the following command::
+
+    nosetests
+    
+2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
+
+Next steps - set up workers and central server
+---------------------------------------------
+
+If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.
 
 1. Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc
 
@@ -84,8 +113,8 @@ Setup on clusters / Tutorial (Future)
 
 4. Try changing the executable to be the Rocket. See if it grabs a job properly...
 
-Thank yous
-==========
+Thank yous and Contributors
+===========================
 
 Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code for pulling jobs onto nodes was refashioned for FireWorks.
 
