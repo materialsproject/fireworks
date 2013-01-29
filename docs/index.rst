@@ -103,6 +103,8 @@ Run unit tests
 Next steps - set up workers and central server
 ---------------------------------------------
 
+**Note: this part is not yet written properly! Please disregard!!**
+
 If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.
 
 1. Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc
