@@ -3,13 +3,6 @@ params:
   ncores: 1
   walltime: '00:02:00'
   queue: debug
-  account: matgen
-  pbs_options:
-    gres: project%scratch2
-  pbs_tags:
-  - V
-  modules:
-  - python/2.7.3
 
 logging_dir: .
 
