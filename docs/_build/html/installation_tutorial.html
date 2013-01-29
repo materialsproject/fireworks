@@ -57,18 +57,99 @@
 <h2>Set up worker nodes<a class="headerlink" href="#set-up-worker-nodes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="install-fireworks-on-the-worker">
 <h3>Install FireWorks on the worker<a class="headerlink" href="#install-fireworks-on-the-worker" title="Permalink to this headline">¶</a></h3>
-<p>To install FireWorks on the worker, please follow the instructions listed at <a class="reference internal" href="installation.html"><em>Installation on a machine</em></a></p>
+<p>To install FireWorks on the worker, please follow the instructions listed at <a class="reference internal" href="installation.html"><em>Installation on a machine</em></a>.</p>
 </div>
-<div class="section" id="next-steps-set-up-workers-and-central-server">
-<h3>Next steps - set up workers and central server<a class="headerlink" href="#next-steps-set-up-workers-and-central-server" title="Permalink to this headline">¶</a></h3>
-<p><strong>Note: this part is not yet written properly! Please disregard!!</strong></p>
-<p>If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.</p>
+<div class="section" id="start-playing-with-the-rocket-launcher">
+<h3>Start playing with the rocket launcher<a class="headerlink" href="#start-playing-with-the-rocket-launcher" title="Permalink to this headline">¶</a></h3>
+<p>After installation, the script rocket_launcher_run.py should have been added to your system path. The rocket launcher creates directories on your file system to contain your runs, and also submits jobs to the queue.</p>
+<p>You should now be able to run the rocket launcher command as an executable. Type this command into your command prompt (from any directory) to ensure that the script is found:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rocket_launcher_run</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>This command should print out more detailed help about the rocket launcher. Take a minute to read it over; it might not all be clear, but we&#8217;ll step through some of the rocket launcher features next.</p>
+</div>
+<div class="section" id="run-the-rocket-launcher-in-single-shot-mode">
+<h3>Run the rocket launcher in single-shot mode<a class="headerlink" href="#run-the-rocket-launcher-in-single-shot-mode" title="Permalink to this headline">¶</a></h3>
+<p>We now want to test interaction of our worker computer with the queue.</p>
 <ol class="arabic simple">
-<li>Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc</li>
-<li>Create an appropriate JobParameters file for your cluster - an example is provided.</li>
-<li>Try running rocket_launcher.py on your cluster with a test job config. See if it prints &#8216;howdy, you won&#8217; or whatever.</li>
-<li>Try changing the executable to be the Rocket. See if it grabs a job properly...</li>
+<li>Navigate to a clean testing directory on your worker node.</li>
+<li>Take a look in the fireworks.user_packages.queue_adapters package to see if an appropriate QueueAdapter already exists for your queueing system. For example, the module pbs_adapter.py is documented to work with the PBS queueing system, so if you are using PBS you might want to try this module first.</li>
 </ol>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">If your queuing system does not have built-in support, do not despair! You might try to use pbs_adapter.py as a reference for coding your own PBS adapter. <em>TODO: add docs!!</em> Otherwise, you can contact us for help (see <a class="reference internal" href="index.html#contributing-label"><em>Contributing</em></a>).</p>
+</div>
+<ol class="arabic simple" start="3">
+<li>The QueueAdapter serves as a template for interacting with the queue, but requires a JobParameters file to fill in specific values like walltime, desired queue name, and other application-specific parameters. An example of a very simple JobParameters file is given as job_params_pbs_nersc.yaml in the fireworks.user_packages.queue_adapters package.</li>
+</ol>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">The specific format of the JobParameters file might vary with the QueueAdapter, as each queuing system might require slightly different parameters. Refer to your QueueAdapter&#8217;s documentation to see how to correctly structure a JobParameters file. For example, the PBSAdapterNERSC defined in pbs_adapter.py accepts many more parameters than those listed in the test JobParameters file.</p>
+</div>
+<ol class="arabic simple" start="4">
+<li>Copy an appropriate job parameters file to your current directory</li>
+<li>Modify the job parameters file as needed to suit your cluster.</li>
+</ol>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">Ensure that the &#8216;exe&#8217; parameter in the JobParameters file reads: &#8220;echo &#8216;howdy, your job launched successfully!&#8217; &gt;&gt; howdy.txt&#8221;</p>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">Make sure the qa_name parameter in the JobParameters file indicates the name of your desired queue adapter.</p>
+</div>
+<ol class="arabic" start="6">
+<li><p class="first">Try submitting a job using the command:</p>
+<div class="highlight-python"><pre>rocket_launcher_run.py &lt;JOB_PARAMETERS_FILE&gt;</pre>
+</div>
+</li>
+</ol>
+<p>where the &lt;JOB_PARAMETERS_FILE&gt; points to your JobParameters file, e.g. job_params_pbs_nersc.yaml.</p>
+<ol class="arabic simple" start="7">
+<li>Ideally, this should have submitted a job to the queue in the current directory. You can read the log files to get more information on what occurred. The log file location was specified in the JobParameters file.</li>
+<li>After your queue manager runs your job, you should see the file howdy.txt in the current directory. This indicates that the exe you specified ran correctly.</li>
+</ol>
+<p>If you finished this part of the tutorial successfully, congratulations! You&#8217;ve successfully set up a worker node to run FireWorks. You can now continue to test launching jobs in a &#8220;rapid-fire&#8221; mode.</p>
+</div>
+<div class="section" id="run-the-rocket-launcher-in-rapid-fire-mode">
+<h3>Run the rocket launcher in rapid-fire mode<a class="headerlink" href="#run-the-rocket-launcher-in-rapid-fire-mode" title="Permalink to this headline">¶</a></h3>
+<p>While launching a single job is nice, a more useful functionality is to maintain a certain number of jobs in the queue. The rocket launcher provides a &#8220;rapid-fire&#8221; mode that automatically provides this functionality. This mode requires another part of the QueueAdapter to be functioning properly, namely the part of the code that determines how many jobs are currently in the queue by the current user.</p>
+<p>To test rapid-fire mode, try the following:</p>
+<ol class="arabic simple">
+<li>Navigate to a clean testing directory on your worker node.</li>
+<li>Copy the same JobParameters file to this testing directory as you used for single-shot mode.</li>
+</ol>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">You don&#8217;t always have to copy over the JobParameters file. If you&#8217;d like, you can keep a single JobParameters file in some known location and just provide the full path to that file when running the rocket_launcher_run.py executable.</p>
+</div>
+<ol class="arabic" start="3">
+<li><p class="first">Try submitting several jobs using the command:</p>
+<div class="highlight-python"><pre>rocket_launcher_run.py --rapidfire -q 3 &lt;JOB_PARAMETERS_FILE&gt;</pre>
+</div>
+</li>
+</ol>
+<p>where the &lt;JOB_PARAMETERS_FILE&gt; points to your JobParameters file, e.g. job_params_pbs_nersc.yaml.</p>
+<ol class="arabic" start="4">
+<li><p class="first">This method should have submitted 3 jobs to the queue at once, all inside of a directory beginning with the tag &#8216;<a href="#id1"><span class="problematic" id="id2">block_</span></a>&#8216;.</p>
+</li>
+<li><p class="first">You can maintain a certain number of jobs in the queue indefinitely by specifying the number of loops parameter to be much greater than 1:</p>
+<div class="highlight-python"><pre>rocket_launcher_run.py --rapidfire -q 3 -n 100 &lt;JOB_PARAMETERS_FILE&gt;</pre>
+</div>
+</li>
+<li><p class="first">The script above should maintain 3 jobs in the queue for 100 loops of the rocket launcher. The rocket launcher will sleep for a user-adjustable time after each loop.</p>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">read the documentation of the rocket launcher for additional details.</p>
+</div>
+</div>
+<div class="section" id="next-steps">
+<h3>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h3>
+<p>If you&#8217;ve completed this tutorial, you&#8217;ve successfully set up a worker node that can communicate with the queueing system and submit either a single job or maintain multiple jobs in the queue.</p>
+<p>However, so far the jobs have not been very dynamic. The same executable (the one specified in the JobParameters file) has been run for every single job. This is not very useful.</p>
+<p>In the next part of the tutorial, we&#8217;ll set up a central workflow server and add some jobs to it. Then, we&#8217;ll come back to the workers and walk through how to dynamically run the jobs specified by the workflow server.</p>
 </div>
 </div>
 </div>
@@ -84,7 +165,10 @@
 <li><a class="reference internal" href="#">Installation Tutorial</a><ul>
 <li><a class="reference internal" href="#set-up-worker-nodes">Set up worker nodes</a><ul>
 <li><a class="reference internal" href="#install-fireworks-on-the-worker">Install FireWorks on the worker</a></li>
-<li><a class="reference internal" href="#next-steps-set-up-workers-and-central-server">Next steps - set up workers and central server</a></li>
+<li><a class="reference internal" href="#start-playing-with-the-rocket-launcher">Start playing with the rocket launcher</a></li>
+<li><a class="reference internal" href="#run-the-rocket-launcher-in-single-shot-mode">Run the rocket launcher in single-shot mode</a></li>
+<li><a class="reference internal" href="#run-the-rocket-launcher-in-rapid-fire-mode">Run the rocket launcher in rapid-fire mode</a></li>
+<li><a class="reference internal" href="#next-steps">Next steps</a></li>
 </ul>
 </li>
 </ul>

@@ -20,8 +20,8 @@ if __name__ == '__main__':
     and queue system interaction are handled by the specified job parameters file. By default, a \
     single job is submitted. To submit many jobs, use the "rapid-fire" option. The "rapid-fire" \
     option can also be used to maintain a certain number of jobs in the queue by specifying the \
-    n_loops parameter to a large number. If n_loops is set to 1 (default) we will quit after \
-    submitting the desired number of jobs.'
+    n_loops parameter to a large number. If n_loops is set to 1 (default) the rocket launcher will \
+    quit after submitting the desired number of jobs.'
     
     parser = ArgumentParser(description=m_description)
     parser.add_argument('job_params', help='The location of a file containing the job parameters (JobParams serialization)')

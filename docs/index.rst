@@ -75,7 +75,7 @@ To get started with FireWorks, we suggest that you follow our installation tutor
 Going Further
 =============
 
-**Write me!!**
+**TODO: add another tutorial here...**
 
 Thank yous and Contributors
 ===========================
