@@ -63,57 +63,19 @@ The Github page is the preferred way of communication because it allows issues a
    :align: bottom
 
 Getting Started
-==============
+===============
 
-*Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.*
+To get started with FireWorks, we suggest that you follow our installation tutorial. The tutorial will help guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows.
 
-**Note:** We suggest that you begin by installing FireWorks on one of your worker computers, as this more naturally follows the tutorial on FireWorks setup.
+.. toctree::
+   :maxdepth: 2
+   
+   installation_tutorial
 
-Install required software
--------------------------
-To prepare for installation, you should:
+Going Further
+=============
 
-1. Install `git <http://git-scm.com>`_, if not already packaged with your system. This will allow you to download the latest source code.
-2. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
-
-Download FireWorks and dependencies
------------------------------------
-1. Run the following code to download the FireWorks source::
-
-    git clone git@github.com:materialsproject/fireworks.git
-
-2. Navigate inside the FireWorks directory containing the file setup.py and run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
-
-    python setup.py develop
-
-3. Install the needed dependencies using pip with the following commands (with administrator privileges)::
-
-    pip install nose
-    pip install pyyaml
-    pip install simplejson
-
-Run unit tests
---------------
-1. Staying in the directory containing setup.py, run the following command::
-
-    nosetests
-    
-2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
-
-Next steps - set up workers and central server
----------------------------------------------
-
-**Note: this part is not yet written properly! Please disregard!!**
-
-If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.
-
-1. Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc
-
-2. Create an appropriate JobParameters file for your cluster - an example is provided.
-
-3. Try running rocket_launcher.py on your cluster with a test job config. See if it prints 'howdy, you won' or whatever.
-
-4. Try changing the executable to be the Rocket. See if it grabs a job properly...
+**Write me!!**
 
 Thank yous and Contributors
 ===========================
@@ -123,9 +85,6 @@ Michael Kocher and Dan Gunter initiated the architecture of a central database w
 Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
 
 .. _pymatgen: http://packages.python.org/pymatgen/
-
-.. toctree::
-   :maxdepth: 2
 
 Indices and tables
 ==================

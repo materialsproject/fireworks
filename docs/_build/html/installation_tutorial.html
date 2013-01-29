@@ -1,0 +1,139 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation Tutorial &mdash; FireWorks 0.1dev1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1dev1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FireWorks 0.1dev1 documentation" href="index.html" />
+    <link rel="prev" title="Features" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Features"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation-tutorial">
+<h1>Installation Tutorial<a class="headerlink" href="#installation-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will guide you through FireWorks installation on worker nodes, test communication with the queue, and submit some placeholder jobs.</p>
+<div class="section" id="set-up-worker-nodes">
+<h2>Set up worker nodes<a class="headerlink" href="#set-up-worker-nodes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="install-fireworks-on-the-worker">
+<h3>Install FireWorks on the worker<a class="headerlink" href="#install-fireworks-on-the-worker" title="Permalink to this headline">¶</a></h3>
+<p>To install FireWorks on the worker, please follow the instructions listed at <a class="reference internal" href="installation.html"><em>Installation on a machine</em></a></p>
+</div>
+<div class="section" id="next-steps-set-up-workers-and-central-server">
+<h3>Next steps - set up workers and central server<a class="headerlink" href="#next-steps-set-up-workers-and-central-server" title="Permalink to this headline">¶</a></h3>
+<p><strong>Note: this part is not yet written properly! Please disregard!!</strong></p>
+<p>If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.</p>
+<ol class="arabic simple">
+<li>Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc</li>
+<li>Create an appropriate JobParameters file for your cluster - an example is provided.</li>
+<li>Try running rocket_launcher.py on your cluster with a test job config. See if it prints &#8216;howdy, you won&#8217; or whatever.</li>
+<li>Try changing the executable to be the Rocket. See if it grabs a job properly...</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation Tutorial</a><ul>
+<li><a class="reference internal" href="#set-up-worker-nodes">Set up worker nodes</a><ul>
+<li><a class="reference internal" href="#install-fireworks-on-the-worker">Install FireWorks on the worker</a></li>
+<li><a class="reference internal" href="#next-steps-set-up-workers-and-central-server">Next steps - set up workers and central server</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Features</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation_tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Features"
+             >previous</a> |</li>
+        <li><a href="index.html">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -25,7 +25,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="FireWorks 0.1dev1 documentation" href="#" /> 
+    <link rel="top" title="FireWorks 0.1dev1 documentation" href="#" />
+    <link rel="next" title="Installation Tutorial" href="installation_tutorial.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,6 +38,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="installation_tutorial.html" title="Installation Tutorial"
+             accesskey="N">next</a> |</li>
         <li><a href="#">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -87,67 +91,24 @@ computers, usually through an external queuing system like PBS. The architecture
 </div>
 <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p><em>Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.</em></p>
-<p><strong>Note:</strong> We suggest that you begin by installing FireWorks on one of your worker computers, as this more naturally follows the tutorial on FireWorks setup.</p>
-<div class="section" id="install-required-software">
-<h2>Install required software<a class="headerlink" href="#install-required-software" title="Permalink to this headline">¶</a></h2>
-<p>To prepare for installation, you should:</p>
-<ol class="arabic simple">
-<li>Install <a class="reference external" href="http://git-scm.com">git</a>, if not already packaged with your system. This will allow you to download the latest source code.</li>
-<li>Install <a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">pip</a>, if not already packaged with your system. This will allow you to download required dependencies.</li>
-</ol>
-</div>
-<div class="section" id="download-fireworks-and-dependencies">
-<h2>Download FireWorks and dependencies<a class="headerlink" href="#download-fireworks-and-dependencies" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic">
-<li><p class="first">Run the following code to download the FireWorks source:</p>
-<div class="highlight-python"><pre>git clone git@github.com:materialsproject/fireworks.git</pre>
-</div>
+<p>To get started with FireWorks, we suggest that you follow our installation tutorial. The tutorial will help guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation_tutorial.html">Installation Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation_tutorial.html#set-up-worker-nodes">Set up worker nodes</a></li>
+</ul>
 </li>
-<li><p class="first">Navigate inside the FireWorks directory containing the file setup.py and run the following command (you might need administrator privileges, so pre-pend the word &#8216;sudo&#8217; as needed):</p>
-<div class="highlight-python"><pre>python setup.py develop</pre>
+</ul>
 </div>
-</li>
-<li><p class="first">Install the needed dependencies using pip with the following commands (with administrator privileges):</p>
-<div class="highlight-python"><pre>pip install nose
-pip install pyyaml
-pip install simplejson</pre>
 </div>
-</li>
-</ol>
-</div>
-<div class="section" id="run-unit-tests">
-<h2>Run unit tests<a class="headerlink" href="#run-unit-tests" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic">
-<li><p class="first">Staying in the directory containing setup.py, run the following command:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">nosetests</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see <a class="reference internal" href="#contributing-label"><em>Contributing</em></a>).</p>
-</li>
-</ol>
-</div>
-<div class="section" id="next-steps-set-up-workers-and-central-server">
-<h2>Next steps - set up workers and central server<a class="headerlink" href="#next-steps-set-up-workers-and-central-server" title="Permalink to this headline">¶</a></h2>
-<p><strong>Note: this part is not yet written properly! Please disregard!!</strong></p>
-<p>If all the unit tests pass, you are ready to begin setting up your workers and central server. Follow the installation tutorial to guide you through this process.</p>
-<ol class="arabic simple">
-<li>Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc</li>
-<li>Create an appropriate JobParameters file for your cluster - an example is provided.</li>
-<li>Try running rocket_launcher.py on your cluster with a test job config. See if it prints &#8216;howdy, you won&#8217; or whatever.</li>
-<li>Try changing the executable to be the Rocket. See if it grabs a job properly...</li>
-</ol>
-</div>
+<div class="section" id="going-further">
+<h1>Going Further<a class="headerlink" href="#going-further" title="Permalink to this headline">¶</a></h1>
+<p><strong>Write me!!</strong></p>
 </div>
 <div class="section" id="thank-yous-and-contributors">
 <h1>Thank yous and Contributors<a class="headerlink" href="#thank-yous-and-contributors" title="Permalink to this headline">¶</a></h1>
 <p>Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued &#8216;placeholder&#8217; scripts responsible for checking out jobs. Some of Michael&#8217;s code for pulling jobs onto nodes was refashioned for FireWorks.</p>
 <p>Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his <a class="reference external" href="http://packages.python.org/pymatgen/">pymatgen</a> library (which I also sometimes contribute to).</p>
-<div class="toctree-wrapper compound">
-<ul class="simple">
-</ul>
-</div>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
@@ -170,18 +131,16 @@ pip install simplejson</pre>
 <li><a class="reference internal" href="#limitations">Limitations</a></li>
 <li><a class="reference internal" href="#contributing">Contributing</a></li>
 <li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
-<li><a class="reference internal" href="#install-required-software">Install required software</a></li>
-<li><a class="reference internal" href="#download-fireworks-and-dependencies">Download FireWorks and dependencies</a></li>
-<li><a class="reference internal" href="#run-unit-tests">Run unit tests</a></li>
-<li><a class="reference internal" href="#next-steps-set-up-workers-and-central-server">Next steps - set up workers and central server</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#thank-yous-and-contributors">Thank yous and Contributors</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#going-further">Going Further</a></li>
+<li><a class="reference internal" href="#thank-yous-and-contributors">Thank yous and Contributors</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation_tutorial.html"
+                        title="next chapter">Installation Tutorial</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -213,6 +172,9 @@ pip install simplejson</pre>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="installation_tutorial.html" title="Installation Tutorial"
+             >next</a> |</li>
         <li><a href="#">FireWorks 0.1dev1 documentation</a> &raquo;</li> 
       </ul>
     </div>
