@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to FireWorks’s documentation! &mdash; FireWorks 0.1dev1 documentation</title>
+    <title>Features &mdash; FireWorks 0.1dev1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -46,9 +46,63 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-fireworks-s-documentation">
-<h1>Welcome to FireWorks&#8217;s documentation!<a class="headerlink" href="#welcome-to-fireworks-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
+  <img alt="FireWorks" src="_images/FireWorks_logo.png" style="width: 300px;" />
+<p><em>Note: FireWorks is under active development. It is currently incomplete and not useable as workflow software. However, certain components of the code are available for initial testing.</em></p>
+<p>FireWorks allows you to define calculation workflows and execute them on remote
+computers, usually through an external queuing system like PBS. The architecture of FireWorks is that of a central management server that stores and maintains the workflows, and a reasonable number of worker computers that pull jobs and perform the computations.</p>
+<div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks allows you to:</p>
+<ul class="simple">
+<li>Store and query workflows through MongoDB.</li>
+<li>Distribute calculations over multiple computing resources simultaneously, and direct certain workflows to intended worker computers.</li>
+<li>Define <em>dynamic</em> workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a workflow step (canceling a workflow, restarting the current step, or completely altering the workflow)</li>
+<li>Automatically detect duplicate sub-workflows - avoid re-running the duplicated sections of a workflow while still running unique sections</li>
+<li>Plug-and-play on several large supercomputing clusters and queueing systems <em>(future)</em></li>
+<li>Web-based monitoring of workflows <em>(future)</em></li>
+<li>Tools for packaging many small jobs into a single large job (useful for running on HPC machines that stipulate a small number of large-CPU jobs). <em>(future)</em></li>
+</ul>
+</div>
+<div class="section" id="limitations">
+<h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks is intended for applications where realtime performance of the workflow software is not a big issue. For example, if you require steps in a workflow to execute within a few seconds of one another, FireWorks might not be for you. In addition, FireWorks has only been tested for a few worker nodes running simultaneously, and has not been stress-tested for hundreds of worker nodes.</p>
+</div>
+<div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>There are many ways to help make FireWorks better. Many of them involve very little time and effort but would be of great use to the developers. Some ways to get involved are:</p>
+<ul class="simple">
+<li>Send a note about how you&#8217;re using FireWorks, and features you might like to see.</li>
+<li>Send a note about how the documentation might be improved. We&#8217;d like FireWorks to be frustration-free, and if you&#8217;ve encountered a stumbling block chances are others are also getting stuck. Sometimes, a little bit of extra explanation goes a long way!</li>
+<li>Send a note about areas of the code that are difficult to understand. We want FireWorks to be easy to read, modify, and maintain.</li>
+<li>Develop adapters for your queuing system or computing center, and share them with the main repo.</li>
+<li>Share code on how FireWorks might be used within a specific application</li>
+<li>Get in touch and contribute to the core codebase.</li>
+</ul>
+</div>
+<div class="section" id="technical-issues">
+<h1>Technical Issues<a class="headerlink" href="#technical-issues" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Use pip-install</li>
+<li>run python setup.py nosetests</li>
+</ul>
+</div>
+<div class="section" id="setup-on-clusters-tutorial-future">
+<h2>Setup on clusters / Tutorial (Future)<a class="headerlink" href="#setup-on-clusters-tutorial-future" title="Permalink to this headline">¶</a></h2>
+<p><em>TODO: link to another page...</em></p>
+<p><em>TODO: add proper docs</em></p>
+<ol class="arabic simple">
+<li>Create a subclass of QueueAdapter that handles queue issues - an example is PBSAdapterNersc</li>
+<li>Create an appropriate JobParameters file for your cluster - an example is provided.</li>
+<li>Try running rocket_launcher.py on your cluster with a test job config. See if it prints &#8216;howdy, you won&#8217; or whatever.</li>
+<li>Try changing the executable to be the Rocket. See if it grabs a job properly...</li>
+</ol>
+</div>
+</div>
+<div class="section" id="thank-yous">
+<h1>Thank yous<a class="headerlink" href="#thank-yous" title="Permalink to this headline">¶</a></h1>
+<p>Michael Kocher, Shyue Ping Ong</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
@@ -71,7 +125,15 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to FireWorks&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#">Features</a></li>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+<li><a class="reference internal" href="#technical-issues">Technical Issues</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#setup-on-clusters-tutorial-future">Setup on clusters / Tutorial (Future)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#thank-yous">Thank yous</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

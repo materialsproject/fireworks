@@ -54,20 +54,24 @@
 </div>
 <div class="section" id="module-fireworks.core.queue_adapter_base">
 <span id="queue-adapter-base-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">queue_adapter_base</span></tt> Module<a class="headerlink" href="#module-fireworks.core.queue_adapter_base" title="Permalink to this headline">¶</a></h2>
-<p>TODO: add docs!!</p>
+<p>This module contains the QueueAdapterBase class.</p>
 <dl class="class">
 <dt id="fireworks.core.queue_adapter_base.JobParameters">
 <em class="property">class </em><tt class="descclassname">fireworks.core.queue_adapter_base.</tt><tt class="descname">JobParameters</tt><big>(</big><em>queue_adapter</em>, <em>params</em>, <em>logging_dir='.'</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.JobParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><tt class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></tt></a></p>
+<p>A JobParameters instance contains all the information needed to write a queue file     and submit to a queue system. Details of the queue file format and queue submission     commands should be included in the QueueAdapterBase object. Specific parameters used     by the QueueAdapterBase should be included in the params variable.</p>
 <dl class="classmethod">
 <dt id="fireworks.core.queue_adapter_base.JobParameters.from_dict">
 <em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>m_dict</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.JobParameters.from_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Note: The QueueAdapter is loaded based on its fw_name alone
+See the docs for to_dict() for more details</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.queue_adapter_base.JobParameters.to_dict">
 <tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.JobParameters.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Note: the QueueAdapter is being serialized using the FW name alone          This keeps the serialization compact and easy to edit by humans.          The from_dict() will dynamically find the correct QueueAdapter using its fw_name.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -75,8 +79,8 @@
 <dt id="fireworks.core.queue_adapter_base.QueueAdapterBase">
 <em class="property">class </em><tt class="descclassname">fireworks.core.queue_adapter_base.</tt><tt class="descname">QueueAdapterBase</tt><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><tt class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></tt></a></p>
-<p>The QueueAdapter is responsible for all interactions with a specific     queue management system.     
-This includes writing and submitting the queue script (e.g., PBS script)     as well as querying for the number of jobs left in the queue.</p>
+<p>The QueueAdapter is responsible for all interactions with a specific     queue management system. This includes handling all details of queue     script format as well as queue submission and management.</p>
+<p>A user should extend this class with implementations that work on     specific queue systems.</p>
 <dl class="classmethod">
 <dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.from_dict">
 <em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>m_dict</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.from_dict" title="Permalink to this definition">¶</a></dt>
@@ -102,15 +106,15 @@ This includes writing and submitting the queue script (e.g., PBS script)     as 
 
 <dl class="method">
 <dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.get_script_str">
-<tt class="descname">get_script_str</tt><big>(</big><em>launch_dir</em>, <em>job_parameters</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.get_script_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a (multi-line) String representing the queue script, e.g. PBS script.         This string will be written to a file and submitted, for example using the qsub         command</p>
+<tt class="descname">get_script_str</tt><big>(</big><em>job_parameters</em>, <em>launch_dir</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.get_script_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a (multi-line) String representing the queue script, e.g. PBS script.         All details of the queue script must be specified in the JobParameters().</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>launch_dir</strong> &#8211; The directory the job will be launched in</li>
 <li><strong>job_parameters</strong> &#8211; A JobParameters() instance</li>
+<li><strong>launch_dir</strong> &#8211; The directory the job will be launched in</li>
 </ul>
 </td>
 </tr>
@@ -120,8 +124,10 @@ This includes writing and submitting the queue script (e.g., PBS script)     as 
 
 <dl class="method">
 <dt id="fireworks.core.queue_adapter_base.QueueAdapterBase.submit_to_queue">
-<tt class="descname">submit_to_queue</tt><big>(</big><em>script_file</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.submit_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>submits the job to the queue, probably using subprocess or shutil</p>
+<tt class="descname">submit_to_queue</tt><big>(</big><em>job_parameters</em>, <em>script_file</em><big>)</big><a class="headerlink" href="#fireworks.core.queue_adapter_base.QueueAdapterBase.submit_to_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>submits the job to the queue, probably using subprocess or shutil
+:param job_parameters: A JobParameters() instance
+:param script_file: name of the script file to use (String)</p>
 </dd></dl>
 
 <dl class="method">
@@ -134,12 +140,10 @@ This includes writing and submitting the queue script (e.g., PBS script)     as 
 </div>
 <div class="section" id="module-fireworks.core.rocket_launcher">
 <span id="rocket-launcher-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rocket_launcher</span></tt> Module<a class="headerlink" href="#module-fireworks.core.rocket_launcher" title="Permalink to this headline">¶</a></h2>
-<p>This module is used to submit jobs to a queue on a cluster. It can submit a single job, or if used in &#8220;rapid-fire&#8221; mode, can submit multiple jobs within a directory structure.</p>
-<p>The details of job submission and queue communication are handled using JobParameters.</p>
-<p>You can directly run this module from the command line on your cluster. See docs of the __main__ method for details.</p>
+<p>This module is used to submit jobs to a queue on a cluster. It can submit a single job, or if used in &#8220;rapid-fire&#8221; mode, can submit multiple jobs within a directory structure. The details of job submission and queue communication are handled using JobParameters, which specifies a QueueAdapter as well as desired properties of the submit script.</p>
 <dl class="function">
 <dt id="fireworks.core.rocket_launcher.launch_rocket">
-<tt class="descclassname">fireworks.core.rocket_launcher.</tt><tt class="descname">launch_rocket</tt><big>(</big><em>job_params</em>, <em>launch_dir='.'</em>, <em>script_filename='submit.script'</em><big>)</big><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fireworks.core.rocket_launcher.</tt><tt class="descname">launch_rocket</tt><big>(</big><em>job_params</em>, <em>launch_dir='.'</em><big>)</big><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submit a single job to the queue.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -148,7 +152,6 @@ This includes writing and submitting the queue script (e.g., PBS script)     as 
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_params</strong> &#8211; A JobParameters instance</li>
 <li><strong>launch_dir</strong> &#8211; The directory where to submit the job</li>
-<li><strong>script_filename</strong> &#8211; desired name for script file</li>
 </ul>
 </td>
 </tr>
@@ -158,7 +161,7 @@ This includes writing and submitting the queue script (e.g., PBS script)     as 
 
 <dl class="function">
 <dt id="fireworks.core.rocket_launcher.rapid_fire">
-<tt class="descclassname">fireworks.core.rocket_launcher.</tt><tt class="descname">rapid_fire</tt><big>(</big><em>job_params</em>, <em>launch_dir='.'</em>, <em>script_filename='submit.script'</em>, <em>njobs_queue=10</em>, <em>njobs_block=500</em>, <em>n_loops=1</em>, <em>t_sleep=3600</em><big>)</big><a class="headerlink" href="#fireworks.core.rocket_launcher.rapid_fire" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fireworks.core.rocket_launcher.</tt><tt class="descname">rapid_fire</tt><big>(</big><em>job_params</em>, <em>launch_dir='.'</em>, <em>njobs_queue=10</em>, <em>njobs_block=500</em>, <em>n_loops=1</em>, <em>t_sleep=3600</em><big>)</big><a class="headerlink" href="#fireworks.core.rocket_launcher.rapid_fire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to submit many jobs to the queue.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -167,7 +170,6 @@ This includes writing and submitting the queue script (e.g., PBS script)     as 
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_params</strong> &#8211; A JobParameters instance</li>
 <li><strong>launch_dir</strong> &#8211; directory where we want to write the blocks</li>
-<li><strong>script_filename</strong> &#8211; desired name for script file</li>
 <li><strong>njobs_queue</strong> &#8211; stops submitting jobs when njobs_queue jobs are in the queue</li>
 <li><strong>njobs_block</strong> &#8211; automatically write a new block when njobs_block jobs are in a single block</li>
 <li><strong>n_loops</strong> &#8211; number of times to loop rapid-fire mode to maintain njobs_queue</li>

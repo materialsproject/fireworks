@@ -17,3 +17,10 @@ utilities Package
     :undoc-members:
     :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+
+    fireworks.utilities.tests
+

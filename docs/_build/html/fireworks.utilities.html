@@ -62,15 +62,19 @@
 <p>The implicit method is especially useful if you don&#8217;t know in advance which subclass of a base class your serialization might point to. e.g. if you require some type of Quadrilateral, a serialization from your collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...</p>
 <dl class="docutils">
 <dt>Some advantages:</dt>
-<dd><ul class="first last simple">
-<li>Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines.</li>
-<li>Simple to allow a superclass define all the serializations for its subclasses, removing code repetition</li>
-<li>Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key</li>
-<li>Both JSON and YAML file import/export are naturally and concisely supported within the framework.</li>
+<dd><ul class="first simple">
+<li>Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines on fw_name.</li>
+<li>Simple to allow a superclass to define all the serializations for its subclasses, removing code repetition</li>
 </ul>
+<p class="last">(in particular, note that from_dict is a class method rather than a static method, allowing use of self)
+- Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
+- Both JSON and YAML file import/export are naturally and concisely supported within the framework.
+- Auto-detect and proper loading of JSON and YAML files
+- Proper JSON handling of datetime (both encoding and decoding) and UTF-8 strings
+- In some cases, objects can be serialized/deserialized extremely concisely, by knowledge of only their fw_name</p>
 </dd>
 </dl>
-<p>The FW serialization is compatible with pymatgen&#8217;s MSONable interface when the serialize_fw decorator is used on the to_dict() methods.</p>
+<p>A dict created using FWSerializer&#8217;s to_dict() method should be readable by Pymatgen&#8217;s PMGDecoder, when the serialize_fw() decorator is used.</p>
 <dl class="class">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable">
 <em class="property">class </em><tt class="descclassname">fireworks.utilities.fw_serializers.</tt><tt class="descname">FWSerializable</tt><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable" title="Permalink to this definition">¶</a></dt>
@@ -194,7 +198,7 @@ see documentation of FWSerializable for more details</p>
 <span id="fw-utilities-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">fw_utilities</span></tt> Module<a class="headerlink" href="#module-fireworks.utilities.fw_utilities" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="fireworks.utilities.fw_utilities.get_fw_logger">
-<tt class="descclassname">fireworks.utilities.fw_utilities.</tt><tt class="descname">get_fw_logger</tt><big>(</big><em>name</em>, <em>l_dir='.'</em>, <em>file_levels=('DEBUG'</em>, <em>'ERROR')</em>, <em>stream_level='DEBUG'</em>, <em>formatter=&lt;logging.Formatter object at 0x10721ad10&gt;</em>, <em>clear_logs=False</em><big>)</big><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_fw_logger" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fireworks.utilities.fw_utilities.</tt><tt class="descname">get_fw_logger</tt><big>(</big><em>name</em>, <em>l_dir='.'</em>, <em>file_levels=('DEBUG'</em>, <em>'ERROR')</em>, <em>stream_level='DEBUG'</em>, <em>formatter=&lt;logging.Formatter object at 0x10a282790&gt;</em>, <em>clear_logs=False</em><big>)</big><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_fw_logger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience method to return a logger.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -217,18 +221,28 @@ see documentation of FWSerializable for more details</p>
 <dl class="function">
 <dt id="fireworks.utilities.fw_utilities.log_exception">
 <tt class="descclassname">fireworks.utilities.fw_utilities.</tt><tt class="descname">log_exception</tt><big>(</big><em>m_logger</em>, <em>msgs</em><big>)</big><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_exception" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut wrapper around log_fancy for exceptions
-:param m_logger: The logger object
-:param msgs: An iterable of Strings, will be joined by newlines</p>
+<dd><p>A shortcut wrapper around log_fancy for exceptions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m_logger</strong> &#8211; The logger object</li>
+<li><strong>msgs</strong> &#8211; An iterable of Strings, will be joined by newlines</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="fireworks.utilities.fw_utilities.log_fancy">
 <tt class="descclassname">fireworks.utilities.fw_utilities.</tt><tt class="descname">log_fancy</tt><big>(</big><em>m_logger</em>, <em>log_lvl</em>, <em>msgs</em>, <em>add_traceback=False</em><big>)</big><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_fancy" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper around the logger messages useful for multi-line logs.
-Just helps to group log messages by adding a fancy border around it,
-which hopefully enhances readability of log lines meant to be
-read together as a unit.</p>
+Helps to group log messages by adding a fancy border around it,
+which enhances readability of log lines meant to be read
+as a unit.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -246,6 +260,18 @@ read together as a unit.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fireworks.utilities.tests.html">tests Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_fw_serializers"><tt class="docutils literal"><span class="pre">test_fw_serializers</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_serializer"><tt class="docutils literal"><span class="pre">test_serializer</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -259,6 +285,9 @@ read together as a unit.</p>
 <li><a class="reference internal" href="#">utilities Package</a><ul>
 <li><a class="reference internal" href="#module-fireworks.utilities.fw_serializers"><tt class="docutils literal"><span class="pre">fw_serializers</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.fw_utilities"><tt class="docutils literal"><span class="pre">fw_utilities</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
