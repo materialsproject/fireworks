@@ -49,7 +49,7 @@
   <img alt="FireWorks" src="_images/FireWorks_logo.png" style="width: 300px;" />
 <p><em>Note: FireWorks is under active development. It is currently incomplete and not useable as workflow software. However, certain components of the code are available for initial testing.</em></p>
 <p>FireWorks allows you to define calculation workflows and execute them on remote
-computers, usually through an external queuing system like PBS. The architecture of FireWorks is that of a central management server that stores and maintains the workflows, and a reasonable number of worker computers that pull jobs and perform the computations.</p>
+computers, usually through an external queuing system like PBS. The architecture of FireWorks is that of a central management server that stores and maintains the workflows, along with one or more worker computers that pull jobs and perform the computations.</p>
 <div class="section" id="features">
 <h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
 <p>FireWorks allows you to:</p>
@@ -65,22 +65,28 @@ computers, usually through an external queuing system like PBS. The architecture
 </div>
 <div class="section" id="limitations">
 <h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h1>
-<p>FireWorks is intended for applications where realtime performance of the workflow software is not a big issue. For example, if you require steps in a workflow to execute within a few seconds of one another, FireWorks might not be for you. In addition, FireWorks has only been tested for a few worker nodes running simultaneously, and has not been stress-tested for hundreds of worker nodes.</p>
+<p>FireWorks is currently intended for applications where performance of the workflow software is not of utmost concern.</p>
+<ul class="simple">
+<li>If you require steps in a workflow to execute within a few seconds of one another, the current version of FireWorks is not for you.</li>
+<li>FireWorks has only been tested for a few worker nodes running simultaneously, and has not been stress-tested for hundreds of worker nodes.</li>
+</ul>
 </div>
 <div class="section" id="contributing">
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
-<p>There are many ways to help make FireWorks better. Many of them involve very little time and effort but would be of great use to the developers. Some ways to get involved are:</p>
+<p>Want to see something added or changed? There are many ways to help make that a reality. Some ways to get involved are:</p>
 <ul class="simple">
 <li>Send a note about how you&#8217;re using FireWorks, and features you might like to see.</li>
-<li>Send a note about how the documentation might be improved. We&#8217;d like FireWorks to be frustration-free, and if you&#8217;ve encountered a stumbling block chances are others are also getting stuck. Sometimes, a little bit of extra explanation goes a long way!</li>
+<li>Send a note about how the documentation might be improved. If you&#8217;ve encountered a stumbling block, chances that are others are also getting stuck.</li>
 <li>Send a note about areas of the code that are difficult to understand. We want FireWorks to be easy to read, modify, and maintain.</li>
 <li>Develop adapters for your queuing system or computing center, and share them with the main repo.</li>
-<li>Share code on how FireWorks might be used within a specific application</li>
-<li>Get in touch and contribute to the core codebase.</li>
+<li>Share code on how FireWorks might be used within a specific application.</li>
+<li>Get in touch and contribute to the core codebase!</li>
 </ul>
+<p>The best way to submit questions, issues, and all other communication is through the FireWorks Github page: <a class="reference external" href="https://github.com/materialsproject/fireworks/issues">https://github.com/materialsproject/fireworks/issues</a></p>
+<p>The Github page is the preferred way of communication because it allows requests to be viewed by others and tracked. However, if you feel that e-mail is needed, you can contact the maintainer at: <img alt="developer contact" class="align-bottom" src="_images/mail.png" /></p>
 </div>
-<div class="section" id="technical-issues">
-<h1>Technical Issues<a class="headerlink" href="#technical-issues" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getting-set-up">
+<h1>Getting Set Up<a class="headerlink" href="#getting-set-up" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -102,7 +108,8 @@ computers, usually through an external queuing system like PBS. The architecture
 </div>
 <div class="section" id="thank-yous">
 <h1>Thank yous<a class="headerlink" href="#thank-yous" title="Permalink to this headline">¶</a></h1>
-<p>Michael Kocher, Shyue Ping Ong</p>
+<p>Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued &#8216;placeholder&#8217; scripts responsible for checking out jobs. Some of Michael&#8217;s code for pulling jobs onto nodes was refashioned for FireWorks.</p>
+<p>Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his <a class="reference external" href="http://packages.python.org/pymatgen/">pymatgen</a> library (which I also sometimes contribute to).</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
@@ -128,7 +135,7 @@ computers, usually through an external queuing system like PBS. The architecture
 <li><a class="reference internal" href="#">Features</a></li>
 <li><a class="reference internal" href="#limitations">Limitations</a></li>
 <li><a class="reference internal" href="#contributing">Contributing</a></li>
-<li><a class="reference internal" href="#technical-issues">Technical Issues</a><ul>
+<li><a class="reference internal" href="#getting-set-up">Getting Set Up</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#setup-on-clusters-tutorial-future">Setup on clusters / Tutorial (Future)</a></li>
 </ul>
