@@ -73,22 +73,26 @@
 <p>We now want to test interaction of our worker computer with the queue.</p>
 <ol class="arabic simple">
 <li>Navigate to a clean testing directory on your worker node.</li>
-<li>Take a look in the fireworks.user_packages.queue_adapters package to see if an appropriate QueueAdapter already exists for your queueing system. For example, the module pbs_adapter.py is documented to work with the PBS queueing system, so if you are using PBS you might want to try this module first.</li>
+<li>Take a look in the <a class="reference internal" href="fireworks.user_objects.queue_adapters.html"><em>queue_adapters</em></a> package to see if an appropriate <a class="reference internal" href="fireworks.core.html"><em>QueueAdapterBase</em></a> already exists for your queueing system. For example, the implementation <a class="reference internal" href="fireworks.user_objects.queue_adapters.html"><em>PBSAdapterNERSC</em></a> is documented to work with the PBS queueing system, so if you are using PBS you might want to try this module first.</li>
 </ol>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
-<p class="last">If your queuing system does not have built-in support, do not despair! You might try to use pbs_adapter.py as a reference for coding your own PBS adapter. <em>TODO: add docs!!</em> Otherwise, you can contact us for help (see <a class="reference internal" href="index.html#contributing-label"><em>Contributing</em></a>).</p>
+<p class="last">If your queuing system does not have built-in support, do not despair! You might try to use <a class="reference internal" href="fireworks.user_objects.queue_adapters.html"><em>PBSAdapterNERSC</em></a> as a reference for coding your own PBS adapter. You can also look at the docs for <a class="reference internal" href="fireworks.core.html"><em>QueueAdapterBase</em></a> to get an idea for what needs to be implemented. In most cases, adding a new QueueAdapterBase implementation should not be difficult. If you encounter trouble, you can contact us for help (see <a class="reference internal" href="index.html#contributing-label"><em>Contributing</em></a>).</p>
 </div>
 <ol class="arabic simple" start="3">
-<li>The QueueAdapter serves as a template for interacting with the queue, but requires a JobParameters file to fill in specific values like walltime, desired queue name, and other application-specific parameters. An example of a very simple JobParameters file is given as job_params_pbs_nersc.yaml in the fireworks.user_packages.queue_adapters package.</li>
+<li>The <a class="reference internal" href="fireworks.core.html"><em>QueueAdapterBase</em></a> serves as a template for interacting with the queue, but requires a JobParameters file to fill in specific values like walltime, desired queue name, and other application-specific parameters. An example of a very simple JobParameters file is given as job_params_pbs_nersc.yaml in the fireworks/user_objects/queue_adapters directory.</li>
 </ol>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
-<p class="last">The specific format of the JobParameters file might vary with the QueueAdapter, as each queuing system might require slightly different parameters. Refer to your QueueAdapter&#8217;s documentation to see how to correctly structure a JobParameters file. For example, the PBSAdapterNERSC defined in pbs_adapter.py accepts many more parameters than those listed in the test JobParameters file.</p>
+<p class="last">The specific format of the JobParameters file might vary with the <a class="reference internal" href="fireworks.core.html"><em>QueueAdapterBase</em></a>, as each queuing system might require slightly different parameters. Refer to the documentation of your <a class="reference internal" href="fireworks.core.html"><em>QueueAdapterBase</em></a> implementation to see how to correctly structure a JobParameters file. For example, the <a class="reference internal" href="fireworks.user_objects.queue_adapters.html"><em>PBSAdapterNERSC</em></a> accepts many more parameters than those listed in the testing JobParameters file.</p>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">For more about the JobParameters file, look at the <a class="reference internal" href="fireworks.core.html"><em>JobParameters</em></a> class.</p>
 </div>
 <ol class="arabic simple" start="4">
-<li>Copy an appropriate job parameters file to your current directory</li>
-<li>Modify the job parameters file as needed to suit your cluster.</li>
+<li>Copy an appropriate JobParameters file to your current directory</li>
+<li>Modify the JobParameters file as needed to suit your cluster.</li>
 </ol>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
@@ -113,7 +117,7 @@
 </div>
 <div class="section" id="run-the-rocket-launcher-in-rapid-fire-mode">
 <h3>Run the rocket launcher in rapid-fire mode<a class="headerlink" href="#run-the-rocket-launcher-in-rapid-fire-mode" title="Permalink to this headline">¶</a></h3>
-<p>While launching a single job is nice, a more useful functionality is to maintain a certain number of jobs in the queue. The rocket launcher provides a &#8220;rapid-fire&#8221; mode that automatically provides this functionality. This mode requires another part of the QueueAdapter to be functioning properly, namely the part of the code that determines how many jobs are currently in the queue by the current user.</p>
+<p>While launching a single job is nice, a more useful functionality is to maintain a certain number of jobs in the queue. The rocket launcher provides a &#8220;rapid-fire&#8221; mode that automatically provides this functionality. This mode requires another part of the <a class="reference internal" href="fireworks.core.html"><em>QueueAdapterBase</em></a> to be functioning properly, namely the part of the code that determines how many jobs are currently in the queue by the current user.</p>
 <p>To test rapid-fire mode, try the following:</p>
 <ol class="arabic simple">
 <li>Navigate to a clean testing directory on your worker node.</li>

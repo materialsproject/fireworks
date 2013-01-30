@@ -29,17 +29,19 @@ We now want to test interaction of our worker computer with the queue.
 
 1. Navigate to a clean testing directory on your worker node.
 
-2. Take a look in the fireworks.user_packages.queue_adapters package to see if an appropriate QueueAdapter already exists for your queueing system. For example, the module pbs_adapter.py is documented to work with the PBS queueing system, so if you are using PBS you might want to try this module first.
+2. Take a look in the :doc:`queue_adapters </fireworks.user_objects.queue_adapters>` package to see if an appropriate :doc:`QueueAdapterBase </fireworks.core>` already exists for your queueing system. For example, the implementation :doc:`PBSAdapterNERSC </fireworks.user_objects.queue_adapters>` is documented to work with the PBS queueing system, so if you are using PBS you might want to try this module first.
 
-.. important:: If your queuing system does not have built-in support, do not despair! You might try to use pbs_adapter.py as a reference for coding your own PBS adapter. *TODO: add docs!!* Otherwise, you can contact us for help (see :ref:`contributing-label`).
+.. important:: If your queuing system does not have built-in support, do not despair! You might try to use :doc:`PBSAdapterNERSC </fireworks.user_objects.queue_adapters>` as a reference for coding your own PBS adapter. You can also look at the docs for :doc:`QueueAdapterBase </fireworks.core>` to get an idea for what needs to be implemented. In most cases, adding a new QueueAdapterBase implementation should not be difficult. If you encounter trouble, you can contact us for help (see :ref:`contributing-label`).
 
-3. The QueueAdapter serves as a template for interacting with the queue, but requires a JobParameters file to fill in specific values like walltime, desired queue name, and other application-specific parameters. An example of a very simple JobParameters file is given as job_params_pbs_nersc.yaml in the fireworks.user_packages.queue_adapters package.
+3. The :doc:`QueueAdapterBase </fireworks.core>` serves as a template for interacting with the queue, but requires a JobParameters file to fill in specific values like walltime, desired queue name, and other application-specific parameters. An example of a very simple JobParameters file is given as job_params_pbs_nersc.yaml in the fireworks/user_objects/queue_adapters directory.
 
-.. important:: The specific format of the JobParameters file might vary with the QueueAdapter, as each queuing system might require slightly different parameters. Refer to your QueueAdapter's documentation to see how to correctly structure a JobParameters file. For example, the PBSAdapterNERSC defined in pbs_adapter.py accepts many more parameters than those listed in the test JobParameters file.
+.. important:: The specific format of the JobParameters file might vary with the :doc:`QueueAdapterBase </fireworks.core>`, as each queuing system might require slightly different parameters. Refer to the documentation of your :doc:`QueueAdapterBase </fireworks.core>` implementation to see how to correctly structure a JobParameters file. For example, the :doc:`PBSAdapterNERSC </fireworks.user_objects.queue_adapters>` accepts many more parameters than those listed in the testing JobParameters file.
 
-4. Copy an appropriate job parameters file to your current directory
+.. tip:: For more about the JobParameters file, look at the :doc:`JobParameters </fireworks.core>` class.
 
-5. Modify the job parameters file as needed to suit your cluster.
+4. Copy an appropriate JobParameters file to your current directory
+
+5. Modify the JobParameters file as needed to suit your cluster.
 
 .. important:: Ensure that the 'exe' parameter in the JobParameters file reads: "echo 'howdy, your job launched successfully!' >> howdy.txt"
 
@@ -60,7 +62,7 @@ If you finished this part of the tutorial successfully, congratulations! You've 
 Run the rocket launcher in rapid-fire mode
 ------------------------------------------
 
-While launching a single job is nice, a more useful functionality is to maintain a certain number of jobs in the queue. The rocket launcher provides a "rapid-fire" mode that automatically provides this functionality. This mode requires another part of the QueueAdapter to be functioning properly, namely the part of the code that determines how many jobs are currently in the queue by the current user.
+While launching a single job is nice, a more useful functionality is to maintain a certain number of jobs in the queue. The rocket launcher provides a "rapid-fire" mode that automatically provides this functionality. This mode requires another part of the :doc:`QueueAdapterBase </fireworks.core>` to be functioning properly, namely the part of the code that determines how many jobs are currently in the queue by the current user.
 
 To test rapid-fire mode, try the following:
 
