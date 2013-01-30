@@ -80,13 +80,13 @@ where the <JOB_PARAMETERS_FILE> points to your JobParameters file, e.g. job_para
 
 4. This method should have submitted 3 jobs to the queue at once, all inside of a directory beginning with the tag 'block_'.
 
-5. You can maintain a certain number of jobs in the queue indefinitely by specifying the number of loops parameter to be much greater than 1::
+5. You can maintain a certain number of jobs in the queue indefinitely by specifying the number of loops parameter to be much greater than 1 (e.g., the example below sets 100 loops)::
 
     rocket_launcher_run.py --rapidfire -q 3 -n 100 <JOB_PARAMETERS_FILE>
 
 6. The script above should maintain 3 jobs in the queue for 100 loops of the rocket launcher. The rocket launcher will sleep for a user-adjustable time after each loop.
 
-.. tip:: read the documentation of the rocket launcher for additional details.
+.. tip:: the documentation of the rocket launcher contains additional details, as well as the built-in help file obtained by running the rocket launcher with the -h option.
     
 Next steps
 ----------
