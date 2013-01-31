@@ -14,9 +14,9 @@ module_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 setup(name='FireWorks',
-      version='0.1dev0.7',
+      version='0.1dev0.8',
       description='FireWorks workflow software',
-      long_description=open(os.path.join(module_dir, 'docs', '_build', 'html', 'index.html')).read(),
+      long_description=open(os.path.join(module_dir, 'README.rst')).read(),
       url='https://github.com/materialsproject/fireworks',
       author='Anubhav Jain',
       author_email='anubhavster@gmail.com',
@@ -36,5 +36,5 @@ setup(name='FireWorks',
         "Topic :: Scientific/Engineering"],
         test_suite='nose.collector',
         tests_require=['nose'],
-        scripts=[os.path.join("scripts", f) for f in os.listdir("scripts")]
+        scripts=[os.path.join(os.path.join(module_dir, "scripts", f)) for f in os.listdir(os.path.join(module_dir, "scripts"))]
         )
