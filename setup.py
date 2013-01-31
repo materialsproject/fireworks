@@ -23,7 +23,7 @@ setup(name='FireWorks',
       license='MIT',
       packages=find_packages(),
       zip_safe=False,
-      install_requires=['pyyaml', 'simplejson'],
+      install_requires=['pyyaml', 'simplejson', 'pymongo'],
       classifiers=[
         "Programming Language :: Python :: 2.7",
         "Development Status :: 2 - Pre-Alpha",

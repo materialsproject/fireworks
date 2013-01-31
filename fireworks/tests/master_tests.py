@@ -23,6 +23,7 @@ class TestImports(unittest.TestCase):
     def test_imports(self):
         import yaml
         import simplejson
+        import pymongo
 
 if __name__ == "__main__":
     unittest.main()

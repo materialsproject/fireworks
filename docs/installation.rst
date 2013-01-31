@@ -25,6 +25,7 @@ Download FireWorks and dependencies
     pip install nose
     pip install pyyaml
     pip install simplejson
+    pip install pymongo
 
 Run unit tests
 --------------
