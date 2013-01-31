@@ -13,14 +13,10 @@ import os
 module_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-def readme():
-    with open(os.path.join(module_dir, 'README.rst')) as f:
-        return f.read()
-    
 setup(name='FireWorks',
       version='0.1dev0.7',
       description='FireWorks workflow software',
-      long_description=open('README.rst').read(),
+      long_description=open(os.path.join(module_dir, 'docs', 'index.rst').read(),
       url='https://github.com/materialsproject/fireworks',
       author='Anubhav Jain',
       author_email='anubhavster@gmail.com',
