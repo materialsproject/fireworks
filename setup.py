@@ -10,9 +10,11 @@ __date__ = "Jan 9, 2013"
 from setuptools import setup, find_packages
 import os
 
+module_dir = os.path.dirname(os.path.abspath(__file__))
+
 
 def readme():
-    with open('README.rst') as f:
+    with open(os.path.join(module_dir, 'README.rst')) as f:
         return f.read()
     
 setup(name='FireWorks',
