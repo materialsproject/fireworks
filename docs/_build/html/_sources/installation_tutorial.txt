@@ -4,6 +4,10 @@ Installation Tutorial
 
 This tutorial will guide you through FireWorks installation on worker nodes, test communication with the queue, and submit some placeholder jobs.
 
+*TODO: add more of an introduction to all the objects during the tutorial, and clarify that this is not the whole story.*
+
+*TODO: provide an overview picture, probably on some other page.*
+
 Set up worker nodes
 ===================
 
