@@ -7,8 +7,11 @@ Install required software
 -------------------------
 To prepare for installation, you should:
 
-1. Install `git <http://git-scm.com>`_, if not already packaged with your system. This will allow you to download the latest source code.
-2. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
+1. Install `python 2.7 <http://www.python.org>`_ (preferably Python 2.7.3), if not already packaged with your system.
+2. Install `git <http://git-scm.com>`_, if not already packaged with your system. This will allow you to download the latest source code.
+3. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
+
+.. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command 'easy_install pip'
 
 Download FireWorks and dependencies
 -----------------------------------
@@ -16,7 +19,11 @@ Download FireWorks and dependencies
 
     git clone git@github.com:materialsproject/fireworks.git
 
-2. Navigate inside the FireWorks directory containing the file setup.py and run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
+2. Navigate inside the FireWorks directory containing the file setup.py::
+
+    cd fireworks
+
+3. run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
 
     python setup.py develop
 

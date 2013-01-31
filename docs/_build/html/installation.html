@@ -53,9 +53,14 @@
 <h2>Install required software<a class="headerlink" href="#install-required-software" title="Permalink to this headline">¶</a></h2>
 <p>To prepare for installation, you should:</p>
 <ol class="arabic simple">
+<li>Install <a class="reference external" href="http://www.python.org">python 2.7</a> (preferably Python 2.7.3), if not already packaged with your system.</li>
 <li>Install <a class="reference external" href="http://git-scm.com">git</a>, if not already packaged with your system. This will allow you to download the latest source code.</li>
 <li>Install <a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">pip</a>, if not already packaged with your system. This will allow you to download required dependencies.</li>
 </ol>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">if you have easy_install configured, e.g. through <a class="reference external" href="http://pypi.python.org/pypi/setuptools">setuptools</a>, you should be able to install pip using the command &#8216;easy_install pip&#8217;</p>
+</div>
 </div>
 <div class="section" id="download-fireworks-and-dependencies">
 <h2>Download FireWorks and dependencies<a class="headerlink" href="#download-fireworks-and-dependencies" title="Permalink to this headline">¶</a></h2>
@@ -64,14 +69,21 @@
 <div class="highlight-python"><pre>git clone git@github.com:materialsproject/fireworks.git</pre>
 </div>
 </li>
-<li><p class="first">Navigate inside the FireWorks directory containing the file setup.py and run the following command (you might need administrator privileges, so pre-pend the word &#8216;sudo&#8217; as needed):</p>
+<li><p class="first">Navigate inside the FireWorks directory containing the file setup.py:</p>
+<div class="highlight-python"><pre>cd fireworks</pre>
+</div>
+</li>
+<li><p class="first">run the following command (you might need administrator privileges, so pre-pend the word &#8216;sudo&#8217; as needed):</p>
 <div class="highlight-python"><pre>python setup.py develop</pre>
 </div>
 </li>
+</ol>
+<ol class="arabic" start="3">
 <li><p class="first">Install the needed dependencies using pip with the following commands (with administrator privileges):</p>
 <div class="highlight-python"><pre>pip install nose
 pip install pyyaml
-pip install simplejson</pre>
+pip install simplejson
+pip install pymongo</pre>
 </div>
 </li>
 </ol>
