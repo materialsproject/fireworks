@@ -42,8 +42,8 @@ FireWorks is currently intended for applications where performance of the workfl
 
 .. _contributing-label:
 
-Contributing
-============
+Contributing and Contact
+========================
 
 Want to see something added or changed? There are many ways to help make that a reality. Some ways to get involved are:
 
@@ -83,6 +83,8 @@ Thank yous and Contributors
 Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code for pulling jobs onto nodes was refashioned for FireWorks.
 
 Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
+
+Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others.
 
 .. _pymatgen: http://packages.python.org/pymatgen/
 
