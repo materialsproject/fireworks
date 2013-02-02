@@ -67,6 +67,17 @@ class FWDatabase(FWSerializable):
         next_id = self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
         if self.id_prefix:
             return ('{}-{}'.format(self.id_prefix, next_id))
-            
+
+
+class LaunchPad():
+    
+    def __init__(self, fw_db=None):
+        fw_db = fw_db if fw_db else FWDatabase()
+    
+    def upsert_fw(self):
+        raise NotImplementedError()
+    
+    # TODO: methods to get status of FW, find matching FW, etc...
+    
 if __name__ == "__main__":
     a = FWDatabase()
