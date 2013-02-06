@@ -10,6 +10,7 @@ TODO: add methods for inserting FW, updating Engines, etc
 TODO: add auto-initialize
 
 '''
+import datetime
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 
@@ -74,10 +75,25 @@ class LaunchPad():
     def __init__(self, fw_db=None):
         fw_db = fw_db if fw_db else FWDatabase()
     
+    def initialize(self, password, require_password=True):
+        m_password = datetime.datetime.now().strftime('%Y-%m-%d')
+        if not require_password or password == m_password:
+            self.fw_db._initialize()
+        
+        else:
+            raise ValueError("Invalid password! Password is today's date: %".format(m_password))
+    
     def upsert_fw(self):
         raise NotImplementedError()
     
     # TODO: methods to get status of FW, find matching FW, etc...
     
 if __name__ == "__main__":
+    """
+    TODO: add command line option parser for
+    initialize <DB_FILE>
+    upsert-firework <DB_FILE> <FW_FILE>
+    get-firework <FW_ID>
+    get-matching-fws <QUERY_JSON>
+    """
     a = FWDatabase()
