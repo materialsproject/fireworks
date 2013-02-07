@@ -27,6 +27,9 @@ class FWDatabase(FWSerializable):
     _fw_name = 'FireWorks Database'
     
     def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix='fw', username=None, password=None):
+        if len(id_prefix) < 1:
+            raise ValueError("Must enter a non-empty id prefix!")
+        
         self.host = host
         self.port = port
         self.name = name
@@ -39,6 +42,9 @@ class FWDatabase(FWSerializable):
         if username:
             self.database.authenticate(username, password)
         
+        self.fireworks = self.database.fireworks
+        self.fw_id_assigner = self.database.fw_id_assigner
+        
     def to_dict(self):
         d = {}
         d['host'] = self.host
@@ -47,11 +53,14 @@ class FWDatabase(FWSerializable):
         d['id_prefix'] = self.id_prefix
         d['username'] = self.username
         d['password'] = self.password
+        
+        return d
     
     def from_dict(self, d):
         return FWDatabase(d['host'], d['port'], d['name'], d['username'], d['password'])
     
     def _initialize(self):
+        self.fireworks.remove()
         self._restart_ids(1)
         
     def _restart_ids(self, next_fw_id):
@@ -61,8 +70,8 @@ class FWDatabase(FWSerializable):
         :param next_fw_id: make sure this is an INTEGER
         '''
         
-        self._id_assigner.remove()
-        self._id_assigner.insert({"next_fw_id": next_fw_id})
+        self.fw_id_assigner.remove()
+        self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
  
     def get_next_fw_id(self):
         next_id = self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
@@ -97,3 +106,4 @@ if __name__ == "__main__":
     get-matching-fws <QUERY_JSON>
     """
     a = FWDatabase()
+    a.to_file("fw_database.yaml")

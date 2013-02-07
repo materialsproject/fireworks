@@ -23,7 +23,7 @@ if __name__ == '__main__':
     For more help on rapid fire options, use rocket_launcher.py rapidfire -h'
     
     parser = ArgumentParser(description=m_description)
-    subparsers = parser.add_subparsers(help='command', dest='r_action')
+    subparsers = parser.add_subparsers(help='command', dest='command')
     single_parser = subparsers.add_parser('singleshot', help='launch a single rocket')
     rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets')
     
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
-    if args.r_action == 'rapidfire':
+    if args.command == 'rapidfire':
         rapid_fire(args.job_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
     else:
         launch_rocket(args.job_params, args.launch_dir)
