@@ -29,6 +29,7 @@ class FireWork(FWSerializable):
     def to_dict(self):
         return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id}
     
+    @classmethod
     def from_dict(self, m_dict):
         return FireWork(m_dict['fw_spec'], m_dict['fw_id'])
 

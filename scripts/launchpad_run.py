@@ -4,7 +4,8 @@
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 '''
 from argparse import ArgumentParser
-from fireworks.core.launchpad import FWDatabase, LaunchPad
+from fireworks.core.launchpad import LaunchPad
+from fireworks.core.firework import FireWork
 
 
 __author__ = 'Anubhav Jain'
@@ -22,17 +23,23 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
     initialize_parser = subparsers.add_parser('initialize', help='initialize a FireWorks database')
+    upsert_parser = subparsers.add_parser('upsert_fw', help='insert or update a FireWork from file')
     
-    parser.add_argument('fw_db_file', help='path to a FWDatabase file')
+    parser.add_argument('launchpad_file', help='path to a LaunchPad file')
     
     initialize_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
     
+    upsert_parser.add_argument('fw_file', help="path to a FireWorks file")
+    
     args = parser.parse_args()
     
-    fw_db = FWDatabase.from_file(args.fw_db_file)
-    lp = LaunchPad(fw_db)
+    lp = LaunchPad.from_file(args.launchpad_file)
     
     if args.command == 'initialize':
         lp.initialize(args.password)
+    
+    if args.command == 'upsert_fw':
+        fw = FireWork.from_file(args.fw_file)
+        lp.upsert_fw(fw)
 

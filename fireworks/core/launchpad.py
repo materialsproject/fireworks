@@ -22,9 +22,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 30, 2013"
 
 
-class FWDatabase(FWSerializable):
-    
-    _fw_name = 'FireWorks Database'
+class LaunchPad(FWSerializable):
     
     def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix='fw', username=None, password=None):
         if len(id_prefix) < 1:
@@ -53,16 +51,20 @@ class FWDatabase(FWSerializable):
         d['id_prefix'] = self.id_prefix
         d['username'] = self.username
         d['password'] = self.password
-        
         return d
     
     @classmethod
     def from_dict(self, d):
-        return FWDatabase(d['host'], d['port'], d['name'], d['id_prefix'], d['username'], d['password'])
+        return LaunchPad(d['host'], d['port'], d['name'], d['id_prefix'], d['username'], d['password'])
     
-    def _initialize(self):
-        self.fireworks.remove()
-        self._restart_ids(1)
+    def initialize(self, password, require_password=True):
+        m_password = datetime.datetime.now().strftime('%Y-%m-%d')
+        
+        if password == m_password or not require_password:
+            self.fireworks.remove()
+            self._restart_ids(1)
+        else:
+            raise ValueError("Invalid safeguard password! Password is today's date: {}".format(m_password))
         
     def _restart_ids(self, next_fw_id):
         '''
@@ -74,30 +76,23 @@ class FWDatabase(FWSerializable):
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
  
     def _get_new_id_num(self):
-        return self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
+        return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
     
     def get_new_fw_id(self):
-        return ('{}:{}'.format(self.id_prefix, self._get_next_id_num()))
-
-
-class LaunchPad():
+        return ('{}:{}'.format(self.id_prefix, self._get_new_id_num()))
     
-    def __init__(self, fw_db=None):
-        self.fw_db = fw_db if fw_db else FWDatabase()
-    
-    def initialize(self, password, require_password=True):
-        m_password = datetime.datetime.now().strftime('%Y-%m-%d')
+    def upsert_fw(self, fw):
+        # TODO: make sure no child fws
         
-        if password == m_password or not require_password:
-            self.fw_db._initialize()
-        else:
-            raise ValueError("Invalid safeguard password! Password is today's date: {}".format(m_password))
-    
-    def upsert_fw(self):
-        raise NotImplementedError()
-    
-    # TODO: methods to get status of FW, find matching FW, etc...
-    
+        # TODO: make this also apply to sub-fireworks
+        # TODO: add logging
+        if not fw.fw_id:
+            fw.fw_id = self.get_new_fw_id()
+        
+        # TODO: make this also apply to sub-fireworks, add children and parent keys
+        self.fireworks.update({"fw_id": fw.fw_id}, fw.to_dict(), upsert=True)
+
+
 if __name__ == "__main__":
     """
     TODO: add command line option parser for
@@ -106,5 +101,5 @@ if __name__ == "__main__":
     get-firework <FW_ID>
     get-matching-fws <QUERY_JSON>
     """
-    a = FWDatabase()
-    a.to_file("fw_database.yaml")
+    a = LaunchPad()
+    a.to_file("launchpad.yaml")
