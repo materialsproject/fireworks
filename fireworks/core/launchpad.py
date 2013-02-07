@@ -70,14 +70,14 @@ class FWDatabase(FWSerializable):
         
         :param next_fw_id: make sure this is an INTEGER
         '''
-        
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.insert({"next_fw_id": self.get_next_fw_id(force_id=next_fw_id)})
+        self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
  
-    def get_next_fw_id(self, force_id=None):
-        next_id = force_id if force_id else self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
-        if self.id_prefix:
-            return ('{}:{}'.format(self.id_prefix, next_id))
+    def _get_new_id_num(self):
+        return self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
+    
+    def get_new_fw_id(self):
+        return ('{}:{}'.format(self.id_prefix, self._get_next_id_num()))
 
 
 class LaunchPad():
