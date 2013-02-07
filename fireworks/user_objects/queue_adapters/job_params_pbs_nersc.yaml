@@ -3,6 +3,11 @@ params:
   ncores: 1
   walltime: '00:02:00'
   queue: debug
+  account: null
+  pbs_options: null
+  pbs_tags: null
+  job_name: null
+  modules: null
 
 logging_dir: .
 
