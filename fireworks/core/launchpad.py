@@ -56,8 +56,9 @@ class FWDatabase(FWSerializable):
         
         return d
     
+    @classmethod
     def from_dict(self, d):
-        return FWDatabase(d['host'], d['port'], d['name'], d['username'], d['password'])
+        return FWDatabase(d['host'], d['port'], d['name'], d['id_prefix'], d['username'], d['password'])
     
     def _initialize(self):
         self.fireworks.remove()
