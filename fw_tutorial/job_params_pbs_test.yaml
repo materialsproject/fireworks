@@ -1,0 +1,9 @@
+params:
+  exe: echo 'howdy, your job launched successfully!' >> howdy.txt
+  ncores: 1
+  walltime: '00:02:00'
+  queue: debug
+
+logging_dir: .
+
+qa_name: PBSAdapter (NERSC)

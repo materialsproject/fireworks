@@ -1,0 +1,6 @@
+host: localhost
+id_prefix: fw
+name: fireworks
+password: null
+port: 27017
+username: null
