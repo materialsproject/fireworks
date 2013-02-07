@@ -45,7 +45,7 @@ We are now going to submit a single job to the queue using the rocket launcher. 
 
 6. Try submitting a job using the command::
 
-    rocket_launcher_run.py <JOB_PARAMETERS_FILE>
+    rocket_launcher_run.py singleshot <JOB_PARAMETERS_FILE>
 
 where the <JOB_PARAMETERS_FILE> points to your JobParameters file, e.g. job_params_pbs_nersc.yaml.
 
@@ -70,7 +70,7 @@ To test rapid-fire mode, try the following:
 
 3. Try submitting several jobs using the command::
 
-    rocket_launcher_run.py --rapidfire -q 3 <JOB_PARAMETERS_FILE>
+    rocket_launcher_run.py rapidfire -q 3 <JOB_PARAMETERS_FILE>
     
 where the <JOB_PARAMETERS_FILE> points to your JobParameters file, e.g. job_params_pbs_nersc.yaml.
 
@@ -78,7 +78,7 @@ where the <JOB_PARAMETERS_FILE> points to your JobParameters file, e.g. job_para
 
 5. You can maintain a certain number of jobs in the queue indefinitely by specifying that the rocket launcher loop multiple times (e.g., the example below sets 100 loops)::
 
-    rocket_launcher_run.py --rapidfire -q 3 -n 100 <JOB_PARAMETERS_FILE>
+    rocket_launcher_run.py rapidfire -q 3 -n 100 <JOB_PARAMETERS_FILE>
 
 .. note:: The script above should maintain 3 jobs in the queue for 100 loops of the rocket launcher. The rocket launcher will sleep for a user-adjustable time after each loop.
 
