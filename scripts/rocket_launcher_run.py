@@ -6,6 +6,7 @@ A runnable script for launching rockets (a command-line interface to rocket_laun
 
 from argparse import ArgumentParser
 from fireworks.core.rocket_launcher import rapid_fire, launch_rocket
+from build.lib.fireworks.core.queue_adapter_base import JobParameters
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -27,7 +28,7 @@ if __name__ == '__main__':
     single_parser = subparsers.add_parser('singleshot', help='launch a single rocket')
     rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets')
     
-    parser.add_argument('job_params', help='The location of a file containing the job parameters')
+    parser.add_argument('job_params_file', help='path to a file containing the job parameters')
     parser.add_argument('-l', '--launch_dir', help='directory to launch the job / rapid-fire', default='.')
     
     rapid_parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
@@ -37,7 +38,9 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
+    job_params = JobParameters.from_file(args.job_params)
+    
     if args.command == 'rapidfire':
-        rapid_fire(args.job_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
+        rapid_fire(args.job_params_file, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
     else:
-        launch_rocket(args.job_params, args.launch_dir)
+        launch_rocket(args.job_params_file, args.launch_dir)
