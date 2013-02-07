@@ -72,12 +72,12 @@ class FWDatabase(FWSerializable):
         '''
         
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
+        self.fw_id_assigner.insert({"next_fw_id": self.get_next_fw_id(force_id=next_fw_id)})
  
-    def get_next_fw_id(self):
-        next_id = self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
+    def get_next_fw_id(self, force_id=None):
+        next_id = force_id if force_id else self._id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
         if self.id_prefix:
-            return ('{}-{}'.format(self.id_prefix, next_id))
+            return ('{}:{}'.format(self.id_prefix, next_id))
 
 
 class LaunchPad():
