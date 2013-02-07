@@ -83,15 +83,15 @@ class FWDatabase(FWSerializable):
 class LaunchPad():
     
     def __init__(self, fw_db=None):
-        fw_db = fw_db if fw_db else FWDatabase()
+        self.fw_db = fw_db if fw_db else FWDatabase()
     
     def initialize(self, password, require_password=True):
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
-        if not require_password or password == m_password:
-            self.fw_db._initialize()
         
+        if password == m_password or not require_password:
+            self.fw_db._initialize()
         else:
-            raise ValueError("Invalid password! Password is today's date: %".format(m_password))
+            raise ValueError("Invalid safeguard password! Password is today's date: {}".format(m_password))
     
     def upsert_fw(self):
         raise NotImplementedError()
