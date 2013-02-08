@@ -71,7 +71,7 @@ class LaunchPad(FWSerializable):
         self.fw_id_assigner.remove()
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
  
-    def _get_new_fw_id(self):
+    def get_new_fw_id(self):
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
     
     def upsert_fw(self, fw):
