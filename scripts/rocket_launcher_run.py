@@ -6,7 +6,7 @@ A runnable script for launching rockets (a command-line interface to rocket_laun
 
 from argparse import ArgumentParser
 from fireworks.core.rocket_launcher import rapid_fire, launch_rocket
-from fireworks.core.queue_adapter_base import JobParameters
+from fireworks.core.worker import JobParameters
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"

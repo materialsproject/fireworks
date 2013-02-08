@@ -4,13 +4,13 @@
 TODO: add docs!
 '''
 
-from fireworks.core.queue_adapter_base import QueueAdapterBase
 import os
 import subprocess
 import getpass
 import re
 from fireworks.utilities.fw_utilities import get_fw_logger,\
     log_fancy, log_exception
+from fireworks.core.worker import QueueAdapterBase
 
 
 __author__ = 'Anubhav Jain, Michael Kocher'
