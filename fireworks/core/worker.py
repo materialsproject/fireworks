@@ -17,6 +17,21 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
+class Worker(FWSerializable):
+    
+    def __init__(self, name, query=None, params=None):
+        self.name = name
+        self.query = query if query else {}
+        self.params = params
+    
+    def to_dict(self):
+        return {'name': self.name, 'query': self.query, 'params': self.params}
+    
+    @classmethod
+    def from_dict(self, m_dict):
+        return Worker(m_dict['name'], m_dict['query'], m_dict['params'])
+        
+    
 class QueueAdapterBase(FWSerializable):
     '''
     The QueueAdapter is responsible for all interactions with a specific \
