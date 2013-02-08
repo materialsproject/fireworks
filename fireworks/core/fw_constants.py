@@ -24,3 +24,6 @@ QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with que
 QUEUE_UPDATE_INTERVAL = 30  # max interval (seconds) needed for queue to update after submitting a job
 
 SUBMIT_SCRIPT_NAME = 'submit.script'  # name of submit script
+
+# 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
+LAUNCH_RANKS = {"WAITING": 1, "RUNNING": 2, "CANCELED": 3, "FIZZLED": 4, "COMPLETED": 5}

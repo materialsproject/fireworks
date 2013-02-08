@@ -7,6 +7,7 @@ This module contains the QueueAdapterBase class.
 
 from fireworks.utilities.fw_serializers import FWSerializable,\
     serialize_fw, load_object
+from fireworks.core.fw_constants import LAUNCH_RANKS
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Michael Kocher'
@@ -30,8 +31,19 @@ class Worker(FWSerializable):
     @classmethod
     def from_dict(self, m_dict):
         return Worker(m_dict['name'], m_dict['query'], m_dict['params'])
-        
+
+
+class Launch():
     
+    def __init__(self, worker, l_id=None, state=None):
+        if state not in LAUNCH_RANKS:
+            raise ValueError("Invalid launch state: {}".format(state))
+        
+        self.worker = worker
+        self.l_id = l_id
+        self.state = state
+
+
 class QueueAdapterBase(FWSerializable):
     '''
     The QueueAdapter is responsible for all interactions with a specific \
