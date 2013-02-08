@@ -6,6 +6,7 @@ TODO: add docs
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket import Rocket
+from fireworks.core.fworker import FWorker
 
 
 __author__ = 'Anubhav Jain'
@@ -20,11 +21,20 @@ if __name__ == '__main__':
     
     parser = ArgumentParser(description=m_description)
     
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default='launchpad.yaml')
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
+    parser.add_argument('-w', '--worker_file', help='path to worker file', default=None)
     
     args = parser.parse_args()
     
-    launchpad = LaunchPad.from_file(args.launchpad_file)
+    if args.launchpad_file:
+        launchpad = LaunchPad.from_file(args.launchpad_file)
+    else:
+        launchpad = LaunchPad()
     
-    rocket = Rocket(launchpad)
+    if args.worker_file:
+        fworker = FWorker.from_file(args.launchpad_file)
+    else:
+        fworker = FWorker()
+    
+    rocket = Rocket(launchpad, fworker)
     rocket.run()

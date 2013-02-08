@@ -4,7 +4,7 @@
 TODO: add docs
 '''
 from fireworks.utilities.fw_serializers import FWSerializable
-
+from fireworks.core.fw_constants import LAUNCH_RANKS
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -46,6 +46,16 @@ class FireWork(FWSerializable):
             return "created"
         
         return "running/completed"
+
+
+class Launch():
+    
+    def __init__(self, fworker, state=None):
+        if state not in LAUNCH_RANKS:
+            raise ValueError("Invalid launch state: {}".format(state))
+        
+        self.fworker = fworker
+        self.state = state
 
 
 if __name__ == '__main__':

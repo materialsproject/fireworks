@@ -16,9 +16,9 @@ __date__ = 'Feb 7, 2013'
 
 class Rocket():
     
-    def __init__(self, launchpad):
+    def __init__(self, launchpad, fworker):
         self.lp = launchpad
-
+        self.fworker = fworker
     
     def run(self):
         
