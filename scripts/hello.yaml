@@ -1,5 +1,0 @@
-fw_id: 1
-fw_spec:
-  !!python/unicode '_script': !!python/unicode 'echo "howdy, your job launched successfully!"
-    >> howdy.txt'
-launch_data: []
