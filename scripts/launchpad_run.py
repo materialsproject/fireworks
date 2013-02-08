@@ -39,11 +39,14 @@ if __name__ == '__main__':
     get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
     
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default='launchpad.yaml')
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     
     args = parser.parse_args()
     
-    lp = LaunchPad.from_file(args.launchpad_file)
+    if args.launchpad_file:
+        lp = LaunchPad.from_file(args.launchpad_file)
+    else:
+        lp = LaunchPad()
     
     if args.command == 'initialize':
         lp.initialize(args.password)
