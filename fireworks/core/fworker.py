@@ -4,7 +4,7 @@
 TODO: add docs
 '''
 
-
+import simplejson as json
 from fireworks.utilities.fw_serializers import FWSerializable,\
     serialize_fw, load_object
 
@@ -25,11 +25,11 @@ class FWorker(FWSerializable):
         self.params = params
     
     def to_dict(self):
-        return {'name': self.name, 'query': self.query, 'params': self.params}
+        return {'name': self.name, 'query': json.dumps(self.query), 'params': self.params}
     
     @classmethod
     def from_dict(self, m_dict):
-        return FWorker(m_dict['name'], m_dict['query'], m_dict['params'])
+        return FWorker(m_dict['name'], json.loads(m_dict['query']), m_dict['params'])
 
 
 class QueueAdapterBase(FWSerializable):

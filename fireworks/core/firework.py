@@ -27,7 +27,7 @@ class FireWork(FWSerializable):
         self.launch_data = launch_data if launch_data else []
     
     def to_dict(self):
-        return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id, 'launch_data': self.launch_data}
+        return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
     
     def to_db_dict(self):
         m_dict = self.to_dict()
@@ -36,10 +36,11 @@ class FireWork(FWSerializable):
     
     @classmethod
     def from_dict(self, m_dict):
+        
         fw_id = m_dict.get('fw_id', None)
         ld = m_dict.get('launch_data', None)
         if ld:
-            ld = [Launch.from_dict[tmp] for tmp in ld]
+            ld = [Launch.from_dict(tmp) for tmp in ld]
         return FireWork(m_dict['fw_spec'], fw_id, ld)
     
     @property

@@ -26,8 +26,7 @@ class Rocket():
         lp = self.launchpad
         
         # check a FW job out of the launchpad
-        
-        (m_fw, launch_id) = lp._checkout_fw(query)
+        m_fw, launch_id = lp._checkout_fw(query, self.fworker)
         if not m_fw:
             raise ValueError("No jobs matching query! {}".format(query))
         
