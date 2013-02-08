@@ -8,13 +8,14 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
 from setuptools import setup, find_packages
+from fireworks import __version__
 import os
 
 module_dir = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == "__main__":
     setup(name='FireWorks',
-          version='0.1dev0.8',
+          version=__version__,
           description='FireWorks workflow software',
           long_description=open(os.path.join(module_dir, 'README.rst')).read(),
           url='https://github.com/materialsproject/fireworks',
