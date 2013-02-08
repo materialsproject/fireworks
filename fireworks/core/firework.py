@@ -44,11 +44,16 @@ class FireWork(FWSerializable):
     
     @property
     def state(self):
-        #TODO: fix me!
-        if len(self.launch_data) == 0:
-            return "created"
+        max_score = 0
+        max_state = 'WAITING'
         
-        return "running/completed"
+        for l in self.launch_data:
+            if LAUNCH_RANKS[l.state] > max_score:
+                max_score = LAUNCH_RANKS[l.state]
+                max_state = l.state 
+        
+        return max_state
+            
 
 
 #TODO: add date, logs ...
