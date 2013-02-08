@@ -94,14 +94,14 @@ class FWSerializable():
     def from_dict(self, m_dict):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
     
-    def to_format(self, f_format='json'):
+    def to_format(self, f_format='json', *args, **kwargs):
         '''
         returns a String representation in the given format
         :param f_format: the format to output to (default json)
         '''
         if f_format == 'json':
             dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
-            return json.dumps(self.to_dict(), default=dthandler)
+            return json.dumps(self.to_dict(), *args, default=dthandler, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
             return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)

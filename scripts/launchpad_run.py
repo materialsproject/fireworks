@@ -6,6 +6,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
+import simplejson as json
 import ast
 
 #TODO: YAML queries give weird unicode string
@@ -57,7 +58,7 @@ if __name__ == '__main__':
         if args.filename:
             fw.to_file(args.filename)
         else:
-            print fw.to_format('json')
+            print fw.to_format('json', indent=4)
         
     elif args.command == 'get_fw_ids':
         if args.query:
