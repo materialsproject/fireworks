@@ -16,22 +16,33 @@ __date__ = "Feb 5, 2013"
 
 class FireWork(FWSerializable):
     
-    _fw_name = "FireWork"
-    
-    def __init__(self, fw_spec, fw_id=None):
+    def __init__(self, fw_spec, fw_id=None, launch_data=None):
         '''
         
         :param fw_spec:
         '''
         self.fw_spec = fw_spec
         self.fw_id = fw_id
+        self.launch_data = launch_data if launch_data else []
     
     def to_dict(self):
-        return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id}
+        return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id, 'launch_data': self.launch_data}
+    
+    def to_db_dict(self):
+        m_dict = self.to_dict()
+        m_dict['state'] = self.state
+        return m_dict
     
     @classmethod
     def from_dict(self, m_dict):
-        return FireWork(m_dict['fw_spec'], m_dict['fw_id'])
+        return FireWork(m_dict['fw_spec'], m_dict['fw_id'], m_dict['launch_data'])
+    
+    @property
+    def state(self):
+        if len(self.launch_data) == 0:
+            return "created"
+        
+        return "running/completed"
 
 
 if __name__ == '__main__':

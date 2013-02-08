@@ -13,6 +13,7 @@ TODO: add auto-initialize
 import datetime
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
+from fireworks.core.firework import FireWork
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -24,10 +25,7 @@ __date__ = "Jan 30, 2013"
 
 class LaunchPad(FWSerializable):
     
-    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix='fw', username=None, password=None):
-        if len(id_prefix) < 1:
-            raise ValueError("Must enter a non-empty id prefix!")
-        
+    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix='', username=None, password=None):
         self.host = host
         self.port = port
         self.name = name
@@ -79,7 +77,10 @@ class LaunchPad(FWSerializable):
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
     
     def get_new_fw_id(self):
-        return ('{}:{}'.format(self.id_prefix, self._get_new_id_num()))
+        next_num = self._get_new_id_num()
+        if self.id_prefix:
+            return ('{}:{}'.format(self.id_prefix, next_num))
+        return next_num
     
     def upsert_fw(self, fw):
         # TODO: make sure no child fws
@@ -90,8 +91,21 @@ class LaunchPad(FWSerializable):
             fw.fw_id = self.get_new_fw_id()
         
         # TODO: make this also apply to sub-fireworks, add children and parent keys
-        self.fireworks.update({"fw_id": fw.fw_id}, fw.to_dict(), upsert=True)
+        self.fireworks.update({"fw_id": fw.fw_id}, fw.to_db_dict(), upsert=True)
+    
+    def get_fw_by_id(self, fw_id, ignore_children=False):
+        # TODO: implement children
+        fw_dict = self.fireworks.find_one({"fw_id": fw_id})
+        return FireWork.from_dict(fw_dict)
 
+    def get_fw_ids(self, query=None):
+        fw_ids = []
+        criteria = query if query else {}
+        
+        for fw in self.fw_read_coll.find(criteria, {"fw_id": True}):
+            fw_ids.append(fw["fw_id"])
+        
+        return fw_ids
 
 if __name__ == "__main__":
     """

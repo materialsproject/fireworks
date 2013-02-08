@@ -9,6 +9,8 @@
 
 *Note: FireWorks is under active development. It is currently incomplete and not useable as workflow software. However, certain components of the code are available for initial testing.*
 
+FireWorks is a **simple** yet **flexible** code for workflow management.
+
 FireWorks allows you to define calculation workflows and execute them on remote
 computers, usually through an external queuing system like PBS. The architecture of FireWorks is that of a central management server that stores and maintains the workflows, along with one or more worker computers that pull jobs and perform the computations.
 
