@@ -35,7 +35,9 @@ class FireWork(FWSerializable):
     
     @classmethod
     def from_dict(self, m_dict):
-        return FireWork(m_dict['fw_spec'], m_dict['fw_id'], m_dict['launch_data'])
+        fw_id = m_dict.get('fw_id', None)
+        ld = m_dict.get('launch_data', None)
+        return FireWork(m_dict['fw_spec'], fw_id, ld)
     
     @property
     def state(self):
