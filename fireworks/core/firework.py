@@ -5,6 +5,7 @@ TODO: add docs
 '''
 from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.fw_constants import LAUNCH_RANKS
+from fireworks.core.fworker import FWorker
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -37,6 +38,8 @@ class FireWork(FWSerializable):
     def from_dict(self, m_dict):
         fw_id = m_dict.get('fw_id', None)
         ld = m_dict.get('launch_data', None)
+        if ld:
+            ld = [Launch.from_dict[tmp] for tmp in ld]
         return FireWork(m_dict['fw_spec'], fw_id, ld)
     
     @property
@@ -48,14 +51,25 @@ class FireWork(FWSerializable):
         return "running/completed"
 
 
-class Launch():
+#TODO: add date, logs ...
+
+class Launch(FWSerializable):
     
-    def __init__(self, fworker, state=None):
+    def __init__(self, fworker, state=None, launch_id=None):
         if state not in LAUNCH_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
         
         self.fworker = fworker
         self.state = state
+        self.launch_id = None
+    
+    def to_dict(self):
+        return {"fworker": self.fworker.to_dict(), "state": self.state, "launch_id": self.launch_id}
+    
+    @classmethod
+    def from_dict(self, m_dict):
+        fworker = FWorker.from_dict(m_dict['fworker'])
+        return Launch(fworker, m_dict['state'], m_dict['launch_id'])
 
 
 if __name__ == '__main__':

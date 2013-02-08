@@ -3,7 +3,7 @@
 '''
 TODO: add docs
 '''
-import subprocess
+import simplejson as json
 import os
 
 __author__ = 'Anubhav Jain'
@@ -17,28 +17,31 @@ __date__ = 'Feb 7, 2013'
 class Rocket():
     
     def __init__(self, launchpad, fworker):
-        self.lp = launchpad
+        self.launchpad = launchpad
         self.fworker = fworker
     
     def run(self):
         
+        query = self.fworker.query
+        lp = self.launchpad
+        
         # check a FW job out of the launchpad
         
-        # TODO: actually check it out
-        fw_id = self.lp.get_fw_ids()[0]
-        m_fw = self.lp.get_fw_by_id(fw_id)
+        (m_fw, launch_id) = lp._checkout_fw(query)
+        if not m_fw:
+            raise ValueError("No jobs matching query! {}".format(query))
         
-        print m_fw.fw_spec
+        # TODO: write the spec to a file in the directory
+        with open('fw_json.spec', 'w') as f:
+            f.write(json.dumps(m_fw.fw_spec))
         
-        # execute the spec
+        # execute the script inside the spec
+        # TODO: support lists, native Python code, bind monitors, etc...
+        # add subprocess stuff
+        # add fw_dict stuff
         cmd = m_fw.fw_spec['_script']
-        
         if isinstance(cmd, basestring):
             os.system(cmd)
 
-        # add subprocess stuff
-        
-        # add fw_dict stuff
-        
-        
-        # perform finishing operations
+        # perform finishing operation
+        lp._complete_launch(m_fw, launch_id)

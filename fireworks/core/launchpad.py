@@ -13,7 +13,7 @@ TODO: add auto-initialize
 import datetime
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
-from fireworks.core.firework import FireWork
+from fireworks.core.firework import FireWork, Launch
 from pymongo import DESCENDING
 
 __author__ = "Anubhav Jain"
@@ -59,21 +59,53 @@ class LaunchPad(FWSerializable):
         
         if password == m_password or not require_password:
             self.fireworks.remove()
-            self._restart_ids(1)
+            self._restart_ids(1, 1)
         else:
             raise ValueError("Invalid safeguard password! Password is today's date: {}".format(m_password))
         
-    def _restart_ids(self, next_fw_id):
+    def _restart_ids(self, next_fw_id, next_launch_id):
         '''
         TODO: add docs
         
         :param next_fw_id: make sure this is an INTEGER
         '''
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
+        self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
  
+    def _checkout_fw(self, query, fworker):
+        query['state'] = {'$in': ['WAITING', 'FIZZLED']}
+        
+        # check out the matching firework
+        m_fw_dict = self.fw_id_assigner.find_and_modify(query=query, update={'$set': {'state': 'RUNNING'}})
+        # no matching fireworks...
+        if not m_fw_dict:
+            return None
+        
+        # create a launch
+        launch_id = self.get_new_launch_id()
+        m_launch = Launch(fworker, 'RUNNING', launch_id)
+        
+        # add launch to FW
+        m_fw_dict = self.fw_id_assigner.find_and_modify(query=query, update={'$push': {'launch_data': m_launch.to_dict()}}, new=True)
+        
+        return (FireWork.from_dict(m_fw_dict), launch_id)
+    
+    def _complete_launch(self, fw, launch_id):
+        
+        m_fw = FireWork.from_dict({"fw_id": fw.fw_id})
+        for launch in m_fw.launch_data:
+            if launch.launch_id == launch_id:
+                print 'found the launch!'
+                launch.state = "COMPLETED"
+                print m_fw.to_db_dict()
+        
+        self.upsert_fw(m_fw)
+        
     def get_new_fw_id(self):
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
+    
+    def get_new_launch_id(self):
+        return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
     
     def upsert_fw(self, fw):
         # TODO: make sure no child fws
