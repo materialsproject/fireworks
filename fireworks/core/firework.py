@@ -39,6 +39,7 @@ class FireWork(FWSerializable):
     
     @property
     def state(self):
+        #TODO: fix me!
         if len(self.launch_data) == 0:
             return "created"
         

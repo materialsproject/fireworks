@@ -24,6 +24,7 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(help='command', dest='command')
     initialize_parser = subparsers.add_parser('initialize', help='initialize a FireWorks database')
     upsert_parser = subparsers.add_parser('upsert_fw', help='insert or update a FireWork from file')
+    get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
     
     parser.add_argument('launchpad_file', help='path to a LaunchPad file')
     
@@ -32,6 +33,8 @@ if __name__ == '__main__':
     
     upsert_parser.add_argument('fw_file', help="path to a FireWorks file")
     
+    get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
+    
     args = parser.parse_args()
     
     lp = LaunchPad.from_file(args.launchpad_file)
@@ -39,7 +42,10 @@ if __name__ == '__main__':
     if args.command == 'initialize':
         lp.initialize(args.password)
     
-    if args.command == 'upsert_fw':
+    elif args.command == 'upsert_fw':
         fw = FireWork.from_file(args.fw_file)
         lp.upsert_fw(fw)
-
+        
+    elif args.command == 'get_fw':
+        fw = lp.get_fw_by_id(args.fw_id)
+        print fw.to_format('json')

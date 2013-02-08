@@ -25,7 +25,7 @@ __date__ = "Jan 30, 2013"
 
 class LaunchPad(FWSerializable):
     
-    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix='', username=None, password=None):
+    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix=None, username=None, password=None):
         self.host = host
         self.port = port
         self.name = name
