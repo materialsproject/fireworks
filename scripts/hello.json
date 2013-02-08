@@ -1,0 +1,1 @@
+{"fw_id": 1, "fw_spec": {"_script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"}, "launch_data": []}

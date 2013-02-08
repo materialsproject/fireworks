@@ -94,7 +94,7 @@ class LaunchPad(FWSerializable):
         fw_ids = []
         criteria = query if query else {}
         
-        for fw in self.fw_read_coll.find(criteria, {"fw_id": True}):
+        for fw in self.fireworks.find(criteria, {"fw_id": True}):
             fw_ids.append(fw["fw_id"])
         
         return fw_ids
