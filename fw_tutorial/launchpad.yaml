@@ -1,5 +1,4 @@
 host: localhost
-id_prefix: null
 name: fireworks
 password: null
 port: 27017

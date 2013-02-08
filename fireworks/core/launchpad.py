@@ -29,7 +29,6 @@ class LaunchPad(FWSerializable):
         self.host = host
         self.port = port
         self.name = name
-        self.id_prefix = id_prefix
         self.username = username
         self.password = password
         
@@ -46,14 +45,13 @@ class LaunchPad(FWSerializable):
         d['host'] = self.host
         d['port'] = self.port
         d['name'] = self.name
-        d['id_prefix'] = self.id_prefix
         d['username'] = self.username
         d['password'] = self.password
         return d
     
     @classmethod
     def from_dict(self, d):
-        return LaunchPad(d['host'], d['port'], d['name'], d['id_prefix'], d['username'], d['password'])
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'])
     
     def initialize(self, password, require_password=True):
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -73,14 +71,8 @@ class LaunchPad(FWSerializable):
         self.fw_id_assigner.remove()
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id})
  
-    def _get_new_id_num(self):
+    def _get_new_fw_id(self):
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
-    
-    def get_new_fw_id(self):
-        next_num = self._get_new_id_num()
-        if self.id_prefix:
-            return ('{}:{}'.format(self.id_prefix, next_num))
-        return next_num
     
     def upsert_fw(self, fw):
         # TODO: make sure no child fws
@@ -116,4 +108,4 @@ if __name__ == "__main__":
     get-matching-fws <QUERY_JSON>
     """
     a = LaunchPad()
-    a.to_file("launchpad.yaml")
+    a.to_file("../../fw_tutorial/launchpad.yaml")
