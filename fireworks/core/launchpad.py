@@ -14,6 +14,7 @@ import datetime
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork
+from pymongo import DESCENDING
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -94,7 +95,7 @@ class LaunchPad(FWSerializable):
         fw_ids = []
         criteria = query if query else {}
         
-        for fw in self.fireworks.find(criteria, {"fw_id": True}):
+        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("fw_spec._priority", DESCENDING)]):
             fw_ids.append(fw["fw_id"])
         
         return fw_ids

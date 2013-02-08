@@ -6,10 +6,9 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
-import simplejson as json
 import ast
 
-#TODO: YAML queries give weird unicode string
+#TODO: YAML queries give weird unicode string, maybe this is unfixable though
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -25,22 +24,22 @@ if __name__ == '__main__':
     
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
+    
     initialize_parser = subparsers.add_parser('initialize', help='initialize a FireWorks database')
-    upsert_parser = subparsers.add_parser('upsert_fw', help='insert or update a FireWork from file')
-    get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
-    get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
-    
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default='launchpad.yaml')
-    
     initialize_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
     
+    upsert_parser = subparsers.add_parser('upsert_fw', help='insert or update a FireWork from file')
     upsert_parser.add_argument('fw_file', help="path to a FireWorks file")
     
+    get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
     get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
     get_fw_parser.add_argument('-f', '--filename', help='output filename', default=None)
     
+    get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
+    
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default='launchpad.yaml')
     
     args = parser.parse_args()
     
