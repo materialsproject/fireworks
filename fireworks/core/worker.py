@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-This module contains the QueueAdapterBase class.
+TODO: add docs
 '''
 
 
@@ -20,7 +20,7 @@ __date__ = 'Dec 12, 2012'
 
 class Worker(FWSerializable):
     
-    def __init__(self, name, query=None, params=None):
+    def __init__(self, name="anonymous worker", query=None, params=None):
         self.name = name
         self.query = query if query else {}
         self.params = params
@@ -59,9 +59,9 @@ class QueueAdapterBase(FWSerializable):
     def get_script_str(self, job_parameters, launch_dir):
         '''
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
-        All details of the queue script must be specified in the JobParameters().
+        All details of the queue script must be specified in the RocketParams().
         
-        :param job_parameters: A JobParameters() instance
+        :param job_parameters: A RocketParams() instance
         :param launch_dir: The directory the job will be launched in
         '''
         raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
@@ -69,7 +69,7 @@ class QueueAdapterBase(FWSerializable):
     def submit_to_queue(self, job_parameters, script_file):
         '''
         submits the job to the queue, probably using subprocess or shutil
-        :param job_parameters: A JobParameters() instance
+        :param job_parameters: A RocketParams() instance
         :param script_file: name of the script file to use (String)
         '''
         raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
@@ -79,7 +79,7 @@ class QueueAdapterBase(FWSerializable):
         returns the number of jobs in the queue, probably using subprocess or shutil to \
         call a command like 'qstat'. returns None when the number of jobs cannot be determined.
         
-        :param job_parameters: a JobParameters() instance
+        :param job_parameters: a RocketParams() instance
         :param username: the username of the jobs to count (default is to autodetect)
         '''
         raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')
@@ -93,9 +93,9 @@ class QueueAdapterBase(FWSerializable):
         return self()
     
     
-class JobParameters(FWSerializable):
+class RocketParams(FWSerializable):
     '''
-    A JobParameters instance contains all the information needed to write a queue file \
+    A RocketParams instance contains all the information needed to write a queue file \
     and submit to a queue system. Details of the queue file format and queue submission \
     commands should be included in the QueueAdapterBase object. Specific parameters used \
     by the QueueAdapterBase should be included in the params variable.
@@ -128,4 +128,4 @@ class JobParameters(FWSerializable):
         
         # load the QueueAdapter object dynamically
         qa = load_object(qa_dict)
-        return JobParameters(qa, m_dict['params'], m_dict['logging_dir'])
+        return RocketParams(qa, m_dict['params'], m_dict['logging_dir'])

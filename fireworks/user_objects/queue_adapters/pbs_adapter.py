@@ -29,7 +29,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         '''
         Create a NERSC-style PBS script. For more documentation, see parent object.
         
-        Supported JobParameters.params are:
+        Supported RocketParams.params are:
             - ncores: number of cores
             - walltime: looks like "hh:mm:ss"
             - queue: the queue to run on
