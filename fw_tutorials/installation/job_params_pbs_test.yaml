@@ -1,5 +1,5 @@
 params:
-  exe: echo 'howdy, your job launched successfully!' >> howdy.txt
+  exe: rocket_run.py -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml
   ncores: 1
   walltime: '00:02:00'
   queue: debug
