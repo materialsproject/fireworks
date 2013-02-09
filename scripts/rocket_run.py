@@ -22,7 +22,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=m_description)
     
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
-    parser.add_argument('-w', '--worker_file', help='path to worker file', default=None)
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
     
     args = parser.parse_args()
     
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         launchpad = LaunchPad()
     
     if args.worker_file:
-        fworker = FWorker.from_file(args.launchpad_file)
+        fworker = FWorker.from_file(args.fworker_file)
     else:
         fworker = FWorker()
     
