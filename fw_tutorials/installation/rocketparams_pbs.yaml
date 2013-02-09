@@ -4,10 +4,10 @@ params:
   walltime: '00:02:00'
   queue: debug
   account: null
-  pbs_options: null
-  pbs_tags: null
+  pbs_options: {}
+  pbs_tags: []
   job_name: null
-  modules: null
+  modules: []
 
 logging_dir: .
 
