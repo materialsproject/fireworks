@@ -4,6 +4,8 @@ Installation Tutorial
 
 This tutorial will guide you through FireWorks installation on the central server and one or more worker nodes. The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain in things in great detail.
 
+This tutorial can be safely completed from the command line, and requires no programming.
+
 Set up the central server
 =========================
 
@@ -55,10 +57,10 @@ This prints out the FireWork with fw_id=1 (the first FireWork entered into the d
 
 You have now stored a FireWork in the database! It is now ready to be launched.
 
-Launch a FireWork on the central server
+Launch a Rocket on the central server
 =======================================
 
-Usually, a FireWork would be run on a worker node and on a queuing system. Here, we demonstrate running a FireWork on the central server and without a queue.
+A Rocket executes a stored FireWork. Usually, a Rocket would be run on a worker node and on a queuing system. For now, we will run the Rocket on the central server itself and without a queue.
 
 1. Navigate to any clean directory. For example::
 
@@ -90,26 +92,74 @@ You should see additional information indicating that your FireWork was launched
 
 The error indicates that there are no more FireWorks to run. If you wanted, you could go back to the previous section's instructions, add another FireWork, and run ``rocket_run.py`` again in a new directory.
 
-Launch a FireWork on a worker node
+Launch a Rocket on a worker node
 ==================================
 
 So far, we have added a FireWork to the database on the central server, and then later ran a Rocket that grabbed the FireWork from the database and executed it on the same server.
 
 A more interesting use case of FireWorks is to define the workflow on the central server, but execute it on one or several 'worker' nodes, perhaps through a queueing system. We'll step through this use case next.
 
+Install FireWorks on the worker
+-------------------------------
+
+On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`.
+
 Reset the FireWorks database
 ----------------------------
 
 Back at the central server,
 
-1. Re-perform all the instructions to 'Set up the central server', including adding a FireWork.
+1. Re-perform the instructions to 'Set up the central server', including re-initializing the database and adding a FireWork.
 
 2. Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
 
-Install FireWorks on the worker
--------------------------------
+Connect to the FireWorks database from the worker
+-------------------------------------------------
 
-On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`
+The worker needs to know the login information for the central database server. On the worker,
+
+1. Navigate to the fw_tutorial directory::
+
+    cd <INSTALL_DIR>/fw_tutorial
+
+where <INSTALL_DIR> is your FireWorks installation directory.
+
+2. Modify the file ``launchpad.yaml`` so it points to the credentials of your central FireWorks server. In particular, the ``hostname`` parameter must change to the IP address of your FireWorks server that is running MongoDB.
+
+3. Confirm that you can query for a FireWork on the central server from your remote worker::
+
+    launchpad_run.py -l launchpad.yaml get_fw 1
+
+This should print out a FireWork.
+
+Configure your worker 
+---------------------
+
+Staying in the fw_tutorial directory,
+
+1. Look inside the file ``fworker.yaml`` and change the ``name`` parameter to something that will help you identify the worker, e.g. the name of the worker machine ("hopper").
+
+Run the rocket 
+--------------
+
+1. Staying in the fw_tutorial directory on your worker node, type::
+
+    rocket_run.py -l launchpad.yaml -w fworker.yaml
+
+This should successfully launch a rocket that finds and runs your FireWork from the central server.
+
+2. Confirm that the FireWork was run::
+
+    launchpad_run.py -l launchpad.yaml get_fw 1
+
+You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker (worker node).
+
+Launch a FireWork on a worker node, using a queueing system
+===========================================================
+
+
+
+
 
 
 Start playing with the rocket launcher
