@@ -24,9 +24,9 @@ You are now ready to start playing with FireWorks!
 Initialize the FireServer
 -------------------------
 
-1. Navigate to the FireWorks tutorial directory::
+1. Navigate to the FireWorks installation tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorial
+    cd <INSTALL_DIR>/fw_tutorials/installation
 
 where <INSTALL_DIR> is your FireWorks installation directory.
  
@@ -118,89 +118,86 @@ Connect to the FireServer from the FireWorker
 
 The FireWorker needs to know the login information for the FireServer. On the FireWorker,
 
-1. Navigate to the fw_tutorial directory::
+1. Navigate to the tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorial
+    cd <INSTALL_DIR>/fw_tutorial/installation
 
 where <INSTALL_DIR> is your FireWorks installation directory.
 
-2. Modify the file ``launchpad.yaml`` so it points to the credentials of your FireServer. In particular, the ``hostname`` parameter must be changed to the IP address of your FireServer.
+2. Copy the LaunchPad file to a new name::
+
+    cp launchpad.yaml my_launchpad.yaml
+    
+3. Modify your ``my_launchpad.yaml`` so it points to the credentials of your FireServer. In particular, the ``hostname`` parameter must be changed to the IP address of your FireServer.
 
 3. Confirm that you can query for a FireWork from your FireWorker:
 
-    launchpad_run.py -l launchpad.yaml get_fw 1
+    launchpad_run.py -l my_launchpad.yaml get_fw 1
 
 This should print out a FireWork.
 
 Configure your FireWorker
 -------------------------
 
-Staying in the fw_tutorial directory,
+Staying in the tutorial directory,
 
-1. Look inside the file ``fworker.yaml`` and change the ``name`` parameter to something that will help you identify the worker, e.g. the name of the worker machine ("hopper").
+1. Copy the FireWorker file to a new name::
+
+    cp fworker.yaml my_fworker.yaml
+
+2. Modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker, e.g. the name of the worker machine ("hopper").
 
 Launch a Rocket on the FireWorker
---------------------------------
+---------------------------------
 
-1. Staying in the fw_tutorial directory on your worker node, type::
+1. Staying in the tutorial directory on your FireWorker, type::
 
-    rocket_run.py -l launchpad.yaml -w fworker.yaml
+    rocket_run.py -l my_launchpad.yaml -w my_fworker.yaml
 
 This should successfully launch a rocket that finds and runs your FireWork from the central server.
 
 2. Confirm that the FireWork was run::
 
-    launchpad_run.py -l launchpad.yaml get_fw 1
+    launchpad_run.py -l my_launchpad.yaml get_fw 1
 
 You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker (worker node).
 
-Launch a Rocket on the FireWorker through a queue =================================================
 
+Launch a Rocket on the FireWorker through a queue
+=================================================
 
+If your worker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't want to launch Rockets directly on the worker. Instead, you'll need to submit Rockets through a queueing system allocates computer time.
 
+In this section, we'll introduce the RocketLauncher, which helps launch Rockets through a queue and organizes launches into separate directories.
 
+Configure the RocketLauncher
+----------------------------
 
+The RocketLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters defined through the RocketParams file.
 
+1. Staying in the tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>`` where <QUEUE> is the supported queue system.
 
-Start playing with the rocket launcher
---------------------------------------
+.. note:: If you cannot find a working RocketParams file for your specific queuing system, please contact us for help (see :ref:`contributing-label`)! We would like to build support for many queuing systems into the FireWorks package, and generally respond quickly to such requests.
 
-The rocket launcher creates directories on your file system to contain your runs, and also submits jobs to the queue.
+2. Copy your RocketParams file to a new name::
 
-After installing the FireWorks code, the script rocket_launcher_run.py should have been added to your system path. Type this command into your command prompt (from any directory) to ensure that the script is found::
+    cp rocketparams_<QUEUE> my_rocketparams.yaml
+    
+3. Open ``my_rocketparams.yaml`` and modify it as follows:
 
-    rocket_launcher_run.py -h
+   a. In the part where it specifies running rocket_run.py, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
 
-This command should print out more detailed help about the rocket launcher. Take a minute to read it over; it might not all be clear, but we'll step through some of the rocket launcher features next.
+   b. In the part where it specifies running rocket_run.py, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine.
+   
+   .. note:: Be sure not to indicate relative paths, and do not use BASH shortcuts like '~'.
 
-Run the rocket launcher in single-shot mode
--------------------------------------------
+4. Try submitting a job using the command::
 
-We are now going to submit a single job to the queue using the rocket launcher. Submitting a job requires interaction with the queue; the details of the interaction are specified through a RocketParams file. For the purposes of this tutorial, we are going to try to use one of the RocketParams files provided with the FireWorks installation.
+    rocket_launcher_run.py singleshot my_rocketparams.yaml
 
-1. Navigate to a clean testing directory on your worker node.
+7. This should have submitted a job to the queue in the current directory. You can read the log files in this directory to get more information on what occurred.
 
-2. An example of a simple RocketParams file is named rocket_params_pbs_nersc.yaml in the fireworks/user_objects/queue_adapters directory. You can guess that this file is for interaction with PBS queues, both from the name of the file and (if you peek inside) the qa_name parameter which specifies a PBS 'queue adapter'. If you are using a different queuing system than PBS, you should search for a different RocketParams file.
-
-.. important:: If you cannot find an appropriate RocketParams file for your specific queuing system, please contact us for help (see :ref:`contributing-label`). We would like to build support for many queuing systems into the FireWorks package. *TODO: give better instructions on what to do if a plug-and-play RocketParams file is not found.*
-
-4. Copy the appropriate RocketParams file to your current working directory.
-
-5. If you haven't already done so, look inside the RocketParams file to get a sense for the parameters that it sets. As mentioned before, the qa_name parameter is somehow responsible for interaction with your specific queuing system. One thing to note is that 'exe' parameter indicates the executable that will be launched once your job starts running in the queue.
-
-.. important:: Ensure that the 'exe' parameter in the RocketParams file reads: "echo 'howdy, your job launched successfully!' >> howdy.txt"
-
-6. Try submitting a job using the command::
-
-    rocket_launcher_run.py singleshot <JOB_PARAMETERS_FILE>
-
-where the <JOB_PARAMETERS_FILE> points to your RocketParams file, e.g. rocket_params_pbs_nersc.yaml.
-
-7. Ideally, this should have submitted a job to the queue in the current directory. You can read the log files to get more information on what occurred. (The log file location was specified in the RocketParams file)
-
-8. After your queue manager runs your job, you should see the file howdy.txt in the current directory. This indicates that the exe you specified ran correctly.
-
-If you finished this part of the tutorial successfully, congratulations! You've successfully set up a worker node to run FireWorks. You can now continue to test launching jobs in a "rapid-fire" mode.
+8. After your queue manager runs your job, you should see the file howdy.txt in the current directory. This indicates that a Rocket was successfully launched through the queue.
 
 Run the rocket launcher in rapid-fire mode
 ------------------------------------------
@@ -217,9 +214,9 @@ To test rapid-fire mode, try the following:
 
 3. Try submitting several jobs using the command::
 
-    rocket_launcher_run.py rapidfire -q 3 <JOB_PARAMETERS_FILE>
+    rocket_launcher_run.py rapidfire -q 3 <ROCKET_PARAMS_FILE>
     
-where the <JOB_PARAMETERS_FILE> points to your RocketParams file, e.g. rocket_params_pbs_nersc.yaml.
+where the <ROCKET_PARAMS_FILE> points to your RocketParams file, e.g. rocket_params_pbs_nersc.yaml.
 
 4. This method should have submitted 3 jobs to the queue at once, all inside of a directory beginning with the tag 'block_'.
 
