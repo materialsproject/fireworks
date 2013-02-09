@@ -56,9 +56,7 @@ class FireWork(FWSerializable):
         return max_state
             
 
-
 #TODO: add date, logs ...
-
 class Launch(FWSerializable):
     
     def __init__(self, fworker, state=None, launch_id=None):
@@ -67,7 +65,7 @@ class Launch(FWSerializable):
         
         self.fworker = fworker
         self.state = state
-        self.launch_id = None
+        self.launch_id = launch_id
     
     def to_dict(self):
         return {"fworker": self.fworker.to_dict(), "state": self.state, "launch_id": self.launch_id}

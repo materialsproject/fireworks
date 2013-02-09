@@ -72,23 +72,22 @@ class LaunchPad(FWSerializable):
         self.fw_id_assigner.remove()
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
  
-    def _checkout_fw(self, query, fworker):
-        query['state'] = {'$in': ['WAITING', 'FIZZLED']}
+    def _checkout_fw(self, fworker):
+        m_query = dict(fworker.query)  # make a copy of the query
+        m_query['state'] = {'$in': ['WAITING', 'FIZZLED']}
         
         # check out the matching firework
-        m_fw_id = self.fireworks.find_and_modify(query=query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}})
+        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}})
         
-        if not m_fw_id:
+        if not m_fw:
             return (None, None)
-        
-        m_fw_id = m_fw_id['fw_id']
         
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, 'RUNNING', launch_id)
         
         # add launch to FW
-        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw_id}, update={'$push': {'launch_data': m_launch.to_dict()}}, new=True)
+        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launch_data': m_launch.to_dict()}}, new=True)
         
         return (FireWork.from_dict(m_fw_dict), launch_id)
     
@@ -96,9 +95,8 @@ class LaunchPad(FWSerializable):
         
         for launch in m_fw.launch_data:
             if launch.launch_id == launch_id:
-                print 'found the launch!'
                 launch.state = "COMPLETED"
-                print m_fw.to_db_dict()
+                break
         
         self.upsert_fw(m_fw)
         
