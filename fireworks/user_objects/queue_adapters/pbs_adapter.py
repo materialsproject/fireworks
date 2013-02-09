@@ -61,13 +61,11 @@ class PBSAdapterNERSC(QueueAdapterBase):
         if p.get('account', None):
             outs.append('#PBS -A {}'.format(p['account']))
         
-        if p.get('pbs_options', None):
-            for k, v in p['pbs_options'].items():
-                outs.append('#PBS -l {k}={v}'.format(k=k, v=v))
+        for k, v in p.get('pbs_options', {}).items():
+            outs.append('#PBS -l {k}={v}'.format(k=k, v=v))
         
-        if p.get('pbs_tags', None):
-            for tag in p['pbs_tags']:
-                outs.append('#PBS -{}'.format(tag))
+        for tag in p.get('pbs_tags', []):
+            outs.append('#PBS -{}'.format(tag))
 
         job_name = 'FW_job'
         if p.get('jobname', None):
