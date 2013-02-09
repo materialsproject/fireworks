@@ -41,6 +41,6 @@ if __name__ == '__main__':
     rocket_params = RocketParams.from_file(args.rocket_params_file)
     
     if args.command == 'rapidfire':
-        rapid_fire(args.rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
+        rapid_fire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
     else:
-        launch_rocket(args.rocket_params, args.launch_dir)
+        launch_rocket(rocket_params, args.launch_dir)
