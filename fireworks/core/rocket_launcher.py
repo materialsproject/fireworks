@@ -35,7 +35,7 @@ def launch_rocket(rocket_params, launch_dir='.'):
     launch_dir = os.path.abspath(launch_dir)
     
     # initialize logger
-    l_logger = get_fw_logger('rockets.launcher', rocket_params.logging_dir)
+    l_logger = get_fw_logger('rocket.launcher', rocket_params.logging_dir)
     
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
