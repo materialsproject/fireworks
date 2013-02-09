@@ -1,8 +1,8 @@
-=====================
-Installation Tutorial
-=====================
+===============================
+FireWorks Installation Tutorial
+===============================
 
-This tutorial will guide you through FireWorks installation on the central server and one or more worker nodes. The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain in things in great detail.
+This tutorial will guide you through FireWorks installation on the central server and one or more worker nodes. The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
 
 This tutorial can be safely completed from the command line, and requires no programming.
 
@@ -64,9 +64,8 @@ A Rocket grabs a FireWork (workflow) from the FireServer database and runs it. U
 
 1. Navigate to any clean directory. For example::
 
-    cd ~
-    mkdir fw_tests
-    cd fw_tests
+    mkdir ~/fw_tests
+    cd ~/fw_tests
     
 2. Execute the following command (once)::
 
@@ -195,44 +194,69 @@ The RocketLauncher needs to know how to communicate with your queue system and t
 
     rocket_launcher_run.py singleshot my_rocketparams.yaml
 
-7. This should have submitted a job to the queue in the current directory. You can read the log files in this directory to get more information on what occurred.
+7. This should have submitted a job to the queue in the current directory. You can read the log files in this directory to get more information on what occurred. You might also now check the status of your queue to make sure your job appeared.
 
-8. After your queue manager runs your job, you should see the file howdy.txt in the current directory. This indicates that a Rocket was successfully launched through the queue.
+8. After your queue manager runs your job, you should see the file howdy.txt in the current directory. 
 
-Run the rocket launcher in rapid-fire mode
-------------------------------------------
+9. If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
-While launching a single job is nice, a more useful functionality is to maintain a certain number of jobs in the queue. The rocket launcher provides a "rapid-fire" mode that automatically provides this functionality.
+   a. The RocketLauncher submitted a script containing a Rocket to your queue manager
+   b. Your queue manager executed the Rocket when resources were ready
+   c. The Rocket fetched a FireWork from the FireServer and ran the specification inside
+   
 
-To test rapid-fire mode, try the following:
+Adding more power: using rapid-fire mode
+========================================
 
-1. Navigate to a clean testing directory on your worker node.
+While launching a single job is nice, a more useful functionality is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The rocket launcher can be run in a "rapid-fire" mode that provides these features.
 
-2. Copy the same RocketParams file to this testing directory as you used for single-shot mode.
+Reset the FireWorks database
+----------------------------
 
-.. tip:: You don't always have to copy over the RocketParams file. If you'd like, you can keep a single RocketParams file in some known location and just provide the full path to that file when running the rocket_launcher_run.py executable.
+Back at the FireServer,
 
-3. Try submitting several jobs using the command::
+1. Re-perform the instructions to 'Set up the central server', including re-initializing the database and adding a FireWork.
 
-    rocket_launcher_run.py rapidfire -q 3 <ROCKET_PARAMS_FILE>
+2. Add two more (identical) FireWorks to the system::
+
+    launchpad_run.py upsert_fw fw_test.yaml
+    launchpad_run.py upsert_fw fw_test.yaml
+
+3. Confirm that you have three FireWorks total::
+
+    launchpad_run.py get_fw_ids
     
-where the <ROCKET_PARAMS_FILE> points to your RocketParams file, e.g. rocket_params_pbs_nersc.yaml.
+You should get back an array containing three FireWork ids.
 
-4. This method should have submitted 3 jobs to the queue at once, all inside of a directory beginning with the tag 'block_'.
+Unleash rapid-fire mode
+-----------------------
 
-5. You can maintain a certain number of jobs in the queue indefinitely by specifying that the rocket launcher loop multiple times (e.g., the example below sets 100 loops)::
+Switching to your FireWorker,
 
-    rocket_launcher_run.py rapidfire -q 3 -n 100 <JOB_PARAMETERS_FILE>
+1. Navigate to a clean testing directory on the FireWorker::
 
-.. note:: The script above should maintain 3 jobs in the queue for 100 loops of the rocket launcher. The rocket launcher will sleep for a user-adjustable time after each loop.
+    mkdir ~/rapidfire_tests
+    cd ~/rapidfire_tests
+    
+2. Copy the your RocketParams file to this testing directory::
 
-.. tip:: the documentation of the rocket launcher contains additional details, as well as the built-in help file obtained by running the rocket launcher with the -h option.
+    cp <PATH_TO_MY_ROCKET_PARAMS> .
+
+where <PATH_TO_MY_ROCKET_PARAMS> is the path to ``my_rocketparams.yaml`` file that you created in the previous section.
+
+3. Looking inside ``my_rocketparams.yaml``, confirm that the path to my_fworker.yaml and my_launchpad.yaml are still valid. (They should be, unless you moved or deleted these files)
+
+4. Try submitting several jobs using the command::
+
+    rocket_launcher_run.py rapidfire -q 3 my_rocketparams.yaml
+
+   .. important:: The RocketLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
+
+5. This method should have submitted 3 jobs to the queue at once, all inside of a directory beginning with the tag ``block_``. Navigate inside this directory and confirm that you've launched multiple Rockets with a single command!
+
+.. tip:: For more tips on the RocketLauncher, such as how to maintain a certain number of jobs in the queue, check out its built-in help: ``rocketlauncher_run.py rapidfire -h``
     
 Next steps
-----------
+==========
 
-If you've completed this tutorial, you've successfully set up a worker node that can communicate with the queueing system and submit either a single job or maintain multiple jobs in the queue.
-
-However, so far the jobs have not been very dynamic. The same executable (the one specified in the RocketParams file) has been run for every single job. This is not very useful.
-
-In the next part of the tutorial, we'll set up a central workflow server and add some jobs to it. Then, we'll come back to the workers and walk through how to dynamically run the jobs specified by the workflow server.
+If you've completed this tutorial, your FireServer and a single FireWorker are fully set up and ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in setting up more complicated and dynamic workflows in the FireServer. We'll cover the basics of workflow creation and execution in the next part of the tutorial.
