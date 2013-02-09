@@ -4,16 +4,98 @@ Installation Tutorial
 
 This tutorial will guide you through FireWorks installation on the central server and one or more worker nodes. The purpose of this tutorial is simply to get you set up as quickly as possible, and is not intended to demonstrate the features or explain the implementation of FireWorks.
 
-*TODO: provide more detailed tutorials about how things are working.*
+Set up the central server
+=========================
 
-*TODO: provide an overview picture, probably on some other page.*
+The FireWorks central server hosts the FireWorks database. Your central server should have a fixed IP address/hostname. To set up a central server:
+
+1. Follow the instructions listed at :doc:`Installation on a machine </installation>`.
+
+2. Install `MongoDB <http://www.mongodb.org>`_ on the server.
+
+3. Start MongoDB::
+
+    mongod
+
+You are now ready to start playing with FireWorks!
+
+Initialize the central server
+-----------------------------
+
+1. Navigate to the FireWorks tutorial directory::
+
+    cd <INSTALL_DIR>/fw_tutorial
+
+where <INSTALL_DIR> is your FireWorks installation directory.
+ 
+2. Initialize the FireWorks database::
+
+    launchpad_run.py initialize <TODAY'S DATE>
+
+where <TODAY'S DATE> is formatted like '2012-12-31' (this is a safeguard to prevent accidentally overwriting an existing database).
+
+.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``launchpad_run.py -h``.
+
+Add a FireWork to the central server
+------------------------------------
+
+A FireWork is a workflow. For this tutorial, we will add a FireWork to the database that consists of only a single step.
+
+1. Staying in the tutorial directory, run the following command::
+
+    launchpad_run.py upsert_fw fw_test.yaml
+
+2. Confirm that the FireWork got added to the database::
+
+    launchpad_run.py get_fw 1
+
+This prints out the FireWork with fw_id=1 (the first FireWork entered into the database).
+
+.. note:: Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, it will print some text into a file named ``howdy.txt``.
+
+You have now stored a FireWork in the database! It is now ready to be launched.
+
+Running a FireWork
+------------------
+
+Usually, a FireWork would be run on a worker node and on a queuing system. Here, we demonstrate running a FireWork on the central server and without a queue.
+
+1. Navigate to any clean directory. For example::
+
+    cd ~
+    mkdir fw_tests
+    cd fw_tests
+    
+2. Execute the following command (once)::
+
+    rocket_run.py
+    
+The Rocket grabs an available FireWork from the central server and runs it.
+
+3. Verify that the desired script ran::
+
+    cat howdy.txt
+    
+You should see the text ``howdy, your job launched successfully!``
+
+4. Check the status of your FireWork on the central database::
+
+    launchpad_run.py get_fw 1
+    
+You should see additional information indicating that your FireWork was launched.
+
+5. Try launching another rocket (you should get an error)::   
+
+    rocket_run.py
+
+The error indicates that there are no more FireWorks to run. However, you could go back to the previous section's instructions, add another FireWork, and run ``rocket_run.py`` again in a new directory if you wanted.
 
 Set up worker nodes
 ===================
 
 Install FireWorks on the worker
 -------------------------------
-To install FireWorks on the worker, please follow the instructions listed at :doc:`Installation on a machine </installation>`.
+To install FireWorks on the worker, please follow the instructions listed at 
 
 Start playing with the rocket launcher
 --------------------------------------

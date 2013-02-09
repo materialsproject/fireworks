@@ -25,7 +25,7 @@ Download FireWorks and dependencies
 
     cd fireworks
 
-3. run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
+3. Run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
 
     python setup.py develop
 
@@ -43,3 +43,18 @@ Run unit tests
     nosetests
     
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
+
+Updating a FireWorks installation
+=================================
+
+If you want to update an existing FireWorks installation, use the following steps::
+
+1. Navigate inside your FireWorks source directory containing the file setup.py
+
+2. Run the following commands::
+
+    git pull
+    
+    python setup.py develop
+    
+    nosetests

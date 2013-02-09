@@ -39,7 +39,7 @@ if __name__ == '__main__':
     get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
     
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
+    parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info', default=None)
     
     args = parser.parse_args()
     
