@@ -25,10 +25,6 @@ Download FireWorks and dependencies
 
     cd fireworks
 
-3. Run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
-
-    python setup.py develop
-
 3. Install the needed dependencies using pip with the following commands (with administrator privileges)::
 
     pip install nose
@@ -36,6 +32,12 @@ Download FireWorks and dependencies
     pip install simplejson
     pip install pymongo
 
+.. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``.
+
+4. Run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
+
+    python setup.py develop
+    
 Run unit tests
 --------------
 1. Staying in the directory containing setup.py, run the following command::

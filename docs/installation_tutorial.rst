@@ -2,20 +2,20 @@
 Installation Tutorial
 =====================
 
-This tutorial will guide you through FireWorks installation on the central server and one or more worker nodes. The purpose of this tutorial is simply to get you set up as quickly as possible, and is not intended to demonstrate the features or explain the implementation of FireWorks.
+This tutorial will guide you through FireWorks installation on the central server and one or more worker nodes. The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain in things in great detail.
 
 Set up the central server
 =========================
 
-The FireWorks central server hosts the FireWorks database. Your central server should have a fixed IP address/hostname. To set up a central server:
+The FireWorks central server hosts the FireWorks database. You should choose a central server that has a fixed IP address/hostname. To set up a central server:
 
-1. Follow the instructions listed at :doc:`Installation on a machine </installation>`.
+1. Follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`.
 
 2. Install `MongoDB <http://www.mongodb.org>`_ on the server.
 
 3. Start MongoDB::
 
-    mongod
+    mongod &
 
 You are now ready to start playing with FireWorks!
 
@@ -39,7 +39,7 @@ where <TODAY'S DATE> is formatted like '2012-12-31' (this is a safeguard to prev
 Add a FireWork to the central server
 ------------------------------------
 
-A FireWork is a workflow. For this tutorial, we will add a FireWork to the database that consists of only a single step.
+A FireWork is a workflow. For this tutorial, we will add a FireWork to the database that consists of only a single step. We'll tackle more complex workflows later.
 
 1. Staying in the tutorial directory, run the following command::
 
@@ -90,12 +90,30 @@ You should see additional information indicating that your FireWork was launched
 
 The error indicates that there are no more FireWorks to run. However, you could go back to the previous section's instructions, add another FireWork, and run ``rocket_run.py`` again in a new directory if you wanted.
 
-Set up worker nodes
-===================
+Launch a FireWork on a worker node
+==================================
+
+So far, we have added a FireWork to the database on the central server, and then later ran a Rocket that grabbed the FireWork from the database and executed it on the same server.
+
+A more interesting use case of FireWorks is to define the workflow on the central server, but execute it on one or several 'worker' nodes, perhaps through a queueing system. We'll step through this use case next.
+
+Reset the FireWorks database
+----------------------------
+
+Back at the central server,
+
+1. Re-perform the instructions to 'initialize the central server'.
+
+2. Re-perform the instructions to 'add a FireWork to the central server'.
+
+(do not launch a Rocket yet!)
 
 Install FireWorks on the worker
 -------------------------------
-To install FireWorks on the worker, please follow the instructions listed at 
+
+On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`
+
+
 
 Start playing with the rocket launcher
 --------------------------------------
