@@ -37,6 +37,7 @@ class Rocket():
         # TODO: support lists, native Python code, bind monitors, etc...
         # add subprocess stuff
         # add fw_dict stuff
+        # add monitoring stuff
         cmd = m_fw.fw_spec['_script']
         if isinstance(cmd, basestring):
             os.system(cmd)
