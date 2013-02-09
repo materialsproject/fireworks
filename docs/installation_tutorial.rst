@@ -55,8 +55,8 @@ This prints out the FireWork with fw_id=1 (the first FireWork entered into the d
 
 You have now stored a FireWork in the database! It is now ready to be launched.
 
-Running a FireWork
-------------------
+Launch a FireWork on the central server
+=======================================
 
 Usually, a FireWork would be run on a worker node and on a queuing system. Here, we demonstrate running a FireWork on the central server and without a queue.
 
@@ -88,7 +88,7 @@ You should see additional information indicating that your FireWork was launched
 
     rocket_run.py
 
-The error indicates that there are no more FireWorks to run. However, you could go back to the previous section's instructions, add another FireWork, and run ``rocket_run.py`` again in a new directory if you wanted.
+The error indicates that there are no more FireWorks to run. If you wanted, you could go back to the previous section's instructions, add another FireWork, and run ``rocket_run.py`` again in a new directory.
 
 Launch a FireWork on a worker node
 ==================================
@@ -102,11 +102,9 @@ Reset the FireWorks database
 
 Back at the central server,
 
-1. Re-perform the instructions to 'initialize the central server'.
+1. Re-perform all the instructions to 'Set up the central server', including adding a FireWork.
 
-2. Re-perform the instructions to 'add a FireWork to the central server'.
-
-3. Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
+2. Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
 
 Install FireWorks on the worker
 -------------------------------
