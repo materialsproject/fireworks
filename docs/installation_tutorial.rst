@@ -106,13 +106,12 @@ Back at the central server,
 
 2. Re-perform the instructions to 'add a FireWork to the central server'.
 
-(do not launch a Rocket yet!)
+3. Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
 
 Install FireWorks on the worker
 -------------------------------
 
 On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`
-
 
 
 Start playing with the rocket launcher
