@@ -102,7 +102,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
         
         # initialize logger
-        pbs_logger = get_fw_logger('rockets.pbs', job_parameters.logging_dir)
+        pbs_logger = get_fw_logger('rocket.pbs', job_parameters.logging_dir)
         
         # submit the job
         try:
@@ -141,7 +141,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # cmd = ['qstat', '-x']\n
 
         # initialize logger
-        pbs_logger = get_fw_logger('rockets.pbs', job_parameters.logging_dir)
+        pbs_logger = get_fw_logger('rocket.pbs', job_parameters.logging_dir)
         
         # initialize username
         if username is None:
