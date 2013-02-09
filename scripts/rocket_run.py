@@ -31,7 +31,7 @@ if __name__ == '__main__':
     else:
         launchpad = LaunchPad()
     
-    if args.worker_file:
+    if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)
     else:
         fworker = FWorker()
