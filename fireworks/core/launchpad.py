@@ -77,7 +77,7 @@ class LaunchPad(FWSerializable):
         m_query['state'] = {'$in': ['WAITING', 'FIZZLED']}
         
         # check out the matching firework
-        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}})
+        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}}, sort=[("fw_spec._priority", DESCENDING)])
         
         if not m_fw:
             return (None, None)
