@@ -46,7 +46,7 @@ def launch_rocket(rocket_params, launch_dir='.'):
         l_logger.info('getting queue adapter')
         qa = rocket_params.qa
         
-        # move to the launch directory.
+        # move to the launch directory
         l_logger.info('moving to launch_dir {}'.format(launch_dir))
         os.chdir(launch_dir)
         
@@ -67,7 +67,7 @@ def launch_rocket(rocket_params, launch_dir='.'):
 
 def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
     '''
-    Used to submit many jobs to the queue.
+    Submit many jobs to the queue.
     
     :param rocket_params: A RocketParams instance
     :param launch_dir: directory where we want to write the blocks
@@ -94,7 +94,7 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
         
         for i in range(n_loops):
             if i > 0:
-                # sleep before new loop
+                # sleep before new loop to give the queue system time to 'breathe' after job submission
                 l_logger.info('Sleeping for {} seconds before beginning new loop...zzz...'.format(t_sleep))
                 time.sleep(t_sleep)
             
@@ -162,6 +162,7 @@ def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     '''
     Internal method to create a new block or launcher directory. \
     The dir name is based on the time and the FW_BLOCK_FORMAT
+    
     :param root_dir: directory to create the new dir in
     :param l_logger: the logger to use
     :param prefix: the prefix for the new dir, default="block_"
