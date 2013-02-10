@@ -29,6 +29,9 @@ class Rocket():
         self.fworker = fworker
     
     def run(self):
+        '''
+        Run the rocket (actually check out a job from the database and execute it)
+        '''
         
         lp = self.launchpad
         

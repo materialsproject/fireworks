@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 '''
-TODO: add docs!
-
+The LaunchPad manages the FireWorks database.
 '''
 import datetime
 from fireworks.utilities.fw_serializers import FWSerializable
