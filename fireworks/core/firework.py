@@ -17,6 +17,9 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
+#TODO: make _fworker_name a reserved keyword
+#TODO: make script plural?
+
 class FireWork(FWSerializable):
     
     def __init__(self, fw_spec, fw_id=None, launch_data=None):
@@ -42,6 +45,7 @@ class FireWork(FWSerializable):
         '''
         return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
     
+    # consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
     def to_db_dict(self):
         '''
         This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
@@ -74,6 +78,7 @@ class FireWork(FWSerializable):
         
         return max_state
             
+#TODO: add a working dir at least
 
 class Launch(FWSerializable):
     

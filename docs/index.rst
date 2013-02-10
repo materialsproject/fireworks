@@ -39,6 +39,8 @@ Some limitations of FireWorks include:
 
 * FireWorks has not been stress tested to very large numbers of worker nodes.
 
+* FireWorks does not optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement); you must define such optimizations explicitly.
+
 * FireWorks is not designed to handle problems requiring movement and storage of extreme data sets (e.g., petabytes of data).
 
 * FireWorks is not designed to be real-time workflow software. If each of your workflow steps is only a few seconds long, there might be a noticeable lag between the time one workflow step completes and the next step begins.
