@@ -17,18 +17,18 @@ core Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`launchpad` Module
------------------------
+:mod:`fworker` Module
+---------------------
 
-.. automodule:: fireworks.core.launchpad
+.. automodule:: fireworks.core.fworker
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`queue_adapter_base` Module
---------------------------------
+:mod:`launchpad` Module
+-----------------------
 
-.. automodule:: fireworks.core.queue_adapter_base
+.. automodule:: fireworks.core.launchpad
     :members:
     :undoc-members:
     :show-inheritance:
