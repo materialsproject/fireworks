@@ -115,7 +115,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
                 try:
                     # output should of the form '2561553.sdb' or '352353.jessup' - just grab the first part for job id
                     job_id = int(p.stdout.read().split('.')[0])
-                    pbs_logger.info('Job submission was_successful and job_id is {}'.format(job_id))
+                    pbs_logger.info('Job submission was successful and job_id is {}'.format(job_id))
                     return job_id
                 except:
                     # probably error parsing job code
