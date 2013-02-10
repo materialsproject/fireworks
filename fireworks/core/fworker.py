@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-TODO: add docs
+This module contains classes relevant for a FireWorker (worker computing resource)
 '''
 
 import simplejson as json
@@ -20,6 +20,12 @@ __date__ = 'Dec 12, 2012'
 class FWorker(FWSerializable):
     
     def __init__(self, name="anonymous fireworker", query=None, params=None):
+        '''
+        
+        :param name: a String name describing the computing resource
+        :param query: a dict query that restricts the type of FireWork this resource will run
+        :param params: further descriptions of this resource
+        '''
         self.name = name
         self.query = query if query else {}
         self.params = params
@@ -44,30 +50,30 @@ class QueueAdapterBase(FWSerializable):
     
     _fw_name = 'QueueAdapterBase'
     
-    def get_script_str(self, job_parameters, launch_dir):
+    def get_script_str(self, rocket_params, launch_dir):
         '''
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
         All details of the queue script must be specified in the RocketParams().
         
-        :param job_parameters: A RocketParams() instance
+        :param rocket_params: A RocketParams() instance
         :param launch_dir: The directory the job will be launched in
         '''
         raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
     
-    def submit_to_queue(self, job_parameters, script_file):
+    def submit_to_queue(self, rocket_params, script_file):
         '''
         submits the job to the queue, probably using subprocess or shutil
-        :param job_parameters: A RocketParams() instance
+        :param rocket_params: A RocketParams() instance
         :param script_file: name of the script file to use (String)
         '''
         raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
 
-    def get_njobs_in_queue(self, job_parameters, username=None):
+    def get_njobs_in_queue(self, rocket_params, username=None):
         '''
         returns the number of jobs in the queue, probably using subprocess or shutil to \
         call a command like 'qstat'. returns None when the number of jobs cannot be determined.
         
-        :param job_parameters: a RocketParams() instance
+        :param rocket_params: a RocketParams() instance
         :param username: the username of the jobs to count (default is to autodetect)
         '''
         raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')

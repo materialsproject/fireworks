@@ -25,7 +25,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
     
     _fw_name = 'PBSAdapter (NERSC)'
     
-    def get_script_str(self, job_parameters, launch_dir):
+    def get_script_str(self, rocket_params, launch_dir):
         '''
         Create a NERSC-style PBS script. For more documentation, see parent object.
         
@@ -43,7 +43,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # convert launch_dir to absolute path
         launch_dir = os.path.abspath(launch_dir)
         
-        p = job_parameters.params
+        p = rocket_params.params
         
         outs = []
         outs.append('#!/bin/bash')
@@ -93,7 +93,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         outs.append('')
         return '\n'.join(outs)
     
-    def submit_to_queue(self, job_parameters, script_file):
+    def submit_to_queue(self, rocket_params, script_file):
         '''
         for documentation, see parent object
         '''
@@ -102,7 +102,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
         
         # initialize logger
-        pbs_logger = get_fw_logger('rocket.pbs', job_parameters.logging_dir)
+        pbs_logger = get_fw_logger('rocket.pbs', rocket_params.logging_dir)
         
         # submit the job
         try:
@@ -131,7 +131,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
             # random error, e.g. no qsub on machine!
             log_exception(pbs_logger, 'Running qsub caused an error...')
     
-    def get_njobs_in_queue(self, job_parameters, username=None):
+    def get_njobs_in_queue(self, rocket_params, username=None):
         '''
         for documentation, see parent object
         '''
@@ -141,7 +141,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # cmd = ['qstat', '-x']\n
 
         # initialize logger
-        pbs_logger = get_fw_logger('rocket.pbs', job_parameters.logging_dir)
+        pbs_logger = get_fw_logger('rocket.pbs', rocket_params.logging_dir)
         
         # initialize username
         if username is None:
