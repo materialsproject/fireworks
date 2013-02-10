@@ -27,7 +27,7 @@ class Rocket():
         # check a FW job out of the launchpad
         m_fw, launch_id = lp._checkout_fw(self.fworker)
         if not m_fw:
-            raise ValueError("No jobs matching query! {}".format(self.fworker.query))
+            raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
         
         # TODO: write the spec to a file in the directory
         with open('fw_json.spec', 'w') as f:

@@ -9,7 +9,7 @@ This tutorial can be safely completed from the command line, and requires no pro
 Set up the central server (FireServer)
 ======================================
 
-The FireWorks central server (FireServer) hosts the FireWorks database. You should choose a central server that has a fixed IP address/hostname. To set up a FireServer:
+The FireWorks central server (FireServer) hosts the FireWorks database. You should choose a central server that has a fixed IP address/hostname so that you can connect to it from other machines. To set up a FireServer:
 
 1. Follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`.
 
@@ -51,16 +51,14 @@ A FireWork is a workflow. For this tutorial, we will use a FireWork that consist
 
     launchpad_run.py get_fw 1
 
-This prints out the FireWork with fw_id=1 (the first FireWork entered into the database).
-
-.. note:: Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, it will print some text into a file named ``howdy.txt``.
+This prints out the FireWork with fw_id=1 (the first FireWork entered into the database). Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, this is the command that will be executed (print some text into a file named ``howdy.txt``).
 
 You have now stored a FireWork in the database! It is now ready to be launched.
 
 Launch a Rocket on the FireServer
 =================================
 
-A Rocket grabs a FireWork (workflow) from the FireServer database and runs it. Usually, a Rocket would be run on a worker (FireWorker) and through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.
+A Rocket fetches a FireWork (workflow) from the FireServer database and runs it. Usually, a Rocket would be run on a separate machine (FireWorker) and through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.
 
 1. Navigate to any clean directory. For example::
 
@@ -71,7 +69,7 @@ A Rocket grabs a FireWork (workflow) from the FireServer database and runs it. U
 
     rocket_run.py
     
-The Rocket grabs an available FireWork from the FireServer and runs it.
+The Rocket fetches an available FireWork from the FireServer and runs it.
 
 3. Verify that the desired script ran::
 
@@ -89,14 +87,14 @@ You should see additional information indicating that your FireWork was launched
 
     rocket_run.py
 
-The error indicates that there are no more FireWorks to run. If you wanted, you could go back to the previous section's instructions, add another FireWork, and run ``rocket_run.py`` again in a new directory.
+The error ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database. If you wanted, you could go back, add another FireWork, and run ``rocket_run.py`` again in a new directory.
 
-Launch a Rocket on a worker computer (FireWorker)
+Launch a Rocket on a worker machine (FireWorker)
 =================================================
 
-So far, we have added a FireWork (workflow) to the database on the FireServer (central server). We then launched a Rocket that grabbed the FireWork from the database and executed it, all within the same machine.
+So far, we have added a FireWork (workflow) to the database on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
 
-A more interesting use case of FireWorks is to add FireWorks to the FireServer, but execute them on one or several outside 'worker' computers (FireWorkers), perhaps through a queueing system. We'll step through this use case next.
+A more interesting use case of FireWorks is to add FireWorks to the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers), perhaps through a queueing system. We'll next configure a worker machine.
 
 Install FireWorks on the FireWorker
 -----------------------------------
@@ -106,11 +104,12 @@ On the worker machine, follow the instructions listed at :doc:`Basic FireWorks I
 Reset the FireWorks database
 ----------------------------
 
-Back at the FireServer,
+1. Back at the FireServer, let's reset our database add a new FireWork::
 
-1. Re-perform the instructions to 'Set up the central server', including re-initializing the database and adding a FireWork.
+    launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py upsert_fw fw_test.yaml
 
-2. Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
+Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
 
 Connect to the FireServer from the FireWorker
 ---------------------------------------------
@@ -127,9 +126,9 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 
     cp launchpad.yaml my_launchpad.yaml
     
-3. Modify your ``my_launchpad.yaml`` so it points to the credentials of your FireServer. In particular, the ``hostname`` parameter must be changed to the IP address of your FireServer.
+3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``hostname`` parameter must be changed to the IP address of your FireServer.
 
-3. Confirm that you can query for a FireWork from your FireWorker:
+3. Confirm that you can access the FireServer from your FireWorker::
 
     launchpad_run.py -l my_launchpad.yaml get_fw 1
 
@@ -138,18 +137,18 @@ This should print out a FireWork.
 Configure your FireWorker
 -------------------------
 
-Staying in the tutorial directory,
+Staying in the installation tutorial directory on the FireWorker,
 
 1. Copy the FireWorker file to a new name::
 
     cp fworker.yaml my_fworker.yaml
 
-2. Modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker, e.g. the name of the worker machine ("hopper").
+2. Modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that identifies the worker, e.g. the name of the worker machine ("hopper"). This will help you identify the worker that ran your FireWork later on.
 
 Launch a Rocket on the FireWorker
 ---------------------------------
 
-1. Staying in the tutorial directory on your FireWorker, type::
+1. Staying in the installation tutorial directory on your FireWorker, type::
 
     rocket_run.py -l my_launchpad.yaml -w my_fworker.yaml
 
@@ -159,36 +158,34 @@ This should successfully launch a rocket that finds and runs your FireWork from 
 
     launchpad_run.py -l my_launchpad.yaml get_fw 1
 
-You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker (worker node).
+You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``.
 
 
 Launch a Rocket on the FireWorker through a queue
 =================================================
 
-If your worker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't want to launch Rockets directly on the worker. Instead, you'll need to submit Rockets through a queueing system allocates computer time.
-
-In this section, we'll introduce the RocketLauncher, which helps launch Rockets through a queue and organizes launches into separate directories.
+If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't want to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system allocates computer time. The RocketLauncher helps launch Rockets through a queue.
 
 Configure the RocketLauncher
 ----------------------------
 
-The RocketLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters defined through the RocketParams file.
+The RocketLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the RocketParams file.
 
-1. Staying in the tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>`` where <QUEUE> is the supported queue system.
+1. Staying in the installation tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>.yaml`` where <QUEUE> is the supported queue system.
 
-.. note:: If you cannot find a working RocketParams file for your specific queuing system, please contact us for help (see :ref:`contributing-label`)! We would like to build support for many queuing systems into the FireWorks package, and generally respond quickly to such requests.
+.. note:: If you cannot find a working RocketParams file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) Don't be shy, we want to help you get set up.
 
-2. Copy your RocketParams file to a new name::
+2. Copy your chosen RocketParams file to a new name::
 
-    cp rocketparams_<QUEUE> my_rocketparams.yaml
+    cp rocketparams_<QUEUE>.yaml my_rocketparams.yaml
     
 3. Open ``my_rocketparams.yaml`` and modify it as follows:
 
-   a. In the part where it specifies running rocket_run.py, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
+   a. In the part that specifies running ``rocket_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
 
-   b. In the part where it specifies running rocket_run.py, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine.
+   b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine.
    
-   c. For the logging_dir parameter, modify the ``path/to/logging`` to contain the **absolute path** of where you would like the FireWorks logs to go. For example, you might create a ``fw_logs`` directory inside your home directory, and point the logging_dir parameter there.
+   c. For the logging_dir parameter, modify the ``path/to/logging`` text to contain the **absolute path** of where you would like FireWorks logs to go. For example, you might create a ``fw_logs`` directory inside your home directory, and point the logging_dir parameter there.
    
    .. note:: Be sure to indicate the full, absolute path name; do not use BASH shortcuts like '.', '..', or '~', and do not indicate a relative path.
 
@@ -196,11 +193,11 @@ The RocketLauncher needs to know how to communicate with your queue system and t
 
     rocket_launcher_run.py singleshot my_rocketparams.yaml
 
-7. This should have submitted a job to the queue in the current directory. You can read the log files in this directory to get more information on what occurred. You might also now check the status of your queue to make sure your job appeared.
+7. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
-8. After your queue manager runs your job, you should see the file howdy.txt in the current directory. 
+8. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-9. If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
+If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
    a. The RocketLauncher submitted a script containing a Rocket to your queue manager
    b. Your queue manager executed the Rocket when resources were ready
@@ -210,21 +207,19 @@ The RocketLauncher needs to know how to communicate with your queue system and t
 Adding more power: using rapid-fire mode
 ========================================
 
-While launching a single job is nice, a more useful functionality is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The rocket launcher can be run in a "rapid-fire" mode that provides these features.
+While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The RocketLauncher can be run in a "rapid-fire" mode that provides these features.
 
 Reset the FireWorks database
 ----------------------------
 
-Back at the FireServer,
+1. Back at the FireServer, let's reset our database add **three** new FireWorks::
 
-1. Re-perform the instructions to 'Set up the central server', including re-initializing the database and adding a FireWork.
-
-2. Add two more (identical) FireWorks to the system::
-
+    launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py upsert_fw fw_test.yaml
     launchpad_run.py upsert_fw fw_test.yaml
     launchpad_run.py upsert_fw fw_test.yaml
 
-3. Confirm that you have three FireWorks total::
+2. Confirm that you have three FireWorks total::
 
     launchpad_run.py get_fw_ids
     
@@ -240,7 +235,7 @@ Switching to your FireWorker,
     mkdir ~/rapidfire_tests
     cd ~/rapidfire_tests
     
-2. Copy the your RocketParams file to this testing directory::
+2. Copy your RocketParams file to this testing directory::
 
     cp <PATH_TO_MY_ROCKET_PARAMS> .
 
@@ -248,17 +243,21 @@ where <PATH_TO_MY_ROCKET_PARAMS> is the path to ``my_rocketparams.yaml`` file th
 
 3. Looking inside ``my_rocketparams.yaml``, confirm that the path to my_fworker.yaml and my_launchpad.yaml are still valid. (They should be, unless you moved or deleted these files)
 
-4. Try submitting several jobs using the command::
+4. Submit several jobs with a single command::
 
     rocket_launcher_run.py rapidfire -q 3 my_rocketparams.yaml
 
    .. important:: The RocketLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
-5. This method should have submitted 3 jobs to the queue at once, all inside of a directory beginning with the tag ``block_``. Navigate inside this directory and confirm that you've launched multiple Rockets with a single command!
+   .. important:: The command above submits jobs until you have at most 3 jobs in the queue. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
+   
+5. The rapid-fire command should have created a directory beginning with the tag ``block_``. Navigate inside this directory, and confirm that three directories starting with the tag ``launch`` were created. The ``launch`` directories contain your individual jobs.
 
-.. tip:: For more tips on the RocketLauncher, such as how to maintain a certain number of jobs in the queue, check out its built-in help: ``rocketlauncher_run.py rapidfire -h``
+You've now launched multiple Rockets with a single command!
+
+.. note:: For more tips on the RocketLauncher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``rocketlauncher_run.py rapidfire -h``
     
 Next steps
 ==========
 
-If you've completed this tutorial, your FireServer and a single FireWorker are fully set up and ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in setting up more complicated and dynamic workflows in the FireServer. We'll cover the basics of workflow creation and execution in the next part of the tutorial.
+If you've completed this tutorial, your FireServer and a single FireWorker are ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in learning how to define more complicated and dynamic workflows. We'll cover the basics of workflow creation and execution in the next part of the tutorial.
