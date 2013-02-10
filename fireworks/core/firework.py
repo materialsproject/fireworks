@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 '''
-TODO: add docs
+A FireWork defines a workflow as a DAG (directed acyclical graph).
+
+A Launch is a describes a FireWork's run on a computing resource.
 '''
 from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.fw_constants import LAUNCH_RANKS
@@ -19,24 +21,37 @@ class FireWork(FWSerializable):
     
     def __init__(self, fw_spec, fw_id=None, launch_data=None):
         '''
+        TODO: add more docs
         
-        :param fw_spec:
+        reserved fw_spec keywords:
+            _script - the script to run
+            _priority - the priority of the FW 
+        
+        :param fw_spec: a dict specification of the job to run
+        :param fw_id: the FW's database id to the LaunchPad
+        :param launch_data: a list of Launch objects of this FireWork
         '''
+        
         self.fw_spec = fw_spec
         self.fw_id = fw_id
         self.launch_data = launch_data if launch_data else []
     
     def to_dict(self):
+        '''
+        This is a 'minimal' or 'compact' dict representation of the FireWork
+        '''
         return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
     
     def to_db_dict(self):
+        '''
+        This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
+        '''
         m_dict = self.to_dict()
         m_dict['state'] = self.state
         return m_dict
     
     @classmethod
     def from_dict(self, m_dict):
-        
         fw_id = m_dict.get('fw_id', None)
         ld = m_dict.get('launch_data', None)
         if ld:
@@ -45,6 +60,10 @@ class FireWork(FWSerializable):
     
     @property
     def state(self):
+        '''
+        Iterate through the launch_data, and find the Launch that is furthest ahead. \
+        That is the state of the FireWork as a whole.
+        '''
         max_score = 0
         max_state = 'WAITING'
         
@@ -56,10 +75,15 @@ class FireWork(FWSerializable):
         return max_state
             
 
-#TODO: add date, logs ...
 class Launch(FWSerializable):
     
     def __init__(self, fworker, state=None, launch_id=None):
+        '''
+        
+        :param fworker: A FWorker object describing the worker
+        :param state: the state of the Launch
+        :param launch_id: the id of the Launch for the LaunchPad
+        '''
         if state not in LAUNCH_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
         
