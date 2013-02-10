@@ -9,6 +9,6 @@ params:
   job_name: null
   modules: []
 
-logging_dir: .
+logging_dir: path/to/logging
 
 qa_name: PBSAdapter (NERSC)
