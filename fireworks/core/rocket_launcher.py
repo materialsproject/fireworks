@@ -89,7 +89,6 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
         
     try:
         l_logger.info('getting queue adapter')
-        qa = rocket_params.qa
         
         block_dir = _create_datestamp_dir(launch_dir, l_logger)
         
