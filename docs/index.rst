@@ -9,23 +9,22 @@
 
 *Note: FireWorks is under active development. It is currently incomplete and not useable as workflow software. However, certain components of the code are available for initial testing.*
 
-FireWorks is a *simple* and *flexible* code for workflow management.
-
-FireWorks allows you to define calculation workflows and execute them on remote
-computers, usually through an external queuing system like PBS. The architecture of FireWorks is that of a central management server that stores and maintains the workflows, along with one or more worker computers that pull jobs and perform the computations.
+FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources.
 
 Features
 ========
 
-FireWorks allows you to:
+FireWorks is intended to be a friendly workflow software that is easy to get started with, but flexible enough to handle complicated use cases.
 
-* Store and query workflows through MongoDB.
+Some (but not all) of its features include:
 
-* Distribute calculations over multiple computing resources simultaneously, and direct certain workflows to intended worker computers.
+* Storage and management of workflows through MongoDB, a noSQL datastore that is flexible and easy to use.
 
-* Define *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a workflow step (canceling a workflow, restarting the current step, or completely altering the workflow)
+* Ability to distribute the calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculations.
 
-* Automatically detect duplicate sub-workflows - avoid re-running the duplicated sections of a workflow while still running unique sections
+* Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a workflow step (canceling a workflow, restarting the current step, or completely altering the workflow)
+
+* Detection of duplicate sub-workflows - automatically skip tasks that are duplicated between two workflows while still running unique sections
 
 * Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
 
@@ -36,33 +35,13 @@ FireWorks allows you to:
 Limitations
 ===========
 
-FireWorks is currently intended for applications where performance of the workflow software is not of utmost concern:
+Some limitations of FireWorks include:
 
-* If you require steps in a workflow to execute within a few seconds of one another, the current version of FireWorks is not for you.
+* FireWorks has not been stress tested to very large numbers of worker nodes.
 
-* FireWorks has only been tested for a few worker nodes running simultaneously, and has not been stress-tested for hundreds of worker nodes.
+* FireWorks is not designed to handle problems requiring movement and storage of extreme data sets (e.g., petabytes of data).
 
-.. _contributing-label:
-
-Contributing and Contact
-========================
-
-Want to see something added or changed? There are many ways to help make that a reality. Some ways to get involved are:
-
-* Help us improve the documentation - direct us to errors or areas that could be clearer. We want getting set up and using FireWorks to be a breeze for everyone.
-* Point us to areas of the code that are difficult to understand or use. We hope to make FireWorks easy to understand, modify, and maintain.
-* Tell us how you're using FireWorks, and request new features. 
-* Develop adapters for your queuing system or computing center, and share them with the main repo.
-* Share code on how FireWorks might be used within a specific application.
-* Get in touch and contribute to the core codebase!
-
-The best way to submit questions, issues, and all other communication is through the FireWorks Github page: https://github.com/materialsproject/fireworks/issues
-
-The Github page is the preferred way of communication because it allows issues and requests to be tracked and shared. However, if you feel that e-mail is better suited for your purpose, you can contact: |Mail|
-
-.. |Mail| image:: _static/mail.png
-   :alt: developer contact
-   :align: bottom
+* FireWorks is not designed to be real-time workflow software. If each of your workflow steps is only a few seconds long, there might be a noticeable lag between the time one workflow step completes and the next step begins.
 
 Getting Started
 ===============
@@ -74,12 +53,27 @@ To get started with FireWorks, we suggest that you follow our installation tutor
    
    installation_tutorial
 
-Going Further
-=============
+.. _contributing-label:
 
-**TODO: add another tutorial here...**
+Contributing and Contact
+========================
 
-Thank yous and Contributors
+Want to see something added or changed? There are many ways to make that a reality! Some ways to get involved are:
+
+* Help us improve the documentation - tell us where you got 'stuck'.
+* Point us to areas of the code that are difficult to understand or use.
+* Tell us how you're using FireWorks, and request new features. 
+* Let us know if you need support for a queueing system.
+* Share code on how FireWorks might be used within a specific application.
+* Get in touch and contribute to the core codebase!
+
+The best way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. However, if you feel that e-mail is better suited for your purpose, you can contact: |Mail|
+
+.. |Mail| image:: _static/mail.png
+   :alt: developer contact
+   :align: bottom
+
+Thank yous
 ===========================
 
 Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code for pulling jobs onto nodes was refashioned for FireWorks.
