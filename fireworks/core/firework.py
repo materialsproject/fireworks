@@ -103,4 +103,4 @@ class Launch(FWSerializable):
 if __name__ == '__main__':
     fw_spec = {'_script': 'echo "howdy, your job launched successfully!" >> howdy.txt'}
     fw = FireWork(fw_spec)
-    fw.to_file("../../fw_tutorial/fw_test.yaml")
+    fw.to_file("../../fw_tutorial/installation/fw_test.yaml")
