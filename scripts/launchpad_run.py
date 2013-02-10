@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
 import ast
+import simplejson as json
 
 #TODO: YAML queries give weird unicode string, maybe this is unfixable though
 
@@ -57,10 +58,11 @@ if __name__ == '__main__':
         
     elif args.command == 'get_fw':
         fw = lp.get_fw_by_id(args.fw_id)
+        fw_dict = fw.to_db_dict()
         if args.filename:
             fw.to_file(args.filename)
         else:
-            print fw.to_format('json', indent=4)
+            print json.dumps(fw_dict, indent=4)
         
     elif args.command == 'get_fw_ids':
         if args.query:
