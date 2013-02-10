@@ -47,6 +47,7 @@ div.body {
 }
  
 div.footer {
+	background: none repeat scroll 0 0 #eeeeee;
     color: #555;
     width: 100%;
     padding: 13px 0;
