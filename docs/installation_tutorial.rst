@@ -9,7 +9,7 @@ This tutorial can be safely completed from the command line, and requires no pro
 Set up the central server (FireServer)
 ======================================
 
-The FireWorks central server (FireServer) hosts the FireWorks database. You should choose a central server that has a fixed IP address/hostname so that you can connect to it from other machines. To set up a FireServer:
+The FireWorks central server (FireServer) hosts the FireWorks database. For production, you should choose a central server that has a fixed IP address/hostname so that you can connect to it from other machines reliably. For initially testing the installation, it should be OK to use a laptop or workstation with a dynamic IP. To set up a FireServer:
 
 1. Follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`.
 
@@ -18,6 +18,8 @@ The FireWorks central server (FireServer) hosts the FireWorks database. You shou
 3. Start MongoDB::
 
     mongod &
+    
+    .. important: If cannot connect to the database from a remote server, you might want to check your FireWall settings and ensure that port 27017 (the default Mongo port) is open/forwarded.
 
 You are now ready to start playing with FireWorks!
 

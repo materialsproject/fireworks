@@ -24,6 +24,9 @@ class TestImports(unittest.TestCase):
         import yaml
         import simplejson
         import pymongo
+        # test that MongoClient is available (newer pymongo)
+        from pymongo import MongoClient
+        
 
 if __name__ == "__main__":
     unittest.main()
