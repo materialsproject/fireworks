@@ -18,8 +18,6 @@ The FireWorks central server (FireServer) hosts the FireWorks database. For prod
 3. Start MongoDB::
 
     mongod &
-    
-    .. important: If cannot connect to the database from a remote server, you might want to check your FireWall settings and ensure that port 27017 (the default Mongo port) is open/forwarded.
 
 You are now ready to start playing with FireWorks!
 
@@ -133,6 +131,8 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 3. Confirm that you can access the FireServer from your FireWorker::
 
     launchpad_run.py -l my_launchpad.yaml get_fw 1
+    
+.. note:: If you cannot connect to the database from a remote server, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports.
 
 This should print out a FireWork.
 
