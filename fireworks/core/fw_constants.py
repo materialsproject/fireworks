@@ -14,7 +14,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 YAML_STYLE = False  # controls whether YAML documents will be nested as braces or blocks (False = blocks)
-USER_PACKAGES = ['fireworks.utilities.tests', 'fireworks.user_objects']  # this is where load_object() looks for serialized objects
+USER_PACKAGES = ['fireworks.utilities.tests', 'fireworks.user_objects', 'fireworks.core']  # this is where load_object() looks for serialized objects
 
 FW_NAME_UPDATES = {}  # if you update a _fw_name, you can use this to record the change and maintain deserialization 
 FW_BLOCK_FORMAT = '%Y-%m-%d-%H-%M-%S-%f'  # date format for writing block directories in "rapid-fire" mode
