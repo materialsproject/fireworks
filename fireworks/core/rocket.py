@@ -5,6 +5,7 @@ TODO: add docs
 '''
 import simplejson as json
 import os
+from fireworks.core.task import SubprocessTask
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -53,8 +54,13 @@ class Rocket():
         # add monitoring stuff
         # lots of stuff to add!
         cmd = m_fw.fw_spec['_script']
+        my_task = None
         if isinstance(cmd, basestring):
-            os.system(cmd)
-
+            # run a subprocess command using the shell
+            my_task = SubprocessTask({"script": cmd, "shell": True})
+        
+        my_task.register_lp(lp)  # TODO: is this really needed?
+        my_task.run_task(m_fw, {})
+        
         # perform finishing operation
         lp._complete_launch(m_fw, launch_id)
