@@ -145,7 +145,7 @@ Staying in the installation tutorial directory on the FireWorker,
 
     cp fworker.yaml my_fworker.yaml
 
-2. Modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that identifies the worker, e.g. the name of the worker machine ("hopper"). This will help you identify the worker that ran your FireWork later on.
+2. Modify your ``my_fworker.yaml`` by changing the ``url`` parameter to the worker host. This will help you identify the worker that ran your FireWork later on.
 
 Launch a Rocket on the FireWorker
 ---------------------------------

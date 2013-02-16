@@ -19,23 +19,24 @@ __date__ = 'Dec 12, 2012'
 
 class FWorker(FWSerializable):
     
-    def __init__(self, name="anonymous fireworker", query=None, params=None):
+    def __init__(self, url, type="general worker", query=None, params=None):
         '''
-        
-        :param name: a String name describing the computing resource
+        :param url: the URL of the resource, should be unique
+        :param type: a String describing the computing resource, does not need to be unique
         :param query: a dict query that restricts the type of FireWork this resource will run
         :param params: further descriptions of this resource
         '''
-        self.name = name
+        self.url = url
+        self.type = type
         self.query = query if query else {}
         self.params = params
     
     def to_dict(self):
-        return {'name': self.name, 'query': json.dumps(self.query), 'params': self.params}
+        return {'url': self.url, 'type': self.type, 'query': json.dumps(self.query), 'params': self.params}
     
     @classmethod
     def from_dict(self, m_dict):
-        return FWorker(m_dict['name'], json.loads(m_dict['query']), m_dict['params'])
+        return FWorker(m_dict['url'], m_dict['type'], json.loads(m_dict['query']), m_dict['params'])
 
 
 class QueueAdapterBase(FWSerializable):

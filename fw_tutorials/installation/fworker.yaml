@@ -1,3 +1,4 @@
-name: give me a name
+url: somecomputer.host.com
+type: general worker
 params: null
 query: '{}'
