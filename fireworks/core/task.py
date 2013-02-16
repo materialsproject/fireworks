@@ -39,6 +39,7 @@ class TaskBase():
 # TODO: Task for committing a file to DB?
 # TODO: add checkpoint function
 
+
 class SubprocessTask(TaskBase):
     
     _fw_name = "Subprocess Task"
@@ -69,7 +70,7 @@ class SubprocessTask(TaskBase):
             raise ValueError("Subprocess Task cannot process both a key and file as the standard in!")
         
         self.use_shlex = parameters.get('use_shlex', True)
-        self.script = str(parameters['script'])  # TODO: figure out a better way to handle unicode
+        self.script = str(parameters['script'])  # Mongo loves unicode, shlex hates it
         
         self.use_shell = parameters.get('use_shell', False)
         
