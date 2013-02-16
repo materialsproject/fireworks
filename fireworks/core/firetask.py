@@ -15,23 +15,19 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 15, 2013'
 
 
-class TaskBase():
+class FireTaskBase():
     '''
     TODO: add docs
     '''
     
     def __init__(self, parameters):
         self.parameters = parameters
-        
+    
+    # TODO: register fw_id?
     def register_lp(self, launchpad):
         self.launchpad = launchpad
     
-    def run_task(self, fw, previous_outputs):
-        '''
-        returns an output
-        :param fw:
-        :param previous_output:
-        '''
+    def run_task(self, fw_spec):
         raise NotImplementedError('Need to implement run_task!')
     
     # TODO: add a write to log method
@@ -40,7 +36,7 @@ class TaskBase():
 # TODO: add checkpoint function
 
 
-class SubprocessTask(TaskBase):
+class SubprocessTask(FireTaskBase):
     
     _fw_name = "Subprocess Task"
     
@@ -79,7 +75,7 @@ class SubprocessTask(TaskBase):
         
         self.shell_exe = parameters.get('shell_exe', None)
         
-    def run_task(self, fw, prev_outputs):
+    def run_task(self, fw_spec):
         
         output = {}
         
@@ -97,7 +93,7 @@ class SubprocessTask(TaskBase):
         #p = subprocess.Popen( args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags)
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
-            (stdout, stderr) = p.communicate(fw[self.stdin_key])
+            (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode
