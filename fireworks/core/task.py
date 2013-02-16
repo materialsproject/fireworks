@@ -20,7 +20,7 @@ class TaskBase():
     TODO: add docs
     '''
     
-    def init(self, parameters):
+    def __init__(self, parameters):
         self.parameters = parameters
         
     def register_lp(self, launchpad):
@@ -48,7 +48,7 @@ class SubprocessTask(TaskBase):
     # set shell to BASH, allow CSH option
     #TODO: use shlex!
     
-    def init(self, parameters):
+    def __init__(self, parameters):
         # dynamic parameters
         
         # stdout = dict with key and/or file parameter, or "_PIPE".
@@ -70,13 +70,13 @@ class SubprocessTask(TaskBase):
             raise ValueError("Subprocess Task cannot process both a key and file as the standard in!")
         
         self.use_shlex = parameters.get('use_shlex', True)
-        
-        self.script = parameters['script']
-        
-        if self.use_shlex and isinstance(self.script, basestring):
-            self.script = shlex.split(self.script)
+        self.script = str(parameters['script'])  # TODO: figure out a better way to handle unicode
         
         self.use_shell = parameters.get('use_shell', False)
+        
+        if self.use_shlex and isinstance(self.script, basestring) and not self.use_shell:
+            self.script = shlex.split(self.script)
+        
         self.shell_exe = parameters.get('shell_exe', None)
         
     def run_task(self, fw, prev_output):
@@ -92,10 +92,14 @@ class SubprocessTask(TaskBase):
             self.stdin = subprocess.PIPE
         
         # run the program
+        print self.script
         p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=self.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=self.use_shell)
-        
+        #p = subprocess.Popen( args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags)
         # communicate in the standard in and get back the standard out and returncode
-        (stdout, stderr) = p.communicate(prev_output[self.stdin_key])
+        if self.stdin_key:
+            (stdout, stderr) = p.communicate(prev_output[self.stdin_key])
+        else:
+            (stdout, stderr) = p.communicate()
         returncode = p.returncode
         
         # write out the output, error files if specified

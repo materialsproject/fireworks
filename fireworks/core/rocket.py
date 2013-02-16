@@ -57,7 +57,7 @@ class Rocket():
         my_task = None
         if isinstance(cmd, basestring):
             # run a subprocess command using the shell
-            my_task = SubprocessTask({"script": cmd, "shell": True})
+            my_task = SubprocessTask({"script": cmd, "use_shell": True})
         
         my_task.register_lp(lp)  # TODO: is this really needed?
         my_task.run_task(m_fw, {})
