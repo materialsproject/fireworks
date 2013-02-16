@@ -41,8 +41,7 @@ class SubprocessTask(FireTaskBase):
     _fw_name = "Subprocess Task"
     
     #TODO: warn that the shell option is DANGEROUS!
-    # set shell to BASH, allow CSH option
-    #TODO: use shlex!
+    #TODO: add terminate on ERROR, continue on OK, once the return dict format is agreed on
     
     def __init__(self, parameters):
         # dynamic parameters

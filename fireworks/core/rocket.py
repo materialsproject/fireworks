@@ -58,9 +58,12 @@ class Rocket():
             my_task = SubprocessTask({"script": cmd, "use_shell": True})
         
         my_task.register_lp(lp)  # TODO: is this really needed?
-        my_task.run_task(m_fw, {})
+        my_task.run_task(m_fw)
         
-        # TODO: add the output of the task from run_task
+        # continue on to next script if:
+        # - it exists
+        # - no fw_output.json
+        # no output dict()
         
         # perform finishing operation
         lp._complete_launch(m_fw, launch_id)
