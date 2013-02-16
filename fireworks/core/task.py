@@ -26,8 +26,7 @@ class TaskBase():
     def register_lp(self, launchpad):
         self.launchpad = launchpad
     
-    # TODO: add previous outputs and FireWork to this?
-    def run_task(self, fw, previous_output):
+    def run_task(self, fw, previous_outputs):
         '''
         returns an output
         :param fw:
@@ -63,7 +62,7 @@ class SubprocessTask(TaskBase):
         self.stderr = parameters.get('stderr', subprocess.PIPE)
         
         self.returncode_key = parameters.get('returncode_key', '_returncode')
-            
+        
         self.stdin_file = parameters.get('stdin_file', None)
         self.stdin_key = parameters.get('stdin_key', None)
         if self.stdin_file and self.stdin_key:
@@ -79,7 +78,7 @@ class SubprocessTask(TaskBase):
         
         self.shell_exe = parameters.get('shell_exe', None)
         
-    def run_task(self, fw, prev_output):
+    def run_task(self, fw, prev_outputs):
         
         output = {}
         
@@ -97,7 +96,7 @@ class SubprocessTask(TaskBase):
         #p = subprocess.Popen( args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags)
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
-            (stdout, stderr) = p.communicate(prev_output[self.stdin_key])
+            (stdout, stderr) = p.communicate(fw[self.stdin_key])
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode

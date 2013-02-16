@@ -4,7 +4,6 @@
 TODO: add docs
 '''
 import simplejson as json
-import os
 from fireworks.core.task import SubprocessTask
 
 __author__ = 'Anubhav Jain'
@@ -48,10 +47,9 @@ class Rocket():
         
         # execute the script inside the spec
         # TODO: support lists, native Python code, bind monitors, etc...
-        # add subprocess stuff'
-        # TODO: hook into os.system if possible, else use shutil or subprocess
         # add fw_dict stuff
-        # add monitoring stuff
+        # add checkpoint stuff
+        # add heartbeat
         # lots of stuff to add!
         cmd = m_fw.fw_spec['_script']
         my_task = None
@@ -61,6 +59,8 @@ class Rocket():
         
         my_task.register_lp(lp)  # TODO: is this really needed?
         my_task.run_task(m_fw, {})
+        
+        # TODO: add the output of the task from run_task
         
         # perform finishing operation
         lp._complete_launch(m_fw, launch_id)
