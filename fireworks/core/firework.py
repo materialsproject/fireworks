@@ -17,8 +17,8 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-#TODO: make _fworker_name a reserved keyword
 #TODO: make script plural?
+#TODO: add ability to block ports
 
 class FireWork(FWSerializable):
     
@@ -103,6 +103,49 @@ class Launch(FWSerializable):
     def from_dict(self, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
         return Launch(fworker, m_dict['state'], m_dict['launch_id'])
+
+
+class FWDecision():
+    '''
+    A FWDecision returns one of several potential actions:
+        -CONTINUE means continue to the next stage in the workflow, no changes are made to the firework
+        -BRANCH means to insert new Fireworks into the workflow and forget about the current children
+        -DETOUR means to insert new Fireworks into the workflow, and then run the current children
+        -TERMINATE means to terminate this branch of the workflow (any children of this Stage will NOT be run).
+
+    The output parameter is a dict that gets passed to the 'output' parameter of the LaunchInfo being analyzed.
+    The output is a dict that:
+        - stores any metadata about the decision
+        - is used by Fuses of child FWs to determine how to proceed
+         
+    '''
+    actions = ["CONTINUE", "BRANCH", "DETOUR", "TERMINATE"]
+    
+    def __init__(self, action, stored_data=None, mod_spec=None, add_fws=None):
+        
+        if action not in FWDecision.actions:
+            raise ValueError("Invalid decision: " + action)
+        
+        if action != "CONTINUE" and mod_spec:
+            raise ValueError("You can only modify the spec if you decide to CONTINUE")
+        
+        if action not in ["BRANCH", "DETOUR"] and add_fws:
+            raise ValueError("You cannot " + str(action) + " whilst also inserting fireworks")
+        
+        if action in ["BRANCH", "DETOUR"] and not add_fws:
+            raise ValueError("If you " + str(action) + ", you must specify fireworks to insert!")
+        
+        self.action = action
+        self.add_fws = add_fws
+        self.mod_spec = mod_spec
+        self.stored_data if stored_data else {}
+        
+    def to_dict(self):
+        return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec, "add_fws": self.add_fws}
+    
+    @classmethod
+    def from_dict(self, m_dict):
+        return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])
 
 
 if __name__ == '__main__':
