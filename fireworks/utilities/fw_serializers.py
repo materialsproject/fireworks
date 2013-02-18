@@ -28,7 +28,7 @@ serialize_fw() decorator is used.
 
 import yaml
 from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
-    FW_NAME_UPDATES
+    FW_NAME_UPDATES, USE_PYMATGEN_SERIALIZATION
 import pkgutil
 import inspect
 import simplejson as json  # note that ujson is faster, but at this time does not support "default" in dumps()
@@ -55,8 +55,9 @@ def serialize_fw(func):
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict['_fw_name'] = self.fw_name
-        m_dict['@module'] = self.__class__.__module__
-        m_dict['@class'] = self.__class__.__name__
+        if USE_PYMATGEN_SERIALIZATION:
+            m_dict['@module'] = self.__class__.__module__
+            m_dict['@class'] = self.__class__.__name__
         
         return m_dict
     return _decorator

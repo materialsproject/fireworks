@@ -27,3 +27,5 @@ SUBMIT_SCRIPT_NAME = 'submit.script'  # name of submit script
 
 # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
 LAUNCH_RANKS = {"WAITING": 1, "RUNNING": 2, "CANCELED": 3, "FIZZLED": 4, "COMPLETED": 5}
+
+USE_PYMATGEN_SERIALIZATION = False
