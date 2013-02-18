@@ -2,20 +2,18 @@
 Defining Jobs with FireTasks
 ============================
 
-In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. You may have noticed that the ``fw_test.yaml`` file specified that command within a 'FireTask' labeled 'SubprocessTask'. A *FireTask* is simply a predefined job template; the *SubprocessTask* is a very general FireTask that runs an arbitrary shell script.
-
-In this section, we'll provide more details about FireTasks.
+In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a 'FireTask' labeled 'SubprocessTask'. A *FireTask* is a predefined job template; the *SubprocessTask* is a FireTask that runs an arbitrary shell script. In this section, we'll demonstrate how to use and define FireTasks.
 
 .. note:: In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker using the instructions from the :doc:`installation tutorial <installation_tutorial>`.
 
 Running multiple FireTasks
 --------------------------
 
-You can run multiple tasks within the same job. For example, the first step of your job might write an input file that a second step performs some computations on. For example, so that the first step prints ``howdy.txt``, and a second step counts the number of words in that file.
+You can run multiple tasks within the same FireWork. For example, the first step of your FireWork might write an input file that the second step processes. Let's create a FireWork where the first step prints ``howdy.txt``, and the second step counts the number of words in that file.
 
 1. Navigate to the tasks tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorials/task
+    cd <INSTALL_DIR>/fw_tutorials/firetask
 
 2. Look inside the file ``fw_multi.yaml``. You should see two FireTasks. The second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``.
 
@@ -36,7 +34,7 @@ While running arbitrary shell scripts is nice, it's not particularly clean. The 
 
 1. Navigate to the tasks tutorial directory and remove any output from the previous step::
 
-    cd <INSTALL_DIR>/fw_tutorials/task
+    cd <INSTALL_DIR>/fw_tutorials/firetask
     rm *.txt *.json
 
 2. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time notice that the command we are printing out is separated out into its own ``echo_text`` parameter. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the input and output files are also now clearly separated from the commands.
@@ -55,7 +53,7 @@ Because the SubprocessTask can run arbitrary shell scripts, it can in theory run
 
 1. Navigate to the tasks tutorial directory and remove any output from the previous step::
 
-    cd <INSTALL_DIR>/fw_tutorials/task
+    cd <INSTALL_DIR>/fw_tutorials/firetask
     rm *.txt *.json
 
 2. Look inside the file ``fw_adder.yaml``. This FireWork references the ``Addition Task``, which is defined inside the file ``addition_task.py`` in the same directory.
