@@ -7,6 +7,6 @@ fw_spec:
       use_shell: true
   - _fw_name: Subprocess Task
     parameters:
-      script: wc -c fworker.yaml howdy.txt >> howdy.txt
+      script: wc -w fworker.yaml howdy.txt >> words.txt
       use_shell: true
 launch_data: []

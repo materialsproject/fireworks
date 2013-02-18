@@ -160,4 +160,4 @@ if __name__ == '__main__':
     tasks = SubprocessTask.from_str('echo "howdy, your job launched successfully!" >> howdy.txt')
     print tasks.to_dict()
     fw = FireWork(tasks)
-    fw.to_file("../../fw_tutorials/installation/fw_test.yaml")
+    fw.to_file("../../fw_tutorials/task/fw_better_multi.yaml")

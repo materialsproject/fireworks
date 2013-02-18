@@ -1,0 +1,10 @@
+fw_id: null
+fw_spec:
+  _tasks:
+  - _fw_name: Subprocess Task
+    parameters:
+      script: cat -t
+      stdin_key: echo_text
+      stdout_file: howdy.txt
+  echo_text: howdy, your job launched successfully!
+launch_data: []

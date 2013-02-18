@@ -49,7 +49,7 @@ class Rocket():
         # add heartbeat
         # lots of stuff to add!
         
-        for my_task in m_fw.all_tasks:
+        for my_task in m_fw.tasks:
             my_task.register_lp(lp)  # TODO: is this really needed?
             my_task.run_task(m_fw)
         

@@ -77,6 +77,8 @@ The Rocket fetches an available FireWork from the FireServer and runs it.
     
 You should see the text ``howdy, your job launched successfully!``
 
+.. note:: In addition to ``howdy.txt``, you should also see a file called ``fw.json``. This contains a JSON representation of the FireWork that the Rocket ran.
+
 4. Check the status of your FireWork::
 
     launchpad_run.py get_fw 1
@@ -116,9 +118,9 @@ Connect to the FireServer from the FireWorker
 
 The FireWorker needs to know the login information for the FireServer. On the FireWorker,
 
-1. Navigate to the tutorial directory::
+1. Navigate to the installation tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorial/installation
+    cd <INSTALL_DIR>/fw_tutorials/installation
 
 where <INSTALL_DIR> is your FireWorks installation directory.
 

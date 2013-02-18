@@ -1,4 +1,4 @@
 url: somecomputer.host.com
-type: general worker
+category: general worker
 params: null
 query: '{}'

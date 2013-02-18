@@ -30,7 +30,7 @@ class FireTaskBase():
     def register_lp(self, launchpad):
         self.launchpad = launchpad
     
-    def run_task(self, fw_spec):
+    def run_task(self, fw):
         raise NotImplementedError('Need to implement run_task!')
     
     @serialize_fw
@@ -86,7 +86,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         
         self.shell_exe = parameters.get('shell_exe', None)
         
-    def run_task(self, fw_spec):
+    def run_task(self, fw):
         
         output = {}
         
@@ -99,12 +99,11 @@ class SubprocessTask(FireTaskBase, FWSerializable):
             self.stdin = subprocess.PIPE
         
         # run the program
-        print self.script
         p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=self.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=self.use_shell)
         #p = subprocess.Popen( args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags)
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
-            (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
+            (stdout, stderr) = p.communicate(fw.fw_spec[self.stdin_key])
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode
@@ -127,6 +126,8 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         
         if self.returncode_key:
             output[self.returncode_key] = returncode
+        
+        return output
     
     @classmethod
     def from_str(cls, shell_cmd):
