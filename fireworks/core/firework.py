@@ -8,7 +8,6 @@ A Launch is a describes a FireWork's run on a computing resource.
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
-from fireworks.core.firetask import FireTaskBase, SubprocessTask
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -45,7 +44,7 @@ class FireWork(FWSerializable):
         self.spec['_tasks'] = [t.to_dict() for t in tasks]
         self.fw_id = fw_id
         self.launch_data = launch_data if launch_data else []
-    
+
     def to_dict(self):
         '''
         This is a 'minimal' or 'compact' dict representation of the FireWork
@@ -146,7 +145,7 @@ class FWDecision():
         self.action = action
         self.add_fws = add_fws
         self.mod_spec = mod_spec
-        self.stored_data if stored_data else {}
+        self.stored_data = stored_data if stored_data else {}
         
     def to_dict(self):
         return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec, "add_fws": self.add_fws}
