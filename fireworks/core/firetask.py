@@ -5,6 +5,8 @@ TODO: add docs
 '''
 import subprocess
 import shlex
+from fireworks.utilities.fw_serializers import serialize_fw, load_object,\
+    FWSerializable
 
 
 __author__ = 'Anubhav Jain'
@@ -21,6 +23,7 @@ class FireTaskBase():
     '''
     
     def __init__(self, parameters):
+        # Add the following line to your FireTasks to get to_dict to work
         self.parameters = parameters
     
     # TODO: register fw_id?
@@ -30,13 +33,21 @@ class FireTaskBase():
     def run_task(self, fw_spec):
         raise NotImplementedError('Need to implement run_task!')
     
+    @serialize_fw
+    def to_dict(self):
+        return {"parameters": self.parameters}
+    
+    @classmethod
+    def from_dict(self, m_dict):
+        return self(m_dict['parameters'])
+    
     # TODO: add a write to log method
     
 # TODO: Task for committing a file to DB?
 # TODO: add checkpoint function
 
 
-class SubprocessTask(FireTaskBase):
+class SubprocessTask(FireTaskBase, FWSerializable):
     
     _fw_name = "Subprocess Task"
     
@@ -44,6 +55,7 @@ class SubprocessTask(FireTaskBase):
     #TODO: add terminate on ERROR, continue on OK, once the return dict format is agreed on
     
     def __init__(self, parameters):
+        self.parameters = parameters
         # dynamic parameters
         
         # stdout = dict with key and/or file parameter, or "_PIPE".
@@ -115,3 +127,7 @@ class SubprocessTask(FireTaskBase):
         
         if self.returncode_key:
             output[self.returncode_key] = returncode
+    
+    @classmethod
+    def from_str(cls, shell_cmd):
+        return SubprocessTask({"script": shell_cmd, "use_shell": True})

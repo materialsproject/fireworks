@@ -5,9 +5,10 @@ A FireWork defines a workflow as a DAG (directed acyclical graph).
 
 A Launch is a describes a FireWork's run on a computing resource.
 '''
-from fireworks.utilities.fw_serializers import FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
+from fireworks.core.firetask import FireTaskBase, SubprocessTask
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -22,21 +23,26 @@ __date__ = "Feb 5, 2013"
 
 class FireWork(FWSerializable):
     
-    def __init__(self, tasks, fw_spec, fw_id=None, launch_data=None):
+    def __init__(self, tasks, fw_spec=None, fw_id=None, launch_data=None):
         '''
         TODO: add more docs
         
         reserved fw_spec keywords:
-            _tasks - the tasks to run
-            _priority - the priority of the FW 
+            _tasks - a list of FireTasks to run
+            _priority - the priority of the FW
         
+        :param tasks: a list of FireTasks
         :param fw_spec: a dict specification of the job to run
         :param fw_id: the FW's database id to the LaunchPad
         :param launch_data: a list of Launch objects of this FireWork
         '''
+        # transform tasks into a list, if not in that format
+        if not isinstance(tasks, list):
+            tasks = [tasks]
+        
         self.tasks = tasks
-        self.fw_spec = fw_spec
-        fw_spec['_tasks'] = self.tasks
+        self.fw_spec = fw_spec if fw_spec else {}
+        self.fw_spec['_tasks'] = [t.to_dict() for t in tasks]
         self.fw_id = fw_id
         self.launch_data = launch_data if launch_data else []
     
@@ -57,11 +63,12 @@ class FireWork(FWSerializable):
     
     @classmethod
     def from_dict(self, m_dict):
+        tasks = [load_object(t) for t in m_dict['fw_spec']['_tasks']]
         fw_id = m_dict.get('fw_id', None)
         ld = m_dict.get('launch_data', None)
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
-        return FireWork(m_dict['fw_spec'], fw_id, ld)
+        return FireWork(tasks, m_dict['fw_spec'], fw_id, ld)
     
     @property
     def state(self):
@@ -150,6 +157,7 @@ class FWDecision():
 
 
 if __name__ == '__main__':
-    fw_spec = {'_tasks': 'echo "howdy, your job launched successfully!" >> howdy.txt'}
-    fw = FireWork(fw_spec)
-    fw.to_file("../../fw_tutorial/installation/fw_test.yaml")
+    tasks = SubprocessTask.from_str('echo "howdy, your job launched successfully!" >> howdy.txt')
+    print tasks.to_dict()
+    fw = FireWork(tasks)
+    fw.to_file("../../fw_tutorials/installation/fw_test.yaml")
