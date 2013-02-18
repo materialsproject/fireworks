@@ -61,7 +61,7 @@ class FireWork(FWSerializable):
         return m_dict
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         tasks = [load_object(t) for t in m_dict['spec']['_tasks']]
         fw_id = m_dict.get('fw_id', None)
         ld = m_dict.get('launch_data', None)
@@ -107,7 +107,7 @@ class Launch(FWSerializable):
         return {"fworker": self.fworker.to_dict(), "state": self.state, "launch_id": self.launch_id}
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
         return Launch(fworker, m_dict['state'], m_dict['launch_id'])
 
@@ -151,5 +151,5 @@ class FWDecision():
         return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec, "add_fws": self.add_fws}
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])

@@ -61,7 +61,7 @@ class LaunchPad(FWSerializable):
         return d
     
     @classmethod
-    def from_dict(self, d):
+    def from_dict(cls, d):
         return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'])
     
     def initialize(self, password, require_password=True):

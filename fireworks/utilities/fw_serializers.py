@@ -56,7 +56,7 @@ def serialize_fw(func):
         if USE_PYMATGEN_SERIALIZATION:
             m_dict['@module'] = self.__class__.__module__
             m_dict['@class'] = self.__class__.__name__
-        
+
         return m_dict
     return _decorator
 
@@ -77,22 +77,22 @@ class FWSerializable():
     
     For an example of serialization, see the class QueueAdapterBase.
     """
-    
+
     @property
     def fw_name(self):
         try:
             return self._fw_name
         except AttributeError:
             return self.__class__.__name__
-    
+
     @classmethod
     def to_dict(self):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
 
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
-    
+
     def to_format(self, f_format='json', *args, **kwargs):
         """
         returns a String representation in the given format
@@ -106,7 +106,7 @@ class FWSerializable():
             return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
-    
+
     @classmethod
     def from_format(self, f_str, f_format='json'):
         """
@@ -131,7 +131,7 @@ class FWSerializable():
             f_format = filename.split('.')[-1]
         with open(filename, 'w') as f:
             f.write(self.to_format(f_format=f_format))
-        
+
     @classmethod
     def from_file(self, filename, f_format='AUTO_DETECT'):
         """
@@ -194,7 +194,7 @@ def load_object(obj_dict):
             if m_object:
                 SAVED_FW_OBJECTS[fw_name] = m_object
                 return m_object
-    
+
     raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
 
 
@@ -224,7 +224,7 @@ def _search_module_for_obj(m_module, obj_dict):
     internal method that looks in a module for a class with a given _fw_name
     """
     obj_name = obj_dict['_fw_name']
-    
+
     for name, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
@@ -235,17 +235,17 @@ def _search_module_for_obj(m_module, obj_dict):
 def _reconstitute_dates(obj_dict):
     if obj_dict is None:
         return None
-    
+
     if isinstance(obj_dict, dict):
         return {k: _reconstitute_dates(v) for k, v in obj_dict.items()}
-    
+
     if isinstance(obj_dict, list):
         return [_reconstitute_dates(v) for v in obj_dict]
-    
+
     if isinstance(obj_dict, basestring):
         try:
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
         except:
             pass
-        
+
     return obj_dict

@@ -33,7 +33,7 @@ class TestSerializer(FWSerializable):
         return {"a": self.a, "m_date": self.m_date}
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         return TestSerializer(m_dict["a"], m_dict["m_date"])
     
 
@@ -50,5 +50,5 @@ class ExportTestSerializer(FWSerializable):
         return {"a": self.a, "_fw_name": self._fw_name}
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         return ExportTestSerializer(m_dict["a"])

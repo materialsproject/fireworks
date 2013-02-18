@@ -35,7 +35,7 @@ class FWorker(FWSerializable):
         return {'url': self.url, 'category': self.category, 'query': json.dumps(self.query), 'params': self.params}
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         return FWorker(m_dict['url'], m_dict['category'], json.loads(m_dict['query']), m_dict['params'])
 
 
@@ -84,7 +84,7 @@ class QueueAdapterBase(FWSerializable):
         return {}
     
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         return self()
     
     
@@ -114,7 +114,7 @@ class RocketParams(FWSerializable):
         return {'qa_name': self.qa.fw_name, 'params': self.params, 'logging_dir': self.logging_dir}
             
     @classmethod
-    def from_dict(self, m_dict):
+    def from_dict(cls, m_dict):
         """
         Note: The QueueAdapter is loaded based on its fw_name alone
         See the docs for to_dict() for more details
