@@ -154,10 +154,3 @@ class FWDecision():
     @classmethod
     def from_dict(self, m_dict):
         return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])
-
-
-if __name__ == '__main__':
-    tasks = SubprocessTask.from_str('echo "howdy, your job launched successfully!" >> howdy.txt')
-    print tasks.to_dict()
-    fw = FireWork(tasks)
-    fw.to_file("../../fw_tutorials/task/fw_better_multi.yaml")
