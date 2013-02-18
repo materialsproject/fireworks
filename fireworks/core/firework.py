@@ -23,16 +23,16 @@ __date__ = "Feb 5, 2013"
 
 class FireWork(FWSerializable):
     
-    def __init__(self, tasks, fw_spec=None, fw_id=None, launch_data=None):
+    def __init__(self, tasks, spec=None, fw_id=None, launch_data=None):
         '''
         TODO: add more docs
         
-        reserved fw_spec keywords:
+        reserved spec keywords:
             _tasks - a list of FireTasks to run
             _priority - the priority of the FW
         
         :param tasks: a list of FireTasks
-        :param fw_spec: a dict specification of the job to run
+        :param spec: a dict specification of the job to run
         :param fw_id: the FW's database id to the LaunchPad
         :param launch_data: a list of Launch objects of this FireWork
         '''
@@ -41,8 +41,8 @@ class FireWork(FWSerializable):
             tasks = [tasks]
         
         self.tasks = tasks
-        self.fw_spec = fw_spec if fw_spec else {}
-        self.fw_spec['_tasks'] = [t.to_dict() for t in tasks]
+        self.spec = spec if spec else {}
+        self.spec['_tasks'] = [t.to_dict() for t in tasks]
         self.fw_id = fw_id
         self.launch_data = launch_data if launch_data else []
     
@@ -50,7 +50,7 @@ class FireWork(FWSerializable):
         '''
         This is a 'minimal' or 'compact' dict representation of the FireWork
         '''
-        return {'fw_spec': self.fw_spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
+        return {'spec': self.spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
     
     # consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
     def to_db_dict(self):
@@ -63,12 +63,12 @@ class FireWork(FWSerializable):
     
     @classmethod
     def from_dict(self, m_dict):
-        tasks = [load_object(t) for t in m_dict['fw_spec']['_tasks']]
+        tasks = [load_object(t) for t in m_dict['spec']['_tasks']]
         fw_id = m_dict.get('fw_id', None)
         ld = m_dict.get('launch_data', None)
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
-        return FireWork(tasks, m_dict['fw_spec'], fw_id, ld)
+        return FireWork(tasks, m_dict['spec'], fw_id, ld)
     
     @property
     def state(self):

@@ -21,7 +21,7 @@ class AdderTask(FireTaskBase, FWSerializable):
     _fw_name = "Addition Task"
     
     def run_task(self, fw):
-        input_array = fw.fw_spec['input_array']
+        input_array = fw.spec['input_array']
         m_sum = sum(input_array)
 
         with open('sum_output.txt', 'w') as f:

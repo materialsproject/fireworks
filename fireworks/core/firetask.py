@@ -100,7 +100,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
 
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
-            (stdout, stderr) = p.communicate(fw.fw_spec[self.stdin_key])
+            (stdout, stderr) = p.communicate(fw.spec[self.stdin_key])
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode

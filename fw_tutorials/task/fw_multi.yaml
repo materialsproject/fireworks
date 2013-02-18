@@ -1,5 +1,5 @@
 fw_id: null
-fw_spec:
+spec:
   _tasks:
   - _fw_name: Subprocess Task
     parameters:

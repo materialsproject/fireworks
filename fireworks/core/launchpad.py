@@ -102,7 +102,7 @@ class LaunchPad(FWSerializable):
         m_query['state'] = {'$in': ['WAITING', 'FIZZLED']}
         
         # check out the matching firework, depending on the query set by the FWorker
-        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}}, sort=[("fw_spec._priority", DESCENDING)])
+        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}}, sort=[("spec._priority", DESCENDING)])
         
         if not m_fw:
             return (None, None)
@@ -178,7 +178,7 @@ class LaunchPad(FWSerializable):
         fw_ids = []
         criteria = query if query else {}
         
-        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("fw_spec._priority", DESCENDING)]):
+        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("spec._priority", DESCENDING)]):
             fw_ids.append(fw["fw_id"])
         
         return fw_ids
