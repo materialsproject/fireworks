@@ -6,16 +6,18 @@ In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple scr
 
 In this section, we'll provide more details about FireTasks.
 
+.. note:: In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker using the instructions from the :doc:`installation tutorial <installation_tutorial>`.
+
 Running multiple FireTasks
 --------------------------
 
-You can run multiple tasks within the same job. For example, the first step of your job might involve writing an input file, while a second step is needed to process that input file. Let's extend our previous job to count the number of words in ``howdy.txt``, and print the result to ``words.txt``.
+You can run multiple tasks within the same job. For example, the first step of your job might write an input file that a second step performs some computations on. For example, so that the first step prints ``howdy.txt``, and a second step counts the number of words in that file.
 
 1. Navigate to the tasks tutorial directory::
 
     cd <INSTALL_DIR>/fw_tutorials/task
 
-2. Look inside the file ``fw_multi.yaml``. You should see two FireTasks. The second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt``.
+2. Look inside the file ``fw_multi.yaml``. You should see two FireTasks. The second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``.
 
 3. Run this FireWork on the central server::
 
@@ -46,8 +48,8 @@ While running arbitrary shell scripts is nice, it's not particularly clean. The 
 	rocket_run.py
 
 
-Creating a new FireTask
------------------------
+Creating a custom FireTask
+--------------------------
 
 Because the SubprocessTask can run arbitrary shell scripts, it can in theory run any type of job. However, it is better to define custom FireTasks (job templates) for the codes you run. A custom FireTask can clarify the usage of your code and guard against unintended behavior by restricting the commands that can be executed. For example, let's look at a custom FireTask that adds one or more numbers using Python's ``sum()`` function:
 
@@ -61,11 +63,17 @@ Because the SubprocessTask can run arbitrary shell scripts, it can in theory run
 3. Look inside the file ``addition_task.py``. It should be clear how a FireTask is set up:
  	a. the reserved ``fw_name`` parameter is set to ``Addition Task``, which is how FireWorks knows to use this code when an ``Addition Task`` is specified inside a FireWork.
  	b. the ``run_task()`` method is the code that gets executed. In this case, the task sums the values in the field called ``input_array``, and writes the output to ``sum_output.txt``.
+ 	c. The main method exports the ``fw_adder.yaml`` file, which is a FireWork that performs the addition task on the inputs ``[1, 2]``.
 
- 
-4. Run the FireWork on the central server to confirm that it also works::
+4. Run the FireWork on the central server to confirm that addition works::
 
 	launchpad_run.py initialize <TODAY'S DATE>
-	launchpad_run.py upsert_fw fw_better_multi.yaml
+	launchpad_run.py upsert_fw fw_adder.yaml
 	rocket_run.py
 
+Next up: Workflows!
+-------------------
+
+With custom FireTasks, you can now go beyond running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on dynamic input from the ``spec`` of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the spec to decide what numbers to add.
+
+While one could construct an entire workflow by chaining together FireTasks within a single FireWork, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single FireWork. The next step in the tutorial is to explore connecting together FireWorks into a true *workflow*.
