@@ -1,6 +1,14 @@
 core Package
 ============
 
+:mod:`firetask` Module
+----------------------
+
+.. automodule:: fireworks.core.firetask
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`firework` Module
 ----------------------
 
