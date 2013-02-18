@@ -6,5 +6,10 @@ fw_spec:
       script: cat -t
       stdin_key: echo_text
       stdout_file: howdy.txt
+  - _fw_name: Subprocess Task
+    parameters:
+      script: wc -w
+      stdin_file: howdy.txt
+      stdout_file: words.txt
   echo_text: howdy, your job launched successfully!
 launch_data: []

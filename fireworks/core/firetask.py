@@ -93,8 +93,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         # get the standard in
         self.stdin = None
         if self.stdin_file:
-            with open(self.stdin_file) as f:
-                self.stdin = f.read()
+            self.stdin = open(self.stdin_file)
         elif self.stdin_key:
             self.stdin = subprocess.PIPE
         
@@ -107,6 +106,10 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode
+        
+        # TODO: make this neater and guaranteed, e.g. using "with open() as f"
+        if self.stdin_file:
+            self.stdin.close()
         
         # write out the output, error files if specified
         if self.stdout_file:
