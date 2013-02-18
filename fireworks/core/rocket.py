@@ -5,6 +5,7 @@ TODO: add docs
 '''
 import simplejson as json
 from fireworks.core.firetask import SubprocessTask
+from fireworks.core.fw_constants import ALLOW_SUBPROCESS
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -58,6 +59,8 @@ class Rocket():
             my_task = SubprocessTask({"script": cmd, "use_shell": True})
         
         my_task.register_lp(lp)  # TODO: is this really needed?
+        if not ALLOW_SUBPROCESS and isinstance(my_task, SubprocessTask):
+            raise ValueError("SubProcess tasks are not allowed!")
         my_task.run_task(m_fw)
         
         # continue on to next script if:
