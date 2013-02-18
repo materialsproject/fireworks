@@ -89,14 +89,14 @@ class SubprocessTask(FireTaskBase, FWSerializable):
     def run_task(self, fw):
         # get the standard in and run task internally
         if self.stdin_file:
-            with open(self.stin_file) as stdin_f:
+            with open(self.stdin_file) as stdin_f:
                 return self._run_task_internal(fw, stdin_f)
-        elif self.stdin_key:
-            return self._run_task_internal(fw, subprocess.PIPE)
-    
+        stdin = subprocess.PIPE if self.stdin_key else None
+        return self._run_task_internal(fw, stdin)
+            
     def _run_task_internal(self, fw, stdin):
         # run the program
-        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=self.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=self.use_shell)
+        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=self.use_shell)
 
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
