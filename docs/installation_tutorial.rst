@@ -262,4 +262,4 @@ You've now launched multiple Rockets with a single command!
 Next steps
 ==========
 
-If you've completed this tutorial, your FireServer and a single FireWorker are ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in learning how to define more complicated and dynamic workflows. We'll cover the basics of workflow creation and execution in the next part of the tutorial.
+If you've completed this tutorial, your FireServer and a single FireWorker are ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in running more complex jobs and creating multi-step workflows. We'll continue the tutorial with how to :doc:`better define jobs using FireTasks </task_tutorial>`.
