@@ -22,20 +22,21 @@ __date__ = "Feb 5, 2013"
 
 class FireWork(FWSerializable):
     
-    def __init__(self, fw_spec, fw_id=None, launch_data=None):
+    def __init__(self, tasks, fw_spec, fw_id=None, launch_data=None):
         '''
         TODO: add more docs
         
         reserved fw_spec keywords:
-            _script - the script to run
+            _tasks - the tasks to run
             _priority - the priority of the FW 
         
         :param fw_spec: a dict specification of the job to run
         :param fw_id: the FW's database id to the LaunchPad
         :param launch_data: a list of Launch objects of this FireWork
         '''
-        
+        self.tasks = tasks
         self.fw_spec = fw_spec
+        fw_spec['_tasks'] = self.tasks
         self.fw_id = fw_id
         self.launch_data = launch_data if launch_data else []
     
@@ -149,6 +150,6 @@ class FWDecision():
 
 
 if __name__ == '__main__':
-    fw_spec = {'_script': 'echo "howdy, your job launched successfully!" >> howdy.txt'}
+    fw_spec = {'_tasks': 'echo "howdy, your job launched successfully!" >> howdy.txt'}
     fw = FireWork(fw_spec)
     fw.to_file("../../fw_tutorial/installation/fw_test.yaml")

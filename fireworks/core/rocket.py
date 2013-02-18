@@ -52,7 +52,7 @@ class Rocket():
         # add checkpoint stuff
         # add heartbeat
         # lots of stuff to add!
-        cmd = m_fw.fw_spec['_script']
+        cmd = m_fw.tasks
         my_task = None
         if isinstance(cmd, basestring):
             # run a subprocess command using the shell
