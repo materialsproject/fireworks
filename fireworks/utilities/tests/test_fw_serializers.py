@@ -100,6 +100,10 @@ class SerializationTest(unittest.TestCase):
     
     def test_implicit_serialization(self):
         self.assertEqual(load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}), self.obj_4, 'Implicit import fails!')
-        
+        print 'trying again'
+        load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"})
+        print 'trying again'
+        load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"})
+
 if __name__ == "__main__":
     unittest.main()

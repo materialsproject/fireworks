@@ -35,16 +35,14 @@ import simplejson as json  # note that ujson is faster, but at this time does no
 import importlib
 import datetime
 
-# TODO: remember the module and class of objects so you don't need to search through all the user packages
-# every single time...
-
-
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 13, 2012'
+
+SAVED_FW_OBJECTS = {}
 
 
 def serialize_fw(func):
@@ -171,24 +169,30 @@ def load_object(obj_dict):
     """
 
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
-    fw_name = obj_dict['_fw_name']
-    fw_name = FW_NAME_UPDATES.get(fw_name, fw_name)
+    fw_name = FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
     obj_dict['_fw_name'] = fw_name
-    
-    # first try to load from the serialized module name
+
+    # first try to load from known location
+    if fw_name in SAVED_FW_OBJECTS:
+        return SAVED_FW_OBJECTS[fw_name]
+
+    # second try to load from the serialized module name
+    # only works if you used USE_PYMATGEN_SERIALIZATION option
     if obj_dict.get('@module', None):
         m_module = importlib.import_module(obj_dict['@module'])
         m_object = _search_module_for_obj(m_module, obj_dict)
         if m_object:
             return m_object
-    
+
     # failing that, look for the object within all of USER_PACKAGES
+    # this will be slow, but only needed the first time
     for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
         for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__, package + '.'):
             m_module = loader.find_module(module_name).load_module(module_name)
             m_object = _search_module_for_obj(m_module, obj_dict)
             if m_object:
+                SAVED_FW_OBJECTS[fw_name] = m_object
                 return m_object
     
     raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
