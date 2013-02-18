@@ -51,7 +51,7 @@ A FireWork is a workflow. For this tutorial, we will use a FireWork that consist
 
     launchpad_run.py get_fw 1
 
-This prints out the FireWork with fw_id=1 (the first FireWork entered into the database). Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, this is the command that will be executed (print some text into a file named ``howdy.txt``).
+This prints out the FireWork with fw_id=1 (the first FireWork entered into the database). Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, this is the command that will be executed (print some text into a file named ``howdy.txt``). The ``use_shell`` parameter indicates that the command will be interpreted through the shell.
 
 You have now stored a FireWork in the database! It is now ready to be launched.
 
@@ -71,7 +71,7 @@ A Rocket fetches a FireWork (workflow) from the FireServer database and runs it.
     
 The Rocket fetches an available FireWork from the FireServer and runs it.
 
-3. Verify that the desired script ran::
+3. Verify that the desired task ran::
 
     cat howdy.txt
     
@@ -201,7 +201,7 @@ The RocketLauncher needs to know how to communicate with your queue system and t
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
-   a. The RocketLauncher submitted a script containing a Rocket to your queue manager
+   a. The RocketLauncher submitted a Rocket to your queue manager
    b. Your queue manager executed the Rocket when resources were ready
    c. The Rocket fetched a FireWork from the FireServer and ran the specification inside
    

@@ -39,10 +39,8 @@ class Rocket():
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
         
-        # TODO: write the spec to a file in the directory
-        # TODO: write the entire FireWork?
-        with open('fw_json.spec', 'w') as f:
-            f.write(json.dumps(m_fw.fw_spec))
+        with open('fw.json', 'w') as f:
+            f.write(json.dumps(m_fw.to_dict()))
         
         # execute the script inside the spec
         # TODO: support lists, native Python code, bind monitors, etc...
