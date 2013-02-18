@@ -29,14 +29,20 @@ Improving our use of SubprocessTask
 -----------------------------------
 
 While running arbitrary shell scripts is nice, it's not particularly clean. For example, 
-the command (``echo``), its arguments (``"howdy, your job launched successfully!"``), and its output (``howdy.txt``) were all intermingled within the same line. If we separated these components, it would be easier to do a data-parallel task where the same command (e.g., ``echo``) is run for multiple arguments. In addition, we might want to avoid using shell operators such as piping to file (``>>``). Let's examine a better way to define our multi-step job.
+the command (``echo``), its arguments (``"howdy, your job launched successfully!"``), and its output (``howdy.txt``) were all intermingled within the same line. If we separated these components, it would be easier to do a data-parallel task where the same commands are run for multiple arguments. Let's examine a better way to define our multi-step job:
 
 1. Navigate to the tasks tutorial directory and remove any output from the previous step::
 
     cd <INSTALL_DIR>/fw_tutorials/task
-    rm *.txt
+    rm *.txt *.json
 
-2. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks. The second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt``.
+2. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time notice that the command we are printing out is separated out into its own ``echo_text`` parameter. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the input and output files are also now clearly separated from the commands.
+
+3. Run the FireWork on the central server to confirm that it also works::
+
+	launchpad_run.py initialize <TODAY'S DATE>
+	launchpad_run.py upsert_fw fw_better_multi.yaml
+	rocket_run.py
 
 
 Improving our code with the SubProcess FireTask
