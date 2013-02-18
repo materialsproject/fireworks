@@ -87,29 +87,23 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         self.shell_exe = parameters.get('shell_exe', None)
         
     def run_task(self, fw):
-        
-        output = {}
-        
-        # get the standard in
-        self.stdin = None
+        # get the standard in and run task internally
         if self.stdin_file:
-            self.stdin = open(self.stdin_file)
+            with open(self.stin_file) as stdin_f:
+                return self._run_task_internal(fw, stdin_f)
         elif self.stdin_key:
-            self.stdin = subprocess.PIPE
-        
+            return self._run_task_internal(fw, subprocess.PIPE)
+    
+    def _run_task_internal(self, fw, stdin):
         # run the program
         p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=self.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=self.use_shell)
-        #p = subprocess.Popen( args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags)
+
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
             (stdout, stderr) = p.communicate(fw.fw_spec[self.stdin_key])
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode
-        
-        # TODO: make this neater and guaranteed, e.g. using "with open() as f"
-        if self.stdin_file:
-            self.stdin.close()
         
         # write out the output, error files if specified
         if self.stdout_file:
@@ -121,6 +115,8 @@ class SubprocessTask(FireTaskBase, FWSerializable):
                 f.write(stderr)
         
         # write the output keys
+        output = {}
+        
         if self.stdout_key:
             output[self.stdout_key] = stdout
         
