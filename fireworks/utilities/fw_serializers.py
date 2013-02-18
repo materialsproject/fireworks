@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''
+"""
 This module aids in serializing and deserializing objects.
 
 To serialize a FW object, refer to the documentation for the FWSerializable class. \
@@ -24,7 +24,7 @@ Some advantages:
 
 A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder, when the \
 serialize_fw() decorator is used.
-'''
+"""
 
 import yaml
 from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
@@ -48,10 +48,10 @@ __date__ = 'Dec 13, 2012'
 
 
 def serialize_fw(func):
-    '''
+    """
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
-    '''
+    """
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict['_fw_name'] = self.fw_name
@@ -64,7 +64,7 @@ def serialize_fw(func):
 
 
 class FWSerializable():
-    '''
+    """
     To create a serializable object within FireWorks, you should subclass this class and implement
     the to_dict() and from_dict() methods.
     
@@ -78,7 +78,7 @@ class FWSerializable():
     that implements the to_dict() and from_dict() for all its subclasses.
     
     For an example of serialization, see the class QueueAdapterBase.
-    '''
+    """
     
     @property
     def fw_name(self):
@@ -96,10 +96,10 @@ class FWSerializable():
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
     
     def to_format(self, f_format='json', *args, **kwargs):
-        '''
+        """
         returns a String representation in the given format
         :param f_format: the format to output to (default json)
-        '''
+        """
         if f_format == 'json':
             dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
             return json.dumps(self.to_dict(), *args, default=dthandler, **kwargs)
@@ -111,11 +111,11 @@ class FWSerializable():
     
     @classmethod
     def from_format(self, f_str, f_format='json'):
-        '''
+        """
         convert from a String representation to its Object
         :param f_str: the String representation
         :param f_format: serialization format of the String (default json)
-        '''
+        """
         if f_format == 'json':
             return self.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
@@ -124,11 +124,11 @@ class FWSerializable():
             raise ValueError('Unsupported format {}'.format(f_format))
 
     def to_file(self, filename, f_format='AUTO_DETECT'):
-        '''
+        """
         Write a serialization of this object to a file
         :param filename: filename to write to
         :param f_format: serialization format, default checks the filename extension
-        '''
+        """
         if f_format == 'AUTO_DETECT':
             f_format = filename.split('.')[-1]
         with open(filename, 'w') as f:
@@ -136,11 +136,11 @@ class FWSerializable():
         
     @classmethod
     def from_file(self, filename, f_format='AUTO_DETECT'):
-        '''
+        """
         Load a serialization of this object from a file
         :param filename: filename to read
         :param f_format: serialization format, default checks the filename extension
-        '''
+        """
         if f_format == 'AUTO_DETECT':
             f_format = filename.split('.')[-1]
         with open(filename, 'r') as f:
@@ -148,7 +148,7 @@ class FWSerializable():
 
 
 def load_object(obj_dict):
-    '''
+    """
     Creates an instantiation of a class based on a dictionary representation. We implicitly
     determine the Class through introspection along with information in the dictionary.
     
@@ -168,7 +168,7 @@ def load_object(obj_dict):
     ii) If you want to put a refactored module in a new place add an entry to USER_PACKAGES
 
     :param obj_dict: the dict representation of the class
-    '''
+    """
 
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
     fw_name = obj_dict['_fw_name']
@@ -195,12 +195,12 @@ def load_object(obj_dict):
 
 
 def load_object_from_file(filename, f_format='AUTO_DETECT'):
-    '''
+    """
     implicitly load an object from a file. just a friendly wrapper to load_object()
     
     :param filename: the filename to load an object from
     :param f_format: the serialization format (default is auto-detect based on filename extension)
-    '''
+    """
     m_dict = {}
     if f_format == 'AUTO_DETECT':
         f_format = filename.split('.')[-1]
@@ -216,9 +216,9 @@ def load_object_from_file(filename, f_format='AUTO_DETECT'):
 
 
 def _search_module_for_obj(m_module, obj_dict):
-    '''
+    """
     internal method that looks in a module for a class with a given _fw_name
-    '''
+    """
     obj_name = obj_dict['_fw_name']
     
     for name, obj in inspect.getmembers(m_module):

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
-'''
+"""
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork

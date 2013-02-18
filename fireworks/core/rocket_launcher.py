@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-'''
+"""
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
 or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure. \
 The details of job submission and queue communication are handled using RocketParams, \
 which specifies a QueueAdapter as well as desired properties of the submit script.
-'''
+"""
 
 import os
 import glob
@@ -24,12 +24,12 @@ __date__ = 'Dec 12, 2012'
 
 
 def launch_rocket(rocket_params, launch_dir='.'):
-    '''
+    """
     Submit a single job to the queue.
     
     :param rocket_params: A RocketParams instance
     :param launch_dir: The directory where to submit the job
-    '''
+    """
     
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
@@ -66,7 +66,7 @@ def launch_rocket(rocket_params, launch_dir='.'):
 
 
 def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
-    '''
+    """
     Submit many jobs to the queue.
     
     :param rocket_params: A RocketParams instance
@@ -75,7 +75,7 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     :param n_loops: number of times to loop rapid-fire mode to maintain njobs_queue
     :param t_sleep: sleep time between loops in rapid-fire mode
-    '''
+    """
     
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
@@ -126,22 +126,22 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
 
 
 def _njobs_in_dir(block_dir):
-    '''
+    """
     Internal method to count the number of jobs inside a block
     :param block_dir: the block directory we want to count the jobs in
-    '''
+    """
     return len(glob.glob('%s/launcher_*' % os.path.abspath(block_dir)))
 
 
 def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
-    '''
+    """
     Internal method to get the number of jobs in the queue using the given job params. \
     In case of failure, automatically retries at certain intervals...
     
     :param rocket_params: a RocketParams() instance
     :param njobs_queue: The maximum number of jobs in the queue desired
     :param l_logger: A logger to put errors/info/warnings/etc.
-    '''
+    """
 
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
     
@@ -159,14 +159,14 @@ def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
         
     
 def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
-    '''
+    """
     Internal method to create a new block or launcher directory. \
     The dir name is based on the time and the FW_BLOCK_FORMAT
     
     :param root_dir: directory to create the new dir in
     :param l_logger: the logger to use
     :param prefix: the prefix for the new dir, default="block_"
-    '''
+    """
     
     time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
     block_path = prefix + time_now

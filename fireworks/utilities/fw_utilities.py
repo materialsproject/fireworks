@@ -19,7 +19,7 @@ PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have alread
 
 
 def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER, clear_logs=False):
-    '''
+    """
     Convenience method to return a logger.
     
     :param name: name of the logger that sets the groups, e.g. 'group1.set2'
@@ -28,7 +28,7 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
     :param stream_level: level to log to standard output. default: 'DEBUG'
     :param formatter: logging format. default: FW_LOGGING_FORMATTER
     :param clear_logs: whether to clear the logger with the same name
-    '''
+    """
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
@@ -56,7 +56,7 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
 
 
 def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
-    '''
+    """
     A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,
     which enhances readability of log lines meant to be read
@@ -66,7 +66,7 @@ def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
     :param log_lvl: The level to log at
     :param msgs: a String or iterable of Strings
     :param add_traceback: add traceback text, useful when logging exceptions (default False)
-    '''
+    """
     
     if isinstance(msgs, basestring):
         msgs = [msgs]
@@ -81,10 +81,10 @@ def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
 
 
 def log_exception(m_logger, msgs):
-    '''
+    """
     A shortcut wrapper around log_fancy for exceptions
     
     :param m_logger: The logger object
     :param msgs: An iterable of Strings, will be joined by newlines
-    '''
+    """
     return log_fancy(m_logger, 'error', msgs, add_traceback=True)

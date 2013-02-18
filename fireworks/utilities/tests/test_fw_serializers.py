@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 TODO: add docs
-'''
+"""
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.tests.test_serializer import TestSerializer,\
     ExportTestSerializer

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 TODO: add docs!
-'''
+"""
 
 import os
 import subprocess
@@ -26,7 +26,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
     _fw_name = 'PBSAdapter (NERSC)'
     
     def get_script_str(self, rocket_params, launch_dir):
-        '''
+        """
         Create a NERSC-style PBS script. For more documentation, see parent object.
         
         Supported RocketParams.params are:
@@ -39,7 +39,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
             - job_name: the name of the job to run
             - modules: a list of modules to load
             - exe: the executable to run, after moving to the launch_dir
-        '''
+        """
         # convert launch_dir to absolute path
         launch_dir = os.path.abspath(launch_dir)
         
@@ -94,9 +94,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
         return '\n'.join(outs)
     
     def submit_to_queue(self, rocket_params, script_file):
-        '''
+        """
         for documentation, see parent object
-        '''
+        """
         
         if not os.path.exists(script_file):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
@@ -132,9 +132,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
             log_exception(pbs_logger, 'Running qsub caused an error...')
     
     def get_njobs_in_queue(self, rocket_params, username=None):
-        '''
+        """
         for documentation, see parent object
-        '''
+        """
         
         # TODO: (low-priority) parse the qstat -x output as an alternate way to get this working
         # tmp_file_name = 'tmp_qstat.xml'

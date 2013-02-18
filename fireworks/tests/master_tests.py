@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-'''
+"""
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.
-'''
+"""
 
 
 __author__ = "Anubhav Jain"
@@ -17,9 +17,9 @@ import unittest
 
 
 class TestImports(unittest.TestCase):
-    '''
+    """
     Make sure that required external libraries can be imported 
-    '''
+    """
     def test_imports(self):
         import yaml
         import simplejson

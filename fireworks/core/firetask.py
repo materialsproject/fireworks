@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 TODO: add docs
-'''
+"""
 from fireworks.utilities.fw_serializers import serialize_fw
 
 
@@ -15,9 +15,9 @@ __date__ = 'Feb 15, 2013'
 
 
 class FireTaskBase():
-    '''
+    """
     TODO: add docs
-    '''
+    """
     
     def __init__(self, parameters):
         # Add the following line to your FireTasks to get to_dict to work

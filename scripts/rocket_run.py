@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 A runnable script to launch a single Rocket (a command-line interface to rocket.py)
-'''
+"""
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket import Rocket

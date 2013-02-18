@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 TODO: add docs
-'''
+"""
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 import datetime
 

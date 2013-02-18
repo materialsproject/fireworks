@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-'''
+"""
 TODO: add docs
-'''
+"""
 import simplejson as json
 
 __author__ = 'Anubhav Jain'
@@ -14,23 +14,23 @@ __date__ = 'Feb 7, 2013'
 
 
 class Rocket():
-    '''
+    """
     The Rocket fetches a workflow step from the FireWorks database and executes it.
-    '''
+    """
     
     def __init__(self, launchpad, fworker):
-        '''
+        """
         
         :param launchpad: A LaunchPad object for interacting with the FW database
         :param fworker: A FWorker object describing the computing resource
-        '''
+        """
         self.launchpad = launchpad
         self.fworker = fworker
     
     def run(self):
-        '''
+        """
         Run the rocket (actually check out a job from the database and execute it)
-        '''
+        """
         
         lp = self.launchpad
         

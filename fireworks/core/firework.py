@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-'''
+"""
 A FireWork defines a workflow as a DAG (directed acyclical graph).
 
 A Launch is a describes a FireWork's run on a computing resource.
-'''
+"""
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -23,7 +23,7 @@ __date__ = "Feb 5, 2013"
 class FireWork(FWSerializable):
     
     def __init__(self, tasks, spec=None, fw_id=None, launch_data=None):
-        '''
+        """
         TODO: add more docs
         
         reserved spec keywords:
@@ -34,7 +34,7 @@ class FireWork(FWSerializable):
         :param spec: a dict specification of the job to run
         :param fw_id: the FW's database id to the LaunchPad
         :param launch_data: a list of Launch objects of this FireWork
-        '''
+        """
         # transform tasks into a list, if not in that format
         if not isinstance(tasks, list):
             tasks = [tasks]
@@ -46,16 +46,16 @@ class FireWork(FWSerializable):
         self.launch_data = launch_data if launch_data else []
 
     def to_dict(self):
-        '''
+        """
         This is a 'minimal' or 'compact' dict representation of the FireWork
-        '''
+        """
         return {'spec': self.spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
     
     # consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
     def to_db_dict(self):
-        '''
+        """
         This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
-        '''
+        """
         m_dict = self.to_dict()
         m_dict['state'] = self.state
         return m_dict
@@ -71,10 +71,10 @@ class FireWork(FWSerializable):
     
     @property
     def state(self):
-        '''
+        """
         Iterate through the launch_data, and find the Launch that is furthest ahead. \
         That is the state of the FireWork as a whole.
-        '''
+        """
         max_score = 0
         max_state = 'WAITING'
         
@@ -90,12 +90,12 @@ class FireWork(FWSerializable):
 class Launch(FWSerializable):
     
     def __init__(self, fworker, state=None, launch_id=None):
-        '''
+        """
         
         :param fworker: A FWorker object describing the worker
         :param state: the state of the Launch
         :param launch_id: the id of the Launch for the LaunchPad
-        '''
+        """
         if state not in LAUNCH_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
         
@@ -113,7 +113,7 @@ class Launch(FWSerializable):
 
 
 class FWDecision():
-    '''
+    """
     A FWDecision returns one of several potential actions:
         -CONTINUE means continue to the next stage in the workflow, no changes are made to the firework
         -BRANCH means to insert new Fireworks into the workflow and forget about the current children
@@ -125,7 +125,7 @@ class FWDecision():
         - stores any metadata about the decision
         - is used by Fuses of child FWs to determine how to proceed
          
-    '''
+    """
     actions = ["CONTINUE", "BRANCH", "DETOUR", "TERMINATE"]
     
     def __init__(self, action, stored_data=None, mod_spec=None, add_fws=None):
