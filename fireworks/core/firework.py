@@ -5,6 +5,7 @@ A FireWork defines a workflow as a DAG (directed acyclical graph).
 
 A Launch is a describes a FireWork's run on a computing resource.
 """
+from collections import defaultdict
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -51,7 +52,7 @@ class FireWork(FWSerializable):
         """
         return {'spec': self.spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
     
-    # consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
+    # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
     def to_db_dict(self):
         """
         This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
@@ -84,8 +85,46 @@ class FireWork(FWSerializable):
                 max_state = l.state 
         
         return max_state
-            
-#TODO: add a working dir at least
+
+
+class FWorkflow(FWSerializable):
+
+    def __init__(self, child_nodes_dict):
+
+        self._nodes = set()
+        self._parents = defaultdict(list)
+        self.children = defaultdict(set)
+
+        for (parent, children) in child_nodes_dict.iteritems():
+            # make sure children is a list
+            if not isinstance(children, list):
+                children = [children]
+
+            # make sure parents and children are Strings for Mongo
+            parent = str(parent)
+            children = [str(c) for c in children]
+
+            # add parent + children to all nodes
+            self._nodes.add(parent)
+            self._nodes.update(children)
+
+            # add the children
+            self.children[parent].update(children)
+
+            # add the parents
+            for child in children:
+                self._parents[child].append(parent)
+
+    def to_dict(self):
+        return dict([(k, list(v)) for (k,v) in self.children.iteritems()])
+
+    @classmethod
+    def from_dict(cls, m_dict):
+        return FWorkflow(m_dict)
+
+
+#TODO: add a working dir at least (maybe inside the Decision?)
+#TODO: add a decision to the Launch
 
 class Launch(FWSerializable):
     
