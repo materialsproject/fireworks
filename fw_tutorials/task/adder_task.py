@@ -21,13 +21,13 @@ class AdderTask(FireTaskBase, FWSerializable):
     _fw_name = "Addition Task"
     
     def run_task(self, fw):
-        sum_array = fw.fw_spec['sum']
-        
-        with open('sum_inputs.txt', 'w') as f:
-            f.write(str(sum_array))
-        
+        input_array = fw.fw_spec['sum']
+        m_sum = sum(input_array)
+
         with open('sum_outputs.txt', 'w') as f:
-            f.write(str(sum(sum_array)))
+            f.write("The sum of {} is: {}".format(input_array, m_sum))
+        
+        return {"sum": m_sum}
 
 if __name__ == '__main__':
     fw = FireWork(AdderTask({}), {"sum": [1, 2]})
