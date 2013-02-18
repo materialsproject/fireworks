@@ -3,7 +3,7 @@ fw_spec:
   _tasks:
   - _fw_name: Addition Task
     parameters: {}
-  sum:
+  input_array:
   - 1
   - 2
 launch_data: []

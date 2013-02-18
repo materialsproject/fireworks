@@ -1,0 +1,1 @@
+{"fw_id": 1, "fw_spec": {"_tasks": [{"_fw_name": "Addition Task", "parameters": {}}], "input_array": [1, 2]}, "launch_data": [{"state": "RUNNING", "fworker": {"url": "unknown url", "category": "general worker", "params": null, "query": "{}"}, "launch_id": 1}]}
