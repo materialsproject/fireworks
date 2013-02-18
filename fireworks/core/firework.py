@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
 """
-A FireWork defines a workflow as a DAG (directed acyclical graph).
+A FireWork defines a workflow step.
 
-A Launch is a describes a FireWork's run on a computing resource.
+An FWorkflow connects FireWorks by their fw_ids.
+
+A Launch is a describes a FireWork's run on a computing resource. The same Launch might apply to multiple FireWorks, e.g. if they are identical.
+
+A FWDecision encapsulates the output of that launch.
 """
 from collections import defaultdict
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
@@ -18,7 +22,6 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-#TODO: make script plural?
 #TODO: add ability to block ports
 
 class FireWork(FWSerializable):
@@ -188,7 +191,11 @@ class FWDecision():
         
     def to_dict(self):
         return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec, "add_fws": self.add_fws}
-    
+
     @classmethod
     def from_dict(cls, m_dict):
         return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])
+
+if __name__ == "__main__":
+    a = FWorkflow({"-1": -2, -1:-3, -2:-4, -3:-4})
+    print a.to_format('yaml')
