@@ -10,6 +10,7 @@ A Launch is a describes a FireWork's run on a computing resource. The same Launc
 A FWDecision encapsulates the output of that launch.
 """
 from collections import defaultdict
+import tarfile
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -54,7 +55,7 @@ class FireWork(FWSerializable):
         This is a 'minimal' or 'compact' dict representation of the FireWork
         """
         return {'spec': self.spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
-    
+
     # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
     def to_db_dict(self):
         """
@@ -90,10 +91,10 @@ class FireWork(FWSerializable):
         return max_state
 
 
-class FWorkflow(FWSerializable):
+class WFConnections(FWSerializable):
+    # TODO: add methods for adding children, removing children
 
     def __init__(self, child_nodes_dict):
-
         self._nodes = set()
         self._parents = defaultdict(list)
         self.children = defaultdict(set)
@@ -119,11 +120,56 @@ class FWorkflow(FWSerializable):
                 self._parents[child].append(parent)
 
     def to_dict(self):
-        return dict([(k, list(v)) for (k,v) in self.children.iteritems()])
+            return dict([(k, list(v)) for (k,v) in self.children.iteritems()])
 
     @classmethod
     def from_dict(cls, m_dict):
-        return FWorkflow(m_dict)
+        return WFConnections(m_dict)
+
+
+class FWorkflow():
+
+    def __init__(self, fireworks, wf_connections):
+
+        """
+
+        :param fireworks: a list of FireWork objects
+        :param wf_connections: A WorkflowConnections object
+        """
+
+
+        self.id_fw = {}
+
+        # initialize id_fw
+        for fw in fireworks:
+            if not fw.fw_id or fw.fw_id in self.id_fw:
+                raise ValueError("FW ids must be well-defined and unique!")
+            # note we have a String key, this matches the WFConnections format
+            self.id_fw[str(fw.fw_id)] = fw
+
+        # TODO: validate that the connections is valid given the FW
+        # (e.g., all the connection ids must be present in the list of FW)
+        self.wf_connections = wf_connections
+
+
+    def to_tar(self):
+        tar = tarfile.open("sample.tar", "w")
+        for name in ["foo", "bar", "quux"]:
+            tar.add(name)
+        tar.close()
+
+    @classmethod
+    def from_tar(cls, tar_filename):
+        t = tarfile.open(tar_filename, 'r')
+        wf_connections = None
+        for f_name in t.getnames():
+            m_file = t.extractfile(f_name)
+            m_format = m_file.name.split('.')[-1]
+            m_contents = m_file.read()
+            if 'wfconnections' in f_name:
+                wf_connections = WFConnections.from_format(m_contents, m_format)
+
+        print wf_connections.to_dict()
 
 
 #TODO: add a working dir at least (maybe inside the Decision?)
@@ -197,5 +243,6 @@ class FWDecision():
         return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])
 
 if __name__ == "__main__":
-    a = FWorkflow({"-1": -2, -1:-3, -2:-4, -3:-4})
-    print a.to_format('yaml')
+    #a = WorkflowConnections({"-1": -2, -1:-3, -2:-4, -3: -4})
+    #print a.to_format('yaml')
+    print FWorkflow.from_tar('../../fw_tutorials/workflow/hello.tar')
