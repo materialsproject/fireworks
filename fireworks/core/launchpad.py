@@ -4,9 +4,10 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
-from fireworks.core.firework import FireWork, Launch
+from fireworks.core.firework import FireWork, Launch, FWorkflow
 from pymongo import DESCENDING
 
 __author__ = 'Anubhav Jain'
@@ -47,6 +48,7 @@ class LaunchPad(FWSerializable):
         
         self.fireworks = self.database.fireworks
         self.fw_id_assigner = self.database.fw_id_assigner
+        self.wfconnections = self.database.wfconnections
         
     def to_dict(self):
         """
@@ -77,6 +79,7 @@ class LaunchPad(FWSerializable):
         
         if password == m_password or not require_password:
             self.fireworks.remove()
+            self.wfconnections.remove()
             self._restart_ids(1, 1)
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
@@ -144,7 +147,8 @@ class LaunchPad(FWSerializable):
         Checkout the next Launch id
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
-    
+
+    '''
     def upsert_fw(self, fw):
         """
         Given a FireWork, either insert it into the database or update the FireWork with the same id.
@@ -160,7 +164,36 @@ class LaunchPad(FWSerializable):
         
         # TODO: make this also apply to sub-fireworks, add children and parent keys
         self.fireworks.update({"fw_id": fw.fw_id}, fw.to_db_dict(), upsert=True)
-    
+    '''
+
+    def insert_wf(self, fwf):
+        """
+
+        :param fwf: an FWorkflow object.
+        """
+
+        if isinstance(fwf, FireWork):
+            fwf = FWorkflow.from_FireWork(fwf)
+
+        # mapping between old and new FireWork ids
+        old_new = {}
+
+        # insert the FireWorks
+        for fw in fwf.id_fw.itervalues():
+            # TODO: update the connections dict!!!
+
+            if not fw.fw_id or fw.fw_id < 0:
+                new_id = self.get_new_fw_id()
+                old_new[str(fw.fw_id)] = str(new_id)
+                fw.fw_id = new_id
+
+            self.fireworks.insert(fw.to_db_dict())
+
+        print old_new
+        # redo the FWorkflow based on new mappings
+        fwf._reassign_ids(old_new)
+        self.wfconnections.insert(fwf.to_db_dict())
+
     def get_fw_by_id(self, fw_id, ignore_children=False):
         """
         Given a FireWork id, give back a FireWork object
@@ -186,4 +219,7 @@ class LaunchPad(FWSerializable):
 
 if __name__ == "__main__":
     a = LaunchPad()
-    a.to_file("../../fw_tutorial/installation/launchpad.yaml")
+    a.initialize('2013-02-19')
+    b = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=-1)
+    c = FWorkflow.from_FireWork(b)
+    a.insert_wf(c)

@@ -98,11 +98,11 @@ class WFConnections(FWSerializable):
 
     def __init__(self, child_nodes_dict=None):
 
-        self.child_nodes_dict = child_nodes_dict if child_nodes_dict else {}
+        child_nodes_dict = child_nodes_dict if child_nodes_dict else {}
         self._parents = defaultdict(list)
         self.children = defaultdict(set)
 
-        for (parent, children) in self.child_nodes_dict.iteritems():
+        for (parent, children) in child_nodes_dict.iteritems():
             # make sure children is a list
             if not isinstance(children, list):
                 children = [children]
@@ -137,7 +137,7 @@ class FWorkflow():
         """
 
         self.id_fw = {}
-        self._nodes = set()
+        self.nodes = set()
 
         # initialize id_fw
         for fw in fireworks:
@@ -145,15 +145,34 @@ class FWorkflow():
                 raise ValueError("FW ids must be well-defined and unique!")
                 # note we have a String key, this matches the WFConnections format
             self.id_fw[str(fw.fw_id)] = fw
-            self._nodes.add(str(fw.fw_id))
+            self.nodes.add(str(fw.fw_id))
 
         # TODO: validate that the connections is valid given the FW
 
         # (e.g., all the connection ids must be present in the list of FW)
         self.wf_connections = wf_connections if isinstance(wf_connections, WFConnections) else WFConnections(wf_connections)
 
+    def _reassign_ids(self, old_new):
+        # update the nodes
+        new_nodes = [str(old_new.get(id, id)) for id in self.nodes]
+        self.nodes = new_nodes
+
+        # update the WFConnections
+        old_children = self.wf_connections.children
+        new_children = {}
+        for (parent, children) in old_children.iteritems():
+            # make sure children is a list
+            if not isinstance(children, list):
+                children = [children]
+
+            new_parent = old_new.get(parent, parent)
+            new_children = [old_new.get(child, child) for child in children]
+            new_children[new_parent] = new_children
+
+        self.wf_connections = WFConnections(new_children)
+
     def to_db_dict(self):
-        return {'nodes': list(self._nodes), 'children': self.wf_connections.to_dict()}
+        return {'nodes': list(self.nodes), 'children': self.wf_connections.to_dict()}
 
     def to_tarfile(self, f_name='fwf.tar', f_format='json'):
         try:
