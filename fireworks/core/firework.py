@@ -152,7 +152,8 @@ class FWorkflow():
         # (e.g., all the connection ids must be present in the list of FW)
         self.wf_connections = wf_connections if isinstance(wf_connections, WFConnections) else WFConnections(wf_connections)
 
-
+    def to_db_dict(self):
+        return {'nodes': list(self._nodes), 'children': self.wf_connections.to_dict()}
 
     def to_tarfile(self, f_name='fwf.tar', f_format='json'):
         try:
@@ -268,7 +269,9 @@ class FWDecision():
 
 if __name__ == "__main__":
     a = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=2)
-    
+    b = FWorkflow.from_FireWork(a)
+    print b.to_db_dict()
+
     #a = WorkflowConnections({"-1": -2, -1:-3, -2:-4, -3: -4})
     #print a.to_format('yaml')
     #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
