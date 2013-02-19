@@ -18,27 +18,27 @@ class FireTaskBase():
     """
     TODO: add docs
     """
-    
+
     def __init__(self, parameters):
         # Add the following line to your FireTasks to get to_dict to work
         self.parameters = parameters
-    
+
     # TODO: register fw_id?
     def register_lp(self, launchpad):
         self.launchpad = launchpad
-    
+
     def run_task(self, fw):
         raise NotImplementedError('Need to implement run_task!')
-    
+
     @serialize_fw
     def to_dict(self):
         return {"parameters": self.parameters}
-    
+
     @classmethod
     def from_dict(cls, m_dict):
         return cls(m_dict['parameters'])
-    
-    # TODO: add a write to log method
-    
-# TODO: Task for committing a file to DB?
-# TODO: add checkpoint function
+
+        # TODO: add a write to log method
+
+        # TODO: Task for committing a file to DB?
+        # TODO: add checkpoint function

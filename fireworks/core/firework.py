@@ -9,6 +9,7 @@ A Launch is a describes a FireWork's run on a computing resource. The same Launc
 
 A FWDecision encapsulates the output of that launch.
 """
+from StringIO import StringIO
 from collections import defaultdict
 import tarfile
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
@@ -26,7 +27,6 @@ __date__ = "Feb 5, 2013"
 #TODO: add ability to block ports
 
 class FireWork(FWSerializable):
-    
     def __init__(self, tasks, spec=None, fw_id=None, launch_data=None):
         """
         TODO: add more docs
@@ -43,7 +43,7 @@ class FireWork(FWSerializable):
         # transform tasks into a list, if not in that format
         if not isinstance(tasks, list):
             tasks = [tasks]
-        
+
         self.tasks = tasks
         self.spec = spec if spec else {}
         self.spec['_tasks'] = [t.to_dict() for t in tasks]
@@ -57,6 +57,7 @@ class FireWork(FWSerializable):
         return {'spec': self.spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
 
     # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
+
     def to_db_dict(self):
         """
         This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
@@ -64,7 +65,7 @@ class FireWork(FWSerializable):
         m_dict = self.to_dict()
         m_dict['state'] = self.state
         return m_dict
-    
+
     @classmethod
     def from_dict(cls, m_dict):
         tasks = [load_object(t) for t in m_dict['spec']['_tasks']]
@@ -73,7 +74,7 @@ class FireWork(FWSerializable):
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
         return FireWork(tasks, m_dict['spec'], fw_id, ld)
-    
+
     @property
     def state(self):
         """
@@ -82,12 +83,12 @@ class FireWork(FWSerializable):
         """
         max_score = 0
         max_state = 'WAITING'
-        
+
         for l in self.launch_data:
             if LAUNCH_RANKS[l.state] > max_score:
                 max_score = LAUNCH_RANKS[l.state]
-                max_state = l.state 
-        
+                max_state = l.state
+
         return max_state
 
 
@@ -120,7 +121,7 @@ class WFConnections(FWSerializable):
                 self._parents[child].append(parent)
 
     def to_dict(self):
-            return dict([(k, list(v)) for (k,v) in self.children.iteritems()])
+        return dict([(k, list(v)) for (k, v) in self.children.iteritems()])
 
     @classmethod
     def from_dict(cls, m_dict):
@@ -128,7 +129,7 @@ class WFConnections(FWSerializable):
 
 
 class FWorkflow():
-
+    #TODO: add .gz support
     def __init__(self, fireworks, wf_connections):
 
         """
@@ -137,46 +138,60 @@ class FWorkflow():
         :param wf_connections: A WorkflowConnections object
         """
 
-
         self.id_fw = {}
 
         # initialize id_fw
         for fw in fireworks:
             if not fw.fw_id or fw.fw_id in self.id_fw:
                 raise ValueError("FW ids must be well-defined and unique!")
-            # note we have a String key, this matches the WFConnections format
+                # note we have a String key, this matches the WFConnections format
             self.id_fw[str(fw.fw_id)] = fw
 
         # TODO: validate that the connections is valid given the FW
+        # TODO: allow WFConnections as a dict primitive rather than an object
         # (e.g., all the connection ids must be present in the list of FW)
         self.wf_connections = wf_connections
 
+    def to_tarfile(self, f_name='fwf.tar', f_format='json'):
+        try:
+            out = tarfile.open(f_name, "w")
 
-    def to_tar(self):
-        tar = tarfile.open("sample.tar", "w")
-        for name in ["foo", "bar", "quux"]:
-            tar.add(name)
-        tar.close()
+            # write out the wfconnections
+            wfc_str = self.wf_connections.to_format(f_format)
+            wfc_info = tarfile.TarInfo('wfconnections.'+f_format)
+            wfc_info.size = len(wfc_str)
+            out.addfile(wfc_info, StringIO(wfc_str))
+
+            # write out fws
+            for fw in self.id_fw.itervalues():
+                fw_str = fw.to_format(f_format)
+                fw_info = tarfile.TarInfo('fw_'+str(fw.fw_id)+'.'+f_format)
+                fw_info.size = len(fw_str)
+                out.addfile(fw_info, StringIO(fw_str))
+
+        finally:
+            out.close()
 
     @classmethod
-    def from_tar(cls, tar_filename):
+    def from_tarfile(cls, tar_filename):
         t = tarfile.open(tar_filename, 'r')
         wf_connections = None
+        fws = []
         for f_name in t.getnames():
             m_file = t.extractfile(f_name)
             m_format = m_file.name.split('.')[-1]
             m_contents = m_file.read()
             if 'wfconnections' in f_name:
                 wf_connections = WFConnections.from_format(m_contents, m_format)
+            else:
+                fws.append(FireWork.from_format(m_contents, m_format))
 
-        print wf_connections.to_dict()
-
+        return FWorkflow(fws, wf_connections)
 
 #TODO: add a working dir at least (maybe inside the Decision?)
 #TODO: add a decision to the Launch
 
 class Launch(FWSerializable):
-    
     def __init__(self, fworker, state=None, launch_id=None):
         """
         
@@ -186,14 +201,14 @@ class Launch(FWSerializable):
         """
         if state not in LAUNCH_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
-        
+
         self.fworker = fworker
         self.state = state
         self.launch_id = launch_id
-    
+
     def to_dict(self):
         return {"fworker": self.fworker.to_dict(), "state": self.state, "launch_id": self.launch_id}
-    
+
     @classmethod
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
@@ -215,34 +230,37 @@ class FWDecision():
          
     """
     actions = ["CONTINUE", "BRANCH", "DETOUR", "TERMINATE"]
-    
+
     def __init__(self, action, stored_data=None, mod_spec=None, add_fws=None):
-        
+
         if action not in FWDecision.actions:
             raise ValueError("Invalid decision: " + action)
-        
+
         if action != "CONTINUE" and mod_spec:
             raise ValueError("You can only modify the spec if you decide to CONTINUE")
-        
+
         if action not in ["BRANCH", "DETOUR"] and add_fws:
             raise ValueError("You cannot " + str(action) + " whilst also inserting fireworks")
-        
+
         if action in ["BRANCH", "DETOUR"] and not add_fws:
             raise ValueError("If you " + str(action) + ", you must specify fireworks to insert!")
-        
+
         self.action = action
         self.add_fws = add_fws
         self.mod_spec = mod_spec
         self.stored_data = stored_data if stored_data else {}
-        
+
     def to_dict(self):
-        return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec, "add_fws": self.add_fws}
+        return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec,
+                "add_fws": self.add_fws}
 
     @classmethod
     def from_dict(cls, m_dict):
         return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])
 
+
 if __name__ == "__main__":
     #a = WorkflowConnections({"-1": -2, -1:-3, -2:-4, -3: -4})
     #print a.to_format('yaml')
-    print FWorkflow.from_tar('../../fw_tutorials/workflow/hello.tar')
+    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
