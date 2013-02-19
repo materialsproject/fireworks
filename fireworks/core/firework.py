@@ -12,6 +12,7 @@ A FWDecision encapsulates the output of that launch.
 from StringIO import StringIO
 from collections import defaultdict
 import tarfile
+from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -95,12 +96,13 @@ class FireWork(FWSerializable):
 class WFConnections(FWSerializable):
     # TODO: add methods for adding children, removing children
 
-    def __init__(self, child_nodes_dict):
-        self._nodes = set()
+    def __init__(self, child_nodes_dict=None):
+
+        self.child_nodes_dict = child_nodes_dict if child_nodes_dict else {}
         self._parents = defaultdict(list)
         self.children = defaultdict(set)
 
-        for (parent, children) in child_nodes_dict.iteritems():
+        for (parent, children) in self.child_nodes_dict.iteritems():
             # make sure children is a list
             if not isinstance(children, list):
                 children = [children]
@@ -108,10 +110,6 @@ class WFConnections(FWSerializable):
             # make sure parents and children are Strings for Mongo
             parent = str(parent)
             children = [str(c) for c in children]
-
-            # add parent + children to all nodes
-            self._nodes.add(parent)
-            self._nodes.update(children)
 
             # add the children
             self.children[parent].update(children)
@@ -139,6 +137,7 @@ class FWorkflow():
         """
 
         self.id_fw = {}
+        self._nodes = set()
 
         # initialize id_fw
         for fw in fireworks:
@@ -146,11 +145,14 @@ class FWorkflow():
                 raise ValueError("FW ids must be well-defined and unique!")
                 # note we have a String key, this matches the WFConnections format
             self.id_fw[str(fw.fw_id)] = fw
+            self._nodes.add(str(fw.fw_id))
 
         # TODO: validate that the connections is valid given the FW
-        # TODO: allow WFConnections as a dict primitive rather than an object
+
         # (e.g., all the connection ids must be present in the list of FW)
-        self.wf_connections = wf_connections
+        self.wf_connections = wf_connections if isinstance(wf_connections, WFConnections) else WFConnections(wf_connections)
+
+
 
     def to_tarfile(self, f_name='fwf.tar', f_format='json'):
         try:
@@ -188,8 +190,13 @@ class FWorkflow():
 
         return FWorkflow(fws, wf_connections)
 
+    @classmethod
+    def from_FireWork(cls, fw):
+        return FWorkflow([fw], None)
+
 #TODO: add a working dir at least (maybe inside the Decision?)
 #TODO: add a decision to the Launch
+
 
 class Launch(FWSerializable):
     def __init__(self, fworker, state=None, launch_id=None):
@@ -260,7 +267,10 @@ class FWDecision():
 
 
 if __name__ == "__main__":
+    a = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=2)
+    
     #a = WorkflowConnections({"-1": -2, -1:-3, -2:-4, -3: -4})
     #print a.to_format('yaml')
-    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
+    #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    #fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
+    #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello_out.tar')
