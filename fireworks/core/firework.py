@@ -25,7 +25,8 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-#TODO: add ability to block ports
+# TODO: add ability to block ports
+# TODO: make all FW ids as String? this is needed for Mongo dicts...ugh...
 
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=None, launch_data=None):
@@ -163,11 +164,11 @@ class FWorkflow():
         for (parent, children) in old_children.iteritems():
             # make sure children is a list
             if not isinstance(children, list):
-                children = [children]
+                children = list(children)
 
             new_parent = old_new.get(parent, parent)
-            new_children = [old_new.get(child, child) for child in children]
-            new_children[new_parent] = new_children
+            new_child = [old_new.get(child, child) for child in children]
+            new_children[new_parent] = new_child
 
         self.wf_connections = WFConnections(new_children)
 
@@ -293,6 +294,6 @@ if __name__ == "__main__":
 
     #a = WorkflowConnections({"-1": -2, -1:-3, -2:-4, -3: -4})
     #print a.to_format('yaml')
-    #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    #
     #fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
     #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello_out.tar')

@@ -189,7 +189,6 @@ class LaunchPad(FWSerializable):
 
             self.fireworks.insert(fw.to_db_dict())
 
-        print old_new
         # redo the FWorkflow based on new mappings
         fwf._reassign_ids(old_new)
         self.wfconnections.insert(fwf.to_db_dict())
@@ -220,6 +219,8 @@ class LaunchPad(FWSerializable):
 if __name__ == "__main__":
     a = LaunchPad()
     a.initialize('2013-02-19')
-    b = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=-1)
-    c = FWorkflow.from_FireWork(b)
-    a.insert_wf(c)
+
+    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    fwf2= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    a.insert_wf(fwf)
+    a.insert_wf(fwf2)
