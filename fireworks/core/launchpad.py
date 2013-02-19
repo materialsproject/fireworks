@@ -153,8 +153,9 @@ class LaunchPad(FWSerializable):
         """
         # TODO: make sure no child fws
         # TODO: make this also apply to sub-fireworks
+        # TODO: make this to be INsert FW, not UPsert. Much safer that way unless you really need upsert.
         # TODO: add logging
-        if not fw.fw_id:
+        if not fw.fw_id or fw.fw_id < 0:
             fw.fw_id = self.get_new_fw_id()
         
         # TODO: make this also apply to sub-fireworks, add children and parent keys
