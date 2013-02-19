@@ -36,7 +36,7 @@ class FireTaskBase():
     
     @classmethod
     def from_dict(cls, m_dict):
-        return self(m_dict['parameters'])
+        return cls(m_dict['parameters'])
     
     # TODO: add a write to log method
     
