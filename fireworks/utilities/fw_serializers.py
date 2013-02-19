@@ -86,7 +86,7 @@ class FWSerializable():
             return self.__class__.__name__
 
     @classmethod
-    def to_dict(self):
+    def to_dict(cls):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
 
     @classmethod
@@ -108,16 +108,16 @@ class FWSerializable():
             raise ValueError('Unsupported format {}'.format(f_format))
 
     @classmethod
-    def from_format(self, f_str, f_format='json'):
+    def from_format(cls, f_str, f_format='json'):
         """
         convert from a String representation to its Object
         :param f_str: the String representation
         :param f_format: serialization format of the String (default json)
         """
         if f_format == 'json':
-            return self.from_dict(_reconstitute_dates(json.loads(f_str)))
+            return cls.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
-            return self.from_dict(_reconstitute_dates(yaml.load(f_str)))
+            return cls.from_dict(_reconstitute_dates(yaml.load(f_str)))
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -133,7 +133,7 @@ class FWSerializable():
             f.write(self.to_format(f_format=f_format))
 
     @classmethod
-    def from_file(self, filename, f_format='AUTO_DETECT'):
+    def from_file(cls, filename, f_format='AUTO_DETECT'):
         """
         Load a serialization of this object from a file
         :param filename: filename to read
@@ -142,7 +142,7 @@ class FWSerializable():
         if f_format == 'AUTO_DETECT':
             f_format = filename.split('.')[-1]
         with open(filename, 'r') as f:
-            return self.from_format(f.read(), f_format=f_format)
+            return cls.from_format(f.read(), f_format=f_format)
 
 
 def load_object(obj_dict):
