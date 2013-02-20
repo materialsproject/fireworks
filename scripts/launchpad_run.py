@@ -5,7 +5,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 """
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import FireWork
+from fireworks.core.firework import FireWork, FWorkflow
 import ast
 import simplejson as json
 
@@ -30,9 +30,12 @@ if __name__ == '__main__':
     initialize_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
     
-    upsert_parser = subparsers.add_parser('upsert_fw', help='insert or update a FireWork from file')
+    upsert_parser = subparsers.add_parser('insert_single_fw', help='insert a single FireWork from file')
     upsert_parser.add_argument('fw_file', help="path to a FireWorks file")
-    
+
+    upsert_parser = subparsers.add_parser('insert_wf', help='insert a FWorkflow from file')
+    upsert_parser.add_argument('wf_file', help="path to a FWorkflow file")
+
     get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
     get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
     get_fw_parser.add_argument('-f', '--filename', help='output filename', default=None)
@@ -52,9 +55,13 @@ if __name__ == '__main__':
     if args.command == 'initialize':
         lp.initialize(args.password)
     
-    elif args.command == 'upsert_fw':
-        fw = FireWork.from_file(args.fw_file)
-        lp.upsert_fw(fw)
+    elif args.command == 'insert_single_fw':
+        fwf = FWorkflow.from_FireWork(FireWork.from_file(args.fw_file))
+        lp.insert_wf(fwf)
+
+    elif args.command == 'insert_wf':
+        fwf = FWorkflow.from_tarfile(args.wf_file)
+        lp.insert_wf(fwf)
         
     elif args.command == 'get_fw':
         fw = lp.get_fw_by_id(args.fw_id)
