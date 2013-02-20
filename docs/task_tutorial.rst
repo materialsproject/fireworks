@@ -1,5 +1,5 @@
 ============================
-Defining Jobs with FireTasks
+Defining Jobs using FireTasks
 ============================
 
 In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a 'FireTask' labeled 'SubprocessTask'. A *FireTask* is a predefined job template; the *SubprocessTask* is a FireTask that runs an arbitrary shell script. In this section, we'll demonstrate how to use and define FireTasks.
