@@ -5,7 +5,8 @@ A FireWork defines a workflow step.
 
 An FWorkflow connects FireWorks by their fw_ids.
 
-A Launch is a describes a FireWork's run on a computing resource. The same Launch might apply to multiple FireWorks, e.g. if they are identical.
+A Launch is a describes a FireWork's run on a computing resource. The same Launch might apply to multiple FireWorks,
+e.g. if they are identical.
 
 A FWDecision encapsulates the output of that launch.
 """
@@ -66,11 +67,13 @@ class FireWork(FWSerializable):
 
         return m_dict
 
-    # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
+    # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (
+    # to_format, to_file)
 
     def to_db_dict(self):
         """
-        This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
+        This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information
+        retrieval.
         """
         m_dict = self.to_dict()
         m_dict['launch_data'] = [l.to_db_dict() for l in self.launch_data]
@@ -151,7 +154,8 @@ class FWorkflow():
         # TODO: validate that the connections is valid given the FW
 
         # (e.g., all the connection ids must be present in the list of FW)
-        self.wf_connections = wf_connections if isinstance(wf_connections, WFConnections) else WFConnections(wf_connections)
+        self.wf_connections = wf_connections if isinstance(wf_connections, WFConnections) else WFConnections(
+            wf_connections)
 
     def _reassign_ids(self, old_new):
         # update the nodes
@@ -189,7 +193,7 @@ class FWorkflow():
             # write out fws
             for fw in self.id_fw.itervalues():
                 fw_str = fw.to_format(f_format)
-                fw_info = tarfile.TarInfo('fw_' + str(fw.fw_id)+'.' + f_format)
+                fw_info = tarfile.TarInfo('fw_' + str(fw.fw_id) + '.' + f_format)
                 fw_info.size = len(fw_str)
                 out.addfile(fw_info, StringIO(fw_str))
 
@@ -245,7 +249,8 @@ class Launch(FWSerializable):
         self.launch_id = launch_id
 
     def to_dict(self):
-        return {'fworker': self.fworker.to_dict(), 'start': self.start, 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
+        return {'fworker': self.fworker.to_dict(), 'start': self.start, 'end': self.end, 'host': self.host,
+                'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
 
     @property
     def time_secs(self):
@@ -259,7 +264,8 @@ class Launch(FWSerializable):
     @classmethod
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
-        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
+        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['start'], m_dict['end'],
+                      m_dict['state'], m_dict['launch_id'])
 
 
 class FWDecision():
@@ -312,5 +318,5 @@ if __name__ == "__main__":
     #print b.to_db_dict()
 
     #fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
-    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
 

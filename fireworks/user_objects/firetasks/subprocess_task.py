@@ -10,8 +10,8 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 18, 2013'
 
-class SubprocessTask(FireTaskBase, FWSerializable):
 
+class SubprocessTask(FireTaskBase, FWSerializable):
     _fw_name = "Subprocess Task"
 
     def __init__(self, parameters):
@@ -56,7 +56,8 @@ class SubprocessTask(FireTaskBase, FWSerializable):
 
     def _run_task_internal(self, fw, stdin):
         # run the program
-        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=self.use_shell)
+        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, shell=self.use_shell)
 
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:

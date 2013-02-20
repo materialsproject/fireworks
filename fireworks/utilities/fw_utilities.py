@@ -13,12 +13,12 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
-
 PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already been initialized
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
 
 
-def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER, clear_logs=False):
+def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER,
+                  clear_logs=False):
     """
     Convenience method to return a logger.
     
@@ -32,7 +32,7 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
-            
+
     # add handlers for the file_levels
     for lvl in file_levels:
         f_name = os.path.join(l_dir, name.replace('.', '_') + '-' + lvl.lower() + '.log')
@@ -43,7 +43,7 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
         if f_name not in PREVIOUS_FILE_LOGGERS:
             logger.addHandler(fh)
             PREVIOUS_FILE_LOGGERS.append(f_name)
-    
+
     if (name, stream_level) not in PREVIOUS_STREAM_LOGGERS:
         # add stream handler
         sh = logging.StreamHandler(stream=sys.stdout)
@@ -51,7 +51,7 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
         sh.setFormatter(formatter)
         logger.addHandler(sh)
         PREVIOUS_STREAM_LOGGERS.append((name, stream_level))
-    
+
     return logger
 
 
@@ -67,10 +67,10 @@ def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
     :param msgs: a String or iterable of Strings
     :param add_traceback: add traceback text, useful when logging exceptions (default False)
     """
-    
+
     if isinstance(msgs, basestring):
         msgs = [msgs]
-        
+
     _log_fnc = getattr(m_logger, log_lvl.lower())
 
     _log_fnc('----|vvv|----')

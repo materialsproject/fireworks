@@ -27,7 +27,7 @@ serialize_fw() decorator is used.
 """
 
 import yaml
-from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES,\
+from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES, \
     FW_NAME_UPDATES, USE_PYMATGEN_SERIALIZATION, DATETIME_HANDLER
 import pkgutil
 import inspect
@@ -50,6 +50,7 @@ def serialize_fw(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
+
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict['_fw_name'] = self.fw_name
@@ -58,6 +59,7 @@ def serialize_fw(func):
             m_dict['@class'] = self.__class__.__name__
 
         return m_dict
+
     return _decorator
 
 
@@ -227,7 +229,7 @@ def _search_module_for_obj(m_module, obj_dict):
     for name, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
-                                getattr(obj, '_fw_name', None) == obj_name:
+                        getattr(obj, '_fw_name', None) == obj_name:
             return obj.from_dict(obj_dict)
 
 

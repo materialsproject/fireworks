@@ -20,7 +20,7 @@ class Rocket():
     """
     The Rocket fetches a workflow step from the FireWorks database and executes it.
     """
-    
+
     def __init__(self, launchpad, fworker):
         """
         
@@ -29,12 +29,12 @@ class Rocket():
         """
         self.launchpad = launchpad
         self.fworker = fworker
-    
+
     def run(self):
         """
         Run the rocket (actually check out a job from the database and execute it)
         """
-        
+
         lp = self.launchpad
 
         host = socket.gethostname()
@@ -45,17 +45,17 @@ class Rocket():
         m_fw, launch_id = lp._checkout_fw(self.fworker, host, ip, launch_dir)
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
-        
+
         with open('fw.json', 'w') as f:
             f.write(json.dumps(m_fw.to_dict(), default=DATETIME_HANDLER))
-        
+
         # execute the script inside the spec
         # TODO: support lists, native Python code, bind monitors, etc...
         # add fw_dict stuff
         # add checkpoint stuff
         # add heartbeat
         # lots of stuff to add!
-        
+
         for my_task in m_fw.tasks:
             m_decision = my_task.run_task(m_fw)
 

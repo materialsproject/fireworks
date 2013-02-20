@@ -5,7 +5,6 @@ Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.
 """
 
-
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
 __version__ = "0.1"
@@ -20,13 +19,14 @@ class TestImports(unittest.TestCase):
     """
     Make sure that required external libraries can be imported 
     """
+
     def test_imports(self):
         import yaml
         import simplejson
         import pymongo
         # test that MongoClient is available (newer pymongo)
         from pymongo import MongoClient
-        
+
 
 if __name__ == "__main__":
     unittest.main()

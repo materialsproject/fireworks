@@ -13,7 +13,7 @@ import datetime
 import time
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception
 from fireworks.core.fw_constants import FW_BLOCK_FORMAT, QUEUE_UPDATE_INTERVAL, \
-QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
+    QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -30,26 +30,26 @@ def launch_rocket(rocket_params, launch_dir='.'):
     :param rocket_params: A RocketParams instance
     :param launch_dir: The directory where to submit the job
     """
-    
+
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
-    
+
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', rocket_params.logging_dir)
-    
+
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
-    
+
     try:
         # get the queue adapter
         l_logger.info('getting queue adapter')
         qa = rocket_params.qa
-        
+
         # move to the launch directory
         l_logger.info('moving to launch_dir {}'.format(launch_dir))
         os.chdir(launch_dir)
-        
+
         # write and submit the queue script using the queue adapter
         l_logger.info('writing queue script')
         with open(SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -60,7 +60,7 @@ def launch_rocket(rocket_params, launch_dir='.'):
         l_logger.info('submitting queue script')
         if not qa.submit_to_queue(rocket_params, SUBMIT_SCRIPT_NAME):
             raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
-    
+
     except:
         log_exception(l_logger, 'Error launching rocket!')
 
@@ -76,42 +76,42 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
     :param n_loops: number of times to loop rapid-fire mode to maintain njobs_queue
     :param t_sleep: sleep time between loops in rapid-fire mode
     """
-    
+
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
-    
+
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', rocket_params.logging_dir)
-    
+
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
-        
+
     try:
         l_logger.info('getting queue adapter')
-        
+
         block_dir = _create_datestamp_dir(launch_dir, l_logger)
-        
+
         for i in range(n_loops):
             if i > 0:
                 # sleep before new loop to give the queue system time to 'breathe' after job submission
                 l_logger.info('Sleeping for {} seconds before beginning new loop...zzz...'.format(t_sleep))
                 time.sleep(t_sleep)
-            
+
             l_logger.info('Beginning loop number {}'.format(i))
-            
+
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
-                
+
             # if too few jobs, launch some more!
             while jobs_in_queue < njobs_queue:
                 l_logger.info('Launching a rocket!')
-                
+
                 # switch to new block dir if it got too big
                 if _njobs_in_dir(block_dir) >= njobs_block:
                     l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
                     block_dir = _create_datestamp_dir(launch_dir, l_logger)
-                
+
                 # create launcher_dir
                 launcher_dir = _create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
@@ -120,7 +120,7 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
-    
+
     except:
         log_exception(l_logger, 'Error with rapid fire!')
 
@@ -144,7 +144,7 @@ def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
     """
 
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
-    
+
     jobs_in_queue = rocket_params.qa.get_njobs_in_queue(rocket_params)
     for i in range(QUEUE_RETRY_ATTEMPTS):
         if jobs_in_queue is not None:
@@ -154,10 +154,10 @@ def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
         time.sleep(RETRY_INTERVAL)
         RETRY_INTERVAL = RETRY_INTERVAL * 2
         jobs_in_queue = rocket_params.qa.get_njobs_in_queue(rocket_params)
-    
+
     raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')
-        
-    
+
+
 def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
     Internal method to create a new block or launcher directory. \
@@ -167,7 +167,7 @@ def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     :param l_logger: the logger to use
     :param prefix: the prefix for the new dir, default="block_"
     """
-    
+
     time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
     block_path = prefix + time_now
     full_path = os.path.join(root_dir, block_path)
