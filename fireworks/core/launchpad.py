@@ -115,10 +115,10 @@ class LaunchPad(FWSerializable):
         
         # create a launch
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, host, ip, launch_dir, 'RUNNING', launch_id)
+        m_launch = Launch(fworker, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
         
         # add launch to FW
-        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launch_data': m_launch.to_dict()}}, new=True)
+        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launch_data': m_launch.to_db_dict()}}, new=True)
         
         # return FW
         return (FireWork.from_dict(m_fw_dict), launch_id)
@@ -135,6 +135,7 @@ class LaunchPad(FWSerializable):
         for launch in m_fw.launch_data:
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
+                launch.end = datetime.datetime.utcnow()
                 break
 
         self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())

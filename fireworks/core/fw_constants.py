@@ -5,6 +5,7 @@ A set of global constants for FireWorks (Python code as a config file)
 """
 
 import logging
+import datetime
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -29,3 +30,5 @@ SUBMIT_SCRIPT_NAME = 'submit.script'  # name of submit script
 LAUNCH_RANKS = {'WAITING': 1, 'READY': 2, 'FIZZLED':3, 'RUNNING': 4, 'CANCELED': 5, 'COMPLETED': 6}
 
 USE_PYMATGEN_SERIALIZATION = False
+
+DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None

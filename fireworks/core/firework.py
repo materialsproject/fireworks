@@ -11,6 +11,7 @@ A FWDecision encapsulates the output of that launch.
 """
 from StringIO import StringIO
 from collections import defaultdict
+import datetime
 import tarfile
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
@@ -221,7 +222,7 @@ class FWorkflow():
 
 
 class Launch(FWSerializable):
-    def __init__(self, fworker, host=None, ip=None, launch_dir=None, state=None, launch_id=None):
+    def __init__(self, fworker, host=None, ip=None, launch_dir=None, start=None, end=None, state=None, launch_id=None):
         """
         
         :param fworker: A FWorker object describing the worker
@@ -238,16 +239,24 @@ class Launch(FWSerializable):
         self.host = host
         self.ip = ip
         self.launch_dir = launch_dir
+        self.start = start if start else datetime.datetime.utcnow()
+        self.end = end
+        self.time_secs = (end - start).total_seconds if end else None
         self.state = state
         self.launch_id = launch_id
 
     def to_dict(self):
-        return {'fworker': self.fworker.to_dict(), 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
+        return {'fworker': self.fworker.to_dict(), 'start': self.start, 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
+
+    def to_db_dict(self):
+        m_d = self.to_dict()
+        m_d['time_secs'] = self.time_secs
+        return m_d
 
     @classmethod
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
-        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['state'], m_dict['launch_id'])
+        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
 
 
 class FWDecision():

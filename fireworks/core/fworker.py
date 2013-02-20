@@ -5,6 +5,7 @@ This module contains classes relevant for a FireWorker (worker computing resourc
 """
 
 import simplejson as json
+from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.utilities.fw_serializers import FWSerializable,\
     serialize_fw, load_object
 
@@ -32,7 +33,7 @@ class FWorker(FWSerializable):
         self.params = params
     
     def to_dict(self):
-        return {'url': self.url, 'category': self.category, 'query': json.dumps(self.query), 'params': self.params}
+        return {'url': self.url, 'category': self.category, 'query': json.dumps(self.query, default=DATETIME_HANDLER), 'params': self.params}
     
     @classmethod
     def from_dict(cls, m_dict):

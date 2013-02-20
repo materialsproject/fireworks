@@ -6,6 +6,7 @@ TODO: add docs
 import os
 import socket
 import simplejson as json
+from fireworks.core.fw_constants import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -46,7 +47,7 @@ class Rocket():
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
         
         with open('fw.json', 'w') as f:
-            f.write(json.dumps(m_fw.to_dict()))
+            f.write(json.dumps(m_fw.to_dict(), default=DATETIME_HANDLER))
         
         # execute the script inside the spec
         # TODO: support lists, native Python code, bind monitors, etc...
