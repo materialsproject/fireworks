@@ -221,6 +221,7 @@ class FWorkflow():
 
 
 class Launch(FWSerializable):
+    # TODO: add an expiration date
     def __init__(self, fworker, host=None, ip=None, launch_dir=None, start=None, end=None, state=None, launch_id=None):
         """
         

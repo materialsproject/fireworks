@@ -27,7 +27,7 @@ class LaunchPad(FWSerializable):
     """
     The LaunchPad manages the FireWorks database.
     """
-    
+
     def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix=None, username=None, password=None):
         """
         
@@ -43,16 +43,16 @@ class LaunchPad(FWSerializable):
         self.name = name
         self.username = username
         self.password = password
-        
+
         connection = MongoClient(host, port)
         self.database = connection[name]
         if username:
             self.database.authenticate(username, password)
-        
+
         self.fireworks = self.database.fireworks
         self.fw_id_assigner = self.database.fw_id_assigner
         self.wfconnections = self.database.wfconnections
-        
+
     def to_dict(self):
         """
         Note: usernames/passwords are exported as unencrypted Strings!
@@ -64,11 +64,11 @@ class LaunchPad(FWSerializable):
         d['username'] = self.username
         d['password'] = self.password
         return d
-    
+
     @classmethod
     def from_dict(cls, d):
         return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'])
-    
+
     def initialize(self, password, require_password=True):
         """
         Create a new FireWorks database. This will overwrite the existing FireWorks database! \
@@ -79,14 +79,14 @@ class LaunchPad(FWSerializable):
         recommended to leave this set to True, otherwise you are inviting dangerous behavior!
         """
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
-        
+
         if password == m_password or not require_password:
             self.fireworks.remove()
             self.wfconnections.remove()
             self._restart_ids(1, 1)
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
-        
+
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
         (internal method) Used to reset id counters
@@ -96,7 +96,7 @@ class LaunchPad(FWSerializable):
 
         self.fw_id_assigner.remove()
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
- 
+
     def _checkout_fw(self, fworker, host, ip, launch_dir):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running, and returns it to the caller. \
@@ -106,32 +106,36 @@ class LaunchPad(FWSerializable):
         """
         m_query = dict(fworker.query)  # make a copy of the query
         m_query['state'] = {'$in': ['READY', 'FIZZLED']}
-        
+
         # check out the matching firework, depending on the query set by the FWorker
-        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}}, sort=[("spec._priority", DESCENDING)])
-        
+        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}},
+                                              sort=[("spec._priority", DESCENDING)])
+
         if not m_fw:
             return (None, None)
-        
+
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
-        
+
         # add launch to FW
-        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launch_data': m_launch.to_db_dict()}}, new=True)
-        
+        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']},
+                                                   update={'$push': {'launch_data': m_launch.to_db_dict()}}, new=True)
+
         # return FW
         return (FireWork.from_dict(m_fw_dict), launch_id)
-    
+
     def _complete_launch(self, m_fw, launch_id):
         """
         (internal method) used to mark a FireWork's Launch as completed.
         :param m_fw:
         :param launch_id:
         """
-        # TODO: what happens when multiple FireWorks share the same launch? Technically _complete_launch should only depend on the launch_id.
-        # You could implement this using a "launches_to_watch" key in FireWorks, and updating all FireWorks where the launch_id matches.
-            
+        # TODO: what happens when multiple FireWorks share the same launch? Technically _complete_launch should only
+        # depend on the launch_id.
+        # You could implement this using a "launches_to_watch" key in FireWorks, and updating all FireWorks where the
+        #  launch_id matches.
+
         for launch in m_fw.launch_data:
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
@@ -140,7 +144,7 @@ class LaunchPad(FWSerializable):
 
         self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())
         self._refresh_wf(m_fw.fw_id)
-        
+
     def get_new_fw_id(self):
         """
         Checkout the next FireWork id
@@ -269,16 +273,17 @@ class LaunchPad(FWSerializable):
         """
         fw_ids = []
         criteria = query if query else {}
-        
+
         for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("spec._priority", DESCENDING)]):
             fw_ids.append(fw["fw_id"])
-        
+
         return fw_ids
+
 
 if __name__ == "__main__":
     lp = LaunchPad()
     lp.initialize('2013-02-19')
-    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
     lp.insert_wf(fwf)
     fworker = FWorker()
     rocket = Rocket(lp, fworker)
