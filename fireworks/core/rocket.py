@@ -60,4 +60,5 @@ class Rocket():
         # TODO: add more useful information in the launch!
 
         # perform finishing operation
+        print 'yay'
         lp._complete_launch(m_fw, launch_id)

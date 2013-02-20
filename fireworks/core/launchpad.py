@@ -5,6 +5,8 @@ The LaunchPad manages the FireWorks database.
 """
 import datetime
 from fireworks.core.fw_constants import LAUNCH_RANKS
+from fireworks.core.fworker import FWorker
+from fireworks.core.rocket import Rocket
 from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
@@ -133,9 +135,11 @@ class LaunchPad(FWSerializable):
         for launch in m_fw.launch_data:
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
+                print 'yay2'
                 break
 
-        self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict(), upsert=True)
+        self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())
+        self._refresh_wf(m_fw.fw_id)
         
     def get_new_fw_id(self):
         """
@@ -272,11 +276,10 @@ class LaunchPad(FWSerializable):
         return fw_ids
 
 if __name__ == "__main__":
-    a = LaunchPad()
-    a.initialize('2013-02-19')
-
-    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    # fwf2= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    a.insert_wf(fwf)
-    #a._refresh_wf(2)
-
+    lp = LaunchPad()
+    #lp.initialize('2013-02-19')
+    #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    #lp.insert_wf(fwf)
+    fworker = FWorker()
+    rocket = Rocket(lp, fworker)
+    rocket.run()
