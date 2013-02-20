@@ -55,6 +55,10 @@ To get started with FireWorks, we suggest that you follow our installation tutor
    
    installation_tutorial
 
+
+ # TODO: add code examples
+ $ TODO: separate out the worker node installation. give users a break
+
 .. _contributing-label:
 
 Contributing and Contact
