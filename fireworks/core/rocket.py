@@ -3,6 +3,8 @@
 """
 TODO: add docs
 """
+import os
+import socket
 import simplejson as json
 
 __author__ = 'Anubhav Jain'
@@ -33,9 +35,13 @@ class Rocket():
         """
         
         lp = self.launchpad
-        
+
+        host = socket.gethostname()
+        ip = socket.gethostbyname(socket.gethostname())
+        launch_dir = os.path.abspath(os.getcwd())
+
         # check a FW job out of the launchpad
-        m_fw, launch_id = lp._checkout_fw(self.fworker)
+        m_fw, launch_id = lp._checkout_fw(self.fworker, host, ip, launch_dir)
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
         
@@ -60,5 +66,4 @@ class Rocket():
         # TODO: add more useful information in the launch!
 
         # perform finishing operation
-        print 'yay'
         lp._complete_launch(m_fw, launch_id)

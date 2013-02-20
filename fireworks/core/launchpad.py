@@ -97,7 +97,7 @@ class LaunchPad(FWSerializable):
         self.fw_id_assigner.remove()
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
  
-    def _checkout_fw(self, fworker):
+    def _checkout_fw(self, fworker, host, ip, launch_dir):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running, and returns it to the caller. \
         The caller should run this FireWork.
@@ -115,7 +115,7 @@ class LaunchPad(FWSerializable):
         
         # create a launch
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, 'RUNNING', launch_id)
+        m_launch = Launch(fworker, host, ip, launch_dir, 'RUNNING', launch_id)
         
         # add launch to FW
         m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launch_data': m_launch.to_dict()}}, new=True)
@@ -135,7 +135,6 @@ class LaunchPad(FWSerializable):
         for launch in m_fw.launch_data:
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
-                print 'yay2'
                 break
 
         self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())
@@ -277,9 +276,9 @@ class LaunchPad(FWSerializable):
 
 if __name__ == "__main__":
     lp = LaunchPad()
-    #lp.initialize('2013-02-19')
-    #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    #lp.insert_wf(fwf)
+    lp.initialize('2013-02-19')
+    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    lp.insert_wf(fwf)
     fworker = FWorker()
     rocket = Rocket(lp, fworker)
     rocket.run()

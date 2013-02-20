@@ -221,10 +221,13 @@ class FWorkflow():
 
 
 class Launch(FWSerializable):
-    def __init__(self, fworker, state=None, launch_id=None):
+    def __init__(self, fworker, host=None, ip=None, launch_dir=None, state=None, launch_id=None):
         """
         
         :param fworker: A FWorker object describing the worker
+        :param host: the hostname where the launch took place (probably automatically set)
+        :param ip: the ip address where the launch took place (probably automatically set)
+        :param launch_dir: the directory on the host where the launch took place (probably automatically set)
         :param state: the state of the Launch
         :param launch_id: the id of the Launch for the LaunchPad
         """
@@ -232,16 +235,19 @@ class Launch(FWSerializable):
             raise ValueError("Invalid launch state: {}".format(state))
 
         self.fworker = fworker
+        self.host = host
+        self.ip = ip
+        self.launch_dir = launch_dir
         self.state = state
         self.launch_id = launch_id
 
     def to_dict(self):
-        return {"fworker": self.fworker.to_dict(), "state": self.state, "launch_id": self.launch_id}
+        return {'fworker': self.fworker.to_dict(), 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
 
     @classmethod
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
-        return Launch(fworker, m_dict['state'], m_dict['launch_id'])
+        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['state'], m_dict['launch_id'])
 
 
 class FWDecision():
