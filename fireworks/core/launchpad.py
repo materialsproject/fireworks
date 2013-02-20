@@ -4,6 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
@@ -141,7 +142,7 @@ class LaunchPad(FWSerializable):
         Checkout the next FireWork id
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_fw_id': 1}})['next_fw_id']
-    
+
     def get_new_launch_id(self):
         """
         Checkout the next Launch id
@@ -192,16 +193,79 @@ class LaunchPad(FWSerializable):
         # redo the FWorkflow based on new mappings
         fwf._reassign_ids(old_new)
         self.wfconnections.insert(fwf.to_db_dict())
+        self._refresh_wf(fwf.nodes[0])
 
-    def get_fw_by_id(self, fw_id, ignore_children=False):
+    def _refresh_wf(self, fw_id):
+        # get the workflow containing this fw_id
+        wf_dict = self.wfconnections.find_one({'nodes': str(fw_id)})
+
+        updated_nodes = set()
+
+        while len(updated_nodes) != len(wf_dict['nodes']):
+            for fw_id in wf_dict['nodes']:
+                if fw_id not in wf_dict['parents']:
+                    self._refresh_fw(fw_id, [])
+                    updated_nodes.add(fw_id)
+                else:
+                    # if all parents are updated, update it
+                    if all(parent in updated_nodes for parent in wf_dict['parents'][fw_id]):
+                        self._refresh_fw(fw_id, wf_dict['parents'][fw_id])
+                        updated_nodes.add(fw_id)
+
+
+    def _get_fw_state(self, fw_id):
+        # TODO: fix the silly String/int nonsense
+        fw_id = int(fw_id)
+        return self.fireworks.find_one({"fw_id": fw_id}, {"state": True})['state']
+
+    def _update_fw_state(self, fw_id, m_state):
+        # TODO: fix the silly String/int nonsense
+        fw_id = int(fw_id)
+        return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
+
+    def _refresh_fw(self, fw_id, parent_ids):
+        m_state = None
+
+        # what are the parent states?
+        parent_states = [self._get_fw_state(p) for p in parent_ids]
+
+        if len(parent_ids) != 0 and not all([s == 'COMPLETED' for s in parent_states]):
+            m_state = 'WAITING'
+
+        elif any([s == 'CANCELED' for s in parent_states]):
+            m_state = 'CANCELED'
+
+        else:
+            # my state depends on launch
+            launch_data = self.get_launches(fw_id)
+            max_score = 0
+            m_state = 'READY'
+
+            for l in launch_data:
+                if LAUNCH_RANKS[l.state] > max_score:
+                    max_score = LAUNCH_RANKS[l.state]
+                    m_state = l.state
+
+        self._update_fw_state(fw_id, m_state)
+
+
+    def get_fw_by_id(self, fw_id):
         """
         Given a FireWork id, give back a FireWork object
         :param fw_id: FireWork id (int)
-        :param ignore_children: if True, does not return parent or child FireWorks, just a single workflow step.
         """
-        # TODO: implement children / parents / ignore_children parameter
-        fw_dict = self.fireworks.find_one({"fw_id": fw_id})
+        fw_dict = self.fireworks.find_one({'fw_id': fw_id})
         return FireWork.from_dict(fw_dict)
+
+    def get_launches(self, fw_id):
+        """
+        Given a FireWork id, give back a FireWork object
+        :param fw_id: FireWork id (int)
+        """
+        # TODO: fix this monstrosity
+        fw_id = int(fw_id)
+        launch_data = self.fireworks.find_one({'fw_id': fw_id}, {'launch_data': 1})['launch_data']
+        return [Launch.from_dict(l) for l in launch_data]
 
     def get_fw_ids(self, query=None):
         """
@@ -221,6 +285,8 @@ if __name__ == "__main__":
     a.initialize('2013-02-19')
 
     fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    fwf2= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    # fwf2= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
     a.insert_wf(fwf)
-    a.insert_wf(fwf2)
+    a._update_fw_state(2, 'COMPLETED')
+    #a._refresh_wf(2)
+

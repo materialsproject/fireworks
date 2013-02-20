@@ -29,7 +29,7 @@ __date__ = "Feb 5, 2013"
 # TODO: make all FW ids as String? this is needed for Mongo dicts...ugh...
 
 class FireWork(FWSerializable):
-    def __init__(self, tasks, spec=None, fw_id=None, launch_data=None):
+    def __init__(self, tasks, spec=None, fw_id=None, launch_data=None, state='WAITING'):
         """
         TODO: add more docs
         
@@ -41,6 +41,7 @@ class FireWork(FWSerializable):
         :param spec: a dict specification of the job to run
         :param fw_id: the FW's database id to the LaunchPad
         :param launch_data: a list of Launch objects of this FireWork
+        :param state: the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
         # transform tasks into a list, if not in that format
         if not isinstance(tasks, list):
@@ -51,12 +52,20 @@ class FireWork(FWSerializable):
         self.spec['_tasks'] = [t.to_dict() for t in tasks]
         self.fw_id = fw_id
         self.launch_data = launch_data if launch_data else []
+        self.state = state
 
     def to_dict(self):
         """
         This is a 'minimal' or 'compact' dict representation of the FireWork
         """
-        return {'spec': self.spec, 'fw_id': self.fw_id, 'launch_data': [l.to_dict() for l in self.launch_data]}
+        m_dict = {'spec': self.spec, 'fw_id': self.fw_id}
+        if len(self.launch_data) > 0:
+            m_dict['launch_data'] = [l.to_dict() for l in self.launch_data]
+
+        if self.state != 'WAITING':
+            m_dict['state'] = self.state
+
+        return m_dict
 
     # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (to_format, to_file)
 
@@ -64,7 +73,9 @@ class FireWork(FWSerializable):
         """
         This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
         """
+        # TODO: this no longer contains redundant fields. Is it still necessary??? Probably not...
         m_dict = self.to_dict()
+        m_dict['launch_data'] = [l.to_dict() for l in self.launch_data]
         m_dict['state'] = self.state
         return m_dict
 
@@ -75,23 +86,8 @@ class FireWork(FWSerializable):
         ld = m_dict.get('launch_data', None)
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
-        return FireWork(tasks, m_dict['spec'], fw_id, ld)
-
-    @property
-    def state(self):
-        """
-        Iterate through the launch_data, and find the Launch that is furthest ahead. \
-        That is the state of the FireWork as a whole.
-        """
-        max_score = 0
-        max_state = 'WAITING'
-
-        for l in self.launch_data:
-            if LAUNCH_RANKS[l.state] > max_score:
-                max_score = LAUNCH_RANKS[l.state]
-                max_state = l.state
-
-        return max_state
+        state = m_dict.get('state', 'WAITING')
+        return FireWork(tasks, m_dict['spec'], fw_id, ld, state)
 
 
 class WFConnections(FWSerializable):
@@ -173,7 +169,7 @@ class FWorkflow():
         self.wf_connections = WFConnections(new_children)
 
     def to_db_dict(self):
-        return {'nodes': list(self.nodes), 'children': self.wf_connections.to_dict()}
+        return {'nodes': list(self.nodes), 'children': self.wf_connections.to_dict(), 'parents': self.wf_connections._parents}
 
     def to_tarfile(self, f_name='fwf.tar', f_format='json'):
         try:
