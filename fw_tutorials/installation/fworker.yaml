@@ -1,4 +1,4 @@
-url: somecomputer.host.com
+name: anonymous worker
 category: general worker
 params: null
 query: '{}'
