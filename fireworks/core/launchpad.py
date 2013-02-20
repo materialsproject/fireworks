@@ -201,13 +201,13 @@ class LaunchPad(FWSerializable):
 
         while len(updated_nodes) != len(wf_dict['nodes']):
             for fw_id in wf_dict['nodes']:
-                if str(fw_id) not in wf_dict['parents']:
+                if str(fw_id) not in wf_dict['parent_links']:
                     self._refresh_fw(fw_id, [])
                     updated_nodes.add(fw_id)
                 else:
                     # if all parents are updated, update it
-                    if all(parent in updated_nodes for parent in wf_dict['parents'][str(fw_id)]):
-                        self._refresh_fw(fw_id, wf_dict['parents'][str(fw_id)])
+                    if all(parent in updated_nodes for parent in wf_dict['parent_links'][str(fw_id)]):
+                        self._refresh_fw(fw_id, wf_dict['parent_links'][str(fw_id)])
                         updated_nodes.add(fw_id)
 
 

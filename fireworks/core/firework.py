@@ -25,7 +25,6 @@ __date__ = "Feb 5, 2013"
 
 
 # TODO: add ability to block ports
-# TODO: make all FW ids as String? this is needed for Mongo dicts...ugh...
 
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=None, launch_data=None, state='WAITING'):
@@ -119,8 +118,8 @@ class WFConnections(FWSerializable):
 
     def to_db_dict(self):
         m_dict = {}
-        m_dict['children'] = dict([(str(k), list(v)) for (k, v) in self.child_links.iteritems()])
-        m_dict['parents'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
+        m_dict['children_links'] = dict([(str(k), list(v)) for (k, v) in self.child_links.iteritems()])
+        m_dict['parent_links'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
         return m_dict
 
     @classmethod
