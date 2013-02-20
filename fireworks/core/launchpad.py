@@ -103,7 +103,7 @@ class LaunchPad(FWSerializable):
         :param fworker: A FWorker instance
         """
         m_query = dict(fworker.query)  # make a copy of the query
-        m_query['state'] = {'$in': ['WAITING', 'FIZZLED']}
+        m_query['state'] = {'$in': ['READY', 'FIZZLED']}
         
         # check out the matching firework, depending on the query set by the FWorker
         m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}}, sort=[("spec._priority", DESCENDING)])
@@ -134,8 +134,8 @@ class LaunchPad(FWSerializable):
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
                 break
-        
-        self.upsert_fw(m_fw)
+
+        self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict(), upsert=True)
         
     def get_new_fw_id(self):
         """
@@ -241,7 +241,6 @@ class LaunchPad(FWSerializable):
                     m_state = l.state
 
         self._update_fw_state(fw_id, m_state)
-
 
     def get_fw_by_id(self, fw_id):
         """

@@ -23,10 +23,6 @@ class FireTaskBase():
         # Add the following line to your FireTasks to get to_dict to work
         self.parameters = parameters
 
-    # TODO: register fw_id?
-    def register_lp(self, launchpad):
-        self.launchpad = launchpad
-
     def run_task(self, fw):
         raise NotImplementedError('Need to implement run_task!')
 

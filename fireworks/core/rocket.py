@@ -50,13 +50,14 @@ class Rocket():
         # lots of stuff to add!
         
         for my_task in m_fw.tasks:
-            my_task.register_lp(lp)  # TODO: is this really needed?
-            my_task.run_task(m_fw)
-        
-        # continue on to next script if:
+            m_decision = my_task.run_task(m_fw)
+
+        # TODO: continue on to next script if:
         # - it exists
         # - no fw_output.json
         # no output dict()
-        
+
+        # TODO: add more useful information in the launch!
+
         # perform finishing operation
         lp._complete_launch(m_fw, launch_id)
