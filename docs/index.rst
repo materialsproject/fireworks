@@ -26,6 +26,8 @@ Some (but not all) of its features include:
 
 * Detection of duplicate sub-workflows - automatically skip tasks that are duplicated between two workflows while still running unique sections
 
+* Loosely-coupled and modular infrastructure that is intentionally hackable. This makes it possible to use some FireWorks components without using *everything* and allows you to tailor FireWorks to your application.
+
 * Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
 
 * Monitoring of workflows through a web service *(future)*
@@ -37,13 +39,21 @@ Limitations
 
 Some limitations of FireWorks include:
 
-* FireWorks has not been stress tested to very large numbers of worker nodes.
+* FireWorks has not been stress tested to very large numbers of worker nodes. If you try this, we'd like to hear the results!
 
 * FireWorks does not optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement); you must define such optimizations explicitly.
 
-* FireWorks is not designed to handle problems requiring movement and storage of extreme data sets (e.g., petabytes of data).
 
-* FireWorks is not designed to be real-time workflow software. If each of your workflow steps is only a few seconds long, there might be a noticeable lag between the time one workflow step completes and the next step begins.
+Is FireWorks appropriate for my application?
+============================================
+
+It can be time-consuming to evaluate whether a workflow software will meet your computing needs from documentation alone. If you just want to know whether FireWorks is a potential solution to your workflow problem, you can email the developer at: |Mail|
+   
+We won't be able to solve your problem in great detail, but can tell you if:
+
+* Your problem is a great match for FireWorks
+* Your problem requires implementing minor extensions or modifications to FireWorks, but FireWorks is still a potential solution
+* Your problem is not easily solved with FireWorks and you should probably look elsewhere!
 
 Getting Started
 ===============
@@ -73,7 +83,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Share code on how FireWorks might be used within a specific application.
 * Get in touch and contribute to the core codebase!
 
-The best way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. However, if you feel that e-mail is better suited for your purpose, you can contact: |Mail|
+The best way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
 
 .. |Mail| image:: _static/mail.png
    :alt: developer contact
@@ -87,6 +97,8 @@ Michael Kocher and Dan Gunter initiated the architecture of a central database w
 Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
 
 Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others.
+
+FireWorks was developed primarily at Lawrence Berkeley National Lab using research funding from Kristin Persson for the Materials Project.
 
 .. _pymatgen: http://packages.python.org/pymatgen/
 
