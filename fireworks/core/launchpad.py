@@ -181,11 +181,9 @@ class LaunchPad(FWSerializable):
 
         # insert the FireWorks
         for fw in fwf.id_fw.itervalues():
-            # TODO: update the connections dict!!!
-
             if not fw.fw_id or fw.fw_id < 0:
                 new_id = self.get_new_fw_id()
-                old_new[str(fw.fw_id)] = str(new_id)
+                old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
 
             self.fireworks.insert(fw.to_db_dict())
@@ -193,34 +191,30 @@ class LaunchPad(FWSerializable):
         # redo the FWorkflow based on new mappings
         fwf._reassign_ids(old_new)
         self.wfconnections.insert(fwf.to_db_dict())
-        self._refresh_wf(fwf.nodes[0])
+        self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
 
     def _refresh_wf(self, fw_id):
         # get the workflow containing this fw_id
-        wf_dict = self.wfconnections.find_one({'nodes': str(fw_id)})
+        wf_dict = self.wfconnections.find_one({'nodes': fw_id})
 
         updated_nodes = set()
 
         while len(updated_nodes) != len(wf_dict['nodes']):
             for fw_id in wf_dict['nodes']:
-                if fw_id not in wf_dict['parents']:
+                if str(fw_id) not in wf_dict['parents']:
                     self._refresh_fw(fw_id, [])
                     updated_nodes.add(fw_id)
                 else:
                     # if all parents are updated, update it
-                    if all(parent in updated_nodes for parent in wf_dict['parents'][fw_id]):
-                        self._refresh_fw(fw_id, wf_dict['parents'][fw_id])
+                    if all(parent in updated_nodes for parent in wf_dict['parents'][str(fw_id)]):
+                        self._refresh_fw(fw_id, wf_dict['parents'][str(fw_id)])
                         updated_nodes.add(fw_id)
 
 
     def _get_fw_state(self, fw_id):
-        # TODO: fix the silly String/int nonsense
-        fw_id = int(fw_id)
         return self.fireworks.find_one({"fw_id": fw_id}, {"state": True})['state']
 
     def _update_fw_state(self, fw_id, m_state):
-        # TODO: fix the silly String/int nonsense
-        fw_id = int(fw_id)
         return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
 
     def _refresh_fw(self, fw_id, parent_ids):
@@ -262,8 +256,6 @@ class LaunchPad(FWSerializable):
         Given a FireWork id, give back a FireWork object
         :param fw_id: FireWork id (int)
         """
-        # TODO: fix this monstrosity
-        fw_id = int(fw_id)
         launch_data = self.fireworks.find_one({'fw_id': fw_id}, {'launch_data': 1})['launch_data']
         return [Launch.from_dict(l) for l in launch_data]
 
@@ -287,6 +279,5 @@ if __name__ == "__main__":
     fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
     # fwf2= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
     a.insert_wf(fwf)
-    a._update_fw_state(2, 'COMPLETED')
     #a._refresh_wf(2)
 

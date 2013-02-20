@@ -12,7 +12,6 @@ A FWDecision encapsulates the output of that launch.
 from StringIO import StringIO
 from collections import defaultdict
 import tarfile
-from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -96,27 +95,33 @@ class WFConnections(FWSerializable):
     def __init__(self, child_nodes_dict=None):
 
         child_nodes_dict = child_nodes_dict if child_nodes_dict else {}
-        self._parents = defaultdict(list)
-        self.children = defaultdict(set)
+        self._parent_links = defaultdict(list)
+        self.child_links = defaultdict(set)
 
         for (parent, children) in child_nodes_dict.iteritems():
             # make sure children is a list
             if not isinstance(children, list):
                 children = [children]
 
-            # make sure parents and children are Strings for Mongo
-            parent = str(parent)
-            children = [str(c) for c in children]
+            # make sure parents and children are ints
+            parent = int(parent)
+            children = [int(c) for c in children]
 
             # add the children
-            self.children[parent].update(children)
+            self.child_links[parent].update(children)
 
             # add the parents
             for child in children:
-                self._parents[child].append(parent)
+                self._parent_links[child].append(parent)
 
     def to_dict(self):
-        return dict([(k, list(v)) for (k, v) in self.children.iteritems()])
+        return dict([(k, list(v)) for (k, v) in self.child_links.iteritems()])
+
+    def to_db_dict(self):
+        m_dict = {}
+        m_dict['children'] = dict([(str(k), list(v)) for (k, v) in self.child_links.iteritems()])
+        m_dict['parents'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
+        return m_dict
 
     @classmethod
     def from_dict(cls, m_dict):
@@ -141,8 +146,8 @@ class FWorkflow():
             if not fw.fw_id or fw.fw_id in self.id_fw:
                 raise ValueError("FW ids must be well-defined and unique!")
                 # note we have a String key, this matches the WFConnections format
-            self.id_fw[str(fw.fw_id)] = fw
-            self.nodes.add(str(fw.fw_id))
+            self.id_fw[fw.fw_id] = fw
+            self.nodes.add(fw.fw_id)
 
         # TODO: validate that the connections is valid given the FW
 
@@ -151,25 +156,26 @@ class FWorkflow():
 
     def _reassign_ids(self, old_new):
         # update the nodes
-        new_nodes = [str(old_new.get(id, id)) for id in self.nodes]
+        new_nodes = [old_new.get(id, id) for id in self.nodes]
         self.nodes = new_nodes
 
         # update the WFConnections
-        old_children = self.wf_connections.children
-        new_children = {}
-        for (parent, children) in old_children.iteritems():
+        old_cl = self.wf_connections.child_links
+        new_cl = {}
+        for (parent, children) in old_cl.iteritems():
             # make sure children is a list
-            if not isinstance(children, list):
-                children = list(children)
+            children = list(children)
 
             new_parent = old_new.get(parent, parent)
-            new_child = [old_new.get(child, child) for child in children]
-            new_children[new_parent] = new_child
+            new_children = [old_new.get(child, child) for child in children]
+            new_cl[new_parent] = new_children
 
-        self.wf_connections = WFConnections(new_children)
+        self.wf_connections = WFConnections(new_cl)
 
     def to_db_dict(self):
-        return {'nodes': list(self.nodes), 'children': self.wf_connections.to_dict(), 'parents': self.wf_connections._parents}
+        m_dict = self.wf_connections.to_db_dict()
+        m_dict['nodes'] = list(self.nodes)
+        return m_dict
 
     def to_tarfile(self, f_name='fwf.tar', f_format='json'):
         try:
@@ -177,14 +183,14 @@ class FWorkflow():
 
             # write out the wfconnections
             wfc_str = self.wf_connections.to_format(f_format)
-            wfc_info = tarfile.TarInfo('wfconnections.'+f_format)
+            wfc_info = tarfile.TarInfo('wfconnections.' + f_format)
             wfc_info.size = len(wfc_str)
             out.addfile(wfc_info, StringIO(wfc_str))
 
             # write out fws
             for fw in self.id_fw.itervalues():
                 fw_str = fw.to_format(f_format)
-                fw_info = tarfile.TarInfo('fw_'+str(fw.fw_id)+'.'+f_format)
+                fw_info = tarfile.TarInfo('fw_' + str(fw.fw_id)+'.' + f_format)
                 fw_info.size = len(fw_str)
                 out.addfile(fw_info, StringIO(fw_str))
 
@@ -284,12 +290,10 @@ class FWDecision():
 
 
 if __name__ == "__main__":
-    a = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=2)
-    b = FWorkflow.from_FireWork(a)
-    print b.to_db_dict()
+    #a = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=2)
+    #b = FWorkflow.from_FireWork(a)
+    #print b.to_db_dict()
 
-    #a = WorkflowConnections({"-1": -2, -1:-3, -2:-4, -3: -4})
-    #print a.to_format('yaml')
-    #
     #fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
-    #fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello_out.tar')
+    fwf= FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+
