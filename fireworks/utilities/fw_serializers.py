@@ -99,7 +99,6 @@ class FWSerializable():
         :param f_format: the format to output to (default json)
         """
         if f_format == 'json':
-            print obj
             return json.dumps(self.to_dict(), *args, default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
