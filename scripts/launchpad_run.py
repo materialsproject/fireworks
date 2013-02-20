@@ -4,6 +4,7 @@
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
 from argparse import ArgumentParser
+from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork, FWorkflow
 import ast
@@ -69,7 +70,7 @@ if __name__ == '__main__':
         if args.filename:
             fw.to_file(args.filename)
         else:
-            print json.dumps(fw_dict, indent=4)
+            print json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
         
     elif args.command == 'get_fw_ids':
         if args.query:

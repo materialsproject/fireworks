@@ -72,9 +72,8 @@ class FireWork(FWSerializable):
         """
         This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information retrieval.
         """
-        # TODO: this no longer contains redundant fields. Is it still necessary??? Probably not...
         m_dict = self.to_dict()
-        m_dict['launch_data'] = [l.to_dict() for l in self.launch_data]
+        m_dict['launch_data'] = [l.to_db_dict() for l in self.launch_data]
         m_dict['state'] = self.state
         return m_dict
 
@@ -241,12 +240,15 @@ class Launch(FWSerializable):
         self.launch_dir = launch_dir
         self.start = start if start else datetime.datetime.utcnow()
         self.end = end
-        self.time_secs = (end - start).total_seconds if end else None
         self.state = state
         self.launch_id = launch_id
 
     def to_dict(self):
         return {'fworker': self.fworker.to_dict(), 'start': self.start, 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
+
+    @property
+    def time_secs(self):
+        return (self.end - self.start).total_seconds() if self.end else None
 
     def to_db_dict(self):
         m_d = self.to_dict()
