@@ -9,14 +9,14 @@ This tutorial can be safely completed from the command line, and requires no pro
 Launch a Rocket on a worker machine (FireWorker)
 ================================================
 
-So far, we have added a FireWork (workflow) to the database on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
+So far, we have added a FireWork (job) to the database on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
 
-A more interesting use case of FireWorks is to add FireWorks to the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers), perhaps through a queueing system. We'll next configure a worker machine.
+A more interesting use case of FireWorks is to add FireWorks to the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers), perhaps through a queueing system. We'll next configure a worker machine. This machine can be the same as your central server if you'd like.
 
 Install FireWorks on the FireWorker
 -----------------------------------
 
-On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`.
+On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`. If you are re-using your central server as the worker, then you don't need to install anything again.
 
 Reset the FireWorks database
 ----------------------------
@@ -33,9 +33,9 @@ Connect to the FireServer from the FireWorker
 
 The FireWorker needs to know the login information for the FireServer. On the FireWorker,
 
-1. Navigate to the installation tutorial directory::
+1. Navigate to the new installation tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorials/installation
+    cd <INSTALL_DIR>/fw_tutorials/installation_pt2
 
 where <INSTALL_DIR> is your FireWorks installation directory.
 
@@ -43,31 +43,32 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 
     cp launchpad.yaml my_launchpad.yaml
 
-3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``hostname`` parameter must be changed to the IP address of your FireServer.
+3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address or hostname of your FireServer.
 
 3. Confirm that you can access the FireServer from your FireWorker::
 
     launchpad_run.py -l my_launchpad.yaml get_fw 1
 
-.. note:: If you cannot connect to the database from a remote server, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports.
-
 This should print out a FireWork.
+
+.. note:: If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports.
+
 
 Configure your FireWorker
 -------------------------
 
-Staying in the installation tutorial directory on the FireWorker,
+Staying in the ``installation_pt2`` tutorial directory on the FireWorker,
 
 1. Copy the FireWorker file to a new name::
 
     cp fworker.yaml my_fworker.yaml
 
-2. Modify your ``my_fworker.yaml`` by changing the ``url`` parameter to the worker host. This will help you identify the worker that ran your FireWork later on.
+2. Modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
 
 Launch a Rocket on the FireWorker
 ---------------------------------
 
-1. Staying in the installation tutorial directory on your FireWorker, type::
+1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, type::
 
     rocket_run.py -l my_launchpad.yaml -w my_fworker.yaml
 
@@ -90,7 +91,7 @@ Configure the RocketLauncher
 
 The RocketLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the RocketParams file.
 
-1. Staying in the installation tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>.yaml`` where <QUEUE> is the supported queue system.
+1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>.yaml`` where <QUEUE> is the supported queue system.
 
 .. note:: If you cannot find a working RocketParams file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) Don't be shy, we want to help you get set up.
 

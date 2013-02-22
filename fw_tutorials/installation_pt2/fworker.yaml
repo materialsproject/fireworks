@@ -1,4 +1,4 @@
-name: anonymous worker
+name: my first fireworker
 category: general worker
 params: null
 query: '{}'
