@@ -14,6 +14,7 @@ from StringIO import StringIO
 from collections import defaultdict
 import datetime
 import tarfile
+from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -95,11 +96,12 @@ class FireWork(FWSerializable):
 class WFConnections(FWSerializable):
     # TODO: add methods for adding children, removing children
 
-    def __init__(self, child_nodes_dict=None):
+    def __init__(self, child_nodes_dict=None, metadata=None):
 
         child_nodes_dict = child_nodes_dict if child_nodes_dict else {}
         self._parent_links = defaultdict(list)
-        self.child_links = defaultdict(set)
+        self.children_links = defaultdict(set)
+        self.metadata = metadata if metadata else {}
 
         for (parent, children) in child_nodes_dict.iteritems():
             # make sure children is a list
@@ -111,24 +113,27 @@ class WFConnections(FWSerializable):
             children = [int(c) for c in children]
 
             # add the children
-            self.child_links[parent].update(children)
+            self.children_links[parent].update(children)
 
             # add the parents
             for child in children:
                 self._parent_links[child].append(parent)
 
     def to_dict(self):
-        return dict([(k, list(v)) for (k, v) in self.child_links.iteritems()])
+        m_dict = {'children_links': dict([(k, list(v)) for (k, v) in self.children_links.iteritems()])}
+        if self.metadata:
+            m_dict['metadata'] = self.metadata
 
     def to_db_dict(self):
-        m_dict = {}
-        m_dict['children_links'] = dict([(str(k), list(v)) for (k, v) in self.child_links.iteritems()])
+        m_dict = self.to_db_dict()
         m_dict['parent_links'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
+        m_dict['metadata'] = self.metadata
         return m_dict
 
     @classmethod
     def from_dict(cls, m_dict):
-        return WFConnections(m_dict)
+        metadata = m_dict.get('metadata', None)
+        return WFConnections(m_dict['children_links'], metadata)
 
 
 class FWorkflow():
@@ -158,13 +163,15 @@ class FWorkflow():
         self.wf_connections = wf_connections if isinstance(wf_connections, WFConnections) else WFConnections(
             wf_connections)
 
+        self.metadata = self.wf_connections.metadata
+
     def _reassign_ids(self, old_new):
         # update the nodes
         new_nodes = [old_new.get(id, id) for id in self.nodes]
         self.nodes = new_nodes
 
         # update the WFConnections
-        old_cl = self.wf_connections.child_links
+        old_cl = self.wf_connections.children_links
         new_cl = {}
         for (parent, children) in old_cl.iteritems():
             # make sure children is a list
@@ -314,7 +321,10 @@ class FWDecision():
 
 
 if __name__ == "__main__":
-    #a = FireWork(SubprocessTask.from_str('hello'), {}, fw_id=2)
+    a = FireWork(SubprocessTask.from_str("echo 'I am the first step of the workflow' >> first.txt"), {}, fw_id=-1)
+    b = FireWork(SubprocessTask.from_str("echo 'I am the first step of the workflow' >> second.txt"), {}, fw_id=-2)
+
+
     #b = FWorkflow.from_FireWork(a)
     #print b.to_db_dict()
 

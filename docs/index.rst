@@ -82,6 +82,7 @@ Planned future tutorials:
 * Using a web interface
 * Checkpoint / restart of jobs
 * Using the QueueLauncher outside of FW
+* Searching for FireWorks and Workflows
 * JSON vs. YAML and serialization of FW objects
 
 
