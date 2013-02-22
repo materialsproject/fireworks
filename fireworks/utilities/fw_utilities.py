@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import logging
+import datetime
 import sys
 import os
 import traceback
-from fireworks.core.fw_constants import FW_LOGGING_FORMATTER
+from fireworks.core.fw_constants import FW_LOGGING_FORMATTER, FW_BLOCK_FORMAT
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -88,3 +89,21 @@ def log_exception(m_logger, msgs):
     :param msgs: An iterable of Strings, will be joined by newlines
     """
     return log_fancy(m_logger, 'error', msgs, add_traceback=True)
+
+
+def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
+    """
+    Internal method to create a new block or launcher directory. \
+    The dir name is based on the time and the FW_BLOCK_FORMAT
+
+    :param root_dir: directory to create the new dir in
+    :param l_logger: the logger to use
+    :param prefix: the prefix for the new dir, default="block_"
+    """
+
+    time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
+    block_path = prefix + time_now
+    full_path = os.path.join(root_dir, block_path)
+    os.mkdir(full_path)
+    l_logger.info('Created new dir {}'.format(full_path))
+    return full_path

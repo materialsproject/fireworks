@@ -9,11 +9,9 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 
 import os
 import glob
-import datetime
 import time
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception
-from fireworks.core.fw_constants import FW_BLOCK_FORMAT, QUEUE_UPDATE_INTERVAL, \
-    QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
+from fireworks.core.fw_constants import QUEUE_UPDATE_INTERVAL, QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -90,7 +88,7 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
     try:
         l_logger.info('getting queue adapter')
 
-        block_dir = _create_datestamp_dir(launch_dir, l_logger)
+        block_dir = create_datestamp_dir(launch_dir, l_logger)
 
         for i in range(n_loops):
             if i > 0:
@@ -110,10 +108,10 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
                 # switch to new block dir if it got too big
                 if _njobs_in_dir(block_dir) >= njobs_block:
                     l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
-                    block_dir = _create_datestamp_dir(launch_dir, l_logger)
+                    block_dir = create_datestamp_dir(launch_dir, l_logger)
 
                 # create launcher_dir
-                launcher_dir = _create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
+                launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
                 launch_rocket(rocket_params, launcher_dir)
                 # wait for the queue system to update
@@ -156,21 +154,3 @@ def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
         jobs_in_queue = rocket_params.qa.get_njobs_in_queue(rocket_params)
 
     raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')
-
-
-def _create_datestamp_dir(root_dir, l_logger, prefix='block_'):
-    """
-    Internal method to create a new block or launcher directory. \
-    The dir name is based on the time and the FW_BLOCK_FORMAT
-    
-    :param root_dir: directory to create the new dir in
-    :param l_logger: the logger to use
-    :param prefix: the prefix for the new dir, default="block_"
-    """
-
-    time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
-    block_path = prefix + time_now
-    full_path = os.path.join(root_dir, block_path)
-    os.mkdir(full_path)
-    l_logger.info('Created new dir {}'.format(full_path))
-    return full_path
