@@ -42,7 +42,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 13, 2012'
 
-SAVED_FW_OBJECTS = {}
+SAVED_FW_MODULES = {}
 
 
 def serialize_fw(func):
@@ -174,11 +174,11 @@ def load_object(obj_dict):
     obj_dict['_fw_name'] = fw_name
 
     # first try to load from known location
-    if fw_name in SAVED_FW_OBJECTS:
-        return SAVED_FW_OBJECTS[fw_name]
+    if fw_name in SAVED_FW_MODULES:
+        obj_dict['@module'] = SAVED_FW_MODULES[fw_name]
 
     # second try to load from the serialized module name
-    # only works if you used USE_PYMATGEN_SERIALIZATION option
+    # only works if you used USE_PYMATGEN_SERIALIZATION option or in SAVED_FW_OBJECTS
     if obj_dict.get('@module', None):
         m_module = importlib.import_module(obj_dict['@module'])
         m_object = _search_module_for_obj(m_module, obj_dict)
@@ -193,7 +193,7 @@ def load_object(obj_dict):
             m_module = loader.find_module(module_name).load_module(module_name)
             m_object = _search_module_for_obj(m_module, obj_dict)
             if m_object:
-                SAVED_FW_OBJECTS[fw_name] = m_object
+                SAVED_FW_MODULES[fw_name] = module_name
                 return m_object
 
     raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
