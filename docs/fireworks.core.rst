@@ -41,18 +41,18 @@ core Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`rocket` Module
---------------------
+:mod:`queue_launcher` Module
+----------------------------
 
-.. automodule:: fireworks.core.rocket
+.. automodule:: fireworks.core.queue_launcher
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`rocket_launcher` Module
------------------------------
+:mod:`rocket` Module
+--------------------
 
-.. automodule:: fireworks.core.rocket_launcher
+.. automodule:: fireworks.core.rocket
     :members:
     :undoc-members:
     :show-inheritance:
