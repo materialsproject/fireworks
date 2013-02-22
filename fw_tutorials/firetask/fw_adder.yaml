@@ -1,4 +1,4 @@
-fw_id: null
+fw_id: -1
 spec:
   _tasks:
   - _fw_name: Addition Task
