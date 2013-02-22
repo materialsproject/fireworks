@@ -127,7 +127,7 @@ class WFConnections(FWSerializable):
         return m_dict
 
     def to_db_dict(self):
-        m_dict = self.to_dict()
+        m_dict = {'children_links': dict([(str(k), list(v)) for (k, v) in self.children_links.iteritems()])}
         m_dict['parent_links'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
         m_dict['metadata'] = self.metadata
         return m_dict
@@ -323,13 +323,16 @@ class FWDecision():
 
 
 if __name__ == "__main__":
-    a = FireWork(SubprocessTask.from_str("echo 'I am the first step of the workflow' >> first.txt"), {}, fw_id=-1)
-    b = FireWork(SubprocessTask.from_str("echo 'I am the first step of the workflow' >> second.txt"), {}, fw_id=-2)
+    a = FireWork(SubprocessTask.from_str("echo 'To be, or not to be,' > hamlet.txt"), {}, fw_id=-1)
+    b = FireWork(SubprocessTask.from_str("echo 'that is the question:' >> hamlet.txt"), {}, fw_id=-2)
+    c = WFConnections({-1: -2})
 
+    fwf = FWorkflow([a, b], c)
+    fwf.to_tarfile('../../fw_tutorials/workflow/hamlet_wf.tar', f_format='yaml')
 
     #b = FWorkflow.from_FireWork(a)
     #print b.to_db_dict()
 
     #fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
-    fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    #fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
 

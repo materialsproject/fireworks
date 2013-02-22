@@ -71,7 +71,7 @@ Adding more power: using rapid-fire mode
 While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The QueueLauncher can be run in a "rapid-fire" mode that provides these features.
 
 Add some FireWorks
-----------------------------
+------------------
 
 Let's reset our database and add three new FireWorks, all from our FireWorker::
 

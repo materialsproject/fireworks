@@ -14,7 +14,7 @@ In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple scr
 
 The ``Subprocess Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Subprocess Task`` is Python code that runs an arbitrary shell script that you give it, so you can use the ``SubProcess Task`` to run almost any job (without worrying that it's all done within a Python layer). In this section, we'll demonstrate how to use and define FireTasks.
 
-.. note:: In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
+This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
 Running multiple FireTasks
 --------------------------

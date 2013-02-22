@@ -1,8 +1,0 @@
-fw_id: -2
-spec:
-  _tasks:
-  - _fw_name: Addition Task
-    parameters: {}
-  input_array:
-  - 2
-launch_data: []
