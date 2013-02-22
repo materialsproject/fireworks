@@ -2,11 +2,19 @@
 Defining Jobs using FireTasks
 ============================
 
-In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled 'SubprocessTask'. The ``SubprocessTask`` is one type of *FireTask*, which is a predefined job template written in Python. The *SubprocessTask* is Python code that runs an arbitrary shell script that you give it, so you can use the SubProcessTask to run almost any job (without worrying that it's all done within a Python layer).
+In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled ``Subprocess Task``::
 
-. In this section, we'll demonstrate how to use and define FireTasks.
+    fw_id: -1
+    spec:
+      _tasks:
+      - _fw_name: Subprocess Task
+        parameters:
+          script: echo "howdy, your job launched successfully!" >> howdy.txt
+          use_shell: true
 
-.. note:: In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker using the instructions from the :doc:`installation tutorial <installation_tutorial>`.
+The ``Subprocess Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Subprocess Task`` is Python code that runs an arbitrary shell script that you give it, so you can use the ``SubProcess Task`` to run almost any job (without worrying that it's all done within a Python layer). In this section, we'll demonstrate how to use and define FireTasks.
+
+.. note:: In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
 Running multiple FireTasks
 --------------------------
@@ -17,12 +25,25 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-2. Look inside the file ``fw_multi.yaml``. You should see two FireTasks; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``.
+2. Look inside the file ``fw_multi.yaml``. You should see two ``Subprocess Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+
+    fw_id: -1
+    spec:
+      _tasks:
+      - _fw_name: Subprocess Task
+        parameters:
+          script: echo "howdy, your job launched successfully!" > howdy.txt
+          use_shell: true
+      - _fw_name: Subprocess Task
+        parameters:
+          script: wc -w < howdy.txt > words.txt
+          use_shell: true
+    launch_data: []
 
 3. Run this multi-step FireWork on the central server::
 
 	 launchpad_run.py initialize <TODAY'S DATE>
-	 launchpad_run.py upsert_fw fw_multi.yaml
+	 launchpad_run.py insert_single_fw fw_multi.yaml
 	 rocket_run.py
 
 .. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will allow you to reset the database, insert a FW, and run it within a single command.
