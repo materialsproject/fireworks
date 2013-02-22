@@ -80,6 +80,8 @@ Planned future tutorials:
 * Automatically prevent duplicate jobs from running twice
 * Using a Python interface
 * Using a web interface
+* Checkpoint / restart of jobs
+* Using the QueueLauncher outside of FW
 * JSON vs. YAML and serialization of FW objects
 
 

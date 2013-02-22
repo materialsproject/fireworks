@@ -44,7 +44,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
 	 launchpad_run.py initialize <TODAY'S DATE>
 	 launchpad_run.py insert_single_fw fw_multi.yaml
-	 rocket_run.py
+	 rocket_launcher_run.py singleshot
 
 .. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will allow you to reset the database, insert a FW, and run it within a single command.
 
@@ -81,7 +81,7 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
 
 	launchpad_run.py initialize <TODAY'S DATE>
 	launchpad_run.py insert_single_fw fw_better_multi.yaml
-	rocket_run.py
+	rocket_launcher_run.py singleshot
 
 At this point, you might want to change the ``echo_text`` parameter, reinsert the FireWork, and re-run the Rocket. Your custom text should get printed to ``howdy.txt`` and the number of words should change appropriately.
 
@@ -132,7 +132,7 @@ Even if you plan to only use ``Subprocess Task``, we suggest that you still read
 
 	launchpad_run.py initialize <TODAY'S DATE>
 	launchpad_run.py insert_single_fw fw_adder.yaml
-	rocket_run.py
+	rocket_launcher_run.py singleshot
 
 Next up: Workflows!
 -------------------

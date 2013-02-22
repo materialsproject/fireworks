@@ -70,7 +70,7 @@ Launch a Rocket on the FireWorker
 
 1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, type::
 
-    rocket_run.py -l my_launchpad.yaml -w my_fworker.yaml
+    rocket_launcher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot
 
 This should successfully launch a rocket that finds and runs your FireWork from the central server.
 
@@ -80,10 +80,10 @@ This should successfully launch a rocket that finds and runs your FireWork from 
 
 You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``.
 
-Running loop mode on the FireWorker
+Running rapidfire mode on the FireWorker
 -----------------------------------
 
-Just like on the central server, you can run in loop mode on the FireWorker to process many jobs.
+Just like on the central server, you can run in rapidfire mode on the FireWorker to process many jobs.
 
 1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, clean up your directory::
 
@@ -95,16 +95,16 @@ Just like on the central server, you can run in loop mode on the FireWorker to p
     launchpad_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
     launchpad_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
 
-3. Run Rockets in loop mode::
+3. Run Rockets in rapidfire mode::
 
-    rocket_run.py -l my_launchpad.yaml -w my_fworker.yaml --loop
+    rocket_launcher_run.py -l my_launchpad.yaml -w my_fworker.yaml rapidfire
 
 You've now run multiple jobs on your FireWorker!
 
 Next Steps
 ==========
 
-A central FireServer and one or more FireWorkers pulling jobs in loop mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rocket_run.py`` on your FireWorker.
+A central FireServer and one or more FireWorkers pulling jobs in rapidfire mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rocket_launcher_run.py`` on your FireWorker.
 
 If you'd like to learn how to launch jobs through a queue, continue on to:  :doc:`Launching Rockets through a queue </queue_tutorial>`
 

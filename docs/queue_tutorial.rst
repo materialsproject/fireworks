@@ -29,7 +29,7 @@ The QueueLauncher needs to know how to communicate with your queue system and th
 
 4. Open ``my_qp.yaml`` and modify it as follows:
 
-   a. In the part that specifies running ``rocket_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine. If you completed the previous tutorial, this is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml``
+   a. In the part that specifies running ``rocket_launcher_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine. If you completed the previous tutorial, this is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml``
 
    b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine. This is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_launchpad.yaml``
 
