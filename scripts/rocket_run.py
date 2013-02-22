@@ -6,7 +6,7 @@ A runnable script to launch a single Rocket (a command-line interface to rocket.
 from argparse import ArgumentParser
 import os
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.rocket import Rocket
+from fireworks.core.rocket import Rocket, loop_rocket_run
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger
 
@@ -40,17 +40,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.loop:
-        curdir = os.getcwd()
-        # initialize logger
-        l_logger = get_fw_logger('rocket.loop', curdir)
-        while True:
-            launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
-            os.chdir(launcher_dir)
-            l_logger.info('Submitting Rocket')
-            rocket = Rocket(launchpad, fworker)
-            rocket.run()
-            l_logger.info('Rocket finished')
-            os.chdir(curdir)
+        loop_rocket_run(launchpad, fworker)
 
     else:
         rocket = Rocket(launchpad, fworker)
