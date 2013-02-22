@@ -2,38 +2,61 @@
 Launch Rockets through a queue
 ==============================
 
-If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't want to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system allocates computer time. The RocketLauncher helps launch Rockets through a queue.
+If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer time.
+
+
+Launch a single job through a queue
+===================================
+
+To get warmed up, let's set things up so we can launch a single Rocket through a queueing system. The QueueLauncher helps launch Rockets through a queue.
 
 Configure the QueueLauncher
-============================
+---------------------------
 
-The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the RocketParams file.
+The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the QueueParams file.
 
-1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>.yaml`` where <QUEUE> is the supported queue system.
+1. Move to the ``installation_pt3`` tutorial directory on your FireWorker::
 
-.. note:: If you cannot find a working RocketParams file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) Don't be shy, we want to help you get set up.
+    cd <INSTALL_DIR>/fw_tutorials/installation_pt3
 
-2. Copy your chosen RocketParams file to a new name::
+2. Locate an appropriate QueueParams file. The files are usually named ``queueparams_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
 
-    cp rocketparams_<QUEUE>.yaml my_rocketparams.yaml
+.. note:: If you cannot find a working QueueParams file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) We would like to support more queueing systems in FireWorks.
 
-3. Open ``my_rocketparams.yaml`` and modify it as follows:
+3. Copy your chosen QueueParams file to a new name::
 
-   a. In the part that specifies running ``rocket_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
+    cp queueparams_<QUEUE>.yaml my_qp.yaml
 
-   b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine.
+4. Open ``my_qp.yaml`` and modify it as follows:
+
+   a. In the part that specifies running ``rocket_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine. If you completed the previous tutorial, this is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml``
+
+   b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine. This is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_launchpad.yaml``
 
    c. For the logging_dir parameter, modify the ``path/to/logging`` text to contain the **absolute path** of where you would like FireWorks logs to go. For example, you might create a ``fw_logs`` directory inside your home directory, and point the logging_dir parameter there.
 
    .. note:: Be sure to indicate the full, absolute path name; do not use BASH shortcuts like '.', '..', or '~', and do not indicate a relative path.
 
-4. Try submitting a job using the command::
+Add some FireWorks
+------------------
 
-    queue_launcher_run.py singleshot my_rocketparams.yaml
+Let's reset our database and add a new FireWork, all from our FireWorker::
 
-7. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
+    launchpad_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
+    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
 
-8. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
+where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
+
+Submit a job
+------------
+
+1. Try submitting a job using the command::
+
+    queue_launcher_run.py singleshot my_qp.yaml
+
+2. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
+
+3. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
@@ -47,43 +70,37 @@ Adding more power: using rapid-fire mode
 
 While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The QueueLauncher can be run in a "rapid-fire" mode that provides these features.
 
-Reset the FireWorks database
+Add some FireWorks
 ----------------------------
 
-1. Back at the FireServer, let's reset our database add **three** new FireWorks::
+Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py insert_single_fw fw_test.yaml
-    launchpad_run.py insert_single_fw fw_test.yaml
-    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
+    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
 
-2. Confirm that you have three FireWorks total::
-
-    launchpad_run.py get_fw_ids
-
-You should get back an array containing three FireWork ids.
+where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
 
 Unleash rapid-fire mode
 -----------------------
-
-Switching to your FireWorker,
 
 1. Navigate to a clean testing directory on the FireWorker::
 
     mkdir ~/rapidfire_tests
     cd ~/rapidfire_tests
 
-2. Copy your RocketParams file to this testing directory::
+2. Copy your QueueParams file to this testing directory::
 
-    cp <PATH_TO_MY_ROCKET_PARAMS> .
+    cp <PATH_TO_MY_QUEUE_PARAMS> .
 
-where <PATH_TO_MY_ROCKET_PARAMS> is the path to ``my_rocketparams.yaml`` file that you created in the previous section.
+where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you created in the previous section.
 
-3. Looking inside ``my_rocketparams.yaml``, confirm that the path to my_fworker.yaml and my_launchpad.yaml are still valid. (They should be, unless you moved or deleted these files)
+3. Looking inside ``my_qp.yaml``, confirm that the path to my_fworker.yaml and my_launchpad.yaml are still valid. (They should be, unless you moved or deleted these files)
 
 4. Submit several jobs with a single command::
 
-    queue_launcher_run.py rapidfire -q 3 my_rocketparams.yaml
+    queue_launcher_run.py rapidfire -q 3 my_qp.yaml
 
    .. important:: The QueueLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
@@ -98,4 +115,4 @@ You've now launched multiple Rockets with a single command!
 Next steps
 ==========
 
-If you've completed this tutorial, your FireServer and a single FireWorker are ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in running more complex jobs and creating multi-step workflows. We'll continue the tutorial with how to :doc:`defining jobs using FireTasks </task_tutorial>`.
+If you've completed this tutorial, your FireServer and a single FireWorker are ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in running more complex jobs and creating multi-step workflows. We'll continue the tutorial with :doc:`defining jobs using FireTasks </task_tutorial>`.
