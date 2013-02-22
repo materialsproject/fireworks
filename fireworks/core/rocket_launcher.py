@@ -23,23 +23,23 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket(rocket_params, launch_dir='.'):
+def launch_rocket(rocket_params, launcher_dir='.'):
     """
     Submit a single job to the queue.
     
     :param rocket_params: A RocketParams instance
-    :param launch_dir: The directory where to submit the job
+    :param launcher_dir: The directory where to submit the job
     """
 
     # convert launch_dir to absolute path
-    launch_dir = os.path.abspath(launch_dir)
+    launcher_dir = os.path.abspath(launcher_dir)
 
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', rocket_params.logging_dir)
 
     # make sure launch_dir exists:
-    if not os.path.exists(launch_dir):
-        raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
+    if not os.path.exists(launcher_dir):
+        raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
 
     try:
         # get the queue adapter
@@ -47,13 +47,13 @@ def launch_rocket(rocket_params, launch_dir='.'):
         qa = rocket_params.qa
 
         # move to the launch directory
-        l_logger.info('moving to launch_dir {}'.format(launch_dir))
-        os.chdir(launch_dir)
+        l_logger.info('moving to launch_dir {}'.format(launcher_dir))
+        os.chdir(launcher_dir)
 
         # write and submit the queue script using the queue adapter
         l_logger.info('writing queue script')
         with open(SUBMIT_SCRIPT_NAME, 'w') as f:
-            queue_script = qa.get_script_str(rocket_params, launch_dir)
+            queue_script = qa.get_script_str(rocket_params, launcher_dir)
             if not queue_script:
                 raise RuntimeError('queue script could not be written, check job params and queue adapter!')
             f.write(queue_script)
@@ -62,7 +62,7 @@ def launch_rocket(rocket_params, launch_dir='.'):
             raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
 
     except:
-        log_exception(l_logger, 'Error launching rocket!')
+        log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
 def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
@@ -152,7 +152,7 @@ def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
             return jobs_in_queue
         l_logger.warn('Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
         time.sleep(RETRY_INTERVAL)
-        RETRY_INTERVAL = RETRY_INTERVAL * 2
+        RETRY_INTERVAL *= 2
         jobs_in_queue = rocket_params.qa.get_njobs_in_queue(rocket_params)
 
     raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')
