@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 """
-A runnable script for launching rockets (a command-line interface to rocket_launcher.py)
+A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
 
 from argparse import ArgumentParser
-from fireworks.core.rocket_launcher import rapid_fire, launch_rocket
+from fireworks.core.queue_launcher import rapid_fire, launch_rocket
 from fireworks.core.fworker import RocketParams
 
 __author__ = "Anubhav Jain"
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     interaction are handled by the mandatory job params file parameter. The "rapid-fire" option can be used \
     to maintain a certain number of jobs in the queue by specifying the n_loops parameter to a large number. \
     If n_loops is set to 1 (default) the rocket launcher will quit after submitting the desired number of jobs. \
-    For more help on rapid fire options, use rocket_launcher.py rapidfire -h'
+    For more help on rapid fire options, use queue_launcher.py rapidfire -h'
     
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')

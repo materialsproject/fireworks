@@ -1,13 +1,13 @@
-=================================================
-Launch a Rocket on the FireWorker through a queue
-=================================================
+==============================
+Launch Rockets through a queue
+==============================
 
 If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't want to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system allocates computer time. The RocketLauncher helps launch Rockets through a queue.
 
-Configure the RocketLauncher
-----------------------------
+Configure the QueueLauncher
+============================
 
-The RocketLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the RocketParams file.
+The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the RocketParams file.
 
 1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, locate an appropriate RocketParams file. The files are usually named ``rocketparams_<QUEUE>.yaml`` where <QUEUE> is the supported queue system.
 
@@ -29,7 +29,7 @@ The RocketLauncher needs to know how to communicate with your queue system and t
 
 4. Try submitting a job using the command::
 
-    rocket_launcher_run.py singleshot my_rocketparams.yaml
+    queue_launcher_run.py singleshot my_rocketparams.yaml
 
 7. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
@@ -37,7 +37,7 @@ The RocketLauncher needs to know how to communicate with your queue system and t
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
-   a. The RocketLauncher submitted a Rocket to your queue manager
+   a. The QueueLauncher submitted a Rocket to your queue manager
    b. Your queue manager executed the Rocket when resources were ready
    c. The Rocket fetched a FireWork from the FireServer and ran the specification inside
 
@@ -45,7 +45,7 @@ If everything ran successfully, congratulations! You just executed a complicated
 Adding more power: using rapid-fire mode
 ========================================
 
-While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The RocketLauncher can be run in a "rapid-fire" mode that provides these features.
+While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The QueueLauncher can be run in a "rapid-fire" mode that provides these features.
 
 Reset the FireWorks database
 ----------------------------
@@ -83,9 +83,9 @@ where <PATH_TO_MY_ROCKET_PARAMS> is the path to ``my_rocketparams.yaml`` file th
 
 4. Submit several jobs with a single command::
 
-    rocket_launcher_run.py rapidfire -q 3 my_rocketparams.yaml
+    queue_launcher_run.py rapidfire -q 3 my_rocketparams.yaml
 
-   .. important:: The RocketLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
+   .. important:: The QueueLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
    .. important:: The command above submits jobs until you have at most 3 jobs in the queue. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
 
@@ -93,7 +93,7 @@ where <PATH_TO_MY_ROCKET_PARAMS> is the path to ``my_rocketparams.yaml`` file th
 
 You've now launched multiple Rockets with a single command!
 
-.. note:: For more tips on the RocketLauncher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``rocketlauncher_run.py rapidfire -h``
+.. note:: For more tips on the QueueLauncher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``queue_launcher_run.py rapidfire -h``
 
 Next steps
 ==========
