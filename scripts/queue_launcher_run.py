@@ -38,7 +38,7 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
-    rocket_params = QueueParams.from_file(args.rocket_params_file)
+    rocket_params = QueueParams.from_file(args.queue_params_file)
     
     if args.command == 'rapidfire':
         rapid_fire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
