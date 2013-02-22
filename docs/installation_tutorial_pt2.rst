@@ -106,6 +106,6 @@ Next Steps
 
 A central FireServer and one or more FireWorkers pulling jobs in loop mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rocket_run.py`` on your FireWorker.
 
-If you'd like to learn how to launch jobs through a queue, continue on to the final chapter of FireWorks installation:  :doc:`Launching Rockets through a queue </queue_tutorial_pt3>`
+If you'd like to learn how to launch jobs through a queue, continue on to:  :doc:`Launching Rockets through a queue </queue_tutorial>`
 
 Otherwise, you can safely skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.
