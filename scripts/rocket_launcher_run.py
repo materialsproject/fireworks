@@ -6,8 +6,9 @@ A runnable script to launch a single Rocket (a command-line interface to rocket.
 from argparse import ArgumentParser
 import os
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.rocket import Rocket, loop_rocket_run
+from fireworks.core.rocket import Rocket
 from fireworks.core.fworker import FWorker
+from fireworks.core.rocket_launcher import loop_rocket_run
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger
 
 

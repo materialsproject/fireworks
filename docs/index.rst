@@ -80,6 +80,7 @@ Planned future tutorials:
 * Automatically prevent duplicate jobs from running twice
 * Using a Python interface
 * Using a web interface
+* JSON vs. YAML and serialization of FW objects
 
 
 .. _contributing-label:
@@ -104,7 +105,7 @@ The collaborative way to submit questions, issues, and all other communication i
 Thank yous
 ==========
 
-Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code for pulling jobs onto nodes was refashioned for FireWorks.
+Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code was refashioned for the QueueLauncher and the PBS QueueAdapter.
 
 Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
 

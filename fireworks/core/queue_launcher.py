@@ -21,7 +21,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket(rocket_params, launcher_dir='.'):
+def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
     """
     Submit a single job to the queue.
     
@@ -113,7 +113,7 @@ def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket(rocket_params, launcher_dir)
+                launch_rocket_to_queue(rocket_params, launcher_dir)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
