@@ -61,9 +61,12 @@ Getting Started
 To get started with FireWorks, we suggest that you follow our installation tutorial. The tutorial will help guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
    installation_tutorial
+   installation_tutorial_pt2
+   queue_tutorial
+   firetask_tutorial
 
 .. _contributing-label:
 

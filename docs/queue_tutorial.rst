@@ -15,9 +15,9 @@ Configure the QueueLauncher
 
 The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the QueueParams file.
 
-1. Move to the ``installation_pt3`` tutorial directory on your FireWorker::
+1. Move to the ``queue`` tutorial directory on your FireWorker::
 
-    cd <INSTALL_DIR>/fw_tutorials/installation_pt3
+    cd <INSTALL_DIR>/fw_tutorials/queue
 
 2. Locate an appropriate QueueParams file. The files are usually named ``queueparams_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
 
