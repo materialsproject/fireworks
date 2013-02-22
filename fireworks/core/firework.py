@@ -27,6 +27,7 @@ __date__ = "Feb 5, 2013"
 
 
 # TODO: add ability to block ports
+# TODO: consider using Mongo oid as fw_id. How important is readability?
 
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=-1, launch_data=None, state='WAITING'):

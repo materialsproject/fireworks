@@ -87,7 +87,7 @@ class QueueAdapterBase(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return self()
+        return cls()
 
 
 class QueueParams(FWSerializable):
