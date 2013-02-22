@@ -17,6 +17,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
+# TODO: move Queue stuff to its own module??
 
 class FWorker(FWSerializable):
     def __init__(self, name="anonymous worker", category="general worker", query=None, params=None):
@@ -89,7 +90,7 @@ class QueueAdapterBase(FWSerializable):
         return self()
 
 
-class RocketParams(FWSerializable):
+class QueueParams(FWSerializable):
     """
     A RocketParams instance contains all the information needed to write a queue file \
     and submit to a queue system. Details of the queue file format and queue submission \
@@ -125,4 +126,4 @@ class RocketParams(FWSerializable):
 
         # load the QueueAdapter object dynamically
         qa = load_object(qa_dict)
-        return RocketParams(qa, m_dict['params'], m_dict['logging_dir'])
+        return QueueParams(qa, m_dict['params'], m_dict['logging_dir'])

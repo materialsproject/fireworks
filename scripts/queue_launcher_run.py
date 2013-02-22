@@ -6,7 +6,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 from fireworks.core.queue_launcher import rapid_fire, launch_rocket
-from fireworks.core.fworker import RocketParams
+from fireworks.core.fworker import QueueParams
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -18,17 +18,17 @@ __date__ = "Jan 14, 2013"
 
 if __name__ == '__main__':
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
-    interaction are handled by the mandatory job params file parameter. The "rapid-fire" option can be used \
+    interaction are handled by the mandatory queue params file parameter. The "rapid-fire" option can be used \
     to maintain a certain number of jobs in the queue by specifying the n_loops parameter to a large number. \
-    If n_loops is set to 1 (default) the rocket launcher will quit after submitting the desired number of jobs. \
+    If n_loops is set to 1 (default) the queue launcher will quit after submitting the desired number of jobs. \
     For more help on rapid fire options, use queue_launcher.py rapidfire -h'
     
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
-    single_parser = subparsers.add_parser('singleshot', help='launch a single rocket')
-    rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets')
+    single_parser = subparsers.add_parser('singleshot', help='launch a single rocket to the queue')
+    rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets to the queue')
     
-    parser.add_argument('rocket_params_file', help='path to a file containing the rocket parameters')
+    parser.add_argument('queue_params_file', help='path to a file containing the queue parameters')
     parser.add_argument('-l', '--launch_dir', help='directory to launch the job / rapid-fire', default='.')
     
     rapid_parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     
-    rocket_params = RocketParams.from_file(args.rocket_params_file)
+    rocket_params = QueueParams.from_file(args.rocket_params_file)
     
     if args.command == 'rapidfire':
         rapid_fire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
