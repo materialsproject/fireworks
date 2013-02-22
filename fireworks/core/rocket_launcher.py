@@ -12,6 +12,11 @@ __date__ = 'Feb 22, 2013'
 
 
 def launch_rocket(launchpad, fworker):
+    """
+    Run a single rocket in the current directory
+    :param launchpad: a LaunchPad object
+    :param fworker: a FWorker object
+    """
     rocket = Rocket(launchpad, fworker)
     rocket.run()
 
@@ -25,7 +30,6 @@ def loop_rocket_run(launchpad, fworker, m_dir=None):
     :param fworker: a FWorker object
     :param m_dir: the directory in which to loop Rocket running
     """
-
     curdir = m_dir if m_dir else os.getcwd()
     # initialize logger
     l_logger = get_fw_logger('rocket.loop', curdir)
