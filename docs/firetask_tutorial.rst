@@ -21,11 +21,11 @@ Running multiple FireTasks
 
 You can run multiple tasks within the same FireWork. For example, the first step of your FireWork might write an input file that the second step processes. Let's create a FireWork where the first step prints ``howdy.txt``, and the second step counts the number of words in that file.
 
-1. Navigate to the tasks tutorial directory::
+1. Navigate to the tasks tutorial directory on your FireServer::
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-2. Look inside the file ``fw_multi.yaml``. You should see two ``Subprocess Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+2. Look inside the file ``fw_multi.yaml``. You should see two ``Subprocess Task``s; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
 
     fw_id: -1
     spec:
@@ -123,7 +123,7 @@ Even if you plan to only use ``Subprocess Task``, we suggest that you still read
                 f.write("The sum of {} is: {}".format(input_array, m_sum))
 
 4. It should be clear how the ``Addition Task`` is set up:
- 	a. the reserved ``fw_name`` parameter is set to ``Addition Task``, which is how FireWorks knows to use this code when an ``Addition Task`` is specified inside the ``fw_adder.yaml`` FireWork file.
+ 	a. the reserved ``_fw_name`` parameter is set to ``Addition Task``, which is how FireWorks knows to use this code when an ``Addition Task`` is specified inside the ``fw_adder.yaml`` FireWork file.
  	b. the ``run_task()`` method is the code that gets executed by the Rocket. In this case, we sum the values in the field called ``input_array``, and write the output to ``sum_output.txt``. In our ``fw_adder.yaml`` file, the ``input_array`` was set to ``1`` and ``2``.
 
 	.. note:: The main method in ``addition_task.py`` is not necessary to define a FireTask. However, it demonstrates how we created the ``fw_adder.yaml`` file.
@@ -137,6 +137,6 @@ Even if you plan to only use ``Subprocess Task``, we suggest that you still read
 Next up: Workflows!
 -------------------
 
-With custom FireTasks, you can now go beyond running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on dynamic input from the ``spec`` of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the spec to decide what numbers to add.
+With custom FireTasks, you can now go beyond running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on dynamic input from the ``spec`` of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the spec to decide what numbers to add. By using the same FireWork with different values in the ``spec``, one could execute a data-parallel application.
 
 While one could construct an entire workflow by chaining together FireTasks within a single FireWork, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single FireWork. The next step in the tutorial is to explore connecting together FireWorks into a true *workflow*.

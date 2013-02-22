@@ -41,7 +41,7 @@ Some limitations of FireWorks include:
 
 * FireWorks has not been stress tested to very large numbers of worker nodes. (If you try this, we'd love to hear the results!)
 
-* FireWorks does not optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement); you must define such optimizations explicitly.
+* FireWorks does not automatically optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement or to match jobs to appropriate hardware); you must define such optimizations yourself.
 
 
 Is FireWorks for me?
@@ -67,6 +67,20 @@ To get started with FireWorks, we suggest that you follow our installation tutor
    installation_tutorial_pt2
    queue_tutorial
    firetask_tutorial
+
+Planned future tutorials:
+
+* Maintaining the FW database and dealing with crashed jobs
+* Securing the FW database
+* SubProcess Task - advanced usage
+* File movement Task Operations
+* Database Task Operations
+* Assigning specific FireWorkers to run certain jobs
+* Assigning and modifying job priority (note: only before running)
+* Automatically prevent duplicate jobs from running twice
+* Using a Python interface
+* Using a web interface
+
 
 .. _contributing-label:
 
