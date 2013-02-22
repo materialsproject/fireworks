@@ -100,6 +100,6 @@ Next steps
 
 At this point, you've successfully set up a system to store a simple job in a database and run it later. You might want to get a snack!
 
-Your next step depends on your interests. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend.
+Your next step depends on your interests. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users.
 
 If don't want to automatically launch a lot of Rockets and instead want to learn how more complex jobs are defined, you might want skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`.
