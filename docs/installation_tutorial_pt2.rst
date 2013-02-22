@@ -2,7 +2,7 @@
 Installation Tutorial (part 2: the Worker)
 ==========================================
 
-If you've set up your FireServer, the next step is to set up worker nodes to run your jobs on a large scale and perhaps through a queuing system. This tutorial will guide you through FireWorks installation on a worker node. Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
+If you've set up your FireServer, the next step is to set up worker nodes to run your jobs on a large scale (perhaps through a queuing system). This tutorial will guide you through FireWorks installation on a worker node. Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
 
 This tutorial can be safely completed from the command line, and requires no programming.
 
@@ -11,19 +11,22 @@ Launch a Rocket on a worker machine (FireWorker)
 
 So far, we have added a FireWork (job) to the database on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
 
-A more interesting use case of FireWorks is to add FireWorks to the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers), perhaps through a queueing system. We'll next configure a worker machine. This machine can be the same as your central server if you'd like.
+A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers), perhaps through a queueing system. We'll next configure a worker machine.
 
 Install FireWorks on the FireWorker
 -----------------------------------
 
-On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`. If you are re-using your central server as the worker, then you don't need to install anything again.
+On the worker machine, follow the instructions listed at :doc:`Basic FireWorks Installation </installation>`.
 
 Reset the FireWorks database
 ----------------------------
 
-1. Back at the FireServer, let's reset our database add a new FireWork::
+1. Back at the FireServer, let's reset our database and add four identical FireWorks::
 
     launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
     launchpad_run.py insert_single_fw fw_test.yaml
 
 Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
@@ -43,15 +46,17 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 
     cp launchpad.yaml my_launchpad.yaml
 
-3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address or hostname of your FireServer.
+3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address of your FireServer.
 
-3. Confirm that you can access the FireServer from your FireWorker::
+3. Confirm that you can query the FireServer from your FireWorker::
 
     launchpad_run.py -l my_launchpad.yaml get_fw 1
 
-This should print out a FireWork.
+This should print out the description of a FireWork that is ready to run.
 
 .. note:: If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports.
+
+.. tip:: If you're still having problems, you can use telnet to check if a port is open: ``telnet <HOSTNAME> <PORTNAME>``, where <HOSTNAME> is your FireServer host and <PORTNAME> is your Mongo port (probably 27017).
 
 
 Configure your FireWorker
