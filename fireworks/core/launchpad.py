@@ -20,8 +20,8 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 30, 2013'
 
-#TODO: add logging throughout
-
+# TODO: add logging throughout
+# TODO: probably lots of cleanup is possible
 
 class LaunchPad(FWSerializable):
     """
