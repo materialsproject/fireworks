@@ -29,6 +29,7 @@ __date__ = "Feb 5, 2013"
 
 # TODO: add ability to block ports
 # TODO: consider using Mongo oid as fw_id. How important is readability?
+# TODO: add created date to FW
 
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=-1, launch_data=None, state='WAITING'):
@@ -123,9 +124,10 @@ class WFConnections(FWSerializable):
         m_dict = {'children_links': dict([(k, list(v)) for (k, v) in self.children_links.iteritems()])}
         if self.metadata:
             m_dict['metadata'] = self.metadata
+        return m_dict
 
     def to_db_dict(self):
-        m_dict = self.to_db_dict()
+        m_dict = self.to_dict()
         m_dict['parent_links'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
         m_dict['metadata'] = self.metadata
         return m_dict
