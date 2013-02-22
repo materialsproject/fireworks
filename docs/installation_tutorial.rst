@@ -95,11 +95,39 @@ You should see additional information indicating that your FireWork was launched
 
 The error ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database. If you wanted, you could go back, add another FireWork, and run ``rocket_run.py`` again in a new directory.
 
+Launch many Rockets (loop mode)
+=================================
+
+If you just want to run lots of Rockets on the central server itself, the simplest way is to run in "loop mode". Let's try this feature:
+
+1. Staying in your working directory from last time, clean up your output files::
+
+    rm fw.json
+    rm howdy.txt
+
+2. Let's reset the database and insert 4 identical FireWorks::
+
+    launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
+
+3. Confirm that the fourth FireWork got added to the database::
+
+    launchpad_run.py get_fw 4
+
+4. Let's run the rocket in loop mode, which will keep repeating until we run out of FireWorks and get the ``No FireWorks are ready to run and match query!`` error::
+
+    rocket_run.py --loop
+
+You should see four directories starting with the tag ``launcher_``. Inside each of these directories, you'll find the results of one of your FireWorks. You can figure out which FireWork ran by looking inside the ``fw.json`` file in each directory.
+
 Next steps
 ==========
 
-At this point, you've successfully set up a system to store a simple job in a database and run it later. You might want to get a snack!
+At this point, you've successfully set up a system to store a simple job in a database and run it later. You even ran several jobs with a single command: ``rocket_run.py --loop``. It might be a good time to get a snack!
 
-Your next step depends on your interests. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users.
+Your next step depends on your interests. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you don't expect to ever have any worker nodes.
 
-If don't want to automatically launch a lot of Rockets and instead want to learn how more complex jobs are defined, you might want skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`.
+If you instead want to learn how more complex jobs are defined, you can skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`.
