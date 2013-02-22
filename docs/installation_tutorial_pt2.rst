@@ -108,4 +108,4 @@ A central FireServer and one or more FireWorkers pulling jobs in loop mode might
 
 If you'd like to learn how to launch jobs through a queue, continue on to the final chapter of FireWorks installation:  :doc:`Installation (part 3) </installation_tutorial_pt3>`
 
-Otherwise, you can safely skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`.
+Otherwise, you can safely skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.

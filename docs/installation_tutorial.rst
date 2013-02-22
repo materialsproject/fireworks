@@ -153,4 +153,4 @@ At this point, you've successfully stored a simple job in a database and run it 
 
 Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you don't expect to ever have any worker nodes.
 
-If you don't want to set up worker nodes and instead want to learn how more complex jobs are defined, you can skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`.
+If you don't want to set up worker nodes and instead want to learn how more complex jobs are defined, you can skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.

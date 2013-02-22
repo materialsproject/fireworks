@@ -2,7 +2,9 @@
 Defining Jobs using FireTasks
 ============================
 
-In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a 'FireTask' labeled 'SubprocessTask'. A *FireTask* is a predefined job template; the *SubprocessTask* is a FireTask that runs an arbitrary shell script. In this section, we'll demonstrate how to use and define FireTasks.
+In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled 'SubprocessTask'. The ``SubprocessTask`` is one type of *FireTask*, which is a predefined job template written in Python. The *SubprocessTask* is Python code that runs an arbitrary shell script that you give it, so you can use the SubProcessTask to run almost any job (without worrying that it's all done within a Python layer).
+
+. In this section, we'll demonstrate how to use and define FireTasks.
 
 .. note:: In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker using the instructions from the :doc:`installation tutorial <installation_tutorial>`.
 
