@@ -51,9 +51,13 @@ A FireWork is a workflow. For this tutorial, we will use a FireWork that consist
 
     launchpad_run.py get_fw 1
 
-This prints out the FireWork with fw_id=1 (the first FireWork entered into the database). Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, this is the command that will be executed (print some text into a file named ``howdy.txt``). The ``use_shell`` parameter indicates that the command will be interpreted through the shell.
+This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database). Our ``fw_test.yaml`` file had specified a negative ``fw_id`` of -1. A negative ``fw_id`` means that the database will assign a ``fw_id`` for us, starting from ``fw_id`` = 1.
+
+Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the workflow is run, this is the command that will be executed (print some text into a file named ``howdy.txt``). The ``use_shell`` parameter indicates that the command will be interpreted through the shell.
 
 You have now stored a FireWork in the database! It is now ready to be launched.
+
+.. note:: A few more details on the ``SubProcessTask`` and its parameters are in the :doc:`defining jobs using FireTasks </task_tutorial>` tutorial. There are many more built-in features of SubProcessTask which we will cover in a future advanced tutorial.
 
 Launch a Rocket on the FireServer
 =================================
@@ -98,4 +102,4 @@ At this point, you've successfully set up a system to store a simple job in a da
 
 Your next step depends on your interests. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation part 2 </installation_tutorial_pt2>`
 
-If don't want to install anything for the rest of the day and want to learn how more complex jobs are defined, you might want skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`. You can install worker nodes and learn how to massively run your jobs another time.
+If don't want to install anything for the rest of the day and want to learn how more complex jobs are defined, you might want skip ahead to :doc:`defining jobs using FireTasks </task_tutorial>`. You can always install worker nodes and learn how to massively run your jobs another time.

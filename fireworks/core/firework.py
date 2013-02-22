@@ -29,7 +29,7 @@ __date__ = "Feb 5, 2013"
 # TODO: add ability to block ports
 
 class FireWork(FWSerializable):
-    def __init__(self, tasks, spec=None, fw_id=None, launch_data=None, state='WAITING'):
+    def __init__(self, tasks, spec=None, fw_id=-1, launch_data=None, state='WAITING'):
         """
         TODO: add more docs
         
@@ -39,7 +39,7 @@ class FireWork(FWSerializable):
         
         :param tasks: a list of FireTasks
         :param spec: a dict specification of the job to run
-        :param fw_id: the FW's database id to the LaunchPad
+        :param fw_id: the FW's database id to the LaunchPad. Negative numbers will be re-assigned dynamically when they are entered in the database through the LaunchPad.
         :param launch_data: a list of Launch objects of this FireWork
         :param state: the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
