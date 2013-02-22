@@ -24,7 +24,7 @@ Reset the FireWorks database
 1. Back at the FireServer, let's reset our database add a new FireWork::
 
     launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py upsert_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
 
 Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
 
@@ -134,9 +134,9 @@ Reset the FireWorks database
 1. Back at the FireServer, let's reset our database add **three** new FireWorks::
 
     launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py upsert_fw fw_test.yaml
-    launchpad_run.py upsert_fw fw_test.yaml
-    launchpad_run.py upsert_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
 
 2. Confirm that you have three FireWorks total::
 

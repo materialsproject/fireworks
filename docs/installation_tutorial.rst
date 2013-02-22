@@ -45,7 +45,7 @@ A FireWork is a workflow. For this tutorial, we will use a FireWork that consist
 
 1. Staying in the tutorial directory, run the following command::
 
-    launchpad_run.py upsert_fw fw_test.yaml
+    launchpad_run.py insert_single_fw fw_test.yaml
 
 2. Confirm that the FireWork got added to the database::
 
