@@ -25,7 +25,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-2. Look inside the file ``fw_multi.yaml``. You should see two ``Subprocess Task``s; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+2. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Subprocess Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
 
     fw_id: -1
     spec:
@@ -46,9 +46,11 @@ You can run multiple tasks within the same FireWork. For example, the first step
 	 launchpad_run.py insert_single_fw fw_multi.yaml
 	 rocket_launcher_run.py singleshot
 
-.. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will allow you to reset the database, insert a FW, and run it within a single command.
+.. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will reset the database, insert a FW, and run it within a single command.
 
 You should see two files written out to the system, ``howdy.txt`` and ``words.txt``, confirming that you successfully ran a two-step job!
+
+.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you should consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead.
 
 Using SubprocessTask
 --------------------
@@ -59,7 +61,7 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
 
     rm howdy.txt fw.json
 
-2. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time, the text we are printing is separated into its own ``echo_text`` parameter. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the names of the input and output files are also clearly separated from the commands themselves within the FireWork specification::
+2. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time, the text we are printing is separated into its own ``echo_text`` parameter, which is defined outside the ``tasks`` part of the ``spec``. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the names of the input and output files are also clearly separated from the commands themselves within the FireWork specification::
 
     fw_id: -1
     spec:
@@ -83,7 +85,7 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
 	launchpad_run.py insert_single_fw fw_better_multi.yaml
 	rocket_launcher_run.py singleshot
 
-At this point, you might want to change the ``echo_text`` parameter, reinsert the FireWork, and re-run the Rocket. Your custom text should get printed to ``howdy.txt`` and the number of words should change appropriately.
+At this point, you might want to change the ``echo_text`` parameter to something other than ``howdy, your job launched successfully!``, reinsert the FireWork, and re-run the Rocket. Your custom text should get printed to ``howdy.txt`` and the number of words should change appropriately.
 
 Creating a custom FireTask
 --------------------------
@@ -139,4 +141,4 @@ Next up: Workflows!
 
 With custom FireTasks, you can now go beyond running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on dynamic input from the ``spec`` of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the spec to decide what numbers to add. By using the same FireWork with different values in the ``spec``, one could execute a data-parallel application.
 
-While one could construct an entire workflow by chaining together FireTasks within a single FireWork, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single FireWork. The next step in the tutorial is to explore connecting together FireWorks into a true *workflow*.
+While one could construct an entire workflow by chaining together FireTasks within a single FireWork, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single FireWork. The next step in the tutorial is to explore :doc:`connecting together FireWorks into a workflow <workflow_tutorial>`.
