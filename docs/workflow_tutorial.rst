@@ -25,9 +25,11 @@ Let's define and execute this workflow.
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
 
-#. The workflow is encapsulated in the ``hamlet_wf.tar`` file. Packed within this file are two FireWork files (one for each step of the workflow), and third file called ``wfconnections.yaml``. The ``wfconnections.yaml`` file is what defines the connections between the two FireWorks.
+#. The workflow is encapsulated in the ``hamlet_wf.tar`` file. Packed within this file are two FireWork files (one for each step of the workflow), and third file called ``wfconnections.yaml``. The ``wfconnections.yaml`` file defines the connections between the two FireWorks.
 
-#. Normally, one would not need to unpack ``hamlet_wf.tar`` and would use this file directly. But for curiosity's sake, let's unpack this file and look inside. (if you're not curious, you can skip to step 5!) ::
+    .. note:: If you don't like the tar file format, you can also serialize an entire workflow as a single JSON or YAML file. For details, see the tutorial on FW serialization (*future*)
+
+#. Normally, one would not need to unpack ``hamlet_wf.tar``. But for curiosity's sake, let's unpack this file and look inside. (if you're not curious, you can skip to step 5!) ::
 
     tar -xvf hamlet_wf.tar
 
