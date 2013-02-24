@@ -50,7 +50,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
 You should see two files written out to the system, ``howdy.txt`` and ``words.txt``, confirming that you successfully ran a two-step job!
 
-.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you should consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead.
+.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you should consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. Or, you could define a single custom FireTask that performs multiple steps internally (the `custodian <https://pypi.python.org/pypi/custodian>`_ Python package is one option to help achieve this).
 
 Using SubprocessTask
 --------------------

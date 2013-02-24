@@ -43,7 +43,7 @@ Some limitations of FireWorks include:
 
 * FireWorks does not automatically optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement or to match jobs to appropriate hardware); you must define such optimizations yourself.
 
-* FireWorks has only been tested on Linux and Macintosh machines. (If you are trying to get set up on Windows, please let us know)
+* FireWorks has only been tested on Linux and Macintosh machines. (If you are trying to get set up on Windows, please let us know if you encounter problems)
 
 Is FireWorks for me?
 ====================
@@ -79,19 +79,20 @@ Depending on your application, you might also be interested in the following tut
 Planned future tutorials:
 
 * Maintaining the FW database and dealing with crashed jobs
+* Detailed tutorial on implementing dynamic jobs
 * Securing the FW database
-* SubProcess Task - advanced usage
+* Detailed tutorial on SubProcess Task
 * File movement Task Operations
 * Database Task Operations
 * Assigning specific FireWorkers to run certain jobs
-* Assigning and modifying job priority (note: only before running)
+* Assigning and modifying job priority
 * Automatically prevent duplicate jobs from running twice
-* Using a Python interface
-* Using a web interface
+* Using Python to command FireWorks
+* Using a web interface to monitor FireWorks
 * Checkpoint / restart of jobs
 * Using the QueueLauncher outside of FW
 * Searching for FireWorks and Workflows
-* JSON vs. YAML and serialization of FW objects
+* JSON vs. YAML and serialization of FW objects (including WF serialiazation as JSON/YAML instead of tar)
 
 
 .. _contributing-label:
