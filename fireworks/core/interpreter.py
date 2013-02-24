@@ -6,6 +6,7 @@ using support actions.
 """
 
 from __future__ import division
+from fireworks.core.actions import DictActions
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -16,8 +17,6 @@ __date__ = "Jun 1, 2012"
 
 
 import re
-
-from custodian.ansible.actions import DictActions
 
 
 class Modder(object):
