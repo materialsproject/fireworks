@@ -145,22 +145,23 @@ class LaunchPad(FWSerializable):
                 launch.stored_data = fw_decision.stored_data
                 break
 
+        # get the wf_dict
+        wfc = WFConnections.from_dict(self.wfconnections.find_one({'nodes': m_fw.fw_id}))
+        # get all the children
+        child_fw_ids = wfc.children_links[m_fw.fw_id]
+
         # depending on the decision, you might have to do additional actions
         if fw_decision.action == 'CONTINUE':
             pass
-        
         elif fw_decision.action == 'TERMINATE':
-            # get the wf_dict
-            wfc = WFConnections.from_dict(self.wfconnections.find_one({'nodes': m_fw.fw_id}))
-            # get all the children
-            child_fw_ids = wfc.children_links[m_fw.fw_id]
             # mark all children as terminated
             for cfid in child_fw_ids:
                 self. _update_fw_state(self, cfid, 'TERMINATED')
 
         elif fw_decision.action == 'MODIFY':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+            for cfid in child_fw_ids:
+                self. _update_fw_spec(self, cfid, fw_decision.mod_spec['modifications'])
+
         elif fw_decision.action == 'DETOUR':
             # TODO: implement
             raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
@@ -262,6 +263,11 @@ class LaunchPad(FWSerializable):
 
     def _update_fw_state(self, fw_id, m_state):
         return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
+
+    def _update_fw_spec(self, fw_id, modder_dict):
+
+        raise NotImplementedError('')
+        #return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
 
     def _refresh_fw(self, fw_id, parent_ids):
         # if we are terminated, just skip this whole thing

@@ -316,6 +316,11 @@ class FWDecision():
     def validate_decision(self):
         if self.action == 'CONTINUE' and self.mod_spec != {}:
             raise ValueError('Cannot CONTINUE and also define a mod spec!')
+        elif self.action == 'TERMINATE' and self.mod_spec != {}:
+            raise ValueError('Cannot TERMINATE and also define a mod spec!')
+        elif self.action == 'MODIFY' and (len(self.mod_spec) != 1 or 'modifications' not in self.mod_spec):
+            raise ValueError('Invalid mod spec for MODIFY action!')
+
 
 if __name__ == "__main__":
     a = FireWork(SubprocessTask.from_str("echo 'To be, or not to be,' > hamlet.txt"), {}, fw_id=-1)
