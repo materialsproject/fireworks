@@ -39,7 +39,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         self.store_stdout = parameters.get('store_stdout', False)
         self.store_stderr = parameters.get('store_stderr', False)
 
-        self.defuse_nonzero_rc = parameters.get('defuse_nonzero_rc', False)
+        self.defuse_bad_rc = parameters.get('defuse_bad_rc', False)
 
         if self.use_shlex and isinstance(self.script, basestring) and not self.use_shell:
             self.script = shlex.split(self.script)
@@ -86,7 +86,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
 
         output['returncode'] = returncode
 
-        if  self.defuse_nonzero_rc and returncode != 0:
+        if  self.defuse_bad_rc and returncode != 0:
             return FWDecision('DEFUSE', output)
 
         return FWDecision('CONTINUE', output)
