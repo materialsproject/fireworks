@@ -12,13 +12,13 @@ __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 17, 2013'
+__date__ = 'Feb 25, 2013'
 
 
-class AdderTask(FireTaskBase, FWSerializable):
-    
-    _fw_name = "Addition Task"
-    
+class AddModifyTask(FireTaskBase, FWSerializable):
+
+    _fw_name = "Add and Modify Task"
+
     def run_task(self, fw):
         input_array = fw.spec['input_array']
         m_sum = sum(input_array)
@@ -26,8 +26,5 @@ class AdderTask(FireTaskBase, FWSerializable):
         with open('sum_output.txt', 'w') as f:
             f.write("The sum of {} is: {}".format(input_array, m_sum))
 
-        return FWDecision('CONTINUE', {'sum': m_sum})
-        
-if __name__ == '__main__':
-    fw = FireWork(AdderTask({}), {"input_array": [1, 2]})
-    fw.to_file("fw_adder.yaml")
+        # store the sum; push the sum to the input array of the next sum
+        return FWDecision('MODIFY', {'sum': m_sum}, {'dict_mods': [{'$push': {'input_array': m_sum}}]})
