@@ -4,10 +4,10 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+from core.firework import WFConnections
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch, FWorkflow
@@ -22,6 +22,7 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: add logging throughout
 # TODO: probably lots of cleanup is possible
+# TODO: be able to "freeze" and "thaw" a FireWork
 
 class LaunchPad(FWSerializable):
     """
@@ -125,11 +126,12 @@ class LaunchPad(FWSerializable):
         # return FW
         return (FireWork.from_dict(m_fw_dict), launch_id)
 
-    def _complete_launch(self, m_fw, launch_id):
+    def _complete_launch(self, m_fw, launch_id, fw_decision=None):
         """
         (internal method) used to mark a FireWork's Launch as completed.
         :param m_fw:
         :param launch_id:
+        :param fw_decision: the decision of what to do next
         """
         # TODO: what happens when multiple FireWorks share the same launch? Technically _complete_launch should only
         # depend on the launch_id.
@@ -140,7 +142,37 @@ class LaunchPad(FWSerializable):
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
                 launch.end = datetime.datetime.utcnow()
+                launch.stored_data = fw_decision.stored_data
                 break
+
+        # depending on the decision, you might have to do additional actions
+        if fw_decision.action == 'CONTINUE':
+            pass
+        
+        elif fw_decision.action == 'TERMINATE':
+            # get the wf_dict
+            wfc = WFConnections.from_dict(self.wfconnections.find_one({'nodes': m_fw.fw_id}))
+            # get all the children
+            child_fw_ids = wfc.children_links[m_fw.fw_id]
+            # mark all children as terminated
+            for cfid in child_fw_ids:
+                self. _update_fw_state(self, cfid, 'TERMINATED')
+
+        elif fw_decision.action == 'MODIFY':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        elif fw_decision.action == 'DETOUR':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        elif fw_decision.action == 'ADD':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        elif fw_decision.action == 'ADDIFY':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        elif fw_decision.action == 'PHOENIX':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
 
         self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())
         self._refresh_wf(m_fw.fw_id)
@@ -202,6 +234,12 @@ class LaunchPad(FWSerializable):
         self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
 
     def _refresh_wf(self, fw_id):
+
+        """
+        Update the FW state of all affected FWs
+        :param fw_id:
+        """
+
         # get the workflow containing this fw_id
         wf_dict = self.wfconnections.find_one({'nodes': fw_id})
 
@@ -226,6 +264,10 @@ class LaunchPad(FWSerializable):
         return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
 
     def _refresh_fw(self, fw_id, parent_ids):
+        # if we are terminated, just skip this whole thing
+        if self._get_fw_state(fw_id) == 'TERMINATED':
+            return
+
         m_state = None
 
         # what are the parent states?

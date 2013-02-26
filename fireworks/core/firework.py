@@ -42,7 +42,8 @@ class FireWork(FWSerializable):
         
         :param tasks: a list of FireTasks
         :param spec: a dict specification of the job to run
-        :param fw_id: the FW's database id to the LaunchPad. Negative numbers will be re-assigned dynamically when they are entered in the database through the LaunchPad.
+        :param fw_id: the FW's database id to the LaunchPad. Negative numbers will be re-assigned dynamically when
+        they are entered in the database through the LaunchPad.
         :param launch_data: a list of Launch objects of this FireWork
         :param state: the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
@@ -138,7 +139,7 @@ class WFConnections(FWSerializable):
         return WFConnections(m_dict['children_links'], metadata)
 
 
-class FWorkflow():
+class FWorkflow(FWSerializable):
     #TODO: add .gz support
     def __init__(self, fireworks, wf_connections):
 
@@ -166,6 +167,7 @@ class FWorkflow():
             wf_connections)
 
         self.metadata = self.wf_connections.metadata
+        self._fws = fireworks
 
     def _reassign_ids(self, old_new):
         # update the nodes
@@ -184,6 +186,12 @@ class FWorkflow():
             new_cl[new_parent] = new_children
 
         self.wf_connections = WFConnections(new_cl)
+
+    def to_dict(self):
+        return {'fws': [f.to_dict() for f in self._fws], 'wf_connections': self.wf_connections.to_dict()}
+
+    def from_dict(cls, m_dict):
+        return ([FireWork.from_dict(f) for f in m_dict['fws']], WFConnections.from_dict(m_dict['wf_connections']))
 
     def to_db_dict(self):
         m_dict = self.wf_connections.to_db_dict()
@@ -236,13 +244,15 @@ class FWorkflow():
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
-    def __init__(self, fworker, host=None, ip=None, launch_dir=None, start=None, end=None, state=None, launch_id=None):
+    def __init__(self, fworker, host=None, ip=None, launch_dir=None, stored_data=None, start=None, end=None, state=None,
+                 launch_id=None):
         """
         
         :param fworker: A FWorker object describing the worker
         :param host: the hostname where the launch took place (probably automatically set)
         :param ip: the ip address where the launch took place (probably automatically set)
         :param launch_dir: the directory on the host where the launch took place (probably automatically set)
+        :param stored_data: data (as dict) to store
         :param state: the state of the Launch
         :param launch_id: the id of the Launch for the LaunchPad
         """
@@ -253,14 +263,16 @@ class Launch(FWSerializable):
         self.host = host
         self.ip = ip
         self.launch_dir = launch_dir
+        self.stored_data = stored_data if stored_data else None
         self.start = start if start else datetime.datetime.utcnow()
         self.end = end
         self.state = state
         self.launch_id = launch_id
 
     def to_dict(self):
-        return {'fworker': self.fworker.to_dict(), 'start': self.start, 'end': self.end, 'host': self.host,
-                'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state, 'launch_id': self.launch_id}
+        return {'fworker': self.fworker.to_dict(), 'stored_data': self.stored_data, 'start': self.start,
+                'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
+                'launch_id': self.launch_id}
 
     @property
     def time_secs(self):
@@ -274,53 +286,36 @@ class Launch(FWSerializable):
     @classmethod
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
-        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['start'], m_dict['end'],
-                      m_dict['state'], m_dict['launch_id'])
+        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['stored_data'],
+                      m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
 
 
 class FWDecision():
     """
-    A FWDecision returns one of several potential actions:
-        -CONTINUE means continue to the next stage in the workflow, no changes are made to the firework
-        -BRANCH means to insert new Fireworks into the workflow and forget about the current children
-        -DETOUR means to insert new Fireworks into the workflow, and then run the current children
-        -TERMINATE means to terminate this branch of the workflow (any children of this Stage will NOT be run).
-
-    The output parameter is a dict that gets passed to the 'output' parameter of the LaunchInfo being analyzed.
-    The output is a dict that:
-        - stores any metadata about the decision
-        - is used by Fuses of child FWs to determine how to proceed
+    TODO: add docs
          
     """
-    actions = ["CONTINUE", "BRANCH", "DETOUR", "TERMINATE"]
+    actions = ['CONTINUE', 'TERMINATE', 'MODIFY', 'DETOUR', 'ADD', 'ADDIFY', 'PHOENIX']
 
-    def __init__(self, action, stored_data=None, mod_spec=None, add_fws=None):
-
+    def __init__(self, action, stored_data=None, mod_spec=None):
         if action not in FWDecision.actions:
             raise ValueError("Invalid decision: " + action)
 
-        if action != "CONTINUE" and mod_spec:
-            raise ValueError("You can only modify the spec if you decide to CONTINUE")
-
-        if action not in ["BRANCH", "DETOUR"] and add_fws:
-            raise ValueError("You cannot " + str(action) + " whilst also inserting fireworks")
-
-        if action in ["BRANCH", "DETOUR"] and not add_fws:
-            raise ValueError("If you " + str(action) + ", you must specify fireworks to insert!")
-
         self.action = action
-        self.add_fws = add_fws
-        self.mod_spec = mod_spec
         self.stored_data = stored_data if stored_data else {}
+        self.mod_spec = mod_spec if mod_spec else {}
+        self.validate_decision()
 
     def to_dict(self):
-        return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec,
-                "add_fws": self.add_fws}
+        return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec}
 
     @classmethod
     def from_dict(cls, m_dict):
-        return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'], m_dict['add_fws'])
+        return FWDecision(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
 
+    def validate_decision(self):
+        if self.action == 'CONTINUE' and self.mod_spec != {}:
+            raise ValueError('Cannot CONTINUE and also define a mod spec!')
 
 if __name__ == "__main__":
     a = FireWork(SubprocessTask.from_str("echo 'To be, or not to be,' > hamlet.txt"), {}, fw_id=-1)
@@ -328,7 +323,7 @@ if __name__ == "__main__":
     c = WFConnections({-1: -2})
 
     fwf = FWorkflow([a, b], c)
-    fwf.to_tarfile('../../fw_tutorials/workflow/hamlet_wf.tar', f_format='yaml')
+    fwf.to_file('../../fw_tutorials/workflow/hamlet_wf.yaml')
 
     #b = FWorkflow.from_FireWork(a)
     #print b.to_db_dict()
