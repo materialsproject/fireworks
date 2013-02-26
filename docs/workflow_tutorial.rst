@@ -72,3 +72,9 @@ Let's define and execute this workflow.
 
 .. note:: In general, we do not recommend running ``rocket_launcher_run.py singleshot`` multiple times in the same directory, because the ``fw.json`` file gets overwritten. We are running in the same directory for this example so that that both FireWorks can access ``hamlet.txt``. In a later tutorial we will cover how to properly pass files between FireWorks in a workflow.
 
+A workflow that passes data
+===========================
+
+Our *Hamlet* workflow was not particularly interesting; you could have achieved the same result by running multiple FireTasks within a single FireWork as in our :doc:`previous tutorial <firetask_tutorial>`. Indeed, the single-FireWork solution is conceptually much simpler than defining workflows. However, even for our *Hamlet* example, a workflow possesses some advantages over using a single FireWork. First, the LaunchPad kept detailed records about the operation of each workflow step, allowing you to dig into the specifics of where and when each individual step completed (using ``launchpad_run.py get_fw <fw_id>``). Second, splitting the job into multiple FireWorks means that multiple Rockets will be launched rather than a single Rocket containing the entire job. The runtime of each Rocket can be kept short, and the load of the job can be split up over several FireWorkers. This latter feature is especially useful if different steps of your workflow require to be run on different types of hardware. However, it does mean that necessary files and data must be transferred between workflow steps.
+
+Our next example will go one step further and pass data from the first step to the next. The first step of our workflow will add the numbers 1 + 1, and the second step will add the number 2 to the result. So the final result should equal 2 + (1 + 1) = 4.
