@@ -152,7 +152,7 @@ class LaunchPad(FWSerializable):
         child_fw_ids = wfc.children_links[m_fw.fw_id]
 
         # depending on the decision, you might have to do additional actions
-        if fw_decision.action == 'CONTINUE':
+        if fw_decision.action in ['CONTINUE', 'BREAK']:
             pass
         elif fw_decision.action == 'DEFUSE':
             # mark all children as defused
