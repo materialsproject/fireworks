@@ -17,7 +17,7 @@ For example, we might want print the first two lines of Hamlet's soliloquy to th
 .. image:: _static/hamlet_wf.png
    :width: 200px
    :align: center
-   :alt: FireWorks
+   :alt: Hamlet WF
 
 Basically, we just want to ensure that *"To be, or not to be,"* is printed out before *"that is the question:"*. Let's define and execute this workflow.
 
@@ -68,21 +68,54 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     launchpad_run.py get_fw 1
     launchpad_run.py get_fw 2
 
-.. note:: Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines.
+.. note:: Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines. But at least we printed them in the correct order!
+
+A Diamond Workflow
+==================
+
+Let's continue with a very similar example, but make the workflow a little more intricate. We will now print the org chart of a company. Of course, CEOs should be printed before managers, and managers before interns:
+
+.. image:: _static/org_wf.png
+   :width: 400px
+   :align: center
+   :alt: Org chart WF
+
+Let's quickly define and execute this workflow.
+
+1. Move to the ``workflow`` tutorial directory on your FireServer::
+
+    cd <INSTALL_DIR>/fw_tutorials/workflow
+
+#. The workflow is encapsulated in the ``org_wf.yaml`` file. Look inside this file.
+
+    * The ``fws`` section should make sense - we have defined a FireWork to print each position in the company.
+    * The ``wf_connections`` section should also make sense. The CEO has two children (the managers). The managers each have the same child (the intern). (The company appears to be quite the oligarchy!)
+
+#. Once everything makes sense, let's add the workflow and run everything at once!::
+
+    launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py insert_wf org_wf.yaml
+    rocket_launcher_run.py rapidfire --silencer
+
+#. You should notice that the CEO correctly gets printed above the managers, who in turn are printed above the intern. There is no preference amongst the two managers as written; FireWorks might print either manager first. If you want to distinguish between them, you can use priorities (covered in a future tutorial).
+
+#. Finally, you can clean up your directory::
+
+    rm -r launcher_*
 
 A workflow that passes data
 ===========================
 
-Our *Hamlet* workflow was not particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single FireWork <firetask_tutorial>`. Indeed, the single-FireWork solution is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial.
+Our *Hamlet* workflow was not particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single FireWork <firetask_tutorial>`. Indeed, the single-FireWork solution with multiple FireTasks is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial.
 
 Meanwhile, we will move on to the case where a FireWork needs data from a previous FireWork in order to perform its task. For example, we can imagine that the first step of our workflow adds the numbers 1 + 1, and the second step adds the number 10 to the result of the first step. The second step doesn't know in advance what the result of the first step will be; the first step must pass its output to the second step after it completes. The final result should be 10 + (1 + 1) = 12. Visually, the workflow looks like:
 
 .. image:: _static/addmod_wf.png
    :width: 200px
    :align: center
-   :alt: FireWorks
+   :alt: Add and Modify WF
 
-The text in blue lettering is not known in advance and can only be determined after running the first workflow step. Let's examine how this workflow is defined.
+The text in blue lettering is not known in advance and can only be determined after running the first workflow step. Let's examine how we can set up such a workflow.
 
 1. Move to the ``workflow`` tutorial directory on your FireServer::
 
@@ -126,7 +159,7 @@ The text in blue lettering is not known in advance and can only be determined af
     launchpad_run.py get_fw 1
     launchpad_run.py get_fw 2
 
-#. You should notice that the FireWork that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask that has pushed its sum onto the ``input_array`` of the second FireWork!
+#. You should notice that the FireWork that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask has pushed its sum onto the ``input_array`` of the second FireWork!
 
 #. Finally, let's run the second step to ensure we successfully passed information between FireWorks::
 
@@ -134,7 +167,7 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. This prints out ``The sum of [10, 2] is: 12`` - just as we desired!
 
-You've now successfully completed an example of passing information between workflows. You now have a sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible (listed in future tutorials). For now, we will continue by quickly running a complex workflow.
+You've now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including file transfer operations (listed in future tutorials). For now, we will continue by quickly running a complex workflow.
 
 A complex workflow
 ==================

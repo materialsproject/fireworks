@@ -56,6 +56,12 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
     return logger
 
 
+def get_silent_logger():
+    logger = logging.getLogger('silent_logger')
+    logger.setLevel(logging.CRITICAL)
+    return logger
+
+
 def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
     """
     A wrapper around the logger messages useful for multi-line logs.
