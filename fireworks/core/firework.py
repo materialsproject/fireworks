@@ -190,8 +190,9 @@ class FWorkflow(FWSerializable):
     def to_dict(self):
         return {'fws': [f.to_dict() for f in self._fws], 'wf_connections': self.wf_connections.to_dict()}
 
+    @classmethod
     def from_dict(cls, m_dict):
-        return ([FireWork.from_dict(f) for f in m_dict['fws']], WFConnections.from_dict(m_dict['wf_connections']))
+        return FWorkflow([FireWork.from_dict(f) for f in m_dict['fws']], WFConnections.from_dict(m_dict['wf_connections']))
 
     def to_db_dict(self):
         m_dict = self.wf_connections.to_db_dict()

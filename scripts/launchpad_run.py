@@ -61,7 +61,11 @@ if __name__ == '__main__':
         lp.insert_wf(fwf)
 
     elif args.command == 'insert_wf':
-        fwf = FWorkflow.from_tarfile(args.wf_file)
+        # TODO: make this cleaner
+        if '.tar' in args.wf_file:
+            fwf = FWorkflow.from_tarfile(args.wf_file)
+        else:
+            fwf = FWorkflow.from_file(args.wf_file)
         lp.insert_wf(fwf)
         
     elif args.command == 'get_fw':

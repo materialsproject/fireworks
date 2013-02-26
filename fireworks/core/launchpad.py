@@ -4,7 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
-from core.firework import WFConnections
+from fireworks.core.firework import WFConnections
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
@@ -12,7 +12,7 @@ from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch, FWorkflow
 from pymongo import DESCENDING
-from utilities.dict_mods import apply_mod
+from fireworks.utilities.dict_mods import apply_mod
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
