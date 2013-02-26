@@ -11,29 +11,20 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 18, 2013'
 
+# TODO: document!
+
 
 class SubprocessTask(FireTaskBase, FWSerializable):
     _fw_name = "Subprocess Task"
 
     def __init__(self, parameters):
         self.parameters = parameters
-        # dynamic parameters
-
-        # stdout = dict with key and/or file parameter, or "_PIPE".
-        # stderr = stdout plus _MERGE
-
-        # TODO: add a defuse_on_error option
-        # else return CONTINUE
 
         self.stdout_file = parameters.get('stdout_file', None)
-        self.stdout_key = parameters.get('stdout_key', '_stdout')
         self.stdout = parameters.get('stdout', subprocess.PIPE)
 
         self.stderr_file = parameters.get('stderr_file', None)
-        self.stderr_key = parameters.get('stderr_key', '_stderr')
         self.stderr = parameters.get('stderr', subprocess.PIPE)
-
-        self.returncode_key = parameters.get('returncode_key', '_returncode')
 
         self.stdin_file = parameters.get('stdin_file', None)
         self.stdin_key = parameters.get('stdin_key', None)
@@ -44,6 +35,11 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         self.script = str(parameters['script'])  # Mongo loves unicode, shlex hates it
 
         self.use_shell = parameters.get('use_shell', False)
+
+        self.store_stdout = parameters.get('store_stdout', False)
+        self.store_stderr = parameters.get('store_stderr', False)
+
+        self.defuse_nonzero_rc = parameters.get('defuse_nonzero_rc', False)
 
         if self.use_shlex and isinstance(self.script, basestring) and not self.use_shell:
             self.script = shlex.split(self.script)
@@ -82,14 +78,16 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         # write the output keys
         output = {}
 
-        if self.stdout_key:
-            output[self.stdout_key] = stdout
+        if self.store_stdout:
+            output['stdout'] = stdout
 
-        if self.stderr_key:
-            output[self.stderr_key] = stderr
+        if self.store_stderr:
+            output['stderr'] = stderr
 
-        if self.returncode_key:
-            output[self.returncode_key] = returncode
+        output['returncode'] = returncode
+
+        if  self.defuse_nonzero_rc and returncode != 0:
+            return FWDecision('DEFUSE', output)
 
         return FWDecision('CONTINUE', output)
 
