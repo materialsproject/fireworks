@@ -13,7 +13,7 @@ fws:
     - _fw_name: Add and Modify Task
       parameters: {}
     input_array:
-    - 2
+    - 10
 wf_connections:
   children_links:
     -1:
