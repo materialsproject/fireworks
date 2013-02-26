@@ -25,13 +25,14 @@ Let's define and execute this workflow.
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
 
-#. The workflow is encapsulated in the ``hamlet_wf.yaml`` file. Look inside this file. The first section, labeled ``fws``, contains a list of FireWork objects. The second section, labeled ``wf_connections``, connects these FireWorks into a workflow. In this file:
+#. The workflow is encapsulated in the ``hamlet_wf.yaml`` file. Look inside this file. The first section, labeled ``fws``, contains a list of FireWork objects:
 
-    * We define a FireWork with ``fw_id`` set to -1, and that prints ``To be, or not to be,``.
-    * We define another FireWork with ``fw_id`` set to -2, and that prints ``that is the question:``
-    * In the ``wf_connections`` section, we are specifying that the child of FW with id -1 is the FW with id -2. This means that we will run the ``To be, or not to be,`` FireWork before the ``that is the question:`` FireWork.
+    * We define a FireWork with ``fw_id`` set to -1, and that prints *"To be, or not to be,"*.
+    * We define another FireWork with ``fw_id`` set to -2, and that prints *"that is the question:"*
 
-    .. note:: You can also serialize a workflow to a .tar file, which allows you to use a separate file for each FireWork. For details, see the tutorial on FW serialization (*future*)
+    The second section, labeled ``wf_connections``, connects these FireWorks into a workflow:
+
+    * In the ``children_links`` subsection, we are specifying that the child of FW with id -1 is the FW with id -2. This means that we want to run *"To be, or not to be,"* first, and *"that is the question:"* after that.
 
 #. Let's insert this workflow into our database::
 
@@ -43,9 +44,9 @@ Let's define and execute this workflow.
     launchpad_run.py get_fw 1
     launchpad_run.py get_fw 2
 
-#. You should notice that the FireWork that writes the first line of the text ("*To be, or not to be,*") shows a state that is ``READY`` to run. In contrast, the FireWork that writes the second line ("*that is the question:*") shows a state of ``WAITING``. The ``WAITING`` state indicates that a Rocket should not pull this FireWork just yet.
+#. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is ``READY`` to run. In contrast, the FireWork that writes the second line (*"that is the question:"*) shows a state of ``WAITING``. The ``WAITING`` state indicates that a Rocket should not pull this FireWork just yet.
 
-    .. note:: The ``fw_id`` is assigned randomly, and you should not expect that the smaller ``fw_id`` will be assigned to the FireWork that will run first.
+    .. note:: The ``fw_id`` is assigned randomly, and it's possible that that the FireWork that will run first will have a larger ``fw_id`` than the one that runs second.
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
@@ -69,5 +70,5 @@ Let's define and execute this workflow.
 
     rm fw.json hamlet.txt
 
-.. note:: In general, we do not recommend running ``rocket_launcher_run.py singleshot`` multiple times in the same directory, because the ``fw.json`` file gets overwritten. Instead, the ``rocket_launcher_run.py rapidfire`` option is recommended, along with defining appropriate data dependencies between your jobs (rapidfire changes directories, meaning you can't trivially access the same ``hamlet.txt`` file in both FireWorks).
+.. note:: In general, we do not recommend running ``rocket_launcher_run.py singleshot`` multiple times in the same directory, because the ``fw.json`` file gets overwritten. We are running in the same directory for this example so that that both FireWorks can access ``hamlet.txt``. In a later tutorial we will cover how to properly pass files between FireWorks in a workflow.
 

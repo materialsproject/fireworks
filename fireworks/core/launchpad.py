@@ -161,7 +161,7 @@ class LaunchPad(FWSerializable):
 
         elif fw_decision.action == 'MODIFY':
             for cfid in child_fw_ids:
-                self. _update_fw_spec(self, cfid, fw_decision.mod_spec['dict_mods'])
+                self. _update_fw_spec(cfid, fw_decision.mod_spec['dict_mods'])
 
         elif fw_decision.action == 'DETOUR':
             # TODO: implement
