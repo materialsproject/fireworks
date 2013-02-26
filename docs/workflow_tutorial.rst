@@ -25,21 +25,18 @@ Let's define and execute this workflow.
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
 
-#. The workflow is encapsulated in the ``hamlet_wf.tar`` file. Packed within this file are two FireWork files (one for each step of the workflow), and third file called ``wfconnections.yaml``. The ``wfconnections.yaml`` file defines the connections between the two FireWorks.
+#. The workflow is encapsulated in the ``hamlet_wf.yaml`` file. Look inside this file. The first section, labeled ``fws``, contains a list of FireWork objects. The second section, labeled ``wf_connections``, connects these FireWorks into a workflow. In this file:
 
-    .. note:: If you don't like the tar file format, you can also serialize an entire workflow as a single JSON or YAML file. For details, see the tutorial on FW serialization (*future*)
+    * We define a FireWork with ``fw_id`` set to -1, and that prints ``To be, or not to be,``.
+    * We define another FireWork with ``fw_id`` set to -2, and that prints ``that is the question:``
+    * In the ``wf_connections`` section, we are specifying that the child of FW with id -1 is the FW with id -2. This means that we will run the ``To be, or not to be,`` FireWork before the ``that is the question:`` FireWork.
 
-#. Normally, one would not need to unpack ``hamlet_wf.tar``. But for curiosity's sake, let's unpack this file and look inside. (if you're not curious, you can skip to step 5!) ::
-
-    tar -xvf hamlet_wf.tar
-
-#. You can now explore the files inside using a text editor. The ``fw_-1.yaml`` file writes the first line of the text to ``hamlet.txt``, the ``fw_-2.yaml`` file writes the second line to the same file, and the ``wfconnections.yaml`` file connects ``fw_id`` of the two FireWorks. Once you feel you have understood the contents of ``hamlet_wf.tar``, you can clean up your directory::
-
-    rm *.yaml
+    .. note:: You can also serialize a workflow to a .tar file, which allows you to use a separate file for each FireWork. For details, see the tutorial on FW serialization (*future*)
 
 #. Let's insert this workflow into our database::
 
-    launchpad_run.py insert_wf hamlet_wf.tar
+    launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py insert_wf hamlet_wf.yaml
 
 #. Let's look at our two FireWorks::
 
