@@ -45,6 +45,8 @@ Let's define and execute this workflow.
 
 #. You should notice that the FireWork that writes the first line of the text ("*To be, or not to be,*") shows a state that is ``READY`` to run. In contrast, the FireWork that writes the second line ("*that is the question:*") shows a state of ``WAITING``. The ``WAITING`` state indicates that a Rocket should not pull this FireWork just yet.
 
+    .. note:: The ``fw_id`` is assigned randomly, and you should not expect that the smaller ``fw_id`` will be assigned to the FireWork that will run first.
+
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
     rocket_launcher_run.py singleshot

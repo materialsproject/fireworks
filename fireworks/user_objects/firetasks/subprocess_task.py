@@ -1,6 +1,7 @@
 import shlex
 import subprocess
 from fireworks.core.firetask import FireTaskBase
+from fireworks.core.firework import FWDecision
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -90,7 +91,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         if self.returncode_key:
             output[self.returncode_key] = returncode
 
-        return output
+        return FWDecision('CONTINUE', output)
 
     @classmethod
     def from_str(cls, shell_cmd):

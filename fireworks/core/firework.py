@@ -14,7 +14,6 @@ from StringIO import StringIO
 from collections import defaultdict
 import datetime
 import tarfile
-from fireworks.user_objects.firetasks.subprocess_task import SubprocessTask
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -26,6 +25,7 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
+# TODO: this module needs to be broken up for sure...
 
 # TODO: add ability to block ports
 # TODO: consider using Mongo oid as fw_id. How important is readability?
@@ -323,6 +323,8 @@ class FWDecision():
             raise ValueError('Invalid mod spec for MODIFY action!')
 
 
+
+"""
 if __name__ == "__main__":
     a = FireWork(SubprocessTask.from_str("echo 'To be, or not to be,' > hamlet.txt"), {}, fw_id=-1)
     b = FireWork(SubprocessTask.from_str("echo 'that is the question:' >> hamlet.txt"), {}, fw_id=-2)
@@ -336,4 +338,4 @@ if __name__ == "__main__":
 
     #fwf.to_tarfile('../../fw_tutorials/workflow/hello_out.tar')
     #fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-
+"""

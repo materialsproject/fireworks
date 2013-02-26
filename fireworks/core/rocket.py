@@ -6,6 +6,7 @@ TODO: add docs
 import os
 import socket
 import simplejson as json
+from fireworks.core.firework import FWDecision
 from fireworks.core.fw_constants import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
@@ -58,6 +59,14 @@ class Rocket():
 
         for my_task in m_fw.tasks:
             m_decision = my_task.run_task(m_fw)
+            if not m_decision:
+                m_decision = FWDecision('CONTINUE')
+
+            print m_decision
+
+            if m_decision.action != 'CONTINUE':
+                break;
+
 
         # TODO: continue on to next script if:
         # - it exists
@@ -67,4 +76,4 @@ class Rocket():
         # TODO: add more useful information in the launch!
 
         # perform finishing operation
-        lp._complete_launch(m_fw, launch_id)
+        lp._complete_launch(m_fw, launch_id, m_decision)
