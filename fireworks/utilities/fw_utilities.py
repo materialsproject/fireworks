@@ -107,3 +107,13 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     os.mkdir(full_path)
     l_logger.info('Created new dir {}'.format(full_path))
     return full_path
+
+
+def singleton(class_):
+    instances = {}
+
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+    return getinstance

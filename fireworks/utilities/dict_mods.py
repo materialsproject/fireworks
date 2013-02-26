@@ -138,7 +138,7 @@ class DictMods(object):
                 raise ValueError("Keyword {} does not refer to an array."
                 .format(k))
             for i in v:
-                DictActions.pull(input_dict, {k: i})
+                DictMods.pull(input_dict, {k: i})
 
     @staticmethod
     def pop(input_dict, settings):
@@ -153,7 +153,7 @@ class DictMods(object):
                 d[key].pop(0)
 
 
-def apply_dictmod(modification, obj):
+def apply_mod(modification, obj):
     """
     Note that modify makes actual in-place modifications. It does not
     return a copy.
