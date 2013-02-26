@@ -58,14 +58,15 @@ class Rocket():
         # lots of stuff to add!
 
         for my_task in m_fw.tasks:
-            m_decision = my_task.run_task(m_fw)
-            if not m_decision:
-                m_decision = FWDecision('CONTINUE')
+            try:
+                m_decision = my_task.run_task(m_fw)
+                if not m_decision:
+                    m_decision = FWDecision('CONTINUE')
 
-            print m_decision
-
-            if m_decision.action != 'CONTINUE':
-                break;
+                if m_decision.action != 'CONTINUE':
+                    break;
+            except:
+                m_decision = FWDecision('TERMINATE', {'_message': 'runtime error during task', '_task': my_task.to_dict()})
 
 
         # TODO: continue on to next script if:
