@@ -1,7 +1,7 @@
 import os
 import time
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir
+from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, get_silent_logger
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -21,7 +21,7 @@ def launch_rocket(launchpad, fworker):
     rocket.run()
 
 
-def loop_rocket_run(launchpad, fworker, m_dir=None):
+def loop_rocket_run(launchpad, fworker, m_dir=None, silencer=False):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -32,7 +32,10 @@ def loop_rocket_run(launchpad, fworker, m_dir=None):
     """
     curdir = m_dir if m_dir else os.getcwd()
     # initialize logger
-    l_logger = get_fw_logger('rocket.loop', curdir)
+    if silencer:
+        l_logger = get_silent_logger()
+    else:
+        l_logger = get_fw_logger('rocket.loop', curdir)
     while True:
         os.chdir(curdir)
         launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
