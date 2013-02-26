@@ -12,6 +12,7 @@ from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch, FWorkflow
 from pymongo import DESCENDING
+from utilities.dict_mods import apply_mod
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -160,7 +161,7 @@ class LaunchPad(FWSerializable):
 
         elif fw_decision.action == 'MODIFY':
             for cfid in child_fw_ids:
-                self. _update_fw_spec(self, cfid, fw_decision.mod_spec['modifications'])
+                self. _update_fw_spec(self, cfid, fw_decision.mod_spec['dict_mods'])
 
         elif fw_decision.action == 'DETOUR':
             # TODO: implement
@@ -190,23 +191,6 @@ class LaunchPad(FWSerializable):
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
-    '''
-    def upsert_fw(self, fw):
-        """
-        Given a FireWork, either insert it into the database or update the FireWork with the same id.
-        
-        :param fw: A FireWork instance
-        """
-        # TODO: make sure no child fws
-        # TODO: make this also apply to sub-fireworks
-        # TODO: make this to be INsert FW, not UPsert. Much safer that way unless you really need upsert.
-        # TODO: add logging
-        if not fw.fw_id or fw.fw_id < 0:
-            fw.fw_id = self.get_new_fw_id()
-        
-        # TODO: make this also apply to sub-fireworks, add children and parent keys
-        self.fireworks.update({"fw_id": fw.fw_id}, fw.to_db_dict(), upsert=True)
-    '''
 
     def insert_wf(self, fwf):
         """
@@ -257,17 +241,19 @@ class LaunchPad(FWSerializable):
                         self._refresh_fw(fw_id, wf_dict['parent_links'][str(fw_id)])
                         updated_nodes.add(fw_id)
 
-
     def _get_fw_state(self, fw_id):
         return self.fireworks.find_one({"fw_id": fw_id}, {"state": True})['state']
 
     def _update_fw_state(self, fw_id, m_state):
-        return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
+        self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
 
-    def _update_fw_spec(self, fw_id, modder_dict):
+    def _update_fw_spec(self, fw_id, modder_dicts):
+        fw = self.get_fw_by_id(fw_id)
 
-        raise NotImplementedError('')
-        #return self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
+        for mod in modder_dicts:
+            apply_mod(mod, fw.spec)
+
+        self.fireworks.update({"fw_id": fw.fw_id}, fw.to_db_dict())
 
     def _refresh_fw(self, fw_id, parent_ids):
         # if we are terminated, just skip this whole thing

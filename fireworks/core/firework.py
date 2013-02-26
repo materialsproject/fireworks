@@ -318,7 +318,7 @@ class FWDecision():
             raise ValueError('Cannot CONTINUE and also define a mod spec!')
         elif self.action == 'TERMINATE' and self.mod_spec != {}:
             raise ValueError('Cannot TERMINATE and also define a mod spec!')
-        elif self.action == 'MODIFY' and (len(self.mod_spec) != 1 or 'modifications' not in self.mod_spec):
+        elif self.action == 'MODIFY' and (len(self.mod_spec) != 1 or 'dict_mods' not in self.mod_spec):
             raise ValueError('Invalid mod spec for MODIFY action!')
 
 
