@@ -5,6 +5,7 @@ TODO: add docs
 """
 import os
 import socket
+import traceback
 import simplejson as json
 from fireworks.core.firework import FWDecision
 from fireworks.core.fw_constants import DATETIME_HANDLER
@@ -66,7 +67,7 @@ class Rocket():
                 if m_decision.action != 'CONTINUE':
                     break;
             except:
-                m_decision = FWDecision('TERMINATE', {'_message': 'runtime error during task', '_task': my_task.to_dict()})
+                m_decision = FWDecision('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
 
 
         # TODO: continue on to next script if:

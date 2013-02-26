@@ -1,5 +1,6 @@
 import shlex
 import subprocess
+import sys
 from fireworks.core.firetask import FireTaskBase
 from fireworks.core.firework import FWDecision
 from fireworks.utilities.fw_serializers import FWSerializable
@@ -21,10 +22,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         self.parameters = parameters
 
         self.stdout_file = parameters.get('stdout_file', None)
-        self.stdout = parameters.get('stdout', subprocess.PIPE)
-
         self.stderr_file = parameters.get('stderr_file', None)
-        self.stderr = parameters.get('stderr', subprocess.PIPE)
 
         self.stdin_file = parameters.get('stdin_file', None)
         self.stdin_key = parameters.get('stdin_key', None)
@@ -38,6 +36,9 @@ class SubprocessTask(FireTaskBase, FWSerializable):
 
         self.store_stdout = parameters.get('store_stdout', False)
         self.store_stderr = parameters.get('store_stderr', False)
+
+        self.stream_stdout = parameters.get('stream_stdout', False)
+        self.stream_stderr = parameters.get('stream_stderr', False)
 
         self.defuse_bad_rc = parameters.get('defuse_bad_rc', False)
 
@@ -56,8 +57,12 @@ class SubprocessTask(FireTaskBase, FWSerializable):
 
     def _run_task_internal(self, fw, stdin):
         # run the program
-        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, shell=self.use_shell)
+
+        stdout = sys.stdout if self.stream_stdout else subprocess.PIPE
+        stderr = sys.stderr if self.stream_stderr else subprocess.PIPE
+
+        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=stdout,
+                             stderr=stderr, shell=self.use_shell)
 
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
@@ -67,6 +72,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         returncode = p.returncode
 
         # write out the output, error files if specified
+
         if self.stdout_file:
             with open(self.stdout_file, 'w+') as f:
                 f.write(stdout)

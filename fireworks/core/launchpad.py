@@ -157,7 +157,7 @@ class LaunchPad(FWSerializable):
         elif fw_decision.action == 'DEFUSE':
             # mark all children as defused
             for cfid in child_fw_ids:
-                self. _update_fw_state(self, cfid, 'DEFUSED')
+                self. _update_fw_state(cfid, 'DEFUSED')
 
         elif fw_decision.action == 'MODIFY':
             for cfid in child_fw_ids:
