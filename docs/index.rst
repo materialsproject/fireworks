@@ -39,7 +39,9 @@ Limitations
 
 Some limitations of FireWorks include:
 
-* FireWorks has not been stress tested to very large numbers of worker nodes. (If you try this, we'd love to hear the results!)
+* FireWorks has not been stress-tested to very large numbers of worker nodes. (If you try this, we'd love to hear the results!)
+
+* FireWorks has not been stress-tested to hundreds or thousands of jobs in a workflow. (If you try this, we'd love to hear the results!)
 
 * FireWorks does not automatically optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement or to match jobs to appropriate hardware); you must define such optimizations yourself.
 
