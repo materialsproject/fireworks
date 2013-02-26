@@ -295,7 +295,7 @@ class FWDecision():
     TODO: add docs
          
     """
-    actions = ['CONTINUE', 'TERMINATE', 'MODIFY', 'DETOUR', 'ADD', 'ADDIFY', 'PHOENIX']
+    actions = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'ADD', 'ADDIFY', 'PHOENIX']
 
     def __init__(self, action, stored_data=None, mod_spec=None):
         if action not in FWDecision.actions:
@@ -316,8 +316,8 @@ class FWDecision():
     def validate_decision(self):
         if self.action == 'CONTINUE' and self.mod_spec != {}:
             raise ValueError('Cannot CONTINUE and also define a mod spec!')
-        elif self.action == 'TERMINATE' and self.mod_spec != {}:
-            raise ValueError('Cannot TERMINATE and also define a mod spec!')
+        elif self.action == 'DEFUSE' and self.mod_spec != {}:
+            raise ValueError('Cannot DEFUSE and also define a mod spec!')
         elif self.action == 'MODIFY' and (len(self.mod_spec) != 1 or 'dict_mods' not in self.mod_spec):
             raise ValueError('Invalid mod spec for MODIFY action!')
 

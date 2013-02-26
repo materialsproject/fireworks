@@ -21,7 +21,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         # stdout = dict with key and/or file parameter, or "_PIPE".
         # stderr = stdout plus _MERGE
 
-        # TODO: add a terminate_on_error option
+        # TODO: add a defuse_on_error option
         # else return CONTINUE
 
         self.stdout_file = parameters.get('stdout_file', None)

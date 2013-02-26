@@ -154,10 +154,10 @@ class LaunchPad(FWSerializable):
         # depending on the decision, you might have to do additional actions
         if fw_decision.action == 'CONTINUE':
             pass
-        elif fw_decision.action == 'TERMINATE':
-            # mark all children as terminated
+        elif fw_decision.action == 'DEFUSE':
+            # mark all children as defused
             for cfid in child_fw_ids:
-                self. _update_fw_state(self, cfid, 'TERMINATED')
+                self. _update_fw_state(self, cfid, 'DEFUSED')
 
         elif fw_decision.action == 'MODIFY':
             for cfid in child_fw_ids:
@@ -256,8 +256,8 @@ class LaunchPad(FWSerializable):
         self.fireworks.update({"fw_id": fw.fw_id}, fw.to_db_dict())
 
     def _refresh_fw(self, fw_id, parent_ids):
-        # if we are terminated, just skip this whole thing
-        if self._get_fw_state(fw_id) == 'TERMINATED':
+        # if we are defused, just skip this whole thing
+        if self._get_fw_state(fw_id) == 'DEFUSED':
             return
 
         m_state = None
