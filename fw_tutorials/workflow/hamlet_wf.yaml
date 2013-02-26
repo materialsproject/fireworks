@@ -5,7 +5,6 @@ fws:
     - _fw_name: Subprocess Task
       parameters:
         script: echo 'To be, or not to be,'
-        stream_stdout: true
         use_shell: true
 - fw_id: -2
   spec:
@@ -13,7 +12,6 @@ fws:
     - _fw_name: Subprocess Task
       parameters:
         script: echo 'that is the question:'
-        stream_stdout: true
         use_shell: true
 wf_connections:
   children_links:

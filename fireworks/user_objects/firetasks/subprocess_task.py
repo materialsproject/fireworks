@@ -37,9 +37,6 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         self.store_stdout = parameters.get('store_stdout', False)
         self.store_stderr = parameters.get('store_stderr', False)
 
-        self.stream_stdout = parameters.get('stream_stdout', False)
-        self.stream_stderr = parameters.get('stream_stderr', False)
-
         self.defuse_bad_rc = parameters.get('defuse_bad_rc', False)
 
         if self.use_shlex and isinstance(self.script, basestring) and not self.use_shell:
@@ -58,8 +55,8 @@ class SubprocessTask(FireTaskBase, FWSerializable):
     def _run_task_internal(self, fw, stdin):
         # run the program
 
-        stdout = sys.stdout if self.stream_stdout else subprocess.PIPE
-        stderr = sys.stderr if self.stream_stderr else subprocess.PIPE
+        stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else sys.stdout
+        stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else sys.stderr
 
         p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=stdout,
                              stderr=stderr, shell=self.use_shell)
