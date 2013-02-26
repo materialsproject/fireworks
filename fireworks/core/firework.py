@@ -308,6 +308,7 @@ class FWDecision():
         self.validate_decision()
 
     def to_dict(self):
+        # TODO: add recursive to_dict() and from_dict()
         return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec}
 
     @classmethod

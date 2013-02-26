@@ -52,15 +52,17 @@ class Rocket():
             f.write(json.dumps(m_fw.to_dict(), default=DATETIME_HANDLER))
 
         # execute the script inside the spec
-        # TODO: support lists, native Python code, bind monitors, etc...
+        # TODO: bind monitors, etc...
         # add fw_dict stuff
         # add checkpoint stuff
         # add heartbeat
         # lots of stuff to add!
+        # TODO: support stored_dict update() rather than overwrite
 
         for my_task in m_fw.tasks:
             try:
                 m_decision = my_task.run_task(m_fw)
+                # TODO: allow a program to write the decision to a file...
                 if not m_decision:
                     m_decision = FWDecision('CONTINUE')
 

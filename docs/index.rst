@@ -22,9 +22,9 @@ Some (but not all) of its features include:
 
 * Ability to distribute the calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
 
-* Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a workflow step (terminating a workflow, restarting the current step, or completely altering the workflow)
+* Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a job (e.g., terminate a workflow, add a new step, or completely alter the workflow)
 
-* Detection of duplicate sub-workflows - automatically skip duplicated portions between two workflows while still running unique sections
+* Automatic detection of duplicate sub-workflows - skip duplicated portions between two workflows while still running unique sections
 
 * Loosely-coupled and modular infrastructure that is intentionally hackable. Use some FireWorks components without using *everything*, and more easily adapt FireWorks to your application.
 
@@ -94,6 +94,8 @@ Planned future tutorials:
 * Checkpoint / restart of jobs
 * Using the QueueLauncher outside of FW
 * Searching for FireWorks and Workflows
+* Logging
+* FW design guide, e.g. FireTasks vs Workflows
 * JSON vs. YAML and serialization of FW objects (including WF serialiazation as JSON/YAML instead of tar)
 
 
@@ -121,13 +123,14 @@ Thank yous
 
 Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code was refashioned for the QueueLauncher and the PBS QueueAdapter.
 
-Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
+Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, etc. The code for modifying a FireWork specification using a dictionary (DictMod) was adapted from his custodian_ library. If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
 
-Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others.
+Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others. In addition, he made many suggestions to improve the usability of the code.
 
 FireWorks was developed primarily at Lawrence Berkeley National Lab using research funding from Kristin Persson for the `Materials Project <http://www.materialsproject.org>`_.
 
 .. _pymatgen: http://packages.python.org/pymatgen/
+.. _custodian: https://pypi.python.org/pypi/custodian
 
 Indices and tables
 ==================

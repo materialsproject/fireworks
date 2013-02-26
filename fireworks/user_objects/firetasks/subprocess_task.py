@@ -13,6 +13,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 18, 2013'
 
 # TODO: document!
+# TODO: add maximum length of 10,000 chars for stored fields
 
 
 class SubprocessTask(FireTaskBase, FWSerializable):
