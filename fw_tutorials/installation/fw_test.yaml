@@ -1,4 +1,3 @@
-fw_id: -1
 spec:
   _tasks:
   - _fw_name: Script Task

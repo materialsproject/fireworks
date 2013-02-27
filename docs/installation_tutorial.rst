@@ -45,7 +45,7 @@ A FireWork is a computing job. For this tutorial, we will use a FireWork that co
 
 1. Staying in the tutorial directory, run the following command::
 
-    lp_run.py add_fw fw_test.yaml
+    lp_run.py add_wf fw_test.yaml
 
 2. Confirm that the FireWork got added to the database::
 
@@ -126,9 +126,9 @@ If you just want to run lots of Rockets on the central server itself, the simple
 2. Let's reset the database and insert 3 identical FireWorks::
 
     lp_run.py reset <TODAY'S DATE>
-    lp_run.py add_fw fw_test.yaml
-    lp_run.py add_fw fw_test.yaml
-    lp_run.py add_fw fw_test.yaml
+    lp_run.py add_wf fw_test.yaml
+    lp_run.py add_wf fw_test.yaml
+    lp_run.py add_wf fw_test.yaml
 
 3. Confirm that the three FireWorks got added to the database::
 

@@ -82,7 +82,7 @@ class FireWork(FWSerializable):
     @classmethod
     def from_dict(cls, m_dict):
         tasks = [load_object(t) for t in m_dict['spec']['_tasks']]
-        fw_id = m_dict.get('fw_id', None)
+        fw_id = m_dict.get('fw_id', -1)
         ld = m_dict.get('launches', None)
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
