@@ -115,7 +115,7 @@ So now we have FireWorks generating other FireWorks, completely automatically! L
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
     lp_run.py reset <TODAY'S DATE>
-    lp_run.py add_fw fw_fibnum.yaml
+    lp_run.py add_wf fw_fibnum.yaml
     lp_run.py get_fw_ids
 
 #. That last command should prove that there is only one FireWork in the database. Let's run it::
@@ -162,7 +162,7 @@ A Fibonacci Adder: The Quick Way
 
 Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
 
-    lp_run.py add_fw fw_fibnum.yaml
+    lp_run.py add_wf fw_fibnum.yaml
     rlauncher_run.py rapidfire --quiet
 
 That was quick!
