@@ -72,6 +72,40 @@ class Workflow(FWSerializable):
 
         self.metadata = metadata
 
+    def apply_action(self, action):
+        return []
+        """
+        # get the wf_dict
+        wfc = WFConnections.from_dict(self.links.find_one({'nodes': m_fw.fw_id}))
+        # get all the children
+        child_fw_ids = wfc.children_links[m_fw.fw_id]
+
+        # depending on the decision, you might have to do additional actions
+        if fw_decision.action in ['CONTINUE', 'BREAK']:
+            pass
+        elif fw_decision.action == 'DEFUSE':
+            # mark all children as defused
+            for cfid in child_fw_ids:
+                self._update_fw_state(cfid, 'DEFUSED')
+
+        elif fw_decision.action == 'MODIFY':
+            for cfid in child_fw_ids:
+                self._update_fw_spec(cfid, fw_decision.mod_spec['dict_mods'])
+
+        elif fw_decision.action == 'DETOUR':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        elif fw_decision.action == 'ADD':
+            old_new = self._insert_fws(fw_decision.mod_spec['add_fws'])
+            self._insert_children(m_fw.fw_id, old_new.values())
+        elif fw_decision.action == 'ADDIFY':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        elif fw_decision.action == 'PHOENIX':
+            # TODO: implement
+            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+        """
+
     def _reassign_ids(self, old_new):
         # update id_fw
         new_id_fw = {}
@@ -87,7 +121,10 @@ class Workflow(FWSerializable):
         self.links = Workflow.Links(new_l)
 
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fw.iteritems()], 'links': self.links.to_dict()}
+        return {'fws': [f.to_dict() for f in self.id_fw.iteritems()], 'links': self.links.to_dict(), 'metadata': self.metadata}
+
+    def to_db_dict(self):
+        return {'fws': [f.to_db_dict() for f in self.id_fw.iteritems()], 'links': self.links.to_db_dict(), 'metadata': self.metadata}
 
     @classmethod
     def from_dict(cls, m_dict):

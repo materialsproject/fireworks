@@ -114,11 +114,12 @@ class LaunchPad(FWSerializable):
 
         :param wf: a Workflow object.
         """
+
         if isinstance(wf, FireWork):
             wf = Workflow.from_FireWork(wf)
 
         # insert the FireWorks and get back mapping of old to new ids
-        old_new = self._insert_fws(wf.id_fw.values())
+        old_new = self._upsert_fws(wf.id_fw.values())
 
         # redo the Workflow based on new mappings
         wf._reassign_ids(old_new)
@@ -153,6 +154,21 @@ class LaunchPad(FWSerializable):
         fw_dict['launches'] = launches
 
         return FireWork.from_dict(fw_dict)
+
+    def get_wf_by_fw_id(self, fw_id):
+
+        """
+        Given a FireWork id, give back the Workflow containing that FireWork
+        :param fw_id:
+        :return: A Workflow object
+        """
+
+        links_dict = self.links.find_one({'nodes': fw_id})
+        fws = []
+        for fw_id in links_dict['nodes']:
+            fws.append(self.get_fw_by_id(fw_id))
+        return Workflow(fws, links_dict['links'], links_dict['metadata'])
+
 
     def get_fw_ids(self, query=None, sort=False):
         """
@@ -245,39 +261,19 @@ class LaunchPad(FWSerializable):
         """
 
         # update the launch data to COMPLETED, set end time, etc
-        self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'COMPLETED'}})
-        self.launches.update({'launch_id': launch_id}, {'$set': {'end': datetime.datetime.utcnow()}})
-        self.launches.update({'launch_id': launch_id}, {'$set': {'action': action.to_dict()}})
+        updates = {'state': 'COMPLETED', 'end': datetime.datetime.utcnow(), 'action': action.to_dict()}
+        self.launches.update({'launch_id': launch_id}, {'$set': updates})
 
-        # get the wf_dict
-        wfc = WFConnections.from_dict(self.links.find_one({'nodes': m_fw.fw_id}))
-        # get all the children
-        child_fw_ids = wfc.children_links[m_fw.fw_id]
+        # find all the fws that have this launch
+        for fw_id in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
+            # get the workflow
+            wf = self.get_wf_from_fw_id(fw_id)
+            # update the workflow object using the action
+            updated_fws = wf.apply_action(action)
+            # reinsert each of the updated fws
+            self._upsert_fws(updated_fws)
 
-        # depending on the decision, you might have to do additional actions
-        if fw_decision.action in ['CONTINUE', 'BREAK']:
-            pass
-        elif fw_decision.action == 'DEFUSE':
-            # mark all children as defused
-            for cfid in child_fw_ids:
-                self._update_fw_state(cfid, 'DEFUSED')
 
-        elif fw_decision.action == 'MODIFY':
-            for cfid in child_fw_ids:
-                self._update_fw_spec(cfid, fw_decision.mod_spec['dict_mods'])
-
-        elif fw_decision.action == 'DETOUR':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
-        elif fw_decision.action == 'ADD':
-            old_new = self._insert_fws(fw_decision.mod_spec['add_fws'])
-            self._insert_children(m_fw.fw_id, old_new.values())
-        elif fw_decision.action == 'ADDIFY':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
-        elif fw_decision.action == 'PHOENIX':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
 
         self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())
         self._refresh_wf(m_fw.fw_id)
@@ -294,15 +290,14 @@ class LaunchPad(FWSerializable):
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
-    def _insert_fws(self, fws):
+    def _upsert_fws(self, fws):
         old_new = {} # mapping between old and new FireWork ids
         for fw in fws:
             if not fw.fw_id or fw.fw_id < 0:
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-
-            self.fireworks.insert(fw.to_db_dict())
+            self.fireworks.update({'fw_id': fw.fw_id, fw.to_db_dict(), upsert=True)
 
         return old_new
 
