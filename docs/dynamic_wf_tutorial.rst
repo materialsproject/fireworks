@@ -70,3 +70,13 @@ You've now successfully completed an example of passing information between work
 A Fibonacci Adder
 =================
 
+Sometimes, you don't know in advance how many workflow steps you require to achieve a result. For example, let's say we had a FireTask capable of adding two numbers together and we wanted to generate all the `Fibonacci numbers <http://en.wikipedia.org/wiki/Fibonacci_number>`_ less than 100. To achieve this, we need a FireTask that does the following:
+
+* Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).
+* If this next Fibonacci number is less than 100:
+    * print it
+    * since we are not done yet, create another FireWork that will sum the larger of our inputs and the new Fibonacci number we just found. In our example, this would mean to create a new FireWork with inputs 1 and 1.
+* When the next Fibonacci number is greater than 100, stop the workflow.
+
+
+* Each new Fibonacci number is the sum of the previous two Fibonacci numbers. Given two Fibonacci numbers as inputs, we can generate the next one by summing them. To get the next Fibonnaci number after *that*, we need to add that sum to the larger of the
