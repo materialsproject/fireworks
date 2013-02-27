@@ -139,7 +139,7 @@ class LaunchPad(FWSerializable):
         :param launch_id: launch id
         :return: Launch object
         """
-        return Launch.from_dict(self.launches.find_one(launch_id))
+        return Launch.from_dict(self.launches.find_one({'launch_id':launch_id}))
 
     def get_fw_by_id(self, fw_id):
         """
@@ -153,7 +153,7 @@ class LaunchPad(FWSerializable):
         # recreate launches from the launch collection
         launches = []
         for launch_id in fw_dict['launches']:
-            launches.append(self.get_launch_by_id(launch_id))
+            launches.append(self.get_launch_by_id(launch_id).to_dict())
         fw_dict['launches'] = launches
 
         return FireWork.from_dict(fw_dict)
@@ -170,7 +170,9 @@ class LaunchPad(FWSerializable):
         fws = []
         for fw_id in links_dict['nodes']:
             fws.append(self.get_fw_by_id(fw_id))
-        return Workflow(fws, links_dict['links'], links_dict['metadata'])
+        links = Workflow.Links.from_dict(links_dict['links']).to_dict()  # necessary because Mongo no like int keys
+
+        return Workflow(fws, links, links_dict['metadata'])
 
 
     def get_fw_ids(self, query=None, sort=False):
@@ -251,7 +253,7 @@ class LaunchPad(FWSerializable):
         self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 
         # add launch to FW
-        self.fireworks.update(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launches': m_launch.launch_id}})
+        self.fireworks.update({'fw_id': m_fw['fw_id']}, {'$push': {'launches': m_launch.launch_id}})
 
         # return FW
         return self.get_fw_by_id(m_fw['fw_id']), launch_id
@@ -269,8 +271,9 @@ class LaunchPad(FWSerializable):
 
         # find all the fws that have this launch
         for fw_id in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
+            fw_id = fw_id['fw_id']
             # get the workflow
-            wf = self.get_wf_from_fw_id(fw_id)
+            wf = self.get_wf_by_fw_id(fw_id)
             # update the workflow object using the action
             updated_fws = wf.apply_action(action, fw_id)
             # reinsert each of the updated fws

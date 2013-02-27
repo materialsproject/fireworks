@@ -72,4 +72,4 @@ class Rocket():
                 m_action = FWAction('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
 
         # perform finishing operation
-        lp._complete_launch(m_fw, launch_id, m_action)
+        lp._complete_launch(launch_id, m_action)

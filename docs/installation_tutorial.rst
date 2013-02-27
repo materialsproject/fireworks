@@ -90,7 +90,7 @@ A Rocket fetches a FireWork from the FireServer database and runs it. A Rocket m
     
 2. Execute the following command (once)::
 
-    rocket_laucher_run.py singleshot
+    rlauncher_run.py singleshot
     
 The Rocket fetches an available FireWork from the FireServer and runs it.
 
@@ -110,7 +110,7 @@ You will now see lots of information about your Rocket launch, such as the time 
 
 5. Try launching another rocket (you should get an error)::   
 
-    rocket_laucher_run.py singleshot
+    rlauncher_run.py singleshot
 
 The error ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database.
 
@@ -136,7 +136,7 @@ If you just want to run lots of Rockets on the central server itself, the simple
 
 4. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks and get the ``No FireWorks are ready to run and match query!`` error::
 
-    rocket_laucher_run.py rapidfire
+    rlauncher_run.py rapidfire
 
 You should see four directories starting with the tag ``launcher_``. Inside each of these directories, you'll find the results of one of your FireWorks (the last directory was our failed attempt to find another FireWork and should be empty).
 
@@ -149,7 +149,7 @@ You'll see the launch information on that FireWork, including the directory wher
 Next steps
 ==========
 
-At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rocket_laucher_run.py rapidfire``. This should give a basic feeling of how you can automate many jobs with FireWorks. It might be a good time to get a snack!
+At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlauncher_run.py rapidfire``. This should give a basic feeling of how you can automate many jobs with FireWorks. It might be a good time to get a snack!
 
 Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you don't expect to ever have any worker nodes.
 

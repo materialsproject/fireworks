@@ -118,7 +118,8 @@ class Launch(FWSerializable):
         self.launch_id = launch_id
 
     def to_dict(self):
-        return {'fworker': self.fworker.to_dict(), 'action': self.action.to_dict(), 'start': self.start,
+        action_dict = self.action.to_dict() if self.action else None
+        return {'fworker': self.fworker.to_dict(), 'action': action_dict, 'start': self.start,
                 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
                 'launch_id': self.launch_id}
 

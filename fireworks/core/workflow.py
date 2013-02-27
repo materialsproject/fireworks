@@ -73,8 +73,10 @@ class Workflow(FWSerializable):
 
         self.metadata = metadata
 
-    def apply_action(self, action):
+    def apply_action(self, action, fw_id):
         return []
+
+    # TODO: add method that starts at a fw_id and refreshes all children if its state changed...
 
     def refresh(self, fw_id):
         fw = self.id_fw[fw_id]
@@ -124,7 +126,9 @@ class Workflow(FWSerializable):
         return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links.to_dict(), 'metadata': self.metadata}
 
     def to_db_dict(self):
-        return {'links': self.links.to_db_dict(), 'metadata': self.metadata}
+        m_dict = self.links.to_db_dict()
+        m_dict['metadata'] = self.metadata
+        return m_dict
 
     @classmethod
     def from_dict(cls, m_dict):
