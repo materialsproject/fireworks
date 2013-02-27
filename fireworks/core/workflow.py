@@ -13,9 +13,8 @@ __date__ = 'Feb 27, 2013'
 
 
 class Workflow(FWSerializable):
-    # TODO: if performance of child_parents is an issue, override the __delitem__ and __setitem__ of dict and make
-    # sure it's always updated
-    class WFLinks(dict, FWSerializable):
+    # TODO: if performance of child_parents is an issue, override delitem/setitem to ensure it's always updated
+    class Links(dict, FWSerializable):
 
         @property
         def nodes(self):
@@ -43,27 +42,27 @@ class Workflow(FWSerializable):
         @classmethod
         def from_dict(cls, m_dict):
             m_dict = dict([(int(k), list(v)) for (k, v) in m_dict.iteritems()])
-            return Workflow.WFLinks(m_dict)
+            return Workflow.Links(m_dict)
 
-    def __init__(self, fireworks, wflinks_dict=None, metadata={}):
+    def __init__(self, fireworks, links_dict=None, metadata={}):
 
         """
         :param fireworks: a list of FireWork objects
-        :param wflinks_dict: A dict representing workflow links
+        :param links_dict: A dict representing workflow links
         :param metadata: metadata for this Workflow
         """
 
-        wflinks_dict = wflinks_dict if wflinks_dict else {}
+        links_dict = links_dict if links_dict else {}
 
         self.id_fws = {}  # main dict containing mapping of an id to a FireWork object
         for fw in fireworks:
             if fw.fw_id in self.id_fws:
                 raise ValueError("FW ids must be unique!")
             self.id_fws[fw.fw_id] = fw
-            if fw.fw_id not in wflinks_dict:
-                wflinks_dict[fw.fw_id] = []
+            if fw.fw_id not in links_dict:
+                links_dict[fw.fw_id] = []
 
-        self.wflinks = Workflow.WFLinks(wflinks_dict)
+        self.links = Workflow.Links(links_dict)
         self.metadata = metadata
 
     def _reassign_ids(self, old_new):
@@ -73,19 +72,19 @@ class Workflow(FWSerializable):
             new_id_fw[old_new.get(fwid, fwid)] = fws
         self.id_fws = new_id_fw
 
-        # update the WFLinks
-        new_wfl = {}
-        for (parent, children) in self.wflinks.iteritems():
+        # update the Links
+        new_l = {}
+        for (parent, children) in self.links.iteritems():
             new_parent = old_new.get(parent, parent)
-            new_wfl[new_parent] = [old_new.get(child, child) for child in children]
-        self.wflinks = Workflow.WFLinks(new_wfl)
+            new_l[new_parent] = [old_new.get(child, child) for child in children]
+        self.links = Workflow.Links(new_l)
 
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fws.iteritems()], 'wflinks': self.wflinks.to_dict()}
+        return {'fws': [f.to_dict() for f in self.id_fws.iteritems()], 'links': self.links.to_dict()}
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.WFLinks.from_dict(m_dict['wflinks']))
+        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']))
 
     @classmethod
     def from_FireWork(cls, fw):
@@ -96,11 +95,11 @@ class Workflow(FWSerializable):
         try:
             out = tarfile.open(f_name, "w")
 
-            # write out the wflinks
-            wfl_str = self.wflinks.to_format(f_format)
-            wfl_info = tarfile.TarInfo('wflinks.' + f_format)
-            wfl_info.size = len(wfl_str)
-            out.addfile(wfl_info, StringIO(wfl_str))
+            # write out the links
+            l_str = self.links.to_format(f_format)
+            l_info = tarfile.TarInfo('links.' + f_format)
+            l_info.size = len(l_str)
+            out.addfile(l_info, StringIO(l_str))
 
             # write out fws
             for fw in self.id_fws.itervalues():
@@ -115,15 +114,15 @@ class Workflow(FWSerializable):
     @classmethod
     def from_tarfile(cls, tar_filename):
         t = tarfile.open(tar_filename, 'r')
-        wflinks = None
+        links = None
         fws = []
         for f_name in t.getnames():
             m_file = t.extractfile(f_name)
             m_format = m_file.name.split('.')[-1]
             m_contents = m_file.read()
-            if 'wflinks' in f_name:
-                wflinks = Workflow.WFLinks.from_format(m_contents, m_format)
+            if 'links' in f_name:
+                links = Workflow.Links.from_format(m_contents, m_format)
             else:
                 fws.append(FireWork.from_format(m_contents, m_format))
 
-        return Workflow(fws, dict(wflinks))
+        return Workflow(fws, dict(links))
