@@ -46,15 +46,16 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
-    parser.add_argument('--quiet', help='do not print log messages', action='store_true')
+    parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
+    parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
 
     args = parser.parse_args()
 
     if args.launchpad_file:
         lp = LaunchPad.from_file(args.launchpad_file)
     else:
-        strm_lvl = 'CRITICAL' if args.quiet else 'INFO'
-        lp = LaunchPad(logdir=args.logdir, strm_lvl=strm_lvl)
+        args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
+        lp = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
 
     if args.command == 'reset':
         lp.reset(args.password)
