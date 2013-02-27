@@ -61,7 +61,7 @@ We can tell you if:
 Getting Started!
 ================
 
-To get started with FireWorks, we suggest that you follow our core tutorials. These tutorials will guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows.
+To get started with FireWorks, we suggest that you follow our core tutorials. These tutorials will guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows. We expect that completing the core tutorials will take between one and three hours. (You might want to get a snack...)
 
 .. toctree::
    :maxdepth: 1
@@ -81,9 +81,6 @@ Depending on your application, you might also be interested in the following tut
     :maxdepth: 1
 
     queue_tutorial
-
-Even More!
-==========
 
 Planned future tutorials:
 
