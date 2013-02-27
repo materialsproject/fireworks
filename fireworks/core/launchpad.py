@@ -106,6 +106,46 @@ class LaunchPad(FWSerializable):
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
+    def add_wf(self, fwf):
+        """
+
+        :param fwf: an FWorkflow object.
+        """
+
+        if isinstance(fwf, FireWork):
+            fwf = FWorkflow.from_FireWork(fwf)
+
+        # insert the FireWorks and get back mapping of old to new ids
+        old_new = self._insert_fws(fwf.id_fw.values())
+
+        # redo the FWorkflow based on new mappings
+        fwf._reassign_ids(old_new)
+        self.wfconnections.insert(fwf.to_db_dict())
+        self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
+        self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
+        return old_new
+
+    def get_fw_by_id(self, fw_id):
+        """
+        Given a FireWork id, give back a FireWork object
+        :param fw_id: FireWork id (int)
+        """
+        fw_dict = self.fireworks.find_one({'fw_id': fw_id})
+        return FireWork.from_dict(fw_dict)
+
+    def get_fw_ids(self, query=None):
+        """
+        Return all the fw ids that match a query
+        :param query: a dict representing a Mongo query
+        """
+        fw_ids = []
+        criteria = query if query else {}
+
+        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("spec._priority", DESCENDING)]):
+            fw_ids.append(fw["fw_id"])
+
+        return fw_ids
+
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
         (internal method) Used to reset id counters
@@ -208,25 +248,6 @@ class LaunchPad(FWSerializable):
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
-    def add_wf(self, fwf):
-        """
-
-        :param fwf: an FWorkflow object.
-        """
-
-        if isinstance(fwf, FireWork):
-            fwf = FWorkflow.from_FireWork(fwf)
-
-        # insert the FireWorks and get back mapping of old to new ids
-        old_new = self._insert_fws(fwf.id_fw.values())
-
-        # redo the FWorkflow based on new mappings
-        fwf._reassign_ids(old_new)
-        self.wfconnections.insert(fwf.to_db_dict())
-        self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
-        self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
-        return old_new
-
     def _insert_fws(self, fws):
         # mapping between old and new FireWork ids
         old_new = {}
@@ -321,14 +342,6 @@ class LaunchPad(FWSerializable):
 
         self._update_fw_state(fw_id, m_state)
 
-    def get_fw_by_id(self, fw_id):
-        """
-        Given a FireWork id, give back a FireWork object
-        :param fw_id: FireWork id (int)
-        """
-        fw_dict = self.fireworks.find_one({'fw_id': fw_id})
-        return FireWork.from_dict(fw_dict)
-
     def get_launches(self, fw_id):
         """
         Given a FireWork id, give back a FireWork object
@@ -336,20 +349,6 @@ class LaunchPad(FWSerializable):
         """
         launch_data = self.fireworks.find_one({'fw_id': fw_id}, {'launch_data': 1})['launch_data']
         return [Launch.from_dict(l) for l in launch_data]
-
-    def get_fw_ids(self, query=None):
-        """
-        Return all the fw ids that match a query
-        :param query: a dict representing a Mongo query
-        """
-        fw_ids = []
-        criteria = query if query else {}
-
-        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("spec._priority", DESCENDING)]):
-            fw_ids.append(fw["fw_id"])
-
-        return fw_ids
-
 
 if __name__ == "__main__":
     lp = LaunchPad()
