@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     elif args.command == 'get_fw':
         fw = lp.get_fw_by_id(args.fw_id)
-        fw_dict = fw.to_db_dict()
+        fw_dict = fw.to_dict()
         if args.filename:
             fw.to_file(args.filename)
         else:

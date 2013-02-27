@@ -32,7 +32,7 @@ __date__ = "Feb 5, 2013"
 
 
 class FireWork(FWSerializable):
-    def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING'):
+    def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
         """
         TODO: add more docs
         
@@ -56,13 +56,14 @@ class FireWork(FWSerializable):
         self.spec['_tasks'] = [t.to_dict() for t in tasks]
         self.fw_id = fw_id
         self.launches = launches if launches else []
+        self.created_at = created_at if created_at else datetime.datetime.utcnow()
         self.state = state
 
     def to_dict(self):
         """
         This is a 'minimal' or 'compact' dict representation of the FireWork
         """
-        m_dict = {'spec': self.spec, 'fw_id': self.fw_id}
+        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_at': self.created_at}
         if len(self.launches) > 0:
             m_dict['launches'] = [l.to_dict() for l in self.launches]
 
@@ -87,7 +88,9 @@ class FireWork(FWSerializable):
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
         state = m_dict.get('state', 'WAITING')
-        return FireWork(tasks, m_dict['spec'], fw_id, ld, state)
+        created_at = m_dict.get('created_at', None)
+
+        return FireWork(tasks, m_dict['spec'], fw_id, ld, state, created_at)
 
 
 class Launch(FWSerializable):
