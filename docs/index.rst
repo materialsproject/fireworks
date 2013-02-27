@@ -70,6 +70,7 @@ To get started with FireWorks, we suggest that you follow our core tutorials. Th
    installation_tutorial_pt2
    firetask_tutorial
    workflow_tutorial
+   dynamic_wf_tutorial
 
 Depending on your application, you might also be interested in the following tutorials:
 

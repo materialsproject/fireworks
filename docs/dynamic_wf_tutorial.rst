@@ -2,11 +2,11 @@
 Dynamic Workflows
 =================
 
-Many workflows will have some aspect of dynamicism to them. For example, a FireWork might need data from a previous FireWork in order to perform its task. The second FireWork won't know what to run until the first one completes. In a more complicated example, we might even want to create new FWs dynamically.
+Many workflows require some type of dynamicism. For example, a FireWork might need data from a previous FireWork in order to perform its task. The second FireWork won't know what to run until the first one completes. In a more complicated example, we might even want to create new FWs dynamically.
 
 A workflow that passes data
 ===========================
-For example, we can imagine that the first step of our workflow adds the numbers 1 + 1, and the second step adds the number 10 to the result of the first step. The second step doesn't know in advance what the result of the first step will be; the first step must pass its output to the second step after it completes. The final result should be 10 + (1 + 1) = 12. Visually, the workflow looks like:
+Let's imagine a workflow in which the first step adds the numbers 1 + 1, and the second step adds the number 10 to the result of the first step. The second step doesn't know in advance what the result of the first step will be; the first step must pass its output to the second step after it completes. The final result should be 10 + (1 + 1) = 12. Visually, the workflow looks like:
 
 .. image:: _static/addmod_wf.png
    :width: 200px
@@ -15,9 +15,9 @@ For example, we can imagine that the first step of our workflow adds the numbers
 
 The text in blue lettering is not known in advance and can only be determined after running the first workflow step. Let's examine how we can set up such a workflow.
 
-    1. Move to the ``workflow`` tutorial directory on your FireServer::
+    1. Move to the ``dynamic_wf`` tutorial directory on your FireServer::
 
-    cd <INSTALL_DIR>/fw_tutorials/workflow
+    cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
 #. The workflow is encapsulated in the ``addmod_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of FireWork objects:
 
@@ -65,7 +65,8 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. This prints out ``The sum of [10, 2] is: 12`` - just as we desired!
 
-You've now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including file transfer operations (listed in future tutorials). For now, we will continue by quickly running a complex workflow.
+You've now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including file transfer operations (listed in future tutorials). For now, we will continue by demonstrating another type of dynamic workflow.
 
-A complex workflow
-==================
+A Fibonacci Adder
+=================
+
