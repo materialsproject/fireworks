@@ -31,16 +31,17 @@ class LaunchPad(FWSerializable):
     The LaunchPad manages the FireWorks database.
     """
 
-    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix=None, username=None, password=None,
+    def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
                  logdir=None, silencer=False):
         """
         
         :param host:
         :param port:
         :param name:
-        :param id_prefix:
         :param username:
         :param password:
+        :param logdir
+        :param silencer
         """
         self.host = host
         self.port = port
