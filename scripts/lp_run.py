@@ -45,14 +45,14 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
-    parser.add_argument('--silencer', help='do not print log messages', action='store_true')
+    parser.add_argument('--quiet', help='do not print log messages', action='store_true')
 
     args = parser.parse_args()
 
     if args.launchpad_file:
         lp = LaunchPad.from_file(args.launchpad_file)
     else:
-        lp = LaunchPad(logdir=args.logdir, silencer=args.silencer)
+        lp = LaunchPad(logdir=args.logdir, quiet=args.quiet)
 
     if args.command == 'reset':
         lp.reset(args.password)

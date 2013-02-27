@@ -34,7 +34,7 @@ class LaunchPad(FWSerializable):
     """
 
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, silencer=False):
+                 logdir=None, quiet=False):
         """
         
         :param host:
@@ -43,7 +43,7 @@ class LaunchPad(FWSerializable):
         :param username:
         :param password:
         :param logdir
-        :param silencer
+        :param quiet
         """
         self.host = host
         self.port = port
@@ -52,10 +52,10 @@ class LaunchPad(FWSerializable):
         self.password = password
 
         # set up logger
-        # TODO: move the logdir and silencer stuff into the fw_utility method
+        # TODO: move the logdir and quiet stuff into the fw_utility method
         self.logdir = logdir
-        self.silencer = silencer
-        self.strm_lvl = 'DEBUG' if not self.silencer else 'CRITICAL'
+        self.quiet = quiet
+        self.strm_lvl = 'DEBUG' if not self.quiet else 'CRITICAL'
         if self.logdir:
             self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
         else:
@@ -81,14 +81,14 @@ class LaunchPad(FWSerializable):
         d['username'] = self.username
         d['password'] = self.password
         d['logdir'] = self.logdir
-        d['silencer'] = self.silencer
+        d['quiet'] = self.quiet
         return d
 
     @classmethod
     def from_dict(cls, d):
         logdir = d.get('logdir', None)
-        silencer = d.get('silencer', False)
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir, silencer)
+        quiet = d.get('quiet', False)
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir, quiet)
 
     def reset(self, password, require_password=True):
         """
@@ -108,6 +108,14 @@ class LaunchPad(FWSerializable):
             self.m_logger.info('LaunchPad was RESET.')
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
+
+    def perform_maintainence(self):
+        self.m_logger.info('Performing Maintenance on Launchpad, please wait....')
+
+        # TODO: add more indices! e.g. launches id, nodes on the WFLinks
+        self.fireworks.ensure_index('fw_id', unique=True)
+
+        self.m_logger.info('LaunchPad was MAINTAINED.')
 
     def add_wf(self, fwf):
         """

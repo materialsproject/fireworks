@@ -21,7 +21,7 @@ def launch_rocket(launchpad, fworker):
     rocket.run()
 
 
-def loop_rocket_run(launchpad, fworker, m_dir=None, silencer=False):
+def loop_rocket_run(launchpad, fworker, m_dir=None, quiet=False):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -32,7 +32,7 @@ def loop_rocket_run(launchpad, fworker, m_dir=None, silencer=False):
     """
     curdir = m_dir if m_dir else os.getcwd()
     # initialize logger
-    if silencer:
+    if quiet:
         l_logger = get_silent_logger()
     else:
         l_logger = get_fw_logger('rocket.loop', curdir)

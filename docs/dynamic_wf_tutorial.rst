@@ -163,7 +163,7 @@ A Fibonacci Adder: The Quick Way
 Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
 
     lp_run.py add_fw fw_fibnum.yaml
-    rlauncher_run.py rapidfire --silencer
+    rlauncher_run.py rapidfire --quiet
 
 That was quick!
 
