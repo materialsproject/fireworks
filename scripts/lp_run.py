@@ -20,41 +20,43 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 if __name__ == '__main__':
-    m_description = 'This script is used for creating and managing a FireWorks database. For a list \
-    of available commands, type "lp_run.py -h". For more help on a specific command, type \
-    "lp_run.py <command> -h".'
-    
+    m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
+                    'available commands, type "lp_run.py -h". For more help on a specific command, ' \
+                    'type "lp_run.py <command> -h".'
+
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
-    
+
     reset_parser = subparsers.add_parser('reset', help='reset a FireWorks database')
     reset_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
-    
+
     addwf_parser = subparsers.add_parser('add_wf', help='insert a FWorkflow from file')
     addwf_parser.add_argument('wf_file', help="path to a FireWork or FWorkflow file")
 
     get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
     get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
     get_fw_parser.add_argument('-f', '--filename', help='output filename', default=None)
-    
+
     get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
-    get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
-    
-    parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info', default=None)
+    get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
+                                   default=None)
+
+    parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
+                        default=None)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--silencer', help='do not print log messages', action='store_true')
 
     args = parser.parse_args()
-    
+
     if args.launchpad_file:
         lp = LaunchPad.from_file(args.launchpad_file)
     else:
         lp = LaunchPad(logdir=args.logdir, silencer=args.silencer)
-    
+
     if args.command == 'reset':
         lp.reset(args.password)
-    
+
     elif args.command == 'add_wf':
         # TODO: make this cleaner, e.g. make TAR option explicit
         try:
@@ -65,7 +67,7 @@ if __name__ == '__main__':
             else:
                 fwf = FWorkflow.from_file(args.wf_file)
         lp.add_wf(fwf)
-        
+
     elif args.command == 'get_fw':
         fw = lp.get_fw_by_id(args.fw_id)
         fw_dict = fw.to_db_dict()
@@ -73,7 +75,7 @@ if __name__ == '__main__':
             fw.to_file(args.filename)
         else:
             print json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
-        
+
     elif args.command == 'get_fw_ids':
         if args.query:
             args.query = ast.literal_eval(args.query)
