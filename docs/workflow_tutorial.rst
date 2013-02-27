@@ -106,6 +106,6 @@ Let's quickly define and execute this workflow.
 Next steps
 ==========
 
-Neither our *Hamlet* workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single FireWork <firetask_tutorial>`. Indeed, the single-FireWork solution with multiple FireTasks is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial.
+Neither our *Hamlet* workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single FireWork <firetask_tutorial>`. Indeed, the single-FireWork solution with multiple FireTasks is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial. For example, you might want to use a Workflow if each step requires a different type of computing resource.
 
-Meanwhile, you can continue on to the last step(!) of the core FireWorks tutorials: :doc:`dynamic workflows <dynamic_wf_tutorial>`
+Meanwhile, you can continue on to the last step(!) of the core FireWorks tutorials, which better illustrates the power of workflows: :doc:`dynamic workflows <dynamic_wf_tutorial>`

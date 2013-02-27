@@ -2,8 +2,10 @@
 Dynamic Workflows
 =================
 
-to the case where a FireWork needs data from a previous FireWork in order to perform its task, and create also dynamically bge
+Many workflows will have some aspect of dynamicism to them. For example, a FireWork might need data from a previous FireWork in order to perform its task. The second FireWork won't know what to run until the first one completes. In a more complicated example, we might even want to create new FWs dynamically.
 
+A workflow that passes data
+===========================
 For example, we can imagine that the first step of our workflow adds the numbers 1 + 1, and the second step adds the number 10 to the result of the first step. The second step doesn't know in advance what the result of the first step will be; the first step must pass its output to the second step after it completes. The final result should be 10 + (1 + 1) = 12. Visually, the workflow looks like:
 
 .. image:: _static/addmod_wf.png
