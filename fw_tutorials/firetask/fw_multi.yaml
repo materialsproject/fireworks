@@ -9,4 +9,4 @@ spec:
     parameters:
       script: wc -w < howdy.txt > words.txt
       use_shell: true
-launch_data: []
+launches: []

@@ -5,4 +5,4 @@ spec:
     parameters: {}
   smaller: 0
   larger: 1
-launch_data: []
+launches: []

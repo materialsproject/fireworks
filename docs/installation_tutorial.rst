@@ -55,7 +55,7 @@ This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into
 
  {
     "fw_id": 1,
-    "launch_data": [],
+    "launches": [],
     "spec": {
         "_tasks": [
             {

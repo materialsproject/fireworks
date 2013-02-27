@@ -216,7 +216,7 @@ class LaunchPad(FWSerializable):
 
         # add launch to FW
         self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']},
-                                       update={'$push': {'launch_data': m_launch.launch_id}})
+                                       update={'$push': {'launches': m_launch.launch_id}})
 
         # return FW
         return self.get_fw_by_id(m_fw['fw_id'])
@@ -233,7 +233,7 @@ class LaunchPad(FWSerializable):
         # You could implement this using a "launches_to_watch" key in FireWorks, and updating all FireWorks where the
         #  launch_id matches.
 
-        for launch in m_fw.launch_data:
+        for launch in m_fw.launches:
             if launch.launch_id == launch_id:
                 launch.state = "COMPLETED"
                 launch.end = datetime.datetime.utcnow()
@@ -368,11 +368,11 @@ class LaunchPad(FWSerializable):
 
         else:
             # my state depends on launch
-            launch_data = self.get_launches(fw_id)
+            launches = self.get_launches(fw_id)
             max_score = 0
             m_state = 'READY'
 
-            for l in launch_data:
+            for l in launches:
                 if LAUNCH_RANKS[l.state] > max_score:
                     max_score = LAUNCH_RANKS[l.state]
                     m_state = l.state
@@ -384,8 +384,8 @@ class LaunchPad(FWSerializable):
         Given a FireWork id, give back a FireWork object
         :param fw_id: FireWork id (int)
         """
-        launch_data = self.fireworks.find_one({'fw_id': fw_id}, {'launch_data': 1})['launch_data']
-        return [Launch.from_dict(l) for l in launch_data]
+        launches = self.fireworks.find_one({'fw_id': fw_id}, {'launches': 1})['launches']
+        return [Launch.from_dict(l) for l in launches]
 
 
 if __name__ == "__main__":

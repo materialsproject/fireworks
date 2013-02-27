@@ -6,4 +6,4 @@ spec:
   input_array:
   - 1
   - 2
-launch_data: []
+launches: []

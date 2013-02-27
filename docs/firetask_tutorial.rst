@@ -38,7 +38,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
         parameters:
           script: wc -w < howdy.txt > words.txt
           use_shell: true
-    launch_data: []
+    launches: []
 
 3. Run this multi-step FireWork on the central server::
 
@@ -77,7 +77,7 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
           stdin_file: howdy.txt
           stdout_file: words.txt
       echo_text: howdy, your job launched successfully!
-    launch_data: []
+    launches: []
 
 3. Run the FireWork on the central server to confirm that this new formulation also works as intended::
 
@@ -109,7 +109,7 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
       input_array:
       - 1
       - 2
-    launch_data: []
+    launches: []
 
 3. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
 

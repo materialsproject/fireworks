@@ -33,7 +33,7 @@ __date__ = "Feb 5, 2013"
 
 
 class FireWork(FWSerializable):
-    def __init__(self, tasks, spec=None, fw_id=-1, launch_data=None, state='WAITING'):
+    def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING'):
         """
         TODO: add more docs
         
@@ -45,7 +45,7 @@ class FireWork(FWSerializable):
         :param spec: a dict specification of the job to run
         :param fw_id: the FW's database id to the LaunchPad. Negative numbers will be re-assigned dynamically when
         they are entered in the database through the LaunchPad.
-        :param launch_data: a list of Launch objects of this FireWork
+        :param launches: a list of Launch objects of this FireWork
         :param state: the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
         # transform tasks into a list, if not in that format
@@ -56,7 +56,7 @@ class FireWork(FWSerializable):
         self.spec = spec if spec else {}
         self.spec['_tasks'] = [t.to_dict() for t in tasks]
         self.fw_id = fw_id
-        self.launch_data = launch_data if launch_data else []
+        self.launches = launches if launches else []
         self.state = state
 
     def to_dict(self):
@@ -64,8 +64,8 @@ class FireWork(FWSerializable):
         This is a 'minimal' or 'compact' dict representation of the FireWork
         """
         m_dict = {'spec': self.spec, 'fw_id': self.fw_id}
-        if len(self.launch_data) > 0:
-            m_dict['launch_data'] = [l.to_dict() for l in self.launch_data]
+        if len(self.launches) > 0:
+            m_dict['launches'] = [l.to_dict() for l in self.launches]
 
         if self.state != 'WAITING':
             m_dict['state'] = self.state
@@ -79,7 +79,7 @@ class FireWork(FWSerializable):
         """
         """
         m_dict = self.to_dict()
-        m_dict['launch_data'] = [l.launch_id for l in self.launch_data]  # the launches are stored separately
+        m_dict['launches'] = [l.launch_id for l in self.launches]  # the launches are stored separately
         m_dict['state'] = self.state
         return m_dict
 
@@ -87,7 +87,7 @@ class FireWork(FWSerializable):
     def from_dict(cls, m_dict):
         tasks = [load_object(t) for t in m_dict['spec']['_tasks']]
         fw_id = m_dict.get('fw_id', None)
-        ld = m_dict.get('launch_data', None)
+        ld = m_dict.get('launches', None)
         if ld:
             ld = [Launch.from_dict(tmp) for tmp in ld]
         state = m_dict.get('state', 'WAITING')

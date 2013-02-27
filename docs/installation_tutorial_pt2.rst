@@ -78,7 +78,7 @@ This should successfully launch a rocket that finds and runs your FireWork from 
 
     lp_run.py -l my_launchpad.yaml get_fw 1
 
-You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``.
+You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launches`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``.
 
 Running rapidfire mode on the FireWorker
 -----------------------------------
