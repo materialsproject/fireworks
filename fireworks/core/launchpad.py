@@ -28,6 +28,7 @@ __date__ = 'Jan 30, 2013'
 # TODO: get children / parents of a FW
 # TODO: show a query in the tutorial for get_fw_ids
 
+
 class LaunchPad(FWSerializable):
     """
     The LaunchPad manages the FireWorks database.
@@ -62,6 +63,7 @@ class LaunchPad(FWSerializable):
             self.database.authenticate(username, password)
 
         self.fireworks = self.database.fireworks
+        self.launches = self.database.launches
         self.fw_id_assigner = self.database.fw_id_assigner
         self.links = self.database.links
 
@@ -92,8 +94,10 @@ class LaunchPad(FWSerializable):
 
         if password == m_password or not require_password:
             self.fireworks.remove()
+            self.launches.remove()
             self.links.remove()
             self._restart_ids(1, 1)
+            self._update_indices()
             self.m_logger.info('LaunchPad was RESET.')
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
@@ -101,8 +105,7 @@ class LaunchPad(FWSerializable):
     def maintain(self):
         self.m_logger.info('Performing maintenance on Launchpad, please wait....')
 
-        # TODO: add more indices! e.g. launches id, nodes on the WFLinks
-        self.fireworks.ensure_index('fw_id', unique=True)
+        self._update_indices()
 
         self.m_logger.info('LaunchPad was MAINTAINED.')
 
@@ -148,6 +151,24 @@ class LaunchPad(FWSerializable):
 
         return fw_ids
 
+    def run_exists(self):
+        """
+        Checks to see if the database contains any FireWorks that are ready to run
+        :return: (T/F)
+        """
+        return bool(self.fireworks.find_one(self._decorate_query({}), fields={'fw_id': 1}))
+
+    def _update_indices(self):
+        self.fireworks.ensure_index('fw_id', unique=True)
+        self.fireworks.ensure_index('state')
+
+        self.launches.ensure_index('launch_id', unique=True)
+        self.launches.ensure_index('state')
+        self.launches.ensure_index('start')
+        self.launches.ensure_index('end')
+        self.launches.ensure_index('host')
+        self.launches.ensure_index('ip')
+
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
         (internal method) Used to reset id counters
@@ -155,37 +176,50 @@ class LaunchPad(FWSerializable):
         :param next_fw_id: id to give next FireWork (int)
         :param next_launch_id: id to give next Launch (int)
         """
-
         self.fw_id_assigner.remove()
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
+        self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
+
+    def _decorate_query(self, query):
+        """
+        (internal method) - takes a query and restricts to only those FireWorks that are able to run
+        :param query:
+        :return:
+        """
+        query['state'] = {'$in': ['READY', 'FIZZLED']}
+        return query
 
     def _checkout_fw(self, fworker, host, ip, launch_dir):
         """
-        (internal method) Finds a FireWork that's ready to be run, marks it as running, and returns it to the caller. \
-        The caller should run this FireWork.
+        (internal method) Finds a FireWork that's ready to be run, marks it as running,
+        and returns it to the caller. The caller is responsible for running the FireWork.
         
         :param fworker: A FWorker instance
+        :param host: the host making the request (for creating a Launch object)
+        :param ip: the ip making the request (for creating a Launch object)
+        :param launch_dir: the dir the FW will be run in (for creating a Launch object)
         """
-        m_query = dict(fworker.query)  # make a copy of the query
-        m_query['state'] = {'$in': ['READY', 'FIZZLED']}
+        m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
         # check out the matching firework, depending on the query set by the FWorker
         m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}},
                                               sort=[("spec._priority", DESCENDING)])
-
         if not m_fw:
-            return (None, None)
+            return None, None
 
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
 
+        # insert the launch
+        self.launches.insert(m_launch.to_db_dict())
+
         # add launch to FW
-        m_fw_dict = self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']},
-                                                   update={'$push': {'launch_data': m_launch.to_db_dict()}}, new=True)
+        self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']},
+                                       update={'$push': {'launch_data': m_launch.launch_id}})
 
         # return FW
-        return (FireWork.from_dict(m_fw_dict), launch_id)
+        return self.get_fw_by_id(m_fw['fw_id'])
 
     def _complete_launch(self, m_fw, launch_id, fw_decision=None):
         """
@@ -352,6 +386,7 @@ class LaunchPad(FWSerializable):
         """
         launch_data = self.fireworks.find_one({'fw_id': fw_id}, {'launch_data': 1})['launch_data']
         return [Launch.from_dict(l) for l in launch_data]
+
 
 if __name__ == "__main__":
     lp = LaunchPad()

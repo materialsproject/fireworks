@@ -77,11 +77,9 @@ class FireWork(FWSerializable):
 
     def to_db_dict(self):
         """
-        This is a 'full' dict representation of a FireWork. It contains redundant fields that enhance information
-        retrieval.
         """
         m_dict = self.to_dict()
-        m_dict['launch_data'] = [l.to_db_dict() for l in self.launch_data]
+        m_dict['launch_data'] = [l.launch_id for l in self.launch_data]  # the launches are stored separately
         m_dict['state'] = self.state
         return m_dict
 
