@@ -5,7 +5,7 @@ TODO: add docs
 """
 from fireworks.core.firetask import FireTaskBase
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FWDecision, FireWork
+from fireworks.core.firework import FWAction, FireWork
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -29,9 +29,9 @@ class FibonacciAdderTask(FireTaskBase, FWSerializable):
             print 'The next Fibonacci number is: {}'.format(m_sum)
             # create a new Fibonacci Adder to add to the workflow
             new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
-            return FWDecision('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
+            return FWAction('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
 
         else:
             print 'We have now exceeded our limit; (the next Fibonacci number would have been: {})'.format(m_sum)
-            return FWDecision('CONTINUE')
+            return FWAction('CONTINUE')
 

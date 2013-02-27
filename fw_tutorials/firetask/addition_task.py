@@ -5,7 +5,7 @@ TODO: add docs
 """
 from fireworks.core.firetask import FireTaskBase
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, FWDecision
+from fireworks.core.firework import FireWork, FWAction
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -26,7 +26,7 @@ class AdderTask(FireTaskBase, FWSerializable):
         with open('sum_output.txt', 'w') as f:
             f.write("The sum of {} is: {}".format(input_array, m_sum))
 
-        return FWDecision('CONTINUE', {'sum': m_sum})
+        return FWAction('CONTINUE', {'sum': m_sum})
         
 if __name__ == '__main__':
     fw = FireWork(AdderTask({}), {"input_array": [1, 2]})

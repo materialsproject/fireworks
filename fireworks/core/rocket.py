@@ -8,7 +8,6 @@ import socket
 import traceback
 import simplejson as json
 from fireworks.core.firetask import FWAction
-from fireworks.core.firework import FWDecision
 from fireworks.core.fw_constants import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'

@@ -31,7 +31,7 @@ The text in blue lettering is not known in advance and can only be determined af
     * Most of this FireTask should now be familiar to you; it is very similar to the ``Addition Task`` we investigated in the :doc:`FireTask tutorial <firetask_tutorial>`.
     * The last line of this file, however, is different. It reads::
 
-        return FWDecision('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
+        return FWAction('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
 
     * The first argument, *MODIFY*, indicates that we want to modify the inputs of the next FireWork (somehow!)
     * The second argument, *{'sum': m_sum}*, is the data we want to store in our database. It does not affect this FireWork's operation.
@@ -105,7 +105,7 @@ So now we have FireWorks generating other FireWorks, completely automatically! L
     * The most important part of the code are the lines::
 
         new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
-        return FWDecision('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
+        return FWAction('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
 
     * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
     * Next, we are returning an instruction to *ADD* a child FireWork to the workflow.

@@ -5,7 +5,7 @@ TODO: add docs
 """
 from fireworks.core.firetask import FireTaskBase
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, FWDecision, WFConnections, FWorkflow
+from fireworks.core.firework import FireWork, FWAction, WFConnections, FWorkflow
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -26,5 +26,5 @@ class AddModifyTask(FireTaskBase, FWSerializable):
         print "The sum of {} is: {}".format(input_array, m_sum)
 
         # store the sum; push the sum to the input array of the next sum
-        return FWDecision('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
+        return FWAction('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
 

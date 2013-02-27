@@ -2,7 +2,7 @@ import shlex
 import subprocess
 import sys
 from fireworks.core.firetask import FireTaskBase
-from fireworks.core.firework import FWDecision
+from fireworks.core.firework import FWAction
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -91,9 +91,9 @@ class ScriptTask(FireTaskBase, FWSerializable):
         output['returncode'] = returncode
 
         if  self.defuse_bad_rc and returncode != 0:
-            return FWDecision('DEFUSE', output)
+            return FWAction('DEFUSE', output)
 
-        return FWDecision('CONTINUE', output)
+        return FWAction('CONTINUE', output)
 
     @classmethod
     def from_str(cls, shell_cmd):

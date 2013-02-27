@@ -8,7 +8,7 @@ An FWorkflow connects FireWorks by their fw_ids.
 A Launch is a describes a FireWork's run on a computing resource. The same Launch might apply to multiple FireWorks,
 e.g. if they are identical.
 
-A FWDecision encapsulates the output of that launch.
+A FWAction encapsulates the output of that launch.
 """
 
 import datetime
