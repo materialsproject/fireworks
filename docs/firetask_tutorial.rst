@@ -42,8 +42,8 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
 3. Run this multi-step FireWork on the central server::
 
-	 lp_run.py initialize <TODAY'S DATE>
-	 lp_run.py insert_single_fw fw_multi.yaml
+	 lp_run.py reset <TODAY'S DATE>
+	 lp_run.py add_fw fw_multi.yaml
 	 rlauncher_run.py singleshot
 
 .. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will reset the database, insert a FW, and run it within a single command.
@@ -81,8 +81,8 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
 
 3. Run the FireWork on the central server to confirm that this new formulation also works as intended::
 
-	lp_run.py initialize <TODAY'S DATE>
-	lp_run.py insert_single_fw fw_better_multi.yaml
+	lp_run.py reset <TODAY'S DATE>
+	lp_run.py add_fw fw_better_multi.yaml
 	rlauncher_run.py singleshot
 
 At this point, you might want to change the ``echo_text`` parameter to something other than ``howdy, your job launched successfully!``, reinsert the FireWork, and re-run the Rocket. Your custom text should get printed to ``howdy.txt`` and the number of words should change appropriately.
@@ -132,8 +132,8 @@ Even if you plan to only use ``Subprocess Task``, we suggest that you still read
 
 4. Run the FireWork on the central server to confirm that the ``Addition Task`` works::
 
-	lp_run.py initialize <TODAY'S DATE>
-	lp_run.py insert_single_fw fw_adder.yaml
+	lp_run.py reset <TODAY'S DATE>
+	lp_run.py add_fw fw_adder.yaml
 	rlauncher_run.py singleshot
 
 Next up: Workflows!

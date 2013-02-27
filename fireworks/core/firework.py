@@ -152,7 +152,7 @@ class FWorkflow(FWSerializable):
         self.id_fw = {}
         self.nodes = set()
 
-        # initialize id_fw
+        # reset id_fw
         for fw in fireworks:
             if not fw.fw_id or fw.fw_id in self.id_fw:
                 raise ValueError("FW ids must be well-defined and unique!")

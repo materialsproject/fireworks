@@ -40,8 +40,8 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next FireWork. Let's see how this operates in practice by inserting the workflow in our database::
 
-    lp_run.py initialize <TODAY'S DATE>
-    lp_run.py insert_wf addmod_wf.yaml
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add_wf addmod_wf.yaml
 
 #. If we examined our two FireWorks at this stage, nothing would be out of the ordinary. In particular, the FireWork that is ``WAITING`` has only a single input, ``10``, and does not yet know what number to add to ``10``. To confirm::
 
@@ -114,8 +114,8 @@ So now we have FireWorks generating other FireWorks, completely automatically! L
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
-    lp_run.py initialize <TODAY'S DATE>
-    lp_run.py insert_single_fw fw_fibnum.yaml
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add_fw fw_fibnum.yaml
     lp_run.py get_fw_ids
 
 #. That last command should prove that there is only one FireWork in the database. Let's run it::
@@ -162,7 +162,7 @@ A Fibonacci Adder: The Quick Way
 
 Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
 
-    lp_run.py insert_single_fw fw_fibnum.yaml
+    lp_run.py add_fw fw_fibnum.yaml
     rlauncher_run.py rapidfire --silencer
 
 That was quick!

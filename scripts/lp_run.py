@@ -27,14 +27,14 @@ if __name__ == '__main__':
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
     
-    initialize_parser = subparsers.add_parser('initialize', help='initialize a FireWorks database')
-    initialize_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
+    reset_parser = subparsers.add_parser('reset', help='reset a FireWorks database')
+    reset_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
     
-    upsert_parser = subparsers.add_parser('insert_single_fw', help='insert a single FireWork from file')
+    upsert_parser = subparsers.add_parser('add_fw', help='insert a single FireWork from file')
     upsert_parser.add_argument('fw_file', help="path to a FireWorks file")
 
-    upsert_parser = subparsers.add_parser('insert_wf', help='insert a FWorkflow from file')
+    upsert_parser = subparsers.add_parser('add_wf', help='insert a FWorkflow from file')
     upsert_parser.add_argument('wf_file', help="path to a FWorkflow file")
 
     get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
@@ -53,20 +53,20 @@ if __name__ == '__main__':
     else:
         lp = LaunchPad()
     
-    if args.command == 'initialize':
-        lp.initialize(args.password)
+    if args.command == 'reset':
+        lp.reset(args.password)
     
-    elif args.command == 'insert_single_fw':
+    elif args.command == 'add_fw':
         fwf = FWorkflow.from_FireWork(FireWork.from_file(args.fw_file))
-        lp.insert_wf(fwf)
+        lp.add_wf(fwf)
 
-    elif args.command == 'insert_wf':
+    elif args.command == 'add_wf':
         # TODO: make this cleaner
         if '.tar' in args.wf_file:
             fwf = FWorkflow.from_tarfile(args.wf_file)
         else:
             fwf = FWorkflow.from_file(args.wf_file)
-        lp.insert_wf(fwf)
+        lp.add_wf(fwf)
         
     elif args.command == 'get_fw':
         fw = lp.get_fw_by_id(args.fw_id)

@@ -42,8 +42,8 @@ Add some FireWorks
 
 Let's reset our database and add a new FireWork, all from our FireWorker::
 
-    lp_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
-    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> reset <TODAY'S DATE>
+    lp_run.py -l <PATH_TO_LAUNCHPAD> add_fw fw_test.yaml
 
 where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
 
@@ -75,10 +75,10 @@ Add some FireWorks
 
 Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    lp_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
-    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
-    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
-    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> reset <TODAY'S DATE>
+    lp_run.py -l <PATH_TO_LAUNCHPAD> add_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> add_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> add_fw fw_test.yaml
 
 where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
 

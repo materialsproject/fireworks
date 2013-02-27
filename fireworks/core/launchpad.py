@@ -71,13 +71,13 @@ class LaunchPad(FWSerializable):
     def from_dict(cls, d):
         return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'])
 
-    def initialize(self, password, require_password=True):
+    def reset(self, password, require_password=True):
         """
         Create a new FireWorks database. This will overwrite the existing FireWorks database! \
         To safeguard against accidentally erasing an existing database, a password must \
         be entered.
         :param password: A String representing today's date, e.g. '2012-12-31'
-        :param require_password: Whether a password is required to initialize the DB. Highly \
+        :param require_password: Whether a password is required to reset the DB. Highly \
         recommended to leave this set to True, otherwise you are inviting dangerous behavior!
         """
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -191,7 +191,7 @@ class LaunchPad(FWSerializable):
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
-    def insert_wf(self, fwf):
+    def add_wf(self, fwf):
         """
 
         :param fwf: an FWorkflow object.
@@ -335,9 +335,9 @@ class LaunchPad(FWSerializable):
 
 if __name__ == "__main__":
     lp = LaunchPad()
-    lp.initialize('2013-02-19')
+    lp.reset('2013-02-19')
     fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    lp.insert_wf(fwf)
+    lp.add_wf(fwf)
     fworker = FWorker()
     rocket = Rocket(lp, fworker)
     rocket.run()

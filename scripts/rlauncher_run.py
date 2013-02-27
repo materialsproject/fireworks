@@ -19,7 +19,7 @@ __date__ = 'Feb 7, 2013'
 if __name__ == '__main__':
     m_description = 'This program launches one or more Rockets. A Rocket grabs a job from the central database and ' \
                     'runs it. The "single-shot" option launches a single Rocket, ' \
-                    'whereas the "rapid-fire" option loops until all FireWorks are completed.'
+                    'whereas the "rapidfire" option loops until all FireWorks are completed.'
 
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')

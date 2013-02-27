@@ -21,7 +21,7 @@ The FireWorks central server (FireServer) hosts the FireWorks database. For prod
 
 You are now ready to start playing with FireWorks!
 
-Initialize the FireServer
+reset the FireServer
 -------------------------
 
 1. Navigate to the FireWorks installation tutorial directory::
@@ -30,9 +30,9 @@ Initialize the FireServer
 
 where <INSTALL_DIR> is your FireWorks installation directory.
  
-2. Initialize the FireWorks database::
+2. reset the FireWorks database::
 
-    lp_run.py initialize <TODAY'S DATE>
+    lp_run.py reset <TODAY'S DATE>
 
 where <TODAY'S DATE> is formatted like '2012-12-31' (this serves as a safeguard to accidentally overwriting an existing database).
 
@@ -45,7 +45,7 @@ A FireWork is a computing job. For this tutorial, we will use a FireWork that co
 
 1. Staying in the tutorial directory, run the following command::
 
-    lp_run.py insert_single_fw fw_test.yaml
+    lp_run.py add_fw fw_test.yaml
 
 2. Confirm that the FireWork got added to the database::
 
@@ -125,10 +125,10 @@ If you just want to run lots of Rockets on the central server itself, the simple
 
 2. Let's reset the database and insert 3 identical FireWorks::
 
-    lp_run.py initialize <TODAY'S DATE>
-    lp_run.py insert_single_fw fw_test.yaml
-    lp_run.py insert_single_fw fw_test.yaml
-    lp_run.py insert_single_fw fw_test.yaml
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add_fw fw_test.yaml
+    lp_run.py add_fw fw_test.yaml
+    lp_run.py add_fw fw_test.yaml
 
 3. Confirm that the three FireWorks got added to the database::
 

@@ -18,10 +18,10 @@ __date__ = "Jan 14, 2013"
 
 if __name__ == '__main__':
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
-    interaction are handled by the mandatory queue params file parameter. The "rapid-fire" option can be used \
+    interaction are handled by the mandatory queue params file parameter. The "rapidfire" option can be used \
     to maintain a certain number of jobs in the queue by specifying the n_loops parameter to a large number. \
     If n_loops is set to 1 (default) the queue launcher will quit after submitting the desired number of jobs. \
-    For more help on rapid fire options, use queue_launcher.py rapidfire -h'
+    For more help on rapid fire options, use qlauncher.py rapidfire -h'
     
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
