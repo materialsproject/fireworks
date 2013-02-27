@@ -1,3 +1,4 @@
+from collections import defaultdict
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -7,10 +8,81 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 27, 2013'
 
-# TODO: refactor workflow stuff and move to its own module
-
 
 class Workflow(FWSerializable):
+    # TODO: if performance of child_parents is an issue, override the __delitem__ and __setitem__ of dict and make
+    # sure it's always updated
+    class WFLinks(dict, FWSerializable):
+
+        @property
+        def nodes(self):
+            return self.keys()
+
+        @property
+        def parent_links(self):
+            d = defaultdict(list)
+            for (parent, children) in self.iteritems():
+                # add the parents
+                for child in children:
+                    d[child].append(parent)
+            return dict(d)
+
+        def to_dict(self):
+            return dict(self)
+
+        def to_db_dict(self):
+            # convert to str form for Mongo, which cannot have int keys
+            m_dict = {'links': dict([(str(k), list(v)) for (k, v) in self.iteritems()]),
+                      'parent_links': dict([(str(k), v) for (k, v) in self.parent_links.iteritems()])}
+            return m_dict
+
+        @classmethod
+        def from_dict(cls, m_dict):
+            m_dict = dict([(int(k), list(v)) for (k, v) in m_dict.iteritems()])
+            return Workflow.WFLinks(m_dict)
+
+
+    # TODO: add methods for adding children, removing children
+
+    def __init__(self, child_nodes_dict=None, metadata=None):
+
+        child_nodes_dict = child_nodes_dict if child_nodes_dict else {}
+        self._parent_links = defaultdict(list)
+        self.children_links = defaultdict(set)
+        self.metadata = metadata if metadata else {}
+
+        for (parent, children) in child_nodes_dict.iteritems():
+            # make sure children is a list
+            if not isinstance(children, list):
+                children = [children]
+
+            # make sure parents and children are ints
+            parent = int(parent)
+            children = [int(c) for c in children]
+
+            # add the children
+            self.children_links[parent].update(children)
+
+            # add the parents
+            for child in children:
+                self._parent_links[child].append(parent)
+
+    def to_dict(self):
+        m_dict = {'children_links': dict([(k, list(v)) for (k, v) in self.children_links.iteritems()])}
+        if self.metadata:
+            m_dict['metadata'] = self.metadata
+        return m_dict
+
+    def to_db_dict(self):
+        m_dict = {'children_links': dict([(str(k), list(v)) for (k, v) in self.children_links.iteritems()])}
+        m_dict['parent_links'] = dict([(str(k), v) for (k, v) in self._parent_links.iteritems()])
+        m_dict['metadata'] = self.metadata
+        return m_dict
+
+    @classmethod
+    def from_dict(cls, m_dict):
+        metadata = m_dict.get('metadata', None)
+        return WFConnections(m_dict['children_links'], metadata)
 
     def __init__(self, fireworks, wf_connections, metadata={}):
 
@@ -63,7 +135,8 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return FWorkflow([FireWork.from_dict(f) for f in m_dict['fws']], WFConnections.from_dict(m_dict['wf_connections']))
+        return FWorkflow([FireWork.from_dict(f) for f in m_dict['fws']],
+                         WFConnections.from_dict(m_dict['wf_connections']))
 
     def to_db_dict(self):
         m_dict = self.wf_connections.to_db_dict()
@@ -110,3 +183,9 @@ class Workflow(FWSerializable):
     @classmethod
     def from_FireWork(cls, fw):
         return FWorkflow([fw], None)
+
+if __name__ == '__main__':
+    a = Workflow.WFLinks({1: [2, 3]})
+    print a.to_dict()
+    print a.nodes
+    print a.parent_links
