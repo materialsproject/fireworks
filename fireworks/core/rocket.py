@@ -7,6 +7,7 @@ import os
 import socket
 import traceback
 import simplejson as json
+from fireworks.core.firetask import FWAction
 from fireworks.core.firework import FWDecision
 from fireworks.core.fw_constants import DATETIME_HANDLER
 
@@ -61,23 +62,15 @@ class Rocket():
 
         for my_task in m_fw.tasks:
             try:
-                m_decision = my_task.run_task(m_fw)
+                m_action = my_task.run_task(m_fw)
                 # TODO: allow a program to write the decision to a file...
-                if not m_decision:
-                    m_decision = FWDecision('CONTINUE')
+                if not m_action:
+                    m_action = FWAction('CONTINUE')
 
-                if m_decision.action != 'CONTINUE':
+                if m_action.action != 'CONTINUE':
                     break;
             except:
-                m_decision = FWDecision('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
-
-
-        # TODO: continue on to next script if:
-        # - it exists
-        # - no fw_output.json
-        # no output dict()
-
-        # TODO: add more useful information in the launch!
+                m_action = FWAction('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
 
         # perform finishing operation
-        lp._complete_launch(m_fw, launch_id, m_decision)
+        lp._complete_launch(m_fw, launch_id, m_action)
