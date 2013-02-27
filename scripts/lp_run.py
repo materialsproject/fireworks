@@ -6,11 +6,12 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import FireWork, FWorkflow
+from fireworks.core.firework import FireWork
 import ast
 import simplejson as json
 
 #TODO: YAML queries give weird unicode string, maybe this is unfixable though
+from fireworks.core.workflow import Workflow
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -52,7 +53,8 @@ if __name__ == '__main__':
     if args.launchpad_file:
         lp = LaunchPad.from_file(args.launchpad_file)
     else:
-        lp = LaunchPad(logdir=args.logdir, quiet=args.quiet)
+        strm_lvl = 'CRITICAL' if args.quiet else 'INFO'
+        lp = LaunchPad(logdir=args.logdir, strm_lvl=strm_lvl)
 
     if args.command == 'reset':
         lp.reset(args.password)
@@ -60,12 +62,12 @@ if __name__ == '__main__':
     elif args.command == 'add_wf':
         # TODO: make this cleaner, e.g. make TAR option explicit
         try:
-            fwf = FWorkflow.from_FireWork(FireWork.from_file(args.wf_file))
+            fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
         except:
             if '.tar' in args.wf_file:
-                fwf = FWorkflow.from_tarfile(args.wf_file)
+                fwf = Workflow.from_tarfile(args.wf_file)
             else:
-                fwf = FWorkflow.from_file(args.wf_file)
+                fwf = Workflow.from_file(args.wf_file)
         lp.add_wf(fwf)
 
     elif args.command == 'get_fw':

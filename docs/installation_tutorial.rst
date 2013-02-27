@@ -21,7 +21,7 @@ The FireWorks central server (FireServer) hosts the FireWorks database. For prod
 
 You are now ready to start playing with FireWorks!
 
-reset the FireServer
+Reset the FireServer
 -------------------------
 
 1. Navigate to the FireWorks installation tutorial directory::
@@ -30,7 +30,7 @@ reset the FireServer
 
 where <INSTALL_DIR> is your FireWorks installation directory.
  
-2. reset the FireWorks database::
+2. Reset the FireWorks database::
 
     lp_run.py reset <TODAY'S DATE>
 

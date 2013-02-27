@@ -86,6 +86,7 @@ class LaunchPad(FWSerializable):
         Create a new FireWorks database. This will overwrite the existing FireWorks database! \
         To safeguard against accidentally erasing an existing database, a password must \
         be entered.
+
         :param password: A String representing today's date, e.g. '2012-12-31'
         :param require_password: Whether a password is required to reset the DB. Highly \
         recommended to leave this set to True, otherwise you are inviting disaster!
@@ -134,6 +135,7 @@ class LaunchPad(FWSerializable):
     def get_launch_by_id(self, launch_id):
         """
         Given a Launch id, return details of the Launch
+
         :param launch_id: launch id
         :return: Launch object
         """
@@ -142,6 +144,7 @@ class LaunchPad(FWSerializable):
     def get_fw_by_id(self, fw_id):
         """
         Given a FireWork id, give back a FireWork object
+
         :param fw_id: FireWork id (int)
         :return: FireWork object
         """
