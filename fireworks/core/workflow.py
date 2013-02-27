@@ -54,23 +54,30 @@ class Workflow(FWSerializable):
 
         links_dict = links_dict if links_dict else {}
 
-        self.id_fws = {}  # main dict containing mapping of an id to a FireWork object
+        self.id_fw = {}  # main dict containing mapping of an id to a FireWork object
         for fw in fireworks:
-            if fw.fw_id in self.id_fws:
-                raise ValueError("FW ids must be unique!")
-            self.id_fws[fw.fw_id] = fw
+            # check uniqueness, cannot have two FWs with the same id!
+            if fw.fw_id in self.id_fw:
+                raise ValueError('FW ids must be unique!')
+            self.id_fw[fw.fw_id] = fw
+
             if fw.fw_id not in links_dict:
                 links_dict[fw.fw_id] = []
 
         self.links = Workflow.Links(links_dict)
+
+        # sanity: make sure the set of nodes from the links_dict is equal to the set of nodes from id_fw
+        if set(self.links.nodes) != set(self.id_fw.keys()):
+            raise ValueError("Specified links don't match given FW")
+
         self.metadata = metadata
 
     def _reassign_ids(self, old_new):
         # update id_fw
         new_id_fw = {}
-        for (fwid, fws) in self.id_fws.iteritems():
+        for (fwid, fws) in self.id_fw.iteritems():
             new_id_fw[old_new.get(fwid, fwid)] = fws
-        self.id_fws = new_id_fw
+        self.id_fw = new_id_fw
 
         # update the Links
         new_l = {}
@@ -80,7 +87,7 @@ class Workflow(FWSerializable):
         self.links = Workflow.Links(new_l)
 
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fws.iteritems()], 'links': self.links.to_dict()}
+        return {'fws': [f.to_dict() for f in self.id_fw.iteritems()], 'links': self.links.to_dict()}
 
     @classmethod
     def from_dict(cls, m_dict):
@@ -102,7 +109,7 @@ class Workflow(FWSerializable):
             out.addfile(l_info, StringIO(l_str))
 
             # write out fws
-            for fw in self.id_fws.itervalues():
+            for fw in self.id_fw.itervalues():
                 fw_str = fw.to_format(f_format)
                 fw_info = tarfile.TarInfo('fw_{}.{}'.format(fw.fw_id, f_format))
                 fw_info.size = len(fw_str)
