@@ -24,7 +24,9 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: add logging throughout
 # TODO: probably lots of cleanup is possible
-# TODO: be able to "freeze" and "thaw" a FireWork
+# TODO: be able to un-terminate a FW
+# TODO: get children / parents of a FW
+# TODO: show a query in the tutorial for get_fw_ids
 
 class LaunchPad(FWSerializable):
     """
@@ -50,6 +52,7 @@ class LaunchPad(FWSerializable):
         self.password = password
 
         # set up logger
+        # TODO: move the logdir and silencer stuff into the fw_utility method
         self.logdir = logdir
         self.silencer = silencer
         self.strm_lvl = 'DEBUG' if not self.silencer else 'CRITICAL'

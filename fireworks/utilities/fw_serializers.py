@@ -3,8 +3,8 @@
 """
 This module aids in serializing and deserializing objects.
 
-To serialize a FW object, refer to the documentation for the FWSerializable class. \
-To de-serialize an object, refer to the documentation for the FWSerializable class and load_object() method.
+To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize an object,
+refer to the documentation for the FWSerializable class and load_object() method.
     - you can de-serialize explicitly, e.g. FWObject.from_dict() to enforce a FWObject instance as the result
     - you can de-serialize implicitly, e.g. load_object() to search for the correct Class dynamically
 
@@ -20,10 +20,11 @@ Some advantages:
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
     - Auto-detect and proper loading of JSON and YAML files
     - Proper JSON handling of datetime (both encoding and decoding) and UTF-8 strings
-    - In some cases, objects can be serialized/deserialized extremely concisely, by knowledge of only their fw_name
+    - In some cases, objects can be serialized/deserialized extremely concisely, by use of only their fw_name (if no
+    parameters are needed to describe the object)
 
-A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder, when the \
-serialize_fw() decorator is used.
+A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder,
+when the serialize_fw() decorator is used.
 """
 
 import yaml
