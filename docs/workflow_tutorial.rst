@@ -36,13 +36,13 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. Let's insert this workflow into our database::
 
-    launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py insert_wf hamlet_wf.yaml
+    lp_run.py initialize <TODAY'S DATE>
+    lp_run.py insert_wf hamlet_wf.yaml
 
 #. Let's look at our two FireWorks::
 
-    launchpad_run.py get_fw 1
-    launchpad_run.py get_fw 2
+    lp_run.py get_fw 1
+    lp_run.py get_fw 2
 
 #. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is ``READY`` to run. In contrast, the FireWork that writes the second line (*"that is the question:"*) shows a state of ``WAITING``. The ``WAITING`` state indicates that a Rocket should not pull this FireWork just yet.
 
@@ -50,23 +50,23 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
-    rocket_launcher_run.py singleshot
+    rlauncher_run.py singleshot
 
 #. You should have seen the text *"To be, or not to be"* printed to your standard out. Let's examine our FireWorks again to examine our new situation::
 
-    launchpad_run.py get_fw 1
-    launchpad_run.py get_fw 2
+    lp_run.py get_fw 1
+    lp_run.py get_fw 2
 
 #. We see now that the first step is ``COMPLETED``, and the second step has automatically graduated from ``WAITING`` to ``READY``.
 
 #. Let's now launch a Rocket that will run the second FireWork of this Workflow.
 
-    rocket_launcher_run.py singleshot
+    rlauncher_run.py singleshot
 
 #. This should print the second step of the workflow (*"That is the question"*). You can verify that both steps are completed::
 
-    launchpad_run.py get_fw 1
-    launchpad_run.py get_fw 2
+    lp_run.py get_fw 1
+    lp_run.py get_fw 2
 
 .. note:: Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines. But at least we printed them in the correct order!
 
@@ -93,9 +93,9 @@ Let's quickly define and execute this workflow.
 
 #. Once everything makes sense, let's add the workflow and run everything at once!::
 
-    launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py insert_wf org_wf.yaml
-    rocket_launcher_run.py rapidfire --silencer
+    lp_run.py initialize <TODAY'S DATE>
+    lp_run.py insert_wf org_wf.yaml
+    rlauncher_run.py rapidfire --silencer
 
 #. You should notice that the CEO correctly gets printed above the managers, who in turn are printed above the intern. There is no preference amongst the two managers as written; FireWorks might print either manager first. If you want to distinguish between them, you can use priorities (covered in a future tutorial).
 

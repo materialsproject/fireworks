@@ -21,8 +21,8 @@ __date__ = 'Feb 7, 2013'
 
 if __name__ == '__main__':
     m_description = 'This script is used for creating and managing a FireWorks database. For a list \
-    of available commands, type "launchpad_run.py -h". For more help on a specific command, type \
-    "launchpad_run.py <command> -h".'
+    of available commands, type "lp_run.py -h". For more help on a specific command, type \
+    "lp_run.py <command> -h".'
     
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')

@@ -23,8 +23,8 @@ Reset the FireWorks database
 
 1. Back at the FireServer, let's reset our database and add a FireWorks::
 
-    launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py insert_single_fw fw_test.yaml
+    lp_run.py initialize <TODAY'S DATE>
+    lp_run.py insert_single_fw fw_test.yaml
 
 Make sure to keep the FireWorks database running, and do not launch a Rocket yet!
 
@@ -47,7 +47,7 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 
 3. Confirm that you can query the FireServer from your FireWorker::
 
-    launchpad_run.py -l my_launchpad.yaml get_fw 1
+    lp_run.py -l my_launchpad.yaml get_fw 1
 
 This should print out the description of a FireWork that is ready to run.
 
@@ -70,13 +70,13 @@ Launch a Rocket on the FireWorker
 
 1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, type::
 
-    rocket_launcher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot
+    rlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot
 
 This should successfully launch a rocket that finds and runs your FireWork from the central server.
 
 2. Confirm that the FireWork was run::
 
-    launchpad_run.py -l my_launchpad.yaml get_fw 1
+    lp_run.py -l my_launchpad.yaml get_fw 1
 
 You should notice that the FireWork is listed as being COMPLETED. In addition, the ``name`` parameter under the ``launch_data`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``.
 
@@ -91,20 +91,20 @@ Just like on the central server, you can run in rapidfire mode on the FireWorker
 
 2. Add three more FireWorks. Let's do this from the FireWorker this time instead of the FireServer::
 
-    launchpad_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
-    launchpad_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
-    launchpad_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
+    lp_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
+    lp_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
+    lp_run.py -l my_launchpad.yaml insert_single_fw fw_test.yaml
 
 3. Run Rockets in rapidfire mode::
 
-    rocket_launcher_run.py -l my_launchpad.yaml -w my_fworker.yaml rapidfire
+    rlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml rapidfire
 
 You've now run multiple jobs on your FireWorker!
 
 Next Steps
 ==========
 
-A central FireServer and one or more FireWorkers pulling jobs in rapidfire mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rocket_launcher_run.py`` on your FireWorker.
+A central FireServer and one or more FireWorkers pulling jobs in rapidfire mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlauncher_run.py`` on your FireWorker.
 
 If you'd like to learn how to launch jobs through a queue, continue on to:  :doc:`Launching Rockets through a queue </queue_tutorial>`
 

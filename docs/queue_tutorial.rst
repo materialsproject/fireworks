@@ -29,7 +29,7 @@ The QueueLauncher needs to know how to communicate with your queue system and th
 
 4. Open ``my_qp.yaml`` and modify it as follows:
 
-   a. In the part that specifies running ``rocket_launcher_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine. If you completed the previous tutorial, this is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml``
+   a. In the part that specifies running ``rlauncher_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine. If you completed the previous tutorial, this is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml``
 
    b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine. This is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_launchpad.yaml``
 
@@ -42,8 +42,8 @@ Add some FireWorks
 
 Let's reset our database and add a new FireWork, all from our FireWorker::
 
-    launchpad_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
-    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
+    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
 
 where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
 
@@ -52,7 +52,7 @@ Submit a job
 
 1. Try submitting a job using the command::
 
-    queue_launcher_run.py singleshot my_qp.yaml
+    qlauncher_run.py singleshot my_qp.yaml
 
 2. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
@@ -75,10 +75,10 @@ Add some FireWorks
 
 Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    launchpad_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
-    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
-    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
-    launchpad_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> initialize <TODAY'S DATE>
+    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
+    lp_run.py -l <PATH_TO_LAUNCHPAD> insert_single_fw fw_test.yaml
 
 where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
 
@@ -100,7 +100,7 @@ where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you crea
 
 4. Submit several jobs with a single command::
 
-    queue_launcher_run.py rapidfire -q 3 my_qp.yaml
+    qlauncher_run.py rapidfire -q 3 my_qp.yaml
 
    .. important:: The QueueLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
@@ -110,7 +110,7 @@ where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you crea
 
 You've now launched multiple Rockets with a single command!
 
-.. note:: For more tips on the QueueLauncher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``queue_launcher_run.py rapidfire -h``
+.. note:: For more tips on the QueueLauncher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``qlauncher_run.py rapidfire -h``
 
 Next steps
 ==========

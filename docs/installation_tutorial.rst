@@ -32,11 +32,11 @@ where <INSTALL_DIR> is your FireWorks installation directory.
  
 2. Initialize the FireWorks database::
 
-    launchpad_run.py initialize <TODAY'S DATE>
+    lp_run.py initialize <TODAY'S DATE>
 
 where <TODAY'S DATE> is formatted like '2012-12-31' (this serves as a safeguard to accidentally overwriting an existing database).
 
-.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``launchpad_run.py -h``.
+.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lp_run.py -h``.
 
 Add a FireWork to the FireServer database
 -----------------------------------------
@@ -45,11 +45,11 @@ A FireWork is a computing job. For this tutorial, we will use a FireWork that co
 
 1. Staying in the tutorial directory, run the following command::
 
-    launchpad_run.py insert_single_fw fw_test.yaml
+    lp_run.py insert_single_fw fw_test.yaml
 
 2. Confirm that the FireWork got added to the database::
 
-    launchpad_run.py get_fw 1
+    lp_run.py get_fw 1
 
 This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
 
@@ -104,7 +104,7 @@ You should see the text: ``howdy, your job launched successfully!``
 
 4. Check the status of your FireWork::
 
-    launchpad_run.py get_fw 1
+    lp_run.py get_fw 1
     
 You will now see lots of information about your Rocket launch, such as the time and directory of the launch. You should also notice that the state of the FireWork is now ``COMPLETED``.
 
@@ -125,14 +125,14 @@ If you just want to run lots of Rockets on the central server itself, the simple
 
 2. Let's reset the database and insert 3 identical FireWorks::
 
-    launchpad_run.py initialize <TODAY'S DATE>
-    launchpad_run.py insert_single_fw fw_test.yaml
-    launchpad_run.py insert_single_fw fw_test.yaml
-    launchpad_run.py insert_single_fw fw_test.yaml
+    lp_run.py initialize <TODAY'S DATE>
+    lp_run.py insert_single_fw fw_test.yaml
+    lp_run.py insert_single_fw fw_test.yaml
+    lp_run.py insert_single_fw fw_test.yaml
 
 3. Confirm that the three FireWorks got added to the database::
 
-    launchpad_run.py get_fw_ids
+    lp_run.py get_fw_ids
 
 4. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks and get the ``No FireWorks are ready to run and match query!`` error::
 
@@ -142,7 +142,7 @@ You should see four directories starting with the tag ``launcher_``. Inside each
 
 5. Finally, let's check the launch state of your third FireWork::
 
-    launchpad_run.py get_fw 3
+    lp_run.py get_fw 3
 
 You'll see the launch information on that FireWork, including the directory where it ran.
 

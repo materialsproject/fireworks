@@ -1,5 +1,5 @@
 params:i
-  exe: rocket_launcher_run.py -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
+  exe: rlauncher_run.py -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
   ncores: 1
   walltime: '00:02:00'
   queue: debug
