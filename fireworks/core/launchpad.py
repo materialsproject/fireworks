@@ -241,16 +241,13 @@ class LaunchPad(FWSerializable):
         """
         (internal method) used to mark a FireWork's Launch as completed.
         :param launch_id:
-        :param fw_decision: the decision of what to do next
+        :param action: the FWAction of what to do next
         """
 
-
-        for launch in m_fw.launches:
-            if launch.launch_id == launch_id:
-                launch.state = "COMPLETED"
-                launch.end = datetime.datetime.utcnow()
-                launch.stored_data = fw_decision.stored_data
-                break
+        # update the launch data to COMPLETED, set end time, etc
+        self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'COMPLETED'}})
+        self.launches.update({'launch_id': launch_id}, {'$set': {'end': datetime.datetime.utcnow()}})
+        self.launches.update({'launch_id': launch_id}, {'$set': {'action': action.to_dict()}})
 
         # get the wf_dict
         wfc = WFConnections.from_dict(self.links.find_one({'nodes': m_fw.fw_id}))
@@ -298,8 +295,7 @@ class LaunchPad(FWSerializable):
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
     def _insert_fws(self, fws):
-        # mapping between old and new FireWork ids
-        old_new = {}
+        old_new = {} # mapping between old and new FireWork ids
         for fw in fws:
             if not fw.fw_id or fw.fw_id < 0:
                 new_id = self.get_new_fw_id()
@@ -398,13 +394,3 @@ class LaunchPad(FWSerializable):
         """
         launches = self.fireworks.find_one({'fw_id': fw_id}, {'launches': 1})['launches']
         return [Launch.from_dict(l) for l in launches]
-
-
-if __name__ == "__main__":
-    lp = LaunchPad()
-    lp.reset('2013-02-19')
-    wf = Workflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    lp.add_wf(wf)
-    fworker = FWorker()
-    rocket = Rocket(lp, fworker)
-    rocket.run()
