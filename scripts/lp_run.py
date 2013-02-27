@@ -31,11 +31,8 @@ if __name__ == '__main__':
     reset_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
     
-    upsert_parser = subparsers.add_parser('add_fw', help='insert a single FireWork from file')
-    upsert_parser.add_argument('fw_file', help="path to a FireWorks file")
-
-    upsert_parser = subparsers.add_parser('add_wf', help='insert a FWorkflow from file')
-    upsert_parser.add_argument('wf_file', help="path to a FWorkflow file")
+    addwf_parser = subparsers.add_parser('add_wf', help='insert a FWorkflow from file')
+    addwf_parser.add_argument('wf_file', help="path to a FireWork or FWorkflow file")
 
     get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
     get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
@@ -58,16 +55,15 @@ if __name__ == '__main__':
     if args.command == 'reset':
         lp.reset(args.password)
     
-    elif args.command == 'add_fw':
-        fwf = FWorkflow.from_FireWork(FireWork.from_file(args.fw_file))
-        lp.add_wf(fwf)
-
     elif args.command == 'add_wf':
-        # TODO: make this cleaner
-        if '.tar' in args.wf_file:
-            fwf = FWorkflow.from_tarfile(args.wf_file)
-        else:
-            fwf = FWorkflow.from_file(args.wf_file)
+        # TODO: make this cleaner, e.g. make TAR option explicit
+        try:
+            fwf = FWorkflow.from_FireWork(FireWork.from_file(args.wf_file))
+        except:
+            if '.tar' in args.wf_file:
+                fwf = FWorkflow.from_tarfile(args.wf_file)
+            else:
+                fwf = FWorkflow.from_file(args.wf_file)
         lp.add_wf(fwf)
         
     elif args.command == 'get_fw':
