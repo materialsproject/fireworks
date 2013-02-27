@@ -19,9 +19,9 @@ class FireTaskBase():
     TODO: add docs
     """
 
-    def __init__(self, parameters):
+    def __init__(self, parameters=None):
         # Add the following line to your FireTasks to get to_dict to work
-        self.parameters = parameters
+        self.parameters = parameters if parameters else {}
 
     def run_task(self, fw):
         raise NotImplementedError('Need to implement run_task!')
