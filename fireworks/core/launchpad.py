@@ -309,10 +309,13 @@ class LaunchPad(FWSerializable):
         Update the FW state of all jobs in workflow
         :param wf: a Workflow object
         """
+        changes = {}
 
-        changes = wf.refresh()  # return dict of fw_id: state
-        for fw_id in changes:
-            self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": changes[fw_id]}})
+        # TODO: make this not suck. Go in order of parents to children and make this a supported method in Workflow
+        for fw_id in wf.id_fw.keys():
+            changes = wf.refresh(fw_id)  # return dict of fw_id: state
+            for fw_id in changes:
+                self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": changes[fw_id]}})
 
 """
     def _insert_children(self, fw_id, child_ids):

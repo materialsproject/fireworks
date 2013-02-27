@@ -2,6 +2,7 @@ from StringIO import StringIO
 from collections import defaultdict
 import tarfile
 from fireworks.core.firework import FireWork
+from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -75,7 +76,34 @@ class Workflow(FWSerializable):
     def apply_action(self, action):
         return []
 
-    def refresh(self):
+    def refresh(self, fw_id):
+        fw = self.id_fw[fw_id]
+        prev_state = fw.state
+
+        # if we're defused, just skip altogether
+        if fw.state == 'DEFUSED':
+            return {}
+
+        # what are the parent states?
+        parent_states = [self.id_fw[p].state for p in self.links.parent_links.get(fw_id, [])]
+
+        if len(parent_states) != 0 and not all([s == 'COMPLETED' for s in parent_states]):
+            m_state = 'WAITING'
+
+        else:
+            # my state depends on launch
+            max_score = 0
+            m_state = 'READY'
+
+            for l in fw.launches:
+                if LAUNCH_RANKS[l.state] > max_score:
+                    max_score = LAUNCH_RANKS[l.state]
+                    m_state = l.state
+
+        fw.state = m_state
+        if m_state != prev_state:
+            return {fw_id: m_state}
+
         return {}
 
     def _reassign_ids(self, old_new):
@@ -145,34 +173,7 @@ class Workflow(FWSerializable):
 
 
         """
-        def _refresh_fw(self, fw_id, parent_ids):
-            # if we are defused, just skip this whole thing
-        if self._get_fw_state(fw_id) == 'DEFUSED':
-            return
 
-        m_state = None
-
-        # what are the parent states?
-        parent_states = [self._get_fw_state(p) for p in parent_ids]
-
-        if len(parent_ids) != 0 and not all([s == 'COMPLETED' for s in parent_states]):
-            m_state = 'WAITING'
-
-        elif any([s == 'CANCELED' for s in parent_states]):
-            m_state = 'CANCELED'
-
-        else:
-            # my state depends on launch
-            launches = self.get_launches(fw_id)
-            max_score = 0
-            m_state = 'READY'
-
-            for l in launches:
-                if LAUNCH_RANKS[l.state] > max_score:
-                    max_score = LAUNCH_RANKS[l.state]
-                    m_state = l.state
-
-        self._update_fw_state(fw_id, m_state)
         """
         """
         # get the wf_dict
