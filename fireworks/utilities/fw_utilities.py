@@ -45,7 +45,7 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
             logger.addHandler(fh)
             PREVIOUS_FILE_LOGGERS.append(f_name)
 
-    if (name, stream_level) not in PREVIOUS_STREAM_LOGGERS:
+    if stream_level and (name, stream_level) not in PREVIOUS_STREAM_LOGGERS:
         # add stream handler
         sh = logging.StreamHandler(stream=sys.stdout)
         sh.setLevel(getattr(logging, stream_level))

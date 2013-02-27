@@ -45,13 +45,15 @@ if __name__ == '__main__':
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
     
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info', default=None)
-    
+    parser.add_argument('--logdir', help='path to a directory for logging', default=None)
+    parser.add_argument('--silencer', help='do not print log messages', action='store_true')
+
     args = parser.parse_args()
     
     if args.launchpad_file:
         lp = LaunchPad.from_file(args.launchpad_file)
     else:
-        lp = LaunchPad()
+        lp = LaunchPad(logdir=args.logdir, silencer=args.silencer)
     
     if args.command == 'reset':
         lp.reset(args.password)

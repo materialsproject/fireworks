@@ -13,6 +13,7 @@ from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch, FWorkflow
 from pymongo import DESCENDING
 from fireworks.utilities.dict_mods import apply_mod
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -30,7 +31,8 @@ class LaunchPad(FWSerializable):
     The LaunchPad manages the FireWorks database.
     """
 
-    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix=None, username=None, password=None):
+    def __init__(self, host='localhost', port=27017, name='fireworks', id_prefix=None, username=None, password=None,
+                 logdir=None, silencer=False):
         """
         
         :param host:
@@ -45,6 +47,15 @@ class LaunchPad(FWSerializable):
         self.name = name
         self.username = username
         self.password = password
+
+        # set up logger
+        self.logdir = logdir
+        self.silencer = silencer
+        self.strm_lvl = 'DEBUG' if not self.silencer else 'CRITICAL'
+        if self.logdir:
+            self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
+        else:
+            self.m_logger = get_fw_logger('launchpad', file_levels=[], stream_level=self.strm_lvl)
 
         connection = MongoClient(host, port)
         self.database = connection[name]
@@ -65,11 +76,15 @@ class LaunchPad(FWSerializable):
         d['name'] = self.name
         d['username'] = self.username
         d['password'] = self.password
+        d['logdir'] = self.logdir
+        d['silencer'] = self.silencer
         return d
 
     @classmethod
     def from_dict(cls, d):
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'])
+        logdir = d.get('logdir', None)
+        silencer = d.get('silencer', False)
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir, silencer)
 
     def reset(self, password, require_password=True):
         """
@@ -86,6 +101,7 @@ class LaunchPad(FWSerializable):
             self.fireworks.remove()
             self.wfconnections.remove()
             self._restart_ids(1, 1)
+            self.m_logger.info('LaunchPad was RESET.')
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
@@ -157,11 +173,11 @@ class LaunchPad(FWSerializable):
         elif fw_decision.action == 'DEFUSE':
             # mark all children as defused
             for cfid in child_fw_ids:
-                self. _update_fw_state(cfid, 'DEFUSED')
+                self._update_fw_state(cfid, 'DEFUSED')
 
         elif fw_decision.action == 'MODIFY':
             for cfid in child_fw_ids:
-                self. _update_fw_spec(cfid, fw_decision.mod_spec['dict_mods'])
+                self._update_fw_spec(cfid, fw_decision.mod_spec['dict_mods'])
 
         elif fw_decision.action == 'DETOUR':
             # TODO: implement
@@ -207,6 +223,7 @@ class LaunchPad(FWSerializable):
         fwf._reassign_ids(old_new)
         self.wfconnections.insert(fwf.to_db_dict())
         self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
+        self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 
     def _insert_fws(self, fws):
