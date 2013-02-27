@@ -58,10 +58,10 @@ We can tell you if:
 * Your problem requires implementing minor extensions or modifications to FireWorks, but FireWorks is still a potential solution
 * Your problem is not easily solved with FireWorks and you should probably look elsewhere!
 
-Getting Started
-===============
+Getting Started!
+================
 
-To get started with FireWorks, we suggest that you follow our core tutorials. The tutorials will guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows.
+To get started with FireWorks, we suggest that you follow our core tutorials. These tutorials will guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows.
 
 .. toctree::
    :maxdepth: 1
@@ -72,12 +72,18 @@ To get started with FireWorks, we suggest that you follow our core tutorials. Th
    workflow_tutorial
    dynamic_wf_tutorial
 
+More!
+=====
+
 Depending on your application, you might also be interested in the following tutorials:
 
 .. toctree::
     :maxdepth: 1
 
     queue_tutorial
+
+Even More!
+==========
 
 Planned future tutorials:
 
