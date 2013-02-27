@@ -9,10 +9,10 @@ firetasks Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`subprocess_task` Module
------------------------------
+:mod:`script_task` Module
+-------------------------
 
-.. automodule:: fireworks.user_objects.firetasks.subprocess_task
+.. automodule:: fireworks.user_objects.firetasks.script_task
     :members:
     :undoc-members:
     :show-inheritance:

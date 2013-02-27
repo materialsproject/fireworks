@@ -10,10 +10,9 @@ e.g. if they are identical.
 
 A FWDecision encapsulates the output of that launch.
 """
-from StringIO import StringIO
-from collections import defaultdict
+
 import datetime
-import tarfile
+from fireworks.core.firetask import FWAction
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -72,9 +71,6 @@ class FireWork(FWSerializable):
 
         return m_dict
 
-    # TODO: consider using a kwarg on the to_dict method, and carrying that over to the serialization class (
-    # to_format, to_file)
-
     def to_db_dict(self):
         """
         """
@@ -94,10 +90,9 @@ class FireWork(FWSerializable):
         return FireWork(tasks, m_dict['spec'], fw_id, ld, state)
 
 
-#TODO: add a decision to the Launch
 class Launch(FWSerializable):
     # TODO: add an expiration date
-    def __init__(self, fworker, host=None, ip=None, launch_dir=None, stored_data=None, start=None, end=None, state=None,
+    def __init__(self, fworker, host=None, ip=None, launch_dir=None, action=None, start=None, end=None, state=None,
                  launch_id=None):
         """
         
@@ -105,7 +100,7 @@ class Launch(FWSerializable):
         :param host: the hostname where the launch took place (probably automatically set)
         :param ip: the ip address where the launch took place (probably automatically set)
         :param launch_dir: the directory on the host where the launch took place (probably automatically set)
-        :param stored_data: data (as dict) to store
+        :param action: The resulting Action from the launch (set after the launch finished)
         :param state: the state of the Launch
         :param launch_id: the id of the Launch for the LaunchPad
         """
@@ -116,14 +111,14 @@ class Launch(FWSerializable):
         self.host = host
         self.ip = ip
         self.launch_dir = launch_dir
-        self.stored_data = stored_data if stored_data else None
+        self.action = action if action else None
         self.start = start if start else datetime.datetime.utcnow()
         self.end = end
         self.state = state
         self.launch_id = launch_id
 
     def to_dict(self):
-        return {'fworker': self.fworker.to_dict(), 'stored_data': self.stored_data, 'start': self.start,
+        return {'fworker': self.fworker.to_dict(), 'action': self.action.to_dict(), 'start': self.start,
                 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
                 'launch_id': self.launch_id}
 
@@ -139,5 +134,6 @@ class Launch(FWSerializable):
     @classmethod
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
-        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], m_dict['stored_data'],
+        action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
+        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], action,
                       m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])

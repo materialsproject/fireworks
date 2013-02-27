@@ -1,6 +1,14 @@
 utilities Package
 =================
 
+:mod:`dict_mods` Module
+-----------------------
+
+.. automodule:: fireworks.utilities.dict_mods
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`fw_serializers` Module
 ----------------------------
 

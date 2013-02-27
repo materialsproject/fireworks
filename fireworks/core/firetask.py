@@ -40,7 +40,7 @@ class FireTaskBase():
         # TODO: add checkpoint function
 
 
-class Action():
+class FWAction():
     """
     TODO: add docs
 
@@ -52,7 +52,7 @@ class Action():
     actions = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'ADD', 'ADDIFY', 'PHOENIX', 'BREAK']
 
     def __init__(self, action, stored_data=None, mod_spec=None):
-        if action not in Action.actions:
+        if action not in FWAction.actions:
             raise ValueError("Invalid action: " + action)
 
         self.action = action
@@ -65,4 +65,4 @@ class Action():
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Action(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
+        return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])

@@ -130,12 +130,28 @@ class LaunchPad(FWSerializable):
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 
+    def get_launch_by_id(self, launch_id):
+        """
+        Given a Launch id, return details of the Launch
+        :param launch_id: launch id
+        :return: Launch object
+        """
+        return Launch.from_dict(self.launches.find_one(launch_id))
+
     def get_fw_by_id(self, fw_id):
         """
         Given a FireWork id, give back a FireWork object
         :param fw_id: FireWork id (int)
+        :return: FireWork object
         """
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})
+
+        # recreate launches from the launch collection
+        launches = []
+        for launch_id in fw_dict['launches']:
+            launches.append(self.get_launch_by_id(launch_id))
+        fw_dict['launches'] = launches
+
         return FireWork.from_dict(fw_dict)
 
     def get_fw_ids(self, query=None, sort=False):
@@ -198,6 +214,7 @@ class LaunchPad(FWSerializable):
         :param host: the host making the request (for creating a Launch object)
         :param ip: the ip making the request (for creating a Launch object)
         :param launch_dir: the dir the FW will be run in (for creating a Launch object)
+        :return: a FireWork, launch_id tuple
         """
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
@@ -206,32 +223,27 @@ class LaunchPad(FWSerializable):
                                               sort=[("spec._priority", DESCENDING)])
         if not m_fw:
             return None, None
+        self.m_logger.debug('Checked out FW with id: {}'.format(m_fw['fw_id']))
 
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
-
-        # insert the launch
         self.launches.insert(m_launch.to_db_dict())
+        self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 
         # add launch to FW
-        self.fireworks.find_and_modify(query={'fw_id': m_fw['fw_id']},
-                                       update={'$push': {'launches': m_launch.launch_id}})
+        self.fireworks.update(query={'fw_id': m_fw['fw_id']}, update={'$push': {'launches': m_launch.launch_id}})
 
         # return FW
-        return self.get_fw_by_id(m_fw['fw_id'])
+        return self.get_fw_by_id(m_fw['fw_id']), launch_id
 
-    def _complete_launch(self, m_fw, launch_id, fw_decision=None):
+    def _complete_launch(self, launch_id, action=None):
         """
         (internal method) used to mark a FireWork's Launch as completed.
-        :param m_fw:
         :param launch_id:
         :param fw_decision: the decision of what to do next
         """
-        # TODO: what happens when multiple FireWorks share the same launch? Technically _complete_launch should only
-        # depend on the launch_id.
-        # You could implement this using a "launches_to_watch" key in FireWorks, and updating all FireWorks where the
-        #  launch_id matches.
+
 
         for launch in m_fw.launches:
             if launch.launch_id == launch_id:

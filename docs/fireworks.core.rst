@@ -57,3 +57,19 @@ core Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`rocket_launcher` Module
+-----------------------------
+
+.. automodule:: fireworks.core.rocket_launcher
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`workflow` Module
+----------------------
+
+.. automodule:: fireworks.core.workflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
