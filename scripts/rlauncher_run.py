@@ -27,17 +27,21 @@ if __name__ == '__main__':
     rapid_parser = subparsers.add_parser('rapidfire',
                                          help='launch multiple Rockets (loop until all FireWorks complete)')
 
-    rapid_parser.add_argument('-s', '--quiet', help='do not print to log', action='store_true')
-
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
 
+    parser.add_argument('--logdir', help='path to a directory for logging', default=None)
+    parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
+    parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
+
     args = parser.parse_args()
+
+    args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
     if args.launchpad_file:
         launchpad = LaunchPad.from_file(args.launchpad_file)
     else:
-        launchpad = LaunchPad()
+        launchpad = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
 
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)
@@ -45,7 +49,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        loop_rocket_run(launchpad, fworker, quiet=args.quiet)
+        loop_rocket_run(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)
 
     else:
-        launch_rocket(launchpad, fworker)
+        launch_rocket(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)

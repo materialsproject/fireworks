@@ -150,6 +150,8 @@ class LaunchPad(FWSerializable):
         """
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})
 
+        if not fw_dict:
+            raise ValueError('No FireWork exists with id: {}'.format(fw_id))
         # recreate launches from the launch collection
         launches = []
         for launch_id in fw_dict['launches']:
@@ -320,19 +322,7 @@ class LaunchPad(FWSerializable):
             for fw_id in changes:
                 self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": changes[fw_id]}})
 
-"""
-    def _insert_children(self, fw_id, child_ids):
-        # TODO: this feels kludgy - we are transforming from dict to Object to dict back to Object back to dict!
-        wfc = WFConnections.from_dict(self.links.find_one({'nodes': fw_id}))
-        wfc_dict = wfc.to_dict()
-        if fw_id in wfc_dict:
-            wfc_dict['children_links'][fw_id].extend(child_ids)
-        else:
-            wfc_dict['children_links'][fw_id] = child_ids
 
-        # TODO: this is a terrible and lazy hack and will bite you later!
-        wfc = WFConnections.from_dict(wfc_dict).to_db_dict()
-        self.links.update({"nodes": fw_id}, {'$set': {'children_links': wfc['children_links']}})
-        self.links.update({"nodes": fw_id}, {'$set': {'parent_links': wfc['parent_links']}})
-        self.links.update({"nodes": fw_id}, {'$pushAll': {'nodes': child_ids}})
-"""
+if __name__ == "__main__":
+    a = LaunchPad()
+    print a.to_format('yaml')

@@ -34,6 +34,8 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
+    stream_level = stream_level if stream_level else 'CRITICAL'
+
     # add handlers for the file_levels
     if l_dir:
         for lvl in file_levels:
@@ -46,7 +48,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
                 logger.addHandler(fh)
                 PREVIOUS_FILE_LOGGERS.append(f_name)
 
-    if stream_level and (name, stream_level) not in PREVIOUS_STREAM_LOGGERS:
+    if (name, stream_level) not in PREVIOUS_STREAM_LOGGERS:
         # add stream handler
         sh = logging.StreamHandler(stream=sys.stdout)
         sh.setLevel(getattr(logging, stream_level))
@@ -54,12 +56,6 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
         logger.addHandler(sh)
         PREVIOUS_STREAM_LOGGERS.append((name, stream_level))
 
-    return logger
-
-
-def get_silent_logger():
-    logger = logging.getLogger('silent_logger')
-    logger.setLevel(logging.CRITICAL)
     return logger
 
 

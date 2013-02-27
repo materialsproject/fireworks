@@ -1,7 +1,7 @@
 import os
 import time
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, get_silent_logger
+from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -11,17 +11,20 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
-def launch_rocket(launchpad, fworker):
+def launch_rocket(launchpad, fworker, logdir=None, strm_lvl=None):
     """
     Run a single rocket in the current directory
     :param launchpad: a LaunchPad object
     :param fworker: a FWorker object
     """
+    l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
+    l_logger.info('Launching Rocket')
     rocket = Rocket(launchpad, fworker)
+    l_logger.info('Rocket finished')
     rocket.run()
 
 
-def loop_rocket_run(launchpad, fworker, m_dir=None, quiet=False):
+def loop_rocket_run(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -32,15 +35,11 @@ def loop_rocket_run(launchpad, fworker, m_dir=None, quiet=False):
     """
     curdir = m_dir if m_dir else os.getcwd()
     # initialize logger
-    if quiet:
-        l_logger = get_silent_logger()
-    else:
-        l_logger = get_fw_logger('rocket.loop', curdir)
-    while True:
+    l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
+
+    while launchpad.run_exists():
         os.chdir(curdir)
         launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
         os.chdir(launcher_dir)
-        l_logger.info('Submitting Rocket')
-        launch_rocket(launchpad, fworker)
-        l_logger.info('Rocket finished')
+        launch_rocket(launchpad, fworker, logdir, strm_lvl)
         time.sleep(0.25)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself

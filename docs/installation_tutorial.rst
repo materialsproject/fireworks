@@ -149,8 +149,8 @@ You'll see the launch information on that FireWork, including the directory wher
 Next steps
 ==========
 
-At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlauncher_run.py rapidfire``. This should give a basic feeling of how you can automate many jobs with FireWorks. It might be a good time to get a snack!
+At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlauncher_run.py rapidfire``. This should give a basic feeling of how you can automate many jobs with FireWorks.
 
-Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node (perhaps through a queuing system), forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you don't expect to ever have any worker nodes.
+Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you don't expect to ever have any worker nodes.
 
 If you don't want to set up worker nodes and instead want to learn how more complex jobs are defined, you can skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.

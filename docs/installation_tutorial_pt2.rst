@@ -21,7 +21,7 @@ On the worker machine, follow the instructions listed at :doc:`Basic FireWorks I
 Reset the FireWorks database
 ----------------------------
 
-1. Back at the FireServer, let's reset our database and add a FireWorks::
+1. Back at the FireServer, let's reset our database and add a FireWork::
 
     lp_run.py reset <TODAY'S DATE>
     lp_run.py add_fw fw_test.yaml
