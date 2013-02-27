@@ -126,7 +126,7 @@ class LaunchPad(FWSerializable):
 
         # insert the WFLinks
         self.links.insert(wf.to_db_dict())
-        self._refresh_wf(wf.nodes[0])  # wf.nodes[0] is any fw_id in this workflow
+        self._refresh_wf(wf)
 
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
@@ -269,14 +269,13 @@ class LaunchPad(FWSerializable):
             # get the workflow
             wf = self.get_wf_from_fw_id(fw_id)
             # update the workflow object using the action
-            updated_fws = wf.apply_action(action)
+            updated_fws = wf.apply_action(action, fw_id)
             # reinsert each of the updated fws
             self._upsert_fws(updated_fws)
-
-
-
-        self.fireworks.update({"fw_id": m_fw.fw_id}, m_fw.to_db_dict())
-        self._refresh_wf(m_fw.fw_id)
+            # redo the links
+            self.links.update({'nodes': fw_id}, wf.to_db_dict())
+            # refresh the FW states
+            self._refresh_wf(wf)
 
     def get_new_fw_id(self):
         """
@@ -297,10 +296,22 @@ class LaunchPad(FWSerializable):
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-            self.fireworks.update({'fw_id': fw.fw_id, fw.to_db_dict(), upsert=True)
+            self.fireworks.update({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
 
         return old_new
 
+    def _refresh_wf(self, wf):
+
+        """
+        Update the FW state of all jobs in workflow
+        :param wf: a Workflow object
+        """
+
+        changes = wf.refresh()  # return dict of fw_id: state
+        for fw_id in changes:
+            self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": changes[fw_id]}})
+
+"""
     def _insert_children(self, fw_id, child_ids):
         # TODO: this feels kludgy - we are transforming from dict to Object to dict back to Object back to dict!
         wfc = WFConnections.from_dict(self.links.find_one({'nodes': fw_id}))
@@ -315,77 +326,4 @@ class LaunchPad(FWSerializable):
         self.links.update({"nodes": fw_id}, {'$set': {'children_links': wfc['children_links']}})
         self.links.update({"nodes": fw_id}, {'$set': {'parent_links': wfc['parent_links']}})
         self.links.update({"nodes": fw_id}, {'$pushAll': {'nodes': child_ids}})
-
-    def _refresh_wf(self, fw_id):
-
-        """
-        Update the FW state of all affected FWs
-        :param fw_id:
-        """
-
-        # get the workflow containing this fw_id
-        wf_dict = self.links.find_one({'nodes': fw_id})
-
-        updated_nodes = set()
-
-        while len(updated_nodes) != len(wf_dict['nodes']):
-            for fw_id in wf_dict['nodes']:
-                if str(fw_id) not in wf_dict['parent_links']:
-                    self._refresh_fw(fw_id, [])
-                    updated_nodes.add(fw_id)
-                else:
-                    # if all parents are updated, update it
-                    if all(parent in updated_nodes for parent in wf_dict['parent_links'][str(fw_id)]):
-                        self._refresh_fw(fw_id, wf_dict['parent_links'][str(fw_id)])
-                        updated_nodes.add(fw_id)
-
-    def _get_fw_state(self, fw_id):
-        return self.fireworks.find_one({"fw_id": fw_id}, {"state": True})['state']
-
-    def _update_fw_state(self, fw_id, m_state):
-        self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": m_state}})
-
-    def _update_fw_spec(self, fw_id, modder_dicts):
-        fw = self.get_fw_by_id(fw_id)
-
-        for mod in modder_dicts:
-            apply_mod(mod, fw.spec)
-
-        self.fireworks.update({"fw_id": fw.fw_id}, fw.to_db_dict())
-
-    def _refresh_fw(self, fw_id, parent_ids):
-        # if we are defused, just skip this whole thing
-        if self._get_fw_state(fw_id) == 'DEFUSED':
-            return
-
-        m_state = None
-
-        # what are the parent states?
-        parent_states = [self._get_fw_state(p) for p in parent_ids]
-
-        if len(parent_ids) != 0 and not all([s == 'COMPLETED' for s in parent_states]):
-            m_state = 'WAITING'
-
-        elif any([s == 'CANCELED' for s in parent_states]):
-            m_state = 'CANCELED'
-
-        else:
-            # my state depends on launch
-            launches = self.get_launches(fw_id)
-            max_score = 0
-            m_state = 'READY'
-
-            for l in launches:
-                if LAUNCH_RANKS[l.state] > max_score:
-                    max_score = LAUNCH_RANKS[l.state]
-                    m_state = l.state
-
-        self._update_fw_state(fw_id, m_state)
-
-    def get_launches(self, fw_id):
-        """
-        Given a FireWork id, give back a FireWork object
-        :param fw_id: FireWork id (int)
-        """
-        launches = self.fireworks.find_one({'fw_id': fw_id}, {'launches': 1})['launches']
-        return [Launch.from_dict(l) for l in launches]
+"""

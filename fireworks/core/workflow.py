@@ -74,6 +74,39 @@ class Workflow(FWSerializable):
 
     def apply_action(self, action):
         return []
+
+    def refresh(self):
+        return {}
+        """
+        def _refresh_fw(self, fw_id, parent_ids):
+            # if we are defused, just skip this whole thing
+        if self._get_fw_state(fw_id) == 'DEFUSED':
+            return
+
+        m_state = None
+
+        # what are the parent states?
+        parent_states = [self._get_fw_state(p) for p in parent_ids]
+
+        if len(parent_ids) != 0 and not all([s == 'COMPLETED' for s in parent_states]):
+            m_state = 'WAITING'
+
+        elif any([s == 'CANCELED' for s in parent_states]):
+            m_state = 'CANCELED'
+
+        else:
+            # my state depends on launch
+            launches = self.get_launches(fw_id)
+            max_score = 0
+            m_state = 'READY'
+
+            for l in launches:
+                if LAUNCH_RANKS[l.state] > max_score:
+                    max_score = LAUNCH_RANKS[l.state]
+                    m_state = l.state
+
+        self._update_fw_state(fw_id, m_state)
+        """
         """
         # get the wf_dict
         wfc = WFConnections.from_dict(self.links.find_one({'nodes': m_fw.fw_id}))
