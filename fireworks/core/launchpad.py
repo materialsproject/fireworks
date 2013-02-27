@@ -4,13 +4,13 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
-from fireworks.core.firework import WFConnections
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
+from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
-from fireworks.core.firework import FireWork, Launch, FWorkflow
+from fireworks.core.firework import FireWork, Launch
 from pymongo import DESCENDING
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -43,7 +43,7 @@ class LaunchPad(FWSerializable):
         :param username:
         :param password:
         :param logdir
-        :param quiet
+        :param strm_lvl
         """
         self.host = host
         self.port = port
@@ -63,20 +63,14 @@ class LaunchPad(FWSerializable):
 
         self.fireworks = self.database.fireworks
         self.fw_id_assigner = self.database.fw_id_assigner
-        self.wfconnections = self.database.wfconnections
+        self.links = self.database.links
 
     def to_dict(self):
         """
         Note: usernames/passwords are exported as unencrypted Strings!
         """
-        d = {}
-        d['host'] = self.host
-        d['port'] = self.port
-        d['name'] = self.name
-        d['username'] = self.username
-        d['password'] = self.password
-        d['logdir'] = self.logdir
-        d['strm_lvl'] = self.strm_lvl
+        d = {'host': self.host, 'port': self.port, 'name': self.name, 'username': self.username,
+             'password': self.password, 'logdir': self.logdir, 'strm_lvl': self.strm_lvl}
         return d
 
     @classmethod
@@ -92,42 +86,44 @@ class LaunchPad(FWSerializable):
         be entered.
         :param password: A String representing today's date, e.g. '2012-12-31'
         :param require_password: Whether a password is required to reset the DB. Highly \
-        recommended to leave this set to True, otherwise you are inviting dangerous behavior!
+        recommended to leave this set to True, otherwise you are inviting disaster!
         """
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
         if password == m_password or not require_password:
             self.fireworks.remove()
-            self.wfconnections.remove()
+            self.links.remove()
             self._restart_ids(1, 1)
             self.m_logger.info('LaunchPad was RESET.')
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
-    def perform_maintainence(self):
-        self.m_logger.info('Performing Maintenance on Launchpad, please wait....')
+    def maintain(self):
+        self.m_logger.info('Performing maintenance on Launchpad, please wait....')
 
         # TODO: add more indices! e.g. launches id, nodes on the WFLinks
         self.fireworks.ensure_index('fw_id', unique=True)
 
         self.m_logger.info('LaunchPad was MAINTAINED.')
 
-    def add_wf(self, fwf):
+    def add_wf(self, wf):
         """
 
-        :param fwf: an FWorkflow object.
+        :param wf: a Workflow object.
         """
-
-        if isinstance(fwf, FireWork):
-            fwf = FWorkflow.from_FireWork(fwf)
+        if isinstance(wf, FireWork):
+            wf = Workflow.from_FireWork(wf)
 
         # insert the FireWorks and get back mapping of old to new ids
-        old_new = self._insert_fws(fwf.id_fw.values())
+        old_new = self._insert_fws(wf.id_fw.values())
 
-        # redo the FWorkflow based on new mappings
-        fwf._reassign_ids(old_new)
-        self.wfconnections.insert(fwf.to_db_dict())
-        self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
+        # redo the Workflow based on new mappings
+        wf._reassign_ids(old_new)
+
+        # insert the WFLinks
+        self.links.insert(wf.to_db_dict())
+        self._refresh_wf(wf.nodes[0])  # wf.nodes[0] is any fw_id in this workflow
+
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 
@@ -139,15 +135,15 @@ class LaunchPad(FWSerializable):
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})
         return FireWork.from_dict(fw_dict)
 
-    def get_fw_ids(self, query=None):
+    def get_fw_ids(self, query=None, sort=False):
         """
-        Return all the fw ids that match a query
+        Return all the fw ids that match a query,
         :param query: a dict representing a Mongo query
         """
         fw_ids = []
         criteria = query if query else {}
-
-        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=[("spec._priority", DESCENDING)]):
+        sort = [("spec._priority", DESCENDING)] if sort else None
+        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort):
             fw_ids.append(fw["fw_id"])
 
         return fw_ids
@@ -155,6 +151,7 @@ class LaunchPad(FWSerializable):
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
         (internal method) Used to reset id counters
+
         :param next_fw_id: id to give next FireWork (int)
         :param next_launch_id: id to give next Launch (int)
         """
@@ -210,7 +207,7 @@ class LaunchPad(FWSerializable):
                 break
 
         # get the wf_dict
-        wfc = WFConnections.from_dict(self.wfconnections.find_one({'nodes': m_fw.fw_id}))
+        wfc = WFConnections.from_dict(self.links.find_one({'nodes': m_fw.fw_id}))
         # get all the children
         child_fw_ids = wfc.children_links[m_fw.fw_id]
 
@@ -269,7 +266,7 @@ class LaunchPad(FWSerializable):
 
     def _insert_children(self, fw_id, child_ids):
         # TODO: this feels kludgy - we are transforming from dict to Object to dict back to Object back to dict!
-        wfc = WFConnections.from_dict(self.wfconnections.find_one({'nodes': fw_id}))
+        wfc = WFConnections.from_dict(self.links.find_one({'nodes': fw_id}))
         wfc_dict = wfc.to_dict()
         if fw_id in wfc_dict:
             wfc_dict['children_links'][fw_id].extend(child_ids)
@@ -278,9 +275,9 @@ class LaunchPad(FWSerializable):
 
         # TODO: this is a terrible and lazy hack and will bite you later!
         wfc = WFConnections.from_dict(wfc_dict).to_db_dict()
-        self.wfconnections.update({"nodes": fw_id}, {'$set': {'children_links': wfc['children_links']}})
-        self.wfconnections.update({"nodes": fw_id}, {'$set': {'parent_links': wfc['parent_links']}})
-        self.wfconnections.update({"nodes": fw_id}, {'$pushAll': {'nodes': child_ids}})
+        self.links.update({"nodes": fw_id}, {'$set': {'children_links': wfc['children_links']}})
+        self.links.update({"nodes": fw_id}, {'$set': {'parent_links': wfc['parent_links']}})
+        self.links.update({"nodes": fw_id}, {'$pushAll': {'nodes': child_ids}})
 
     def _refresh_wf(self, fw_id):
 
@@ -290,7 +287,7 @@ class LaunchPad(FWSerializable):
         """
 
         # get the workflow containing this fw_id
-        wf_dict = self.wfconnections.find_one({'nodes': fw_id})
+        wf_dict = self.links.find_one({'nodes': fw_id})
 
         updated_nodes = set()
 
@@ -359,8 +356,8 @@ class LaunchPad(FWSerializable):
 if __name__ == "__main__":
     lp = LaunchPad()
     lp.reset('2013-02-19')
-    fwf = FWorkflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
-    lp.add_wf(fwf)
+    wf = Workflow.from_tarfile('../../fw_tutorials/workflow/hello.tar')
+    lp.add_wf(wf)
     fworker = FWorker()
     rocket = Rocket(lp, fworker)
     rocket.run()
