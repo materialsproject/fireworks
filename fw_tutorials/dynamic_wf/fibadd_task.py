@@ -26,11 +26,12 @@ class FibonacciAdderTask(FireTaskBase, FWSerializable):
         m_sum = smaller + larger
 
         if m_sum < 100:
-            print "The next Fibonacci number is: {}".format(m_sum)
+            print 'The next Fibonacci number is: {}'.format(m_sum)
             # create a new Fibonacci Adder to add to the workflow
             new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
-            return FWDecision('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw.to_dict()]})
+            return FWDecision('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
 
         else:
+            print 'We have now exceeded our limit; (the next Fibonacci number would have been: {})'.format(m_sum)
             return FWDecision('CONTINUE')
 

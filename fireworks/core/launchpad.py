@@ -167,8 +167,8 @@ class LaunchPad(FWSerializable):
             # TODO: implement
             raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
         elif fw_decision.action == 'ADD':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
+            old_new = self._insert_fws(fw_decision.mod_spec['add_fws'])
+            self._insert_children(m_fw.fw_id, old_new.values())
         elif fw_decision.action == 'ADDIFY':
             # TODO: implement
             raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
@@ -191,7 +191,6 @@ class LaunchPad(FWSerializable):
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
-
     def insert_wf(self, fwf):
         """
 
@@ -201,11 +200,19 @@ class LaunchPad(FWSerializable):
         if isinstance(fwf, FireWork):
             fwf = FWorkflow.from_FireWork(fwf)
 
+        # insert the FireWorks and get back mapping of old to new ids
+        old_new = self._insert_fws(fwf.id_fw.values())
+
+        # redo the FWorkflow based on new mappings
+        fwf._reassign_ids(old_new)
+        self.wfconnections.insert(fwf.to_db_dict())
+        self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
+        return old_new
+
+    def _insert_fws(self, fws):
         # mapping between old and new FireWork ids
         old_new = {}
-
-        # insert the FireWorks
-        for fw in fwf.id_fw.itervalues():
+        for fw in fws:
             if not fw.fw_id or fw.fw_id < 0:
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
@@ -213,10 +220,22 @@ class LaunchPad(FWSerializable):
 
             self.fireworks.insert(fw.to_db_dict())
 
-        # redo the FWorkflow based on new mappings
-        fwf._reassign_ids(old_new)
-        self.wfconnections.insert(fwf.to_db_dict())
-        self._refresh_wf(fwf.nodes[0])  # fwf.nodes[0] is any fw_id in this workflow
+        return old_new
+
+    def _insert_children(self, fw_id, child_ids):
+        # TODO: this feels kludgy - we are transforming from dict to Object to dict back to Object back to dict!
+        wfc = WFConnections.from_dict(self.wfconnections.find_one({'nodes': fw_id}))
+        wfc_dict = wfc.to_dict()
+        if fw_id in wfc_dict:
+            wfc_dict['children_links'][fw_id].extend(child_ids)
+        else:
+            wfc_dict['children_links'][fw_id] = child_ids
+
+        # TODO: this is a terrible and lazy hack and will bite you later!
+        wfc = WFConnections.from_dict(wfc_dict).to_db_dict()
+        self.wfconnections.update({"nodes": fw_id}, {'$set': {'children_links': wfc['children_links']}})
+        self.wfconnections.update({"nodes": fw_id}, {'$set': {'parent_links': wfc['parent_links']}})
+        self.wfconnections.update({"nodes": fw_id}, {'$pushAll': {'nodes': child_ids}})
 
     def _refresh_wf(self, fw_id):
 

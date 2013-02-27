@@ -320,6 +320,11 @@ class FWDecision():
             raise ValueError('Cannot {} and also define a mod spec!'.format(self.action))
         elif self.action == 'MODIFY' and (len(self.mod_spec) != 1 or 'dict_mods' not in self.mod_spec):
             raise ValueError('Invalid mod spec for MODIFY action!')
+        elif self.action == 'ADD' and (len(self.mod_spec) != 1 or 'add_fws' not in self.mod_spec):
+            raise ValueError('Invalid mod spec for ADD action!')
+
+        #else:
+        #    raise NotImplementedError('Action {} has not been implemented yet!'.format(self.action))
 
 
 

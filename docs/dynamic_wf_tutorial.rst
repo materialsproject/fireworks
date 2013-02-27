@@ -70,13 +70,108 @@ You've now successfully completed an example of passing information between work
 A Fibonacci Adder
 =================
 
-Sometimes, you don't know in advance how many workflow steps you require to achieve a result. For example, let's say we had a FireTask capable of adding two numbers together and we wanted to generate all the `Fibonacci numbers <http://en.wikipedia.org/wiki/Fibonacci_number>`_ less than 100. To achieve this, we need a FireTask that does the following:
+Sometimes, you don't know in advance how many workflow steps you require to achieve a result. For example, let's generate all the `Fibonacci numbers <http://en.wikipedia.org/wiki/Fibonacci_number>`_ less than 100, but only using a single addition in each FireWork.
+
+We will start with a single FireWork that contains the start of the sequence (0, 1). This FireWork will generate the next Fibonacci number in the sequence by addition, and then generate its own child FireWork that to carry out the next addition operation. That child will in turn generate its own children. Starting from a single FireWork, we will end up with as many FireWorks as are needed to generate all the Fibonacci numbers less than 100.
+
+A diagram of our the operation of our single FireWork looks like this:
+
+.. image:: _static/fibnum_wf.png
+   :width: 200px
+   :align: center
+   :alt: Fibonacci Number Workflow
+
+
+Our single FireWork will contain a custom FireTask that does the following:
 
 * Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).
 * If this next Fibonacci number is less than 100:
     * print it
-    * since we are not done yet, create another FireWork that will sum the larger of our inputs and the new Fibonacci number we just found. In our example, this would mean to create a new FireWork with inputs 1 and 1.
-* When the next Fibonacci number is greater than 100, stop the workflow.
+    * create its own child FireWork that will sum the larger of our inputs and the new Fibonacci number we just found. In our example, this would mean to create a new FireWork with inputs 1 and 1.
+    * this new FireWork will output the next Fibonacci number (2), and then create its own child FireWork to continue the sequence (not shown)
 
+* When the next Fibonacci number is greater than 100, print a message that we have exceeded our limit and stop the workflow.
 
-* Each new Fibonacci number is the sum of the previous two Fibonacci numbers. Given two Fibonacci numbers as inputs, we can generate the next one by summing them. To get the next Fibonnaci number after *that*, we need to add that sum to the larger of the
+So now we have FireWorks generating other FireWorks, completely automatically! Let's see how this is achieved:
+
+1. Move to the ``dynamic_wf`` tutorial directory on your FireServer::
+
+    cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
+
+#. The initial FireWork is in the file ``fw_fibnum.yaml``. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, and asking to run the ``Fibonacci Adder Task``.
+
+#. The dynamicism is in the ``Fibonacci Adder Task``, which is defined in the file ``fibadd_task.py``. Look inside this file.
+
+    * The most important part of the code are the lines::
+
+        new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
+        return FWDecision('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
+
+    * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
+    * Next, we are returning an instruction to *ADD* a child FireWork to the workflow.
+    * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
+    * The *{'add_fws': [new_fw]}* means that we just want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *add_fws* key is a special key that can be defined when returning an *ADD* instruction.
+
+#. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
+
+    launchpad_run.py initialize <TODAY'S DATE>
+    launchpad_run.py insert_single_fw fw_fibnum.yaml
+    launchpad_run.py get_fw_ids
+
+#. That last command should prove that there is only one FireWork in the database. Let's run it::
+
+    rocket_launcher_run.py singleshot
+
+#. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one FireWork, one Rocket. But let's try to again to get all the FireWorks in the database::
+
+    launchpad_run.py get_fw_ids
+
+#. Now there are two FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
+
+    rocket_launcher_run.py singleshot
+
+#. This should print out the next Fibonacci number (2). You can repeat this until our FireTask detects we have gone above our limit of 100::
+
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 3
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 5
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 8
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 13
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 21
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 34
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 55
+    $ rocket_launcher_run.py singleshot
+    The next Fibonacci number is: 89
+    $ rocket_launcher_run.py singleshot
+    We have now exceeded our limit; (the next Fibonacci number would have been: 144)
+
+#. If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We'll instead look at all the different FireWorks created dynamically by our program:
+
+    launchpad_run.py get_fw_ids
+
+There are 11 FireWorks in all, and 10 of them were created dynamically!
+
+A Fibonacci Adder: The Quick Way
+================================
+
+Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
+
+    launchpad_run.py insert_single_fw fw_fibnum.yaml
+    rocket_launcher_run.py rapidfire --silencer
+
+That was quick!
+
+.. note:: The rapidfire option creates a new directory for each launch. At the end of the last script you will have many directories starting with ``launcher_``. You might want to clean these up after running (or store them for future provenance!)
+
+The end is just the beginning
+=============================
+
+You've made it to the end of the core tutorial! By now you should have a good feeling for the basic operation of FireWorks and the types of automation it allows. However, it is certainly not the end of the story. Job priorities, duplicate job detection, and running through queues are just some of the features we haven't discussed in the core tutorial.
+
+If you are already itching to learn more about additional topics, please follow the additional tutorials on our main page. Otherwise, have fun playing with FireWorks! As always, let us know what you think.
