@@ -18,7 +18,7 @@ PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already b
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
 
 
-def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER,
+def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER,
                   clear_logs=False):
     """
     Convenience method to return a logger.
@@ -35,15 +35,16 @@ def get_fw_logger(name, l_dir='.', file_levels=('DEBUG', 'ERROR'), stream_level=
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
     # add handlers for the file_levels
-    for lvl in file_levels:
-        f_name = os.path.join(l_dir, name.replace('.', '_') + '-' + lvl.lower() + '.log')
-        mode = 'w' if clear_logs else 'a'
-        fh = logging.FileHandler(f_name, mode=mode)
-        fh.setLevel(getattr(logging, lvl))
-        fh.setFormatter(formatter)
-        if f_name not in PREVIOUS_FILE_LOGGERS:
-            logger.addHandler(fh)
-            PREVIOUS_FILE_LOGGERS.append(f_name)
+    if l_dir:
+        for lvl in file_levels:
+            f_name = os.path.join(l_dir, name.replace('.', '_') + '-' + lvl.lower() + '.log')
+            mode = 'w' if clear_logs else 'a'
+            fh = logging.FileHandler(f_name, mode=mode)
+            fh.setLevel(getattr(logging, lvl))
+            fh.setFormatter(formatter)
+            if f_name not in PREVIOUS_FILE_LOGGERS:
+                logger.addHandler(fh)
+                PREVIOUS_FILE_LOGGERS.append(f_name)
 
     if stream_level and (name, stream_level) not in PREVIOUS_STREAM_LOGGERS:
         # add stream handler

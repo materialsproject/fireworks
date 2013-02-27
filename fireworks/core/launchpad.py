@@ -34,7 +34,7 @@ class LaunchPad(FWSerializable):
     """
 
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, quiet=False):
+                 logdir=None, strm_lvl=None):
         """
         
         :param host:
@@ -52,14 +52,9 @@ class LaunchPad(FWSerializable):
         self.password = password
 
         # set up logger
-        # TODO: move the logdir and quiet stuff into the fw_utility method
         self.logdir = logdir
-        self.quiet = quiet
-        self.strm_lvl = 'DEBUG' if not self.quiet else 'CRITICAL'
-        if self.logdir:
-            self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
-        else:
-            self.m_logger = get_fw_logger('launchpad', file_levels=[], stream_level=self.strm_lvl)
+        self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
+        self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
         connection = MongoClient(host, port)
         self.database = connection[name]
@@ -81,14 +76,14 @@ class LaunchPad(FWSerializable):
         d['username'] = self.username
         d['password'] = self.password
         d['logdir'] = self.logdir
-        d['quiet'] = self.quiet
+        d['strm_lvl'] = self.strm_lvl
         return d
 
     @classmethod
     def from_dict(cls, d):
         logdir = d.get('logdir', None)
-        quiet = d.get('quiet', False)
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir, quiet)
+        strm_lvl = d.get('strm_lvl', None)
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir, strm_lvl)
 
     def reset(self, password, require_password=True):
         """
