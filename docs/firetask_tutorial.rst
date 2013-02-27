@@ -2,17 +2,17 @@
 Defining Jobs using FireTasks
 ============================
 
-In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled ``Subprocess Task``::
+In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled ``Script Task``::
 
     fw_id: -1
     spec:
       _tasks:
-      - _fw_name: Subprocess Task
+      - _fw_name: Script Task
         parameters:
           script: echo "howdy, your job launched successfully!" >> howdy.txt
           use_shell: true
 
-The ``Subprocess Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Subprocess Task`` is Python code that runs an arbitrary shell script that you give it, so you can use the ``SubProcess Task`` to run almost any job (without worrying that it's all done within a Python layer). In this section, we'll demonstrate how to use and define FireTasks.
+The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` is Python code that runs an arbitrary shell script that you give it, so you can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). In this section, we'll demonstrate how to use and define FireTasks.
 
 This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
@@ -25,16 +25,16 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-2. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Subprocess Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+2. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Script Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
 
     fw_id: -1
     spec:
       _tasks:
-      - _fw_name: Subprocess Task
+      - _fw_name: Script Task
         parameters:
           script: echo "howdy, your job launched successfully!" > howdy.txt
           use_shell: true
-      - _fw_name: Subprocess Task
+      - _fw_name: Script Task
         parameters:
           script: wc -w < howdy.txt > words.txt
           use_shell: true
@@ -52,7 +52,7 @@ You should see two files written out to the system, ``howdy.txt`` and ``words.tx
 
 .. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you should consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. Or, you could define a single custom FireTask that performs multiple steps internally (the `custodian <https://pypi.python.org/pypi/custodian>`_ Python package is one option to help achieve this).
 
-Using SubprocessTask
+Using ScriptTask
 --------------------
 
 While running arbitrary shell scripts is nice, it's not particularly well-organized. The command (``echo``), its arguments (``"howdy, your job launched successfully!"``), and its output (``howdy.txt``) are all intermingled within the same line. If we separated these components, it would be easier to do a data-parallel task where the same commands are run for multiple arguments. Let's explore a better way to define our multi-step job:
@@ -66,12 +66,12 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
     fw_id: -1
     spec:
       _tasks:
-      - _fw_name: Subprocess Task
+      - _fw_name: Script Task
         parameters:
           script: cat -t
           stdin_key: echo_text
           stdout_file: howdy.txt
-      - _fw_name: Subprocess Task
+      - _fw_name: Script Task
         parameters:
           script: wc -w
           stdin_file: howdy.txt
@@ -90,9 +90,9 @@ At this point, you might want to change the ``echo_text`` parameter to something
 Creating a custom FireTask
 --------------------------
 
-Because the ``Subprocess Task`` can run arbitrary shell scripts, it can in theory run any type of job and is an 'all-encompassing' FireTask. However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks (job templates) for the codes you run. A custom FireTask can clarify the usage of your code and guard against unintended behavior by restricting the commands that can be executed.
+Because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of job and is an 'all-encompassing' FireTask. However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks (job templates) for the codes you run. A custom FireTask can clarify the usage of your code and guard against unintended behavior by restricting the commands that can be executed.
 
-Even if you plan to only use ``Subprocess Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows with this FireTask:
+Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows with this FireTask:
 
 1. Navigate to the tasks tutorial directory and remove any output from the previous step::
 

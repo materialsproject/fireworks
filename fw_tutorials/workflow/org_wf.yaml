@@ -2,28 +2,28 @@ fws:
 - fw_id: -1
   spec:
     _tasks:
-    - _fw_name: Subprocess Task
+    - _fw_name: Script Task
       parameters:
         script: echo 'Ingrid is CEO.'
         use_shell: true
 - fw_id: -2
   spec:
     _tasks:
-    - _fw_name: Subprocess Task
+    - _fw_name: Script Task
       parameters:
         script: echo 'Jack is a manager.'
         use_shell: true
 - fw_id: -3
   spec:
     _tasks:
-    - _fw_name: Subprocess Task
+    - _fw_name: Script Task
       parameters:
         script: echo 'Jill is a manager.'
         use_shell: true
 - fw_id: -4
   spec:
     _tasks:
-    - _fw_name: Subprocess Task
+    - _fw_name: Script Task
       parameters:
         script: echo 'Kip is an intern.'
         use_shell: true

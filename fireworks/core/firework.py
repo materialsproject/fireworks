@@ -184,8 +184,8 @@ class FWDecision():
 
 """
 if __name__ == "__main__":
-    a = FireWork(SubprocessTask.from_str("echo 'To be, or not to be,' > hamlet.txt"), {}, fw_id=-1)
-    b = FireWork(SubprocessTask.from_str("echo 'that is the question:' >> hamlet.txt"), {}, fw_id=-2)
+    a = FireWork(ScriptTask.from_str("echo 'To be, or not to be,' > hamlet.txt"), {}, fw_id=-1)
+    b = FireWork(ScriptTask.from_str("echo 'that is the question:' >> hamlet.txt"), {}, fw_id=-2)
     c = WFConnections({-1: -2})
 
     fwf = FWorkflow([a, b], c)

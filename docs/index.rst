@@ -87,7 +87,7 @@ Planned future tutorials:
 * Maintaining the FW database and dealing with crashed jobs
 * Detailed tutorial on implementing dynamic jobs
 * Securing the FW database
-* Detailed tutorial on SubProcess Task
+* Detailed tutorial on Script Task
 * File movement Task Operations
 * Database Task Operations
 * Assigning specific FireWorkers to run certain jobs

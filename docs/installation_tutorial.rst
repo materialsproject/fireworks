@@ -59,7 +59,7 @@ This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into
     "spec": {
         "_tasks": [
             {
-                "_fw_name": "Subprocess Task",
+                "_fw_name": "Script Task",
                 "parameters": {
                     "use_shell": true,
                     "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
@@ -76,7 +76,7 @@ Notice the part of the FireWork that reads: ``echo "howdy, your job launched suc
 
 You have now stored a FireWork in the database! It is now ready to be launched (state = ``READY``).
 
-.. note:: More details on using the ``SubProcessTask`` are presented in the later tutorials.
+.. note:: More details on using the ``ScriptTask`` are presented in the later tutorials.
 
 Launch a Rocket on the FireServer
 =================================

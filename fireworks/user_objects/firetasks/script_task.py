@@ -16,8 +16,8 @@ __date__ = 'Feb 18, 2013'
 # TODO: add maximum length of 10,000 chars for stored fields
 
 
-class SubprocessTask(FireTaskBase, FWSerializable):
-    _fw_name = "Subprocess Task"
+class ScriptTask(FireTaskBase, FWSerializable):
+    _fw_name = "Script Task"
 
     def __init__(self, parameters):
         self.parameters = parameters
@@ -28,7 +28,7 @@ class SubprocessTask(FireTaskBase, FWSerializable):
         self.stdin_file = parameters.get('stdin_file', None)
         self.stdin_key = parameters.get('stdin_key', None)
         if self.stdin_file and self.stdin_key:
-            raise ValueError("Subprocess Task cannot process both a key and file as the standard in!")
+            raise ValueError("Script Task cannot process both a key and file as the standard in!")
 
         self.use_shlex = parameters.get('use_shlex', True)
         self.script = str(parameters['script'])  # Mongo loves unicode, shlex hates it
@@ -97,4 +97,4 @@ class SubprocessTask(FireTaskBase, FWSerializable):
 
     @classmethod
     def from_str(cls, shell_cmd):
-        return SubprocessTask({"script": shell_cmd, "use_shell": True})
+        return ScriptTask({"script": shell_cmd, "use_shell": True})
