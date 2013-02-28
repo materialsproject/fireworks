@@ -27,6 +27,9 @@ if __name__ == '__main__':
     rapid_parser = subparsers.add_parser('rapidfire',
                                          help='launch multiple Rockets (loop until all FireWorks complete)')
 
+    rapid_parser.add_argument('--infinite', help='loop forever', action='store_true')
+    rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
+
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
 
@@ -49,7 +52,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)
+        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep)
 
     else:
-        launch_rocket(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)
+        launch_rocket(launchpad, fworker, args.logdir, args.loglvl)
