@@ -321,8 +321,3 @@ class LaunchPad(FWSerializable):
             updated_ids = wf.refresh(fw_id)  # return dict of fw_id: state
             for fw_id in updated_ids:
                 self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": wf.id_fw[fw_id].state}})
-
-
-if __name__ == "__main__":
-    a = LaunchPad()
-    print a.to_format('yaml')
