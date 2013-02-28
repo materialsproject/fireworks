@@ -123,7 +123,7 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
  * This FireTask first reads the **input_array** parameter of the FireWork's **spec**.
  * It then sums all the values it finds in the **input_array** parameter of the FireWork's **spec** using Python's ``sum()`` function.
  * The FireTask then prints both the inputs and the sum to the standard out.
- * Finally, the task returns a *FWAction* object. We'll discuss this object in greater detail in future tutorials. For now, it is sufficient to know that this is an instruction that says we should *CONTINUE* with the workflow, and store the sum we computed in the database (inside the FireWork).
+ * Finally, the task returns a *FWAction* object. We'll discuss this object in greater detail in future tutorials. For now, it is sufficient to know that this is an instruction that says we should *CONTINUE* with the workflow, and store the sum we computed in the database (inside the FireWork's ``stored_data`` section).
 
 #. Now let's define a FireWork that runs this FireTask to add the numbers ``1`` and ``2``. Look inside the file ``fw_adder.yaml`` for this new FireWork definition::
 
@@ -145,6 +145,10 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 	lp_run.py reset <TODAY'S DATE>
 	lp_run.py add_wf fw_adder.yaml
 	rlauncher_run.py singleshot
+
+# Confirm that the *sum* is not only printed to the screen, but also stored in our FireWork in the ``stored_data`` section::
+
+    lp_run.py get_fw 1
 
 Next up: Workflows!
 -------------------
