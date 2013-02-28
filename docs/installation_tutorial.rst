@@ -78,7 +78,7 @@ This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into
 3. Some of the FireWork is straightforward, but a few sections deserve further explanation:
 
 * The **spec** of the FireWork contains *all* the information about what job to run and the parameters needed to run it.
-* Within the spec, **_tasks** section tells you what jobs will run. The ``Script Task`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**.
+* Within the **spec**, the **_tasks** section tells you what jobs will run. The ``Script Task`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**.
 * This FireWork runs the command ``echo "howdy, your job launched successfully!" >> howdy.txt"``, which prints text to a file named ``howdy.txt``.
 * The **state** of *READY* means the FireWork is ready to be run.
 
@@ -175,7 +175,7 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 
     ls -d launcher_*
 
-    You should see two directories, one for each FireWork we inserted.
+   You should see two directories, one for each FireWork we inserted.
 
 5. You can continue adding FireWorks as desired; the Rocket Launcher will run them automatically and create a new directory for each job. When you are finished, you can exit out of the Rocket Launcher terminal window and delete your working directory.
 
