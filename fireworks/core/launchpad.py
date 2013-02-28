@@ -127,7 +127,10 @@ class LaunchPad(FWSerializable):
 
         # insert the WFLinks
         self.links.insert(wf.to_db_dict())
-        self._refresh_wf(wf)
+
+        # refresh WF states, starting from roots
+        for fw_id in wf.root_fw_ids:
+            self._refresh_wf(wf, fw_id)
 
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
@@ -283,7 +286,7 @@ class LaunchPad(FWSerializable):
             # redo the links
             self.links.update({'nodes': fw_id}, wf.to_db_dict())
             # refresh the FW states
-            self._refresh_wf(wf)
+            self._refresh_wf(wf, fw_id)
 
     def get_new_fw_id(self):
         """
@@ -308,16 +311,13 @@ class LaunchPad(FWSerializable):
 
         return old_new
 
-    def _refresh_wf(self, wf):
+    def _refresh_wf(self, wf, fw_id):
 
         """
         Update the FW state of all jobs in workflow
         :param wf: a Workflow object
+        :param fw_id: the parent fw_id - children will be refreshed
         """
-        changes = {}
-
-        # TODO: make this not suck. Go in order of parents to children and make this a supported method in Workflow
-        for fw_id in wf.id_fw.keys():
-            updated_ids = wf.refresh(fw_id)  # return dict of fw_id: state
-            for fw_id in updated_ids:
-                self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": wf.id_fw[fw_id].state}})
+        updated_ids = wf.refresh(fw_id)  # return dict of fw_id: state
+        for fw_id in updated_ids:
+            self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": wf.id_fw[fw_id].state}})

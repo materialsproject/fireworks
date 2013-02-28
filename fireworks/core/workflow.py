@@ -113,6 +113,13 @@ class Workflow(FWSerializable):
 
         return updated_ids
 
+    @property
+    def root_fw_ids(self):
+        all_ids = set(self.links.nodes)
+        child_ids = set(self.links.parent_links.keys())
+        root_ids = all_ids.difference(child_ids)
+        return list(root_ids)
+
     def _reassign_ids(self, old_new):
         # update id_fw
         new_id_fw = {}
