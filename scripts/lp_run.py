@@ -10,8 +10,6 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
 import ast
 import simplejson as json
-
-#TODO: YAML queries give weird unicode string, maybe this is unfixable though
 from fireworks.core.workflow import Workflow
 
 __author__ = 'Anubhav Jain'

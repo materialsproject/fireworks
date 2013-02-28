@@ -17,7 +17,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
-# TODO: move Queue stuff to its own module??
 
 class FWorker(FWSerializable):
     def __init__(self, name="anonymous worker", category="general worker", query=None, params=None):

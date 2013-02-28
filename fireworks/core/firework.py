@@ -24,11 +24,8 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
-# TODO: this module needs to be broken up for sure...
 
 # TODO: add ability to block ports
-# TODO: consider using Mongo oid as fw_id. How important is readability?
-# TODO: add created date to FW
 
 
 class FireWork(FWSerializable):

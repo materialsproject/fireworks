@@ -22,12 +22,10 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 30, 2013'
 
-# TODO: add logging throughout
-# TODO: probably lots of cleanup is possible
+
 # TODO: be able to un-terminate a FW
 # TODO: get children / parents of a FW
 # TODO: show a query in the tutorial for get_fw_ids
-
 
 class LaunchPad(FWSerializable):
     """

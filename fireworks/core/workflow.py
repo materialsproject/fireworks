@@ -102,8 +102,6 @@ class Workflow(FWSerializable):
 
         return changed_fws
 
-    # TODO: add method that starts at a fw_id and refreshes all children if its state changed...
-
     def refresh(self, fw_id, updated_ids=None):
         updated_ids = updated_ids if updated_ids else set()
 
