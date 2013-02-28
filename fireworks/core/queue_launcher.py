@@ -109,6 +109,8 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, lo
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
+                jobs_exist = not launchpad or launchpad.run_exists()
+                jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
 
             if not infinite:
                 break
