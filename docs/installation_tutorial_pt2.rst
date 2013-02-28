@@ -46,6 +46,8 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 
 3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address of your FireServer.
 
+.. tip:: If you do not know the IP address of your FireServer and you are on a Linux machine, you can try running ``/sbin/ifconfig``.
+
 3. Confirm that you can query the FireServer from your FireWorker::
 
     lp_run.py -l my_launchpad.yaml get_fw 1

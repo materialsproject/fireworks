@@ -8,12 +8,12 @@ If your FireWorker is a large, shared resource (such as a computing cluster or s
 Launch a single job through a queue
 ===================================
 
-To get warmed up, let's set things up so we can launch a single Rocket through a queueing system. The QueueLauncher helps launch Rockets through a queue.
+To get warmed up, let's set things up so we can launch a single Rocket through a queueing system. The Queue Launcher helps launch Rockets through a queue.
 
-Configure the QueueLauncher
+Configure the Queue Launcher
 ---------------------------
 
-The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through a QueueParams file.
+The Queue Launcher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through a QueueParams file.
 
 1. Move to the ``queue`` tutorial directory on your FireWorker::
 
@@ -60,7 +60,7 @@ Submit a job
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
-   a. The QueueLauncher submitted a Rocket to your queue manager
+   a. The Queue Launcher submitted a Rocket to your queue manager
    b. Your queue manager executed the Rocket when resources were ready
    c. The Rocket fetched a FireWork from the FireServer and ran the specification inside
 
@@ -68,7 +68,7 @@ If everything ran successfully, congratulations! You just executed a complicated
 Adding more power: using rapid-fire mode
 ========================================
 
-While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. The QueueLauncher can be run in a "rapid-fire" mode that provides these features.
+While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. Like the Rocket Launcher, the Queue Launcher can be run in a "rapid-fire" mode that provides these features.
 
 Add some FireWorks
 ------------------
@@ -102,7 +102,7 @@ where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you crea
 
     qlauncher_run.py rapidfire -q 3 my_qp.yaml
 
-   .. important:: The QueueLauncher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
+   .. important:: The Queue Launcher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
    .. important:: The command above submits jobs until you have at most 3 jobs in the queue. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
 
@@ -110,7 +110,7 @@ where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you crea
 
 You've now launched multiple Rockets with a single command!
 
-.. note:: For more tips on the QueueLauncher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``qlauncher_run.py rapidfire -h``
+.. note:: For more tips on the Queue Launcher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``qlauncher_run.py rapidfire -h``
 
 Next steps
 ==========
