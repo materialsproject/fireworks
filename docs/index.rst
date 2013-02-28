@@ -81,6 +81,7 @@ Depending on your application, you might also be interested in the following tut
     :maxdepth: 1
 
     queue_tutorial
+    python_tutorial
 
 Planned future tutorials:
 
@@ -93,7 +94,6 @@ Planned future tutorials:
 * Assigning specific FireWorkers to run certain jobs
 * Assigning and modifying job priority
 * Automatically prevent duplicate jobs from running twice
-* Using Python to command FireWorks
 * Using a web interface to monitor FireWorks
 * Checkpoint / restart of jobs
 * Using the QueueLauncher outside of FW
