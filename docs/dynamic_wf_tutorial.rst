@@ -105,12 +105,12 @@ So now we have FireWorks generating other FireWorks, completely automatically! L
     * The most important part of the code are the lines::
 
         new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
-        return FWAction('ADD', {'next_fibnum': m_sum}, {'add_fws': [new_fw]})
+        return FWAction('ADD', {'next_fibnum': m_sum}, {'add_fw': new_fw})
 
     * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
     * Next, we are returning an instruction to *ADD* a child FireWork to the workflow.
     * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
-    * The *{'add_fws': [new_fw]}* means that we just want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *add_fws* key is a special key that can be defined when returning an *ADD* instruction.
+    * The *{'add_fw': new_fw}* means that we just want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *add_fw* key is a special key that can be defined when returning an *ADD* instruction.
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 

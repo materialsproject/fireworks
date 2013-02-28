@@ -179,7 +179,6 @@ class LaunchPad(FWSerializable):
 
         return Workflow(fws, links, links_dict['metadata'])
 
-
     def get_fw_ids(self, query=None, sort=False):
         """
         Return all the fw ids that match a query,
@@ -283,11 +282,14 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             # update the workflow object using the action
             updated_fws = wf.apply_action(action, fw_id)
-            # reinsert each of the updated fws
-            self._upsert_fws(updated_fws)
+            # reinsert each of the updated/new fws
+            old_new = self._upsert_fws(updated_fws)
+            # reassign the ids of new fws
+            wf._reassign_ids(old_new)
             # redo the links
             self.links.update({'nodes': fw_id}, wf.to_db_dict())
             # refresh the FW states
+
             self._refresh_wf(wf, fw_id)
 
     def get_new_fw_id(self):

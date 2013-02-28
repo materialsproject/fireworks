@@ -81,21 +81,24 @@ class Workflow(FWSerializable):
             # Do nothing
             pass
 
-        elif action.command == 'DEFUSE':
+        if action.command == 'DEFUSE':
             # mark all children as defused
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].state = 'DEFUSED'
                 changed_fws.append(self.id_fw[cfid])
 
-        elif action.command == 'MODIFY':
+        if action.command == 'MODIFY' or 'ADD':
             for cfid in self.links[fw_id]:
-                for mod in action.mod_spec['dict_mods']:
+                for mod in action.mod_spec.get('dict_mods', []):
                     apply_mod(mod, self.id_fw[cfid].spec)
                     changed_fws.append(self.id_fw[cfid])
 
-        elif action.command == 'ADD':
-            for mod in action.mod_spec['add_fws']:
-                raise ValueError('NOT YET IMPLEMENTED')
+        if action.command == 'ADD':
+            add_fw = action.mod_spec['add_fw']
+            self.links[fw_id].append(add_fw.fw_id)
+            self.links[add_fw.fw_id] = []  # TODO: allow this to be children of original FW
+            self.id_fw[add_fw.fw_id] = add_fw
+            changed_fws.append(add_fw)
 
         return changed_fws
 
