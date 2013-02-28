@@ -1,5 +1,5 @@
 ==================
-Defining Workflows
+Creating Workflows
 ==================
 
 Thus far, the only way to run multiple jobs in sequence was to define a list of several FireTasks inside a single FireWork. In this tutorial, we'll explore how Workflows let us deifne complex sequences of FireWorks. We'll start with a simple example and then move to more complicated workflows.

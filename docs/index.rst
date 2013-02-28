@@ -9,7 +9,7 @@
 
 *Note: FireWorks is under active development. It is currently incomplete and not useable as workflow software. However, certain components of the code are available for initial testing.*
 
-FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources.
+FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
 Features
 ========
@@ -20,7 +20,7 @@ Some (but not all) of its features include:
 
 * Storage and management of workflows through MongoDB, a noSQL datastore that is flexible and easy to use.
 
-* Ability to distribute the calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
+* Ability to distribute calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
 
 * Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a job (e.g., terminate a workflow, add a new step, or completely alter the workflow)
 
@@ -32,7 +32,7 @@ Some (but not all) of its features include:
 
 * Monitoring of workflows through a web service *(future)*
 
-* Package many small jobs into a single large job (useful for running on HPC machines that stipulate a small number of large-CPU jobs). *(future)*
+* Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs). *(future)*
 
 Limitations
 ===========
@@ -61,7 +61,7 @@ We can tell you if:
 Getting Started!
 ================
 
-To get started with FireWorks, we suggest that you follow our core tutorials. These tutorials will guide you through set up of both worker computers and the central computer, as well as demonstrate how to define and run basic workflows. We expect that completing the core tutorials will take between one and three hours. (You might want to get a snack...)
+To get started with FireWorks, we suggest that you follow our core tutorials. These tutorials will set up a central server as well as worker computers. They will also demonstrate how to define and run basic workflows. We expect that completing all of the core tutorials will take between one and three hours. (You might want to get a snack...)
 
 .. toctree::
    :maxdepth: 1

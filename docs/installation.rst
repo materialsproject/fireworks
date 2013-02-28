@@ -13,8 +13,6 @@ To prepare for installation, you should:
 
 .. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``.
 
-*TODO: write about a potential virtualenv style installation.*
-
 Download FireWorks and dependencies
 -----------------------------------
 1. Run the following code to download the FireWorks source::
@@ -46,8 +44,8 @@ Run unit tests
     
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
 
-Updating a FireWorks installation
-=================================
+Updating an existing FireWorks installation
+===========================================
 
 If you want to update an existing FireWorks installation, use the following steps::
 
