@@ -110,9 +110,4 @@ where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you crea
 
 You've now launched multiple Rockets with a single command!
 
-.. note:: For more tips on the Queue Launcher, such as how to maintain a certain number of jobs in the queue and loop infinitely, read its built-in help: ``qlauncher_run.py rapidfire -h``
-
-Next steps
-==========
-
-If you've completed this tutorial, your FireServer and a single FireWorker are ready for business! If you'd like, you can now configure more FireWorkers. However, you're most likely interested in running more complex jobs and creating multi-step workflows. We'll continue the tutorial with :doc:`defining jobs using FireTasks </firetask_tutorial>`.
+.. note:: For more tips on the Queue Launcher, such as how to maintain a certain number of jobs in the queue indefinitely, read its built-in help: ``qlauncher_run.py rapidfire -h``
