@@ -21,7 +21,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
+def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lvl=None):
     """
     Submit a single job to the queue.
     
@@ -33,7 +33,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
     launcher_dir = os.path.abspath(launcher_dir)
 
     # initialize logger
-    l_logger = get_fw_logger('rocket.launcher', rocket_params.logging_dir)
+    l_logger = get_fw_logger('queue.launcher', l_dir=logdir, stream_level=strm_lvl)
 
     # make sure launch_dir exists:
     if not os.path.exists(launcher_dir):
@@ -41,7 +41,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
 
     try:
         # get the queue adapter
-        l_logger.info('getting queue adapter')
+        l_logger.debug('getting queue adapter')
         qa = rocket_params.qa
 
         # move to the launch directory
@@ -49,7 +49,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
         os.chdir(launcher_dir)
 
         # write and submit the queue script using the queue adapter
-        l_logger.info('writing queue script')
+        l_logger.debug('writing queue script')
         with open(SUBMIT_SCRIPT_NAME, 'w') as f:
             queue_script = qa.get_script_str(rocket_params, launcher_dir)
             if not queue_script:
@@ -63,7 +63,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
         log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
-def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
+def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None):
     """
     Submit many jobs to the queue.
     
@@ -71,15 +71,13 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_
     :param launch_dir: directory where we want to write the blocks
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
-    :param n_loops: number of times to loop rapid-fire mode to maintain njobs_queue
-    :param t_sleep: sleep time between loops in rapid-fire mode
     """
 
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
 
     # initialize logger
-    l_logger = get_fw_logger('rocket.launcher', rocket_params.logging_dir)
+    l_logger = get_fw_logger('queue.launcher', l_dir=logdir, stream_level=strm_lvl)
 
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
@@ -90,19 +88,13 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_
 
         block_dir = create_datestamp_dir(launch_dir, l_logger)
 
-        for i in range(n_loops):
-            if i > 0:
-                # sleep before new loop to give the queue system time to 'breathe' after job submission
-                l_logger.info('Sleeping for {} seconds before beginning new loop...zzz...'.format(t_sleep))
-                time.sleep(t_sleep)
-
-            l_logger.info('Beginning loop number {}'.format(i))
-
+        while True:
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
+            # see if jobs exist for running - if no launchpad is defined than this is also ok
+            jobs_exist = not launchpad or launchpad.run_exists()
 
-            # if too few jobs, launch some more!
-            while jobs_in_queue < njobs_queue:
+            while jobs_in_queue < njobs_queue and jobs_exist:
                 l_logger.info('Launching a rocket!')
 
                 # switch to new block dir if it got too big
@@ -113,14 +105,19 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(rocket_params, launcher_dir)
+                launch_rocket_to_queue(rocket_params, launcher_dir, logdir, strm_lvl)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
-                jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
+
+            if not infinite:
+                break
+            l_logger.info('Sleeping for {} secs'.format(sleep_time))
+            time.sleep(sleep_time)
+            l_logger.info('Checking for Rockets to run...'.format(sleep_time))
 
     except:
-        log_exception(l_logger, 'Error with rapid fire!')
+        log_exception(l_logger, 'Error with queue launcher rapid fire!')
 
 
 def _njobs_in_dir(block_dir):
