@@ -44,9 +44,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     rocket_params = QueueParams.from_file(args.queue_params_file)
-    
+    args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
+
     if args.command == 'rapidfire':
         launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else None
-        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep, launchpad)
+        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.logdir, args.loglvl, args.infinite, args.t_sleep, launchpad)
     else:
-        launch_rocket_to_queue(rocket_params, args.launch_dir)
+        launch_rocket_to_queue(rocket_params, args.launch_dir, args.logdir, args.loglvl)
