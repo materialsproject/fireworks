@@ -13,7 +13,7 @@ To get warmed up, let's set things up so we can launch a single Rocket through a
 Configure the QueueLauncher
 ---------------------------
 
-The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through the QueueParams file.
+The QueueLauncher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through a QueueParams file.
 
 1. Move to the ``queue`` tutorial directory on your FireWorker::
 
@@ -35,12 +35,12 @@ The QueueLauncher needs to know how to communicate with your queue system and th
 
    c. For the logging_dir parameter, modify the ``path/to/logging`` text to contain the **absolute path** of where you would like FireWorks logs to go. For example, you might create a ``fw_logs`` directory inside your home directory, and point the logging_dir parameter there.
 
-   .. note:: Be sure to indicate the full, absolute path name; do not use BASH shortcuts like '.', '..', or '~', and do not indicate a relative path.
+   .. note:: Be sure to indicate the full, absolute path name; do not use BASH shortcuts like '.', '..', or '~', and do not indicate a relative path. (also, do not pass Go!)
 
 Add some FireWorks
 ------------------
 
-Let's reset our database and add a new FireWork, all from our FireWorker::
+Let's reset our database and add a new FireWork, all from our FireWorker this time::
 
     lp_run.py -l <PATH_TO_LAUNCHPAD> reset <TODAY'S DATE>
     lp_run.py -l <PATH_TO_LAUNCHPAD> add_wf fw_test.yaml
