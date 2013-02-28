@@ -30,9 +30,11 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     * We define a FireWork with ``fw_id`` set to -1, and that prints *"To be, or not to be,"*.
     * We define another FireWork with ``fw_id`` set to -2, and that prints *"that is the question:"*
 
-    The second section, labeled ``wf_connections``, connects these FireWorks into a workflow:
+    .. note:: A negative ``fw_id`` means that the ``fw_id`` should be reassigned by the LaunchPad so as not to conflict with existing ``fw_ids``. When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned.
 
-    * In the ``children_links`` subsection, we are specifying that the child of FW with id -1 is the FW with id -2. This means that to hold off on running *"that is the question:"* until we've first run *"To be, or not to be,"*.
+    The second section, labeled ``links``, connects these FireWorks into a workflow:
+
+    * In the ``children_links`` subsection, we are specifying that the child of FW with id -1 is the FW with id -2. This means hold off on running *"that is the question:"* until we've first run *"To be, or not to be,"*.
 
 #. Let's insert this workflow into our database::
 
@@ -44,13 +46,13 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     lp_run.py get_fw 1
     lp_run.py get_fw 2
 
-#. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is ``READY`` to run. In contrast, the FireWork that writes the second line (*"that is the question:"*) shows a state of ``WAITING``. The ``WAITING`` state indicates that a Rocket should not pull this FireWork just yet.
+#. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*.
 
     .. note:: The ``fw_id`` is assigned randomly, so don't assign any meaning to the value of the ``fw_id``.
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
-    rlauncher_run.py singleshot
+    rlauncher_run.py --silencer singleshot
 
 #. You should have seen the text *"To be, or not to be"* printed to your standard out. Let's examine our FireWorks again to examine our new situation::
 
@@ -59,9 +61,9 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. We see now that the first step is ``COMPLETED``, and the second step has automatically graduated from ``WAITING`` to ``READY``.
 
-#. Let's now launch a Rocket that will run the second FireWork of this Workflow.
+#. Let's now launch a Rocket that will run the second FireWork of this Workflow::
 
-    rlauncher_run.py singleshot
+    rlauncher_run.py --silencer singleshot
 
 #. This should print the second step of the workflow (*"That is the question"*). You can verify that both steps are completed::
 
@@ -82,16 +84,16 @@ Let's continue with a very similar example, but make the workflow a little more 
 
 Let's quickly define and execute this workflow.
 
-1. Move to the ``workflow`` tutorial directory on your FireServer::
+1. Stay in the same ``workflow`` tutorial directory on your FireServer::
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
 
 #. The workflow is encapsulated in the ``org_wf.yaml`` file. Look inside this file.
 
     * The ``fws`` section should make sense - we have defined one FireWork for each position in the company (4 in total).
-    * The ``wf_connections`` section should also make sense. The CEO has two children (the managers). The managers each have the same child (the intern). (The company appears to be quite the oligarchy!)
+    * The ``links`` section should also make sense. The CEO has two children (the managers). The managers each have the same child (the intern). (The company appears to be quite the oligarchy!)
 
-#. Once everything makes sense, let's add the workflow and run everything at once!::
+#. Once everything makes sense, let's add the workflow and run everything at once::
 
     lp_run.py reset <TODAY'S DATE>
     lp_run.py add_wf org_wf.yaml

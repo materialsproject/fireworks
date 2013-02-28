@@ -144,7 +144,9 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
 	lp_run.py reset <TODAY'S DATE>
 	lp_run.py add_wf fw_adder.yaml
-	rlauncher_run.py singleshot
+	rlauncher_run.py --silencer singleshot
+
+.. note:: The ``--silencer`` option suppresses log messages.
 
 # Confirm that the *sum* is not only printed to the screen, but also stored in our FireWork in the ``stored_data`` section::
 
