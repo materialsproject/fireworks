@@ -114,7 +114,7 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, lo
 
             if not infinite:
                 break
-            l_logger.info('Sleeping for {} secs'.format(sleep_time))
+            l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
             time.sleep(sleep_time)
             l_logger.info('Checking for Rockets to run...'.format(sleep_time))
 

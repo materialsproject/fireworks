@@ -2,9 +2,8 @@
 Defining Jobs using FireTasks
 =============================
 
-In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled ``Script Task``::
+In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, that command was defined within a task labeled ``Script Task``::
 
-    fw_id: -1
     spec:
       _tasks:
       - _fw_name: Script Task
@@ -12,7 +11,7 @@ In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple scr
           script: echo "howdy, your job launched successfully!" >> howdy.txt
           use_shell: true
 
-The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` is Python code that runs an arbitrary shell script that you give it, so you can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). In this section, we'll demonstrate how to use and define FireTasks.
+The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up custom job templates that are more explicit and reusable. In this section, we'll demonstrate how to accomplish this with *FireTasks*, as well as provide more details on the ``Script Task``.
 
 This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
@@ -25,9 +24,8 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-#. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Script Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+#. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Script Task`` inside our **spec**. Remember, our **spec** contains all the information needed to run our job. The second ``Script Task`` runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
 
-    fw_id: -1
     spec:
       _tasks:
       - _fw_name: Script Task
@@ -38,9 +36,8 @@ You can run multiple tasks within the same FireWork. For example, the first step
         parameters:
           script: wc -w < howdy.txt > words.txt
           use_shell: true
-    launches: []
 
-#. Run this multi-step FireWork on the central server::
+#. Run this multi-step FireWork on your FireServer::
 
 	 lp_run.py reset <TODAY'S DATE>
 	 lp_run.py add_wf fw_multi.yaml
@@ -50,20 +47,19 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
 You should see two files written out to the system, ``howdy.txt`` and ``words.txt``, confirming that you successfully ran a two-step job!
 
-.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you should consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. Or, you could define a single custom FireTask that performs multiple steps internally (the `custodian <https://pypi.python.org/pypi/custodian>`_ Python package is one option to help achieve this).
+.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :ref:`customtask-label` or :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead.
 
 Using ScriptTask
 --------------------
 
-While running arbitrary shell scripts is nice, it's not particularly well-organized. The command (``echo``), its arguments (``"howdy, your job launched successfully!"``), and its output (``howdy.txt``) are all intermingled within the same line. If we separated these components, it would be easier to do a data-parallel task where the same commands are run for multiple arguments. Let's explore a better way to define our multi-step job:
+While running arbitrary shell scripts is flexible, it's not particularly well-organized. The command (``echo``), its arguments (``"howdy, your job launched successfully!"``), and its output (``howdy.txt``) are all intermingled within the same line. If we separated these components, it would be easier to do a data-parallel task where the same commands are run for multiple arguments. Let's explore a better way to define our multi-step job:
 
 1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
-    rm howdy.txt fw.json
+    rm howdy.txt fw.json words.txt
 
-#. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time, the text we are printing is separated into its own ``echo_text`` parameter, which is defined outside the ``tasks`` part of the ``spec``. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the names of the input and output files are also clearly separated from the commands themselves within the FireWork specification::
+#. Look inside the file ``fw_better_multi.yaml``::
 
-    fw_id: -1
     spec:
       _tasks:
       - _fw_name: Script Task
@@ -77,7 +73,12 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
           stdin_file: howdy.txt
           stdout_file: words.txt
       echo_text: howdy, your job launched successfully!
-    launches: []
+
+   You should see two FireTasks as before. However, this time, the **spec** contains more than just **_tasks** - it also contains an **echo_text** parameter that's separated from the **_tasks**. We can replace the **echo_text** parameter with arbitrary data, and the same **_tasks** will process that data. Thus, performing the same tasks on multiple data is just a matter of changing a single parameter.
+
+   Under the hood, the first ``Script Task`` is getting its input from the **echo_text** parameter (we defined its ``stdin_key`` to be *echo_text*). It is then writing its output to ``howdy.txt``. The second ``Script Task`` is reading in ``howdy.txt``, performing the ``wc -w`` command, and writing its output ``words.txt``.
+
+   .. note:: We have changed the command from ``echo`` (in earlier examples) to ``cat -t`` - this is only because ``cat -t`` can easily take in input from a standard input stream.
 
 #. Run the FireWork on the central server to confirm that this new formulation also works as intended::
 
@@ -87,6 +88,8 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
 
 At this point, you might want to change the ``echo_text`` parameter to something other than ``howdy, your job launched successfully!``, reinsert the FireWork, and re-run the Rocket. Your custom text should get printed to ``howdy.txt`` and the number of words should change appropriately.
 
+.. _customtask-label:
+
 Creating a custom FireTask
 --------------------------
 
@@ -94,26 +97,13 @@ Because the ``Script Task`` can run arbitrary shell scripts, it can in theory ru
 
 Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks:
 
-1. Navigate to the tasks tutorial directory and remove any output from the previous step::
+1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
-    cd <INSTALL_DIR>/fw_tutorials/firetask
-    rm howdy.txt words.txt fw.json
+    rm howdy.txt fw.json words.txt
 
-#. Look inside the file ``fw_adder.yaml`` for a new FireWork definition. This FireWork references a new FireTask, ``Addition Task``, that adds the numbers ``1`` and ``2``::
+#. Let's first look at what a custom FireTask looks like in Python. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
 
-    fw_id: -1
-    spec:
-      _tasks:
-      - _fw_name: Addition Task
-        parameters: {}
-      input_array:
-      - 1
-      - 2
-    launches: []
-
-#. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
-
-     class AdditionTask(FireTaskBase, FWSerializable):
+    class AdditionTask(FireTaskBase, FWSerializable):
 
         _fw_name = "Addition Task"
 
@@ -121,14 +111,36 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
             input_array = fw.spec['input_array']
             m_sum = sum(input_array)
 
-            with open('sum_output.txt', 'w') as f:
-                f.write("The sum of {} is: {}".format(input_array, m_sum))
+            print "The sum of {} is: {}".format(input_array, m_sum)
 
-#. It should be clear how the ``Addition Task`` is set up:
- 	a. the reserved ``_fw_name`` parameter is set to ``Addition Task``, which is how FireWorks knows to use this code when an ``Addition Task`` is specified inside the ``fw_adder.yaml`` FireWork file.
- 	b. the ``run_task()`` method is the code that gets executed by the Rocket. In this case, we sum the values in the field called ``input_array``, and write the output to ``sum_output.txt``. In our ``fw_adder.yaml`` file, the ``input_array`` was set to ``1`` and ``2``.
+            return FWAction('CONTINUE', {'sum': m_sum})
 
-#. Run the FireWork on the central server to confirm that the ``Addition Task`` works::
+#. A few notes about what's going on:
+
+ * In the class definition, we are extending *FireTaskBase* to tell FireWorks that this is a FireTask.
+ * A special parameter named *_fw_name* is set to ``Addition Task``. This parameter sets what this FireTask will be called by the outside world.
+ * The ``run_task()`` method is a special method name that gets called when the task is run. It can take in a FireWork object (*fw*).
+ * This FireTask first reads the **input_array** parameter of the FireWork's **spec**.
+ * It then sums all the values it finds in the **input_array** parameter of the FireWork's **spec** using Python's ``sum()`` function.
+ * The FireTask then prints both the inputs and the sum to the standard out.
+ * Finally, the task returns a *FWAction* object. We'll discuss this object in greater detail in future tutorials. For now, it is sufficient to know that this is an instruction that says we should *CONTINUE* with the workflow, and store the sum we computed in the database (inside the FireWork).
+
+#. Now let's define a FireWork that runs this FireTask to add the numbers ``1`` and ``2``. Look inside the file ``fw_adder.yaml`` for this new FireWork definition::
+
+    spec:
+      _tasks:
+      - _fw_name: Addition Task
+        parameters: {}
+      input_array:
+      - 1
+      - 2
+
+#. Let's match up this FireWork's **spec** with our code for our custom FireWork:
+
+ * The *_fw_name* parameter is set to the same value as in our code for the FireTask (``Addition Task``). This is how FireWorks knows to run your custom FireTask rather than ``Script Task`` or some other FireTask.
+ * This **spec** has an **input_array** field defined to ``1`` and ``2``. Remember that our Python code was grabbing the values in the **input_array**, summing them, and printing them to standard out.
+
+#. When you are comfortable you understand how a custom FireTask is set up, try running the FireWork on the central server to confirm that the ``Addition Task`` works::
 
 	lp_run.py reset <TODAY'S DATE>
 	lp_run.py add_wf fw_adder.yaml
@@ -137,6 +149,6 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 Next up: Workflows!
 -------------------
 
-With custom FireTasks, you can now go beyond running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on dynamic input from the ``spec`` of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the spec to decide what numbers to add. By using the same FireWork with different values in the ``spec``, one could execute a data-parallel application.
+With custom FireTasks, you can go beyond the limitations of running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on data from the ``spec`` of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the spec to decide what numbers to add. By using the same FireWork with different values in the ``spec``, one could execute a data-parallel application.
 
-While one could construct an entire workflow by chaining together FireTasks within a single FireWork, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single FireWork. The next step in the tutorial is to explore :doc:`connecting together FireWorks into a workflow <workflow_tutorial>`.
+While one could construct an entire workflow by chaining together multiple FireTasks within a single FireWork, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single FireWork. The next step in the tutorial is to explore :doc:`connecting together FireWorks into a workflow <workflow_tutorial>`.
