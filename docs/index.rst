@@ -100,7 +100,7 @@ Planned future tutorials:
 * Searching for FireWorks and Workflows
 * Logging
 * FW design guide, e.g. FireTasks vs Workflows
-* JSON vs. YAML and serialization of FW objects (including WF serialiazation as JSON/YAML instead of tar)
+* JSON vs. YAML and serialization of FW objects (including WF serialiazation as TAR instead of JSON/YAML)
 
 
 .. _contributing-label:
