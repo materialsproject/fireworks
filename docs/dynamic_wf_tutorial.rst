@@ -110,7 +110,7 @@ Let's see how this is achieved:
     * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
     * Next, we are returning an instruction to *CREATE* a child FireWork to the workflow.
     * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
-    * The *{'create_fw': new_fw}* means that we just want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction.
+    * The *{'create_fw': new_fw}* means that we want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction. The LaunchPad will interpret this command after the FireWork completes.
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
@@ -120,42 +120,42 @@ Let's see how this is achieved:
 
 #. That last command should prove that there is only one FireWork in the database. Let's run it::
 
-    rlauncher_run.py singleshot
+    rlauncher_run.py --silencer singleshot
 
 #. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one FireWork, one Rocket. But let's try to again to get all the FireWorks in the database::
 
     lp_run.py get_fw_ids
 
-#. Now there are two FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
+#. Now there are *two* FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
 
-    rlauncher_run.py singleshot
+    rlauncher_run.py --silencer singleshot
 
 #. This should print out the next Fibonacci number (2). You can repeat this until our FireTask detects we have gone above our limit of 100::
 
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 3
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 5
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 8
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 13
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 21
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 34
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 55
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     The next Fibonacci number is: 89
-    $ rlauncher_run.py singleshot
+    $ rlauncher_run.py --silencer singleshot
     We have now exceeded our limit; (the next Fibonacci number would have been: 144)
 
-#. If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We'll instead look at all the different FireWorks created dynamically by our program:
+#. If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We'll instead look at all the different FireWorks created dynamically by our program::
 
     lp_run.py get_fw_ids
 
-There are 11 FireWorks in all, and 10 of them were created dynamically!
+There are 11 FireWorks in all, and 10 of them were created by other FireWorks rather than a human!
 
 A Fibonacci Adder: The Quick Way
 ================================
@@ -163,7 +163,7 @@ A Fibonacci Adder: The Quick Way
 Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
 
     lp_run.py add_wf fw_fibnum.yaml
-    rlauncher_run.py rapidfire --quiet
+    rlauncher_run.py --silencer rapidfire
 
 That was quick!
 
