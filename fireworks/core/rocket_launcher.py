@@ -24,7 +24,7 @@ def launch_rocket(launchpad, fworker, logdir=None, strm_lvl=None):
     l_logger.info('Rocket finished')
 
 
-def loop_rocket_run(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None):
+def rapidfire(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.

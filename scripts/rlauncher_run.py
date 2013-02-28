@@ -6,7 +6,7 @@ A runnable script to launch a single Rocket (a command-line interface to rocket.
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
-from fireworks.core.rocket_launcher import loop_rocket_run, launch_rocket
+from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 
 
 __author__ = 'Anubhav Jain'
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        loop_rocket_run(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)
+        rapidfire(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)
 
     else:
         launch_rocket(launchpad, fworker, logdir=args.logdir, strm_lvl=args.loglvl)
