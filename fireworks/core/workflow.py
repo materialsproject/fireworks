@@ -94,11 +94,11 @@ class Workflow(FWSerializable):
                     changed_fws.append(self.id_fw[cfid])
 
         if action.command == 'CREATE':
-            add_fw = action.mod_spec['add_fw']
-            self.links[fw_id].append(add_fw.fw_id)
-            self.links[add_fw.fw_id] = []  # TODO: allow this to be children of original FW
-            self.id_fw[add_fw.fw_id] = add_fw
-            changed_fws.append(add_fw)
+            create_fw = action.mod_spec['create_fw']
+            self.links[fw_id].append(create_fw.fw_id)
+            self.links[create_fw.fw_id] = []  # TODO: allow this to be children of original FW
+            self.id_fw[create_fw.fw_id] = create_fw
+            changed_fws.append(create_fw)
 
         return changed_fws
 

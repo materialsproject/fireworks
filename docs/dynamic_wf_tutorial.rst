@@ -4,6 +4,8 @@ Dynamic Workflows
 
 Many workflows require some type of dynamicism. For example, a FireWork might need data from a previous FireWork in order to perform its task. The second FireWork won't know what to run until the first one completes. In a more complicated example, we might even want to create new FireWorks automatically depending on the results of the current FireWork.
 
+This tutorial can be completed from the command line, but some knowledge of Python is suggested. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
+
 A workflow that passes data
 ===========================
 Let's imagine a workflow in which the first step adds the numbers 1 + 1, and the second step adds the number 10 to the result of the first step. The second step doesn't know in advance what the result of the first step will be; the first step must pass its output to the second step after it completes. The final result should be 10 + (1 + 1) = 12. Visually, the workflow looks like:
@@ -103,12 +105,12 @@ Let's see how this is achieved:
     * The most important part of the code are the lines::
 
         new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
-        return FWAction('CREATE', {'next_fibnum': m_sum}, {'add_fw': new_fw})
+        return FWAction('CREATE', {'next_fibnum': m_sum}, {'create_fw': new_fw})
 
     * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
     * Next, we are returning an instruction to *CREATE* a child FireWork to the workflow.
     * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
-    * The *{'add_fw': new_fw}* means that we just want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *add_fw* key is a special key that can be defined when returning an *CREATE* instruction.
+    * The *{'create_fw': new_fw}* means that we just want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction.
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
