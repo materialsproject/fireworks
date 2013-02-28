@@ -87,13 +87,13 @@ class Workflow(FWSerializable):
                 self.id_fw[cfid].state = 'DEFUSED'
                 changed_fws.append(self.id_fw[cfid])
 
-        if action.command == 'MODIFY' or 'ADD':
+        if action.command == 'MODIFY' or 'CREATE':
             for cfid in self.links[fw_id]:
                 for mod in action.mod_spec.get('dict_mods', []):
                     apply_mod(mod, self.id_fw[cfid].spec)
                     changed_fws.append(self.id_fw[cfid])
 
-        if action.command == 'ADD':
+        if action.command == 'CREATE':
             add_fw = action.mod_spec['add_fw']
             self.links[fw_id].append(add_fw.fw_id)
             self.links[add_fw.fw_id] = []  # TODO: allow this to be children of original FW
