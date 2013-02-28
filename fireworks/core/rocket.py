@@ -8,7 +8,7 @@ import socket
 import traceback
 import simplejson as json
 from fireworks.core.firetask import FWAction
-from fireworks.core.fw_constants import DATETIME_HANDLER
+from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -48,8 +48,9 @@ class Rocket():
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
-        with open('fw.json', 'w') as f:
-            f.write(json.dumps(m_fw.to_dict(), default=DATETIME_HANDLER))
+        if PRINT_FW_JSON:
+            with open('fw.json', 'w') as f:
+                f.write(json.dumps(m_fw.to_dict(), default=DATETIME_HANDLER))
 
         # execute the script inside the spec
         # TODO: bind monitors, etc...
@@ -66,7 +67,7 @@ class Rocket():
                 if not m_action:
                     m_action = FWAction('CONTINUE')
 
-                if m_action.action != 'CONTINUE':
+                if m_action.command != 'CONTINUE':
                     break;
             except:
                 m_action = FWAction('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})

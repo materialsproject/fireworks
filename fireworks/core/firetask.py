@@ -4,6 +4,7 @@
 TODO: add docs
 """
 from fireworks.utilities.fw_serializers import serialize_fw
+from fireworks.utilities.fw_utilities import recursive_dict
 
 
 __author__ = 'Anubhav Jain'
@@ -49,19 +50,18 @@ class FWAction():
     # TODO: ADDIFY can be merged into ADD (definitely)
     # TODO: DETOUR can be merged into ADD (probably)
 
-    actions = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'ADD', 'ADDIFY', 'PHOENIX', 'BREAK']
+    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'ADD', 'ADDIFY', 'PHOENIX', 'BREAK']
 
-    def __init__(self, action, stored_data=None, mod_spec=None):
-        if action not in FWAction.actions:
-            raise ValueError("Invalid action: " + action)
+    def __init__(self, command, stored_data=None, mod_spec=None):
+        if command not in FWAction.commands:
+            raise ValueError("Invalid command: " + command)
 
-        self.action = action
+        self.command = command
         self.stored_data = stored_data if stored_data else {}
         self.mod_spec = mod_spec if mod_spec else {}
 
     def to_dict(self):
-        # TODO: add recursive to_dict() and from_dict()
-        return {"action": self.action, "stored_data": self.stored_data, "mod_spec": self.mod_spec}
+        return {"action": self.command, "stored_data": self.stored_data, "mod_spec": recursive_dict(self.mod_spec)}
 
     @classmethod
     def from_dict(cls, m_dict):

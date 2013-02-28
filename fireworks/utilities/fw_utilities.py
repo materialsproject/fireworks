@@ -120,3 +120,28 @@ def singleton(class_):
             instances[class_] = class_(*args, **kwargs)
         return instances[class_]
     return getinstance
+
+def recursive_dict(obj):
+
+    if obj is None:
+        return None
+
+    if isinstance(obj, dict):
+        return {k: recursive_dict(v) for k, v in obj.items()}
+
+    if isinstance(obj, list):
+        return [recursive_dict(v) for v in obj]
+
+    if hasattr(obj, 'to_dict'):
+        if isinstance(obj.to_dict, dict):
+            return recursive_dict(obj.to_dict)
+        else:
+            return recursive_dict(obj.to_dict())
+
+    if isinstance(obj, int) or isinstance(obj, float):
+        return obj
+
+    if isinstance(obj, unicode):
+        return obj.encode('ascii', 'ignore')
+
+    return str(obj)

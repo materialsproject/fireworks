@@ -128,7 +128,7 @@ class LaunchPad(FWSerializable):
         # insert the WFLinks
         self.links.insert(wf.to_db_dict())
 
-        # refresh WF states, starting from roots
+        # refresh WF states, starting from all roots
         for fw_id in wf.root_fw_ids:
             self._refresh_wf(wf, fw_id)
 
@@ -269,6 +269,8 @@ class LaunchPad(FWSerializable):
         :param launch_id:
         :param action: the FWAction of what to do next
         """
+
+        # TODO: need a try-except here, high probability of failure if incorrect action supplied
 
         # update the launch data to COMPLETED, set end time, etc
         updates = {'state': 'COMPLETED', 'end': datetime.datetime.utcnow(), 'action': action.to_dict()}

@@ -33,3 +33,5 @@ LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RUNNING':
 USE_PYMATGEN_SERIALIZATION = False
 
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+
+PRINT_FW_JSON = True

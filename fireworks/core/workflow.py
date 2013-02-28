@@ -3,6 +3,7 @@ from collections import defaultdict
 import tarfile
 from fireworks.core.firework import FireWork
 from fireworks.core.fw_constants import LAUNCH_RANKS
+from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -74,7 +75,29 @@ class Workflow(FWSerializable):
         self.metadata = metadata
 
     def apply_action(self, action, fw_id):
-        return []
+        changed_fws = []
+
+        if action.command in ['CONTINUE', 'BREAK']:
+            # Do nothing
+            pass
+
+        elif action.command == 'DEFUSE':
+            # mark all children as defused
+            for cfid in self.links[fw_id]:
+                self.id_fw[cfid].state = 'DEFUSED'
+                changed_fws.append(self.id_fw[cfid])
+
+        elif action.command == 'MODIFY':
+            for cfid in self.links[fw_id]:
+                for mod in action.mod_spec['dict_mods']:
+                    apply_mod(mod, self.id_fw[cfid].spec)
+                    changed_fws.append(self.id_fw[cfid])
+
+        elif action.command == 'ADD':
+            for mod in action.mod_spec['add_fws']:
+                raise ValueError('NOT YET IMPLEMENTED')
+
+        return changed_fws
 
     # TODO: add method that starts at a fw_id and refreshes all children if its state changed...
 
@@ -198,23 +221,15 @@ class Workflow(FWSerializable):
         child_fw_ids = wfc.children_links[m_fw.fw_id]
 
         # depending on the decision, you might have to do additional actions
-        if fw_decision.action in ['CONTINUE', 'BREAK']:
-            pass
-        elif fw_decision.action == 'DEFUSE':
-            # mark all children as defused
-            for cfid in child_fw_ids:
-                self._update_fw_state(cfid, 'DEFUSED')
 
-        elif fw_decision.action == 'MODIFY':
-            for cfid in child_fw_ids:
-                self._update_fw_spec(cfid, fw_decision.mod_spec['dict_mods'])
+
+
+
 
         elif fw_decision.action == 'DETOUR':
             # TODO: implement
             raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
-        elif fw_decision.action == 'ADD':
-            old_new = self._insert_fws(fw_decision.mod_spec['add_fws'])
-            self._insert_children(m_fw.fw_id, old_new.values())
+
         elif fw_decision.action == 'ADDIFY':
             # TODO: implement
             raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
