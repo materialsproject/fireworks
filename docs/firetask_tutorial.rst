@@ -25,7 +25,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-2. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Script Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+#. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Script Task``; the second one runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
 
     fw_id: -1
     spec:
@@ -40,7 +40,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
           use_shell: true
     launches: []
 
-3. Run this multi-step FireWork on the central server::
+#. Run this multi-step FireWork on the central server::
 
 	 lp_run.py reset <TODAY'S DATE>
 	 lp_run.py add_wf fw_multi.yaml
@@ -61,7 +61,7 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
 
     rm howdy.txt fw.json
 
-2. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time, the text we are printing is separated into its own ``echo_text`` parameter, which is defined outside the ``tasks`` part of the ``spec``. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the names of the input and output files are also clearly separated from the commands themselves within the FireWork specification::
+#. Look inside the file ``fw_better_multi.yaml``. You should see two FireTasks as before. However, this time, the text we are printing is separated into its own ``echo_text`` parameter, which is defined outside the ``tasks`` part of the ``spec``. We just need to change the value of this parameter in order to perform the same commands (``echo`` and ``wc``) on different input data. Note also that the names of the input and output files are also clearly separated from the commands themselves within the FireWork specification::
 
     fw_id: -1
     spec:
@@ -79,7 +79,7 @@ While running arbitrary shell scripts is nice, it's not particularly well-organi
       echo_text: howdy, your job launched successfully!
     launches: []
 
-3. Run the FireWork on the central server to confirm that this new formulation also works as intended::
+#. Run the FireWork on the central server to confirm that this new formulation also works as intended::
 
 	lp_run.py reset <TODAY'S DATE>
 	lp_run.py add_wf fw_better_multi.yaml
@@ -92,14 +92,14 @@ Creating a custom FireTask
 
 Because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of job and is an 'all-encompassing' FireTask. However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks (job templates) for the codes you run. A custom FireTask can clarify the usage of your code and guard against unintended behavior by restricting the commands that can be executed.
 
-Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows with this FireTask:
+Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks:
 
 1. Navigate to the tasks tutorial directory and remove any output from the previous step::
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
-    rm howdy.txt fw.json
+    rm howdy.txt words.txt fw.json
 
-2. Look inside the file ``fw_adder.yaml`` for a new FireWork definition. This FireWork references a new FireTask, ``Addition Task``, that adds the numbers ``1`` and ``2``::
+#. Look inside the file ``fw_adder.yaml`` for a new FireWork definition. This FireWork references a new FireTask, ``Addition Task``, that adds the numbers ``1`` and ``2``::
 
     fw_id: -1
     spec:
@@ -111,9 +111,9 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
       - 2
     launches: []
 
-3. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
+#. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
 
-     class AdderTask(FireTaskBase, FWSerializable):
+     class AdditionTask(FireTaskBase, FWSerializable):
 
         _fw_name = "Addition Task"
 
@@ -124,13 +124,11 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
             with open('sum_output.txt', 'w') as f:
                 f.write("The sum of {} is: {}".format(input_array, m_sum))
 
-4. It should be clear how the ``Addition Task`` is set up:
+#. It should be clear how the ``Addition Task`` is set up:
  	a. the reserved ``_fw_name`` parameter is set to ``Addition Task``, which is how FireWorks knows to use this code when an ``Addition Task`` is specified inside the ``fw_adder.yaml`` FireWork file.
  	b. the ``run_task()`` method is the code that gets executed by the Rocket. In this case, we sum the values in the field called ``input_array``, and write the output to ``sum_output.txt``. In our ``fw_adder.yaml`` file, the ``input_array`` was set to ``1`` and ``2``.
 
-	.. note:: The main method in ``addition_task.py`` is not necessary to define a FireTask. However, it demonstrates how we created the ``fw_adder.yaml`` file.
-
-4. Run the FireWork on the central server to confirm that the ``Addition Task`` works::
+#. Run the FireWork on the central server to confirm that the ``Addition Task`` works::
 
 	lp_run.py reset <TODAY'S DATE>
 	lp_run.py add_wf fw_adder.yaml

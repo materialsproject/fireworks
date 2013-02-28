@@ -27,12 +27,11 @@ fws:
       parameters:
         script: echo 'Kip is an intern.'
         use_shell: true
-wf_connections:
-  children_links:
-    -1:
-    - -2
-    - -3
-    -2:
-    - -4
-    -3:
-    - -4
+links:
+  -1:
+  - -2
+  - -3
+  -2:
+  - -4
+  -3:
+  - -4

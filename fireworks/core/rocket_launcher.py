@@ -20,8 +20,8 @@ def launch_rocket(launchpad, fworker, logdir=None, strm_lvl=None):
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
     l_logger.info('Launching Rocket')
     rocket = Rocket(launchpad, fworker)
-    l_logger.info('Rocket finished')
     rocket.run()
+    l_logger.info('Rocket finished')
 
 
 def loop_rocket_run(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None):

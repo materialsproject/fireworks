@@ -78,13 +78,15 @@ class Workflow(FWSerializable):
 
     # TODO: add method that starts at a fw_id and refreshes all children if its state changed...
 
-    def refresh(self, fw_id):
+    def refresh(self, fw_id, changes=None):
+        changes = changes if changes else {}
+
         fw = self.id_fw[fw_id]
         prev_state = fw.state
 
         # if we're defused, just skip altogether
         if fw.state == 'DEFUSED':
-            return {}
+            return changes
 
         # what are the parent states?
         parent_states = [self.id_fw[p].state for p in self.links.parent_links.get(fw_id, [])]
@@ -104,9 +106,13 @@ class Workflow(FWSerializable):
 
         fw.state = m_state
         if m_state != prev_state:
-            return {fw_id: m_state}
+            changes[fw_id] = m_state
+            # refresh all the children
+            for child_id in self.links[fw_id]:
+                # MAJOR TODO: what if a child state gets updated TWICE? Need to pick the higher rank one
+                changes.update(self.refresh(child_id, changes))
 
-        return {}
+        return changes
 
     def _reassign_ids(self, old_new):
         # update id_fw

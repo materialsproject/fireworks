@@ -13,7 +13,6 @@ fws:
       parameters:
         script: echo 'that is the question:'
         use_shell: true
-wf_connections:
-  children_links:
-    -1:
-    - -2
+links:
+  -1:
+  - -2

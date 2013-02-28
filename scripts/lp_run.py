@@ -4,6 +4,7 @@
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
 from argparse import ArgumentParser
+import traceback
 from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
@@ -64,12 +65,18 @@ if __name__ == '__main__':
         # TODO: make this cleaner, e.g. make TAR option explicit
         try:
             fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
+            lp.add_wf(fwf)
         except:
-            if '.tar' in args.wf_file:
-                fwf = Workflow.from_tarfile(args.wf_file)
-            else:
-                fwf = Workflow.from_file(args.wf_file)
-        lp.add_wf(fwf)
+            try:
+                if '.tar' in args.wf_file:
+                    fwf = Workflow.from_tarfile(args.wf_file)
+                else:
+                    fwf = Workflow.from_file(args.wf_file)
+                lp.add_wf(fwf)
+            except:
+                print 'Error reading FireWork/Workflow file.'
+                traceback.print_exc()
+
 
     elif args.command == 'get_fw':
         fw = lp.get_fw_by_id(args.fw_id)

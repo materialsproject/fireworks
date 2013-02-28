@@ -14,7 +14,6 @@ fws:
       parameters: {}
     input_array:
     - 10
-wf_connections:
-  children_links:
-    -1:
-    - -2
+links:
+  -1:
+  - -2
