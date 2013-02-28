@@ -78,7 +78,7 @@ While running arbitrary shell scripts is flexible, it's not particularly well-or
 
    Under the hood, the first ``Script Task`` is getting its input from the **echo_text** parameter (we defined its ``stdin_key`` to be *echo_text*). It is then writing its output to ``howdy.txt``. The second ``Script Task`` is reading in ``howdy.txt``, performing the ``wc -w`` command, and writing its output ``words.txt``.
 
-   .. note:: We have changed the command from ``echo`` (in earlier examples) to ``cat -t`` - this is only because ``cat -t`` can easily take in input from a standard input stream.
+   .. note:: We have changed the command from ``echo`` (in earlier examples) to ``cat -t`` - this is because ``cat -t`` can easily take in input from a standard input stream, which is how the **echo_text** parameter is being fed in.
 
 #. Run the FireWork on the central server to confirm that this new formulation also works as intended::
 
@@ -140,7 +140,7 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
  * The *_fw_name* parameter is set to the same value as in our code for the FireTask (``Addition Task``). This is how FireWorks knows to run your custom FireTask rather than ``Script Task`` or some other FireTask.
  * This **spec** has an **input_array** field defined to ``1`` and ``2``. Remember that our Python code was grabbing the values in the **input_array**, summing them, and printing them to standard out.
 
-#. When you are comfortable you understand how a custom FireTask is set up, try running the FireWork on the central server to confirm that the ``Addition Task`` works::
+#. When you are comfortable that you roughly understand how a custom FireTask is set up, try running the FireWork on the central server to confirm that the ``Addition Task`` works::
 
 	lp_run.py reset <TODAY'S DATE>
 	lp_run.py add_wf fw_adder.yaml
