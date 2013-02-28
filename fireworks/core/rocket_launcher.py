@@ -42,4 +42,4 @@ def loop_rocket_run(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None):
         launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
         os.chdir(launcher_dir)
         launch_rocket(launchpad, fworker, logdir, strm_lvl)
-        time.sleep(0.25)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself
+        time.sleep(0.05)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself
