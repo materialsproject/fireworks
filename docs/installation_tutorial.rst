@@ -30,65 +30,71 @@ Reset the FireServer
 
 where <INSTALL_DIR> is your FireWorks installation directory.
  
-2. Reset the FireWorks database::
+2. Reset the FireWorks database (the LaunchPad)::
 
     lp_run.py reset <TODAY'S DATE>
 
-where <TODAY'S DATE> is formatted like '2012-12-31' (this serves as a safeguard to accidentally overwriting an existing database).
+where <TODAY'S DATE> is formatted like '2012-01-31' (this serves as a safeguard to accidentally overwriting an existing database). You should receive confirmation that the LaunchPad was reset.
 
-.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lp_run.py -h``.
+.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lp_run.py -h``. The ``-h`` help option is available for all of the scripts in these tutorials.
 
 Add a FireWork to the FireServer database
 -----------------------------------------
 
-A FireWork is a computing job. For this tutorial, we will use a FireWork that consists of only a single step. We'll tackle more complex workflows in other tutorials.
+A FireWork contains the computing job to be performed. For this tutorial, we will use a FireWork that consists of only a single step. We'll tackle more complex workflows in other tutorials.
 
 1. Staying in the tutorial directory, run the following command::
 
     lp_run.py add_wf fw_test.yaml
 
-2. Confirm that the FireWork got added to the database::
+   .. note:: You can look inside the file ``fw_test.yaml`` with a text editor if you'd like; we'll explain its components shortly.
+
+2. You should have received confirmation that the FireWork got added. You can query the database for this FireWork as follows::
 
     lp_run.py get_fw 1
 
 This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
 
- {
-    "fw_id": 1,
-    "launches": [],
-    "spec": {
-        "_tasks": [
-            {
-                "_fw_name": "Script Task",
-                "parameters": {
-                    "use_shell": true,
-                    "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
+    {
+        "created_at": "2013-01-31T05:10:27.911000",
+        "fw_id": 1,
+        "spec": {
+            "_tasks": [
+                {
+                    "_fw_name": "Script Task",
+                    "parameters": {
+                        "use_shell": true,
+                        "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
+                    }
                 }
-            }
-        ]
-    },
-    "state": "READY"
-}
+            ]
+        },
+        "state": "READY"
+    }
 
-Our ``fw_test.yaml`` file had specified a negative ``fw_id`` of -1; a negative ``fw_id`` means that the database will assign the id for us, starting from ``fw_id`` = 1.
 
-Notice the part of the FireWork that reads: ``echo "howdy, your job launched successfully!" >> howdy.txt"``. When the job is run, this is the command that will be executed (print some text into a file named ``howdy.txt``). The ``use_shell`` parameter indicates that the command will be interpreted through the shell.
+3. Some of the FireWork is straightforward, but a few sections deserve further explanation:
 
-You have now stored a FireWork in the database! It is now ready to be launched (state = ``READY``).
+* The **spec** of the FireWork contains *all* the information about what job to run and the parameters needed to run it.
+* Within the spec, **_tasks** section tells you what jobs will run. The ``Script Task`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**.
+* This FireWork runs the command ``echo "howdy, your job launched successfully!" >> howdy.txt"``, which prints text to a file named ``howdy.txt``.
+* The **state** of *READY* means the FireWork is ready to be run.
+
+You have now stored a FireWork in the LaunchPad, and it's ready to run!
 
 .. note:: More details on using the ``ScriptTask`` are presented in the later tutorials.
 
 Launch a Rocket on the FireServer
 =================================
 
-A Rocket fetches a FireWork from the FireServer database and runs it. A Rocket might be run on a separate machine (FireWorker) and through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.
+A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be run on a separate machine (FireWorker) or through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.
 
 1. Navigate to any clean directory. For example::
 
     mkdir ~/fw_tests
     cd ~/fw_tests
     
-2. Execute the following command (once)::
+2. We can launch Rockets using the Rocket Launcher. Execute the following command (once)::
 
     rlauncher_run.py singleshot
     
@@ -100,7 +106,7 @@ The Rocket fetches an available FireWork from the FireServer and runs it.
     
 You should see the text: ``howdy, your job launched successfully!``
 
-.. note:: In addition to ``howdy.txt``, you should also see a file called ``fw.json``. This contains a JSON representation of the FireWork that the Rocket ran.
+.. note:: In addition to ``howdy.txt``, you should also see a file called ``fw.json``. This contains a JSON representation of the FireWork that the Rocket ran and can be useful later for tracking down a launch or debugging.
 
 4. Check the status of your FireWork::
 
@@ -115,42 +121,68 @@ You will now see lots of information about your Rocket launch, such as the time 
 The error ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database.
 
 Launch many Rockets (rapidfire mode)
-=================================
+====================================
 
-If you just want to run lots of Rockets on the central server itself, the simplest way is to run in "loop mode". Let's try this feature:
+If you just want to run many jobs on the central server itself, the simplest way is to run the Rocket Launcher in "rapidfire mode". Let's try this feature:
 
 1. Staying in your working directory from last time, clean up your output files::
 
     rm fw.json howdy.txt
 
-2. Let's reset the database and insert 3 identical FireWorks::
+#. Let's add 3 identical FireWorks::
 
-    lp_run.py reset <TODAY'S DATE>
+    cp <INSTALL_DIR>/fw_tutorials/installation/fw_test.yaml .
     lp_run.py add_wf fw_test.yaml
     lp_run.py add_wf fw_test.yaml
     lp_run.py add_wf fw_test.yaml
 
-3. Confirm that the three FireWorks got added to the database::
+#. Confirm that the three FireWorks got added to the database, in addition to the one from before (4 total)::
 
     lp_run.py get_fw_ids
 
-4. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks and get the ``No FireWorks are ready to run and match query!`` error::
+#. We could also just get the ``fw_id`` of jobs that are ready to run (our 3 new FireWorks)::
+
+    lp_run.py get_fw_ids -q '{"state":"READY"}'
+
+#. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks to run::
 
     rlauncher_run.py rapidfire
 
-You should see four directories starting with the tag ``launcher_``. Inside each of these directories, you'll find the results of one of your FireWorks (the last directory was our failed attempt to find another FireWork and should be empty).
+#. You should see three directories starting with the tag ``launcher_``. Inside each of these directories, you'll find the results of one of your FireWorks (a file named ``howdy.txt``).
 
-5. Finally, let's check the launch state of your third FireWork::
 
-    lp_run.py get_fw 3
+Running FireWorks automatically
+===============================
 
-You'll see the launch information on that FireWork, including the directory where it ran.
+We can set our Rocket Launcher to continuously look for new FireWorks to run. Let's try this feature.
+
+1. Staying in your working directory from last time, clean up your previous output files::
+
+    rm -r launcher_*
+
+2. Start the Rocket Launcher so that it looks for new FireWorks every 10 seconds::
+
+    rlauncher_run.py rapidfire --infinite --sleep 10
+
+3. **In a new terminal window**, navigate back to your working directory containing ``fw_test.yaml``. Let's insert two FireWorks::
+
+    lp_run.py add_wf fw_test.yaml
+    lp_run.py add_wf fw_test.yaml
+
+4. After a few seconds, the Rocket Launcher should have picked up the new jobs and run them. Confirm this is the case::
+
+    ls -d launcher_*
+
+    You should see two directories, one for each FireWork we inserted.
+
+5. You can continue adding FireWorks as desired; the Rocket Launcher will run them automatically and create a new directory for each job. When you are finished, you can exit out of the Rocket Launcher terminal window and delete your working directory.
+
 
 Next steps
 ==========
 
-At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlauncher_run.py rapidfire``. This should give a basic feeling of how you can automate many jobs with FireWorks.
+At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlauncher_run.py rapidfire``, and run jobs automatically using the ``--infinite`` Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.
 
-Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation (part 2) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you don't expect to ever have any worker nodes.
+Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation Tutorial (part 2: the Worker) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you only want to run jobs on the FireServer itself.
 
-If you don't want to set up worker nodes and instead want to learn how more complex jobs are defined, you can skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.
+If you are only running on the FireServer, you can skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.

@@ -1,6 +1,6 @@
-============================
+=============================
 Defining Jobs using FireTasks
-============================
+=============================
 
 In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, you might have noticed that command defined within a task labeled ``Script Task``::
 
