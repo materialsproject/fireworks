@@ -5,7 +5,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 """
 
 from argparse import ArgumentParser
-from fireworks.core.queue_launcher import rapid_fire, launch_rocket_to_queue
+from fireworks.core.queue_launcher import rapidfire, launch_rocket_to_queue
 from fireworks.core.fworker import QueueParams
 
 __author__ = "Anubhav Jain"
@@ -41,6 +41,6 @@ if __name__ == '__main__':
     rocket_params = QueueParams.from_file(args.queue_params_file)
     
     if args.command == 'rapidfire':
-        rapid_fire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
+        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.n_loops, args.t_sleep)
     else:
         launch_rocket_to_queue(rocket_params, args.launch_dir)

@@ -63,7 +63,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.'):
         log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
-def rapid_fire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
+def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, n_loops=1, t_sleep=3600):
     """
     Submit many jobs to the queue.
     
