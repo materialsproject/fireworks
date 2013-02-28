@@ -307,7 +307,7 @@ class LaunchPad(FWSerializable):
     def _upsert_fws(self, fws):
         old_new = {} # mapping between old and new FireWork ids
         for fw in fws:
-            if not fw.fw_id or fw.fw_id < 0:
+            if fw.fw_id < 0:
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
