@@ -102,15 +102,15 @@ Let's see how this is achieved:
 
 #. The dynamicism is in the ``Fibonacci Adder Task``, which is defined in the file ``fibadd_task.py``. Look inside this file.
 
-    * The most important part of the code are the lines::
+ * The most important part of the code are the lines::
 
         new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
         return FWAction('CREATE', {'next_fibnum': m_sum}, {'create_fw': new_fw})
 
-    * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
-    * Next, we are returning an instruction to *CREATE* a child FireWork to the workflow.
-    * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
-    * The *{'create_fw': new_fw}* means that we want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction. The LaunchPad will interpret this command after the FireWork completes.
+ * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
+ * Next, we are returning an instruction to *CREATE* a child FireWork to the workflow.
+ * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
+ * The *{'create_fw': new_fw}* means that we want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction. The LaunchPad will interpret this command after the FireWork completes.
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 

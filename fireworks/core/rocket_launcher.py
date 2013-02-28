@@ -1,5 +1,6 @@
 import os
 import time
+from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir
 
@@ -11,12 +12,13 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
-def launch_rocket(launchpad, fworker, logdir=None, strm_lvl=None):
+def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None):
     """
     Run a single rocket in the current directory
     :param launchpad: a LaunchPad object
     :param fworker: a FWorker object
     """
+    fworker = fworker if fworker else FWorker()
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
     l_logger.info('Launching Rocket')
     rocket = Rocket(launchpad, fworker)
@@ -24,7 +26,7 @@ def launch_rocket(launchpad, fworker, logdir=None, strm_lvl=None):
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60):
+def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -34,6 +36,7 @@ def rapidfire(launchpad, fworker, m_dir=None, logdir=None, strm_lvl=None, infini
     :param m_dir: the directory in which to loop Rocket running
     """
     curdir = m_dir if m_dir else os.getcwd()
+    fworker = fworker if fworker else FWorker()
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
 
