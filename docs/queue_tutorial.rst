@@ -110,7 +110,7 @@ where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you crea
 
 You've now launched multiple Rockets with a single command!
 
-.. note:: For more tips on the Queue Launcher, such as how to maintain a certain number of jobs in the queue, read its built-in help: ``qlauncher_run.py rapidfire -h``
+.. note:: For more tips on the Queue Launcher, such as how to maintain a certain number of jobs in the queue and loop infinitely, read its built-in help: ``qlauncher_run.py rapidfire -h``
 
 Next steps
 ==========
