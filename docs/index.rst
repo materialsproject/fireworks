@@ -7,7 +7,7 @@
    :width: 300 px
    :alt: FireWorks
 
-*Note: FireWorks is under active development. It is currently incomplete and not useable as workflow software. However, certain components of the code are available for initial testing.*
+*Note: FireWorks is under active development; major features are yet to be implemented, and the internal code is refactored often and not suitable for production. However, certain components of the code are available for initial testing.*
 
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
@@ -139,7 +139,7 @@ FireWorks was developed primarily at Lawrence Berkeley National Lab using resear
 License
 =======
 
-FireWorks is developed under the MIT License (a very permissive license), reproduced below::
+FireWorks is developed under the MIT License (a very permissive open-source license), reproduced below::
 
     The MIT License (MIT)
     Copyright (c) 2011-2012 LBNL, Anubhav Jain
