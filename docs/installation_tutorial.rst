@@ -47,7 +47,7 @@ A FireWork contains the computing job to be performed. For this tutorial, we wil
 
 1. Staying in the tutorial directory, run the following command::
 
-    lp_run.py add_wf fw_test.yaml
+    lp_run.py add fw_test.yaml
 
    .. note:: You can look inside the file ``fw_test.yaml`` with a text editor if you'd like; we'll explain its components shortly.
 
@@ -134,9 +134,9 @@ If you just want to run many jobs on the central server itself, the simplest way
 #. Let's add 3 identical FireWorks::
 
     cp <INSTALL_DIR>/fw_tutorials/installation/fw_test.yaml .
-    lp_run.py add_wf fw_test.yaml
-    lp_run.py add_wf fw_test.yaml
-    lp_run.py add_wf fw_test.yaml
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
 
 #. Confirm that the three FireWorks got added to the database, in addition to the one from before (4 total)::
 
@@ -168,8 +168,8 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 
 3. **In a new terminal window**, navigate back to your working directory containing ``fw_test.yaml``. Let's insert two FireWorks::
 
-    lp_run.py add_wf fw_test.yaml
-    lp_run.py add_wf fw_test.yaml
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
 
 4. After a few seconds, the Rocket Launcher should have picked up the new jobs and run them. Confirm this is the case::
 

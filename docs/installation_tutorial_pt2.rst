@@ -25,7 +25,7 @@ Reset the FireWorks database
 
     lp_run.py reset <TODAY'S DATE>
     cd <INSTALL_DIR>/fw_tutorials/installation_pt2
-    lp_run.py add_wf fw_test.yaml
+    lp_run.py add fw_test.yaml
 
 Make sure to keep the MongoDB running on the FireServer, and do not launch a Rocket yet!
 
@@ -94,9 +94,9 @@ Just like on the central server, you can run in rapidfire mode on the FireWorker
 
 2. Add three more FireWorks. Let's do this from the FireWorker this time instead of the FireServer::
 
-    lp_run.py -l my_launchpad.yaml add_wf fw_test.yaml
-    lp_run.py -l my_launchpad.yaml add_wf fw_test.yaml
-    lp_run.py -l my_launchpad.yaml add_wf fw_test.yaml
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
 
 3. Run Rockets in rapidfire mode::
 

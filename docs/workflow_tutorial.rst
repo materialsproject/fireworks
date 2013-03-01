@@ -39,7 +39,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 #. Let's insert this workflow into our database::
 
     lp_run.py reset <TODAY'S DATE>
-    lp_run.py add_wf hamlet_wf.yaml
+    lp_run.py add hamlet_wf.yaml
 
 #. Let's look at our two FireWorks::
 
@@ -96,7 +96,7 @@ Let's quickly define and execute this workflow.
 #. Once everything makes sense, let's add the workflow and run everything at once::
 
     lp_run.py reset <TODAY'S DATE>
-    lp_run.py add_wf org_wf.yaml
+    lp_run.py add org_wf.yaml
     rlauncher_run.py --silencer rapidfire
 
 #. You should notice that the CEO correctly gets printed above the managers, who in turn are printed above the intern. There is no preference amongst the two managers as written; FireWorks might print either manager first. If you want to distinguish between them, you can use priorities (covered in a future tutorial).
