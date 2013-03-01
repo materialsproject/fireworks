@@ -8,9 +8,9 @@ import os
 import subprocess
 import getpass
 import re
+from fireworks.queue.queue_adapter import QueueAdapterBase
 from fireworks.utilities.fw_utilities import get_fw_logger, \
     log_fancy, log_exception
-from fireworks.core.fworker import QueueAdapterBase
 
 
 __author__ = 'Anubhav Jain, Michael Kocher'

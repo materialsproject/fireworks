@@ -6,8 +6,8 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.queue_launcher import rapidfire, launch_rocket_to_queue
-from fireworks.core.fworker import QueueParams
+from fireworks.queue.queue_adapter import QueueParams
+from fireworks.queue.queue_launcher import rapidfire, launch_rocket_to_queue
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"

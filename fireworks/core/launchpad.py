@@ -4,15 +4,11 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
-from fireworks.core.fw_constants import LAUNCH_RANKS
-from fireworks.core.fworker import FWorker
-from fireworks.core.rocket import Rocket
 from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch
 from pymongo import DESCENDING
-from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
@@ -102,10 +98,11 @@ class LaunchPad(FWSerializable):
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
     def maintain(self):
+        # TODO: compact the database / collections
+        # TODO: track down launches that have not pinged the server in awhile...
+
         self.m_logger.info('Performing maintenance on Launchpad, please wait....')
-
         self._update_indices()
-
         self.m_logger.info('LaunchPad was MAINTAINED.')
 
     def add_wf(self, wf):
