@@ -92,11 +92,12 @@ class FireWork(FWSerializable):
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
-    def __init__(self, fworker, host=None, ip=None, launch_dir=None, action=None, start=None, end=None, state=None,
+    def __init__(self, fworker, fw_id, host=None, ip=None, launch_dir=None, action=None, start=None, end=None, state=None,
                  launch_id=None):
         """
         
         :param fworker: A FWorker object describing the worker
+        :param fw_id: id of the FireWork this launch is running
         :param host: the hostname where the launch took place (probably automatically set)
         :param ip: the ip address where the launch took place (probably automatically set)
         :param launch_dir: the directory on the host where the launch took place (probably automatically set)
@@ -108,6 +109,7 @@ class Launch(FWSerializable):
             raise ValueError("Invalid launch state: {}".format(state))
 
         self.fworker = fworker
+        self.fw_id = fw_id
         self.host = host
         self.ip = ip
         self.launch_dir = launch_dir
@@ -119,7 +121,7 @@ class Launch(FWSerializable):
 
     def to_dict(self):
         action_dict = self.action.to_dict() if self.action else None
-        return {'fworker': self.fworker.to_dict(), 'action': action_dict, 'start': self.start,
+        return {'fworker': self.fworker.to_dict(), 'fw_id': self.fw_id, 'action': action_dict, 'start': self.start,
                 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
                 'launch_id': self.launch_id}
 
@@ -136,5 +138,5 @@ class Launch(FWSerializable):
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
-        return Launch(fworker, m_dict['host'], m_dict['ip'], m_dict['launch_dir'], action,
+        return Launch(fworker, m_dict['fw_id'], m_dict['host'], m_dict['ip'], m_dict['launch_dir'], action,
                       m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])

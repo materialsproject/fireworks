@@ -247,7 +247,7 @@ class LaunchPad(FWSerializable):
 
         # create a launch
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
+        m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
         self.launches.insert(m_launch.to_db_dict())
         self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 
@@ -317,6 +317,14 @@ class LaunchPad(FWSerializable):
         :param wf: a Workflow object
         :param fw_id: the parent fw_id - children will be refreshed
         """
+        # TODO: time how long it took to refresh the WF!
         updated_ids = wf.refresh(fw_id)  # return dict of fw_id: state
         for fw_id in updated_ids:
+            # TODO: add duplicate checking here!
+            # steal_launches
+            # If the dupe check succeeds you must
+            # - update the state
+            # - run refresh_wf on the children
+            # Move this final update clause to a new loop over updated ids...
+            # Do this self consistently??
             self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": wf.id_fw[fw_id].state}})
