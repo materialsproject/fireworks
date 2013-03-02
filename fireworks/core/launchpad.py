@@ -247,7 +247,7 @@ class LaunchPad(FWSerializable):
 
         # create a launch
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
+        m_launch = Launch(fworker, m_fw['fw_id'], host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
         self.launches.insert(m_launch.to_db_dict())
         self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 
