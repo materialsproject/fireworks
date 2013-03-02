@@ -36,6 +36,7 @@ class FireWork(FWSerializable):
         reserved spec keywords:
             _tasks - a list of FireTasks to run
             _priority - the priority of the FW
+            _dupefinder - a DupeFinder object, for avoiding duplicates
         
         :param tasks: a list of FireTasks
         :param spec: a dict specification of the job to run

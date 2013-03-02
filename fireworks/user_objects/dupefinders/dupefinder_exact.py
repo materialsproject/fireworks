@@ -13,7 +13,6 @@ class DupeFinderExact():
 
 
     # TODO: move the logic into query() instead of verify() for better performance
-    
     def verify(self, spec1, spec2):
         return spec1 == spec2
 
