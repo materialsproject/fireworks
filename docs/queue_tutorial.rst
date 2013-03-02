@@ -4,6 +4,7 @@ Launch Rockets through a queue
 
 If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer time.
 
+The simplest way to submit jobs through a queue is to submit queue scripts that run ``rlauncher_run.py``. This method is just like typing ``rlauncher_run.py`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us. In particular, FireWorks is *completely unaware* that you are running through a queue(!); as far as FireWorks is concerned, a Rocket was launched somewhere, somehow. We'll discuss a more integrated way of doing things in a later tutorial. For now, we'll introduce the Queue Launcher, which helps you rapidly submit Rocket Launcher jobs using a queue system.
 
 Launch a single job through a queue
 ===================================
