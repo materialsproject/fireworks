@@ -322,13 +322,11 @@ class LaunchPad(FWSerializable):
         for fw_id in updated_ids:
             fw = wf.id_fw[fw_id]
             # do a duplicate check if we just updated to READY and _dupefinder is present
-            """
             self._steal_launches(fw)
             if len(fw.launches) > 0:  # we have launches! no longer are we just READY
                 self._upsert_fws([fw])  # update the DB with the new launches
                 self._refresh_wf(wf, fw_id)  # since we updated a state, we need to refresh the WF again
                 break
-            """
             self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": fw.state}})
 
     def _steal_launches(self, thief_fw):
