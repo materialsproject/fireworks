@@ -5,7 +5,7 @@ The LaunchPad manages the FireWorks database.
 """
 import datetime
 from fireworks.core.workflow import Workflow
-from fireworks.utilities.fw_serializers import FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch
 from pymongo import DESCENDING
@@ -320,11 +320,30 @@ class LaunchPad(FWSerializable):
         # TODO: time how long it took to refresh the WF!
         updated_ids = wf.refresh(fw_id)  # return dict of fw_id: state
         for fw_id in updated_ids:
-            # TODO: add duplicate checking here!
-            # steal_launches
-            # If the dupe check succeeds you must
-            # - update the state
-            # - run refresh_wf on the children
-            # Move this final update clause to a new loop over updated ids...
-            # Do this self consistently??
-            self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": wf.id_fw[fw_id].state}})
+            fw = wf.id_fw[fw_id]
+            # do a duplicate check if we just updated to READY and _dupefinder is present
+            """
+            self._steal_launches(fw)
+            if len(fw.launches) > 0:  # we have launches! no longer are we just READY
+                self._upsert_fws([fw])  # update the DB with the new launches
+                self._refresh_wf(wf, fw_id)  # since we updated a state, we need to refresh the WF again
+                break
+            """
+            self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": fw.state}})
+
+    def _steal_launches(self, thief_fw):
+        if thief_fw.state == 'READY' and '_dupefinder' in thief_fw.spec:
+            m_dupefinder = load_object(thief_fw.spec['_dupefinder'])
+            # get the query that will limit the number of results to check as duplicates
+            m_query = m_dupefinder.query()
+            m_query['launches'] = {'$ne': []}
+
+            # iterate through all potential duplicates in the DB
+            for potential_match in self.fireworks.find(m_query):
+                if m_dupefinder.verify(thief_fw.spec, potential_match['spec']):  # verify the match
+                    # steal the launches
+                    victim_fw = self.get_fw_by_id(potential_match['fw_id'])
+                    thief_launches = [l.launch_id for l in thief_fw.launches]
+                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
+                    for launch in valuable_launches:
+                        thief_fw.launches.append(launch)
