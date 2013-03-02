@@ -19,7 +19,7 @@ class DupeFinderBase():
     def verify(self, spec1, spec2):
         raise NotImplementedError
 
-    def query(self):
+    def query(self, spec):
         raise NotImplementedError
 
     @serialize_fw

@@ -11,10 +11,13 @@ class DupeFinderExact():
     TODO: add docs
     """
 
-
+    _fw_name = 'Dupe Finder Exact'
+    
     # TODO: move the logic into query() instead of verify() for better performance
     def verify(self, spec1, spec2):
         return spec1 == spec2
+        # return True  # if it matches the query, it doesn't need to be verified; it's an exact match!
 
-    def query(self):
+    def query(self, spec):
         return {}
+        # return {'spec': {'$elemMatch': spec}}
