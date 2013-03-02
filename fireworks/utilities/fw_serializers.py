@@ -45,6 +45,7 @@ __date__ = 'Dec 13, 2012'
 
 SAVED_FW_MODULES = {}
 
+# TODO: consider replacing to_db_dict() methods with a (db_dict=True) option in to_dict(). Then you don't have to memorize which classes have a to_db_dict() method
 
 def serialize_fw(func):
     """

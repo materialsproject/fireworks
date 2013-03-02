@@ -24,11 +24,11 @@ __date__ = 'Dec 12, 2012'
 class PBSAdapterNERSC(QueueAdapterBase):
     _fw_name = 'PBSAdapter (NERSC)'
 
-    def get_script_str(self, rocket_params, launch_dir):
+    def get_script_str(self, queue_params, launch_dir):
         """
         Create a NERSC-style PBS script. For more documentation, see parent object.
         
-        Supported RocketParams.params are:
+        Supported QueueParams.params are:
             - ncores: number of cores
             - walltime: looks like "hh:mm:ss"
             - queue: the queue to run on
@@ -42,7 +42,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # convert launch_dir to absolute path
         launch_dir = os.path.abspath(launch_dir)
 
-        p = rocket_params.params
+        p = queue_params.params
 
         outs = []
         outs.append('#!/bin/bash')
