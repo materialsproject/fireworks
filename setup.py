@@ -24,7 +24,7 @@ if __name__ == "__main__":
           license='MIT',
           packages=find_packages(),
           zip_safe=False,
-          install_requires=['pyyaml', 'simplejson', 'pymongo'],
+          install_requires=['pyyaml>=3.1.0', 'simplejson>=3.0', 'pymongo>=2.4.2'],
           classifiers=[
             "Programming Language :: Python :: 2.7",
             "Development Status :: 2 - Pre-Alpha",
