@@ -22,7 +22,6 @@ class TestImports(unittest.TestCase):
 
     def test_imports(self):
         import yaml
-        import simplejson
         import pymongo
         # test that MongoClient is available (newer pymongo)
         from pymongo import MongoClient

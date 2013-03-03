@@ -24,18 +24,13 @@ if __name__ == "__main__":
           license='MIT',
           packages=find_packages(),
           zip_safe=False,
-          install_requires=['pyyaml>=3.1.0', 'simplejson>=3.0', 'pymongo>=2.4.2'],
-          classifiers=[
-            "Programming Language :: Python :: 2.7",
-            "Development Status :: 2 - Pre-Alpha",
-            "Intended Audience :: Science/Research",
-            "Intended Audience :: System Administrators",
-            "Intended Audience :: Information Technology",
-            "License :: OSI Approved :: MIT License",
-            "Operating System :: OS Independent",
-            "Topic :: Other/Nonlisted Topic",
-            "Topic :: Scientific/Engineering"],
-            test_suite='nose.collector',
-            tests_require=['nose'],
-            scripts=[os.path.join(os.path.join(module_dir, "scripts", f)) for f in os.listdir(os.path.join(module_dir, "scripts"))]
-            )
+          install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2'],
+          classifiers=["Programming Language :: Python :: 2.7", "Development Status :: 2 - Pre-Alpha",
+                       "Intended Audience :: Science/Research", "Intended Audience :: System Administrators",
+                       "Intended Audience :: Information Technology", "License :: OSI Approved :: MIT License",
+                       "Operating System :: OS Independent", "Topic :: Other/Nonlisted Topic",
+                       "Topic :: Scientific/Engineering"],
+          test_suite='nose.collector',
+          tests_require=['nose'],
+          scripts=[os.path.join(os.path.join(module_dir, "scripts", f)) for f in
+                   os.listdir(os.path.join(module_dir, "scripts"))])

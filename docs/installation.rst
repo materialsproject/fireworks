@@ -27,7 +27,6 @@ Download FireWorks and dependencies
 
     pip install nose
     pip install pyyaml
-    pip install simplejson
     pip install pymongo
 
 .. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``. In particular, ensure that pymongo is >= 2.4.2 and includes MongoClient.

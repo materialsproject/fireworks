@@ -1,3 +1,2 @@
 PyYAML>=3.1.0
-simplejson>=3.0
 pymongo>=2.4.2

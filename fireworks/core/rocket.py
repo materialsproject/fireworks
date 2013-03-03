@@ -6,7 +6,7 @@ TODO: add docs
 import os
 import socket
 import traceback
-import simplejson as json
+import json
 from fireworks.core.firetask import FWAction
 from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
 

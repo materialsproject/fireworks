@@ -9,7 +9,7 @@ from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
 import ast
-import simplejson as json
+import json
 from fireworks.core.workflow import Workflow
 
 __author__ = 'Anubhav Jain'

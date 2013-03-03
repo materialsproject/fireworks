@@ -4,7 +4,7 @@
 This module contains classes relevant for a FireWorker (worker computing resource)
 """
 
-import simplejson as json
+import json
 from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.utilities.fw_serializers import FWSerializable
 
