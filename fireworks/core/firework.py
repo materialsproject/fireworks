@@ -16,6 +16,7 @@ from fireworks.core.firetask import FWAction
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
+from fireworks.utilities.fw_utilities import recursive_dict
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -61,7 +62,7 @@ class FireWork(FWSerializable):
         """
         This is a 'minimal' or 'compact' dict representation of the FireWork
         """
-        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_at': self.created_at}
+        m_dict = {'spec': recursive_dict(self.spec), 'fw_id': self.fw_id, 'created_at': self.created_at}
         if len(self.launches) > 0:
             m_dict['launches'] = [l.to_dict() for l in self.launches]
 

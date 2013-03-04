@@ -1,4 +1,4 @@
-from fireworks.utilities.fw_serializers import serialize_fw
+from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -8,7 +8,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Mar 01, 2013'
 
 
-class DupeFinderBase():
+class DupeFinderBase(FWSerializable):
     """
     TODO: add docs
     """
