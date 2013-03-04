@@ -3,7 +3,7 @@
 """
 TODO: add docs
 """
-from fireworks.utilities.fw_serializers import serialize_fw
+from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 from fireworks.utilities.fw_utilities import recursive_dict
 
 
@@ -15,7 +15,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 15, 2013'
 
 
-class FireTaskBase():
+class FireTaskBase(FWSerializable):
     """
     TODO: add docs
     """

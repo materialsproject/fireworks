@@ -15,7 +15,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 25, 2013'
 
 
-class AddModifyTask(FireTaskBase, FWSerializable):
+class AddModifyTask(FireTaskBase):
 
     _fw_name = "Add and Modify Task"
 
