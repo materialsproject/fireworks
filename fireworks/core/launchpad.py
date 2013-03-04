@@ -333,7 +333,7 @@ class LaunchPad(FWSerializable):
         if thief_fw.state == 'READY' and '_dupefinder' in thief_fw.spec:
             m_dupefinder = load_object(thief_fw.spec['_dupefinder'])
             # get the query that will limit the number of results to check as duplicates
-            m_query = m_dupefinder.query()
+            m_query = m_dupefinder.query(thief_fw.spec)
             m_query['launches'] = {'$ne': []}
 
             # iterate through all potential duplicates in the DB
