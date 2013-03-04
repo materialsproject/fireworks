@@ -43,7 +43,6 @@ class Workflow(FWSerializable):
 
         @classmethod
         def from_dict(cls, m_dict):
-            print m_dict, '****'
             m_dict = dict([(int(k), list(v)) for (k, v) in m_dict.iteritems()])
             return Workflow.Links(m_dict)
 
