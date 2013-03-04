@@ -125,7 +125,7 @@ The collaborative way to submit questions, issues, and all other communication i
 Contributors
 ============
 
-FireWorks was developed primarily at Lawrence Berkeley National Lab by Anubhav Jain using research funding from Kristin Persson for the `Materials Project <http://www.materialsproject.org>`_.
+FireWorks was developed primarily by Anubhav Jain at Lawrence Berkeley National Lab, using research funding from Kristin Persson for the `Materials Project <http://www.materialsproject.org>`_.
 
 Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code was refashioned for the QueueLauncher and the PBS QueueAdapter.
 
