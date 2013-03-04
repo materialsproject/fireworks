@@ -223,8 +223,9 @@ class LaunchPad(FWSerializable):
         :param query:
         :return:
         """
-        query['state'] = {'$in': ['READY', 'FIZZLED']}
-        return query
+        m_query = dict(query)  # defensive copy
+        m_query['state'] = {'$in': ['READY', 'FIZZLED']}
+        return m_query
 
     def _checkout_fw(self, fworker, host, ip, launch_dir):
         """
