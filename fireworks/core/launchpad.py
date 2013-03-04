@@ -238,24 +238,35 @@ class LaunchPad(FWSerializable):
         """
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
-        # check out the matching firework, depending on the query set by the FWorker
-        m_fw = self.fireworks.find_and_modify(query=m_query, fields={"fw_id": 1}, update={'$set': {'state': 'RUNNING'}},
-                                              sort=[("spec._priority", DESCENDING)])
-        if not m_fw:
-            return None, None
-        self.m_logger.debug('Checked out FW with id: {}'.format(m_fw['fw_id']))
+        while True:
+            # check out the matching firework, depending on the query set by the FWorker
+            m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'TEMPORARY'}}, sort=[("spec._priority", DESCENDING)])
+            if not m_fw:
+                return None, None
+            m_fw = FireWork.from_dict(m_fw)
 
+            # check if there are duplicates
+            self.m_logger.debug('Trying out FW with id: {}'.format(m_fw.fw_id))
+            if not self._steal_launches(m_fw):
+                break
+
+            self._upsert_fws([m_fw])  # update the DB with the new launches
+            self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id), m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
+
+        # check out FW for *reals*
         # create a launch
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, m_fw['fw_id'], host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
+        m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
         self.launches.insert(m_launch.to_db_dict())
         self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 
         # add launch to FW
-        self.fireworks.update({'fw_id': m_fw['fw_id']}, {'$push': {'launches': m_launch.launch_id}})
+        m_fw.launches.append(m_launch)
+        m_fw.state = 'RUNNING'
+        self._upsert_fws([m_fw])
+        self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
 
-        # return FW
-        return self.get_fw_by_id(m_fw['fw_id']), launch_id
+        return m_fw, launch_id
 
     def _complete_launch(self, launch_id, action=None):
         """
@@ -324,11 +335,9 @@ class LaunchPad(FWSerializable):
             # do a duplicate check if we just updated to READY and _dupefinder is present
             self._steal_launches(fw)
             self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": fw.state}})
-            if len(fw.launches) > 0:  # we have launches! no longer are we just READY
-                self._upsert_fws([fw])  # update the DB with the new launches
-                self._refresh_wf(wf, fw_id)  # since we updated a state, we need to refresh the WF again
 
     def _steal_launches(self, thief_fw):
+        stolen = False
         if thief_fw.state == 'READY' and '_dupefinder' in thief_fw.spec:
             m_dupefinder = load_object(thief_fw.spec['_dupefinder'])
             # get the query that will limit the number of results to check as duplicates
@@ -343,3 +352,6 @@ class LaunchPad(FWSerializable):
                     valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
                     for launch in valuable_launches:
                         thief_fw.launches.append(launch)
+                        stolen = True
+
+        return stolen
