@@ -180,7 +180,7 @@ FireWorks is developed under a BSD-style License (a very permissive open-source 
     patches, or upgrades to the features, functionality or performance
     of the source code ("Enhancements") to anyone; however, if you
     choose to make your Enhancements available either publicly, or
-    directly to Lawrence Berkeley National Laboratory or it
+    directly to Lawrence Berkeley National Laboratory or its
     contributors, without imposing a separate written license agreement
     for such Enhancements, then you hereby grant the following license:
     a  non-exclusive, royalty-free perpetual license to install, use,
