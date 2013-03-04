@@ -43,6 +43,7 @@ class Workflow(FWSerializable):
 
         @classmethod
         def from_dict(cls, m_dict):
+            print m_dict, '****'
             m_dict = dict([(int(k), list(v)) for (k, v) in m_dict.iteritems()])
             return Workflow.Links(m_dict)
 
@@ -65,6 +66,11 @@ class Workflow(FWSerializable):
 
             if fw.fw_id not in links_dict:
                 links_dict[fw.fw_id] = []
+
+            # transform any non-iterable values to iterables
+            for k, v in links_dict.iteritems():
+                if not isinstance(v, list):
+                    links_dict[k] = [v]
 
         self.links = Workflow.Links(links_dict)
 
