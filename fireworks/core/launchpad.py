@@ -240,7 +240,7 @@ class LaunchPad(FWSerializable):
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
-            m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'TEMPORARY'}}, sort=[("spec._priority", DESCENDING)])
+            m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
             if not m_fw:
                 return None, None
             m_fw = FireWork.from_dict(m_fw)
