@@ -100,6 +100,7 @@ class LaunchPad(FWSerializable):
     def maintain(self):
         # TODO: compact the database / collections
         # TODO: track down launches that have not pinged the server in awhile...
+        # TODO: update FIZZLED and long RESERVED states...
 
         self.m_logger.info('Performing maintenance on Launchpad, please wait....')
         self._update_indices()
