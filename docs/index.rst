@@ -141,8 +141,10 @@ License
 
 FireWorks is developed under a BSD-style License (a very permissive open-source license), reproduced below::
 
-    FireWorks Copyright (c) 2013, Anubhav Jain & Lawrence Berkeley
-    National Laboratory.  All rights reserved.
+    FireWorks Copyright (c) 2013, The Regents of the University of
+    California, through Lawrence Berkeley National Laboratory (subject
+    to receipt of any required approvals from the U.S. Dept. of Energy).
+    All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions
