@@ -35,7 +35,7 @@ The text in blue lettering is not known in advance and can only be determined af
         return FWAction('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
 
  * The first argument, *MODIFY*, indicates that we want to modify the inputs of the next FireWork (somehow!)
- * The second argument, *{'sum': m_sum}*, is the data we want to store in our database. It does not affect this FireWork's operation.
+ * The second argument, *{'sum': m_sum}*, is the data we want to store in our database for future reference. It does not affect this FireWork's operation.
  * The final argument, *{'dict_mods': [{'_push': {'input_array': m_sum}}]}*, is the most complex. This argument describes the modifications to make to the next FireWork using a special language. For now, it's sufficient to know that when using the *MODIFY* command, one must specify a *dict_mods* key that contains a list of *modifications*. In our case, we have just a single modification: *{'_push': {'input_array': m_sum}}*.
  * The instruction *{'_push': {'input_array': m_sum}}* means that the *input_array* key of the next FireWork(s) will have another item *pushed* to the end of it. In our case, we will be pushing the sum of (1 + 1) to the ``input_array`` of the next FireWork.
 
