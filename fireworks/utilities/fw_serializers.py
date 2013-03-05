@@ -175,14 +175,15 @@ def load_object(obj_dict):
     fw_name = FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
     obj_dict['_fw_name'] = fw_name
 
+    known_module = obj_dict.get('@module', None)
     # first try to load from known location
     if fw_name in SAVED_FW_MODULES:
-        obj_dict['@module'] = SAVED_FW_MODULES[fw_name]
+        known_module = SAVED_FW_MODULES[fw_name]
 
     # second try to load from the serialized module name
     # only works if you used USE_PYMATGEN_SERIALIZATION option or in SAVED_FW_OBJECTS
-    if obj_dict.get('@module', None):
-        m_module = importlib.import_module(obj_dict['@module'])
+    if known_module:
+        m_module = importlib.import_module(known_module)
         m_object = _search_module_for_obj(m_module, obj_dict)
         if m_object:
             return m_object
