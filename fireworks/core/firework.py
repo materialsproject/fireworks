@@ -26,7 +26,7 @@ __date__ = "Feb 5, 2013"
 
 
 # TODO: add ability to block ports
-
+# TODO: properly load object recursively, e.g. in the spec
 
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
