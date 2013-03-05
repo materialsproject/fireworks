@@ -12,7 +12,6 @@ A FWAction encapsulates the output of that launch.
 """
 
 import datetime
-from fireworks.core.firetask import FWAction
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
@@ -142,3 +141,33 @@ class Launch(FWSerializable):
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
         return Launch(fworker, m_dict['fw_id'], m_dict['host'], m_dict['ip'], m_dict['launch_dir'], action,
                       m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
+
+
+class FWAction():
+    """
+    TODO: add docs
+
+    """
+
+    # TODO: ADDIFY can be merged into ADD (definitely)
+    # TODO: DETOUR can be merged into ADD (probably)
+
+    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'ADDIFY', 'PHOENIX', 'BREAK']
+
+    def __init__(self, command, stored_data=None, mod_spec=None):
+        if command not in FWAction.commands:
+            raise ValueError("Invalid command: " + command)
+
+        self.command = command
+        self.stored_data = stored_data if stored_data else {}
+        self.mod_spec = mod_spec if mod_spec else {}
+
+    def to_dict(self):
+        return {"action": self.command, "stored_data": self.stored_data, "mod_spec": recursive_dict(self.mod_spec)}
+
+    @classmethod
+    def from_dict(cls, m_dict):
+        # TODO: do a recursive load properly, and then move FWAction back to FireTask where it belongs
+        if 'create_fw' in m_dict['mod_spec']:
+            m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
+        return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])

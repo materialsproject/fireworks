@@ -80,7 +80,7 @@ class Workflow(FWSerializable):
         self.metadata = metadata
 
     def apply_action(self, action, fw_id):
-        updated_fws = []
+        updated_ids = []
 
         if action.command in ['CONTINUE', 'BREAK']:
             # Do nothing
@@ -90,24 +90,26 @@ class Workflow(FWSerializable):
             # mark all children as defused
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].state = 'DEFUSED'
-                updated_fws.append(self.id_fw[cfid])
+                updated_ids.append(cfid)
 
         if action.command == 'MODIFY' or 'CREATE':
             for cfid in self.links[fw_id]:
                 for mod in action.mod_spec.get('dict_mods', []):
                     apply_mod(mod, self.id_fw[cfid].spec)
-                    updated_fws.append(self.id_fw[cfid])
+                    updated_ids.append(cfid)
 
         if action.command == 'CREATE':
             create_fw = action.mod_spec['create_fw']
             self.links[fw_id].append(create_fw.fw_id)
             self.links[create_fw.fw_id] = []  # TODO: allow this to be children of original FW
             self.id_fw[create_fw.fw_id] = create_fw
-            updated_fws.append(create_fw)
+            updated_ids.append(create_fw.fw_id)
 
-        return updated_fws
+        return updated_ids
 
     def refresh(self, fw_id, updated_ids=None):
+        #TODO: document this better
+
         updated_ids = updated_ids if updated_ids else set()
 
         fw = self.id_fw[fw_id]
@@ -127,14 +129,22 @@ class Workflow(FWSerializable):
             # my state depends on launch
             max_score = 0
             m_state = 'READY'
+            m_action = None
 
+            # TODO: pick the first launch that matches 'COMPLETED'; multiple might exist
             for l in fw.launches:
                 if LAUNCH_RANKS[l.state] > max_score:
                     max_score = LAUNCH_RANKS[l.state]
                     m_state = l.state
+                    if m_state == 'COMPLETED':
+                        m_action = l.action
 
         fw.state = m_state
+
         if m_state != prev_state:
+            if m_state == 'COMPLETED':
+                updated_ids = updated_ids.union(self.apply_action(m_action, fw.fw_id))
+
             updated_ids.add(fw_id)
             # refresh all the children
             for child_id in self.links[fw_id]:

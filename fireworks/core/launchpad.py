@@ -118,6 +118,7 @@ class LaunchPad(FWSerializable):
         # insert the FireWorks and get back mapping of old to new ids
         old_new = self._upsert_fws(wf.id_fw.values())
 
+        # TODO: refresh_workflow probably takes care of this now
         # redo the Workflow based on new mappings
         wf._reassign_ids(old_new)
 
@@ -276,29 +277,14 @@ class LaunchPad(FWSerializable):
         :param launch_id:
         :param action: the FWAction of what to do next
         """
-
-        # TODO: need a try-except here, high probability of failure if incorrect action supplied
-
         # update the launch data to COMPLETED, set end time, etc
         updates = {'state': 'COMPLETED', 'end': datetime.datetime.utcnow(), 'action': action.to_dict()}
         self.launches.update({'launch_id': launch_id}, {'$set': updates})
 
         # find all the fws that have this launch
-        for fw_id in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
-            fw_id = fw_id['fw_id']
-            # get the workflow
-            wf = self.get_wf_by_fw_id(fw_id)
-            # update the workflow object using the action
-            updated_fws = wf.apply_action(action, fw_id)
-            # reinsert each of the updated/new fws
-            old_new = self._upsert_fws(updated_fws)
-            # reassign the ids of new fws
-            wf._reassign_ids(old_new)
-            # redo the links
-            self.links.update({'nodes': fw_id}, wf.to_db_dict())
-            # refresh the FW states
-
-            self._refresh_wf(wf, fw_id)
+        for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
+            fw_id = fw['fw_id']
+            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
     def get_new_fw_id(self):
         """
@@ -331,9 +317,14 @@ class LaunchPad(FWSerializable):
         :param fw_id: the parent fw_id - children will be refreshed
         """
         # TODO: time how long it took to refresh the WF!
-        updated_ids = wf.refresh(fw_id)  # return dict of fw_id: state
-        for fw_id in updated_ids:
-            self.fireworks.update({"fw_id": fw_id}, {"$set": {"state": wf.id_fw[fw_id].state}})
+        # TODO: need a try-except here, high probability of failure if incorrect action supplied
+
+        updated_ids = wf.refresh(fw_id)
+        updated_fws = [wf.id_fw[fid] for fid in updated_ids]
+        old_new = self._upsert_fws(updated_fws)
+        wf._reassign_ids(old_new)
+        # redo the links
+        self.links.update({'nodes': fw_id}, wf.to_db_dict())
 
     def _steal_launches(self, thief_fw):
         stolen = False
