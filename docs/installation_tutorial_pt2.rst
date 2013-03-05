@@ -1,5 +1,5 @@
 ==========================================
-Installation Tutorial (part 2: the FireWorker)
+Installation Tutorial (part 2: the Worker)
 ==========================================
 
 If you've set up your FireServer, the next step is to set up worker nodes to run your jobs on a large scale (perhaps through a queuing system). This tutorial will guide you through FireWorks installation on a worker node. Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.

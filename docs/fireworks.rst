@@ -15,6 +15,7 @@ Subpackages
 .. toctree::
 
     fireworks.core
+    fireworks.queue
     fireworks.tests
     fireworks.user_objects
     fireworks.utilities

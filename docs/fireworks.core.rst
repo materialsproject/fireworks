@@ -1,6 +1,14 @@
 core Package
 ============
 
+:mod:`dupefinder` Module
+------------------------
+
+.. automodule:: fireworks.core.dupefinder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`firetask` Module
 ----------------------
 
@@ -37,14 +45,6 @@ core Package
 -----------------------
 
 .. automodule:: fireworks.core.launchpad
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`queue_launcher` Module
-----------------------------
-
-.. automodule:: fireworks.core.queue_launcher
     :members:
     :undoc-members:
     :show-inheritance:

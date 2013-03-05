@@ -82,6 +82,7 @@ Depending on your application, you might also be interested in the following tut
 
     queue_tutorial
     python_tutorial
+    duplicates_tutorial
 
 Planned future tutorials:
 
@@ -93,7 +94,6 @@ Planned future tutorials:
 * Database Task Operations
 * Assigning specific FireWorkers to run certain jobs
 * Assigning and modifying job priority
-* Automatically prevent duplicate jobs from running twice
 * Using a web interface to monitor FireWorks
 * Checkpoint / restart of jobs
 * Using the QueueLauncher outside of FW
@@ -129,7 +129,7 @@ FireWorks was developed primarily by Anubhav Jain at Lawrence Berkeley National 
 
 Michael Kocher and Dan Gunter initiated the architecture of a central database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code was refashioned for the QueueLauncher and the PBS QueueAdapter.
 
-Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, continuous integration, etc. The code for modifying a FireWork specification using a dictionary (DictMod) was adapted (with permission) from his custodian_ library (which incidentally might be a useful complement to FireWorks). If you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
+Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, continuous integration, etc. The code for modifying a FireWork specification using a dictionary (DictMod) was adapted (with permission) from his custodian_ library. Incidentally, that library is a nice complement to FireWorks for use in FireTasks. Also, if you are in the market for a free Python materials analysis code, I highly recommend his pymatgen_ library (which I also sometimes contribute to).
 
 Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others. In addition, he made many suggestions to improve the usability of the code.
 
