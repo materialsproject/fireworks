@@ -224,7 +224,7 @@ class LaunchPad(FWSerializable):
         :return:
         """
         m_query = dict(query)  # defensive copy
-        m_query['state'] = {'$in': ['READY', 'FIZZLED']}
+        m_query['state'] = 'READY'
         return m_query
 
     def _check_fw_for_uniqueness(self, m_fw):
@@ -258,6 +258,7 @@ class LaunchPad(FWSerializable):
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
+            print m_query, 'HELLO 5b'
             m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
             print 'Reserving FW, HELLO 6'
             if not m_fw:
