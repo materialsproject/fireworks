@@ -4,11 +4,11 @@
 TODO: add docs
 """
 import os
-import socket
 import traceback
 import json
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
+from fireworks.utilities.fw_utilities import get_host_ip
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -38,9 +38,7 @@ class Rocket():
         """
 
         lp = self.launchpad
-
-        host = socket.gethostname()
-        ip = socket.gethostbyname(socket.gethostname())
+        host, ip = get_host_ip()
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad

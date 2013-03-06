@@ -12,7 +12,7 @@ import glob
 import time
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir, get_host_ip
 from fireworks.core.fw_constants import QUEUE_UPDATE_INTERVAL, QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
 
 __author__ = 'Anubhav Jain, Michael Kocher'
@@ -30,7 +30,6 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
     :param queue_params: A QueueParams instance
     :param launcher_dir: The directory where to submit the job
     """
-
 
     launchpad = launchpad if launchpad else LaunchPad()
     fworker = fworker if fworker else FWorker()
@@ -55,15 +54,19 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
         os.chdir(launcher_dir)
 
         if reserve:
-            # checkout the fw
+            # TODO: move auto host IP inside Launch?
+            host, ip = get_host_ip()
             fw, launch_id = launchpad._reserve_fw(fworker, host, ip, launcher_dir)
 
             # update the queueparams using the FW
+            if '_queueparams' in fw.spec:
+                queue_params.params.update(fw.spec['_queueparams'])
 
             # update the exe to include the FW_id
-            # ensure exe[0] is rlauncher_run.py else throw error
-
-            # if you have the launch_id, you can add the job id later to it
+            exe_array = queue_params.params['exe'].split(' ')
+            exe_array.insert(1, '--fw_id')
+            exe_array.insert(2, str(fw.fw_id))
+            queue_params.params['exe'] = ' '.join(exe_array)
 
         # write and submit the queue script using the queue adapter
         l_logger.debug('writing queue script')
@@ -73,6 +76,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
                 raise RuntimeError('queue script could not be written, check job params and queue adapter!')
             f.write(queue_script)
         l_logger.info('submitting queue script')
+        # TODO: update the launch with launch_id with job id of the submitted job
         if not qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME):
             raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
 

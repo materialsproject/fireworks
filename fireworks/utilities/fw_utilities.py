@@ -5,6 +5,7 @@ import datetime
 import sys
 import os
 import traceback
+import socket
 from fireworks.core.fw_constants import FW_LOGGING_FORMATTER, FW_BLOCK_FORMAT
 
 __author__ = 'Anubhav Jain'
@@ -120,3 +121,7 @@ def singleton(class_):
             instances[class_] = class_(*args, **kwargs)
         return instances[class_]
     return getinstance
+
+
+def get_host_ip():
+    return socket.gethostname(), socket.gethostbyname(socket.gethostname())
