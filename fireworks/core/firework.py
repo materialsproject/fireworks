@@ -12,11 +12,8 @@ A FWAction encapsulates the output of that launch.
 """
 
 import datetime
-from fireworks.utilities.fw_serializers import FWSerializable, load_object, recursive_serialize, serialize_fw, \
-    recursive_deserialize
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize
 from fireworks.core.fw_constants import LAUNCH_RANKS
-from fireworks.core.fworker import FWorker
-from fireworks.utilities.fw_utilities import recursive_dict
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
