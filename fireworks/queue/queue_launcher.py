@@ -63,11 +63,11 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', logdir=None, strm_lvl
         log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
-def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None):
+def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None):
     """
     Submit many jobs to the queue.
     
-    :param rocket_params: A QueueParams instance
+    :param queue_params: A QueueParams instance
     :param launch_dir: directory where we want to write the blocks
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
@@ -90,7 +90,7 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, lo
 
         while True:
             # get number of jobs in queue
-            jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
+            jobs_in_queue = _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger)
             # see if jobs exist for running - if no launchpad is defined than this is also ok
             jobs_exist = not launchpad or launchpad.run_exists()
 
@@ -105,12 +105,12 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, lo
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(rocket_params, launcher_dir, logdir, strm_lvl)
+                launch_rocket_to_queue(queue_params, launcher_dir, logdir, strm_lvl)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_exist = not launchpad or launchpad.run_exists()
-                jobs_in_queue = _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger)
+                jobs_in_queue = _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger)
 
             if not infinite:
                 break

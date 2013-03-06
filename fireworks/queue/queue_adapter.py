@@ -20,30 +20,30 @@ class QueueAdapterBase(FWSerializable):
 
     _fw_name = 'QueueAdapterBase'
 
-    def get_script_str(self, rocket_params, launch_dir):
+    def get_script_str(self, queue_params, launch_dir):
         """
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
         All details of the queue script must be specified in the QueueParams().
 
-        :param rocket_params: A QueueParams() instance
+        :param queue_params: A QueueParams() instance
         :param launch_dir: The directory the job will be launched in
         """
         raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
 
-    def submit_to_queue(self, rocket_params, script_file):
+    def submit_to_queue(self, queue_params, script_file):
         """
         submits the job to the queue, probably using subprocess or shutil
-        :param rocket_params: A QueueParams() instance
+        :param queue_params: A QueueParams() instance
         :param script_file: name of the script file to use (String)
         """
         raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
 
-    def get_njobs_in_queue(self, rocket_params, username=None):
+    def get_njobs_in_queue(self, queue_params, username=None):
         """
         returns the number of jobs in the queue, probably using subprocess or shutil to \
         call a command like 'qstat'. returns None when the number of jobs cannot be determined.
 
-        :param rocket_params: a QueueParams() instance
+        :param queue_params: a QueueParams() instance
         :param username: the username of the jobs to count (default is to autodetect)
         """
         raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')
