@@ -227,8 +227,30 @@ class LaunchPad(FWSerializable):
         m_query['state'] = {'$in': ['READY', 'FIZZLED']}
         return m_query
 
-    def _get_a_fw_to_run(self, fworker, fw_id = None):
+    def _check_fw_for_uniqueness(self, m_fw):
+        # check if there are duplicates
+        self.m_logger.debug('Trying out FW with id: {}'.format(m_fw.fw_id))
+        if not self._steal_launches(m_fw):
+            return True
+
+        self._upsert_fws([m_fw])  # update the DB with the new launches
+        self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id), m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
+
+        return False
+
+
+
+    def _get_a_fw_to_run(self, fworker, fw_id=None):
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
+
+        # TODO: clean up this terrible code
+
+        if fw_id:
+            m_fw = self.fireworks.find_and_modify({"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}, update={'$set': {'state': 'RESERVED'}})
+            if m_fw:
+                m_fw = FireWork.from_dict(m_fw)
+                if self._check_fw_for_uniqueness(m_fw):
+                    return m_fw
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
@@ -237,15 +259,8 @@ class LaunchPad(FWSerializable):
                 return None, None
             m_fw = FireWork.from_dict(m_fw)
 
-            # check if there are duplicates
-            self.m_logger.debug('Trying out FW with id: {}'.format(m_fw.fw_id))
-            if not self._steal_launches(m_fw):
-                break
-
-            self._upsert_fws([m_fw])  # update the DB with the new launches
-            self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id), m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
-
-        return m_fw
+            if self._check_fw_for_uniqueness(m_fw):
+                return m_fw
 
     def _reserve_fw(self, fworker, host, ip, launch_dir):
         m_fw = self._get_a_fw_to_run(fworker)
@@ -265,7 +280,7 @@ class LaunchPad(FWSerializable):
 
         return m_fw, launch_id
 
-    def _checkout_fw(self, fworker, host, ip, launch_dir):
+    def _checkout_fw(self, fworker, host, ip, launch_dir, fw_id):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,
         and returns it to the caller. The caller is responsible for running the FireWork.
@@ -277,7 +292,7 @@ class LaunchPad(FWSerializable):
         :return: a FireWork, launch_id tuple
         """
 
-        m_fw = self._get_a_fw_to_run(fworker)
+        m_fw = self._get_a_fw_to_run(fworker, fw_id)
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
