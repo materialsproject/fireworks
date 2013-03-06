@@ -123,5 +123,9 @@ def singleton(class_):
     return getinstance
 
 
-def get_host_ip():
-    return socket.gethostname(), socket.gethostbyname(socket.gethostname())
+def get_my_ip():
+    return socket.gethostbyname(socket.gethostname())
+
+
+def get_my_host():
+    return socket.gethostname()

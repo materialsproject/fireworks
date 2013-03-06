@@ -262,7 +262,7 @@ class LaunchPad(FWSerializable):
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
-    def _reserve_fw(self, fworker, host, ip, launch_dir):
+    def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         m_fw = self._get_a_fw_to_run(fworker)
 
         # create a launch
@@ -280,7 +280,7 @@ class LaunchPad(FWSerializable):
 
         return m_fw, launch_id
 
-    def _checkout_fw(self, fworker, host, ip, launch_dir, fw_id):
+    def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,
         and returns it to the caller. The caller is responsible for running the FireWork.

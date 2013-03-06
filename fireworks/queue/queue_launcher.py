@@ -12,7 +12,7 @@ import glob
 import time
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir, get_host_ip
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
 from fireworks.core.fw_constants import QUEUE_UPDATE_INTERVAL, QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
 
 __author__ = 'Anubhav Jain, Michael Kocher'
@@ -54,9 +54,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
         os.chdir(launcher_dir)
 
         if reserve:
-            # TODO: move auto host IP inside Launch?
-            host, ip = get_host_ip()
-            fw, launch_id = launchpad._reserve_fw(fworker, host, ip, launcher_dir)
+            fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
 
             # update the queueparams using the FW
             if '_queueparams' in fw.spec:

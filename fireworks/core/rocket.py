@@ -8,7 +8,6 @@ import traceback
 import json
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
-from fireworks.utilities.fw_utilities import get_host_ip
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -39,11 +38,10 @@ class Rocket():
         """
 
         lp = self.launchpad
-        host, ip = get_host_ip()
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad
-        m_fw, launch_id = lp._checkout_fw(self.fworker, host, ip, launch_dir, self.fw_id)
+        m_fw, launch_id = lp._checkout_fw(self.fworker, launch_dir, self.fw_id)
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 

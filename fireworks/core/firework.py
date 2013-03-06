@@ -15,6 +15,7 @@ import datetime
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, serialize_fw
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -168,8 +169,8 @@ class Launch(FWSerializable):
 
         self.fworker = fworker
         self.fw_id = fw_id
-        self.host = host
-        self.ip = ip
+        self.host = host if host else get_my_host()
+        self.ip = ip if ip else get_my_ip()
         self.launch_dir = launch_dir
         self.action = action if action else None
         self.start = start if start else datetime.datetime.utcnow()
