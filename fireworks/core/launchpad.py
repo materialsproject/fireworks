@@ -268,7 +268,7 @@ class LaunchPad(FWSerializable):
         # create a launch
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RESERVED', launch_id=launch_id)
+        m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RESERVED', launch_id=launch_id)
         self.launches.insert(m_launch.to_db_dict())
         self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 
@@ -295,7 +295,7 @@ class LaunchPad(FWSerializable):
         m_fw = self._get_a_fw_to_run(fworker, fw_id)
         # create a launch
         launch_id = self.get_new_launch_id()
-        m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)
+        m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RUNNING', launch_id=launch_id)
         self.launches.insert(m_launch.to_db_dict())
         self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
 

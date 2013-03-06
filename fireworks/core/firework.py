@@ -149,7 +149,7 @@ class FWAction():
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
-    def __init__(self, fworker, fw_id, host=None, ip=None, launch_dir=None, action=None, start=None, end=None,
+    def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, start=None, end=None,
                  state=None,
                  launch_id=None):
         """
@@ -196,5 +196,5 @@ class Launch(FWSerializable):
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
-        return Launch(fworker, m_dict['fw_id'], m_dict['host'], m_dict['ip'], m_dict['launch_dir'],
+        return Launch(fworker, m_dict['fw_id'], m_dict['launch_dir'], m_dict['host'], m_dict['ip'],
                       action, m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
