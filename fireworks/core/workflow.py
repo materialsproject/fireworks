@@ -4,7 +4,7 @@ import tarfile
 from fireworks.core.firework import FireWork
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize
+from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -173,9 +173,8 @@ class Workflow(FWSerializable):
             new_l[new_parent] = [old_new.get(child, child) for child in children]
         self.links = Workflow.Links(new_l)
 
-    @recursive_serialize
     def to_dict(self):
-        return {'fws': [f for f in self.id_fw.itervalues()], 'links': self.links, 'metadata': self.metadata}
+        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links, 'metadata': self.metadata}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
@@ -183,7 +182,6 @@ class Workflow(FWSerializable):
         return m_dict
 
     @classmethod
-    @recursive_deserialize
     def from_dict(cls, m_dict):
         return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']))
 
