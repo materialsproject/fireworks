@@ -40,6 +40,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    # TODO: fw_id only matters for singleshot, rapidfire cannot have it!
+
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
     if args.launchpad_file:
@@ -53,7 +55,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep, args.fw_id)
+        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep)
 
     else:
         launch_rocket(launchpad, fworker, args.logdir, args.loglvl, args.fw_id)

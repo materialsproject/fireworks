@@ -41,6 +41,7 @@ class Rocket():
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad
+        print 'CHECKING OUT, HELLO, {}'.format(self.fw_id)
         m_fw, launch_id = lp._checkout_fw(self.fworker, launch_dir, self.fw_id)
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
