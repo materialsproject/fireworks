@@ -116,8 +116,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Help us improve the documentation - tell us where you got 'stuck' and improve the install process for everyone.
 * Let us know if you need support for a queueing system or certain features.
 * Point us to areas of the code that are difficult to understand or use.
-* Share code on how FireWorks was used to solve a specific problem.
-* Get in touch and contribute to the core codebase!
+* :doc:`Contribute code</contributing>`.
 
 The collaborative way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
 
@@ -126,6 +125,8 @@ The collaborative way to submit questions, issues, and all other communication i
    :align: bottom
 
 The list of contributors to FireWorks can be found :doc:`here </contributors>`.
+
+.. _license-label:
 
 License
 =======
