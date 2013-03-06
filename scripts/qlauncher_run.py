@@ -53,6 +53,6 @@ if __name__ == '__main__':
 
     # TODO: the number of arguments here is crazy!
     if args.command == 'rapidfire':
-        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.logdir, args.loglvl, args.infinite, args.sleep, launchpad, fworker, args.reserve)
+        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.loglvl, args.infinite, args.sleep, launchpad, fworker, args.reserve)
     else:
-        launch_rocket_to_queue(rocket_params, args.launch_dir, args.logdir, args.loglvl, launchpad, fworker, args.reserve)
+        launch_rocket_to_queue(rocket_params, args.launch_dir, args.loglvl, launchpad, fworker, args.reserve)
