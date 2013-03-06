@@ -1,4 +1,4 @@
-from fireworks.core.dupefinder import DupeFinderBase
+from fireworks.features.dupefinder import DupeFinderBase
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
