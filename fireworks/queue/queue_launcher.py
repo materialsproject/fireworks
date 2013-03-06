@@ -54,12 +54,13 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
         os.chdir(launcher_dir)
 
         if reserve:
+            l_logger.debug('finding a FW to reserve...')
             fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
-
-            # update the queueparams using the FW
+            l_logger.debug('reserved FW with fw_id: {}'.format(fw.fw_id))
             if '_queueparams' in fw.spec:
+                l_logger.debug('updating queue params using FireWork spec..')
+                # TODO: make sure this does not affect future FireWorks!!
                 queue_params.params.update(fw.spec['_queueparams'])
-
             # update the exe to include the FW_id
             exe_array = queue_params.params['exe'].split(' ')
             exe_array.insert(1, '--fw_id')
