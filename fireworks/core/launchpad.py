@@ -377,6 +377,7 @@ class LaunchPad(FWSerializable):
                     # steal the launches
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
                     thief_launches = [l.launch_id for l in thief_fw.launches]
+                    # TODO: note that we might submit two duplicates to a queue if one is 'RESERVED'.
                     valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches and l.state != 'RESERVED']
                     for launch in valuable_launches:
                         thief_fw.launches.append(launch)
