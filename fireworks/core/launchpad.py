@@ -256,7 +256,7 @@ class LaunchPad(FWSerializable):
             # check out the matching firework, depending on the query set by the FWorker
             m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
             if not m_fw:
-                return None, None
+                return None
             m_fw = FireWork.from_dict(m_fw)
 
             if self._check_fw_for_uniqueness(m_fw):
@@ -264,7 +264,8 @@ class LaunchPad(FWSerializable):
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         m_fw = self._get_a_fw_to_run(fworker)
-
+        if not m_fw:
+            return None, None
         # create a launch
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
@@ -293,6 +294,8 @@ class LaunchPad(FWSerializable):
         """
 
         m_fw = self._get_a_fw_to_run(fworker, fw_id)
+        if not m_fw:
+            return None, None
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RUNNING', launch_id=launch_id)
