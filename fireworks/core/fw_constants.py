@@ -30,9 +30,6 @@ SUBMIT_SCRIPT_NAME = 'submit.script'  # name of submit script
 # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
 LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6, 'COMPLETED': 7}
 
-# TODO: remove this option
-USE_PYMATGEN_SERIALIZATION = False
-
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 PRINT_FW_JSON = True

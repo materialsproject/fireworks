@@ -6,7 +6,6 @@ TODO: add docs
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.tests.test_serializer import TestSerializer, \
     ExportTestSerializer
-from fireworks.core.fw_constants import USE_PYMATGEN_SERIALIZATION
 
 
 __author__ = "Anubhav Jain"
@@ -56,9 +55,6 @@ class SerializationTest(unittest.TestCase):
     def test_serialize_fw_decorator(self):
         m_dict = self.obj_1.to_dict()
         self.assertEqual(m_dict['_fw_name'], 'TestSerializer Name')
-        if USE_PYMATGEN_SERIALIZATION:
-            self.assertEqual(m_dict['@class'], 'TestSerializer')
-            self.assertEqual(m_dict['@module'], 'fireworks.utilities.tests.test_serializer')
 
     def test_json(self):
         obj1_json_string = str(self.obj_1.to_format())  # default format is JSON, make sure this is true

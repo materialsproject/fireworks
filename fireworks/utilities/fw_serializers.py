@@ -29,7 +29,7 @@ when the serialize_fw() decorator is used.
 
 import yaml
 from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES, \
-    FW_NAME_UPDATES, USE_PYMATGEN_SERIALIZATION, DATETIME_HANDLER
+    FW_NAME_UPDATES, DATETIME_HANDLER
 import pkgutil
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
@@ -246,15 +246,9 @@ def load_object(obj_dict):
     fw_name = FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
     obj_dict['_fw_name'] = fw_name
 
-    known_module = obj_dict.get('@module', None)
     # first try to load from known location
     if fw_name in SAVED_FW_MODULES:
-        known_module = SAVED_FW_MODULES[fw_name]
-
-    # second try to load from the serialized module name
-    # only works if you used USE_PYMATGEN_SERIALIZATION option or in SAVED_FW_OBJECTS
-    if known_module:
-        m_module = importlib.import_module(known_module)
+        m_module = importlib.import_module(SAVED_FW_MODULES[fw_name])
         m_object = _search_module_for_obj(m_module, obj_dict)
         if m_object:
             return m_object
