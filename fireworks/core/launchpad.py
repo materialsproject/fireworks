@@ -227,17 +227,7 @@ class LaunchPad(FWSerializable):
         m_query['state'] = {'$in': ['READY', 'FIZZLED']}
         return m_query
 
-    def _checkout_fw(self, fworker, host, ip, launch_dir):
-        """
-        (internal method) Finds a FireWork that's ready to be run, marks it as running,
-        and returns it to the caller. The caller is responsible for running the FireWork.
-        
-        :param fworker: A FWorker instance
-        :param host: the host making the request (for creating a Launch object)
-        :param ip: the ip making the request (for creating a Launch object)
-        :param launch_dir: the dir the FW will be run in (for creating a Launch object)
-        :return: a FireWork, launch_id tuple
-        """
+    def _get_a_fw_to_run(self, fworker, fw_id = None):
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
         while True:
@@ -255,7 +245,39 @@ class LaunchPad(FWSerializable):
             self._upsert_fws([m_fw])  # update the DB with the new launches
             self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id), m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
 
-        # check out FW for *reals*
+        return m_fw
+
+    def _reserve_fw(self, fworker, host, ip, launch_dir):
+        m_fw = self._get_a_fw_to_run(fworker)
+
+        # create a launch
+        # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
+        launch_id = self.get_new_launch_id()
+        m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RESERVED', launch_id=launch_id)
+        self.launches.insert(m_launch.to_db_dict())
+        self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
+
+        # add launch to FW
+        m_fw.launches.append(m_launch)
+        m_fw.state = 'RESERVED'
+        self._upsert_fws([m_fw])
+        self.m_logger.debug('Reserved FW with id: {}'.format(m_fw.fw_id))
+
+        return m_fw, launch_id
+
+    def _checkout_fw(self, fworker, host, ip, launch_dir):
+        """
+        (internal method) Finds a FireWork that's ready to be run, marks it as running,
+        and returns it to the caller. The caller is responsible for running the FireWork.
+        
+        :param fworker: A FWorker instance
+        :param host: the host making the request (for creating a Launch object)
+        :param ip: the ip making the request (for creating a Launch object)
+        :param launch_dir: the dir the FW will be run in (for creating a Launch object)
+        :return: a FireWork, launch_id tuple
+        """
+
+        m_fw = self._get_a_fw_to_run(fworker)
         # create a launch
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, m_fw.fw_id, host, ip, launch_dir, state='RUNNING', launch_id=launch_id)

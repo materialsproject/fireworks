@@ -10,6 +10,8 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 import os
 import glob
 import time
+from fireworks.core.fworker import FWorker
+from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
 from fireworks.core.fw_constants import QUEUE_UPDATE_INTERVAL, QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
 
@@ -21,13 +23,17 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, reserve=False):
+def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launchpad=None, fworker=None, reserve=False):
     """
     Submit a single job to the queue.
     
     :param queue_params: A QueueParams instance
     :param launcher_dir: The directory where to submit the job
     """
+
+
+    launchpad = launchpad if launchpad else LaunchPad()
+    fworker = fworker if fworker else FWorker()
 
     # convert launch_dir to absolute path
     launcher_dir = os.path.abspath(launcher_dir)
@@ -48,6 +54,17 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, reserv
         l_logger.info('moving to launch_dir {}'.format(launcher_dir))
         os.chdir(launcher_dir)
 
+        if reserve:
+            # checkout the fw
+            fw, launch_id = launchpad._reserve_fw(fworker, host, ip, launcher_dir)
+
+            # update the queueparams using the FW
+
+            # update the exe to include the FW_id
+            # ensure exe[0] is rlauncher_run.py else throw error
+
+            # if you have the launch_id, you can add the job id later to it
+
         # write and submit the queue script using the queue adapter
         l_logger.debug('writing queue script')
         with open(SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -63,7 +80,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, reserv
         log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
-def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None, reserve=False):
+def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None, fworker=None, reserve=False):
     """
     Submit many jobs to the queue.
     
@@ -72,6 +89,8 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     """
+
+    launchpad = launchpad if launchpad else LaunchPad()
 
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
@@ -91,8 +110,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
         while True:
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger)
-            # see if jobs exist for running - if no launchpad is defined than this is also ok
-            jobs_exist = not launchpad or launchpad.run_exists()
+            jobs_exist = launchpad.run_exists()
 
             while jobs_in_queue < njobs_queue and jobs_exist:
                 l_logger.info('Launching a rocket!')
@@ -105,7 +123,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(queue_params, launcher_dir, strm_lvl, reserve)
+                launch_rocket_to_queue(queue_params, launcher_dir, strm_lvl, launchpad, fworker, reserve)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)

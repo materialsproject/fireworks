@@ -5,6 +5,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 """
 
 from argparse import ArgumentParser
+from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.queue.queue_adapter import QueueParams
 from fireworks.queue.queue_launcher import rapidfire, launch_rocket_to_queue
@@ -34,21 +35,23 @@ if __name__ == '__main__':
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
-    parser.add_argument('r', '--reserve', help='reserve a fw', action='store_true')
-    
+    parser.add_argument('-r', '--reserve', help='reserve a fw', action='store_true')
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
+
     rapid_parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
     rapid_parser.add_argument('-b', '--njobs_block', help='maximum jobs to put in a block', default=500, type=int)
     rapid_parser.add_argument('--infinite', help='loop forever', action='store_true')
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
-    rapid_parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
-    
+
     args = parser.parse_args()
-    
+
+    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else None
+    fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
     rocket_params = QueueParams.from_file(args.queue_params_file)
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
     if args.command == 'rapidfire':
-        launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else None
-        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.logdir, args.loglvl, args.infinite, args.sleep, launchpad, args.reserve)
+        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.logdir, args.loglvl, args.infinite, args.sleep, launchpad, fworker, args.reserve)
     else:
-        launch_rocket_to_queue(rocket_params, args.launch_dir, args.logdir, args.loglvl, args.reserve)
+        launch_rocket_to_queue(rocket_params, args.launch_dir, args.logdir, args.loglvl, launchpad, fworker, args.reserve)
