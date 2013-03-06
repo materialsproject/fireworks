@@ -3,7 +3,7 @@
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
 or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure. \
-The details of job submission and queue communication are handled using RocketParams, \
+The details of job submission and queue communication are handled using QueueParams, \
 which specifies a QueueAdapter as well as desired properties of the submit script.
 """
 
@@ -21,11 +21,11 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lvl=None):
+def launch_rocket_to_queue(queue_params, launcher_dir='.', logdir=None, strm_lvl=None):
     """
     Submit a single job to the queue.
     
-    :param rocket_params: A RocketParams instance
+    :param queue_params: A QueueParams instance
     :param launcher_dir: The directory where to submit the job
     """
 
@@ -42,7 +42,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lv
     try:
         # get the queue adapter
         l_logger.debug('getting queue adapter')
-        qa = rocket_params.qa
+        qa = queue_params.qa
 
         # move to the launch directory
         l_logger.info('moving to launch_dir {}'.format(launcher_dir))
@@ -51,12 +51,12 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lv
         # write and submit the queue script using the queue adapter
         l_logger.debug('writing queue script')
         with open(SUBMIT_SCRIPT_NAME, 'w') as f:
-            queue_script = qa.get_script_str(rocket_params, launcher_dir)
+            queue_script = qa.get_script_str(queue_params, launcher_dir)
             if not queue_script:
                 raise RuntimeError('queue script could not be written, check job params and queue adapter!')
             f.write(queue_script)
         l_logger.info('submitting queue script')
-        if not qa.submit_to_queue(rocket_params, SUBMIT_SCRIPT_NAME):
+        if not qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME):
             raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
 
     except:
@@ -67,7 +67,7 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, lo
     """
     Submit many jobs to the queue.
     
-    :param rocket_params: A RocketParams instance
+    :param rocket_params: A QueueParams instance
     :param launch_dir: directory where we want to write the blocks
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
@@ -130,19 +130,19 @@ def _njobs_in_dir(block_dir):
     return len(glob.glob('%s/launcher_*' % os.path.abspath(block_dir)))
 
 
-def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
+def _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger):
     """
     Internal method to get the number of jobs in the queue using the given job params. \
     In case of failure, automatically retries at certain intervals...
     
-    :param rocket_params: a RocketParams() instance
+    :param queue_params: a QueueParams() instance
     :param njobs_queue: The maximum number of jobs in the queue desired
     :param l_logger: A logger to put errors/info/warnings/etc.
     """
 
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
-    jobs_in_queue = rocket_params.qa.get_njobs_in_queue(rocket_params)
+    jobs_in_queue = queue_params.qa.get_njobs_in_queue(queue_params)
     for i in range(QUEUE_RETRY_ATTEMPTS):
         if jobs_in_queue is not None:
             l_logger.info('{} jobs in queue. Desired: {}'.format(jobs_in_queue, njobs_queue))
@@ -150,6 +150,6 @@ def _get_number_of_jobs_in_queue(rocket_params, njobs_queue, l_logger):
         l_logger.warn('Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
         time.sleep(RETRY_INTERVAL)
         RETRY_INTERVAL *= 2
-        jobs_in_queue = rocket_params.qa.get_njobs_in_queue(rocket_params)
+        jobs_in_queue = queue_params.qa.get_njobs_in_queue(queue_params)
 
     raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')

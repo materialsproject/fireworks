@@ -23,9 +23,9 @@ class QueueAdapterBase(FWSerializable):
     def get_script_str(self, rocket_params, launch_dir):
         """
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
-        All details of the queue script must be specified in the RocketParams().
+        All details of the queue script must be specified in the QueueParams().
 
-        :param rocket_params: A RocketParams() instance
+        :param rocket_params: A QueueParams() instance
         :param launch_dir: The directory the job will be launched in
         """
         raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
@@ -33,7 +33,7 @@ class QueueAdapterBase(FWSerializable):
     def submit_to_queue(self, rocket_params, script_file):
         """
         submits the job to the queue, probably using subprocess or shutil
-        :param rocket_params: A RocketParams() instance
+        :param rocket_params: A QueueParams() instance
         :param script_file: name of the script file to use (String)
         """
         raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
@@ -43,7 +43,7 @@ class QueueAdapterBase(FWSerializable):
         returns the number of jobs in the queue, probably using subprocess or shutil to \
         call a command like 'qstat'. returns None when the number of jobs cannot be determined.
 
-        :param rocket_params: a RocketParams() instance
+        :param rocket_params: a QueueParams() instance
         :param username: the username of the jobs to count (default is to autodetect)
         """
         raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')
@@ -59,7 +59,7 @@ class QueueAdapterBase(FWSerializable):
 
 class QueueParams(FWSerializable):
     """
-    A RocketParams instance contains all the information needed to write a queue file \
+    A QueueParams instance contains all the information needed to write a queue file \
     and submit to a queue system. Details of the queue file format and queue submission \
     commands should be included in the QueueAdapterBase object. Specific parameters used \
     by the QueueAdapterBase should be included in the params variable.
