@@ -78,7 +78,7 @@ One nice feature of FireWorks' built-in duplicate detection is that it operates 
 
 #. Let's add back our two-step workflow and run it::
 
-    lp_run.py reset <TODAY'S DATE>lp
+    lp_run.py reset <TODAY'S DATE>
     lp_run.py add wf_12.yaml
     rlauncher_run.py --silencer rapidfire
 
