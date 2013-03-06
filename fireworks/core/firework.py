@@ -12,7 +12,8 @@ A FWAction encapsulates the output of that launch.
 """
 
 import datetime
-from fireworks.utilities.fw_serializers import FWSerializable, load_object
+from fireworks.utilities.fw_serializers import FWSerializable, load_object, recursive_serialize, serialize_fw, \
+    recursive_deserialize
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_utilities import recursive_dict
@@ -57,13 +58,15 @@ class FireWork(FWSerializable):
         self.created_at = created_at if created_at else datetime.datetime.utcnow()
         self.state = state
 
+    @recursive_serialize
     def to_dict(self):
         """
         This is a 'minimal' or 'compact' dict representation of the FireWork
         """
-        m_dict = {'spec': recursive_dict(self.spec), 'fw_id': self.fw_id, 'created_at': self.created_at}
+        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_at': self.created_at}
+
         if len(self.launches) > 0:
-            m_dict['launches'] = [l.to_dict() for l in self.launches]
+            m_dict['launches'] = self.launches
 
         if self.state != 'WAITING':
             m_dict['state'] = self.state
@@ -79,8 +82,9 @@ class FireWork(FWSerializable):
         return m_dict
 
     @classmethod
+    @recursive_deserialize
     def from_dict(cls, m_dict):
-        tasks = [load_object(t) for t in m_dict['spec']['_tasks']]
+        tasks = m_dict['spec']['_tasks']
         fw_id = m_dict.get('fw_id', -1)
         l = m_dict.get('launches', None)
         if l:

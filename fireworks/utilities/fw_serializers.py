@@ -47,6 +47,80 @@ SAVED_FW_MODULES = {}
 
 # TODO: consider replacing to_db_dict() methods with a (db_dict=True) option in to_dict(). Then you don't have to memorize which classes have a to_db_dict() method
 
+def _recursive_dict(obj):
+
+    if obj is None:
+        return None
+
+    if hasattr(obj, 'to_dict'):
+        return _recursive_dict(obj.to_dict())
+
+    if isinstance(obj, dict):
+        return {k: _recursive_dict(v) for k, v in obj.items()}
+
+    if isinstance(obj, list):
+        return [_recursive_dict(v) for v in obj]
+
+    if isinstance(obj, int) or isinstance(obj, float):
+        return obj
+
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+
+    return str(obj)
+
+
+def _recursive_load(obj):
+    if obj is None:
+        return None
+
+    if isinstance(obj, dict):
+        if '_fw_name' in obj:
+            return load_object(obj)
+        return {k: _recursive_load(v) for k, v in obj.items()}
+
+    if isinstance(obj, list):
+        return [_recursive_load(v) for v in obj]
+
+    if isinstance(obj, basestring):
+        try:
+            # convert String to datetime
+            return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+        except:
+            # convert unicode to ASCII if not really unicode
+            if obj == obj.encode('ascii', 'ignore'):
+                return str(obj)
+
+    return obj
+
+
+def recursive_serialize(func):
+    """
+    a decorator to add FW serializations keys
+    see documentation of FWSerializable for more details
+    """
+
+    def _decorator(self, *args, **kwargs):
+        m_dict = func(self, *args, **kwargs)
+        m_dict = _recursive_dict(m_dict)
+        return m_dict
+
+    return _decorator
+
+def recursive_deserialize(func):
+    """
+    a decorator to add FW serializations keys
+    see documentation of FWSerializable for more details
+    """
+
+    def _decorator(self, *args, **kwargs):
+        new_args = [a for a in args]
+        new_args[0] = {k: _recursive_load(v) for k, v in args[0].items()}
+        m_dict = func(self, *new_args, **kwargs)
+        return m_dict
+
+    return _decorator
+
 def serialize_fw(func):
     """
     a decorator to add FW serializations keys
@@ -56,10 +130,6 @@ def serialize_fw(func):
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict['_fw_name'] = self.fw_name
-        if USE_PYMATGEN_SERIALIZATION:
-            m_dict['@module'] = self.__class__.__module__
-            m_dict['@class'] = self.__class__.__name__
-
         return m_dict
 
     return _decorator
@@ -148,6 +218,7 @@ class FWSerializable():
             return cls.from_format(f.read(), f_format=f_format)
 
 
+# TODO: make this quicker the first time around
 def load_object(obj_dict):
     """
     Creates an instantiation of a class based on a dictionary representation. We implicitly
