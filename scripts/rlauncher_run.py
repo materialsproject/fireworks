@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
-    parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None)
+    parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
 
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
