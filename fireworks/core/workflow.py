@@ -173,7 +173,7 @@ class Workflow(FWSerializable):
             new_l[new_parent] = [old_new.get(child, child) for child in children]
         self.links = Workflow.Links(new_l)
 
-    @recursive_serialize()
+    @recursive_serialize
     def to_dict(self):
         return {'fws': [f for f in self.id_fw.itervalues()], 'links': self.links, 'metadata': self.metadata}
 
@@ -183,7 +183,7 @@ class Workflow(FWSerializable):
         return m_dict
 
     @classmethod
-    @recursive_deserialize()
+    @recursive_deserialize
     def from_dict(cls, m_dict):
         return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']))
 
