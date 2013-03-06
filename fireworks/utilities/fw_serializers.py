@@ -45,7 +45,6 @@ __date__ = 'Dec 13, 2012'
 
 SAVED_FW_MODULES = {}
 
-# TODO: consider replacing to_db_dict() methods with a (db_dict=True) option in to_dict(). Then you don't have to memorize which classes have a to_db_dict() method
 
 def _recursive_dict(obj):
 
@@ -155,6 +154,10 @@ class FWSerializable():
     @classmethod
     def to_dict(cls):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
+
+    @classmethod
+    def to_db_dict(cls):
+        return cls.to_dict()
 
     @classmethod
     def from_dict(cls, m_dict):
