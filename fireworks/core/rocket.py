@@ -7,7 +7,7 @@ import os
 import socket
 import traceback
 import json
-from fireworks.core.firework import FWAction
+from fireworks.core.firetask import FWAction
 from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
 
 __author__ = 'Anubhav Jain'
@@ -58,6 +58,7 @@ class Rocket():
         # add checkpoint stuff
         # add heartbeat
         # lots of stuff to add!
+        # update the number of tasks completed in the launch after every task
         # TODO: support stored_dict update() rather than overwrite
 
         for my_task in m_fw.tasks:
