@@ -25,7 +25,7 @@ FW_LOGGING_FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(message)s'
 QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in certain cases
 QUEUE_UPDATE_INTERVAL = 30  # max interval (seconds) needed for queue to update after submitting a job
 
-SUBMIT_SCRIPT_NAME = 'submit.script'  # name of submit script
+SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
 
 # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
 LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6, 'COMPLETED': 7}
