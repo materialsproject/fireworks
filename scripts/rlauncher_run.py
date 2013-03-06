@@ -32,6 +32,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
+    parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None)
 
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
@@ -52,7 +53,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep)
+        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep, args.fw_id)
 
     else:
-        launch_rocket(launchpad, fworker, args.logdir, args.loglvl)
+        launch_rocket(launchpad, fworker, args.logdir, args.loglvl, args.fw_id)

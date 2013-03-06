@@ -23,7 +23,7 @@ class Rocket():
     The Rocket fetches a workflow step from the FireWorks database and executes it.
     """
 
-    def __init__(self, launchpad, fworker):
+    def __init__(self, launchpad, fworker, fw_id):
         """
         
         :param launchpad: A LaunchPad object for interacting with the FW database
@@ -31,6 +31,7 @@ class Rocket():
         """
         self.launchpad = launchpad
         self.fworker = fworker
+        self.fw_id = fw_id
 
     def run(self):
         """

@@ -12,7 +12,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
-def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None):
+def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None, fw_id=None):
     """
     Run a single rocket in the current directory
     :param launchpad: a LaunchPad object
@@ -21,12 +21,12 @@ def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None):
     fworker = fworker if fworker else FWorker()
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
     l_logger.info('Launching Rocket')
-    rocket = Rocket(launchpad, fworker)
+    rocket = Rocket(launchpad, fworker, fw_id)
     rocket.run()
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60):
+def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, fw_id=None):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -45,7 +45,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
-            launch_rocket(launchpad, fworker, logdir, strm_lvl)
+            launch_rocket(launchpad, fworker, logdir, strm_lvl, fw_id)
             time.sleep(0.05)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself
         if not infinite:
             break
