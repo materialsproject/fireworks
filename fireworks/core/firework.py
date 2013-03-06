@@ -146,6 +146,8 @@ class FWAction():
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        if 'create_fw' in m_dict['mod_spec']:
+            m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
         return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
 
 
