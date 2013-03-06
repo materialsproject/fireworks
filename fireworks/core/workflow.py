@@ -4,7 +4,7 @@ import tarfile
 from fireworks.core.firework import FireWork
 from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -173,8 +173,9 @@ class Workflow(FWSerializable):
             new_l[new_parent] = [old_new.get(child, child) for child in children]
         self.links = Workflow.Links(new_l)
 
+    @recursive_serialize()
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links.to_dict(), 'metadata': self.metadata}
+        return {'fws': [f for f in self.id_fw.itervalues()], 'links': self.links, 'metadata': self.metadata}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
@@ -182,6 +183,7 @@ class Workflow(FWSerializable):
         return m_dict
 
     @classmethod
+    @recursive_deserialize()
     def from_dict(cls, m_dict):
         return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']))
 
@@ -225,31 +227,3 @@ class Workflow(FWSerializable):
                 fws.append(FireWork.from_format(m_contents, m_format))
 
         return Workflow(fws, dict(links))
-
-
-        """
-
-        """
-        """
-        # get the wf_dict
-        wfc = WFConnections.from_dict(self.links.find_one({'nodes': m_fw.fw_id}))
-        # get all the children
-        child_fw_ids = wfc.children_links[m_fw.fw_id]
-
-        # depending on the decision, you might have to do additional actions
-
-
-
-
-
-        elif fw_decision.action == 'DETOUR':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
-
-        elif fw_decision.action == 'ADDIFY':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
-        elif fw_decision.action == 'PHOENIX':
-            # TODO: implement
-            raise NotImplementedError('{} action not implemented yet'.format(fw_decision.action))
-        """

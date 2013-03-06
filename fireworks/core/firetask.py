@@ -27,10 +27,12 @@ class FireTaskBase(FWSerializable):
         raise NotImplementedError('Need to implement run_task!')
 
     @serialize_fw
+    @recursive_serialize
     def to_dict(self):
         return {"parameters": self.parameters}
 
     @classmethod
+    @recursive_deserialize
     def from_dict(cls, m_dict):
         return cls(m_dict['parameters'])
 

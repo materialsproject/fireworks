@@ -6,7 +6,7 @@ This module contains classes relevant for a FireWorker (worker computing resourc
 
 import json
 from fireworks.core.fw_constants import DATETIME_HANDLER
-from fireworks.utilities.fw_serializers import FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Michael Kocher'
@@ -30,10 +30,12 @@ class FWorker(FWSerializable):
         self.query = query if query else {}
         self.params = params
 
+    @recursive_serialize
     def to_dict(self):
         return {'name': self.name, 'category': self.category, 'query': json.dumps(self.query, default=DATETIME_HANDLER),
                 'params': self.params}
 
     @classmethod
+    @recursive_deserialize
     def from_dict(cls, m_dict):
         return FWorker(m_dict['name'], m_dict['category'], json.loads(m_dict['query']), m_dict['params'])
