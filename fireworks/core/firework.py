@@ -97,7 +97,8 @@ class FireWork(FWSerializable):
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
-    def __init__(self, fworker, fw_id, host=None, ip=None, launch_dir=None, action=None, start=None, end=None, state=None,
+    def __init__(self, fworker, fw_id, host=None, ip=None, launch_dir=None, action=None, start=None, end=None,
+                 state=None,
                  launch_id=None):
         """
         
@@ -124,9 +125,9 @@ class Launch(FWSerializable):
         self.state = state
         self.launch_id = launch_id
 
+    @recursive_serialize
     def to_dict(self):
-        action_dict = self.action.to_dict() if self.action else None
-        return {'fworker': self.fworker.to_dict(), 'fw_id': self.fw_id, 'action': action_dict, 'start': self.start,
+        return {'fworker': self.fworker, 'fw_id': self.fw_id, 'action': self.action, 'start': self.start,
                 'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
                 'launch_id': self.launch_id}
 
@@ -141,37 +142,5 @@ class Launch(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        fworker = FWorker.from_dict(m_dict['fworker'])
-        action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
-        return Launch(fworker, m_dict['fw_id'], m_dict['host'], m_dict['ip'], m_dict['launch_dir'], action,
-                      m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
-
-
-class FWAction():
-    """
-    TODO: add docs
-
-    """
-
-    # TODO: ADDIFY can be merged into ADD (definitely)
-    # TODO: DETOUR can be merged into ADD (probably)
-
-    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'ADDIFY', 'PHOENIX', 'BREAK']
-
-    def __init__(self, command, stored_data=None, mod_spec=None):
-        if command not in FWAction.commands:
-            raise ValueError("Invalid command: " + command)
-
-        self.command = command
-        self.stored_data = stored_data if stored_data else {}
-        self.mod_spec = mod_spec if mod_spec else {}
-
-    def to_dict(self):
-        return {"action": self.command, "stored_data": self.stored_data, "mod_spec": recursive_dict(self.mod_spec)}
-
-    @classmethod
-    def from_dict(cls, m_dict):
-        # TODO: do a recursive load properly, and then move FWAction back to FireTask where it belongs
-        if 'create_fw' in m_dict['mod_spec']:
-            m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
-        return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
+        return Launch(m_dict['fworker'], m_dict['fw_id'], m_dict['host'], m_dict['ip'], m_dict['launch_dir'],
+                      m_dict['action'], m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
