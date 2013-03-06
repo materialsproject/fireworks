@@ -3,7 +3,7 @@
 """
 TODO: add docs
 """
-from fireworks.core.firetask import FireTaskBase, FWAction
+from fireworks.core.firework import FireTaskBase, FWAction
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

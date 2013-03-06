@@ -1,7 +1,7 @@
 import shlex
 import subprocess
 import sys
-from fireworks.core.firetask import FireTaskBase, FWAction
+from fireworks.core.firework import FireTaskBase, FWAction
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'

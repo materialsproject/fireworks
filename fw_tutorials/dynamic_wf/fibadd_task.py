@@ -3,9 +3,8 @@
 """
 TODO: add docs
 """
-from fireworks.core.firetask import FireTaskBase
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FWAction, FireWork
+from fireworks.core.firework import FWAction, FireWork, FireTaskBase
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

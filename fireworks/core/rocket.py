@@ -7,7 +7,7 @@ import os
 import socket
 import traceback
 import json
-from fireworks.core.firetask import FWAction
+from fireworks.core.firework import FWAction
 from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
 
 __author__ = 'Anubhav Jain'
