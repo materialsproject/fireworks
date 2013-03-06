@@ -12,8 +12,8 @@ A FWAction encapsulates the output of that launch.
 """
 
 import datetime
+from fireworks.core.firetask import Launch
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize
-from fireworks.core.fw_constants import LAUNCH_RANKS
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -82,59 +82,11 @@ class FireWork(FWSerializable):
     @recursive_deserialize
     def from_dict(cls, m_dict):
         tasks = m_dict['spec']['_tasks']
+        l = m_dict.get('launches', None)
+        if l:
+            l = [Launch.from_dict(tmp) for tmp in l]
         fw_id = m_dict.get('fw_id', -1)
         state = m_dict.get('state', 'WAITING')
         created_at = m_dict.get('created_at', None)
 
-        return FireWork(tasks, m_dict['spec'], fw_id, m_dict.get('launches', None), state, created_at)
-
-
-class Launch(FWSerializable):
-    # TODO: add an expiration date
-    def __init__(self, fworker, fw_id, host=None, ip=None, launch_dir=None, action=None, start=None, end=None,
-                 state=None,
-                 launch_id=None):
-        """
-        
-        :param fworker: A FWorker object describing the worker
-        :param fw_id: id of the FireWork this launch is running
-        :param host: the hostname where the launch took place (probably automatically set)
-        :param ip: the ip address where the launch took place (probably automatically set)
-        :param launch_dir: the directory on the host where the launch took place (probably automatically set)
-        :param action: The resulting Action from the launch (set after the launch finished)
-        :param state: the state of the Launch
-        :param launch_id: the id of the Launch for the LaunchPad
-        """
-        if state not in LAUNCH_RANKS:
-            raise ValueError("Invalid launch state: {}".format(state))
-
-        self.fworker = fworker
-        self.fw_id = fw_id
-        self.host = host
-        self.ip = ip
-        self.launch_dir = launch_dir
-        self.action = action if action else None
-        self.start = start if start else datetime.datetime.utcnow()
-        self.end = end
-        self.state = state
-        self.launch_id = launch_id
-
-    @recursive_serialize
-    def to_dict(self):
-        return {'fworker': self.fworker, 'fw_id': self.fw_id, 'action': self.action, 'start': self.start,
-                'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
-                'launch_id': self.launch_id}
-
-    @property
-    def time_secs(self):
-        return (self.end - self.start).total_seconds() if self.end else None
-
-    def to_db_dict(self):
-        m_d = self.to_dict()
-        m_d['time_secs'] = self.time_secs
-        return m_d
-
-    @classmethod
-    def from_dict(cls, m_dict):
-        return Launch(m_dict['fworker'], m_dict['fw_id'], m_dict['host'], m_dict['ip'], m_dict['launch_dir'],
-                      m_dict['action'], m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
+        return FireWork(tasks, m_dict['spec'], fw_id, l, state, created_at)

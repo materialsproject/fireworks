@@ -61,9 +61,10 @@ if __name__ == '__main__':
 
     elif args.command == 'add':
         # TODO: make this cleaner, e.g. make TAR option explicit
-        try:
-            fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
-            lp.add_wf(fwf)
+        # try:
+        fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
+        lp.add_wf(fwf)
+        '''
         except:
             try:
                 if '.tar' in args.wf_file:
@@ -74,6 +75,7 @@ if __name__ == '__main__':
             except:
                 print 'Error reading FireWork/Workflow file.'
                 traceback.print_exc()
+        '''
 
 
     elif args.command == 'get_fw':
