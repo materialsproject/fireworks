@@ -241,33 +241,34 @@ class LaunchPad(FWSerializable):
 
 
     def _get_a_fw_to_run(self, fworker, fw_id=None):
+        print 'Reserving FW, HELLO  1a'
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
         # TODO: clean up this terrible code
-        self.m_logger.debug('Reserving FW, HELLO 2')
+        print 'Reserving FW, HELLO 2'
         if fw_id:
             m_fw = self.fireworks.find_and_modify({"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}, update={'$set': {'state': 'RESERVED'}})
-            self.m_logger.debug('Reserving FW, HELLO 3')
+            print 'Reserving FW, HELLO 3'
             if m_fw:
-                self.m_logger.debug('Reserving FW, HELLO 4')
+                print 'Reserving FW, HELLO 4'
                 m_fw = FireWork.from_dict(m_fw)
                 if self._check_fw_for_uniqueness(m_fw):
-                    self.m_logger.debug('Reserving FW, HELLO 5')
+                    print 'Reserving FW, HELLO 5'
                     return m_fw
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
             m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
-            self.m_logger.debug('Reserving FW, HELLO 6')
+            print 'Reserving FW, HELLO 6'
             if not m_fw:
-                self.m_logger.debug('Reserving FW, HELLO 7')
+                print 'Reserving FW, HELLO 7'
                 return None
-            self.m_logger.debug('Reserving FW, HELLO 8')
+            print 'Reserving FW, HELLO 8'
             m_fw = FireWork.from_dict(m_fw)
 
-            self.m_logger.debug('Reserving FW, HELLO 9')
+            print 'Reserving FW, HELLO 9'
             if self._check_fw_for_uniqueness(m_fw):
-                self.m_logger.debug('Reserving FW, HELLO 10')
+                print 'Reserving FW, HELLO 10'
                 return m_fw
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
