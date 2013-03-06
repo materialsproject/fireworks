@@ -20,8 +20,7 @@ __date__ = 'Jan 30, 2013'
 
 
 # TODO: be able to un-terminate a FW
-# TODO: get children / parents of a FW
-# TODO: show a query in the tutorial for get_fw_ids
+# TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at least set the state to FIZZLED and add traceback...
 
 class LaunchPad(FWSerializable):
     """

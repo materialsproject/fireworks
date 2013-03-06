@@ -15,7 +15,7 @@ __date__ = 'Feb 27, 2013'
 
 
 class Workflow(FWSerializable):
-    # TODO: if performance of child_parents is an issue, override delitem/setitem to ensure it's always updated
+    # TODO: if performance of parent_links is an issue, override delitem/setitem to ensure it's always updated
     class Links(dict, FWSerializable):
 
         @property
@@ -105,6 +105,7 @@ class Workflow(FWSerializable):
             self.id_fw[create_fw.fw_id] = create_fw
             updated_ids.append(create_fw.fw_id)
 
+        # TODO: implement the remaining actions
         return updated_ids
 
     def refresh(self, fw_id, updated_ids=None):
@@ -131,7 +132,7 @@ class Workflow(FWSerializable):
             m_state = 'READY'
             m_action = None
 
-            # TODO: pick the first launch that matches 'COMPLETED'; multiple might exist
+            # TODO: pick the first launch in terms of end date that matches 'COMPLETED'; multiple might exist
             for l in fw.launches:
                 if LAUNCH_RANKS[l.state] > max_score:
                     max_score = LAUNCH_RANKS[l.state]

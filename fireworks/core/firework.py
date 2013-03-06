@@ -114,8 +114,6 @@ class FireTaskBase(FWSerializable):
     def from_dict(cls, m_dict):
         return cls(m_dict['parameters'])
 
-        # TODO: add a write to log method
-
         # TODO: Task for committing a file to DB?
         # TODO: add checkpoint function
 
@@ -125,10 +123,9 @@ class FWAction():
     TODO: add docs
 
     """
-    # TODO: ADDIFY can be merged into ADD (definitely)
     # TODO: DETOUR can be merged into ADD (probably)
 
-    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'ADDIFY', 'PHOENIX', 'BREAK']
+    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'PHOENIX', 'BREAK']
 
     def __init__(self, command, stored_data=None, mod_spec=None):
         if command not in FWAction.commands:
