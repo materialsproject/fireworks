@@ -21,7 +21,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(queue_params, launcher_dir='.', logdir=None, strm_lvl=None):
+def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, reserve=False):
     """
     Submit a single job to the queue.
     
@@ -33,7 +33,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', logdir=None, strm_lvl
     launcher_dir = os.path.abspath(launcher_dir)
 
     # initialize logger
-    l_logger = get_fw_logger('queue.launcher', l_dir=logdir, stream_level=strm_lvl)
+    l_logger = get_fw_logger('queue.launcher', l_dir=queue_params.logging_dir, stream_level=strm_lvl)
 
     # make sure launch_dir exists:
     if not os.path.exists(launcher_dir):
@@ -63,7 +63,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', logdir=None, strm_lvl
         log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
-def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None):
+def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None, reserve=False):
     """
     Submit many jobs to the queue.
     
@@ -77,7 +77,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, log
     launch_dir = os.path.abspath(launch_dir)
 
     # initialize logger
-    l_logger = get_fw_logger('queue.launcher', l_dir=logdir, stream_level=strm_lvl)
+    l_logger = get_fw_logger('queue.launcher', l_dir=queue_params.logging_dir, stream_level=strm_lvl)
 
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
@@ -105,7 +105,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, log
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(queue_params, launcher_dir, logdir, strm_lvl)
+                launch_rocket_to_queue(queue_params, launcher_dir, strm_lvl, reserve)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
