@@ -21,7 +21,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lvl=None):
+def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lvl=None, reserve=False):
     """
     Submit a single job to the queue.
     
@@ -63,7 +63,7 @@ def launch_rocket_to_queue(rocket_params, launcher_dir='.', logdir=None, strm_lv
         log_exception(l_logger, 'Error writing/submitting queue script!')
 
 
-def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None):
+def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None, reserve=False):
     """
     Submit many jobs to the queue.
     
@@ -105,7 +105,7 @@ def rapidfire(rocket_params, launch_dir='.', njobs_queue=10, njobs_block=500, lo
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(rocket_params, launcher_dir, logdir, strm_lvl)
+                launch_rocket_to_queue(rocket_params, launcher_dir, logdir, strm_lvl, reserve)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)

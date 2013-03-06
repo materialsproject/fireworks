@@ -34,6 +34,7 @@ if __name__ == '__main__':
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
+    parser.add_argument('r', '--reserve', help='reserve a fw', action='store_true')
     
     rapid_parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
     rapid_parser.add_argument('-b', '--njobs_block', help='maximum jobs to put in a block', default=500, type=int)
@@ -48,6 +49,6 @@ if __name__ == '__main__':
 
     if args.command == 'rapidfire':
         launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else None
-        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.logdir, args.loglvl, args.infinite, args.sleep, launchpad)
+        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.logdir, args.loglvl, args.infinite, args.sleep, launchpad, args.reserve)
     else:
-        launch_rocket_to_queue(rocket_params, args.launch_dir, args.logdir, args.loglvl)
+        launch_rocket_to_queue(rocket_params, args.launch_dir, args.logdir, args.loglvl, args.reserve)
