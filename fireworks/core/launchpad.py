@@ -271,7 +271,7 @@ class LaunchPad(FWSerializable):
                 return m_fw
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
-        self.m_logger.debug('Reserving FW, HELLO 1')
+        print 'Reserving FW, HELLO 1'
         m_fw = self._get_a_fw_to_run(fworker)
         if not m_fw:
             return None, None
