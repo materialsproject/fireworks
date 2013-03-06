@@ -86,7 +86,7 @@ class FireWork(FWSerializable):
         state = m_dict.get('state', 'WAITING')
         created_at = m_dict.get('created_at', None)
 
-        return FireWork(tasks, m_dict['spec'], fw_id, m_dict['launches'], state, created_at)
+        return FireWork(tasks, m_dict['spec'], fw_id, m_dict.get('launches', None), state, created_at)
 
 
 class Launch(FWSerializable):
