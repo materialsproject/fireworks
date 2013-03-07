@@ -245,7 +245,6 @@ class LaunchPad(FWSerializable):
 
         # TODO: clean up this terrible code
         if fw_id:
-            print 'yay, we reserved, {}'.format(fw_id)
             m_fw = self.fireworks.find_and_modify({"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}, update={'$set': {'state': 'RESERVED'}})
             if m_fw:
                 m_fw = FireWork.from_dict(m_fw)
