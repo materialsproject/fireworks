@@ -4,6 +4,7 @@
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
 from argparse import ArgumentParser
+import os
 import traceback
 from fireworks.core.fw_constants import DATETIME_HANDLER
 from fireworks.core.launchpad import LaunchPad
@@ -44,11 +45,15 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
+
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
 
     args = parser.parse_args()
+
+    if not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
+        args.launchpad_file = 'my_launchpad.yaml'
 
     if args.launchpad_file:
         lp = LaunchPad.from_file(args.launchpad_file)

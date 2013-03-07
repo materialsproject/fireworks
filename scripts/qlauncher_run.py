@@ -39,7 +39,6 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--reserve', help='reserve a fw', action='store_true')
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
-    parser.add_argument('-d', '--default_filenames', help='fallback to my_launchpad.yaml and my_fworker.yaml', default=None)
 
     rapid_parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
     rapid_parser.add_argument('-b', '--njobs_block', help='maximum jobs to put in a block', default=500, type=int)
@@ -48,10 +47,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.default_filenames and not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
+    if not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
         args.launchpad_file = 'my_launchpad.yaml'
 
-    if args.default_filenames and not args.fworker_file and os.path.exists('my_fworker.yaml'):
+    if not args.fworker_file and os.path.exists('my_fworker.yaml'):
         args.fworker_file = 'my_fworker.yaml'
 
     launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else None
