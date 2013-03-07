@@ -1,22 +1,6 @@
 core Package
 ============
 
-:mod:`dupefinder` Module
-------------------------
-
-.. automodule:: fireworks.core.dupefinder
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`firetask` Module
-----------------------
-
-.. automodule:: fireworks.core.firetask
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`firework` Module
 ----------------------
 

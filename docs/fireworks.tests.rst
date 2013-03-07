@@ -9,3 +9,11 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`mongo_tests` Module
+-------------------------
+
+.. automodule:: fireworks.tests.mongo_tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
