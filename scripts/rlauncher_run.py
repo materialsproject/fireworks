@@ -27,12 +27,13 @@ if __name__ == '__main__':
     rapid_parser = subparsers.add_parser('rapidfire',
                                          help='launch multiple Rockets (loop until all FireWorks complete)')
 
+    single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
+
     rapid_parser.add_argument('--infinite', help='loop forever', action='store_true')
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
-    parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
 
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
