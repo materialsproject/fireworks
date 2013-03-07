@@ -34,6 +34,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
+    parser.add_argument('-d', '--default_filenames', help='fallback to my_launchpad.yaml and my_fworker.yaml', default=None)
 
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
@@ -41,7 +42,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # TODO: fw_id only matters for singleshot, rapidfire cannot have it!
+    if args.default_filenames and not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
+        args.launchpad_file = 'my_launchpad.yaml'
+
+    if args.default_filenames and not args.fworker_file and os.path.exists('my_fworker.yaml'):
+        args.fworker_file = 'my_fworker.yaml'
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
