@@ -21,6 +21,9 @@ TESTDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_output'
 
 #TODO: make these tests much better. Right now they are just a crude first line of defense.
 
+# TODO: add dupefinder tests
+# TODO: test serialization of YAML on at least one WF
+
 class MongoTests(unittest.TestCase):
 
     @classmethod
