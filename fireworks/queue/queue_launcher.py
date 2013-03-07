@@ -62,7 +62,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
                 # TODO: make sure this does not affect future FireWorks!!
                 queue_params.params.update(fw.spec['_queueparams'])
             # update the exe to include the FW_id
-            queue_params.params['exe'] += ' --fw id {}'.format(fw.fw_id)
+            queue_params.params['exe'] += ' --fw_id {}'.format(fw.fw_id)
 
         # write and submit the queue script using the queue adapter
         l_logger.debug('writing queue script')
