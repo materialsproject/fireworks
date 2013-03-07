@@ -71,11 +71,11 @@ class ScriptTask(FireTaskBase, FWSerializable):
         # write out the output, error files if specified
 
         if self.stdout_file:
-            with open(self.stdout_file, 'w+') as f:
+            with open(self.stdout_file, 'a+') as f:
                 f.write(stdout)
 
         if self.stderr_file:
-            with open(self.stderr_file, 'w+') as f:
+            with open(self.stderr_file, 'a+') as f:
                 f.write(stderr)
 
         # write the output keys
@@ -95,5 +95,8 @@ class ScriptTask(FireTaskBase, FWSerializable):
         return FWAction('CONTINUE', output)
 
     @classmethod
-    def from_str(cls, shell_cmd):
-        return ScriptTask({"script": shell_cmd, "use_shell": True})
+    def from_str(cls, shell_cmd, parameters=None):
+        parameters = parameters if parameters else {}
+        parameters['script'] = shell_cmd
+        parameters['use_shell'] = True
+        return ScriptTask(parameters)
