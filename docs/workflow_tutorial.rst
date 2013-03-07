@@ -30,7 +30,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     * We define a FireWork with ``fw_id`` set to -1, and that prints *"To be, or not to be,"*.
     * We define another FireWork with ``fw_id`` set to -2, and that prints *"that is the question:"*
 
-    .. note:: A negative ``fw_id`` means that the ``fw_id`` should be reassigned by the LaunchPad so as not to conflict with existing ``fw_ids``. When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned.
+    .. note:: A negative ``fw_id`` means that the ``fw_id`` should be reassigned by the LaunchPad so as not to conflict with existing ``fw_ids``. When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned. The ``fw_id`` is assigned in an arbitrary order, so don't interpret any meaning in the value of the ``fw_id``.
 
     The second section, labeled ``links``, connects these FireWorks into a workflow:
 
@@ -47,8 +47,6 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     lp_run.py get_fw 2
 
 #. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*.
-
-    .. note:: The ``fw_id`` is assigned randomly, so don't assign any meaning to the value of the ``fw_id``.
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 

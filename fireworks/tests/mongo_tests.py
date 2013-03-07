@@ -25,6 +25,8 @@ MODULE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 # TODO: add dupefinder tests
 # TODO: test serialization of YAML on at least one WF
 
+# TODO: cleanup!!
+
 class MongoTests(unittest.TestCase):
 
     @classmethod
