@@ -78,7 +78,9 @@ Submit a job
 
     qlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot my_qp.yaml
 
-   .. note:: The LaunchPad and FireWorker are not always used when running the Queue Launcher (this is the case here). But, it is good practice to always specify them.
+  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml`` and ``my_fworker.yaml``, then you don't need to specify the ``-l`` and ``-w`` options explicitly. FireWorks will automatically search for these files in the current directory. For this tutorial, we'll include the full command and avoid shortcuts.
+
+  .. note:: The LaunchPad and FireWorker are only used in some Queue Launcher commands (in this case, they are not used at all). But, it is good practice to always specify them.
 
 #. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 

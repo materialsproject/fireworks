@@ -40,19 +40,19 @@ The FireWorker needs to know the login information for the FireServer. On the **
 
 where <INSTALL_DIR> is your FireWorks installation directory.
 
-2. Copy the LaunchPad file to a new name::
+#. Copy the LaunchPad file to a new name::
 
     cp launchpad.yaml my_launchpad.yaml
 
-3. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address of your FireServer.
+#. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address of your FireServer.
 
 .. tip:: If you do not know the IP address of your FireServer and you are on a Linux machine, you can try running ``/sbin/ifconfig``.
 
-3. Confirm that you can query the FireServer from your FireWorker::
+#. Confirm that you can query the FireServer from your FireWorker::
 
     lp_run.py -l my_launchpad.yaml get_fw 1
 
-This should print out the description of a FireWork that is *READY* to run.
+   This should print out the description of a FireWork that is *READY* to run.
 
 .. tip:: If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports. If you're still having problems, you can use telnet to check if a port is open: ``telnet <HOSTNAME> <PORTNAME>``, where ``<HOSTNAME>`` is your FireServer hostname and ``<PORTNAME>`` is your Mongo port (probably 27017).
 
@@ -75,11 +75,15 @@ Launch a Rocket on the FireWorker
 
     rlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot
 
+  .. tip:: If you use the names ``my_launchpad.yaml`` and ``my_fworker.yaml``, then you don't need to specify the ``-l`` and ``-w`` options explicitly. FireWorks will automatically search for these files in the current directory. For now, we'll include the full command and avoid shortcuts.
+
 This should successfully launch a rocket that finds and runs your FireWork from the central server.
 
 2. Confirm that the FireWork was run::
 
     lp_run.py -l my_launchpad.yaml get_fw 1
+
+  .. tip:: Similar to the Rocket Launcher, if you use the name ``my_launchpad.yaml`` then the ``-l`` option is not needed.
 
 You should notice that the FireWork is listed as being *COMPLETED*. In addition, the ``name`` parameter under the ``launches.fworker`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``. If you have multiple FireWorkers, this can help you identify where your job ran later on.
 
