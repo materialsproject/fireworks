@@ -138,7 +138,10 @@ class LaunchPad(FWSerializable):
         :param launch_id: launch id
         :return: Launch object
         """
-        return Launch.from_dict(self.launches.find_one({'launch_id':launch_id}))
+        m_launch = self.launches.find_one({'launch_id':launch_id})
+        if m_launch:
+            return Launch.from_dict(m_launch)
+        raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
     def get_fw_by_id(self, fw_id):
         """
