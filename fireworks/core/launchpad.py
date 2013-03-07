@@ -50,8 +50,8 @@ class LaunchPad(FWSerializable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        connection = MongoClient(host, port)
-        self.database = connection[name]
+        self.connection = MongoClient(host, port)
+        self.database = self.connection[name]
         if username:
             self.database.authenticate(username, password)
 
