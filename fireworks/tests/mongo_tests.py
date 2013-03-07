@@ -97,7 +97,9 @@ class MongoTests(unittest.TestCase):
             for d in os.listdir(TESTDIR):
                 shutil.rmtree(os.path.join(TESTDIR, d))
 
-            os.remove(os.path.join(os.path.dirname(os.path.abspath(__file__)),'fw.json'))
+            fw_json_loc = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fw.json')
+            if os.path.exists(fw_json_loc):
+                os.remove(fw_json_loc)
 
 
 if __name__ == "__main__":
