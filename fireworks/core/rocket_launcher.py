@@ -40,6 +40,9 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
 
+    # TODO: wrap in try-except. Use log_exception for exceptions EXCEPT running out of jobs.
+    # TODO: always chdir() back to curdir when finished...then delete cruft from MongoTests
+
     while True:
         while launchpad.run_exists():
             os.chdir(curdir)
