@@ -100,9 +100,8 @@ class MongoTests(unittest.TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
             shutil.rmtree(i)
 
-        fw_json_loc = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fw.json')
-        if os.path.exists(fw_json_loc):
-            os.remove(fw_json_loc)
+        if os.path.exists('fw.json'):
+            os.remove('fw.json')
 
 
 if __name__ == "__main__":
