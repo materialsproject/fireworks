@@ -20,44 +20,65 @@ The Queue Launcher needs to know how to communicate with your queue system and t
 
     cd <INSTALL_DIR>/fw_tutorials/queue
 
-2. Locate an appropriate QueueParams file. The files are usually named ``queueparams_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
+#. Locate an appropriate QueueParams file. The files are usually named ``queueparams_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
 
 .. note:: If you cannot find a working QueueParams file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) We would like to support more queueing systems in FireWorks.
 
-3. Copy your chosen QueueParams file to a new name::
+#. Copy your chosen QueueParams file to a new name::
 
     cp queueparams_<QUEUE>.yaml my_qp.yaml
 
-4. Open ``my_qp.yaml`` and modify it as follows:
+#. Navigate to clean working directory on the FireWorker. For example::
 
-   a. In the part that specifies running ``rlauncher_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine. If you completed the previous tutorial, this is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml``
+    mkdir ~/queue_tests
+    cd ~/queue_tests
 
-   b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine. This is probably: ``<INSTALL_DIR>/fw_tutorials/installation_pt2/my_launchpad.yaml``
+#. Copy over your queue file and the test FW to this directory::
+
+    cp <INSTALL_DIR>/fw_tutorials/queue/my_qp.yaml .
+    cp <INSTALL_DIR>/fw_tutorials/queue/fw_test.yaml .
+
+#. Copy over your LaunchPad and FireWorker files from the second installation tutorial::
+
+    cp <INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml .
+    cp <INSTALL_DIR>/fw_tutorials/installation_pt2/my_launchpad.yaml .
+
+   .. note:: If you do not have these files, please go back and regenerate them according to the instructions :doc:`here </installation_tutorial_pt2>`.
+
+#. Open ``my_qp.yaml`` and modify it as follows:
+
+   a. In the part that specifies running ``rlauncher_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
+
+   b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine.
 
    c. For the logging_dir parameter, modify the ``path/to/logging`` text to contain the **absolute path** of where you would like FireWorks logs to go. For example, you might create a ``fw_logs`` directory inside your home directory, and point the logging_dir parameter there.
 
-   .. note:: Be sure to indicate the full, absolute path name; do not use BASH shortcuts like '.', '..', or '~', and do not indicate a relative path. (also, do not pass Go!)
+   .. note:: Be sure to indicate the full, absolute path name; do not use BASH shortcuts like '.', '..', or '~', and do not indicate a relative path.
+
+You are now ready to begin!
 
 Add some FireWorks
 ------------------
 
-Let's reset our database and add a new FireWork, all from our FireWorker this time::
+Staying in your testing directory, let's reset our database and add a new FireWork, all from our FireWorker::
 
-    lp_run.py -l <PATH_TO_LAUNCHPAD> reset <TODAY'S DATE>
-    lp_run.py -l <PATH_TO_LAUNCHPAD> add fw_test.yaml
-
-where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
+    lp_run.py -l my_launchpad.yaml reset <TODAY'S DATE>
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
 
 Submit a job
 ------------
 
 1. Try submitting a job using the command::
 
-    qlauncher_run.py singleshot my_qp.yaml
+    qlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot my_qp.yaml
 
-2. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
+   .. note:: The LaunchPad and FireWorker are not always used when running the Queue Launcher (this is the case here). But, it is good practice to always specify them.
 
-3. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
+#. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
+
+#. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
+
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. If you think this might be responsible for your problem, you might try to submit an interactive job to your queue. Once on the compute node, you can try connecting to your FireServer database through Mongo: ``mongo <hostname>:<port>/fireworks -u <USERNAME> -p <PASSWORD>``. (You could also try running ``lp_run.py -l my_launchpad.yaml get_fw 1`` to test the DB connection, but make sure you do this from a compute node). If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
@@ -76,32 +97,21 @@ Add some FireWorks
 
 Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    lp_run.py -l <PATH_TO_LAUNCHPAD> reset <TODAY'S DATE>
-    lp_run.py -l <PATH_TO_LAUNCHPAD> add fw_test.yaml
-    lp_run.py -l <PATH_TO_LAUNCHPAD> add fw_test.yaml
-    lp_run.py -l <PATH_TO_LAUNCHPAD> add fw_test.yaml
-
-where ``<PATH_TO_LAUNCHPAD>`` is the location of your ``my_launchpad.yaml`` file.
+    lp_run.py -l my_launchpad.yaml reset <TODAY'S DATE>
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
+    lp_run.py -l my_launchpad.yaml add fw_test.yaml
 
 Unleash rapid-fire mode
 -----------------------
 
-1. Navigate to a clean testing directory on the FireWorker::
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
-    mkdir ~/rapidfire_tests
-    cd ~/rapidfire_tests
+#. Submit several jobs with a single command::
 
-2. Copy your QueueParams file to this testing directory::
+    qlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml rapidfire -q 3 my_qp.yaml
 
-    cp <PATH_TO_MY_QUEUE_PARAMS> .
-
-where <PATH_TO_MY_QUEUE_PARAMS> is the path to ``my_qp.yaml`` file that you created in the previous section.
-
-3. Looking inside ``my_qp.yaml``, confirm that the path to my_fworker.yaml and my_launchpad.yaml are still valid. (They should be, unless you moved or deleted these files)
-
-4. Submit several jobs with a single command::
-
-    qlauncher_run.py rapidfire -q 3 my_qp.yaml
+   .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlauncher_run.py``.The second place is inside the ``my_qp.yaml`` file.  The locations when specifying arguments to ``qlauncher_run.py`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_qp.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
 
    .. important:: The Queue Launcher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
