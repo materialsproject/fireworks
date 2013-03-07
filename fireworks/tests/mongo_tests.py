@@ -1,5 +1,6 @@
+import os
+import shutil
 import unittest
-import glob
 from fireworks.core.firework import FireWork
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -16,6 +17,9 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Mar 06, 2013'
 
 TESTDB_NAME = 'fireworks_unittest'
+TESTDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_output')
+
+#TODO: make these tests much better. Right now they are just a crude first line of defense.
 
 class MongoTests(unittest.TestCase):
 
@@ -65,7 +69,7 @@ class MongoTests(unittest.TestCase):
         fib = FibonacciAdderTask()
         fw = FireWork(fib, {'smaller': 0, 'larger': 1})
         self.lp.add_wf(fw)
-        rapidfire(self.lp)
+        rapidfire(self.lp, m_dir=TESTDIR)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data['next_fibnum'], 3)
@@ -86,6 +90,11 @@ class MongoTests(unittest.TestCase):
     def tearDownClass(cls):
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
+
+            for d in os.listdir(TESTDIR):
+                shutil.rmtree(os.path.join(TESTDIR, d))
+
+            os.remove(os.path.join(os.path.dirname(os.path.abspath(__file__)),'fw.json'))
 
 
 if __name__ == "__main__":
