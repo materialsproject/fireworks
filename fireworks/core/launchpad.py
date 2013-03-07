@@ -247,7 +247,7 @@ class LaunchPad(FWSerializable):
         if fw_id:
             m_fw = self.fireworks.find_and_modify({"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}, update={'$set': {'state': 'RESERVED'}})
             if m_fw:
-                m_fw = FireWork.from_dict(m_fw)
+                m_fw = self.get_fw_by_id(fw_id)
                 if self._check_fw_for_uniqueness(m_fw):
                     return m_fw
 
@@ -256,7 +256,7 @@ class LaunchPad(FWSerializable):
             m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
             if not m_fw:
                 return None
-            m_fw = FireWork.from_dict(m_fw)
+            m_fw = self.get_fw_by_id(m_fw['fw_id'])
 
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
