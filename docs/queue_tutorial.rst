@@ -2,14 +2,20 @@
 Launch Rockets through a queue
 ==============================
 
-If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer time.
+If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer resources.
 
-The simplest way to submit jobs through a queue is to submit queue scripts that run ``rlauncher_run.py``. This method is just like typing ``rlauncher_run.py`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us. In particular, FireWorks is *completely unaware* that you are running through a queue(!); as far as FireWorks is concerned, a Rocket was launched somewhere, somehow. We'll discuss a more integrated way of doing things in a later tutorial. For now, we'll introduce the Queue Launcher, which helps you rapidly submit Rocket Launcher jobs using a queue system.
+The simplest way to submit jobs through a queue is to submit scripts to your queue manager that run ``rlauncher_run.py``. This method is just like typing ``rlauncher_run.py`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
+
+The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script "wakes" up and figures out what FireWork to run.
+
+The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don't have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your job stuck in the queue is not preventing high-priority jobs from running on other machines.
+
+There are also some disadvantages to this simple system, and we'll discuss a more advanced system in which FireWorks is aware of your queue in a future tutorial. However, we suggest that you get things working simply first.
 
 Launch a single job through a queue
 ===================================
 
-To get warmed up, let's set things up so we can launch a single Rocket through a queueing system. The Queue Launcher helps launch Rockets through a queue.
+To get warmed up, let's set things up a *Queue Launcher* to launch a single Rocket through a queueing system.
 
 Configure the Queue Launcher
 ---------------------------
