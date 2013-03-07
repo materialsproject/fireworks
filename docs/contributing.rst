@@ -18,35 +18,31 @@ Our criteria for inclusion of your code depends on the type of contribution you 
 Adding new Queue Adapters, FireTasks, etc.
 ------------------------------------------
 
-If you've written Queue Adapters, FireTasks, Duplicate Finders, or other "plug-in" type objects that do not modify existing code, we would be very happy to include them in the main repo. The main condition for inclusion is that they be useful to at least a sizable section of the FireWorks community. Otherwise, we might ask that you package them separately so that the subsection of the community that is interested in your objects can download them as an 'add-on'.
+If you've written Queue Adapters, FireTasks, Duplicate Finders, or other "plug-in" type objects that do not modify existing code, we would be very happy to include them in the main repo. The main condition for inclusion is that they be useful to a broad section of the FireWorks community.
 
 Adding new features or performance enhancements
 -----------------------------------------------
 
-We also encourage you to submit new features and enhancements to the FireWorks code. That said, our priorities for the FireWorks codebase are in the order:
+We encourage you to submit new features and enhancements to the FireWorks code. That said, please be mindful that there exists a delicate balance between adding features and maintaining simplicity and usability.
 
-1. simplicity
-#. features
-#. performance
-
-We ask that contributors begin by submitting the simplest version of their new feature or enhancement (hopefully about 500 lines of code or less). Simple codes are easy to use, flexible to adapt later, more durable against unforeseen errors, and easier to maintain and debug. More complex features should be built on top of the simplest version in a modular way. If your feature requires thousands of lines of code to be useful at all, you should re-evaluate your implementation, and whether that feature is necessary.
+We request that contributors begin by submitting the simplest version of their new feature or enhancement (hopefully about 500 lines of code or less). Simple codes are easy to use, flexible to adapt later, more durable against unforeseen errors, and easier to maintain and debug. More complex features should be built on top of the simplest version in a modular way. If your feature requires thousands of lines of code to be useful at all, you might re-evaluate your implementation.
 
 Modifying core modules
 ----------------------
 
-The core FireWorks modules are the most important of all, as they affect all users. One of our major goals is to keep the core of FireWorks lightweight, simple to use and understand, and difficult to "break". Proposed extensions or modifications to the core modules will therefore be evaluated quite strictly; they will be accepted only if they can be implemented very cleanly (i.e., in under 40 lines of code) and if they are of great interest to the majority of users. If you are embarking on core codebase changes that you'd like to merge back, we suggest that you contact us first to plan out your code.
+The core FireWorks modules are the most important of all, as they affect all users. One of our major goals is to keep the core of FireWorks lightweight, simple to use and understand, and difficult to "break". Proposed extensions or modifications to the core modules will therefore be evaluated quite strictly; they will be accepted only if they can be implemented very cleanly (i.e., generally in under 40 lines of code) and if they are of great interest to the majority of users.
 
 Documentation, coding style, and tests
 --------------------------------------
 
-We ask for reasonably clear documentation of modules, classes, methods, and tricky code sections (hopefully not too many of the last item!) Where possible, code within a method or class should be easy to understand without the need for additional documentation. In some cases, we may request a tutorial to clarify usage of your code. In terms of programming style, some guidelines are given in `PEP 8 <http://www.python.org/dev/peps/pep-0008/>`_, but we mainly ask that you try to follow the style of the FireWorks core modules. Depending on the complexity of the contribution, tests might need to be included along with your code.
+We ask for reasonably clear documentation of modules, classes, methods, and tricky code sections (hopefully not too many of the last item!) Where possible, code within a method or class should be easy to understand without the need for additional documentation. In some cases, we may request a tutorial to clarify usage of your code to the community. In terms of programming style, some guidelines are given in `PEP 8 <http://www.python.org/dev/peps/pep-0008/>`_, but we mainly ask that you try to follow the style of the FireWorks core modules. Depending on the complexity of the contribution, tests might need to be included along with your code.
 
-These types of issues can be iterated upon with the core FireWorks team, and when starting you should not be as concerned with them as with writing clear, succint, and functional code. If we feel that issues such as documentation or style are preventing merging of your code with the main repo, a core developer may request your permission to re-document and/or re-style your code, and add his/her name to either the ``__credits__`` or ``__authors__`` field of your code header (your name will still be retained in the ``__authors__`` field).
+However, when starting you should not be as concerned with these issues as with writing clear, succint, and functional code. If we feel that issues such as documentation or style are preventing merging of your code with the main repo, a core developer may request your permission to re-document and/or re-style your code, and add his/her name to either the ``__credits__`` or ``__authors__`` field of your code header (your name will still be retained in the ``__authors__`` field).
 
 Licensing
 ---------
 
-If you haven't already, please read the FireWorks :ref:`license-label`. Your contributions will also be distributed under this license. If this is a problem, please contact us.
+If you haven't already, please read the FireWorks :ref:`license-label`. Your contributions will also be distributed under this license.
 
 How to contribute
 =================
