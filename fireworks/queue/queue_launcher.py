@@ -31,7 +31,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
     :param launcher_dir: The directory where to submit the job
     """
 
-    launchpad = launchpad if launchpad else LaunchPad()
+    #TODO: move the jobs_exist code here, so the singleshot() also knows if a job exists before submitting to the queue!
     fworker = fworker if fworker else FWorker()
 
     # convert launch_dir to absolute path
@@ -44,40 +44,45 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
     if not os.path.exists(launcher_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
 
-    try:
-        # get the queue adapter
-        l_logger.debug('getting queue adapter')
-        qa = queue_params.qa
+    jobs_exist = not launchpad or launchpad.run_exists()
 
-        # move to the launch directory
-        l_logger.info('moving to launch_dir {}'.format(launcher_dir))
-        os.chdir(launcher_dir)
+    if jobs_exist():
+        try:
+            # get the queue adapter
+            l_logger.debug('getting queue adapter')
+            qa = queue_params.qa
 
-        if reserve:
-            l_logger.debug('finding a FW to reserve...')
-            fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
-            l_logger.debug('reserved FW with fw_id: {}'.format(fw.fw_id))
-            if '_queueparams' in fw.spec:
-                l_logger.debug('updating queue params using FireWork spec..')
-                # TODO: make sure this does not affect future FireWorks!!
-                queue_params.params.update(fw.spec['_queueparams'])
-            # update the exe to include the FW_id
-            queue_params.params['exe'] += ' --fw_id {}'.format(fw.fw_id)
+            # move to the launch directory
+            l_logger.info('moving to launch_dir {}'.format(launcher_dir))
+            os.chdir(launcher_dir)
 
-        # write and submit the queue script using the queue adapter
-        l_logger.debug('writing queue script')
-        with open(SUBMIT_SCRIPT_NAME, 'w') as f:
-            queue_script = qa.get_script_str(queue_params, launcher_dir)
-            if not queue_script:
-                raise RuntimeError('queue script could not be written, check job params and queue adapter!')
-            f.write(queue_script)
-        l_logger.info('submitting queue script')
-        # TODO: update the launch with launch_id with job id of the submitted job
-        if not qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME):
-            raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
+            if reserve:
+                l_logger.debug('finding a FW to reserve...')
+                fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
+                l_logger.debug('reserved FW with fw_id: {}'.format(fw.fw_id))
+                if '_queueparams' in fw.spec:
+                    l_logger.debug('updating queue params using FireWork spec..')
+                    # TODO: make sure this does not affect future FireWorks!!
+                    queue_params.params.update(fw.spec['_queueparams'])
+                # update the exe to include the FW_id
+                queue_params.params['exe'] += ' --fw_id {}'.format(fw.fw_id)
 
-    except:
-        log_exception(l_logger, 'Error writing/submitting queue script!')
+            # write and submit the queue script using the queue adapter
+            l_logger.debug('writing queue script')
+            with open(SUBMIT_SCRIPT_NAME, 'w') as f:
+                queue_script = qa.get_script_str(queue_params, launcher_dir)
+                if not queue_script:
+                    raise RuntimeError('queue script could not be written, check job params and queue adapter!')
+                f.write(queue_script)
+            l_logger.info('submitting queue script')
+            # TODO: update the launch with launch_id with job id of the submitted job
+            if not qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME):
+                raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
+
+        except:
+            log_exception(l_logger, 'Error writing/submitting queue script!')
+    else:
+        l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
 
 
 def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None, fworker=None, reserve=False):
@@ -89,8 +94,6 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     """
-
-    launchpad = launchpad if launchpad else LaunchPad()
 
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
@@ -110,7 +113,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
         while True:
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger)
-            jobs_exist = launchpad.run_exists()
+            jobs_exist = not launchpad or launchpad.run_exists()
 
             while jobs_in_queue < njobs_queue and jobs_exist:
                 l_logger.info('Launching a rocket!')
