@@ -38,6 +38,9 @@ class MongoTests(unittest.TestCase):
         except:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
+    def setUp(self):
+        self.old_wd = os.getcwd()
+
     def test_basic_fw(self):
         test1 = ScriptTask.from_str("python -c 'print \"test1\"'", {'store_stdout': True})
         fw = FireWork(test1)
@@ -91,18 +94,16 @@ class MongoTests(unittest.TestCase):
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
+        os.chdir(self.old_wd)
+        if os.path.exists(os.path.join('fw.json')):
+            os.remove('fw.json')
+        for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
+            shutil.rmtree(i)
 
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
-
-        for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
-            shutil.rmtree(i)
-
-        if os.path.exists('fw.json'):
-            os.remove('fw.json')
-
 
 if __name__ == "__main__":
     unittest.main()
