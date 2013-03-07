@@ -238,8 +238,6 @@ class LaunchPad(FWSerializable):
 
         return False
 
-
-
     def _get_a_fw_to_run(self, fworker, fw_id=None):
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
@@ -249,20 +247,25 @@ class LaunchPad(FWSerializable):
             if m_fw:
                 m_fw = self.get_fw_by_id(fw_id)
                 if self._check_fw_for_uniqueness(m_fw):
-                    return m_fw
+                    lid = None
+                    for l in m_fw.launches:
+                        if l.state == 'RESERVED':
+                            lid = l.launch_id
+                            break
+                    return m_fw, lid
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
             m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
             if not m_fw:
-                return None
+                return None, None
             m_fw = self.get_fw_by_id(m_fw['fw_id'])
 
             if self._check_fw_for_uniqueness(m_fw):
-                return m_fw
+                return m_fw, None
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
-        m_fw = self._get_a_fw_to_run(fworker)
+        m_fw, lid = self._get_a_fw_to_run(fworker)
         if not m_fw:
             return None, None
         # create a launch
@@ -291,14 +294,14 @@ class LaunchPad(FWSerializable):
         :return: a FireWork, launch_id tuple
         """
 
-        m_fw = self._get_a_fw_to_run(fworker, fw_id)
+        m_fw, launch_id = self._get_a_fw_to_run(fworker, fw_id)
         if not m_fw:
             return None, None
         # create a launch
-        launch_id = self.get_new_launch_id()
+        launch_id = launch_id if launch_id else self.get_new_launch_id()
         m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RUNNING', launch_id=launch_id)
-        self.launches.insert(m_launch.to_db_dict())
-        self.m_logger.debug('Created new Launch with launch_id: {}'.format(launch_id))
+        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(launch_id))
 
         # add launch to FW
         m_fw.launches.append(m_launch)
@@ -376,8 +379,7 @@ class LaunchPad(FWSerializable):
                     # steal the launches
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
                     thief_launches = [l.launch_id for l in thief_fw.launches]
-                    # TODO: note that we might submit two duplicates to a queue if one is 'RESERVED'.
-                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches and l.state != 'RESERVED']
+                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
                     for launch in valuable_launches:
                         thief_fw.launches.append(launch)
                         stolen = True

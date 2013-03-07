@@ -150,9 +150,9 @@ class FWAction():
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
+    # TODO: figure out a way to track how long it took to go from a RESERVED launch to a RUNNING launch. Also RUNTIME. # Probably want a STATE_HISTORY.
     def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, start=None, end=None,
-                 state=None,
-                 launch_id=None):
+                 state=None, launch_id=None):
         """
 
         :param fworker: A FWorker object describing the worker
