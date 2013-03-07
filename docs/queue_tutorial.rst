@@ -80,13 +80,11 @@ Submit a job
 
   .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml`` and ``my_fworker.yaml``, then you don't need to specify the ``-l`` and ``-w`` options explicitly. FireWorks will automatically search for these files in the current directory. For this tutorial, we'll include the full command and avoid shortcuts.
 
-  .. note:: The LaunchPad and FireWorker are only used in some Queue Launcher commands (in this case, they are not used at all). But, it is good practice to always specify them.
-
 #. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
 #. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. If you think this might be responsible for your problem, you might try to submit an interactive job to your queue. Once on the compute node, you can try connecting to your FireServer database through Mongo: ``mongo <hostname>:<port>/fireworks -u <USERNAME> -p <PASSWORD>``. (You could also try running ``lp_run.py -l my_launchpad.yaml get_fw 1`` to test the DB connection, but make sure you do this from a compute node). If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue, which will allow to type commands inside a running job. Once on the compute node, you can try connecting to your FireServer database through Mongo: ``mongo <hostname>:<port>/fireworks -u <USERNAME> -p <PASSWORD>``. You could also try running ``lp_run.py -l my_launchpad.yaml get_fw 1`` from the compute node as an alternate test of database connectivity. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
