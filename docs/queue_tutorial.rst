@@ -10,7 +10,7 @@ The jobs we will submit to the queue are basically placeholder jobs that are asl
 
 The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don't have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your job stuck in the queue is not preventing high-priority jobs from running on other machines.
 
-There are also some disadvantages to this simple system, and we'll discuss a more advanced system in which FireWorks is aware of your queue in a future tutorial. However, we suggest that you get things working simply first.
+There are also some disadvantages to this simple system, which we'll discuss at the end of the tutorial. We'll also direct you on how to overcome these limitations if needed. For now, we suggest that you get things working simply.
 
 Launch a single job through a queue
 ===================================
@@ -153,12 +153,32 @@ You might want to set up your worker so that it maintains a certain number of jo
     qlauncher_run.py singleshot -h
     qlauncher_run.py rapidfire -h
 
-Next steps
-==========
+Limitations and Next Steps
+==========================
 
-If you've completed this tutorial, you're ready to unleash your FireWorks on a large shared resource!
+The information in this tutorial might be all you need to automate your application. However, as we noted previously, there are some limitations to running under a model in which FireWorks is completely unaware of the existence of queues. Some limitations include:
 
-The information in this tutorial might be all you need to automate your application. However, as we noted before, there are some limitations to running in a model where FireWorks is completely unaware of the existence of queues. If you're interested in learning about another mode of the Queue Launcher, in which FireWorks is alerted to the queue, forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`!
+#. **You can't track how many of your jobs are queued**
+
+Since FireWorks is unaware of your queue, there's no way to track how many of your jobs are queued up on various machines. You'll have to wait until they start running before their presence is reported to FireWorks.
+
+#. **You might submit too many jobs to the queue**
+
+It's possible to submit more queue scripts than exist jobs in the database. Before submtting a queue script, the Queue Launcher checks that at least one job exists in the database (that's ready to run). However, let's take an example where you have one FireWork in the database that's ready to run. Nothing in the current system prevents you from using the Queue Launcher to rapid-fire 20 jobs to the queue.  You won't be prevented from submitting queue scripts until that FireWork has actually started running.
+
+If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn't run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time.
+
+#. **You can't easily tailor queue parameters (e.g. walltime) based on the job**
+
+Perhaps the most severe limitation is that the Queue Launcher submits queue scripts with identical queue parameters (e.g., all jobs will have the same walltime, use the same number of cores, etc.)
+
+If you have just two or three sets of queue parameters for your jobs, you can get around this this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run *two* Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you'd like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.
+
+If you have many types of jobs, all of which use different queue parameters, this limitation might restrict your application.
+
+Next step: reserving FireWorks to overcome limitations
+------------------------------------------------------
+
+If you feel these limitations severely impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity.
 
 .. note:: If you are planning to complete the next tutorial, you might save your working directory with the files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.
-
