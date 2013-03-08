@@ -118,7 +118,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Help us improve the documentation - tell us where you got 'stuck' and improve the install process for everyone.
 * Let us know if you need support for a queueing system or certain features.
 * Point us to areas of the code that are difficult to understand or use.
-* :doc:`Contribute code</contributing>`.
+* Contribute code! If you are interested in this option, please see our :doc:`contribution guidelines</contributing>`.
 
 The collaborative way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
 
