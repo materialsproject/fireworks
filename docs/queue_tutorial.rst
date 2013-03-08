@@ -116,10 +116,44 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
    .. important:: The Queue Launcher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
-   .. important:: The command above submits jobs until you have at most 3 jobs in the queue. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
+   .. important:: The command above submits jobs until you have at most 3 jobs in the queue under your username. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
 
 #. The rapid-fire command should have created a directory beginning with the tag ``block_``. Navigate inside this directory, and confirm that three directories starting with the tag ``launch`` were created. The ``launch`` directories contain your individual jobs.
 
 You've now launched multiple Rockets with a single command!
 
-.. note:: For more tips on the Queue Launcher, such as how to maintain a certain number of jobs in the queue indefinitely, read its built-in help: ``qlauncher_run.py rapidfire -h``
+Continually submit jobs
+========================
+
+You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the FireServer. Let's set this up.
+
+1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+
+#. Let's reset our database and add four new FireWorks this time::
+
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
+
+   .. note:: We have omitted the ``-l`` parameter. You can use this shortcut when using the standard file name (``my_launchpad.yaml``) for the LaunchPad.
+
+#. Run the queue launcher in infinite mode::
+
+    qlauncher_run.py rapidfire -q 2 --infinite my_qp.yaml
+
+   .. note:: We have used the shortcut of omitting the ``-l`` parameter and ``-w`` parameter when using standard file names.
+
+#. This command will always maintain 2 jobs in the queue. When a job finishes, another will be submitted to take its place!
+
+#. As with all FireWorks scripts, you can run the built-in help for more information::
+
+    qlauncher_run.py -h
+    qlauncher_run.py singleshot -h
+    qlauncher_run.py rapidfire -h
+
+Next steps
+==========
+
+

@@ -24,7 +24,7 @@ You are now ready to start playing with FireWorks!
 .. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. In addition, if you are running it on a shared machine, make sure that the ``--dbpath`` variable is set to a directory that you can access.
 
 Reset the FireServer
--------------------------
+--------------------
 
 1. Navigate to the FireWorks installation tutorial directory::
 
@@ -162,23 +162,28 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 
     rm -r launcher_*
 
-2. Start the Rocket Launcher so that it looks for new FireWorks every 10 seconds::
+#. Start the Rocket Launcher so that it looks for new FireWorks every 10 seconds::
 
     rlauncher_run.py rapidfire --infinite --sleep 10
 
-3. **In a new terminal window**, navigate back to your working directory containing ``fw_test.yaml``. Let's insert two FireWorks::
+#. **In a new terminal window**, navigate back to your working directory containing ``fw_test.yaml``. Let's insert two FireWorks::
 
     lp_run.py add fw_test.yaml
     lp_run.py add fw_test.yaml
 
-4. After a few seconds, the Rocket Launcher should have picked up the new jobs and run them. Confirm this is the case::
+#. After a few seconds, the Rocket Launcher should have picked up the new jobs and run them. Confirm this is the case::
 
     ls -d launcher_*
 
    You should see two directories, one for each FireWork we inserted.
 
-5. You can continue adding FireWorks as desired; the Rocket Launcher will run them automatically and create a new directory for each job. When you are finished, you can exit out of the Rocket Launcher terminal window and delete your working directory.
+#. You can continue adding FireWorks as desired; the Rocket Launcher will run them automatically and create a new directory for each job. When you are finished, you can exit out of the Rocket Launcher terminal window and delete your working directory.
 
+#. As with all FireWorks scripts, you can run the built-in help for more information::
+
+    rlauncher_run.py -h
+    rlauncher_run.py singleshot -h
+    rlauncher_run.py rapidfire -h
 
 Next steps
 ==========
