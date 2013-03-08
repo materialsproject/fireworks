@@ -6,16 +6,16 @@ If your FireWorker is a large, shared resource (such as a computing cluster or s
 
 The simplest way to submit jobs through a queue is to submit scripts to your queue manager that run ``rlauncher_run.py``. This method is just like typing ``rlauncher_run.py`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
 
-The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script "wakes" up and figures out what FireWork to run.
+The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script "wakes" up and runs the Rocket Launcher, which then figures out what FireWork to run.
 
 The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don't have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your job stuck in the queue is not preventing high-priority jobs from running on other machines.
 
-There are also some disadvantages to this simple system, which we'll discuss at the end of the tutorial. We'll also direct you on how to overcome these limitations if needed. For now, we suggest that you get things working simply.
+There are also some disadvantages to this simple system, which we'll discuss at the end of the tutorial. We'll also direct you on how to overcome these limitations in a subsequent tutorial. For now, we suggest that you get things working simply.
 
 Launch a single job through a queue
 ===================================
 
-To get warmed up, let's set up a *Queue Launcher* to launch a single Rocket through a queueing system.
+To get warmed up, let's set up a *Queue Launcher* to run a single FireWork through a queueing system.
 
 Configure the Queue Launcher
 ---------------------------
