@@ -15,12 +15,12 @@ There are also some disadvantages to this simple system, and we'll discuss a mor
 Launch a single job through a queue
 ===================================
 
-To get warmed up, let's set things up a *Queue Launcher* to launch a single Rocket through a queueing system.
+To get warmed up, let's set up a *Queue Launcher* to launch a single Rocket through a queueing system.
 
 Configure the Queue Launcher
 ---------------------------
 
-The Queue Launcher needs to know how to communicate with your queue system and the executable to submit to the queue (in our case, a Rocket). These parameters are defined through a QueueParams file.
+The Queue Launcher needs to write and submit a queue script that contains an executable (in our case, a Rocket Launcher). This is achieved through a QueueParams file.
 
 1. Move to the ``queue`` tutorial directory on your FireWorker::
 
@@ -84,13 +84,14 @@ Submit a job
 
 #. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue, which will allow to type commands inside a running job. Once on the compute node, you can try connecting to your FireServer database through Mongo: ``mongo <hostname>:<port>/fireworks -u <USERNAME> -p <PASSWORD>``. You could also try running ``lp_run.py -l my_launchpad.yaml get_fw 1`` from the compute node as an alternate test of database connectivity. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lp_run.py -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
-   a. The Queue Launcher submitted a Rocket to your queue manager
-   b. Your queue manager executed the Rocket when resources were ready
-   c. The Rocket fetched a FireWork from the FireServer and ran the specification inside
+   a. The Queue Launcher submitted a Rocket Launcher to your queue manager
+   b. Your queue manager executed the Rocket Launcher when resources were ready
+   c. The Rocket Launcher launched a Rocket
+   d. The Rocket     fetched a FireWork from the FireServer and ran the specification inside
 
 
 Adding more power: using rapid-fire mode
@@ -98,20 +99,14 @@ Adding more power: using rapid-fire mode
 
 While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. Like the Rocket Launcher, the Queue Launcher can be run in a "rapid-fire" mode that provides these features.
 
-Add some FireWorks
-------------------
+1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
-Let's reset our database and add three new FireWorks, all from our FireWorker::
+#. Let's reset our database and add three new FireWorks, all from our FireWorker::
 
     lp_run.py -l my_launchpad.yaml reset <TODAY'S DATE>
     lp_run.py -l my_launchpad.yaml add fw_test.yaml
     lp_run.py -l my_launchpad.yaml add fw_test.yaml
     lp_run.py -l my_launchpad.yaml add fw_test.yaml
-
-Unleash rapid-fire mode
------------------------
-
-#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
 #. Submit several jobs with a single command::
 
@@ -123,7 +118,7 @@ Unleash rapid-fire mode
 
    .. important:: The command above submits jobs until you have at most 3 jobs in the queue. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
 
-5. The rapid-fire command should have created a directory beginning with the tag ``block_``. Navigate inside this directory, and confirm that three directories starting with the tag ``launch`` were created. The ``launch`` directories contain your individual jobs.
+#. The rapid-fire command should have created a directory beginning with the tag ``block_``. Navigate inside this directory, and confirm that three directories starting with the tag ``launch`` were created. The ``launch`` directories contain your individual jobs.
 
 You've now launched multiple Rockets with a single command!
 

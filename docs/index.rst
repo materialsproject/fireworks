@@ -102,6 +102,7 @@ Planned future tutorials:
 * Using the QueueLauncher outside of FW
 * Searching for FireWorks and Workflows
 * Logging
+* Shortcuts, power usage
 * FW design guide, e.g. FireTasks vs Workflows
 * JSON vs. YAML and serialization of FW objects (including WF serialiazation as TAR instead of JSON/YAML)
 
