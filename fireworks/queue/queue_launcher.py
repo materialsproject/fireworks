@@ -46,7 +46,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
 
     jobs_exist = not launchpad or launchpad.run_exists()
 
-    if jobs_exist():
+    if jobs_exist:
         try:
             # get the queue adapter
             l_logger.debug('getting queue adapter')
