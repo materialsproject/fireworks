@@ -168,11 +168,11 @@ It's possible to submit more queue scripts than exist jobs in the database. Befo
 
 If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn't run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time.
 
-#. **You can't easily tailor queue parameters (e.g. walltime) based on the job**
+#. **You can't easily tailor queue parameters (e.g. walltime) individually for each the job**
 
 Perhaps the most severe limitation is that the Queue Launcher submits queue scripts with identical queue parameters (e.g., all jobs will have the same walltime, use the same number of cores, etc.)
 
-If you have just two or three sets of queue parameters for your jobs, you can get around this this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run *two* Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you'd like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.
+If you have just two or three sets of queue parameters for your jobs, you can work around this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run *two* Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you'd like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.
 
 If you have many types of jobs, all of which use different queue parameters, this limitation might restrict your application.
 
