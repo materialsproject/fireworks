@@ -378,7 +378,9 @@ class LaunchPad(FWSerializable):
             m_query['launches'] = {'$ne': []}
             # iterate through all potential duplicates in the DB
             for potential_match in self.fireworks.find(m_query):
-                if m_dupefinder.verify(thief_fw.spec, potential_match['spec']):  # verify the match
+                spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
+                spec2 = dict(potential_match['spec'])  # defensive copy
+                if m_dupefinder.verify(spec1, spec2):  # verify the match
                     # steal the launches
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
                     thief_launches = [l.launch_id for l in thief_fw.launches]
