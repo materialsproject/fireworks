@@ -84,6 +84,7 @@ Depending on your application, you might also be interested in the following tut
     :maxdepth: 1
 
     queue_tutorial
+    queue_tutorial_pt2
     python_tutorial
     duplicates_tutorial
 

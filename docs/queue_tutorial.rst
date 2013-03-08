@@ -156,4 +156,9 @@ You might want to set up your worker so that it maintains a certain number of jo
 Next steps
 ==========
 
+If you've completed this tutorial, you're ready to unleash your FireWorks on a large shared resource!
+
+The information in this tutorial might be all you need to automate your application. However, as we noted before, there are some limitations to running in a model where FireWorks is completely unaware of the existence of queues. If you're interested in learning about another mode of the Queue Launcher, in which FireWorks is alerted to the queue, forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`!
+
+.. note:: If you are planning to complete the next tutorial, you might save your working directory with the files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.
 
