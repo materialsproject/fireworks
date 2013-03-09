@@ -244,18 +244,11 @@ class LaunchPad(FWSerializable):
     def _get_a_fw_to_run(self, fworker, fw_id=None):
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
-        # TODO: clean up this terrible code
+        # Override query if fw_id defined
+        # Note for later: We want to return None if this specific FW doesn't exist anymore
+        # This is because our queue params might have been tailored to this FW
         if fw_id:
-            m_fw = self.fireworks.find_and_modify({"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}, update={'$set': {'state': 'RESERVED'}})
-            if m_fw:
-                m_fw = self.get_fw_by_id(fw_id)
-                if self._check_fw_for_uniqueness(m_fw):
-                    lid = None
-                    for l in m_fw.launches:
-                        if l.state == 'RESERVED':
-                            lid = l.launch_id
-                            break
-                    return m_fw, lid
+            m_query = {"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
