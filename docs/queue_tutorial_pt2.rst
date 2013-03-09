@@ -114,7 +114,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
-# The solution is to un-reserve our *RESERVED* FireWork::
+#. The solution is to un-reserve our *RESERVED* FireWork::
 
     lp_run.py unreserve
 
