@@ -6,4 +6,4 @@ spec:
       script: echo "howdy, your job launched successfully!" >> howdy.txt
       use_shell: truei
   _queueparams:
-  - walltime: '00:10:00'
+    walltime: '00:10:00'
