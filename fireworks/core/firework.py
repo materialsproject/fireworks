@@ -36,6 +36,7 @@ class FireWork(FWSerializable):
             _tasks - a list of FireTasks to run
             _priority - the priority of the FW
             _dupefinder - a DupeFinder object, for avoiding duplicates
+            _queueparams - values of the QueueParams dict to override
         
         :param tasks: a list of FireTasks
         :param spec: a dict specification of the job to run
