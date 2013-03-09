@@ -127,7 +127,7 @@ Continually submit jobs
 
 You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the FireServer. Let's set this up.
 
-1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
 #. Let's reset our database and add four new FireWorks this time::
 
@@ -164,21 +164,21 @@ Since FireWorks is unaware of your queue, there's no way to track how many of yo
 
 #. **You might submit too many jobs to the queue**
 
-It's possible to submit more queue scripts than exist jobs in the database. Before submtting a queue script, the Queue Launcher checks that at least one job exists in the database (that's ready to run). However, let's take an example where you have one FireWork in the database that's ready to run. Nothing in the current system prevents you from using the Queue Launcher to rapid-fire 20 jobs to the queue.  You won't be prevented from submitting queue scripts until that FireWork has actually started running.
+It's possible to submit more queue scripts than exist jobs in the database. Before submitting a queue script, the Queue Launcher checks that at least one unstarted job exists in the database. However, let's take an example where you have one FireWork in the database that's ready to run. Nothing in the current system prevents you from using the Queue Launcher to rapid-fire 20 jobs to the queue.  You won't be prevented from submitting queue scripts until that FireWork has actually started running.
 
-If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn't run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time.
+If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn't run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time. If you are using rapid-fire mode, you'll also end up with an additional ``launcher_`` directory.
 
 #. **You can't easily tailor queue parameters (e.g. walltime) individually for each the job**
 
 Perhaps the most severe limitation is that the Queue Launcher submits queue scripts with identical queue parameters (e.g., all jobs will have the same walltime, use the same number of cores, etc.)
 
-If you have just two or three sets of queue parameters for your jobs, you can work aroundue this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run *two* Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you'd like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.
+If you have just two or three sets of queue parameters for your different job types, you can work around this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run *two* Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you'd like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.
 
-If you have many types of jobs, all of which use different queue parameters, this limitation might restrict your application.
+While this solution works for a few different job types, it is not practical if you have many job types. In addition, it requires some coordination between FireWork categories, FireWorkers, and Queue Launchers. Therefore, if setting multiple sets of queue parameters is needed for your application, we suggest that you read on for a solution.
 
 Next step: reserving FireWorks to overcome limitations
 ------------------------------------------------------
 
 If you feel these limitations severely impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity.
 
-.. note:: If you are planning to complete the next tutorial, you might save your working directory with the files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.
+.. note:: If you are planning to complete the next tutorial, you should save your working directory with the files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.
