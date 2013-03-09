@@ -91,3 +91,44 @@ Another key feature of reserving FireWorks before queue submission is that the F
 Limitations: dealing with failure
 =================================
 
+One limitation of reserving FireWorks is that the FireWork's fate is tied to that of the queue submission. If the place in the queue is deleted, that FireWork is stuck in limbo unless you reset its state from *RESERVED* back to *READY*. Let's try to simulate this:
+
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+
+#. Let's add and run this FireWork. Before the job starts running, delete it from the queue (if you're too slow, repeat this entire step)::
+
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add fw_test.yaml
+    qlauncher_run.py -r singleshot my_qp.yaml
+    qdel <JOB_ID>
+
+   .. note:: The job id should have been printed by the Queue Launcher, or you can check your queue manager. The ``qdel`` command might need to be modified, depending on the type of queue manager you use.
+
+#. Now we have no jobs in the queue. But our FireWork still shows up as *RESERVED*::
+
+    lp_run.py get_fw 1
+
+#. Because our FireWork is *RESERVED*, we cannot run it::
+
+    qlauncher_run.py -r singleshot my_qp.yaml
+
+   tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
+
+# The solution is to un-reserve our *RESERVED* FireWork::
+
+    lp_run.py unreserve
+
+#. Now the FireWork should be in the *READY* state::
+
+    lp_run.py get_fw 1
+
+#. And we can run it again::
+
+    qlauncher_run.py -r singleshot my_qp.yaml
+
+.. note:: The ``unreserve`` command is currently a blunt instrument that un-reserves **all** reserved FireWorks. If you un-reserve a FireWork that is still in a queue, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
+
+Conclusion
+==========
+
+As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueparams`` parameter in your ``spec``. Jobs launched from the Simple Queue Launcher will not carry out this override!
