@@ -66,3 +66,25 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 Overriding Queue Parameters within the FireWork
 ===============================================
 
+Another key feature of reserving FireWorks before queue submission is that the FireWork can override queue parameters. This is done by specifying the ``_queueparams`` reserved key in the ``spec``. For example, let's override the walltime parameter.
+
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+
+#. Look in the file ``my_qp.yaml``. You should have walltime parameter listed, perhaps set to 2 minutes. By default, all jobs submitted by this Queue Launcher would have a 2-minute walltime.
+
+#. Let's copy over the ``fw_walltime.yaml`` file from the tutorials dir::
+
+    cp <INSTALL_DIR>/fw_tutorials/queue_pt2/fw_walltime.yaml .
+
+#. Look inside ``fw_walltime.yaml``. You will see a ``_queueparams`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueparams`` key will override the corresponding parameter in ``my_qp.yaml`` when the Queue Launcher is run in reservation mode. So now, the FireWork itself is determining key properties of the queue submission.
+
+#. Let's add and run this FireWork::
+
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add fw_test.yaml
+    qlauncher_run.py -r singleshot my_qp.yaml
+
+#. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_qp.yaml``.
+
+#. Your job should complete successfully as before. You could also try to override other queue parameters such as the number of cores for running the job or the account which is charged for running the job. In this way, your queue submission can be tailored on a per-job basis!
+
