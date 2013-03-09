@@ -43,7 +43,7 @@ if __name__ == '__main__':
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
                                    default=None)
 
-    unreserve_parser = subparsers.add_parser('unreserve_fws', help='Un-reserve reserved FireWorks')
+    unreserve_parser = subparsers.add_parser('unreserve', help='Un-reserve reserved FireWorks')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
