@@ -280,8 +280,8 @@ class LaunchPad(FWSerializable):
 
     def unreserve_fws(self):
         # TODO: allow to unreserve only a portion of jobs
-        self.launches.update(query={'state': 'RESERVED'}, update={'state': 'READY'}, multi=True)
-        self.fireworks.update(query={'state': 'RESERVED'}, update={'state': 'READY'}, multi=True)
+        self.launches.update(query={'state': 'RESERVED'}, update={'$set':{'state': 'READY'}}, multi=True)
+        self.fireworks.update(query={'state': 'RESERVED'}, update={'$set':{'state': 'READY'}}, multi=True)
 
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
