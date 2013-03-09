@@ -278,6 +278,11 @@ class LaunchPad(FWSerializable):
 
         return m_fw, launch_id
 
+    def unreserve_fws(self):
+        # TODO: allow to unreserve only a portion of jobs
+        self.launches.update(query={'state': 'RESERVED'}, update={'state': 'READY'}, multi=True)
+        self.fireworks.update(query={'state': 'RESERVED'}, update={'state': 'READY'}, multi=True)
+
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,

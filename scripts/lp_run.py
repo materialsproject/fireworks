@@ -43,9 +43,10 @@ if __name__ == '__main__':
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
                                    default=None)
 
+    unreserve_parser = subparsers.add_parser('unreserve_fws', help='Un-reserve reserved FireWorks')
+
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
-
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
@@ -63,6 +64,9 @@ if __name__ == '__main__':
 
     if args.command == 'reset':
         lp.reset(args.password)
+
+    elif args.command == 'unreserve_fws':
+            lp.unreserve_fws()
 
     elif args.command == 'add':
         # TODO: make this cleaner, e.g. make TAR option explicit
