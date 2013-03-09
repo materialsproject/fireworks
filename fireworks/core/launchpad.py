@@ -300,14 +300,19 @@ class LaunchPad(FWSerializable):
         m_fw, launch_id = self._get_a_fw_to_run(fworker, fw_id)
         if not m_fw:
             return None, None
-        # create a launch
-        launch_id = launch_id if launch_id else self.get_new_launch_id()
-        m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RUNNING', launch_id=launch_id)
+        # create or update a launch
+        l_id = launch_id if launch_id else self.get_new_launch_id()
+        m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RUNNING', launch_id=l_id)
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(launch_id))
 
         # add launch to FW
-        m_fw.launches.append(m_launch)
+        if not launch_id:
+            # we're appending a new FireWork
+            m_fw.launches.append(m_launch)
+        else:
+            # we're updating an existing launch
+            m_fw.launches = [m_launch if l.launch_id==m_launch.launch_id else l for l in m_fw.launches]
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
