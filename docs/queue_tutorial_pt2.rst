@@ -14,6 +14,7 @@ write/submit queue script        write generic script using QueueParams  | 1. **
 queue manager runs queue script  determine a FW to run and run it        run the **reserved** FW
 job is deleted from queue        no action needed by the user            any affected **reserved** jobs must be
                                                                          unreserved by user manually
+run multiple FWs in one script   simple / fully supported                currently unsupported
 ===============================  ======================================  =============================================
 
 Reserving jobs allows for more flexibility, but also adds maintenance overhead when queues go down or jobs in the queue are cancelled. Hence, there are some advantages to sticking with Simple Queue Launching. With that out of the way, let's explore the reservation method of queue submission!
