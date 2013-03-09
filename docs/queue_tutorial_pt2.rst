@@ -88,3 +88,6 @@ Another key feature of reserving FireWorks before queue submission is that the F
 
 #. Your job should complete successfully as before. You could also try to override other queue parameters such as the number of cores for running the job or the account which is charged for running the job. In this way, your queue submission can be tailored on a per-job basis!
 
+Limitations: dealing with failure
+=================================
+
