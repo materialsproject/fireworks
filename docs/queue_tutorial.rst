@@ -122,12 +122,12 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
 You've now launched multiple Rockets with a single command!
 
-Continually submit jobs
-========================
+Continually submit jobs to the queue
+====================================
 
 You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the FireServer. Let's set this up.
 
-1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
 #. Let's reset our database and add four new FireWorks this time::
 
@@ -146,6 +146,38 @@ You might want to set up your worker so that it maintains a certain number of jo
    .. note:: We have used the shortcut of omitting the ``-l`` parameter and ``-w`` parameter when using standard file names.
 
 #. This command will always maintain 2 jobs in the queue. When a job finishes, another will be submitted to take its place!
+
+Running multiple Rockets per queue job
+======================================
+
+So far, each queue script we submitted has only one job. We can also submit multiple jobs per queue script by running the ``rapidfire`` option of the *Rocket Launcher* inside the Queue Launcher. Then, a single queue script will run multiple Rockets.
+
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
+
+#. Copy your QueueParams file to ``my_qp_multi.yaml``::
+
+    cp my_qp.yaml my_qp_multi.yaml
+
+#. Edit ``my_qp_multi.yaml`` as follows:
+
+    a. In the part that specifies running ``rlauncher_run.py``, modify the ``singleshot`` text to read ``rapidfire``.
+
+#. Let's add three FireWorks to the LaunchPad and submit a *single* queue script::
+
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
+    lp_run.py add fw_test.yaml
+    qlauncher_run.py singleshot my_qp_multi.yaml
+
+#. You should confirm that only a single job got submitted to the queue. However, when the job starts running, you'll see that all three of your jobs completed in separate ``launcher_`` directories!
+
+.. warning:: Currently, we do not recommend running in this mode unless you are confident that all jobs can finish before the walltime expires. Otherwise, you might run into a situation where the walltime kills one of your jobs mid-run. In future tutorials and FireWorks versions, we'll demonstrate how to handle this case cleanly. For now, we suggest you stick to 1 FireWork per queue script unless you know what you are doing!
+
+
+
+More information
+================
 
 #. As with all FireWorks scripts, you can run the built-in help for more information::
 
