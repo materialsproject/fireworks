@@ -65,7 +65,7 @@ if __name__ == '__main__':
     if args.command == 'reset':
         lp.reset(args.password)
 
-    elif args.command == 'unreserve_fws':
+    elif args.command == 'unreserve':
             lp.unreserve_fws()
 
     elif args.command == 'add':
