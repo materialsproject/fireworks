@@ -112,8 +112,8 @@ Planned future tutorials:
 
 .. _contributing-label:
 
-Contributing and Contact
-========================
+Contributing / Contact / Bug Reports
+====================================
 
 Want to see something added or changed? There are many ways to make that a reality! Some ways to get involved are:
 
@@ -122,7 +122,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Point us to areas of the code that are difficult to understand or use.
 * Contribute code! If you are interested in this option, please see our :doc:`contribution guidelines</contributing>`.
 
-The collaborative way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
+The collaborative way to submit questions, issues / bug reports, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
 
 .. |Mail| image:: _static/mail.png
    :alt: developer contact
