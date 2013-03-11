@@ -43,6 +43,8 @@ Run unit tests
     
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
 
+.. _updating-label:
+
 Updating an existing FireWorks installation
 ===========================================
 

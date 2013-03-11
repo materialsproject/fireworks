@@ -12,6 +12,7 @@ from fireworks.core.firework import FireWork
 import ast
 import json
 from fireworks.core.workflow import Workflow
+from fireworks import __version__ as FW_VERSION
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -45,6 +46,8 @@ if __name__ == '__main__':
 
     unreserve_parser = subparsers.add_parser('unreserve', help='Un-reserve reserved FireWorks')
 
+    version_parser = subparsers.add_parser('version', help='Print the version of FireWorks installed')
+
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
@@ -53,47 +56,51 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
-        args.launchpad_file = 'my_launchpad.yaml'
+    if args.command == 'version':
+        print FW_VERSION
 
-    if args.launchpad_file:
-        lp = LaunchPad.from_file(args.launchpad_file)
     else:
-        args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
-        lp = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
+        if not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
+            args.launchpad_file = 'my_launchpad.yaml'
 
-    if args.command == 'reset':
-        lp.reset(args.password)
-
-    elif args.command == 'unreserve':
-            lp.unreserve_fws()
-
-    elif args.command == 'add':
-        # TODO: make this cleaner, e.g. make TAR option explicit
-        try:
-            fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
-            lp.add_wf(fwf)
-
-        except:
-            try:
-                if '.tar' in args.wf_file:
-                    fwf = Workflow.from_tarfile(args.wf_file)
-                else:
-                    fwf = Workflow.from_file(args.wf_file)
-                lp.add_wf(fwf)
-            except:
-                print 'Error reading FireWork/Workflow file.'
-                traceback.print_exc()
-
-    elif args.command == 'get_fw':
-        fw = lp.get_fw_by_id(args.fw_id)
-        fw_dict = fw.to_dict()
-        if args.filename:
-            fw.to_file(args.filename)
+        if args.launchpad_file:
+            lp = LaunchPad.from_file(args.launchpad_file)
         else:
-            print json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
+            args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
+            lp = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
 
-    elif args.command == 'get_fw_ids':
-        if args.query:
-            args.query = ast.literal_eval(args.query)
-        print lp.get_fw_ids(args.query)
+        if args.command == 'reset':
+            lp.reset(args.password)
+
+        elif args.command == 'unreserve':
+                lp.unreserve_fws()
+
+        elif args.command == 'add':
+            # TODO: make this cleaner, e.g. make TAR option explicit
+            try:
+                fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
+                lp.add_wf(fwf)
+
+            except:
+                try:
+                    if '.tar' in args.wf_file:
+                        fwf = Workflow.from_tarfile(args.wf_file)
+                    else:
+                        fwf = Workflow.from_file(args.wf_file)
+                    lp.add_wf(fwf)
+                except:
+                    print 'Error reading FireWork/Workflow file.'
+                    traceback.print_exc()
+
+        elif args.command == 'get_fw':
+            fw = lp.get_fw_by_id(args.fw_id)
+            fw_dict = fw.to_dict()
+            if args.filename:
+                fw.to_file(args.filename)
+            else:
+                print json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
+
+        elif args.command == 'get_fw_ids':
+            if args.query:
+                args.query = ast.literal_eval(args.query)
+            print lp.get_fw_ids(args.query)

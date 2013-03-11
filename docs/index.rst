@@ -9,6 +9,8 @@
 
 *Note: FireWorks is under active development; major features are yet to be implemented, and the internal code is refactored often and not suitable for production. However, certain components of the code are available for initial testing.*
 
+.. warning:: If you encounter bugs or mismatches between the tutorials and the code, please first make sure that you have the latest version of FireWorks installed. Instructions on how to update your installation are here: :ref:`updating-label`. (This warning will be removed after FireWorks is no longer in development mode.)
+
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
 Features
@@ -110,8 +112,8 @@ Planned future tutorials:
 
 .. _contributing-label:
 
-Contributing and Contact
-========================
+Contributing / Contact / Bug Reports
+====================================
 
 Want to see something added or changed? There are many ways to make that a reality! Some ways to get involved are:
 
@@ -120,7 +122,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Point us to areas of the code that are difficult to understand or use.
 * Contribute code! If you are interested in this option, please see our :doc:`contribution guidelines</contributing>`.
 
-The collaborative way to submit questions, issues, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
+The collaborative way to submit questions, issues / bug reports, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
 
 .. |Mail| image:: _static/mail.png
    :alt: developer contact
