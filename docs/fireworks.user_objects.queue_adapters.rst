@@ -9,3 +9,11 @@ queue_adapters Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`slurm_adapter` Module
+---------------------------
+
+.. automodule:: fireworks.user_objects.queue_adapters.slurm_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
