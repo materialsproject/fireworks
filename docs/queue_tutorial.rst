@@ -190,17 +190,17 @@ Limitations and Next Steps
 
 The information in this tutorial might be all you need to automate your application. However, as we noted previously, there are some limitations to running under a model in which FireWorks is completely unaware of the existence of queues. Some limitations include:
 
-#. **You can't track how many of your jobs are queued**
+1. **You can't track how many of your jobs are queued**
 
 Since FireWorks is unaware of your queue, there's no way to track how many of your jobs are queued up on various machines. You'll have to wait until they start running before their presence is reported to FireWorks.
 
-#. **You might submit too many jobs to the queue**
+2. **You might submit too many jobs to the queue**
 
 It's possible to submit more queue scripts than exist jobs in the database. Before submitting a queue script, the Queue Launcher checks that at least one unstarted job exists in the database. However, let's take an example where you have one FireWork in the database that's ready to run. Nothing in the current system prevents you from using the Queue Launcher to rapid-fire 20 jobs to the queue.  You won't be prevented from submitting queue scripts until that FireWork has actually started running.
 
 If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn't run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time. If you are using rapid-fire mode, you'll also end up with an additional ``launcher_`` directory.
 
-#. **You can't easily tailor queue parameters (e.g. walltime) individually for each the job**
+3. **You can't easily tailor queue parameters (e.g. walltime) individually for each the job**
 
 Perhaps the most severe limitation is that the Queue Launcher submits queue scripts with identical queue parameters (e.g., all jobs will have the same walltime, use the same number of cores, etc.)
 
