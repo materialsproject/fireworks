@@ -25,6 +25,8 @@ Download FireWorks and dependencies
 
     git clone git@github.com:materialsproject/fireworks.git
 
+   .. note:: Make sure you have an account on GitHub set up, and have associated your SSH key on your computer with your GitHub account. Otherwise you might get a cryptic ``Permission denied (publickey)`` error.
+
 2. Navigate inside the FireWorks directory containing the file setup.py::
 
     cd fireworks
