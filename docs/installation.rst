@@ -1,10 +1,11 @@
+============================
 Basic FireWorks installation
 ============================
 
 *Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.*
 
-Install required software
--------------------------
+Preparing to Install
+====================
 To prepare for installation, you should:
 
 1. Install `python 2.7 <http://www.python.org>`_ (preferably Python 2.7.3), if not already packaged with your system. To check your python version, use the command ``python --version``.
@@ -13,8 +14,13 @@ To prepare for installation, you should:
 
 .. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``.
 
+Virtualenv installation option
+------------------------------
+
+Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. For example, you might want to use Python 2.7 for FireWorks, but Python 3+ for other Python codes you're interested in using. Or, you might have different versions of Python libraries supporting FireWorks and your other installations. This is often the case on shared machines. if you're interested in this option, you might consider a :doc:`virtualenv install </virtualenv_tutorial>`. Otherwise, just follow the installation tutorial below.
+
 Download FireWorks and dependencies
------------------------------------
+===================================
 1. Run the following code to download the FireWorks source::
 
     git clone git@github.com:materialsproject/fireworks.git
@@ -36,7 +42,7 @@ Download FireWorks and dependencies
     python setup.py develop
     
 Run unit tests
---------------
+==============
 1. Staying in the directory containing setup.py, run the following command::
 
     nosetests
