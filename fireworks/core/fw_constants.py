@@ -32,5 +32,6 @@ SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 PRINT_FW_JSON = True
+PRINT_FW_YAML = False
 
 PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive

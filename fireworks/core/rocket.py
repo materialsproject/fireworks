@@ -7,8 +7,9 @@ import os
 import traceback
 import json
 import threading
+import time
 from fireworks.core.firework import FWAction
-from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON, PING_TIME_SECS
+from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON, PING_TIME_SECS, PRINT_FW_YAML
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -53,8 +54,10 @@ class Rocket():
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
         if PRINT_FW_JSON:
-            with open('fw.json', 'w') as f:
-                f.write(json.dumps(m_fw.to_dict(), default=DATETIME_HANDLER))
+            m_fw.to_file('fw.json')
+
+        if PRINT_FW_YAML:
+            m_fw.to_file('fw.yaml')
 
         # execute the script inside the spec
         # TODO: bind monitors, etc...
