@@ -32,6 +32,7 @@ class FireTaskBase(FWSerializable):
     def __init__(self, parameters=None):
         """
         Initialize a FireTask
+
         :param parameters: Parameters that control the FireTask's operation (custom depending on the FireTask type)
         """
         # When implementing a FireTask, add the following line to the init() to get to_dict to work automatically
@@ -39,8 +40,9 @@ class FireTaskBase(FWSerializable):
 
     def run_task(self, fw_spec):
         """
-        Given a FireWork's spec, run this FireTask on the spec. Return a FWAction to specify
-        what to do next.
+        This method gets called when the FireTask is run. It can take in a FireWork spec,
+        perform some task using that data, and then return an output in the form of a FWAction.
+
         :param fw_spec: a FireWork spec (as dict)
         :return: a FWAction instance
         """
@@ -56,16 +58,12 @@ class FireTaskBase(FWSerializable):
     def from_dict(cls, m_dict):
         return cls(m_dict['parameters'])
 
-        # TODO: Task for committing a file to DB?
-        # TODO: add checkpoint function
-
 
 class FWAction():
     """
-    TODO: add docs
-
+    A FWAction encapsulates the output of a FireTask (it is returned by a FireTask after the FireTask completes). The
+     FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.
     """
-    # TODO: DETOUR can be merged into ADD (probably)
 
     commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'PHOENIX', 'BREAK']
 
