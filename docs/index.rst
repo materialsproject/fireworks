@@ -130,15 +130,15 @@ The collaborative way to submit questions, issues / bug reports, and all other c
 
 The list of contributors to FireWorks can be found :doc:`here </contributors>`.
 
-.. _license-label:
-
 License
 =======
 
 FireWorks is released under a modified BSD license; the full text can be found :doc:`here</license>`.
 
-Indices and tables
-==================
+Comprehensive Documentation
+===========================
+
+Some comprehensive documentation is listed below (only for the brave!)
 
 * :ref:`genindex`
 * :ref:`modindex`
