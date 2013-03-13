@@ -4,6 +4,8 @@
 A set of global constants for FireWorks (Python code as a config file)
 """
 
+# TODO: make this into a real config file?
+
 import logging
 import datetime
 
