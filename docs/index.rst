@@ -9,7 +9,7 @@
 
 *Note: FireWorks is under active development; major features are yet to be implemented, and the internal code is refactored often and not suitable for production. However, certain components of the code are available for initial testing.*
 
-.. warning:: If you encounter bugs or mismatches between the tutorials and the code, please first make sure that you have the latest version of FireWorks installed. Instructions on how to update your installation are here: :ref:`updating-label`. (This warning will be removed after FireWorks is no longer in development mode.)
+.. warning:: If you encounter bugs or mismatches between the tutorials and the code, please first make sure that you have the latest version of FireWorks installed. Instructions on how to update your installation are here: :ref:`updating-label`. (This warning will be removed when FireWorks is no longer in development mode.)
 
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 

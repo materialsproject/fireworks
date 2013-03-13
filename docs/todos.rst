@@ -11,6 +11,12 @@ FW Docs
 
 * explain early on (first tutorial) that the FireServer and FireWorker are decoupled.
 
+* Note: reserved spec keywords:
+    * _tasks - a list of FireTasks to run
+    * _priority - the priority of the FW
+    * _dupefinder - a DupeFinder object, for avoiding duplicates
+    * _queueparams - values of the QueueParams dict to override
+
 Major Features
 ==============
 
