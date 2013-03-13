@@ -31,7 +31,8 @@ class FireTaskBase(FWSerializable):
     def __init__(self, parameters=None):
         """
 
-        :param parameters: (dict) Parameters that control the FireTask's operation (custom depending on the FireTask type)
+        :param parameters: (dict) Parameters that control the FireTask's operation (custom depending on the FireTask
+        type)
         """
         # When implementing a FireTask, add the following line to the init() to get to_dict to work automatically
         self.parameters = parameters if parameters else {}
@@ -101,7 +102,7 @@ class FireWork(FWSerializable):
         :param tasks: (list) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the FireTask
         :param fw_id: (int) the FW's database id (negative numbers will be re-assigned dynamically when they are
-        entered in the database through the LaunchPad.
+         entered in the database through the LaunchPad.
         :param launches: (list) a list of Launch objects of this FireWork
         :param state: (str) the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
@@ -162,8 +163,8 @@ class Launch(FWSerializable, object):
         :param ip: (str) the IP address where the launch took place (set automatically if None)
         :param action: (FWAction) the output of the Launch
         :param state_history: (list) a history of all states of the Launch and when they occurred
-        :param launch_id: launch_id set by the LaunchPad
-        :param fw_id: id of the FireWork this Launch is running
+        :param launch_id: (int) launch_id set by the LaunchPad
+        :param fw_id: (int) id of the FireWork this Launch is running
         """
 
         if state not in FireWork.STATE_RANKS:
@@ -181,16 +182,15 @@ class Launch(FWSerializable, object):
 
     def touch_history(self):
         """
-        Updates the update_at field of the state history of a Launch. Used when pinging that a Launch is still alive.
+        Updates the update_at field of the state history of a Launch. Used to ping that a Launch is still alive.
         """
         self.state_history[-1]['updated_at'] = datetime.datetime.utcnow()
 
     @property
     def state(self):
         """
-        The current state of the Launch.
 
-        :return: (str) state
+        :return: (str) The current state of the Launch.
         """
         return self._state
 
@@ -240,7 +240,7 @@ class Launch(FWSerializable, object):
     def runtime_secs(self):
         """
 
-        :return: (int) the number of seconds that the Launch ran for (RUNNING to COMPLETED or FIZZLED)
+        :return: (int) the number of seconds that the Launch ran for
         """
         start = self.time_start
         end = self.time_end
@@ -251,7 +251,7 @@ class Launch(FWSerializable, object):
     def reservedtime_secs(self):
         """
 
-        :return: (int) number of seconds the Launch was queued (RESERVED to RUNNING)
+        :return: (int) number of seconds the Launch was queued
         """
         start = self.time_reserved
         if start:
@@ -274,7 +274,8 @@ class Launch(FWSerializable, object):
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
-        return Launch(m_dict['state'], m_dict['launch_dir'], fworker, m_dict['host'], m_dict['ip'], action, m_dict['state_history'], m_dict['launch_id'], m_dict['fw_id'])
+        return Launch(m_dict['state'], m_dict['launch_dir'], fworker, m_dict['host'], m_dict['ip'], action,
+                      m_dict['state_history'], m_dict['launch_id'], m_dict['fw_id'])
 
     def _update_state_history(self, state):
         """
