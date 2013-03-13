@@ -30,7 +30,8 @@ class FireTaskBase(FWSerializable):
 
     def __init__(self, parameters=None):
         """
-        :param parameters: Parameters that control the FireTask's operation (custom depending on the FireTask type)
+
+        :param parameters: (dict) Parameters that control the FireTask's operation (custom depending on the FireTask type)
         """
         # When implementing a FireTask, add the following line to the init() to get to_dict to work automatically
         self.parameters = parameters if parameters else {}
@@ -40,8 +41,8 @@ class FireTaskBase(FWSerializable):
         This method gets called when the FireTask is run. It can take in a FireWork spec,
         perform some task using that data, and then return an output in the form of a FWAction.
 
-        :param fw_spec: a FireWork spec (as dict)
-        :return: a FWAction instance
+        :param fw_spec: (dict) a FireWork spec
+        :return: (FWAction)
         """
         raise NotImplementedError('The FireTask needs to implement run_task()!')
 
@@ -67,7 +68,7 @@ class FWAction():
     def __init__(self, command, stored_data=None, mod_spec=None):
         """
 
-        :param command: (String) an item from the list of FWAction.commands
+        :param command: (str) an item from the list of FWAction.commands
         :param stored_data: (dict) any output data to store. Intended to be brief, not store a ton of data.
         :param mod_spec: description of how to modify the Workflow according to a set of rules (see tutorial docs)
         """
@@ -102,7 +103,7 @@ class FireWork(FWSerializable):
         :param fw_id: (int) the FW's database id (negative numbers will be re-assigned dynamically when they are
         entered in the database through the LaunchPad.
         :param launches: (list) a list of Launch objects of this FireWork
-        :param state: (String) the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
+        :param state: (str) the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
 
         # automatically transform tasks into a list, if not in that format
@@ -150,20 +151,21 @@ class FireWork(FWSerializable):
 
 
 class Launch(FWSerializable, object):
-    # TODO: update docs
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, action=None, state_history=None,
                  launch_id=None, fw_id=None):
         """
 
-        :param fworker: A FWorker object describing the worker
-        :param fw_id: id of the FireWork this launch is running
-        :param host: the hostname where the launch took place (probably automatically set)
-        :param ip: the ip address where the launch took place (probably automatically set)
-        :param launch_dir: the directory on the host where the launch took place (probably automatically set)
-        :param action: The resulting Action from the launch (set after the launch finished)
-        :param state: the state of the Launch
-        :param launch_id: the id of the Launch for the LaunchPad
+        :param state: (str) the state of the Launch (e.g. RUNNING, COMPLETED)
+        :param launch_dir: (str) the directory where the Launch takes place
+        :param fworker: (FWorker) The FireWorker running the Launch
+        :param host: (str) the hostname where the launch took place (set automatically if None)
+        :param ip: (str) the IP address where the launch took place (set automatically if None)
+        :param action: (FWAction) the output of the Launch
+        :param state_history: (list) a history of all states of the Launch and when they occurred
+        :param launch_id: launch_id set by the LaunchPad
+        :param fw_id: id of the FireWork this Launch is running
         """
+
         if state not in FireWork.STATE_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
 
@@ -178,46 +180,79 @@ class Launch(FWSerializable, object):
         self.launch_id = launch_id
 
     def touch_history(self):
+        """
+        Updates the update_at field of the state history of a Launch. Used when pinging that a Launch is still alive.
+        """
         self.state_history[-1]['updated_at'] = datetime.datetime.utcnow()
 
     @property
     def state(self):
+        """
+        The current state of the Launch.
+
+        :return: (str) state
+        """
         return self._state
 
     @state.setter
-    def state(self, value):
-        self._state = value
-        self._update_state_history(value)
+    def state(self, state):
+        """
+        Setter the the Launch's state. Automatically trigger an update to state_history when state is changed.
+
+        :param state: (str) the Launch state
+        """
+        self._state = state
+        self._update_state_history(state)
 
     @property
     def time_start(self):
+        """
+
+        :return: (datetime) the time the Launch started RUNNING
+        """
         return self._get_time('RUNNING')
 
     @property
     def time_end(self):
+        """
+
+        :return: (datetime) the time the Launch was COMPLETED or FIZZLED
+        """
         return self._get_time(['COMPLETED', 'FIZZLED'])
 
     @property
     def time_reserved(self):
+        """
+
+        :return: (datetime) the time the Launch was RESERVED in the queue
+        """
         return self._get_time('RESERVED')
 
     @property
-    def time_ready(self):
-        return self._get_time('READY')
-
-    @property
     def last_pinged(self):
+        """
+
+        :return: (datetime) the time the Launch last pinged a heartbeat that it was still running
+        """
         return self._get_time('RUNNING', True)
 
     @property
     def runtime_secs(self):
+        """
+
+        :return: (int) the number of seconds that the Launch ran for (RUNNING to COMPLETED or FIZZLED)
+        """
         start = self.time_start
         end = self.time_end
         if start and end:
             return (end - start).total_seconds()
 
     @property
-    def queuedtime_secs(self):
+    def reservedtime_secs(self):
+        """
+
+        :return: (int) number of seconds the Launch was queued (RESERVED to RUNNING)
+        """
         start = self.time_reserved
         if start:
             end = self.time_start if self.time_start else datetime.datetime.utcnow()
@@ -242,12 +277,22 @@ class Launch(FWSerializable, object):
         return Launch(m_dict['state'], m_dict['launch_dir'], fworker, m_dict['host'], m_dict['ip'], action, m_dict['state_history'], m_dict['launch_id'], m_dict['fw_id'])
 
     def _update_state_history(self, state):
+        """
+        Internal method to update the state history whenever the Launch state is modified
+        :param state:
+        """
         last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
         if state != last_state:
             now_time = datetime.datetime.utcnow()
-            self.state_history.append({'state': state, 'created_at': now_time, 'updated_at': now_time})
+            self.state_history.append({'state': state, 'created_at': now_time})
 
     def _get_time(self, states, use_update_time=False):
+        """
+        Internal method to help get the time of various events in the Launch (e.g. RUNNING) from the state history
+        :param states:
+        :param use_update_time:
+        :return:
+        """
         states = states if isinstance(states, list) else [states]
         for data in self.state_history:
             if data['state'] in states:
