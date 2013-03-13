@@ -95,8 +95,7 @@ class FireWork(FWSerializable):
     STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
                    'COMPLETED': 7}
 
-    # TODO: move fw_id as last parameter for consistency (id is always last parameter in constructors a la Launch)
-    def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
+    def __init__(self, tasks, spec=None, launches=None, state='WAITING', created_at=None, fw_id=-1):
         """
         :param tasks: (list) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the FireTask
@@ -147,7 +146,7 @@ class FireWork(FWSerializable):
         state = m_dict.get('state', 'WAITING')
         created_at = m_dict.get('created_at', None)
 
-        return FireWork(tasks, m_dict['spec'], fw_id, l, state, created_at)
+        return FireWork(tasks, m_dict['spec'], l, state, created_at, fw_id)
 
 
 class Launch(FWSerializable, object):
