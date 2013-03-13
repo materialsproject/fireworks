@@ -20,6 +20,8 @@ Major Features
 
 * Put all worker config files in a central location
 
+* More and better unit tests, e.g. unit tests of scripts
+
 FireTasks
 =========
 

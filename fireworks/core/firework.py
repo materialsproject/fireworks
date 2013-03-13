@@ -156,12 +156,14 @@ class FireWork(FWSerializable):
         return FireWork(tasks, m_dict['spec'], fw_id, l, state, created_at)
 
 # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
-LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6, 'COMPLETED': 7}
+LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
+                'COMPLETED': 7}
+
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
     # TODO: figure out a way to track how long it took to go from a RESERVED launch to a RUNNING launch. Also RUNTIME
-    # . # Probably want a STATE_HISTORY.
+    # TODO: Probably want a STATE_HISTORY.
     def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, start=None, end=None,
                  state=None, launch_id=None):
         """
