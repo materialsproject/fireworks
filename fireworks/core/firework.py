@@ -68,6 +68,12 @@ class FWAction():
     commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'PHOENIX', 'BREAK']
 
     def __init__(self, command, stored_data=None, mod_spec=None):
+        """
+
+        :param command: (String) an item from the list of FWAction.commands
+        :param stored_data: (dict) any output data to store. Intended to be brief, not store a ton of data.
+        :param mod_spec: description of how to modify the Workflow according to a set of rules (see tutorial docs)
+        """
         if command not in FWAction.commands:
             raise ValueError("Invalid command: " + command)
 
