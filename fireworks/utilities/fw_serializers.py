@@ -63,9 +63,13 @@ def _recursive_dict(obj):
     if isinstance(obj, int) or isinstance(obj, float):
         return obj
 
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+
     return str(obj)
 
 
+# TODO: is reconstitute_dates really needed? Can this method just do everything?
 def _recursive_load(obj):
     if obj is None:
         return None
@@ -79,9 +83,13 @@ def _recursive_load(obj):
         return [_recursive_load(v) for v in obj]
 
     if isinstance(obj, basestring):
-        # convert unicode to ASCII if not really unicode
-        if obj == obj.encode('ascii', 'ignore'):
-            return str(obj)
+        try:
+            # convert String to datetime if really datetime
+            return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+        except:
+            # convert unicode to ASCII if not really unicode
+            if obj == obj.encode('ascii', 'ignore'):
+                return str(obj)
 
     return obj
 
@@ -98,6 +106,7 @@ def recursive_serialize(func):
         return m_dict
 
     return _decorator
+
 
 def recursive_deserialize(func):
     """

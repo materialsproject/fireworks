@@ -151,10 +151,12 @@ class FireWork(FWSerializable):
         return FireWork(tasks, m_dict['spec'], fw_id, l, state, created_at)
 
 
-class Launch(FWSerializable):
+class Launch(FWSerializable, object):
     # TODO: update places where Launch() is initialized
+    # TODO: fw_id at end, state near beginning and non-optional when init
     # TODO: add a ping in the Rocket that updates the RUNNING state every 10 mins or so
     # TODO: update docs
+    # TODO: reorg class
     def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, state=None, state_history=None,
                  launch_id=None):
         """
@@ -193,7 +195,7 @@ class Launch(FWSerializable):
 
     @property
     def time_end(self):
-        return self._get_time(['COMPLETED, FIZZLED'])
+        return self._get_time(['COMPLETED', 'FIZZLED'])
 
     @property
     def time_reserved(self):
@@ -203,6 +205,7 @@ class Launch(FWSerializable):
     def time_ready(self):
         return self._get_time('READY')
 
+    @property
     def last_pinged(self):
         return self._get_time('RUNNING', True)
 
@@ -219,6 +222,7 @@ class Launch(FWSerializable):
         return m_d
 
     @classmethod
+    @recursive_deserialize
     def from_dict(cls, m_dict):
         fworker = FWorker.from_dict(m_dict['fworker'])
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
@@ -230,17 +234,18 @@ class Launch(FWSerializable):
         return self._state
 
     @state.setter
-    def state(self, state):
-        self._state = state
-        self._update_state_history(state)
+    def state(self, value):
+        self._state = value
+        self._update_state_history(value)
 
     def _update_state_history(self, state):
-        now_time = datetime.datetime.utcnow()
         last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
         if state != last_state:
+            now_time = datetime.datetime.utcnow()
             self.state_history.append({'state': state, 'created_at': now_time, 'updated_at': now_time})
-        else:
-            self.state_history[-1]['updated_at'] = now_time
+
+    def _touch_history(self):
+        self.state_history[-1]['updated_at'] = datetime.datetime.utcnow()
 
     def _get_time(self, states, use_update_time=False):
         states = states if isinstance(states, list) else [states]
