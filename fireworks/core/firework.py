@@ -96,7 +96,6 @@ class FireWork(FWSerializable):
                    'COMPLETED': 7}
 
     # TODO: move fw_id as last parameter for consistency (id is always last parameter in constructors a la Launch)
-    # TODO: add a state history here too?
     def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
         """
         :param tasks: (list) a list of FireTasks to run in sequence
@@ -152,8 +151,6 @@ class FireWork(FWSerializable):
 
 
 class Launch(FWSerializable, object):
-    # TODO: add a ping in the Rocket that updates the RUNNING state every 10 mins or so
-    # TODO: add "time_in_queue"
     # TODO: update docs
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, action=None, state_history=None,
                  launch_id=None, fw_id=None):
@@ -218,6 +215,13 @@ class Launch(FWSerializable, object):
         start = self.time_start
         end = self.time_end
         if start and end:
+            return (end - start).total_seconds()
+
+    @property
+    def queuedtime_secs(self):
+        start = self.time_reserved
+        if start:
+            end = self.time_start if self.time_start else datetime.datetime.utcnow()
             return (end - start).total_seconds()
 
     @recursive_serialize

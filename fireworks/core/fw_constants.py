@@ -33,4 +33,4 @@ DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datet
 
 PRINT_FW_JSON = True
 
-PING_TIME_SECS = 300  # while Running a job, how often to ping back the server that we're still alive
+PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
