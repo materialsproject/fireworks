@@ -1,8 +1,7 @@
 from StringIO import StringIO
 from collections import defaultdict
 import tarfile
-from fireworks.core.firework import FireWork
-from fireworks.core.fw_constants import LAUNCH_RANKS
+from fireworks.core.firework import FireWork, LAUNCH_RANKS
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable
 

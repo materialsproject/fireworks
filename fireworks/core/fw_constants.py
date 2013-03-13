@@ -29,9 +29,6 @@ QUEUE_UPDATE_INTERVAL = 15  # max interval (seconds) needed for queue to update 
 
 SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
 
-# 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
-LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6, 'COMPLETED': 7}
-
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 PRINT_FW_JSON = True

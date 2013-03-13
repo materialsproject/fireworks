@@ -10,7 +10,6 @@ This module contains some of the most central FireWorks classes:
 """
 
 import datetime
-from fireworks.core.fw_constants import LAUNCH_RANKS
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip
@@ -95,20 +94,18 @@ class FWAction():
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
         """
-        TODO: add more docs
-        
-        reserved spec keywords:
+        Note: reserved spec keywords:
             _tasks - a list of FireTasks to run
             _priority - the priority of the FW
             _dupefinder - a DupeFinder object, for avoiding duplicates
             _queueparams - values of the QueueParams dict to override
         
-        :param tasks: a list of FireTasks
-        :param spec: a dict specification of the job to run
-        :param fw_id: the FW's database id to the LaunchPad. Negative numbers will be re-assigned dynamically when
-        they are entered in the database through the LaunchPad.
-        :param launches: a list of Launch objects of this FireWork
-        :param state: the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
+        :param tasks: (list) a list of FireTasks to run in sequence
+        :param spec: (dict) specification of the job to run. Used by the FireTask
+        :param fw_id: (int) the FW's database id (negative numbers will be re-assigned dynamically when they are
+        entered in the database through the LaunchPad.
+        :param launches: (list) a list of Launch objects of this FireWork
+        :param state: (String) the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         """
         # transform tasks into a list, if not in that format
         if not isinstance(tasks, list):
@@ -158,6 +155,8 @@ class FireWork(FWSerializable):
 
         return FireWork(tasks, m_dict['spec'], fw_id, l, state, created_at)
 
+# 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
+LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6, 'COMPLETED': 7}
 
 class Launch(FWSerializable):
     # TODO: add an expiration date
