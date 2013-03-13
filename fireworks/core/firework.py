@@ -161,11 +161,13 @@ class Launch(FWSerializable):
     LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
                     'COMPLETED': 7}
 
-    # TODO: add an expiration date
-    # TODO: figure out a way to track how long it took to go from a RESERVED launch to a RUNNING launch. Also RUNTIME
-    # TODO: Probably want a STATE_HISTORY.
-    def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, start=None, end=None,
-                 state=None, launch_id=None):
+    # TODO: update time_secs() to give runtime from state_history variable
+    # TODO: update to_dict() and from_dict()
+    # TODO: update places where Launch() is initialized
+    # TODO: add a ping in the Rocket that updates the RUNNING state every 10 mins or so
+    # TODO: update docs
+    def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, state=None, state_history=None,
+                 launch_id=None):
         """
 
         :param fworker: A FWorker object describing the worker
@@ -186,9 +188,8 @@ class Launch(FWSerializable):
         self.ip = ip if ip else get_my_ip()
         self.launch_dir = launch_dir
         self.action = action if action else None
-        self.start = start if start else datetime.datetime.utcnow()
-        self.end = end
-        self.state = state
+        self.state_history = state_history if state_history else []
+        self._update_state(state)
         self.launch_id = launch_id
 
     @recursive_serialize
@@ -212,3 +213,12 @@ class Launch(FWSerializable):
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
         return Launch(fworker, m_dict['fw_id'], m_dict['launch_dir'], m_dict['host'], m_dict['ip'],
                       action, m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
+
+    def _update_state(self, state):
+        now_time = datetime.datetime.utcnow()
+        self.state = state
+        last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
+        if self.state != last_state:
+            self.state_history.append({'state': state, 'created_at': now_time, 'updated_at': now_time})
+        else:
+            self.state_history[-1]['updated_at'] = now_time

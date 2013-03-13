@@ -22,6 +22,8 @@ Major Features
 
 * More and better unit tests, e.g. unit tests of scripts
 
+* When running a FireTask, ping the LaunchPad every once in awhile to know that all is OK...
+
 FireTasks
 =========
 
