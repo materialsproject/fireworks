@@ -20,7 +20,8 @@ __date__ = 'Jan 30, 2013'
 
 
 # TODO: be able to un-terminate a FW
-# TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at least set the state to FIZZLED and add traceback...
+# TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
+# least set the state to FIZZLED and add traceback...
 
 class LaunchPad(FWSerializable):
     """
@@ -138,7 +139,7 @@ class LaunchPad(FWSerializable):
         :param launch_id: launch id
         :return: Launch object
         """
-        m_launch = self.launches.find_one({'launch_id':launch_id})
+        m_launch = self.launches.find_one({'launch_id': launch_id})
         if m_launch:
             return Launch.from_dict(m_launch)
         raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
@@ -154,7 +155,7 @@ class LaunchPad(FWSerializable):
 
         if not fw_dict:
             raise ValueError('No FireWork exists with id: {}'.format(fw_id))
-        # recreate launches from the launch collection
+            # recreate launches from the launch collection
         launches = []
         for launch_id in fw_dict['launches']:
             launches.append(self.get_launch_by_id(launch_id).to_dict())
@@ -237,7 +238,8 @@ class LaunchPad(FWSerializable):
             return True
 
         self._upsert_fws([m_fw])  # update the DB with the new launches
-        self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id), m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
+        self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id),
+                         m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
 
         return False
 
@@ -252,7 +254,8 @@ class LaunchPad(FWSerializable):
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
-            m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}}, sort=[("spec._priority", DESCENDING)])
+            m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}},
+                                                  sort=[("spec._priority", DESCENDING)])
             if not m_fw:
                 return None, None
             m_fw = self.get_fw_by_id(m_fw['fw_id'])
@@ -264,7 +267,7 @@ class LaunchPad(FWSerializable):
         m_fw, lid = self._get_a_fw_to_run(fworker)
         if not m_fw:
             return None, None
-        # create a launch
+            # create a launch
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
         m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RESERVED', launch_id=launch_id)
@@ -280,8 +283,8 @@ class LaunchPad(FWSerializable):
 
     def unreserve_fws(self):
         # TODO: allow to unreserve only a portion of jobs
-        self.launches.update({'state': 'RESERVED'}, {'$set':{'state': 'READY'}}, multi=True)
-        self.fireworks.update({'state': 'RESERVED'}, {'$set':{'state': 'READY'}}, multi=True)
+        self.launches.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
+        self.fireworks.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
@@ -298,7 +301,7 @@ class LaunchPad(FWSerializable):
         m_fw, prev_launch_id = self._get_a_fw_to_run(fworker, fw_id)
         if not m_fw:
             return None, None
-        # create or update a launch
+            # create or update a launch
         l_id = prev_launch_id if prev_launch_id else self.get_new_launch_id()
         m_launch = Launch(fworker, m_fw.fw_id, launch_dir, host, ip, state='RUNNING', launch_id=l_id)
         self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
@@ -310,7 +313,7 @@ class LaunchPad(FWSerializable):
             m_fw.launches.append(m_launch)
         else:
             # we're updating an existing launch
-            m_fw.launches = [m_launch if l.launch_id==m_launch.launch_id else l for l in m_fw.launches]
+            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
@@ -324,8 +327,10 @@ class LaunchPad(FWSerializable):
         :param action: the FWAction of what to do next
         """
         # update the launch data to COMPLETED, set end time, etc
-        updates = {'state': 'COMPLETED', 'end': datetime.datetime.utcnow(), 'action': action.to_dict()}
-        self.launches.update({'launch_id': launch_id}, {'$set': updates})
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.state = 'COMPLETED'
+        m_launch.action = action
+        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):

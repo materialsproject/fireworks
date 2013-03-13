@@ -91,6 +91,12 @@ class FWAction():
 
 
 class FireWork(FWSerializable):
+    # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
+    STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
+                   'COMPLETED': 7}
+
+    # TODO: move fw_id as last parameter for consistency (id is always last parameter in constructors a la Launch)
+    # TODO: add a state history here too?
     def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
         """
         :param tasks: (list) a list of FireTasks to run in sequence
@@ -146,12 +152,6 @@ class FireWork(FWSerializable):
 
 
 class Launch(FWSerializable):
-    # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
-    LAUNCH_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
-                    'COMPLETED': 7}
-
-    # TODO: update time_secs() to give runtime from state_history variable
-    # TODO: update to_dict() and from_dict()
     # TODO: update places where Launch() is initialized
     # TODO: add a ping in the Rocket that updates the RUNNING state every 10 mins or so
     # TODO: update docs
@@ -168,7 +168,7 @@ class Launch(FWSerializable):
         :param state: the state of the Launch
         :param launch_id: the id of the Launch for the LaunchPad
         """
-        if state not in Launch.LAUNCH_RANKS:
+        if state not in FireWork.STATE_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
 
         self.fworker = fworker
@@ -178,22 +178,44 @@ class Launch(FWSerializable):
         self.launch_dir = launch_dir
         self.action = action if action else None
         self.state_history = state_history if state_history else []
-        self._update_state(state)
+        self.state = state
         self.launch_id = launch_id
 
     @recursive_serialize
     def to_dict(self):
-        return {'fworker': self.fworker, 'fw_id': self.fw_id, 'action': self.action, 'start': self.start,
-                'end': self.end, 'host': self.host, 'ip': self.ip, 'launch_dir': self.launch_dir, 'state': self.state,
+        return {'fworker': self.fworker, 'fw_id': self.fw_id, 'launch_dir': self.launch_dir, 'host': self.host,
+                'ip': self.ip, 'action': self.action, 'state': self.state, 'state_history': self.state_history,
                 'launch_id': self.launch_id}
 
     @property
-    def time_secs(self):
-        return (self.end - self.start).total_seconds() if self.end else None
+    def time_start(self):
+        return self._get_time('RUNNING')
+
+    @property
+    def time_end(self):
+        return self._get_time(['COMPLETED, FIZZLED'])
+
+    @property
+    def time_reserved(self):
+        return self._get_time('RESERVED')
+
+    @property
+    def time_ready(self):
+        return self._get_time('READY')
+
+    def last_pinged(self):
+        return self._get_time('RUNNING', True)
+
+    @property
+    def runtime_secs(self):
+        start = self.time_start
+        end = self.time_end
+        if start and end:
+            return (end - start).total_seconds()
 
     def to_db_dict(self):
         m_d = self.to_dict()
-        m_d['time_secs'] = self.time_secs
+        m_d['runtime_secs'] = self.runtime_secs
         return m_d
 
     @classmethod
@@ -201,13 +223,29 @@ class Launch(FWSerializable):
         fworker = FWorker.from_dict(m_dict['fworker'])
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
         return Launch(fworker, m_dict['fw_id'], m_dict['launch_dir'], m_dict['host'], m_dict['ip'],
-                      action, m_dict['start'], m_dict['end'], m_dict['state'], m_dict['launch_id'])
+                      action, m_dict['state'], m_dict['state_history'], m_dict['launch_id'])
 
-    def _update_state(self, state):
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, state):
+        self._state = state
+        self._update_state_history(state)
+
+    def _update_state_history(self, state):
         now_time = datetime.datetime.utcnow()
-        self.state = state
         last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
-        if self.state != last_state:
+        if state != last_state:
             self.state_history.append({'state': state, 'created_at': now_time, 'updated_at': now_time})
         else:
             self.state_history[-1]['updated_at'] = now_time
+
+    def _get_time(self, states, use_update_time=False):
+        states = states if isinstance(states, list) else [states]
+        for data in self.state_history:
+            if data['state'] in states:
+                if use_update_time:
+                    return data['updated_at']
+                return data['created_at']

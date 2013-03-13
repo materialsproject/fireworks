@@ -1,7 +1,7 @@
 from StringIO import StringIO
 from collections import defaultdict
 import tarfile
-from fireworks.core.firework import FireWork, Launch
+from fireworks.core.firework import FireWork
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable
 
@@ -133,8 +133,8 @@ class Workflow(FWSerializable):
 
             # TODO: pick the first launch in terms of end date that matches 'COMPLETED'; multiple might exist
             for l in fw.launches:
-                if Launch.LAUNCH_RANKS[l.state] > max_score:
-                    max_score = Launch.LAUNCH_RANKS[l.state]
+                if FireWork.STATE_RANKS[l.state] > max_score:
+                    max_score = FireWork.STATE_RANKS[l.state]
                     m_state = l.state
                     if m_state == 'COMPLETED':
                         m_action = l.action
