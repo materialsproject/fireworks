@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
 """
-A FireWork defines a workflow step.
+This module contains some of the most central FireWorks classes:
 
-An FWorkflow connects FireWorks by their fw_ids.
-
-A Launch is a describes a FireWork's run on a computing resource. The same Launch might apply to multiple FireWorks,
-e.g. if they are identical.
-
-A FWAction encapsulates the output of that launch.
+- A FireTaskBase defines the contract for tasks that run within a FireWork (FireTasks)
+- A FWAction encapsulates the output of a FireTask and tells FireWorks what to do next after a job completes
+- A FireWork defines a workflow step and contains one or more FireTasks.
+- A Launch describes the run of a FireWork on a computing resource.
 """
 
 import datetime
@@ -24,6 +22,71 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
+
+class FireTaskBase(FWSerializable):
+    """
+    FireTaskBase is used as an abstract class that defines a computing task (FireTask). All FireTasks
+    should inherit from FireTaskBase.
+    """
+
+    def __init__(self, parameters=None):
+        """
+        Initialize a FireTask
+        :param parameters: Parameters that control the FireTask's operation (custom depending on the FireTask type)
+        """
+        # When implementing a FireTask, add the following line to the init() to get to_dict to work automatically
+        self.parameters = parameters if parameters else {}
+
+    def run_task(self, fw):
+        """
+        Given a FireWork (in particular the FW spec), run this FireTask on the spec. Return a FWAction to specify
+        what to do next.
+        :param fw: a FireWork instance
+        :return: a FWAction instance
+        """
+        raise NotImplementedError('The FireTask needs to implement run_task()!')
+
+    @serialize_fw
+    @recursive_serialize
+    def to_dict(self):
+        return {"parameters": self.parameters}
+
+    @classmethod
+    @recursive_deserialize
+    def from_dict(cls, m_dict):
+        return cls(m_dict['parameters'])
+
+        # TODO: Task for committing a file to DB?
+        # TODO: add checkpoint function
+
+
+class FWAction():
+    """
+    TODO: add docs
+
+    """
+    # TODO: DETOUR can be merged into ADD (probably)
+
+    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'PHOENIX', 'BREAK']
+
+    def __init__(self, command, stored_data=None, mod_spec=None):
+        if command not in FWAction.commands:
+            raise ValueError("Invalid command: " + command)
+
+        self.command = command
+        self.stored_data = stored_data if stored_data else {}
+        self.mod_spec = mod_spec if mod_spec else {}
+
+    @recursive_serialize
+    def to_dict(self):
+        return {"action": self.command, "stored_data": self.stored_data, "mod_spec": self.mod_spec}
+
+    @classmethod
+    @recursive_deserialize
+    def from_dict(cls, m_dict):
+        if 'create_fw' in m_dict['mod_spec']:
+            m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
+        return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
 
 # TODO: add ability to block ports
 
@@ -94,64 +157,10 @@ class FireWork(FWSerializable):
         return FireWork(tasks, m_dict['spec'], fw_id, l, state, created_at)
 
 
-class FireTaskBase(FWSerializable):
-    """
-    TODO: add docs
-    """
-
-    def __init__(self, parameters=None):
-        # Add the following line to your FireTasks to get to_dict to work
-        self.parameters = parameters if parameters else {}
-
-    def run_task(self, fw):
-        raise NotImplementedError('Need to implement run_task!')
-
-    @serialize_fw
-    @recursive_serialize
-    def to_dict(self):
-        return {"parameters": self.parameters}
-
-    @classmethod
-    @recursive_deserialize
-    def from_dict(cls, m_dict):
-        return cls(m_dict['parameters'])
-
-        # TODO: Task for committing a file to DB?
-        # TODO: add checkpoint function
-
-
-class FWAction():
-    """
-    TODO: add docs
-
-    """
-    # TODO: DETOUR can be merged into ADD (probably)
-
-    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'PHOENIX', 'BREAK']
-
-    def __init__(self, command, stored_data=None, mod_spec=None):
-        if command not in FWAction.commands:
-            raise ValueError("Invalid command: " + command)
-
-        self.command = command
-        self.stored_data = stored_data if stored_data else {}
-        self.mod_spec = mod_spec if mod_spec else {}
-
-    @recursive_serialize
-    def to_dict(self):
-        return {"action": self.command, "stored_data": self.stored_data, "mod_spec": self.mod_spec}
-
-    @classmethod
-    @recursive_deserialize
-    def from_dict(cls, m_dict):
-        if 'create_fw' in m_dict['mod_spec']:
-            m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
-        return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
-
-
 class Launch(FWSerializable):
     # TODO: add an expiration date
-    # TODO: figure out a way to track how long it took to go from a RESERVED launch to a RUNNING launch. Also RUNTIME. # Probably want a STATE_HISTORY.
+    # TODO: figure out a way to track how long it took to go from a RESERVED launch to a RUNNING launch. Also RUNTIME
+    # . # Probably want a STATE_HISTORY.
     def __init__(self, fworker, fw_id, launch_dir=None, host=None, ip=None, action=None, start=None, end=None,
                  state=None, launch_id=None):
         """
