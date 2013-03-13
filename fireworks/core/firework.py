@@ -31,7 +31,6 @@ class FireTaskBase(FWSerializable):
 
     def __init__(self, parameters=None):
         """
-        Initialize a FireTask
 
         :param parameters: Parameters that control the FireTask's operation (custom depending on the FireTask type)
         """
@@ -92,7 +91,6 @@ class FWAction():
             m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
         return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
 
-# TODO: add ability to block ports
 
 class FireWork(FWSerializable):
     def __init__(self, tasks, spec=None, fw_id=-1, launches=None, state='WAITING', created_at=None):
