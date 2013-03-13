@@ -60,7 +60,7 @@ class Rocket():
 
         for my_task in m_fw.tasks:
             try:
-                m_action = my_task.run_task(m_fw)
+                m_action = my_task.run_task(m_fw.spec)
                 # TODO: allow a program to write the decision to a file...
                 if not m_action:
                     m_action = FWAction('CONTINUE')

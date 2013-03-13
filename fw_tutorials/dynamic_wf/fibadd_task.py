@@ -18,9 +18,9 @@ class FibonacciAdderTask(FireTaskBase, FWSerializable):
 
     _fw_name = "Fibonacci Adder Task"
 
-    def run_task(self, fw):
-        smaller = fw.spec['smaller']
-        larger = fw.spec['larger']
+    def run_task(self, fw_spec):
+        smaller = fw_spec['smaller']
+        larger = fw_spec['larger']
 
         m_sum = smaller + larger
 

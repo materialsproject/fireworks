@@ -37,11 +37,11 @@ class FireTaskBase(FWSerializable):
         # When implementing a FireTask, add the following line to the init() to get to_dict to work automatically
         self.parameters = parameters if parameters else {}
 
-    def run_task(self, fw):
+    def run_task(self, fw_spec):
         """
-        Given a FireWork (in particular the FW spec), run this FireTask on the spec. Return a FWAction to specify
+        Given a FireWork's spec, run this FireTask on the spec. Return a FWAction to specify
         what to do next.
-        :param fw: a FireWork instance
+        :param fw_spec: a FireWork spec (as dict)
         :return: a FWAction instance
         """
         raise NotImplementedError('The FireTask needs to implement run_task()!')

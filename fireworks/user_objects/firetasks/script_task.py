@@ -44,15 +44,15 @@ class ScriptTask(FireTaskBase, FWSerializable):
 
         self.shell_exe = parameters.get('shell_exe', None)
 
-    def run_task(self, fw):
+    def run_task(self, fw_spec):
         # get the standard in and run task internally
         if self.stdin_file:
             with open(self.stdin_file) as stdin_f:
-                return self._run_task_internal(fw, stdin_f)
+                return self._run_task_internal(fw_spec, stdin_f)
         stdin = subprocess.PIPE if self.stdin_key else None
-        return self._run_task_internal(fw, stdin)
+        return self._run_task_internal(fw_spec, stdin)
 
-    def _run_task_internal(self, fw, stdin):
+    def _run_task_internal(self, fw_spec, stdin):
         # run the program
 
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else sys.stdout
@@ -63,7 +63,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
 
         # communicate in the standard in and get back the standard out and returncode
         if self.stdin_key:
-            (stdout, stderr) = p.communicate(fw.spec[self.stdin_key])
+            (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
         else:
             (stdout, stderr) = p.communicate()
         returncode = p.returncode

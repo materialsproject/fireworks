@@ -17,8 +17,8 @@ class AddModifyTask(FireTaskBase):
 
     _fw_name = "Add and Modify Task"
 
-    def run_task(self, fw):
-        input_array = fw.spec['input_array']
+    def run_task(self, fw_spec):
+        input_array = fw_spec['input_array']
         m_sum = sum(input_array)
 
         print "The sum of {} is: {}".format(input_array, m_sum)

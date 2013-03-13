@@ -107,8 +107,8 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
         _fw_name = "Addition Task"
 
-        def run_task(self, fw):
-            input_array = fw.spec['input_array']
+        def run_task(self, fw_spec):
+            input_array = fw_spec['input_array']
             m_sum = sum(input_array)
 
             print "The sum of {} is: {}".format(input_array, m_sum)
@@ -119,7 +119,7 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
  * In the class definition, we are extending *FireTaskBase* to tell FireWorks that this is a FireTask.
  * A special parameter named *_fw_name* is set to ``Addition Task``. This parameter sets what this FireTask will be called by the outside world.
- * The ``run_task()`` method is a special method name that gets called when the task is run. It can take in a FireWork object (*fw*).
+ * The ``run_task()`` method is a special method name that gets called when the task is run. It can take in a FireWork object's specification (*fw_spec*).
  * This FireTask first reads the **input_array** parameter of the FireWork's **spec**.
  * It then sums all the values it finds in the **input_array** parameter of the FireWork's **spec** using Python's ``sum()`` function.
  * The FireTask then prints both the inputs and the sum to the standard out.
