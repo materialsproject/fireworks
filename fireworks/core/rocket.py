@@ -6,8 +6,9 @@ TODO: add docs
 import os
 import traceback
 import json
+import threading
 from fireworks.core.firework import FWAction
-from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON
+from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON, PING_TIME_SECS
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -15,6 +16,12 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
+
+
+def ping_launch(launchpad, launch_id, stop_event):
+    while not stop_event.is_set():
+        launchpad._ping_launch(launch_id)
+        stop_event.wait(PING_TIME_SECS)
 
 
 class Rocket():
@@ -53,10 +60,14 @@ class Rocket():
         # TODO: bind monitors, etc...
         # add fw_dict stuff
         # add checkpoint stuff
-        # add heartbeat
         # lots of stuff to add!
         # update the number of tasks completed in the launch after every task
         # TODO: support stored_dict update() rather than overwrite
+
+        # set up heartbeat (pinging the server that we're still alive)
+        ping_stop = threading.Event()
+        ping_thread = threading.Thread(target=ping_launch,  args=(lp, launch_id, ping_stop))
+        ping_thread.start()
 
         for my_task in m_fw.tasks:
             try:
@@ -71,4 +82,6 @@ class Rocket():
                 m_action = FWAction('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
 
         # perform finishing operation
+        ping_stop.set()
         lp._complete_launch(launch_id, m_action)
+

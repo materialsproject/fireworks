@@ -153,6 +153,7 @@ class FireWork(FWSerializable):
 
 class Launch(FWSerializable, object):
     # TODO: add a ping in the Rocket that updates the RUNNING state every 10 mins or so
+    # TODO: add "time_in_queue"
     # TODO: update docs
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, action=None, state_history=None,
                  launch_id=None, fw_id=None):

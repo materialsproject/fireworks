@@ -337,6 +337,11 @@ class LaunchPad(FWSerializable):
             fw_id = fw['fw_id']
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
+    def _ping_launch(self, launch_id):
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.touch_history()
+        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+
     def get_new_fw_id(self):
         """
         Checkout the next FireWork id

@@ -4,5 +4,5 @@ spec:
   _tasks:
   - _fw_name: Script Task
     parameters:
-      script: echo "starting"; sleep 5; echo "ending"
+      script: echo "starting"; sleep 15; echo "ending"
       use_shell: true
