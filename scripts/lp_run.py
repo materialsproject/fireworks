@@ -6,7 +6,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 import os
 import traceback
-from fireworks.core.fw_constants import DATETIME_HANDLER
+from fireworks.core.fw_constants import DATETIME_HANDLER, RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
 import ast
@@ -44,7 +44,13 @@ if __name__ == '__main__':
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
                                    default=None)
 
-    unreserve_parser = subparsers.add_parser('unreserve', help='Un-reserve reserved FireWorks')
+    reservation_parser = subparsers.add_parser('detect_bad_reservations', help='Find launches with stale reservations')
+    reservation_parser.add_argument('--time', help='expiration time (seconds)', default=RESERVATION_EXPIRATION_SECS, type=int)
+    reservation_parser.add_argument('--fix', help='cancel bad reservations', action='store_true')
+
+    fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
+    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=RUN_EXPIRATION_SECS, type=int)
+    fizzled_parser.add_argument('--fix', help='mark fizzled', action='store_true')
 
     version_parser = subparsers.add_parser('version', help='Print the version of FireWorks installed')
 
@@ -72,15 +78,19 @@ if __name__ == '__main__':
         if args.command == 'reset':
             lp.reset(args.password)
 
-        elif args.command == 'unreserve':
-                lp.unreserve_fws()
+        elif args.command == 'detect_fizzled':
+            # TODO: report when fixed
+            print lp.detect_fizzled(args.time, args.fix)
+
+        elif args.command == 'detect_bad_reservations':
+            # TODO: report when fixed
+            print lp.detect_bad_reservations(args.time, args.fix)
 
         elif args.command == 'add':
             # TODO: make this cleaner, e.g. make TAR option explicit
-            #try:
-            fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
-            lp.add_wf(fwf)
-            '''
+            try:
+                fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
+                lp.add_wf(fwf)
             except:
                 try:
                     if '.tar' in args.wf_file:
@@ -91,7 +101,6 @@ if __name__ == '__main__':
                 except:
                     print 'Error reading FireWork/Workflow file.'
                     traceback.print_exc()
-            '''
 
         elif args.command == 'get_fw':
             fw = lp.get_fw_by_id(args.fw_id)
