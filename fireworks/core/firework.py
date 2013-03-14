@@ -186,6 +186,16 @@ class Launch(FWSerializable, object):
         """
         self.state_history[-1]['updated_on'] = datetime.datetime.utcnow()
 
+    def set_reservation_id(self, reservation_id):
+        """
+        Adds the job_id to the reservation
+        :param reservation_id: the id of the reservation (e.g., queue reservation)
+        """
+        for data in self.state_history:
+            if data['state'] == 'RESERVED':
+                data['reservation_id'] = reservation_id
+                break
+
     @property
     def state(self):
         """

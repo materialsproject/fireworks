@@ -286,6 +286,12 @@ class LaunchPad(FWSerializable):
         self.launches.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
         self.fireworks.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
+    def _set_reservation_id(self, launch_id, reservation_id):
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.set_reservation_id(reservation_id)
+        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+
+
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,

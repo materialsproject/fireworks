@@ -77,9 +77,11 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
                     raise RuntimeError('queue script could not be written, check job params and queue adapter!')
                 f.write(queue_script)
             l_logger.info('submitting queue script')
-            # TODO: update the launch with launch_id with job id of the submitted job
-            if not qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME):
+            reservation_id = qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME)
+            if not reservation_id:
                 raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
+            elif reserve:
+                launchpad._set_reservation_id(launch_id, reservation_id)
 
         except:
             log_exception(l_logger, 'Error writing/submitting queue script!')
