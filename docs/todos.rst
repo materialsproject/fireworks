@@ -17,6 +17,8 @@ FW Docs
     * _dupefinder - a DupeFinder object, for avoiding duplicates
     * _queueparams - values of the QueueParams dict to override
 
+* Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial)
+
 Major Features
 ==============
 

@@ -58,7 +58,7 @@ A FireWork contains the computing job to be performed. For this tutorial, we wil
 This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
 
     {
-        "created_at": "2013-01-31T05:10:27.911000",
+        "created_on": "2013-01-31T05:10:27.911000",
         "fw_id": 1,
         "spec": {
             "_tasks": [

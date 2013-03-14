@@ -97,7 +97,7 @@ class FireWork(FWSerializable):
     STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
                    'COMPLETED': 7}
 
-    def __init__(self, tasks, spec=None, launches=None, state='WAITING', created_at=None, fw_id=-1):
+    def __init__(self, tasks, spec=None, launches=None, state='WAITING', created_on=None, fw_id=-1):
         """
         :param tasks: (list) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the FireTask
@@ -116,12 +116,12 @@ class FireWork(FWSerializable):
         self.spec['_tasks'] = [t.to_dict() for t in tasks]  # put tasks in a special location of the spec
         self.fw_id = fw_id
         self.launches = launches if launches else []
-        self.created_at = created_at if created_at else datetime.datetime.utcnow()
+        self.created_on = created_on if created_on else datetime.datetime.utcnow()
         self.state = state
 
     @recursive_serialize
     def to_dict(self):
-        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_at': self.created_at}
+        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_on': self.created_on}
 
         if len(self.launches) > 0:
             m_dict['launches'] = self.launches
@@ -146,9 +146,9 @@ class FireWork(FWSerializable):
             l = [Launch.from_dict(tmp) for tmp in l]
         fw_id = m_dict.get('fw_id', -1)
         state = m_dict.get('state', 'WAITING')
-        created_at = m_dict.get('created_at', None)
+        created_on = m_dict.get('created_on', None)
 
-        return FireWork(tasks, m_dict['spec'], l, state, created_at, fw_id)
+        return FireWork(tasks, m_dict['spec'], l, state, created_on, fw_id)
 
 
 class Launch(FWSerializable, object):
@@ -184,7 +184,7 @@ class Launch(FWSerializable, object):
         """
         Updates the update_at field of the state history of a Launch. Used to ping that a Launch is still alive.
         """
-        self.state_history[-1]['updated_at'] = datetime.datetime.utcnow()
+        self.state_history[-1]['updated_on'] = datetime.datetime.utcnow()
 
     @property
     def state(self):
@@ -285,7 +285,9 @@ class Launch(FWSerializable, object):
         last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
         if state != last_state:
             now_time = datetime.datetime.utcnow()
-            self.state_history.append({'state': state, 'created_at': now_time})
+            self.state_history.append({'state': state, 'created_on': now_time})
+        if state == 'RUNNING':
+            self.touch_history()  # always add updated_on key for RUNNING state
 
     def _get_time(self, states, use_update_time=False):
         """
@@ -298,5 +300,5 @@ class Launch(FWSerializable, object):
         for data in self.state_history:
             if data['state'] in states:
                 if use_update_time:
-                    return data['updated_at']
-                return data['created_at']
+                    return data['updated_on']
+                return data['created_on']
