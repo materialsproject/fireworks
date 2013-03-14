@@ -80,7 +80,7 @@ class MongoTests(unittest.TestCase):
         fw = FireWork(fib, {'smaller': 0, 'larger': 1})
         self.lp.add_wf(fw)
         rapidfire(self.lp, m_dir=MODULE_DIR)
-        time.sleep(2)  # give Mongo a chance to catch up on its delayed write functionality
+        time.sleep(10)  # give Mongo a chance to catch up on its delayed write functionality
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data['next_fibnum'], 3)
