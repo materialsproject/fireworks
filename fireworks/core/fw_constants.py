@@ -35,3 +35,6 @@ PRINT_FW_JSON = True
 PRINT_FW_YAML = False
 
 PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
+
+RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue for 14 days before we cancel its reservation
+RUN_EXPIRATION_SECS = PING_TIME_SECS * 4  # if a job is not pinged in this much time, we mark it FIZZLED

@@ -4,6 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+from fireworks.core.fw_constants import RESERVATION_EXPIRATION_SECS
 from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from pymongo.mongo_client import MongoClient
@@ -19,9 +20,9 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 30, 2013'
 
 
-# TODO: be able to un-terminate a FW
+# TODO: be able to terminate / un-terminate a FW
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
-# least set the state to FIZZLED and add traceback...
+# least set the state to FIZZLED or ERROR and add traceback...
 
 class LaunchPad(FWSerializable):
     """
@@ -281,8 +282,33 @@ class LaunchPad(FWSerializable):
 
         return m_fw, launch_id
 
+    def unreserve(self, launch_id):
+        self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
+        self.launches.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
+
+    def report_bad_reservations(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
+        bad_launch_ids = []
+        now_time = datetime.datetime.utcnow()
+        cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
+        bad_launch_data = self.launches.find({'state': 'RESERVED', 'state_history': {'$elemmatch': {'state': 'RESERVED', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
+        for ld in bad_launch_data:
+            bad_launch_ids.append(ld['launch_id'])
+        if fix:
+            for lid in bad_launch_ids:
+                self.unreserve(lid)
+        return bad_launch_ids
+
+
+    """
+    mark_fizzled (launch_id)
+    detect_fizzled (time_leniency, also_mark=False) --> return array
+    
+    unreserve (launch_id)
+    detect_bad_reservations (time_leniency, also_mark=False) --> return arry
+    """
     def unreserve_fws(self):
         # TODO: allow to unreserve only a portion of jobs
+        # TODO: DELETE ME!!!!!!!!!
         self.launches.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
         self.fireworks.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
