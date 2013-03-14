@@ -30,7 +30,6 @@ class FireTaskBase(FWSerializable):
 
     def __init__(self, parameters=None):
         """
-
         :param parameters: (dict) Parameters that control the FireTask's operation (custom depending on the FireTask
         type)
         """
@@ -68,7 +67,6 @@ class FWAction():
 
     def __init__(self, command, stored_data=None, mod_spec=None):
         """
-
         :param command: (str) an item from the list of FWAction.commands
         :param stored_data: (dict) any output data to store. Intended to be brief, not store a ton of data.
         :param mod_spec: description of how to modify the Workflow according to a set of rules (see tutorial docs)
@@ -155,7 +153,6 @@ class Launch(FWSerializable, object):
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, action=None, state_history=None,
                  launch_id=None, fw_id=None):
         """
-
         :param state: (str) the state of the Launch (e.g. RUNNING, COMPLETED)
         :param launch_dir: (str) the directory where the Launch takes place
         :param fworker: (FWorker) The FireWorker running the Launch
@@ -189,6 +186,7 @@ class Launch(FWSerializable, object):
     def set_reservation_id(self, reservation_id):
         """
         Adds the job_id to the reservation
+
         :param reservation_id: the id of the reservation (e.g., queue reservation)
         """
         for data in self.state_history:
@@ -199,7 +197,6 @@ class Launch(FWSerializable, object):
     @property
     def state(self):
         """
-
         :return: (str) The current state of the Launch.
         """
         return self._state
@@ -217,7 +214,6 @@ class Launch(FWSerializable, object):
     @property
     def time_start(self):
         """
-
         :return: (datetime) the time the Launch started RUNNING
         """
         return self._get_time('RUNNING')
@@ -225,7 +221,6 @@ class Launch(FWSerializable, object):
     @property
     def time_end(self):
         """
-
         :return: (datetime) the time the Launch was COMPLETED or FIZZLED
         """
         return self._get_time(['COMPLETED', 'FIZZLED'])
@@ -233,7 +228,6 @@ class Launch(FWSerializable, object):
     @property
     def time_reserved(self):
         """
-
         :return: (datetime) the time the Launch was RESERVED in the queue
         """
         return self._get_time('RESERVED')
@@ -241,7 +235,6 @@ class Launch(FWSerializable, object):
     @property
     def last_pinged(self):
         """
-
         :return: (datetime) the time the Launch last pinged a heartbeat that it was still running
         """
         return self._get_time('RUNNING', True)
@@ -249,7 +242,6 @@ class Launch(FWSerializable, object):
     @property
     def runtime_secs(self):
         """
-
         :return: (int) the number of seconds that the Launch ran for
         """
         start = self.time_start
@@ -260,7 +252,6 @@ class Launch(FWSerializable, object):
     @property
     def reservedtime_secs(self):
         """
-
         :return: (int) number of seconds the Launch was queued
         """
         start = self.time_reserved
@@ -290,6 +281,7 @@ class Launch(FWSerializable, object):
     def _update_state_history(self, state):
         """
         Internal method to update the state history whenever the Launch state is modified
+
         :param state:
         """
         last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
@@ -302,9 +294,10 @@ class Launch(FWSerializable, object):
     def _get_time(self, states, use_update_time=False):
         """
         Internal method to help get the time of various events in the Launch (e.g. RUNNING) from the state history
-        :param states:
-        :param use_update_time:
-        :return:
+
+        :param states: match one of these states
+        :param use_update_time: use the "updated_on" time rather than "created_on"
+        :return: (datetime)
         """
         states = states if isinstance(states, list) else [states]
         for data in self.state_history:
