@@ -4,7 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
-from fireworks.core.fw_constants import RESERVATION_EXPIRATION_SECS
+from fireworks.core.fw_constants import RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS
 from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from pymongo.mongo_client import MongoClient
@@ -52,7 +52,7 @@ class LaunchPad(FWSerializable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        self.connection = MongoClient(host, port, w=10, j=True, fsync=True)  # about as safe as Mongo gets
+        self.connection = MongoClient(host, port, w=1, fsync=True)  # about as safe as Mongo gets
         self.database = self.connection[name]
         if username:
             self.database.authenticate(username, password)
@@ -284,9 +284,9 @@ class LaunchPad(FWSerializable):
 
     def unreserve(self, launch_id):
         self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
-        self.launches.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
+        self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
-    def report_bad_reservations(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
+    def detect_bad_reservations(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
@@ -298,14 +298,25 @@ class LaunchPad(FWSerializable):
                 self.unreserve(lid)
         return bad_launch_ids
 
+    def mark_fizzled(self, launch_id):
+        self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'FIZZLED'}})
+        for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
+            fw_id = fw_data['fw_id']
+            wf = self.get_wf_by_fw_id(fw_id)
+            self._refresh_wf(wf, fw_id)
 
-    """
-    mark_fizzled (launch_id)
-    detect_fizzled (time_leniency, also_mark=False) --> return array
+    def detect_fizzled(self, expiration_secs=RUN_EXPIRATION_SECS, fix=False):
+        bad_launch_ids = []
+        now_time = datetime.datetime.utcnow()
+        cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
+        bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {'$elemmatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
+        for ld in bad_launch_data:
+            bad_launch_ids.append(ld['launch_id'])
+        if fix:
+            for lid in bad_launch_ids:
+                self.mark_fizzled(lid)
+        return bad_launch_ids
 
-    unreserve (launch_id)
-    detect_bad_reservations (time_leniency, also_mark=False) --> return arry
-    """
     def unreserve_fws(self):
         # TODO: allow to unreserve only a portion of jobs
         # TODO: DELETE ME!!!!!!!!!
