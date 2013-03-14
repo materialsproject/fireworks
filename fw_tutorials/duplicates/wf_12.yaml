@@ -1,6 +1,5 @@
 fws:
-- created_on: 2013-03-04 22:55:17.472632
-  fw_id: -2
+- fw_id: -2
   spec:
     _dupefinder:
       _fw_name: Dupe Finder Exact
@@ -9,8 +8,7 @@ fws:
       parameters: {}
     input_array:
     - 2
-- created_on: 2013-03-04 22:55:17.379439
-  fw_id: -1
+- fw_id: -1
   spec:
     _dupefinder:
       _fw_name: Dupe Finder Exact
