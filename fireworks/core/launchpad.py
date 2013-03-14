@@ -124,7 +124,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
-        self.links.insert(wf.to_db_dict())
+        self.links.insert(wf.to_db_dict(), safe=True)
 
         # refresh WF states, starting from all roots
         for fw_id in wf.root_fw_ids:
@@ -219,7 +219,7 @@ class LaunchPad(FWSerializable):
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
+        self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id}, safe=True)
         self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
     def _decorate_query(self, query):
@@ -272,7 +272,7 @@ class LaunchPad(FWSerializable):
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id, fw_id=m_fw.fw_id)
-        self.launches.insert(m_launch.to_db_dict())
+        self.launches.insert(m_launch.to_db_dict(), safe=True)
 
         # add launch to FW
         m_fw.launches.append(m_launch)
