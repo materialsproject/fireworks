@@ -4,7 +4,6 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
-from django.template.defaultfilters import safe
 from fireworks.core.fw_constants import RESERVATION_EXPIRATION_SECS
 from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
