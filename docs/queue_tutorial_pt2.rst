@@ -37,7 +37,7 @@ Reserving FireWorks
     qlauncher_run.py -r singleshot my_qp.yaml
     lp_run.py get_fw 1
 
-#. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the ``launches`` key of the FireWork.
+#. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
 
 #. When your queue runs and completes your job, you should see that the state is updated to *COMPLETED*::
 
