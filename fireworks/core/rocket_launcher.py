@@ -26,7 +26,7 @@ def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None, fw_id=Non
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, breathing_time=0.05):
+def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, slow_mode=False):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -37,11 +37,15 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
     """
     curdir = m_dir if m_dir else os.getcwd()
     fworker = fworker if fworker else FWorker()
+    breathing_time = 3 if slow_mode else 0.05
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
 
+
     # TODO: wrap in try-except. Use log_exception for exceptions EXCEPT running out of jobs.
     # TODO: always chdir() back to curdir when finished...then delete cruft from MongoTests
+
+
 
     while True:
         while launchpad.run_exists():
@@ -49,7 +53,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
             launch_rocket(launchpad, fworker, logdir, strm_lvl)
-            time.sleep(breathing_time)  # delay; you'll need a long breathing time (maybe 2 secs) if running dynamic WFs
+            time.sleep(breathing_time)
         if not infinite:
             break
         l_logger.info('Sleeping for {} secs'.format(sleep_time))
