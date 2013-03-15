@@ -24,7 +24,6 @@ class FibonacciAdderTask(FireTaskBase, FWSerializable):
         stop_point = fw_spec['stop_point']
 
         m_sum = smaller + larger
-        print 'stop_point is', stop_point
         if m_sum < stop_point:
             print 'The next Fibonacci number is: {}'.format(m_sum)
             # create a new Fibonacci Adder to add to the workflow
