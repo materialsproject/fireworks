@@ -190,7 +190,7 @@ What just happened?
 
 It's important to understand that when you add a FireWork to the LaunchPad, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher.
 
-When we ran the Rocket Launcher in rapid-fire mode, the Rocket Launcher requests a new task from the LaunchPad immediately after completing the current task. It might *seem* like the LaunchPad is the one in charge, but in reality the Rocket Launcher is the one that must initiate the request for a FireWork. You might have noticed this when we ran the Rocket Launcher in infinite mode with a sleep time of 10. In this mode, we are requesting a new task every 10 seconds after completing the previous task. When you add a new FireWork to the LaunchPad, it does not start running automatically. We must wait for the Rocket Launcher to request it!
+When we ran the Rocket Launcher in rapid-fire mode, the Rocket Launcher requests a new task from the LaunchPad immediately after completing its current task. It stops requesting tasks when none are left in the database. It might *seem* like the LaunchPad is the one in charge, but in reality the Rocket Launcher must initiate the request for a FireWork. You might have noticed this when we ran the Rocket Launcher in infinite mode with a sleep time of 10. In this mode, we are requesting a new task every 10 seconds after completing the previous task. When you add a new FireWork to the LaunchPad, it does not start running automatically. We must wait for the Rocket Launcher to request it!
 
 
 Next steps
