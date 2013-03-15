@@ -38,8 +38,8 @@ class LaunchPad(FWSerializable):
         :param name:
         :param username:
         :param password:
-        :param logdir
-        :param strm_lvl
+        :param logdir:
+        :param strm_lvl:
         """
         self.host = host
         self.port = port
