@@ -88,6 +88,8 @@ if __name__ == '__main__':
 
         elif args.command == 'add':
             # TODO: make this cleaner, e.g. make TAR option explicit
+            # fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
+            # lp.add_wf(fwf)
             try:
                 fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
                 lp.add_wf(fwf)
