@@ -5,6 +5,8 @@ A set of global constants for FireWorks (Python code as a config file)
 """
 
 
+#TODO: migrate all constants to FWConfig() so they can be overwritten
+
 import logging
 import datetime
 import os
