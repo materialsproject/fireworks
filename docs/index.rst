@@ -80,6 +80,14 @@ To get started with FireWorks, we suggest that you follow our core tutorials. Th
 More!
 =====
 
+We recommend that all users read the following tutorials before using FireWorks seriously:
+
+.. toctree::
+    :maxdepth: 1
+
+    failures_tutorial
+
+
 Depending on your application, you might also be interested in the following tutorials:
 
 .. toctree::
@@ -92,7 +100,7 @@ Depending on your application, you might also be interested in the following tut
 
 Planned future tutorials:
 
-* Maintaining the FW database and dealing with crashed jobs
+* Maintaining the FW database and
 * Detailed tutorial on implementing dynamic jobs
 * Securing the FW database
 * Detailed tutorial on Script Task
