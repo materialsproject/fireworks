@@ -288,8 +288,8 @@ class Launch(FWSerializable, object):
         if state != last_state:
             now_time = datetime.datetime.utcnow()
             self.state_history.append({'state': state, 'created_on': now_time})
-        if state in ['RUNNING', 'RESERVED']:
-            self.touch_history()  # add updated_on key
+            if state in ['RUNNING', 'RESERVED']:
+                self.touch_history()  # add updated_on key
 
     def _get_time(self, states, use_update_time=False):
         """
