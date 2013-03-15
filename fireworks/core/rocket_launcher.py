@@ -49,7 +49,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
             launch_rocket(launchpad, fworker, logdir, strm_lvl)
-            time.sleep(0.05)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself
+            time.sleep(0.1)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself
         if not infinite:
             break
         l_logger.info('Sleeping for {} secs'.format(sleep_time))
