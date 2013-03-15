@@ -31,7 +31,8 @@ if __name__ == '__main__':
     single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
 
     rapid_parser.add_argument('--infinite', help='loop forever', action='store_true')
-    rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
+    rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=60, type=int)
+    rapid_parser.add_argument('--breathe', help='breathe time between loops (secs)', default=0.05, type=float)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
@@ -61,7 +62,7 @@ if __name__ == '__main__':
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep)
+        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.infinite, args.sleep, args.breathe)
 
     else:
         launch_rocket(launchpad, fworker, args.logdir, args.loglvl, args.fw_id)

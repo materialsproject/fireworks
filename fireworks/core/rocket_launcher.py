@@ -26,7 +26,7 @@ def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None, fw_id=Non
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60):
+def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60, breathing_time=0.05):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -49,7 +49,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
             launch_rocket(launchpad, fworker, logdir, strm_lvl)
-            time.sleep(0.05)  # delay; might not be needed, just a safeguard to keep the script from tripping on itself
+            time.sleep(breathing_time)  # delay; you'll need a long breathing time (maybe 2 secs) if running dynamic WFs
         if not infinite:
             break
         l_logger.info('Sleeping for {} secs'.format(sleep_time))

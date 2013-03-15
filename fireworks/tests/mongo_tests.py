@@ -76,21 +76,15 @@ class MongoTests(unittest.TestCase):
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()
-        fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 100})
+        fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 6})
         self.lp.add_wf(fw)
-        rapidfire(self.lp, m_dir=MODULE_DIR)
+        rapidfire(self.lp, m_dir=MODULE_DIR, breathing_time=3)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data['next_fibnum'], 3)
         self.assertEqual(self.lp.get_launch_by_id(4).action.stored_data['next_fibnum'], 5)
-        self.assertEqual(self.lp.get_launch_by_id(5).action.stored_data['next_fibnum'], 8)
-        self.assertEqual(self.lp.get_launch_by_id(6).action.stored_data['next_fibnum'], 13)
-        self.assertEqual(self.lp.get_launch_by_id(7).action.stored_data['next_fibnum'], 21)
-        self.assertEqual(self.lp.get_launch_by_id(8).action.stored_data['next_fibnum'], 34)
-        self.assertEqual(self.lp.get_launch_by_id(9).action.stored_data['next_fibnum'], 55)
-        self.assertEqual(self.lp.get_launch_by_id(10).action.stored_data['next_fibnum'], 89)
-        self.assertEqual(self.lp.get_launch_by_id(11).action.stored_data, {})
-        self.assertRaises(ValueError, self.lp.get_launch_by_id, 12)
+        self.assertEqual(self.lp.get_launch_by_id(5).action.stored_data, {})
+        self.assertRaises(ValueError, self.lp.get_launch_by_id, 6)
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
