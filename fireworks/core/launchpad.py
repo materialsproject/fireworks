@@ -347,7 +347,7 @@ class LaunchPad(FWSerializable):
             # create or update a launch
         l_id = prev_launch_id if prev_launch_id else self.get_new_launch_id()
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, launch_id=l_id, fw_id=m_fw.fw_id)
-        self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
         # add launch to FW
@@ -373,7 +373,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'COMPLETED'
         m_launch.action = action
-        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -383,7 +383,7 @@ class LaunchPad(FWSerializable):
     def _ping_launch(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history()
-        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
     def get_new_fw_id(self):
         """
@@ -404,7 +404,7 @@ class LaunchPad(FWSerializable):
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-            self.fireworks.update({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
+            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
 
         return old_new
 
@@ -423,7 +423,7 @@ class LaunchPad(FWSerializable):
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
         # redo the links
-        self.links.update({'nodes': fw_id}, wf.to_db_dict())
+        self.links.find_and_modify({'nodes': fw_id}, wf.to_db_dict())
 
     def _steal_launches(self, thief_fw):
         stolen = False
