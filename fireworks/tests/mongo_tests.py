@@ -82,6 +82,7 @@ class MongoTests(unittest.TestCase):
         fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 4})
         self.lp.add_wf(fw)
         rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=4, sleep_time=5, max_loops=60)
+        time.sleep(3)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data['next_fibnum'], 3)
