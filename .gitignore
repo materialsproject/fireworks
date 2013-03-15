@@ -41,4 +41,6 @@ nosetests.xml
 
 # Pycharm
 .idea/*
-fw_config.yaml
+
+# FireWorks config files
+fw_config*
