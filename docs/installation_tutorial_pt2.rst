@@ -106,7 +106,7 @@ Just like on the central server, you can run in rapidfire mode on the FireWorker
 
     rlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml rapidfire
 
-You've now run multiple jobs on your FireWorker! You could even try running the Rocket Launcher in ``--infinite`` mode - then, you would have FireWorker that continuously ran new jobs added to the LaunchPad on the FireServer.
+You've now run multiple jobs on your FireWorker! You could even try running the Rocket Launcher in ``--nlaunches infinite`` mode - then, you would have FireWorker that continuously ran new jobs added to the LaunchPad on the FireServer.
 
 Next Steps
 ==========

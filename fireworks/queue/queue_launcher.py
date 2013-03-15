@@ -89,7 +89,7 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
 
 
-def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, infinite=False, sleep_time=60, launchpad=None, fworker=None, reserve=False):
+def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, nlaunches=0, sleep_time=60, launchpad=None, fworker=None, reserve=False):
     """
     Submit many jobs to the queue.
     
@@ -101,6 +101,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
 
     # convert launch_dir to absolute path
     launch_dir = os.path.abspath(launch_dir)
+    nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
 
     # initialize logger
     l_logger = get_fw_logger('queue.launcher', l_dir=queue_params.logging_dir, stream_level=strm_lvl)
@@ -109,6 +110,7 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
     if not os.path.exists(launch_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
 
+    num_launched = 0
     try:
         l_logger.info('getting queue adapter')
 
@@ -134,10 +136,13 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
+                num_launched += 1
+                if num_launched == nlaunches:
+                    break
                 jobs_exist = not launchpad or launchpad.run_exists()
                 jobs_in_queue = _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger)
 
-            if not infinite:
+            if num_launched == nlaunches or nlaunches == 0:
                 break
             l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
             time.sleep(sleep_time)

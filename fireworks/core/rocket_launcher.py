@@ -26,7 +26,7 @@ def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None, fw_id=Non
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, num_launches=0, sleep_time=60, max_loops=-1):
+def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, nlaunches=0, sleep_time=60, max_loops=-1):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -34,12 +34,13 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, n
     :param launchpad: a LaunchPad object
     :param fworker: a FWorker object
     :param m_dir: the directory in which to loop Rocket running
-    :param num_launches: 0 means 'until completion', -1 means 'infinity'
+    :param nlaunches: 0 means 'until completion', -1 means 'infinity'
     """
     curdir = m_dir if m_dir else os.getcwd()
     fworker = fworker if fworker else FWorker()
     # initialize logger
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
+    nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
 
     # TODO: wrap in try-except. Use log_exception for exceptions EXCEPT running out of jobs.
     # TODO: always chdir() back to curdir when finished...then delete cruft from MongoTests
@@ -52,10 +53,10 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, n
             os.chdir(launcher_dir)
             launch_rocket(launchpad, fworker, logdir, strm_lvl)
             num_launched += 1
-            if num_launched == num_launches:
+            if num_launched == nlaunches:
                 break
             time.sleep(0.1)  # add a small amount of buffer breathing time for DB to refresh, etc.
-        if num_launched == num_launches or num_launches == 0:
+        if num_launched == nlaunches or nlaunches == 0:
             break
         l_logger.info('Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)

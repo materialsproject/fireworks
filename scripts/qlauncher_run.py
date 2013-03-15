@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     rapid_parser.add_argument('-q', '--njobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
     rapid_parser.add_argument('-b', '--njobs_block', help='maximum jobs to put in a block', default=500, type=int)
-    rapid_parser.add_argument('--infinite', help='loop forever', action='store_true')
+    rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite")')
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
 
     args = parser.parse_args()
@@ -60,6 +60,6 @@ if __name__ == '__main__':
 
     # TODO: the number of arguments here is crazy!
     if args.command == 'rapidfire':
-        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.loglvl, args.infinite, args.sleep, launchpad, fworker, args.reserve)
+        rapidfire(rocket_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.loglvl, args.nlaunches, args.sleep, launchpad, fworker, args.reserve)
     else:
         launch_rocket_to_queue(rocket_params, args.launch_dir, args.loglvl, launchpad, fworker, args.reserve)

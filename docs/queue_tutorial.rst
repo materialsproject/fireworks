@@ -139,9 +139,9 @@ You might want to set up your worker so that it maintains a certain number of jo
 
    .. note:: We have omitted the ``-l`` parameter. You can use this shortcut when using the standard file name (``my_launchpad.yaml``) for the LaunchPad.
 
-#. Run the queue launcher in infinite mode::
+#. Run the queue launcher in **infinite** mode::
 
-    qlauncher_run.py rapidfire -q 2 --infinite my_qp.yaml
+    qlauncher_run.py rapidfire -q 2 --nlaunches infinite my_qp.yaml
 
    .. note:: We have used the shortcut of omitting the ``-l`` parameter and ``-w`` parameter when using standard file names.
 
