@@ -363,7 +363,7 @@ class LaunchPad(FWSerializable):
 
         return m_fw, l_id
 
-    def _complete_launch(self, launch_id, action=None):
+    def _complete_launch(self, launch_id, action, state='COMPLETED'):
         """
         (internal method) used to mark a FireWork's Launch as completed.
         :param launch_id:
@@ -371,7 +371,7 @@ class LaunchPad(FWSerializable):
         """
         # update the launch data to COMPLETED, set end time, etc
         m_launch = self.get_launch_by_id(launch_id)
-        m_launch.state = 'COMPLETED'
+        m_launch.state = state
         m_launch.action = action
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
 

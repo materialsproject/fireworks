@@ -76,14 +76,15 @@ class Rocket():
             try:
                 m_action = my_task.run_task(m_fw.spec)
                 # TODO: allow a program to write the decision to a file...
+                # TODO: allow a BREAK action to modify flow
                 if not m_action:
                     m_action = FWAction('CONTINUE')
 
                 if m_action.command != 'CONTINUE':
                     break;
             except:
-                # TODO: have this FIZZLE the launch instead of DEFUSING it automatically
-                m_action = FWAction('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
+                m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
+                lp._complete_launch(launch_id, m_action, 'FIZZLED')
 
         # perform finishing operation
         ping_stop.set()
