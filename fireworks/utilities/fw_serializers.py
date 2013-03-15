@@ -28,8 +28,7 @@ when the serialize_fw() decorator is used.
 """
 
 import yaml
-from fireworks.core.fw_constants import YAML_STYLE, USER_PACKAGES, \
-    FW_NAME_UPDATES, DATETIME_HANDLER
+from fireworks.core.fw_constants import YAML_STYLE, FW_NAME_UPDATES, DATETIME_HANDLER, FWConfig
 import pkgutil
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
@@ -260,7 +259,7 @@ def load_object(obj_dict):
 
     # failing that, look for the object within all of USER_PACKAGES
     # this will be slow, but only needed the first time
-    for package in USER_PACKAGES:
+    for package in FWConfig().USER_PACKAGES:
         root_module = importlib.import_module(package)
         for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__, package + '.'):
             m_module = loader.find_module(module_name).load_module(module_name)
