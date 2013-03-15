@@ -85,7 +85,7 @@ A diagram of our the first two steps of operation of our FireWork looks like thi
 Our single FireWork will contain a custom FireTask that does the following:
 
 * Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).
-* If this next Fibonacci number is less than 100:
+* If this next Fibonacci number is less than 100 (the **stop_point**):
     * Print it
     * Create its own child FireWork that will sum the new Fibonacci number we just found with the larger of the current inputs. In our example, this would mean to create a new FireWork with inputs 1 and 1.
     * This new FireWork will output the next Fibonacci number (2), and then create its own child FireWork to continue the sequence (not shown)
@@ -98,16 +98,16 @@ Let's see how this is achieved:
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
-#. The initial FireWork is in the file ``fw_fibnum.yaml``. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, and asking to run the ``Fibonacci Adder Task``.
+#. The initial FireWork is in the file ``fw_fibnum.yaml``. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, along with the **stop_point** of 100, and asking to run the ``Fibonacci Adder Task``.
 
 #. The dynamicism is in the ``Fibonacci Adder Task``, which is defined in the file ``fibadd_task.py``. Look inside this file.
 
  * The most important part of the code are the lines::
 
-        new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum})
+        new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
         return FWAction('CREATE', {'next_fibnum': m_sum}, {'create_fw': new_fw})
 
- * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the ``smaller`` number of the new FireWork is the larger number of the current FireWork, and the ``larger`` number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram)
+ * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the **smaller** number of the new FireWork is the larger number of the current FireWork, and the **larger** number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram). The **stop_point** is kept the same.
  * Next, we are returning an instruction to *CREATE* a child FireWork to the workflow.
  * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
  * The *{'create_fw': new_fw}* means that we want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction. The LaunchPad will interpret this command after the FireWork completes.
