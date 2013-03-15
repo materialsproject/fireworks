@@ -44,7 +44,7 @@ if __name__ == '__main__':
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
                                    default=None)
 
-    reservation_parser = subparsers.add_parser('detect_bad_reservations', help='Find launches with stale reservations')
+    reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)', default=RESERVATION_EXPIRATION_SECS, type=int)
     reservation_parser.add_argument('--fix', help='cancel bad reservations', action='store_true')
 
@@ -82,9 +82,9 @@ if __name__ == '__main__':
             # TODO: report when fixed
             print lp.detect_fizzled(args.time, args.fix)
 
-        elif args.command == 'detect_bad_reservations':
+        elif args.command == 'detect_unreserved':
             # TODO: report when fixed
-            print lp.detect_bad_reservations(args.time, args.fix)
+            print lp.detect_unreserved(args.time, args.fix)
 
         elif args.command == 'add':
             # TODO: make this cleaner, e.g. make TAR option explicit

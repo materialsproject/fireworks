@@ -85,6 +85,7 @@ class Rocket():
             except:
                 m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
                 lp._complete_launch(launch_id, m_action, 'FIZZLED')
+                return
 
         # perform finishing operation
         ping_stop.set()

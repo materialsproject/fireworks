@@ -115,9 +115,11 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
-#. The solution is to un-reserve our *RESERVED* FireWork::
+#. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then unreserve ("fix") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
 
-    lp_run.py unreserve
+    lp_run.py detect_unreserved --time 1 --fix
+
+   .. note:: In production, you will want to increase the ``--time`` parameter considerably. The default value is 2 weeks (``--time 1209600``).
 
 #. Now the FireWork should be in the *READY* state::
 
@@ -127,7 +129,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
     qlauncher_run.py -r singleshot my_qp.yaml
 
-.. note:: The ``unreserve`` command is currently a blunt instrument that un-reserves **all** reserved FireWorks. If you un-reserve a FireWork that is still in a queue, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
+.. note:: If you un-reserve a FireWork that is still in a queue and hasn't crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
 
 Conclusion
 ==========

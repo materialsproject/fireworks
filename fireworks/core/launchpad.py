@@ -286,7 +286,7 @@ class LaunchPad(FWSerializable):
         self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
         self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
-    def detect_bad_reservations(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
+    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
@@ -316,12 +316,6 @@ class LaunchPad(FWSerializable):
             for lid in bad_launch_ids:
                 self.mark_fizzled(lid)
         return bad_launch_ids
-
-    def unreserve_fws(self):
-        # TODO: allow to unreserve only a portion of jobs
-        # TODO: DELETE ME!!!!!!!!!
-        self.launches.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
-        self.fireworks.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
     def _set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
