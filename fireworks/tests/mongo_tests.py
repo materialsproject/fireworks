@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 import unittest
+import time
 from fireworks.core.firework import FireWork
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -76,19 +77,16 @@ class MongoTests(unittest.TestCase):
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()
-        fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 6})
+        fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 4})
         self.lp.add_wf(fw)
-        launch_rocket(self.lp)
+        rapidfire(self.lp, m_dir=MODULE_DIR)
+        time.sleep(3)
+        rapidfire(self.lp, m_dir=MODULE_DIR)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
-        launch_rocket(self.lp)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
-        launch_rocket(self.lp)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data['next_fibnum'], 3)
-        launch_rocket(self.lp)
-        self.assertEqual(self.lp.get_launch_by_id(4).action.stored_data['next_fibnum'], 5)
-        launch_rocket(self.lp)
-        self.assertEqual(self.lp.get_launch_by_id(5).action.stored_data, {})
-        self.assertRaises(ValueError, self.lp.get_launch_by_id, 6)
+        self.assertEqual(self.lp.get_launch_by_id(4).action.stored_data, {})
+        self.assertRaises(ValueError, self.lp.get_launch_by_id, 5)
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
