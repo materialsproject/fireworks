@@ -55,7 +55,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 Catastrophic Failure
 ====================
 
-The previous failure was fairly clean; the job threw an error, and FireWorks was able to automatically mark the job as *FIZZLED*. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let's see how to handle this case.
+The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as *FIZZLED*. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let's see how to handle this case.
 
 #. Reset your database and add back the sleeping FireWork::
 
@@ -65,10 +65,38 @@ The previous failure was fairly clean; the job threw an error, and FireWorks was
 #. We'll run the FireWork again, but this time you should interrupt its operation by **forcibly closing your terminal window** (immediately after running the job, before you see the text ``ending``)::
 
     rlauncher_run.py singleshot
-    (forcibly close your terminal window)
+    ----(forcibly close your terminal window)
 
 #. Now let's re-open a terminal window and see what FireWorks thinks is happening with this job::
 
     lp_run.py get_fw 1
 
-#. You should notice that FireWorks still thinks this job is *RUNNING*!
+#. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
+
+    lp_run.py detect_fizzled --time 1 --fix
+
+#. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
+
+    lp_run.py get_fw 1
+
+#. The FireWork should now be correctly listed as *FIZZLED*!
+
+#. Of course, in practice you'll never want to mark jobs running for 1 second as being *FIZZLED*. This will mark jobs that are running properly as *FIZZLED*!
+
+#. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time. Your job will automatically ping the FireWorks that it's *alive* every hour - if FireWorks does not hear from your job in 4 hours, it will auto-detect it as being *FIZZLED*. You can test this feature with the following sequence of commands::
+
+
+    lp_run.py reset <TODAY'S DATE>
+    lp_run.py add fw_sleep.yaml
+    rlauncher_run.py singleshot
+    ---(forcibly close your terminal window)
+    ---(wait 4 or more hours!!)
+    lp_run.py detect_fizzled --fix
+    lp_run.py get_fw 1
+
+.. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_constants.py``, but we suggest you leave them as-is unless you really need to be notified right away of job failures.
+
+Life after *FIZZLED*
+====================
+
+Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. Currently, your only option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you'll need to rerun your entire workflow from the beginning, and any steps that came prior to the failure will be repeated unless you omit them from the new workflow.
