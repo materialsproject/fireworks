@@ -90,7 +90,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     lp_run.py add fw_sleep.yaml
     rlauncher_run.py singleshot
     ---(forcibly close your terminal window)
-    ---(wait 4 or more hours!!)
+    ---(wait 4 or more hours!! or temporarily set your System Clock ahead by 5 hours)
     lp_run.py detect_fizzled --fix
     lp_run.py get_fw 1
 
