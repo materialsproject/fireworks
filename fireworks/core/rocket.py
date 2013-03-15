@@ -82,6 +82,7 @@ class Rocket():
                 if m_action.command != 'CONTINUE':
                     break;
             except:
+                # TODO: have this FIZZLE the launch instead of DEFUSING it automatically
                 m_action = FWAction('DEFUSE', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
 
         # perform finishing operation
