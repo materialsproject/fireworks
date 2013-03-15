@@ -81,9 +81,9 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. The FireWork should now be correctly listed as *FIZZLED*!
 
-#. Of course, in practice you'll never want to mark jobs running for 1 second as being *FIZZLED*. This will mark jobs that are running properly as *FIZZLED*!
+#. Of course, in production you'll never want to mark all jobs running for 1 second as being *FIZZLED*; this will mark jobs that are running properly as *FIZZLED*!
 
-#. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time. Your job will automatically ping the FireWorks that it's *alive* every hour - if FireWorks does not hear from your job in 4 hours, it will auto-detect it as being *FIZZLED*. You can test this feature with the following sequence of commands::
+#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lp_run.py detect_fizzled``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
 
 
     lp_run.py reset <TODAY'S DATE>
@@ -94,7 +94,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     lp_run.py detect_fizzled --fix
     lp_run.py get_fw 1
 
-.. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_constants.py``, but we suggest you leave them as-is unless you really need to be notified right away of job failures.
+.. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_constants.py``, but we suggest you leave them alone unless really needed.
 
 Life after *FIZZLED*
 ====================
