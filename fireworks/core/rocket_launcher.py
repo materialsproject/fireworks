@@ -26,7 +26,7 @@ def launch_rocket(launchpad, fworker=None, logdir=None, strm_lvl=None, fw_id=Non
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, infinite=False, sleep_time=60):
+def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, num_launches=0, sleep_time=60, max_loops=-1):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -34,6 +34,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
     :param launchpad: a LaunchPad object
     :param fworker: a FWorker object
     :param m_dir: the directory in which to loop Rocket running
+    :param num_launches: 0 means 'until completion', -1 means 'infinity'
     """
     curdir = m_dir if m_dir else os.getcwd()
     fworker = fworker if fworker else FWorker()
@@ -42,18 +43,23 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, i
 
     # TODO: wrap in try-except. Use log_exception for exceptions EXCEPT running out of jobs.
     # TODO: always chdir() back to curdir when finished...then delete cruft from MongoTests
-
-    while True:
+    num_launched = 0
+    num_loops = 0
+    while num_loops != max_loops:
         while launchpad.run_exists():
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
             launch_rocket(launchpad, fworker, logdir, strm_lvl)
+            num_launched += 1
+            if num_launched == num_launches:
+                break
             time.sleep(0.1)  # add a small amount of buffer breathing time for DB to refresh, etc.
-        if not infinite:
+        if num_launched == num_launches or num_launches == 0:
             break
         l_logger.info('Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)
+        num_loops += 1
         l_logger.info('Checking for FWs to run...'.format(sleep_time))
 
 
