@@ -52,7 +52,7 @@ class LaunchPad(FWSerializable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        self.connection = MongoClient(host, port, fsync=True)  # about as safe as Mongo gets
+        self.connection = MongoClient(host, port, w=1, fsync=True)  # about as safe as Mongo gets
         self.database = self.connection[name]
         if username:
             self.database.authenticate(username, password)
@@ -285,6 +285,7 @@ class LaunchPad(FWSerializable):
     def unreserve(self, launch_id):
         self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
         self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
+        self.connection.fsync()
 
     def detect_bad_reservations(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
@@ -304,6 +305,7 @@ class LaunchPad(FWSerializable):
             fw_id = fw_data['fw_id']
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
+        self.connection.fsync()
 
     def detect_fizzled(self, expiration_secs=RUN_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
@@ -322,11 +324,13 @@ class LaunchPad(FWSerializable):
         # TODO: DELETE ME!!!!!!!!!
         self.launches.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
         self.fireworks.update({'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
+        self.connection.fsync()
 
     def _set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.set_reservation_id(reservation_id)
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.connection.fsync()
 
 
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
@@ -347,8 +351,9 @@ class LaunchPad(FWSerializable):
             # create or update a launch
         l_id = prev_launch_id if prev_launch_id else self.get_new_launch_id()
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, launch_id=l_id, fw_id=m_fw.fw_id)
-        self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
+        self.connection.fsync()
 
         # add launch to FW
         if not prev_launch_id:
@@ -373,7 +378,8 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'COMPLETED'
         m_launch.action = action
-        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.connection.fsync()
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -383,7 +389,8 @@ class LaunchPad(FWSerializable):
     def _ping_launch(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history()
-        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.connection.fsync()
 
     def get_new_fw_id(self):
         """
@@ -404,8 +411,9 @@ class LaunchPad(FWSerializable):
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
+            self.fireworks.update({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
 
+        self.connection.fsync()
         return old_new
 
     def _refresh_wf(self, wf, fw_id):
@@ -423,7 +431,8 @@ class LaunchPad(FWSerializable):
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
         # redo the links
-        self.links.find_and_modify({'nodes': fw_id}, wf.to_db_dict())
+        self.links.update({'nodes': fw_id}, wf.to_db_dict())
+        self.connection.fsync()
 
     def _steal_launches(self, thief_fw):
         stolen = False
