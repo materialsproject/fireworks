@@ -10,7 +10,7 @@ core Package
     :show-inheritance:
 
 :mod:`fw_config` Module
---------------------------
+-----------------------
 
 .. automodule:: fireworks.core.fw_config
     :members:
