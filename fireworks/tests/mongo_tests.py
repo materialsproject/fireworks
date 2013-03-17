@@ -88,7 +88,7 @@ class MongoTests(unittest.TestCase):
         try:
             self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
         except:
-            time.sleep(20)  # TODO: this is really ugly! but needed ... ugh
+            time.sleep(30)  # TODO: this is really ugly! but needed ... ugh
             self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
 
         self.assertFalse(self.lp.run_exists())
