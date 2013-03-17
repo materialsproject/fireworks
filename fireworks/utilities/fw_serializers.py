@@ -28,12 +28,12 @@ when the serialize_fw() decorator is used.
 """
 
 import yaml
-from fireworks.core.fw_config import FWConfig
 import pkgutil
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import importlib
 import datetime
+from fireworks.core.fw_config import FWConfig
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'

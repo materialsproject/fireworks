@@ -114,7 +114,10 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     return full_path
 
 def get_my_ip():
-    return socket.gethostbyname(socket.gethostname())
+    try:
+        return socket.gethostbyname(socket.gethostname())
+    except:
+        return '127.0.0.1'
 
 
 def get_my_host():
