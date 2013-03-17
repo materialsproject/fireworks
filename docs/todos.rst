@@ -50,4 +50,4 @@ Misc.
 
 * Add a prerequisites section/page. In particular mention that this is not for Windows. Say you run on 32-bit and 64-bit architectures.
 
-* <INSTALL_DIR> is really download dir.? It's only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation.
+* <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.

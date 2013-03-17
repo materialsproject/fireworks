@@ -290,7 +290,8 @@ class LaunchPad(FWSerializable):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
-        bad_launch_data = self.launches.find({'state': 'RESERVED', 'state_history': {'$elemMatch': {'state': 'RESERVED', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
+        bad_launch_data = self.launches.find({'state': 'RESERVED', 'state_history': {
+        '$elemMatch': {'state': 'RESERVED', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
         for ld in bad_launch_data:
             bad_launch_ids.append(ld['launch_id'])
         if fix:
@@ -309,7 +310,8 @@ class LaunchPad(FWSerializable):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
-        bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {'$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
+        bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {
+        '$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
         for ld in bad_launch_data:
             bad_launch_ids.append(ld['launch_id'])
         if fix:
