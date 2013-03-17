@@ -43,3 +43,11 @@ Misc.
 =====
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
+
+* Standard setup instructures for big supercomputing facilities  - NERSC. Teragrid, etc (e.g. things like module load Python/2.7, also virtualenv)
+
+* Install using pip only, not Github devleopers! Package the tutorial separately.
+
+* Add a prerequisites section/page. In particular mention that this is not for Windows. Say you run on 32-bit and 64-bit architectures.
+
+* <INSTALL_DIR> is really download dir.? It's only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation.
