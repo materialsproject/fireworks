@@ -86,17 +86,23 @@ We recommend that all users read the following tutorials before using FireWorks 
     :maxdepth: 1
 
     failures_tutorial
+    duplicates_tutorial
 
-
-Depending on your application, you might also be interested in the following tutorials:
+Users of shared resources and queuing systems should read the following tutorials:
 
 .. toctree::
     :maxdepth: 1
 
     queue_tutorial
     queue_tutorial_pt2
+
+Python users and Power users will be interested in the following:
+
+.. toctree::
+    :maxdepth: 1
+
     python_tutorial
-    duplicates_tutorial
+    config_tutorial
 
 Planned future tutorials:
 
@@ -113,7 +119,6 @@ Planned future tutorials:
 * Using the QueueLauncher outside of FW
 * Searching for FireWorks and Workflows
 * Logging
-* Shortcuts, power usage
 * FW design guide, e.g. FireTasks vs Workflows
 * JSON vs. YAML and serialization of FW objects (including WF serialiazation as TAR instead of JSON/YAML)
 

@@ -97,6 +97,8 @@ Because the ``Script Task`` can run arbitrary shell scripts, it can in theory ru
 
 Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks:
 
+.. note:: You can place code for custom FireTasks in the **user_packages** directory of FireWorks; it will be discovered there. If you want to place your FireTasks in a package outside of FireWorks, please read the :doc:`FireWorks configuration tutorial <config_tutorial>`.
+
 1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
     rm howdy.txt fw.json words.txt
