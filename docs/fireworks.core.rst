@@ -9,10 +9,10 @@ core Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`fw_constants` Module
+:mod:`fw_config` Module
 --------------------------
 
-.. automodule:: fireworks.core.fw_constants
+.. automodule:: fireworks.core.fw_config
     :members:
     :undoc-members:
     :show-inheritance:

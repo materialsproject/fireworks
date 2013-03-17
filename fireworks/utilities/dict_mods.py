@@ -8,8 +8,8 @@ but simplifies it considerably for the limited use cases required by FireWorks.
 """
 
 # TODO: add unit tests
+from pymatgen.util.decorators import singleton
 
-from fireworks.utilities.fw_utilities import singleton
 
 __author__ = "Shyue Ping Ong"
 __credits__ = "Anubhav Jain"

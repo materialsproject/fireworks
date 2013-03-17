@@ -11,9 +11,8 @@ import os
 import glob
 import time
 from fireworks.core.fworker import FWorker
-from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
-from fireworks.core.fw_constants import QUEUE_UPDATE_INTERVAL, QUEUE_RETRY_ATTEMPTS, SUBMIT_SCRIPT_NAME
+from fireworks.core.fw_config import FWConfig
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -71,13 +70,13 @@ def launch_rocket_to_queue(queue_params, launcher_dir='.', strm_lvl=None, launch
 
             # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
-            with open(SUBMIT_SCRIPT_NAME, 'w') as f:
+            with open(FWConfig().SUBMIT_SCRIPT_NAME, 'w') as f:
                 queue_script = qa.get_script_str(queue_params, launcher_dir)
                 if not queue_script:
                     raise RuntimeError('queue script could not be written, check job params and queue adapter!')
                 f.write(queue_script)
             l_logger.info('submitting queue script')
-            reservation_id = qa.submit_to_queue(queue_params, SUBMIT_SCRIPT_NAME)
+            reservation_id = qa.submit_to_queue(queue_params, FWConfig().SUBMIT_SCRIPT_NAME)
             if not reservation_id:
                 raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
             elif reserve:
@@ -134,8 +133,8 @@ def rapidfire(queue_params, launch_dir='.', njobs_queue=10, njobs_block=500, str
                 # launch a single job
                 launch_rocket_to_queue(queue_params, launcher_dir, strm_lvl, launchpad, fworker, reserve)
                 # wait for the queue system to update
-                l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
-                time.sleep(QUEUE_UPDATE_INTERVAL)
+                l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
+                time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
                 num_launched += 1
                 if num_launched == nlaunches:
                     break
@@ -173,7 +172,7 @@ def _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger):
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
     jobs_in_queue = queue_params.qa.get_njobs_in_queue(queue_params)
-    for i in range(QUEUE_RETRY_ATTEMPTS):
+    for i in range(FWConfig().QUEUE_RETRY_ATTEMPTS):
         if jobs_in_queue is not None:
             l_logger.info('{} jobs in queue. Desired: {}'.format(jobs_in_queue, njobs_queue))
             return jobs_in_queue

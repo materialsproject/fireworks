@@ -28,7 +28,7 @@ when the serialize_fw() decorator is used.
 """
 
 import yaml
-from fireworks.core.fw_constants import YAML_STYLE, FW_NAME_UPDATES, DATETIME_HANDLER, FWConfig
+from fireworks.core.fw_config import FWConfig
 import pkgutil
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
@@ -43,7 +43,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 13, 2012'
 
 SAVED_FW_MODULES = {}
-
+DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 def _recursive_dict(obj):
 
@@ -180,7 +180,7 @@ class FWSerializable():
             return json.dumps(self.to_dict(), *args, default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
+            return yaml.dump(self.to_dict(), default_flow_style=FWConfig().YAML_STYLE, allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -247,7 +247,7 @@ def load_object(obj_dict):
     """
 
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
-    fw_name = FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
+    fw_name = FWConfig().FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
     obj_dict['_fw_name'] = fw_name
 
     # first try to load from known location

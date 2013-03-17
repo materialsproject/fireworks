@@ -6,13 +6,14 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 import os
 import traceback
-from fireworks.core.fw_constants import DATETIME_HANDLER, RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS
+from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
 import ast
 import json
 from fireworks.core.workflow import Workflow
 from fireworks import __version__ as FW_VERSION
+from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -45,11 +46,11 @@ if __name__ == '__main__':
                                    default=None)
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
-    reservation_parser.add_argument('--time', help='expiration time (seconds)', default=RESERVATION_EXPIRATION_SECS, type=int)
+    reservation_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
     reservation_parser.add_argument('--fix', help='cancel bad reservations', action='store_true')
 
     fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
-    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=RUN_EXPIRATION_SECS, type=int)
+    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS, type=int)
     fizzled_parser.add_argument('--fix', help='mark fizzled', action='store_true')
 
     version_parser = subparsers.add_parser('version', help='Print the version of FireWorks installed')

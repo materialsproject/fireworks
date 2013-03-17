@@ -5,8 +5,8 @@ This module contains classes relevant for a FireWorker (worker computing resourc
 """
 
 import json
-from fireworks.core.fw_constants import DATETIME_HANDLER
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, \
+    DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Michael Kocher'

@@ -9,7 +9,7 @@ import json
 import threading
 import time
 from fireworks.core.firework import FWAction
-from fireworks.core.fw_constants import DATETIME_HANDLER, PRINT_FW_JSON, PING_TIME_SECS, PRINT_FW_YAML
+from fireworks.core.fw_config import FWConfig
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -22,7 +22,7 @@ __date__ = 'Feb 7, 2013'
 def ping_launch(launchpad, launch_id, stop_event):
     while not stop_event.is_set():
         launchpad._ping_launch(launch_id)
-        stop_event.wait(PING_TIME_SECS)
+        stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
 class Rocket():
@@ -53,10 +53,10 @@ class Rocket():
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
-        if PRINT_FW_JSON:
+        if FWConfig().PRINT_FW_JSON:
             m_fw.to_file('fw.json')
 
-        if PRINT_FW_YAML:
+        if FWConfig().PRINT_FW_YAML:
             m_fw.to_file('fw.yaml')
 
         # execute the script inside the spec

@@ -94,7 +94,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     lp_run.py detect_fizzled --fix
     lp_run.py get_fw 1
 
-.. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_constants.py``, but we suggest you leave them alone unless really needed.
+.. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_config.py``, but we suggest you leave them alone unless really needed.
 
 Life after *FIZZLED*
 ====================

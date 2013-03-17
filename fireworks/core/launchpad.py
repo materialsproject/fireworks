@@ -4,7 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
-from fireworks.core.fw_constants import RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS
+from fireworks.core.fw_config import FWConfig
 from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
 from pymongo.mongo_client import MongoClient
@@ -286,7 +286,7 @@ class LaunchPad(FWSerializable):
         self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
         self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
 
-    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, fix=False):
+    def detect_unreserved(self, expiration_secs=FWConfig().RESERVATION_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
@@ -305,7 +305,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_fizzled(self, expiration_secs=RUN_EXPIRATION_SECS, fix=False):
+    def detect_fizzled(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()

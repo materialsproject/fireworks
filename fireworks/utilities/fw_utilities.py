@@ -6,7 +6,7 @@ import sys
 import os
 import traceback
 import socket
-from fireworks.core.fw_constants import FW_LOGGING_FORMATTER, FW_BLOCK_FORMAT
+from fireworks.core.fw_config import FWConfig
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -17,9 +17,10 @@ __date__ = 'Dec 12, 2012'
 
 PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already been initialized
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
+DEFAULT_FORMATTER = logging.Formatter(FWConfig().FW_LOGGING_FORMAT)
 
 
-def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=FW_LOGGING_FORMATTER,
+def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=DEFAULT_FORMATTER,
                   clear_logs=False):
     """
     Convenience method to return a logger.
@@ -105,23 +106,12 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     :param prefix: the prefix for the new dir, default="block_"
     """
 
-    time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
+    time_now = datetime.datetime.utcnow().strftime(FWConfig().FW_BLOCK_FORMAT)
     block_path = prefix + time_now
     full_path = os.path.join(root_dir, block_path)
     os.mkdir(full_path)
     l_logger.info('Created new dir {}'.format(full_path))
     return full_path
-
-
-def singleton(class_):
-    instances = {}
-
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-    return getinstance
-
 
 def get_my_ip():
     return socket.gethostbyname(socket.gethostname())
