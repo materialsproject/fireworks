@@ -11,6 +11,8 @@
 
 .. warning:: **The latest version of FireWorks renames the lp_run.py, rlauncher.py, and qlauncher.py scripts**. The .py extension has been removed. If you are upgrading from an old installation, you should delete the old scripts (e.g., by typing ``which lp_run.py`` and deleting it from that location). If you have set up queueparams, you will also want to update the script specified in the ``exe`` section.
 
+.. warning:: The syntax for the QueueLauncher has changed recently.
+
 .. warning:: If you encounter bugs or mismatches between the tutorials and the code, please first make sure that you have the latest version of FireWorks installed. Instructions on how to update your installation are here: :ref:`updating-label`. (This warning will be removed when FireWorks is no longer in development mode.)
 
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.

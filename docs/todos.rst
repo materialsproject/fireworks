@@ -42,7 +42,7 @@ FireTasks
 Misc.
 =====
 
-* Make putting in my_qp.yaml in the Queue Launcher optional, and make my_qp be my_queueparams.yaml for explicitness. Allow to specify a config directory rather than individual files.
+* Update all tutorials for the config directory option rather than individual files. In particular the Queue Launcher has changed the way it's run.
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
