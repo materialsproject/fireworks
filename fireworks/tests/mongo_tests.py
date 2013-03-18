@@ -85,6 +85,7 @@ class MongoTests(unittest.TestCase):
         time.sleep(5)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
+
         try:
             self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
         except:
