@@ -81,16 +81,10 @@ class MongoTests(unittest.TestCase):
         fib = FibonacciAdderTask()
         fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 3})
         self.lp.add_wf(fw)
-        rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=3, sleep_time=5, max_loops=30)
-        time.sleep(5)
+        rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=3)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
-
-        try:
-            self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
-        except:
-            time.sleep(30)  # TODO: this is really ugly! but needed ... ugh
-            self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
+        self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
 
         self.assertFalse(self.lp.run_exists())
 
