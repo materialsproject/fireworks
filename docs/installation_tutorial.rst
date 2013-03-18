@@ -34,11 +34,11 @@ where <INSTALL_DIR> is your FireWorks installation directory.
  
 2. Reset the FireWorks database (the LaunchPad)::
 
-    lp_run reset <TODAY'S DATE>
+    lpad reset <TODAY'S DATE>
 
 where <TODAY'S DATE> is formatted like '2012-01-31' (this serves as a safeguard to accidentally overwriting an existing database). You should receive confirmation that the LaunchPad was reset.
 
-.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lp_run -h``. The ``-h`` help option is available for all of the scripts in these tutorials.
+.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h``. The ``-h`` help option is available for all of the scripts in these tutorials.
 
 Add a FireWork to the FireServer database
 -----------------------------------------
@@ -47,13 +47,13 @@ A FireWork contains the computing job to be performed. For this tutorial, we wil
 
 1. Staying in the tutorial directory, run the following command::
 
-    lp_run add fw_test.yaml
+    lpad add fw_test.yaml
 
    .. note:: You can look inside the file ``fw_test.yaml`` with a text editor if you'd like; we'll explain its components shortly.
 
 2. You should have received confirmation that the FireWork got added. You can query the database for this FireWork as follows::
 
-    lp_run get_fw 1
+    lpad get_fw 1
 
 This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
 
@@ -98,7 +98,7 @@ A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be ru
     
 2. We can launch Rockets using the Rocket Launcher. Execute the following command (once)::
 
-    rlauncher_run singleshot
+    rlaunch singleshot
     
 The Rocket fetches an available FireWork from the FireServer and runs it.
 
@@ -112,13 +112,13 @@ You should see the text: ``howdy, your job launched successfully!``
 
 4. Check the status of your FireWork::
 
-    lp_run get_fw 1
+    lpad get_fw 1
     
 You will now see lots of information about your Rocket launch, such as the time and directory of the launch. You should also notice that the state of the FireWork is now ``COMPLETED``.
 
 5. Try launching another rocket (you should get an error)::   
 
-    rlauncher_run singleshot
+    rlaunch singleshot
 
 The error ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database.
 
@@ -134,21 +134,21 @@ If you just want to run many jobs on the central server itself, the simplest way
 #. Let's add 3 identical FireWorks::
 
     cp <INSTALL_DIR>/fw_tutorials/installation/fw_test.yaml .
-    lp_run add fw_test.yaml
-    lp_run add fw_test.yaml
-    lp_run add fw_test.yaml
+    lpad add fw_test.yaml
+    lpad add fw_test.yaml
+    lpad add fw_test.yaml
 
 #. Confirm that the three FireWorks got added to the database, in addition to the one from before (4 total)::
 
-    lp_run get_fw_ids
+    lpad get_fw_ids
 
 #. We could also just get the ``fw_id`` of jobs that are ready to run (our 3 new FireWorks)::
 
-    lp_run get_fw_ids -q '{"state":"READY"}'
+    lpad get_fw_ids -q '{"state":"READY"}'
 
 #. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks to run::
 
-    rlauncher_run rapidfire
+    rlaunch rapidfire
 
 #. You should see three directories starting with the tag ``launcher_``. Inside each of these directories, you'll find the results of one of your FireWorks (a file named ``howdy.txt``).
 
@@ -164,12 +164,12 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 
 #. Start the Rocket Launcher so that it looks for new FireWorks every 10 seconds::
 
-    rlauncher_run rapidfire --nlaunches infinite --sleep 10
+    rlaunch rapidfire --nlaunches infinite --sleep 10
 
 #. **In a new terminal window**, navigate back to your working directory containing ``fw_test.yaml``. Let's insert two FireWorks::
 
-    lp_run add fw_test.yaml
-    lp_run add fw_test.yaml
+    lpad add fw_test.yaml
+    lpad add fw_test.yaml
 
 #. After a few seconds, the Rocket Launcher should have picked up the new jobs and run them. Confirm this is the case::
 
@@ -181,9 +181,9 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 
 #. As with all FireWorks scripts, you can run the built-in help for more information::
 
-    rlauncher_run -h
-    rlauncher_run singleshot -h
-    rlauncher_run rapidfire -h
+    rlaunch -h
+    rlaunch singleshot -h
+    rlaunch rapidfire -h
 
 What just happened?
 ===================
@@ -196,7 +196,7 @@ When we ran the Rocket Launcher in rapid-fire mode, the Rocket Launcher requests
 Next steps
 ==========
 
-At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlauncher_run rapidfire``, and run jobs automatically using the **infinite** Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.
+At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlaunch rapidfire``, and run jobs automatically using the **infinite** Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.
 
 Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation Tutorial (part 2: the Worker) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you only want to run jobs on the FireServer itself.
 

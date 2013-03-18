@@ -18,7 +18,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def rlauncher_run():
+def rlaunch():
     m_description = 'This program launches one or more Rockets. A Rocket grabs a job from the central database and ' \
                     'runs it. The "single-shot" option launches a single Rocket, ' \
                     'whereas the "rapidfire" option loops until all FireWorks are completed.'
@@ -70,4 +70,4 @@ def rlauncher_run():
         launch_rocket(launchpad, fworker, args.logdir, args.loglvl, args.fw_id)
 
 if __name__ == '__main__':
-    rlauncher_run()
+    rlaunch()

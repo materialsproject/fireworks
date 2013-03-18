@@ -41,28 +41,28 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next FireWork. Let's see how this operates in practice by inserting the workflow in our database::
 
-    lp_run reset <TODAY'S DATE>
-    lp_run add addmod_wf.yaml
+    lpad reset <TODAY'S DATE>
+    lpad add addmod_wf.yaml
 
 #. If we examined our two FireWorks at this stage, nothing would be out of the ordinary. In particular, one of the FireWorks has only a single input, ``10``, and does not yet know what number to add to ``10``. To confirm::
 
-    lp_run get_fw 1
-    lp_run get_fw 2
+    lpad get_fw 1
+    lpad get_fw 2
 
 #. Let's now run the first step of the workflow::
 
-    rlauncher_run --silencer singleshot
+    rlaunch --silencer singleshot
 
 #. This prints out ``The sum of [1, 1] is: 2`` - no surprise there. But let's look what happens when we look at our FireWorks again::
 
-    lp_run get_fw 1
-    lp_run get_fw 2
+    lpad get_fw 1
+    lpad get_fw 2
 
 #. You should notice that the FireWork that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask has pushed its sum onto the ``input_array`` of the second FireWork!
 
 #. Finally, let's run the second step to ensure we successfully passed information between FireWorks::
 
-    rlauncher_run --silencer singleshot
+    rlaunch --silencer singleshot
 
 #. This prints out ``The sum of [10, 2] is: 12`` - just as we desired!
 
@@ -114,46 +114,46 @@ Let's see how this is achieved:
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
-    lp_run reset <TODAY'S DATE>
-    lp_run add fw_fibnum.yaml
-    lp_run get_fw_ids
+    lpad reset <TODAY'S DATE>
+    lpad add fw_fibnum.yaml
+    lpad get_fw_ids
 
 #. That last command should prove that there is only one FireWork in the database. Let's run it::
 
-    rlauncher_run --silencer singleshot
+    rlaunch --silencer singleshot
 
 #. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one FireWork, one Rocket. But let's try to again to get all the FireWorks in the database::
 
-    lp_run get_fw_ids
+    lpad get_fw_ids
 
 #. Now there are *two* FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
 
-    rlauncher_run --silencer singleshot
+    rlaunch --silencer singleshot
 
 #. This should print out the next Fibonacci number (2). You can repeat this until our FireTask detects we have gone above our limit of 100::
 
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 3
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 5
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 8
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 13
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 21
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 34
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 55
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     The next Fibonacci number is: 89
-    $ rlauncher_run --silencer singleshot
+    $ rlaunch --silencer singleshot
     We have now exceeded our limit; (the next Fibonacci number would have been: 144)
 
 #. If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We'll instead look at all the different FireWorks created dynamically by our program::
 
-    lp_run get_fw_ids
+    lpad get_fw_ids
 
 There are 11 FireWorks in all, and 10 of them were created by other FireWorks rather than a human!
 
@@ -162,8 +162,8 @@ A Fibonacci Adder: The Quick Way
 
 Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
 
-    lp_run add fw_fibnum.yaml
-    rlauncher_run --silencer rapidfire
+    lpad add fw_fibnum.yaml
+    rlaunch --silencer rapidfire
 
 That was quick!
 

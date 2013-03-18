@@ -23,10 +23,10 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def lp_run():
+def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
-                    'available commands, type "lp_run -h". For more help on a specific command, ' \
-                    'type "lp_run <command> -h".'
+                    'available commands, type "lpad -h". For more help on a specific command, ' \
+                    'type "lpad <command> -h".'
 
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
@@ -122,4 +122,4 @@ def lp_run():
             print lp.get_fw_ids(args.query)
 
 if __name__ == '__main__':
-    lp_run()
+    lpad()

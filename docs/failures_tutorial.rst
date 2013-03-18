@@ -19,9 +19,9 @@ Let's first introduce normal operation of a FireWork that prints ``starting``, s
 
 #. Let's add and run this FireWork. You'll have to wait 10 seconds for it to complete::
 
-    lp_run reset <TODAY'S DATE>
-    lp_run add fw_sleep.yaml
-    rlauncher_run singleshot
+    lpad reset <TODAY'S DATE>
+    lpad add fw_sleep.yaml
+    rlaunch singleshot
 
 #. Hopefully, your patience was rewarded with ``ending`` printed to your terminal. If so, let's keep going!
 
@@ -32,25 +32,25 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
 #. Reset your database and add back the sleeping FireWork::
 
-    lp_run reset <TODAY'S DATE>
-    lp_run add fw_sleep.yaml
+    lpad reset <TODAY'S DATE>
+    lpad add fw_sleep.yaml
 
 #. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C or Ctrl+\). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
 
-    rlauncher_run singleshot
+    rlaunch singleshot
     (Ctrl+C or Ctrl+\)
 
 #. If you did this correctly, you'll have seen the text ``starting`` but not the text ``ending``. You might also see some error text printed to your terminal.
 
 #. This behavior is what happens when your job throws an error (such as the *KeyboardInterrupt* error we just simulated). Let's see what became of this ill-fated FireWork::
 
-    lp_run get_fw 1
+    lpad get_fw 1
 
 #. You should notice the state of this FireWork is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run.
 
 #. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
 
-    lp_run get_fw_ids -q '{"state":"FIZZLED"}'
+    lpad get_fw_ids -q '{"state":"FIZZLED"}'
 
 Catastrophic Failure
 ====================
@@ -59,40 +59,40 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. Reset your database and add back the sleeping FireWork::
 
-    lp_run reset <TODAY'S DATE>
-    lp_run add fw_sleep.yaml
+    lpad reset <TODAY'S DATE>
+    lpad add fw_sleep.yaml
 
 #. We'll run the FireWork again, but this time you should interrupt its operation by **forcibly closing your terminal window** (immediately after running the job, before you see the text ``ending``)::
 
-    rlauncher_run singleshot
+    rlaunch singleshot
     ----(forcibly close your terminal window)
 
 #. Now let's re-open a terminal window and see what FireWorks thinks is happening with this job::
 
-    lp_run get_fw 1
+    lpad get_fw 1
 
 #. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
 
-    lp_run detect_fizzled --time 1 --fix
+    lpad detect_fizzled --time 1 --fix
 
 #. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
-    lp_run get_fw 1
+    lpad get_fw 1
 
 #. The FireWork should now be correctly listed as *FIZZLED*!
 
 #. Of course, in production you'll never want to mark all jobs running for 1 second as being *FIZZLED*; this will mark jobs that are running properly as *FIZZLED*!
 
-#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lp_run detect_fizzled``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
+#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lpad detect_fizzled``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
 
 
-    lp_run reset <TODAY'S DATE>
-    lp_run add fw_sleep.yaml
-    rlauncher_run singleshot
+    lpad reset <TODAY'S DATE>
+    lpad add fw_sleep.yaml
+    rlaunch singleshot
     ---(forcibly close your terminal window)
     ---(wait 4 or more hours!! or temporarily set your System Clock ahead by 5 hours)
-    lp_run detect_fizzled --fix
-    lp_run get_fw 1
+    lpad detect_fizzled --fix
+    lpad get_fw 1
 
 .. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_config.py``, but we suggest you leave them alone unless really needed.
 

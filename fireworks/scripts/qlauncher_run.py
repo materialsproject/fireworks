@@ -19,7 +19,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
 
 
-def qlauncher_run():
+def qlaunch():
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
     interaction are handled by the mandatory queue params file parameter. The "rapidfire" option can be used \
     to maintain a certain number of jobs in the queue by specifying the n_loops parameter to a large number. \
@@ -71,4 +71,4 @@ def qlauncher_run():
 
 
 if __name__ == '__main__':
-    qlauncher_run()
+    qlaunch()

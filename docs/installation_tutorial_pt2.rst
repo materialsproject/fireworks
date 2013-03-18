@@ -23,9 +23,9 @@ Reset the FireWorks database
 
 1. Back at the **FireServer**, let's reset our database and add a FireWork::
 
-    lp_run reset <TODAY'S DATE>
+    lpad reset <TODAY'S DATE>
     cd <INSTALL_DIR>/fw_tutorials/installation_pt2
-    lp_run add fw_test.yaml
+    lpad add fw_test.yaml
 
 Make sure to keep the MongoDB running on the FireServer, and do not launch a Rocket yet!
 
@@ -50,7 +50,7 @@ where <INSTALL_DIR> is your FireWorks installation directory.
 
 #. Confirm that you can query the FireServer from your FireWorker::
 
-    lp_run -l my_launchpad.yaml get_fw 1
+    lpad -l my_launchpad.yaml get_fw 1
 
    This should print out the description of a FireWork that is *READY* to run.
 
@@ -73,7 +73,7 @@ Launch a Rocket on the FireWorker
 
 1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, type::
 
-    rlauncher_run -l my_launchpad.yaml -w my_fworker.yaml singleshot
+    rlaunch -l my_launchpad.yaml -w my_fworker.yaml singleshot
 
   .. tip:: If you use the names ``my_launchpad.yaml`` and ``my_fworker.yaml``, then you don't need to specify the ``-l`` and ``-w`` options explicitly. FireWorks will automatically search for these files in the current directory. For now, we'll include the full command and avoid shortcuts.
 
@@ -81,7 +81,7 @@ This should successfully launch a rocket that finds and runs your FireWork from 
 
 2. Confirm that the FireWork was run::
 
-    lp_run -l my_launchpad.yaml get_fw 1
+    lpad -l my_launchpad.yaml get_fw 1
 
   .. tip:: Similar to the Rocket Launcher, if you use the name ``my_launchpad.yaml`` then the ``-l`` option is not needed.
 
@@ -98,19 +98,19 @@ Just like on the central server, you can run in rapidfire mode on the FireWorker
 
 2. Add three more FireWorks. Let's do this from the FireWorker this time instead of the FireServer::
 
-    lp_run -l my_launchpad.yaml add fw_test.yaml
-    lp_run -l my_launchpad.yaml add fw_test.yaml
-    lp_run -l my_launchpad.yaml add fw_test.yaml
+    lpad -l my_launchpad.yaml add fw_test.yaml
+    lpad -l my_launchpad.yaml add fw_test.yaml
+    lpad -l my_launchpad.yaml add fw_test.yaml
 
 3. Run Rockets in rapidfire mode::
 
-    rlauncher_run -l my_launchpad.yaml -w my_fworker.yaml rapidfire
+    rlaunch -l my_launchpad.yaml -w my_fworker.yaml rapidfire
 
 You've now run multiple jobs on your FireWorker! You could even try running the Rocket Launcher in ``--nlaunches infinite`` mode - then, you would have FireWorker that continuously ran new jobs added to the LaunchPad on the FireServer.
 
 Next Steps
 ==========
 
-A central FireServer and one or more FireWorkers pulling jobs in ``rapidfire`` mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlauncher_run`` on your FireWorker. A description of how to run through a queue is given here:  :doc:`Launching Rockets through a queue </queue_tutorial>`. You can complete that tutorial now, or save it for later.
+A central FireServer and one or more FireWorkers pulling jobs in ``rapidfire`` mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlaunch`` on your FireWorker. A description of how to run through a queue is given here:  :doc:`Launching Rockets through a queue </queue_tutorial>`. You can complete that tutorial now, or save it for later.
 
 Meanwhile, we will move on to :doc:`defining jobs using FireTasks </firetask_tutorial>`.
