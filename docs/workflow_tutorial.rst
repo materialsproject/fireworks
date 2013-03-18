@@ -38,35 +38,35 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. Let's insert this workflow into our database::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add hamlet_wf.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add hamlet_wf.yaml
 
 #. Let's look at our two FireWorks::
 
-    lp_run.py get_fw 1
-    lp_run.py get_fw 2
+    lp_run get_fw 1
+    lp_run get_fw 2
 
 #. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*.
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
-    rlauncher_run.py --silencer singleshot
+    rlauncher_run --silencer singleshot
 
 #. You should have seen the text *"To be, or not to be"* printed to your standard out. Let's examine our FireWorks again to examine our new situation::
 
-    lp_run.py get_fw 1
-    lp_run.py get_fw 2
+    lp_run get_fw 1
+    lp_run get_fw 2
 
 #. We see now that the first step is ``COMPLETED``, and the second step has automatically graduated from ``WAITING`` to ``READY``.
 
 #. Let's now launch a Rocket that will run the second FireWork of this Workflow::
 
-    rlauncher_run.py --silencer singleshot
+    rlauncher_run --silencer singleshot
 
 #. This should print the second step of the workflow (*"That is the question"*). You can verify that both steps are completed::
 
-    lp_run.py get_fw 1
-    lp_run.py get_fw 2
+    lp_run get_fw 1
+    lp_run get_fw 2
 
 .. note:: Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines. But at least we printed them in the correct order!
 
@@ -93,9 +93,9 @@ Let's quickly define and execute this workflow.
 
 #. Once everything makes sense, let's add the workflow and run everything at once::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add org_wf.yaml
-    rlauncher_run.py --silencer rapidfire
+    lp_run reset <TODAY'S DATE>
+    lp_run add org_wf.yaml
+    rlauncher_run --silencer rapidfire
 
 #. You should notice that the CEO correctly gets printed above the managers, who in turn are printed above the intern. There is no preference amongst the two managers as written; FireWorks might print either manager first. If you want to distinguish between them, you can use priorities (covered in a future tutorial).
 

@@ -39,9 +39,9 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
 #. Run this multi-step FireWork on your FireServer::
 
-	 lp_run.py reset <TODAY'S DATE>
-	 lp_run.py add fw_multi.yaml
-	 rlauncher_run.py singleshot
+	 lp_run reset <TODAY'S DATE>
+	 lp_run add fw_multi.yaml
+	 rlauncher_run singleshot
 
 .. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will reset the database, insert a FW, and run it within a single command.
 
@@ -82,9 +82,9 @@ While running arbitrary shell scripts is flexible, it's not particularly well-or
 
 #. Run the FireWork on the central server to confirm that this new formulation also works as intended::
 
-	lp_run.py reset <TODAY'S DATE>
-	lp_run.py add fw_better_multi.yaml
-	rlauncher_run.py singleshot
+	lp_run reset <TODAY'S DATE>
+	lp_run add fw_better_multi.yaml
+	rlauncher_run singleshot
 
 At this point, you might want to change the ``echo_text`` parameter to something other than ``howdy, your job launched successfully!``, reinsert the FireWork, and re-run the Rocket. Your custom text should get printed to ``howdy.txt`` and the number of words should change appropriately.
 
@@ -144,15 +144,15 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
 #. When you are comfortable that you roughly understand how a custom FireTask is set up, try running the FireWork on the central server to confirm that the ``Addition Task`` works::
 
-	lp_run.py reset <TODAY'S DATE>
-	lp_run.py add fw_adder.yaml
-	rlauncher_run.py --silencer singleshot
+	lp_run reset <TODAY'S DATE>
+	lp_run add fw_adder.yaml
+	rlauncher_run --silencer singleshot
 
 .. note:: The ``--silencer`` option suppresses log messages.
 
 # Confirm that the *sum* is not only printed to the screen, but also stored in our FireWork in the ``stored_data`` section::
 
-    lp_run.py get_fw 1
+    lp_run get_fw 1
 
 Next up: Workflows!
 -------------------

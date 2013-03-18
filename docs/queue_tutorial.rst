@@ -4,7 +4,7 @@ Launch Rockets through a queue
 
 If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer resources.
 
-The simplest way to submit jobs through a queue is to submit scripts to your queue manager that run ``rlauncher_run.py``. This method is just like typing ``rlauncher_run.py`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
+The simplest way to submit jobs through a queue is to submit scripts to your queue manager that run ``rlauncher_run``. This method is just like typing ``rlauncher_run`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
 
 The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script "wakes" up and runs the Rocket Launcher, which then figures out what FireWork to run.
 
@@ -53,7 +53,7 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
 #. Open ``my_qp.yaml`` and modify it as follows:
 
-   a. In the part that specifies running ``rlauncher_run.py``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
+   a. In the part that specifies running ``rlauncher_run``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
 
    b. On the same line, modify the ``path/to/my_launchpad.yaml`` to contain the **absolute path** of the ``my_launchpad.yaml`` file on your machine.
 
@@ -68,15 +68,15 @@ Add some FireWorks
 
 Staying in your testing directory, let's reset our database and add a new FireWork, all from our FireWorker::
 
-    lp_run.py -l my_launchpad.yaml reset <TODAY'S DATE>
-    lp_run.py -l my_launchpad.yaml add fw_test.yaml
+    lp_run -l my_launchpad.yaml reset <TODAY'S DATE>
+    lp_run -l my_launchpad.yaml add fw_test.yaml
 
 Submit a job
 ------------
 
 1. Try submitting a job using the command::
 
-    qlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml singleshot my_qp.yaml
+    qlauncher_run -l my_launchpad.yaml -w my_fworker.yaml singleshot my_qp.yaml
 
   .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml`` and ``my_fworker.yaml``, then you don't need to specify the ``-l`` and ``-w`` options explicitly. FireWorks will automatically search for these files in the current directory. For this tutorial, we'll include the full command and avoid shortcuts.
 
@@ -84,7 +84,7 @@ Submit a job
 
 #. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lp_run.py -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lp_run -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
 
 If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
 
@@ -103,16 +103,16 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
 #. Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    lp_run.py -l my_launchpad.yaml reset <TODAY'S DATE>
-    lp_run.py -l my_launchpad.yaml add fw_test.yaml
-    lp_run.py -l my_launchpad.yaml add fw_test.yaml
-    lp_run.py -l my_launchpad.yaml add fw_test.yaml
+    lp_run -l my_launchpad.yaml reset <TODAY'S DATE>
+    lp_run -l my_launchpad.yaml add fw_test.yaml
+    lp_run -l my_launchpad.yaml add fw_test.yaml
+    lp_run -l my_launchpad.yaml add fw_test.yaml
 
 #. Submit several jobs with a single command::
 
-    qlauncher_run.py -l my_launchpad.yaml -w my_fworker.yaml rapidfire -q 3 my_qp.yaml
+    qlauncher_run -l my_launchpad.yaml -w my_fworker.yaml rapidfire -q 3 my_qp.yaml
 
-   .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlauncher_run.py``.The second place is inside the ``my_qp.yaml`` file.  The locations when specifying arguments to ``qlauncher_run.py`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_qp.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
+   .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlauncher_run``.The second place is inside the ``my_qp.yaml`` file.  The locations when specifying arguments to ``qlauncher_run`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_qp.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
 
    .. important:: The Queue Launcher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
@@ -131,17 +131,17 @@ You might want to set up your worker so that it maintains a certain number of jo
 
 #. Let's reset our database and add four new FireWorks this time::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add fw_test.yaml
-    lp_run.py add fw_test.yaml
-    lp_run.py add fw_test.yaml
-    lp_run.py add fw_test.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add fw_test.yaml
+    lp_run add fw_test.yaml
+    lp_run add fw_test.yaml
+    lp_run add fw_test.yaml
 
    .. note:: We have omitted the ``-l`` parameter. You can use this shortcut when using the standard file name (``my_launchpad.yaml``) for the LaunchPad.
 
 #. Run the queue launcher in **infinite** mode::
 
-    qlauncher_run.py rapidfire -q 2 --nlaunches infinite my_qp.yaml
+    qlauncher_run rapidfire -q 2 --nlaunches infinite my_qp.yaml
 
    .. note:: We have used the shortcut of omitting the ``-l`` parameter and ``-w`` parameter when using standard file names.
 
@@ -160,15 +160,15 @@ So far, each queue script we submitted has only one job. We can also submit mult
 
 #. Edit ``my_qp_multi.yaml`` as follows:
 
-    a. In the part that specifies running ``rlauncher_run.py``, modify the ``singleshot`` text to read ``rapidfire``.
+    a. In the part that specifies running ``rlauncher_run``, modify the ``singleshot`` text to read ``rapidfire``.
 
 #. Let's add three FireWorks to the LaunchPad and submit a *single* queue script::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add fw_test.yaml
-    lp_run.py add fw_test.yaml
-    lp_run.py add fw_test.yaml
-    qlauncher_run.py singleshot my_qp_multi.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add fw_test.yaml
+    lp_run add fw_test.yaml
+    lp_run add fw_test.yaml
+    qlauncher_run singleshot my_qp_multi.yaml
 
 #. You should confirm that only a single job got submitted to the queue. However, when the job starts running, you'll see that all three of your jobs completed in separate ``launcher_`` directories!
 
@@ -181,9 +181,9 @@ More information
 
 #. As with all FireWorks scripts, you can run the built-in help for more information::
 
-    qlauncher_run.py -h
-    qlauncher_run.py singleshot -h
-    qlauncher_run.py rapidfire -h
+    qlauncher_run -h
+    qlauncher_run singleshot -h
+    qlauncher_run rapidfire -h
 
 Limitations and Next Steps
 ==========================

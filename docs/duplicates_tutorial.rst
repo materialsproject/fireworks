@@ -37,9 +37,9 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. Let's add our workflow to the database and run it::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add wf_12.yaml
-    rlauncher_run.py --silencer rapidfire
+    lp_run reset <TODAY'S DATE>
+    lp_run add wf_12.yaml
+    rlauncher_run --silencer rapidfire
 
 #. You should see two output directories, one corresponding to each section of the workflow. The standard out should have also printed the lines::
 
@@ -48,20 +48,20 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. So far, there is nothing surprising; we defined a workflow and ran it. Let's see what happens when we try to add back the same exact workflow::
 
-    lp_run.py add wf_12.yaml
+    lp_run add wf_12.yaml
 
 #. This completes successfully; the built-in duplicate checker will allow you to add in the same workflow twice. Let's see what happens when we try to run this workflow::
 
-    rlauncher_run.py --silencer rapidfire
+    rlauncher_run --silencer rapidfire
 
 #. You will get a ``No FireWorks are ready to run and match query! {}`` error! Even though we added a new workflow, FireWorks did not actually run it because it was a duplicate of the previous workflow.
 
 #. Instead of actually running the new FireWorks, FireWorks simply copied the launch data from the earlier, duplicated FireWorks. Let's confirm that this is the case. Our first workflow had FireWorks with``fw_id`` 1 and 2, and our second workflow had FireWorks with ``fw_id`` 3 and 4::
 
-    lp_run.py get_fw 1
-    lp_run.py get_fw 2
-    lp_run.py get_fw 3
-    lp_run.py get_fw 4
+    lp_run get_fw 1
+    lp_run get_fw 2
+    lp_run get_fw 3
+    lp_run get_fw 4
 
 #. All four FireWorks - both the ones we ran explicitly and the second set of duplicated runs - show Launch data as if they had been *all* been run explicitly.
 
@@ -78,9 +78,9 @@ One nice feature of FireWorks' built-in duplicate detection is that it operates 
 
 #. Let's add back our two-step workflow and run it::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add wf_12.yaml
-    rlauncher_run.py --silencer rapidfire
+    lp_run reset <TODAY'S DATE>
+    lp_run add wf_12.yaml
+    rlauncher_run --silencer rapidfire
 
 #. As before, we should have run two FireWorks in agreement with our desired workflow. Now, let's consider a situation where we insert a three-step workflow, but **two of the steps are duplicated from before**:
 
@@ -93,8 +93,8 @@ One nice feature of FireWorks' built-in duplicate detection is that it operates 
 
 #. Ideally, we would want to only run the third step of the workflow from scratch, since it is unique. The first two steps we've already run before, and we can just copy the results from a past run. Let's confirm that this is what happens when we run our new three-step workflow::
 
-    lp_run.py add wf_123.yaml
-    rlauncher_run.py --silencer rapidfire
+    lp_run add wf_123.yaml
+    rlauncher_run --silencer rapidfire
 
 #. You should see text in the standard out that reads::
 

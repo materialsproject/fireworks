@@ -28,20 +28,20 @@ Reserving FireWorks
 
 #. Let's reset our database and add a FireWork for testing::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add fw_test.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add fw_test.yaml
 
 #. Reserving a FireWork is as simple as adding the ``-r`` option to the Queue Launcher. Let's queue up a reserved FireWork and immediately check its state::
 
 
-    qlauncher_run.py -r singleshot my_qp.yaml
-    lp_run.py get_fw 1
+    qlauncher_run -r singleshot my_qp.yaml
+    lp_run get_fw 1
 
 #. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
 
 #. When your queue runs and completes your job, you should see that the state is updated to *COMPLETED*::
 
-    lp_run.py get_fw 1
+    lp_run get_fw 1
 
 Preventing too many jobs in the queue
 =====================================
@@ -52,13 +52,13 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
 #. Reset the database and add a FireWork for testing::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add fw_test.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add fw_test.yaml
 
 #. We have only one FireWork in the database, so we should only be able to submit one job to the queue. Let's try submitting two::
 
-    qlauncher_run.py -r singleshot my_qp.yaml
-    qlauncher_run.py -r singleshot my_qp.yaml
+    qlauncher_run -r singleshot my_qp.yaml
+    qlauncher_run -r singleshot my_qp.yaml
 
 #. You should see that the first submission went OK, but the second one told us ``No jobs exist in the LaunchPad for submission to queue!``. If we repeated this sequence without the ``-r`` option, we would submit too many jobs to the queue.
 
@@ -81,9 +81,9 @@ Another key feature of reserving FireWorks before queue submission is that the F
 
 #. Let's add and run this FireWork::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add fw_test.yaml
-    qlauncher_run.py -r singleshot my_qp.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add fw_test.yaml
+    qlauncher_run -r singleshot my_qp.yaml
 
 #. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_qp.yaml``.
 
@@ -98,36 +98,36 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. Let's add and run this FireWork. Before the job starts running, delete it from the queue (if you're too slow, repeat this entire step)::
 
-    lp_run.py reset <TODAY'S DATE>
-    lp_run.py add fw_test.yaml
-    qlauncher_run.py -r singleshot my_qp.yaml
+    lp_run reset <TODAY'S DATE>
+    lp_run add fw_test.yaml
+    qlauncher_run -r singleshot my_qp.yaml
     qdel <JOB_ID>
 
    .. note:: The job id should have been printed by the Queue Launcher, or you can check your queue manager. The ``qdel`` command might need to be modified, depending on the type of queue manager you use.
 
 #. Now we have no jobs in the queue. But our FireWork still shows up as *RESERVED*::
 
-    lp_run.py get_fw 1
+    lp_run get_fw 1
 
 #. Because our FireWork is *RESERVED*, we cannot run it::
 
-    qlauncher_run.py -r singleshot my_qp.yaml
+    qlauncher_run -r singleshot my_qp.yaml
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
 #. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then unreserve ("fix") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
 
-    lp_run.py detect_unreserved --time 1 --fix
+    lp_run detect_unreserved --time 1 --fix
 
    .. note:: In production, you will want to increase the ``--time`` parameter considerably. The default value is 2 weeks (``--time 1209600``).
 
 #. Now the FireWork should be in the *READY* state::
 
-    lp_run.py get_fw 1
+    lp_run get_fw 1
 
 #. And we can run it again::
 
-    qlauncher_run.py -r singleshot my_qp.yaml
+    qlauncher_run -r singleshot my_qp.yaml
 
 .. note:: If you un-reserve a FireWork that is still in a queue and hasn't crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
 

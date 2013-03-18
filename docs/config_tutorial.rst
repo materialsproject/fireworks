@@ -13,7 +13,7 @@ A sample FW_config file (that does not change any settings) is located in the Fi
 
 2. To test whether your config file is activated, run any LaunchPad command::
 
-    lp_run.py version
+    lp_run version
 
 You should see text printed to the Terminal saying ``successfully loaded your custom FW_config.yaml!``. You can remove this text by deleting the ``ECHO_TEST`` parameter from your ``FW_config.yaml`` file.
 

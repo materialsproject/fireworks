@@ -25,8 +25,8 @@ __date__ = 'Feb 7, 2013'
 
 def lp_run():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
-                    'available commands, type "lp_run.py -h". For more help on a specific command, ' \
-                    'type "lp_run.py <command> -h".'
+                    'available commands, type "lp_run -h". For more help on a specific command, ' \
+                    'type "lp_run <command> -h".'
 
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
