@@ -1,4 +1,4 @@
 from fireworks.scripts.qlauncher_run import qlaunch
 
 if __name__ == '__main__':
-    qlauncher()
+    qlaunch()
