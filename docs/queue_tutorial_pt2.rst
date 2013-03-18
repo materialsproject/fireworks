@@ -22,7 +22,7 @@ Reserving jobs allows for more flexibility, but also adds maintenance overhead w
 Reserving FireWorks
 ===================
 
-1. Begin in your working directory from the :doc:`previous tutorial </queue_tutorial>`. You should have four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
+1. Begin in your working directory from the :doc:`previous tutorial </queue_tutorial>`. You should have four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
    .. note:: Because we are using standard filenames for the LaunchPad and FireWorker, we will omit the ``-l`` and ``-w`` parameters when running scripts for the remainder of this tutorial.
 
@@ -34,7 +34,7 @@ Reserving FireWorks
 #. Reserving a FireWork is as simple as adding the ``-r`` option to the Queue Launcher. Let's queue up a reserved FireWork and immediately check its state::
 
 
-    qlaunch -r singleshot my_qp.yaml
+    qlaunch -r singleshot my_queueparams.yaml
     lpad get_fw 1
 
 #. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
@@ -48,7 +48,7 @@ Preventing too many jobs in the queue
 
 One nice feature of reserving FireWorks is that you are automatically prevented from submitting more jobs to the queue than exist FireWorks in the database. Let's try to submit too many jobs and see what happens.
 
-#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
 #. Reset the database and add a FireWork for testing::
 
@@ -57,8 +57,8 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
 #. We have only one FireWork in the database, so we should only be able to submit one job to the queue. Let's try submitting two::
 
-    qlaunch -r singleshot my_qp.yaml
-    qlaunch -r singleshot my_qp.yaml
+    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot my_queueparams.yaml
 
 #. You should see that the first submission went OK, but the second one told us ``No jobs exist in the LaunchPad for submission to queue!``. If we repeated this sequence without the ``-r`` option, we would submit too many jobs to the queue.
 
@@ -69,23 +69,23 @@ Overriding Queue Parameters within the FireWork
 
 Another key feature of reserving FireWorks before queue submission is that the FireWork can override queue parameters. This is done by specifying the ``_queueparams`` reserved key in the ``spec``. For example, let's override the walltime parameter.
 
-#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
-#. Look in the file ``my_qp.yaml``. You should have walltime parameter listed, perhaps set to 2 minutes. By default, all jobs submitted by this Queue Launcher would have a 2-minute walltime.
+#. Look in the file ``my_queueparams.yaml``. You should have walltime parameter listed, perhaps set to 2 minutes. By default, all jobs submitted by this Queue Launcher would have a 2-minute walltime.
 
 #. Let's copy over the ``fw_walltime.yaml`` file from the tutorials dir::
 
     cp <INSTALL_DIR>/fw_tutorials/queue_pt2/fw_walltime.yaml .
 
-#. Look inside ``fw_walltime.yaml``. You will see a ``_queueparams`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueparams`` key will override the corresponding parameter in ``my_qp.yaml`` when the Queue Launcher is run in reservation mode. So now, the FireWork itself is determining key properties of the queue submission.
+#. Look inside ``fw_walltime.yaml``. You will see a ``_queueparams`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueparams`` key will override the corresponding parameter in ``my_queueparams.yaml`` when the Queue Launcher is run in reservation mode. So now, the FireWork itself is determining key properties of the queue submission.
 
 #. Let's add and run this FireWork::
 
     lpad reset <TODAY'S DATE>
     lpad add fw_test.yaml
-    qlaunch -r singleshot my_qp.yaml
+    qlaunch -r singleshot my_queueparams.yaml
 
-#. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_qp.yaml``.
+#. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_queueparams.yaml``.
 
 #. Your job should complete successfully as before. You could also try to override other queue parameters such as the number of cores for running the job or the account which is charged for running the job. In this way, your queue submission can be tailored on a per-job basis!
 
@@ -94,13 +94,13 @@ Limitations: dealing with failure
 
 One limitation of reserving FireWorks is that the FireWork's fate is tied to that of the queue submission. If the place in the queue is deleted, that FireWork is stuck in limbo unless you reset its state from *RESERVED* back to *READY*. Let's try to simulate this:
 
-#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qp.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
 #. Let's add and run this FireWork. Before the job starts running, delete it from the queue (if you're too slow, repeat this entire step)::
 
     lpad reset <TODAY'S DATE>
     lpad add fw_test.yaml
-    qlaunch -r singleshot my_qp.yaml
+    qlaunch -r singleshot my_queueparams.yaml
     qdel <JOB_ID>
 
    .. note:: The job id should have been printed by the Queue Launcher, or you can check your queue manager. The ``qdel`` command might need to be modified, depending on the type of queue manager you use.
@@ -111,7 +111,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. Because our FireWork is *RESERVED*, we cannot run it::
 
-    qlaunch -r singleshot my_qp.yaml
+    qlaunch -r singleshot my_queueparams.yaml
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
@@ -127,7 +127,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. And we can run it again::
 
-    qlaunch -r singleshot my_qp.yaml
+    qlaunch -r singleshot my_queueparams.yaml
 
 .. note:: If you un-reserve a FireWork that is still in a queue and hasn't crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
 

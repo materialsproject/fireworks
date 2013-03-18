@@ -11,7 +11,7 @@
 
 .. warning:: **The latest version of FireWorks renames the lpad.py, rlauncher.py, and qlauncher.py scripts**. The .py extension has been removed and the names shortened as requested by some users. If you are upgrading from an old installation, you should delete the old scripts (e.g., by typing ``which lp.py`` and deleting it from that location). If you have set up queueparams, you will also want to update the script specified in the ``exe`` section.
 
-.. warning:: The syntax for the QueueLauncher has changed recently, i.e. you no longer need to specify ``my_qp.yaml`` if you specify a config dir.
+.. warning:: The syntax for the QueueLauncher has changed recently, i.e. you no longer need to specify ``my_queueparams.yaml`` if you specify a config dir.
 
 .. warning:: If you encounter bugs or mismatches between the tutorials and the code, please first make sure that you have the latest version of FireWorks installed. Instructions on how to update your installation are here: :ref:`updating-label`. (This warning will be removed when FireWorks is no longer in development mode.)
 
