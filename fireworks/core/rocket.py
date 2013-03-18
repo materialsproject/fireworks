@@ -73,6 +73,7 @@ class Rocket():
         ping_thread.start()
 
         for my_task in m_fw.tasks:
+            print 'BEGINNING task {}'.format(my_task.fw_name)  # TODO: make this better logged and controlled
             try:
                 m_action = my_task.run_task(m_fw.spec)
                 # TODO: allow a program to write the decision to a file...
