@@ -77,6 +77,14 @@ To get started with FireWorks, we suggest that you follow our core tutorials. Th
    workflow_tutorial
    dynamic_wf_tutorial
 
+To get things running on a shared resource with a queueing system (e.g., a supercomputing center), you should complete the following tutorials:
+
+.. toctree::
+    :maxdepth: 1
+
+    queue_tutorial
+    queue_tutorial_pt2
+
 More!
 =====
 
@@ -86,15 +94,8 @@ We recommend that all users read the following tutorials before using FireWorks 
     :maxdepth: 1
 
     failures_tutorial
-    duplicates_tutorial
-
-Users of shared resources and queuing systems should read the following tutorials:
-
-.. toctree::
-    :maxdepth: 1
-
-    queue_tutorial
-    queue_tutorial_pt2
+    security_tutorial
+        duplicates_tutorial
 
 Python users and Power users will be interested in the following:
 
