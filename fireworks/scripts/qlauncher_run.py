@@ -44,7 +44,7 @@ def qlaunch():
 
     rapid_parser.add_argument('-m', '--maxjobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block', help='maximum jobs to put in a block', default=500, type=int)
-    rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite")')
+    rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite")', default=0)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
 
     args = parser.parse_args()
