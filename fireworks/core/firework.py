@@ -57,7 +57,7 @@ class FireTaskBase(FWSerializable):
         return cls(m_dict['parameters'])
 
 
-class FWAction():
+class FWAction(FWSerializable):
     """
     A FWAction encapsulates the output of a FireTask (it is returned by a FireTask after the FireTask completes). The
      FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.

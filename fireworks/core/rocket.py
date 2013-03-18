@@ -44,6 +44,8 @@ class Rocket():
         """
         Run the rocket (actually check out a job from the database and execute it)
         """
+        finish_state = 'COMPLETED'  # the default state to finish in, assuming no errors
+        all_stored_data = {}  # stored data for *all* the Tasks
 
         lp = self.launchpad
         launch_dir = os.path.abspath(os.getcwd())
@@ -59,13 +61,7 @@ class Rocket():
         if FWConfig().PRINT_FW_YAML:
             m_fw.to_file('FW.yaml')
 
-        # execute the script inside the spec
-        # TODO: bind monitors, etc...
-        # add fw_dict stuff
-        # add checkpoint stuff
-        # lots of stuff to add!
-        # update the number of tasks completed in the launch after every task
-        # TODO: support stored_dict update() rather than overwrite
+        # TODO: add checkpoint stuff
 
         # set up heartbeat (pinging the server that we're still alive)
         ping_stop = threading.Event()
@@ -73,22 +69,29 @@ class Rocket():
         ping_thread.start()
 
         for my_task in m_fw.tasks:
-            print 'BEGINNING task {}'.format(my_task.fw_name)  # TODO: make this better logged and controlled
             try:
                 m_action = my_task.run_task(m_fw.spec)
-                # TODO: allow a program to write the decision to a file...
-                # TODO: allow a BREAK action to modify flow
+
+                # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
+                if os.path.exists('FWAction.json'):
+                    m_action = FWAction.from_file('FWAction.json')
+                elif os.path.exists('FWAction.yaml'):
+                    m_action = FWAction.from_file('FWAction.yaml')
+
                 if not m_action:
                     m_action = FWAction('CONTINUE')
+
+                # update the global stored data with the data to store from this particular Task
+                all_stored_data.update(m_action.stored_data)
 
                 if m_action.command != 'CONTINUE':
                     break;
             except:
                 m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
-                lp._complete_launch(launch_id, m_action, 'FIZZLED')
-                return
+                finish_state = 'FIZZLED'
 
         # perform finishing operation
         ping_stop.set()
-        lp._complete_launch(launch_id, m_action)
+        m_action.stored_data = all_stored_data
+        lp._complete_launch(launch_id, m_action, finish_state)
 
