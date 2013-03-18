@@ -65,7 +65,7 @@ def qlaunch():
 
     # TODO: the number of arguments here is crazy!
     if args.command == 'rapidfire':
-        rapidfire(queue_params, args.launch_dir, args.njobs_queue, args.njobs_block, args.loglvl, args.nlaunches, args.sleep, launchpad, fworker, args.reserve)
+        rapidfire(queue_params, args.launch_dir, args.maxjobs_queue, args.maxjobs_block, args.loglvl, args.nlaunches, args.sleep, launchpad, fworker, args.reserve)
     else:
         launch_rocket_to_queue(queue_params, args.launch_dir, args.loglvl, launchpad, fworker, args.reserve)
 
