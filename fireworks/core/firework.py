@@ -92,7 +92,7 @@ class FWAction():
 
 class FireWork(FWSerializable):
     # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
-    STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'FIZZLED': 3, 'RESERVED': 4, 'RUNNING': 5, 'CANCELED': 6,
+    STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'CANCELED': 6,
                    'COMPLETED': 7}
 
     def __init__(self, tasks, spec=None, launches=None, state='WAITING', created_on=None, fw_id=-1):
