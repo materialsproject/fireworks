@@ -1,0 +1,4 @@
+from fireworks.scripts.rlauncher_run import rlauncher_run
+
+if __name__ == '__main__':
+    rlauncher_run()

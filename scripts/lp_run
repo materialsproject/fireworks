@@ -1,0 +1,4 @@
+from fireworks.scripts.lp_run import lp_run
+
+if __name__ == '__main__':
+    lp_run()
