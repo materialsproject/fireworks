@@ -34,7 +34,7 @@ Reserving FireWorks
 #. Reserving a FireWork is as simple as adding the ``-r`` option to the Queue Launcher. Let's queue up a reserved FireWork and immediately check its state::
 
 
-    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot
     lpad get_fw 1
 
 #. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
@@ -57,8 +57,8 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
 #. We have only one FireWork in the database, so we should only be able to submit one job to the queue. Let's try submitting two::
 
-    qlaunch -r singleshot my_queueparams.yaml
-    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot
+    qlaunch -r singleshot
 
 #. You should see that the first submission went OK, but the second one told us ``No jobs exist in the LaunchPad for submission to queue!``. If we repeated this sequence without the ``-r`` option, we would submit too many jobs to the queue.
 
@@ -83,7 +83,7 @@ Another key feature of reserving FireWorks before queue submission is that the F
 
     lpad reset <TODAY'S DATE>
     lpad add fw_test.yaml
-    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot
 
 #. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_queueparams.yaml``.
 
@@ -100,7 +100,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
     lpad reset <TODAY'S DATE>
     lpad add fw_test.yaml
-    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot
     qdel <JOB_ID>
 
    .. note:: The job id should have been printed by the Queue Launcher, or you can check your queue manager. The ``qdel`` command might need to be modified, depending on the type of queue manager you use.
@@ -111,7 +111,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. Because our FireWork is *RESERVED*, we cannot run it::
 
-    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
@@ -127,7 +127,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. And we can run it again::
 
-    qlaunch -r singleshot my_queueparams.yaml
+    qlaunch -r singleshot
 
 .. note:: If you un-reserve a FireWork that is still in a queue and hasn't crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
 

@@ -76,9 +76,9 @@ Submit a job
 
 1. Try submitting a job using the command::
 
-    qlaunch -l my_launchpad.yaml -w my_fworker.yaml singleshot my_queueparams.yaml
+    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_queueparams.yaml singleshot
 
-  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml`` and ``my_fworker.yaml``, then you don't need to specify the ``-l`` and ``-w`` options explicitly. FireWorks will automatically search for these files in the current directory. For this tutorial, we'll include the full command and avoid shortcuts.
+  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_queueparams.yaml``, then you don't need to specify the ``-l``, ``-w``, and ``-q`` options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuation directory that you specify with a single ``-c`` parameter. For this tutorial, we'll include the full command and avoid shortcuts.
 
 #. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
@@ -91,7 +91,7 @@ If everything ran successfully, congratulations! You just executed a complicated
    a. The Queue Launcher submitted a Rocket Launcher to your queue manager
    b. Your queue manager executed the Rocket Launcher when resources were ready
    c. The Rocket Launcher launched a Rocket
-   d. The Rocket     fetched a FireWork from the FireServer and ran the specification inside
+   d. The Rocket fetched a FireWork from the FireServer and ran the specification inside
 
 
 Adding more power: using rapid-fire mode
@@ -110,7 +110,7 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
 #. Submit several jobs with a single command::
 
-    qlaunch -l my_launchpad.yaml -w my_fworker.yaml rapidfire -q 3 my_queueparams.yaml
+    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_queueparams.yaml rapidfire -m 3
 
    .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlaunch``.The second place is inside the ``my_queueparams.yaml`` file.  The locations when specifying arguments to ``qlaunch`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_queueparams.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
 
@@ -141,9 +141,9 @@ You might want to set up your worker so that it maintains a certain number of jo
 
 #. Run the queue launcher in **infinite** mode::
 
-    qlaunch rapidfire -q 2 --nlaunches infinite my_queueparams.yaml
+    qlaunch rapidfire -m 2 --nlaunches infinite
 
-   .. note:: We have used the shortcut of omitting the ``-l`` parameter and ``-w`` parameter when using standard file names.
+   .. note:: We have used the shortcut of omitting the ``-l``, ``w``, and ``q`` parameters when using standard file names.
 
 #. This command will always maintain 2 jobs in the queue. When a job finishes, another will be submitted to take its place!
 
@@ -168,12 +168,11 @@ So far, each queue script we submitted has only one job. We can also submit mult
     lpad add fw_test.yaml
     lpad add fw_test.yaml
     lpad add fw_test.yaml
-    qlaunch singleshot my_qp_multi.yaml
+    qlaunch -q my_qp_multi.yaml singleshot
 
 #. You should confirm that only a single job got submitted to the queue. However, when the job starts running, you'll see that all three of your jobs completed in separate ``launcher_`` directories!
 
 .. warning:: Currently, we do not recommend running in this mode unless you are confident that all jobs can finish before the walltime expires. Otherwise, you might run into a situation where the walltime kills one of your jobs mid-run. In future tutorials and FireWorks versions, we'll demonstrate how to handle this case cleanly. For now, we suggest you stick to 1 FireWork per queue script unless you know what you are doing!
-
 
 
 More information
