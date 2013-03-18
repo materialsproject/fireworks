@@ -29,7 +29,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
         Create a NERSC-style PBS script. For more documentation, see parent object.
         
         Supported QueueParams.params are:
-            - ncores: number of cores
+            - mppwidth: number of cores (for queues that specify ncores as mppwidth)
+            - nnodes: number of nodes (if you are not specifying mppwidth)
+            - ppnode: processors per node (if you are not specifying mppwidth)
             - walltime: looks like "hh:mm:ss"
             - queue: the queue to run on
             - account: the account to charge 
@@ -48,8 +50,11 @@ class PBSAdapterNERSC(QueueAdapterBase):
         outs.append('#!/bin/bash')
         outs.append('')
 
-        if p.get('ncores', None):
-            outs.append('#PBS -l mppwidth={}'.format(p['ncores']))
+        if p.get('mppwidth', None):
+            outs.append('#PBS -l mppwidth={}'.format(p['mppwidth']))
+
+        elif p.get('nnodes') and p.get('ppnode'):
+            outs.append('#PBS -l nodes={}:ppn={}'.format(p['nnodes'], p['ppnode']))
 
         if p.get('walltime', None):
             outs.append('#PBS -l walltime={}'.format(p['walltime']))
