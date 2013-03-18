@@ -53,9 +53,9 @@ class Rocket():
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
+        # write fw.json and/or fw.yaml to the directory
         if FWConfig().PRINT_FW_JSON:
             m_fw.to_file('fw.json')
-
         if FWConfig().PRINT_FW_YAML:
             m_fw.to_file('fw.yaml')
 
