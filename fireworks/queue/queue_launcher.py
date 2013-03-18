@@ -174,7 +174,7 @@ def _get_number_of_jobs_in_queue(queue_params, njobs_queue, l_logger):
     jobs_in_queue = queue_params.qa.get_njobs_in_queue(queue_params)
     for i in range(FWConfig().QUEUE_RETRY_ATTEMPTS):
         if jobs_in_queue is not None:
-            l_logger.info('{} jobs in queue. Desired: {}'.format(jobs_in_queue, njobs_queue))
+            l_logger.info('{} jobs in queue. Maximum allowed by user: {}'.format(jobs_in_queue, njobs_queue))
             return jobs_in_queue
         l_logger.warn('Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
         time.sleep(RETRY_INTERVAL)
