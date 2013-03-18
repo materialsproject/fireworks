@@ -94,7 +94,7 @@ Just like on the central server, you can run in rapidfire mode on the FireWorker
 
 1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, clean up your directory::
 
-    rm fw.json howdy.txt
+    rm FW.json howdy.txt
 
 2. Add three more FireWorks. Let's do this from the FireWorker this time instead of the FireServer::
 

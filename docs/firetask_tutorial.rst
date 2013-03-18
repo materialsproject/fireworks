@@ -56,7 +56,7 @@ While running arbitrary shell scripts is flexible, it's not particularly well-or
 
 1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
-    rm howdy.txt fw.json words.txt
+    rm howdy.txt FW.json words.txt
 
 #. Look inside the file ``fw_better_multi.yaml``::
 
@@ -101,7 +101,7 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
 1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
-    rm howdy.txt fw.json words.txt
+    rm howdy.txt FW.json words.txt
 
 #. Let's first look at what a custom FireTask looks like in Python. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
 

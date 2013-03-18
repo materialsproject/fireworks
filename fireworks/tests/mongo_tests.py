@@ -96,8 +96,8 @@ class MongoTests(unittest.TestCase):
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
         os.chdir(self.old_wd)
-        if os.path.exists(os.path.join('fw.json')):
-            os.remove('fw.json')
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
         for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
             shutil.rmtree(i)
 

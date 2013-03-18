@@ -2,7 +2,7 @@
 Modifying the FW Config (and linking to external packages)
 ==========================================================
 
-Many parameters used by FireWorks can be changed to suit your needs. For example, by default FireWorks will print a ``fw.json`` file in your run directory, but you can turn this off or switch to YAML format. Or, you might write a :doc:`custom FireTask </firetask_tutorial>` in a Python package external to FireWorks and need FireWorks to discover it.
+Many parameters used by FireWorks can be changed to suit your needs. For example, by default FireWorks will print a ``FW.json`` file in your run directory, but you can turn this off or switch to YAML format. Or, you might write a :doc:`custom FireTask </firetask_tutorial>` in a Python package external to FireWorks and need FireWorks to discover it.
 
 How to modify the FW Config
 ===========================
@@ -32,8 +32,8 @@ Parameters you might want to change
 
 A few basic parameters that can be tweaked are:
 
-* ``PRINT_FW_JSON: True`` - whether to print the ``fw.json`` file in your run directory
-* ``PRINT_FW_YAML: False`` - whether to print the ``fw.yaml`` file in your run directory
+* ``PRINT_FW_JSON: True`` - whether to print the ``FW.json`` file in your run directory
+* ``PRINT_FW_YAML: False`` - whether to print the ``FW.yaml`` file in your run directory
 * ``SUBMIT_SCRIPT_NAME: FW_submit.script`` - the name to give the script for submitting PBS/SLURM/queue jobs
 * ``FW_LOGGING_FORMAT: %(asctime)s %(levelname)s %(message)s`` - format for loggers (this String will be passed to ``logging.Formatter()``)
 

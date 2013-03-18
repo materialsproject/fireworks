@@ -108,7 +108,7 @@ The Rocket fetches an available FireWork from the FireServer and runs it.
     
 You should see the text: ``howdy, your job launched successfully!``
 
-.. note:: In addition to ``howdy.txt``, you should also see a file called ``fw.json``. This contains a JSON representation of the FireWork that the Rocket ran and can be useful later for tracking down a launch or debugging.
+.. note:: In addition to ``howdy.txt``, you should also see a file called ``FW.json``. This contains a JSON representation of the FireWork that the Rocket ran and can be useful later for tracking down a launch or debugging.
 
 4. Check the status of your FireWork::
 
@@ -129,7 +129,7 @@ If you just want to run many jobs on the central server itself, the simplest way
 
 1. Staying in your working directory from last time, clean up your output files::
 
-    rm fw.json howdy.txt
+    rm FW.json howdy.txt
 
 #. Let's add 3 identical FireWorks::
 
