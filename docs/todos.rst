@@ -42,6 +42,8 @@ FireTasks
 Misc.
 =====
 
+* Make putting in my_qp.yaml in the Queue Launcher optional, and make my_qp be my_queueparams.yaml for explicitness. Allow to specify a config directory rather than individual files.
+
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
 * Standard setup instructures for big supercomputing facilities  - NERSC. Teragrid, etc (e.g. things like module load Python/2.7, also virtualenv)

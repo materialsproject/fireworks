@@ -22,7 +22,8 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
-if __name__ == '__main__':
+
+def lp_run():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
                     'available commands, type "lp_run.py -h". For more help on a specific command, ' \
                     'type "lp_run.py <command> -h".'
@@ -57,6 +58,8 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=None)
+    parser.add_argument('-c', '--config_dir', help='path to a directory containing the LaunchPad file (used if -l unspecified)',
+                        default='.')
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
@@ -67,8 +70,8 @@ if __name__ == '__main__':
         print FW_VERSION
 
     else:
-        if not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
-            args.launchpad_file = 'my_launchpad.yaml'
+        if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
+            args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
 
         if args.launchpad_file:
             lp = LaunchPad.from_file(args.launchpad_file)
@@ -117,3 +120,6 @@ if __name__ == '__main__':
             if args.query:
                 args.query = ast.literal_eval(args.query)
             print lp.get_fw_ids(args.query)
+
+if __name__ == '__main__':
+    lp_run()

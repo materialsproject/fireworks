@@ -17,7 +17,8 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
-if __name__ == '__main__':
+
+def rlauncher_run():
     m_description = 'This program launches one or more Rockets. A Rocket grabs a job from the central database and ' \
                     'runs it. The "single-shot" option launches a single Rocket, ' \
                     'whereas the "rapidfire" option loops until all FireWorks are completed.'
@@ -35,6 +36,8 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
+    parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
+                        default='.')
 
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
@@ -42,11 +45,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if not args.launchpad_file and os.path.exists('my_launchpad.yaml'):
-        args.launchpad_file = 'my_launchpad.yaml'
+    if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
+        args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
 
-    if not args.fworker_file and os.path.exists('my_fworker.yaml'):
-        args.fworker_file = 'my_fworker.yaml'
+    if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
+        args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
@@ -65,3 +68,6 @@ if __name__ == '__main__':
 
     else:
         launch_rocket(launchpad, fworker, args.logdir, args.loglvl, args.fw_id)
+
+if __name__ == '__main__':
+    rlauncher_run()
