@@ -20,13 +20,13 @@ FW Docs
 Major Features
 ==============
 
-* Figure out what to do about fsync
+* Figure out what to do about fsync (in progress...)
 
 * Add a checkpoint/restart function
 
 * Allow the server to submit jobs to workers (maybe using ssh-commands?)
 
-* Put all worker config files in a central location
+* Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
 
 * More and better unit tests, e.g. unit tests of scripts
 
@@ -43,6 +43,8 @@ Misc.
 * Detect a blank config dir and give a proper error.
 
 * allow environment varialbe to set config dir location
+
+* Finish all planned tutorials
 
 * Add warning or reject if you try to add a FW with FW_id > 1
 

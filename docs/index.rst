@@ -109,7 +109,8 @@ Python users and Power users will be interested in the following:
 
 Planned future tutorials:
 
-* Maintaining the FW database and
+* Maintaining the FW database
+* Taming the configuration files
 * Detailed tutorial on implementing dynamic jobs
 * Securing the FW database
 * Detailed tutorial on Script Task
