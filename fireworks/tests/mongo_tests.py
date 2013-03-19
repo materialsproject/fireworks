@@ -2,7 +2,6 @@ import os
 import shutil
 import glob
 import unittest
-import time
 from fireworks.core.firework import FireWork
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -47,7 +46,6 @@ class MongoTests(unittest.TestCase):
         fw = FireWork(test1)
         self.lp.add_wf(fw)
         launch_rocket(self.lp)
-        time.sleep(3)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
 
     def test_multi_fw(self):
@@ -56,7 +54,6 @@ class MongoTests(unittest.TestCase):
         fw = FireWork([test1, test2])
         self.lp.add_wf(fw)
         launch_rocket(self.lp)
-        time.sleep(3)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test2\n')
 
     def test_add_fw(self):
