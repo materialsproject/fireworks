@@ -40,7 +40,11 @@ FireTasks
 Misc.
 =====
 
-# Detect a blank config dir and give a proper error.
+* Detect a blank config dir and give a proper error.
+
+* allow environment varialbe to set config dir location
+
+* Add warning or reject if you try to add a FW with FW_id > 1
 
 * Update all tutorials for the config directory option rather than individual files.
 
