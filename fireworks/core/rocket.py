@@ -87,6 +87,7 @@ class Rocket():
                 if m_action.command != 'CONTINUE':
                     break;
             except:
+                traceback.print_exc()
                 m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
                 finish_state = 'FIZZLED'
 
