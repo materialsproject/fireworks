@@ -9,7 +9,7 @@ Introduction to virtualenv
 
 Your virtualenv is stored inside a user-specified directory on your system. That directory will contain the Python 2.7.3 executable needed for FireWorks as well as all dependencies for the FireWorks code. When you activate your virtualenv, your "normal" Python executable will be bypassed in favor of the one in this directory. In addition, your normal "site packages" directory that contains your external Python libraries will be bypassed in favor of the one you set up in your virtualenv. Finally, your "pip" and "easy_install" will be bypassed so that they install packages to your virtualenv. When you deactivate your virtualenv, things will return back to their usual state.
 
-If you'd like more details on virtualenv, you can read the `official documentation <https://pypi.python.org/pypi/virtualenv>`_ or see some basic setup instructions `here <http://pythoncentral.org/setting-up-the-python-environment-with-virtualenv/>`_, `here <http://iamzed.com/2009/05/07/a-primer-on-virtualenv/>`_, or `here <http://simononsoftware.com/virtualenv-tutorial/>`_.
+If you'd like more details on virtualenv, you can read the `official documentation <https://pypi.python.org/pypi/virtualenv>`_ or see some basic setup instructions `here <http://pythoncentral.org/setting-up-the-python-environment-with-virtualenv/>`_, `or here <http://iamzed.com/2009/05/07/a-primer-on-virtualenv/>`_, `or also here <http://simononsoftware.com/virtualenv-tutorial/>`_.
 
 Setting up virtualenv
 =====================

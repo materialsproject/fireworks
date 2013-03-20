@@ -26,12 +26,13 @@ A sample FW_config file (that does not change any settings) is located in the Fi
 
 You should see text printed to the Terminal saying ``successfully loaded your custom FW_config.yaml!``. You can remove this text by deleting the ``ECHO_TEST`` parameter from your ``FW_config.yaml`` file.
 
+
 .. _configfile-label:
 
 Specifying default locations for the config files
 -------------------------------------------------
 
-It can be annoying to manually type in the ``-l``, ``-w``, and ``-q`` parameters in FireWorks scripts (corresponding to the locations of the LaunchPad, FireWorker, and QueueParams files, respectively). You can set these parameters once and for all by specifying the following variables::
+It can be annoying to manually type in the ``-l``, ``-w``, and ``-q`` parameters in FireWorks scripts (corresponding to the locations of the LaunchPad, FireWorker, and QueueParams files, respectively). You can set these parameters once and for all by specifying the following variables in your FWConfig::
 
     LAUNCHPAD_LOC: fullpath/to/my_launchpad.yaml
     FWORKER_LOC: fullpath/to/my_fworker.yaml

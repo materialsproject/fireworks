@@ -42,7 +42,7 @@ However, when starting you should not be as concerned with these issues as with 
 Licensing
 ---------
 
-If you haven't already, please read the FireWorks :ref:`license-label`. Your contributions will also be distributed under this license.
+If you haven't already, please read the FireWorks :doc:`license <license>`. Your contributions will also be distributed under this license.
 
 How to contribute
 =================

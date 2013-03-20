@@ -54,4 +54,4 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
 
     rlaunch -l my_launchpad.yaml singleshot
 
-To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on :ref:`_configfile-label`.
+To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on :ref:`configfile-label`.

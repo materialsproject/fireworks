@@ -33,6 +33,7 @@ class FireTaskBase(FWSerializable):
         :param parameters: (dict) Parameters that control the FireTask's operation (custom depending on the FireTask
         type)
         """
+
         # When implementing a FireTask, add the following line to the init() to get to_dict to work automatically
         self.parameters = parameters if parameters else {}
 
