@@ -56,4 +56,6 @@ Misc.
 
 * Install using pip only, not Github devleopers! Package the tutorial separately.
 
+* Fully support .tar?
+
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.

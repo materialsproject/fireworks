@@ -24,7 +24,7 @@ __date__ = 'Feb 7, 2013'
 
 
 def add(lp, filename):
-    # TODO: make this cleaner, e.g. make TAR option explicit
+    # TODO: make this cleaner, e.g. make TAR option explicit or just remove .TAR support altogether
     # fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
     # lp.add_wf(fwf)
     try:
