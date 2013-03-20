@@ -35,18 +35,18 @@ Your admin user is now configured, and your Mongo instance is now protected from
 Add username and password keys to your LaunchPad file
 =====================================================
 
-Your LaunchPad file contains the location of the LaunchPad as well as any credentials needed to connect. To connect to an authenticated database::
+Your LaunchPad file contains the location of the LaunchPad as well as any credentials needed to connect. To connect to an authenticated database:
 
 1. Locate your ``my_launchpad.yaml`` file (perhaps from when you completed the :doc:`Worker tutorial <installation_tutorial_pt2>`). If you never created such a file, you can find a template in ``<INSTALL_DIR>/fw_tutorials/installation_pt2/launchpad.yaml``. You might copy it to ``my_launchpad.yaml`` and edit it as necessary.
 
-2. Add your username and password to your launchpad file by adding or editing the following lines::
+#. Add your username and password to your launchpad file by adding or editing the following lines::
 
     username: <YOUR_USERNAME>
     password: <YOUR_PASSWORD>
 
-3. **Make sure you store your LaunchPad file in a secure location with protected filesystem access.** It contains your password as plain text!
+#. **Make sure you store your LaunchPad file in a secure location with protected filesystem access.** It contains your password as plain text!
 
-3. Whenever running any FireWork scripts, make sure to specify the ``-l`` option and link to your configuration file. For example::
+#. Whenever running any FireWork scripts, make sure to specify the ``-l`` option and link to your configuration file. For example::
 
     lpad -l my_launchpad.yaml get_fw_ids
 
@@ -54,4 +54,4 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
 
     rlaunch -l my_launchpad.yaml singleshot
 
-To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on managing configuration files.
+To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on :ref:`_configfile-label`.

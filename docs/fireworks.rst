@@ -17,6 +17,7 @@ Subpackages
     fireworks.core
     fireworks.features
     fireworks.queue
+    fireworks.scripts
     fireworks.tests
     fireworks.user_objects
     fireworks.utilities

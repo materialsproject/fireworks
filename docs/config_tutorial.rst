@@ -1,8 +1,13 @@
-==========================================================
-Modifying the FW Config (and linking to external packages)
-==========================================================
+=======================
+Modifying the FW Config
+=======================
 
-Many parameters used by FireWorks can be changed to suit your needs. For example, by default FireWorks will print a ``FW.json`` file in your run directory, but you can turn this off or switch to YAML format. Or, you might write a :doc:`custom FireTask </firetask_tutorial>` in a Python package external to FireWorks and need FireWorks to discover it.
+Many parameters used by FireWorks can be changed to suit your needs. Some examples include:
+
+* specifying the default locations of your configuration files. This will save you **a lot** of typing when running FireWorks scripts, e.g. ``lpad -l my_launchpad.yaml get_fw_ids`` becomes ``lpad get_fw_ids`` once you've set your default LaunchPad location.
+* enabling FireTasks for which the code is located outside of the FireWorks package
+* smaller adjustments, e.g. whether to print a ``FW.json`` file in your run directory
+* performance tweaks (not recommended!)
 
 How to modify the FW Config
 ===========================
@@ -10,10 +15,10 @@ How to modify the FW Config
 A sample FW_config file (that does not change any settings) is located in the FireWorks tutorial directory: ``<INSTALL_DIR>/fw_tutorials/fw_config/FW_config.yaml``.
 
 1. To activate the config file, you can do one of the following:
-  a. move it to your root ``<INSTALL_DIR>`` (do not change it's name!) OR
-  b. put the config file anywhere, but set the `FW_CONFIG_FILE` as an environment variable in your OS. The ``FW_CONFIG_FILE`` variable should be set to the **full** path (no relative links!) of your config file, including the filename.
+    i. move it to your root ``<INSTALL_DIR>`` (do not change it's name!)
+    ii. put the config file anywhere, but set the `FW_CONFIG_FILE` as an environment variable in your OS. The ``FW_CONFIG_FILE`` environment variable should be set to the **full** path (no relative links!) of your config file, including the filename.
 
-.. note:: If you do both (a) and (b), the config file in your ``<INSTALL_DIR>`` will take precedence.
+     .. note:: If you do both (a) and (b), the config file in your ``<INSTALL_DIR>`` will take precedence.
 
 2. To test whether your config file is activated, run any LaunchPad command::
 
@@ -21,8 +26,25 @@ A sample FW_config file (that does not change any settings) is located in the Fi
 
 You should see text printed to the Terminal saying ``successfully loaded your custom FW_config.yaml!``. You can remove this text by deleting the ``ECHO_TEST`` parameter from your ``FW_config.yaml`` file.
 
+.. _configfile-label:
+
+Specifying default locations for the config files
+-------------------------------------------------
+
+It can be annoying to manually type in the ``-l``, ``-w``, and ``-q`` parameters in FireWorks scripts (corresponding to the locations of the LaunchPad, FireWorker, and QueueParams files, respectively). You can set these parameters once and for all by specifying the following variables::
+
+    LAUNCHPAD_LOC: fullpath/to/my_launchpad.yaml
+    FWORKER_LOC: fullpath/to/my_fworker.yaml
+    QUEUEPARAMS_LOC: fullpath/to/my_queueparams.yaml
+
+  .. note:: be sure to use full paths, not relative paths or BASH shortcuts!
+
+Once you set these parameters in your FWConfig, you no longer have to worry about typing them ever again!
+
+.. note:: An alternate strategy is to set a single parameter called ``CONFIG_FILE_DIR``. This should be the full path to a directory containing files named ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_queueparams.yaml``. FireWorks looks for these files in the ``CONFIG_FILE_DIR`` if it cannot find them elsewhere. If unset in the FWConfig, the ``CONFIG_FILE_DIR`` is set to the directory you are running your FW script in.
+
 Linking to FireTasks in external packages
-=========================================
+-----------------------------------------
 
 If you've placed Python code for some of your own custom FireTasks in an external Python package named *my_package.firetasks*, you can notify FireWorks of the FireTasks in this directory by adding the packages to your config::
 
@@ -32,7 +54,7 @@ If you've placed Python code for some of your own custom FireTasks in an externa
 .. note:: Make sure your package is in your PYTHONPATH! For example, typing ``from my_package import firetasks`` in an interactive Python terminal should succeed.
 
 Parameters you might want to change
-===================================
+-----------------------------------
 
 A few basic parameters that can be tweaked are:
 
@@ -43,7 +65,7 @@ A few basic parameters that can be tweaked are:
 
 
 Parameters that you probably shouldn't change
-=============================================
+---------------------------------------------
 
 Some parameters that you can change, but probably shouldn't, are:
 

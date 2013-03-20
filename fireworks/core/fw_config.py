@@ -63,7 +63,6 @@ class FWConfig(object):
 
         self.CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
 
-
         self.override_user_settings()
 
     def override_user_settings(self):

@@ -56,9 +56,9 @@ Run unit tests
 Updating an existing FireWorks installation
 ===========================================
 
-If you want to update an existing FireWorks installation, use the following steps::
+If you want to update an existing FireWorks installation, use the following steps:
 
-1. Navigate inside your FireWorks source directory containing the file setup.py
+1. Navigate inside your FireWorks source directory containing the file setup.py.
 
 2. Run the following commands::
 

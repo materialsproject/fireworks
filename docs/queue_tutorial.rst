@@ -18,7 +18,7 @@ Launch a single job through a queue
 To get warmed up, let's set up a *Queue Launcher* to run a single FireWork through a queueing system.
 
 Configure the Queue Launcher
----------------------------
+----------------------------
 
 The Queue Launcher needs to write and submit a queue script that contains an executable (in our case, a Rocket Launcher). This is achieved through a QueueParams file.
 
