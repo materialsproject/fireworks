@@ -18,7 +18,7 @@ A sample FW_config file (that does not change any settings) is located in the Fi
     i. move it to your root ``<INSTALL_DIR>`` (do not change it's name!)
     ii. put the config file anywhere, but set the `FW_CONFIG_FILE` as an environment variable in your OS. The ``FW_CONFIG_FILE`` environment variable should be set to the **full** path (no relative links!) of your config file, including the filename.
 
-    .. note:: If you do both (a) and (b), the config file in your ``<INSTALL_DIR>`` will take precedence.
+    .. note:: If you do both (a) and (b), the config file specified as an environment variable will take precedence.
 
 2. To test whether your config file is activated, run any LaunchPad command::
 

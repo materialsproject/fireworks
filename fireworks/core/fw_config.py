@@ -66,12 +66,13 @@ class FWConfig(object):
         self.override_user_settings()
 
     def override_user_settings(self):
-        MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-        root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
-        config_path = os.path.join(root_dir, 'FW_config.yaml')
-
-        if "FW_CONFIG_FILE" in os.environ and not os.path.exists(config_path):
+        if "FW_CONFIG_FILE" in os.environ:
             config_path = os.environ['FW_CONFIG_FILE']
+
+        else:
+            MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+            root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
+            config_path = os.path.join(root_dir, 'FW_config.yaml')
 
         if os.path.exists(config_path):
             with open(config_path) as f:
