@@ -44,7 +44,6 @@ class Rocket():
         """
         Run the rocket (actually check out a job from the database and execute it)
         """
-        finish_state = 'COMPLETED'  # the default state to finish in, assuming no errors
         all_stored_data = {}  # stored data for *all* the Tasks
 
         lp = self.launchpad
@@ -90,9 +89,9 @@ class Rocket():
             # perform finishing operation
             ping_stop.set()
             m_action.stored_data = all_stored_data
-            lp._complete_launch(launch_id, m_action, finish_state)
+            lp._complete_launch(launch_id, m_action, 'COMPLETED')
 
         except:
             traceback.print_exc()
             m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
-            lp._complete_launch(launch_id, m_action, finish_state)
+            lp._complete_launch(launch_id, m_action, 'FIZZLED')
