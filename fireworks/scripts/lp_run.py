@@ -57,9 +57,9 @@ def lpad():
     version_parser = subparsers.add_parser('version', help='Print the version of FireWorks installed')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
-                        default=None)
+                        default=FWConfig().LAUNCHPAD_LOC)
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the LaunchPad file (used if -l unspecified)',
-                        default='.')
+                        default=FWConfig().CONFIG_FILE_DIR)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')

@@ -6,6 +6,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 import os
+from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.queue.queue_adapter import QueueParams
@@ -36,11 +37,11 @@ def qlaunch():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
     parser.add_argument('-r', '--reserve', help='reserve a fw', action='store_true')
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
-    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
-    parser.add_argument('-q', '--queueparams_file', help='path to queueparams file', default=None)
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
+    parser.add_argument('-q', '--queueparams_file', help='path to queueparams file', default=FWConfig().QUEUEPARAMS_LOC)
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
-                        default='.')
+                        default=FWConfig().CONFIG_FILE_DIR)
 
     rapid_parser.add_argument('-m', '--maxjobs_queue', help='maximum jobs to keep in queue for this user', default=10, type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block', help='maximum jobs to put in a block', default=500, type=int)

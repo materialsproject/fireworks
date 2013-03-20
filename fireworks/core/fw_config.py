@@ -57,6 +57,13 @@ class FWConfig(object):
         self.RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue for 14 days before we
         # cancel its reservation
 
+        self.LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
+        self.FWORKER_LOC = None  # where to find the my_fworker.yaml file
+        self.QUEUEPARAMS_LOC = None  # where to find the my_fworker.yaml file
+
+        self.CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
+
+
         self.override_user_settings()
 
     def override_user_settings(self):

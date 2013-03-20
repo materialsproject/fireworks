@@ -5,6 +5,7 @@ A runnable script to launch a single Rocket (a command-line interface to rocket.
 """
 from argparse import ArgumentParser
 import os
+from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
@@ -34,10 +35,10 @@ def rlaunch():
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite")')
     rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=60, type=int)
 
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=None)
-    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=None)
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
-                        default='.')
+                        default=FWConfig().CONFIG_FILE_DIR)
 
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
