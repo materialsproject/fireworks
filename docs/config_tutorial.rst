@@ -9,7 +9,11 @@ How to modify the FW Config
 
 A sample FW_config file (that does not change any settings) is located in the FireWorks tutorial directory: ``<INSTALL_DIR>/fw_tutorials/fw_config/FW_config.yaml``.
 
-1. To activate the config file, you must move it to your root ``<INSTALL_DIR>`` (do not change it's name!)
+1. To activate the config file, you can do one of the following:
+  a. move it to your root ``<INSTALL_DIR>`` (do not change it's name!) OR
+  b. put the config file anywhere, but set the `FW_CONFIG_FILE` as an environment variable in your OS. The ``FW_CONFIG_FILE`` variable should be set to the **full** path (no relative links!) of your config file, including the filename.
+
+.. note:: If you do both (a) and (b), the config file in your ``<INSTALL_DIR>`` will take precedence.
 
 2. To test whether your config file is activated, run any LaunchPad command::
 

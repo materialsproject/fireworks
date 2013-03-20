@@ -71,6 +71,9 @@ class FWConfig(object):
         root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
         config_path = os.path.join(root_dir, 'FW_config.yaml')
 
+        if "FW_CONFIG_FILE" in os.environ and not os.path.exists(config_path):
+            config_path = os.environ['FW_CONFIG_FILE']
+
         if os.path.exists(config_path):
             with open(config_path) as f:
                 overrides = yaml.load(f.read())
