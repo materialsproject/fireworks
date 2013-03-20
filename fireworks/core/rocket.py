@@ -64,12 +64,12 @@ class Rocket():
         # TODO: add checkpoint stuff
 
         # set up heartbeat (pinging the server that we're still alive)
-        ping_stop = threading.Event()
-        ping_thread = threading.Thread(target=ping_launch,  args=(lp, launch_id, ping_stop))
-        ping_thread.start()
+        try:
+            ping_stop = threading.Event()
+            ping_thread = threading.Thread(target=ping_launch,  args=(lp, launch_id, ping_stop))
+            ping_thread.start()
 
-        for my_task in m_fw.tasks:
-            try:
+            for my_task in m_fw.tasks:
                 m_action = my_task.run_task(m_fw.spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
@@ -86,13 +86,13 @@ class Rocket():
 
                 if m_action.command != 'CONTINUE':
                     break;
-            except:
-                traceback.print_exc()
-                m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
-                finish_state = 'FIZZLED'
 
-        # perform finishing operation
-        ping_stop.set()
-        m_action.stored_data = all_stored_data
-        lp._complete_launch(launch_id, m_action, finish_state)
+            # perform finishing operation
+            ping_stop.set()
+            m_action.stored_data = all_stored_data
+            lp._complete_launch(launch_id, m_action, finish_state)
 
+        except:
+            traceback.print_exc()
+            m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
+            lp._complete_launch(launch_id, m_action, finish_state)
