@@ -23,6 +23,24 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
+def add(lp, filename):
+    # TODO: make this cleaner, e.g. make TAR option explicit
+    # fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
+    # lp.add_wf(fwf)
+    try:
+        fwf = Workflow.from_FireWork(FireWork.from_file(filename))
+        lp.add_wf(fwf)
+    except:
+        try:
+            if '.tar' in filename:
+                fwf = Workflow.from_tarfile(filename)
+            else:
+                fwf = Workflow.from_file(filename)
+            lp.add_wf(fwf)
+        except:
+            print 'Error reading FireWork/Workflow file.'
+            traceback.print_exc()
+
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
                     'available commands, type "lpad -h". For more help on a specific command, ' \
@@ -35,8 +53,11 @@ def lpad():
     reset_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
 
-    addwf_parser = subparsers.add_parser('add', help='insert a FWorkflow from file')
-    addwf_parser.add_argument('wf_file', help="path to a FireWork or FWorkflow file")
+    addwf_parser = subparsers.add_parser('add', help='insert a Workflow from file')
+    addwf_parser.add_argument('wf_file', help="path to a FireWork or Workflow file")
+
+    adddir_parser = subparsers.add_parser('add_dir', help='insert all FWs/Workflows in a directory')
+    adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
 
     get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
     get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
@@ -91,22 +112,11 @@ def lpad():
             print lp.detect_unreserved(args.time, args.fix)
 
         elif args.command == 'add':
-            # TODO: make this cleaner, e.g. make TAR option explicit
-            # fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
-            # lp.add_wf(fwf)
-            try:
-                fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
-                lp.add_wf(fwf)
-            except:
-                try:
-                    if '.tar' in args.wf_file:
-                        fwf = Workflow.from_tarfile(args.wf_file)
-                    else:
-                        fwf = Workflow.from_file(args.wf_file)
-                    lp.add_wf(fwf)
-                except:
-                    print 'Error reading FireWork/Workflow file.'
-                    traceback.print_exc()
+            add(lp, args.wf_file)
+
+        elif args.command == 'add_dir':
+            for filename in os.listdir(args.wf_dir):
+                add(lp, filename)
 
         elif args.command == 'get_fw':
             fw = lp.get_fw_by_id(args.fw_id)
