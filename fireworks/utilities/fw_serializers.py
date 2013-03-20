@@ -198,7 +198,7 @@ class FWSerializable():
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
-    def to_file(self, filename, f_format='AUTO_DETECT'):
+    def to_file(self, filename, f_format='AUTO_DETECT', *args, **kwargs):
         """
         Write a serialization of this object to a file
         :param filename: filename to write to
@@ -207,7 +207,7 @@ class FWSerializable():
         if f_format == 'AUTO_DETECT':
             f_format = filename.split('.')[-1]
         with open(filename, 'w') as f:
-            f.write(self.to_format(f_format=f_format))
+            f.write(self.to_format(f_format=f_format, *args, **kwargs))
 
     @classmethod
     def from_file(cls, filename, f_format='AUTO_DETECT'):

@@ -57,7 +57,7 @@ class Rocket():
 
         # write FW.json and/or FW.yaml to the directory
         if FWConfig().PRINT_FW_JSON:
-            m_fw.to_file('FW.json')
+            m_fw.to_file('FW.json', indent=4)
         if FWConfig().PRINT_FW_YAML:
             m_fw.to_file('FW.yaml')
 
