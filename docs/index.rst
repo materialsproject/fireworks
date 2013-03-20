@@ -90,14 +90,14 @@ To get things running on a shared resource with a queueing system (e.g., a super
 More!
 =====
 
-We recommend that all users read the following tutorials before using FireWorks seriously:
+We recommend that all users read (or at least browse) the following tutorials before using FireWorks seriously:
 
 .. toctree::
     :maxdepth: 1
 
     failures_tutorial
     security_tutorial
-        duplicates_tutorial
+    duplicates_tutorial
 
 Python users and Power users will be interested in the following:
 
