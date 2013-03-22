@@ -93,6 +93,8 @@ class Workflow(FWSerializable):
 
         if action.command == 'MODIFY' or 'CREATE':
             for cfid in self.links[fw_id]:
+                self.id_fw[cfid].spec.update(action.mod_spec.get('dict_update', {}))
+
                 for mod in action.mod_spec.get('dict_mods', []):
                     apply_mod(mod, self.id_fw[cfid].spec)
                     updated_ids.append(cfid)

@@ -44,6 +44,8 @@ Misc.
 
 * It's too easy to mess up the FWAction, and then debugging is a pain. e.g. need a dict_mods key, make sure the dict_mods is a list, make sure no $ sign, etc... One option is to allow a simple dict.update() instead of the Mongo language.
 
+* RUNTIME key not there in launches?
+
 * allow environment varialbe to set config dir location
 
 * Finish all planned tutorials
