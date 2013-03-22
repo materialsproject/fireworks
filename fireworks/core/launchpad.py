@@ -263,7 +263,7 @@ class LaunchPad(FWSerializable):
         m_fw = self._get_a_fw_to_run(fworker.query)
         if not m_fw:
             return None, None
-            # create a launch
+        # create a launch
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id, fw_id=m_fw.fw_id)
@@ -334,17 +334,29 @@ class LaunchPad(FWSerializable):
         :return: a FireWork, launch_id tuple
         """
 
+        # TODO: this method is confusing, says AJ of Xmas past
+
         m_fw = self._get_a_fw_to_run(fworker.query, fw_id)
         if not m_fw:
             return None, None
-            # create or update a launch
-        l_id = self.get_new_launch_id()
+
+        # create or update a launch
+        # Was this FireWork previously reserved? If so, update that launch instead of creating a new one
+        prev_reservations = [l for l in m_fw.launches if l.state == 'RESERVED']
+        prev_launch_id = None if len(prev_reservations) == 0 else prev_reservations[0].launch_id
+
+        l_id = prev_launch_id if prev_launch_id else self.get_new_launch_id()
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, launch_id=l_id, fw_id=m_fw.fw_id)
         self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
-        # add launch to FW
-        m_fw.launches.append(m_launch)
+        if not prev_launch_id:
+            # we're appending a new FireWork
+            m_fw.launches.append(m_launch)
+        else:
+            # we're updating an existing launch
+            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
+
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
