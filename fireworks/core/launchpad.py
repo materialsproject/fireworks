@@ -236,6 +236,7 @@ class LaunchPad(FWSerializable):
         # check if there are duplicates
         self.m_logger.debug('Trying out FW with id: {}'.format(m_fw.fw_id))
         if not self._steal_launches(m_fw):
+            self.m_logger.debug('FW with id: {} is unique!'.format(m_fw.fw_id))
             return True
 
         self._upsert_fws([m_fw])  # update the DB with the new launches
@@ -434,6 +435,7 @@ class LaunchPad(FWSerializable):
             m_query['launches'] = {'$ne': []}
             # iterate through all potential duplicates in the DB
             for potential_match in self.fireworks.find(m_query):
+                self.m_logger.debug('Checking for duplicates, fwids {} and {}'.format(thief_fw.fw_id, potential_match['fw_id']))
                 spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
                 spec2 = dict(potential_match['spec'])  # defensive copy
                 if m_dupefinder.verify(spec1, spec2):  # verify the match
