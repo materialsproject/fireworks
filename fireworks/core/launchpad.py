@@ -198,7 +198,7 @@ class LaunchPad(FWSerializable):
         Checks to see if the database contains any FireWorks that are ready to run
         :return: (T/F)
         """
-        return bool(self.fireworks.find_one(self._decorate_query({}), fields={'fw_id': 1}))
+        return bool(self._get_a_fw_to_run(checkout=False))
 
     def _update_indices(self):
         self.fireworks.ensure_index('fw_id', unique=True)
@@ -222,16 +222,6 @@ class LaunchPad(FWSerializable):
         self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
         self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
-    def _decorate_query(self, query):
-        """
-        (internal method) - takes a query and restricts to only those FireWorks that are able to run
-        :param query:
-        :return:
-        """
-        m_query = dict(query)  # defensive copy
-        m_query['state'] = 'READY'
-        return m_query
-
     def _check_fw_for_uniqueness(self, m_fw):
         # check if there are duplicates
         if not self._steal_launches(m_fw):
@@ -244,8 +234,9 @@ class LaunchPad(FWSerializable):
 
         return False
 
-    def _get_a_fw_to_run(self, fworker, fw_id=None):
-        m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
+    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
+        m_query = dict(query) if query else {}  # make a defensive copy
+        m_query['state'] = 'READY'
 
         # Override query if fw_id defined
         # Note for the fw_id option: We want to return None if this specific FW doesn't exist anymore
@@ -255,8 +246,12 @@ class LaunchPad(FWSerializable):
 
         while True:
             # check out the matching firework, depending on the query set by the FWorker
-            m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}},
+            if checkout:
+                m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}},
                                                   sort=[("spec._priority", DESCENDING)])
+            else:
+                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1}, sort=[("spec._priority", DESCENDING)])
+
             if not m_fw:
                 return None
             m_fw = self.get_fw_by_id(m_fw['fw_id'])
@@ -265,7 +260,7 @@ class LaunchPad(FWSerializable):
                 return m_fw
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
-        m_fw = self._get_a_fw_to_run(fworker)
+        m_fw = self._get_a_fw_to_run(fworker.query)
         if not m_fw:
             return None, None
             # create a launch
@@ -339,7 +334,7 @@ class LaunchPad(FWSerializable):
         :return: a FireWork, launch_id tuple
         """
 
-        m_fw = self._get_a_fw_to_run(fworker, fw_id)
+        m_fw = self._get_a_fw_to_run(fworker.query, fw_id)
         if not m_fw:
             return None, None
             # create or update a launch
