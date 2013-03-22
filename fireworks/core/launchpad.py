@@ -429,7 +429,7 @@ class LaunchPad(FWSerializable):
     def _steal_launches(self, thief_fw):
         stolen = False
         if thief_fw.state in ['READY', 'RESERVED'] and '_dupefinder' in thief_fw.spec:
-            m_dupefinder = load_object(thief_fw.spec['_dupefinder'])
+            m_dupefinder = thief_fw.spec['_dupefinder']
             # get the query that will limit the number of results to check as duplicates
             m_query = m_dupefinder.query(thief_fw.spec)
             m_query['launches'] = {'$ne': []}
