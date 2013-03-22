@@ -1,0 +1,24 @@
+fws:
+- created_on: '2013-03-22T06:43:43.879368'
+  fw_id: -2
+  spec:
+    _priority: 2
+    _tasks:
+    - _fw_name: Script Task
+      parameters:
+        script: echo "Task A-2"
+        use_shell: true
+- created_on: '2013-03-22T06:43:43.878695'
+  fw_id: -1
+  spec:
+    _priority: 2
+    _tasks:
+    - _fw_name: Script Task
+      parameters:
+        script: echo "Task A-1"
+        use_shell: true
+links:
+  -2: []
+  -1:
+  - -2
+metadata: {}
