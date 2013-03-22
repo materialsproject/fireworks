@@ -248,7 +248,7 @@ class LaunchPad(FWSerializable):
         m_query = self._decorate_query(dict(fworker.query))  # make a copy of the query
 
         # Override query if fw_id defined
-        # Note for later: We want to return None if this specific FW doesn't exist anymore
+        # Note for the fw_id option: We want to return None if this specific FW doesn't exist anymore
         # This is because our queue params might have been tailored to this FW
         if fw_id:
             m_query = {"fw_id": fw_id, "state": {'$in': ['READY', 'RESERVED']}}
@@ -258,14 +258,14 @@ class LaunchPad(FWSerializable):
             m_fw = self.fireworks.find_and_modify(query=m_query, update={'$set': {'state': 'RESERVED'}},
                                                   sort=[("spec._priority", DESCENDING)])
             if not m_fw:
-                return None, None
+                return None
             m_fw = self.get_fw_by_id(m_fw['fw_id'])
 
             if self._check_fw_for_uniqueness(m_fw):
-                return m_fw, None
+                return m_fw
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
-        m_fw, lid = self._get_a_fw_to_run(fworker)
+        m_fw = self._get_a_fw_to_run(fworker)
         if not m_fw:
             return None, None
             # create a launch
@@ -339,22 +339,17 @@ class LaunchPad(FWSerializable):
         :return: a FireWork, launch_id tuple
         """
 
-        m_fw, prev_launch_id = self._get_a_fw_to_run(fworker, fw_id)
+        m_fw = self._get_a_fw_to_run(fworker, fw_id)
         if not m_fw:
             return None, None
             # create or update a launch
-        l_id = prev_launch_id if prev_launch_id else self.get_new_launch_id()
+        l_id = self.get_new_launch_id()
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, launch_id=l_id, fw_id=m_fw.fw_id)
         self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
         # add launch to FW
-        if not prev_launch_id:
-            # we're appending a new FireWork
-            m_fw.launches.append(m_launch)
-        else:
-            # we're updating an existing launch
-            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
+        m_fw.launches.append(m_launch)
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
