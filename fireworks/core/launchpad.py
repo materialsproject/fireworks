@@ -60,7 +60,7 @@ class LaunchPad(FWSerializable):
         self.fireworks = self.database.fireworks
         self.launches = self.database.launches
         self.fw_id_assigner = self.database.fw_id_assigner
-        self.links = self.database.links
+        self.workflows = self.database.workflows
 
     def to_dict(self):
         """
@@ -91,7 +91,7 @@ class LaunchPad(FWSerializable):
         if password == m_password or not require_password:
             self.fireworks.remove()
             self.launches.remove()
-            self.links.remove()
+            self.workflows.remove()
             self._restart_ids(1, 1)
             self._update_indices()
             self.m_logger.info('LaunchPad was RESET.')
@@ -124,7 +124,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
-        self.links.insert(wf.to_db_dict())
+        self.workflows.insert(wf.to_db_dict())
 
         # refresh WF states, starting from all roots
         for fw_id in wf.root_fw_ids:
@@ -172,7 +172,7 @@ class LaunchPad(FWSerializable):
         :return: A Workflow object
         """
 
-        links_dict = self.links.find_one({'nodes': fw_id})
+        links_dict = self.workflows.find_one({'nodes': fw_id})
         fws = []
         for fw_id in links_dict['nodes']:
             fws.append(self.get_fw_by_id(fw_id))
@@ -422,7 +422,7 @@ class LaunchPad(FWSerializable):
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
         # redo the links
-        self.links.update({'nodes': fw_id}, wf.to_db_dict())
+        self.workflows.update({'nodes': fw_id}, wf.to_db_dict())
         # self.connection.fsync()  # fsync the changes
 
     def _steal_launches(self, thief_fw):
