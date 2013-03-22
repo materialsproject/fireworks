@@ -176,7 +176,7 @@ class Workflow(FWSerializable):
         self.links = Workflow.Links(new_l)
 
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links, 'metadata': self.metadata}
+        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links.to_dict(), 'metadata': self.metadata}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
