@@ -185,7 +185,7 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']))
+        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']), m_dict['metadata'])
 
     @classmethod
     def from_FireWork(cls, fw):
