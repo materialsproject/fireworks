@@ -98,6 +98,7 @@ We recommend that all users read (or at least browse) the following tutorials be
     failures_tutorial
     security_tutorial
     duplicates_tutorial
+    priority_tutorial
 
 Python users and Power users will be interested in the following:
 
@@ -115,7 +116,6 @@ Planned future tutorials:
 * File movement Task Operations
 * Database Task Operations
 * Assigning specific FireWorkers to run certain jobs
-* Assigning and modifying job priority
 * Using a web interface to monitor FireWorks
 * Checkpoint / restart of jobs
 * Using the QueueLauncher outside of FW

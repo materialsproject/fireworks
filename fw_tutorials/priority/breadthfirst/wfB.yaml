@@ -2,7 +2,7 @@ fws:
 - created_on: '2013-03-22T06:43:43.879697'
   fw_id: -4
   spec:
-    _priority: 1
+    _priority: 3
     _tasks:
     - _fw_name: Script Task
       parameters:
