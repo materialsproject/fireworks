@@ -62,6 +62,8 @@ Misc.
 
 * Fully support .tar?
 
+* Clean up job_exists() calls - they are now expensive!
+
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.
 
 Potential bugs?

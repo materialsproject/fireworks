@@ -321,7 +321,6 @@ class LaunchPad(FWSerializable):
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
         # self.connection.fsync()
 
-
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,
@@ -335,6 +334,11 @@ class LaunchPad(FWSerializable):
         """
 
         # TODO: this method is confusing, says AJ of Xmas past
+
+        # TODO: state history is not preserved when going from RESERVED --> RUNNING! The RUNNING launch just
+        # overwrites the RESERVED launch completely!!
+
+        # TODO: Duplicate FWS are not updated when going from RESERVED --> RUNNING!
 
         m_fw = self._get_a_fw_to_run(fworker.query, fw_id)
         if not m_fw:
