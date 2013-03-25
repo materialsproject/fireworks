@@ -30,12 +30,13 @@ Major Features
 
 * More and better unit tests, e.g. unit tests of scripts
 
+
 FireTasks
 =========
 
 * Something to commit data to MongoDB
 * Maybe a GridFS file storage task
-* File movement tasks?
+* File movement tasks? including ssh transfer?
 
 Misc.
 =====
@@ -66,7 +67,11 @@ Misc.
 
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.
 
+* Change priority / defuse when state < RESERVED. Do this for an entire workflow or an individual FW.
+
 Potential bugs?
 ===============
 
 1) Add two duplicated workflows. Run the rapidfire rocketlauncher.
+
+2) Fix the reservation as a new launch bug.
