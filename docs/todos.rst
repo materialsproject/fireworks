@@ -53,6 +53,8 @@ Misc.
 
 * Add warning or reject if you try to add a FW with FW_id > 1
 
+* Add user database indices for faster querying of certain specs
+
 * Update all tutorials for the config directory option rather than individual files.
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
@@ -68,6 +70,10 @@ Misc.
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.
 
 * Change priority / defuse when state < RESERVED. Do this for an entire workflow or an individual FW.
+
+* Tell people how to run different EXE based on machine, ie.. by changing bashrc.
+
+* Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
 Potential bugs?
 ===============
