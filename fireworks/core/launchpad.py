@@ -333,28 +333,25 @@ class LaunchPad(FWSerializable):
         :return: a FireWork, launch_id tuple
         """
 
-        # TODO: this method is confusing, says AJ of Xmas past
-
-        # TODO: state history is not preserved when going from RESERVED --> RUNNING! The RUNNING launch just
-        # overwrites the RESERVED launch completely!!
-
-        # TODO: Duplicate FWS are not updated when going from RESERVED --> RUNNING!
+        # TODO: this method is confusing, says AJ of Xmas past. Clean it up, remove duplication, etc.
 
         m_fw = self._get_a_fw_to_run(fworker.query, fw_id)
         if not m_fw:
             return None, None
 
-        # create or update a launch
-        # Was this FireWork previously reserved? If so, update that launch instead of creating a new one
+        # was this Launch previously reserved? If so, overwrite that reservation with this Launch
+        # note that adding a new Launch is problematic from a duplicate run standpoint
         prev_reservations = [l for l in m_fw.launches if l.state == 'RESERVED']
-        prev_launch_id = None if len(prev_reservations) == 0 else prev_reservations[0].launch_id
+        reserved_launch = None if len(prev_reservations) == 0 else prev_reservations[0]
 
-        l_id = prev_launch_id if prev_launch_id else self.get_new_launch_id()
-        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, launch_id=l_id, fw_id=m_fw.fw_id)
+        state_history = reserved_launch.state_history if reserved_launch else None
+        l_id = reserved_launch.launch_id if reserved_launch else self.get_new_launch_id()
+        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history, launch_id=l_id, fw_id=m_fw.fw_id)
+
         self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
-        if not prev_launch_id:
+        if not reserved_launch:
             # we're appending a new FireWork
             m_fw.launches.append(m_launch)
         else:
@@ -363,6 +360,14 @@ class LaunchPad(FWSerializable):
 
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
+
+        # update any duplicated runs
+        for fw in self.fireworks.find({'launches': l_id, 'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FIZZLED']}}, {'fw_id': 1}):
+            fw_id = fw['fw_id']
+            fw = self.get_fw_by_id(fw_id)
+            fw.state = 'RUNNING'
+            self._upsert_fws([fw])
+
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
         # self.connection.fsync()
 
