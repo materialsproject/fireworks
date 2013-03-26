@@ -269,6 +269,8 @@ class Launch(FWSerializable, object):
     def to_db_dict(self):
         m_d = self.to_dict()
         m_d['runtime_secs'] = self.runtime_secs
+        if self.reservedtime_secs:
+            m_d['reservedtime_secs'] = self.reservedtime_secs
         return m_d
 
     @classmethod
