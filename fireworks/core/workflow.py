@@ -78,6 +78,10 @@ class Workflow(FWSerializable):
 
         self.metadata = metadata if metadata else {}
 
+    @property
+    def fws(self):
+        return self.id_fw.values()
+
     def apply_action(self, action, fw_id):
         updated_ids = []
 
