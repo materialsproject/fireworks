@@ -409,6 +409,10 @@ class LaunchPad(FWSerializable):
 
     def _upsert_fws(self, fws):
         old_new = {} # mapping between old and new FireWork ids
+
+        # sort the FWs by id, then the new FW_ids will match the order of the old ones...
+        fws.sort(key=lambda x: x.fw_id, reverse=True)
+
         for fw in fws:
             if fw.fw_id < 0:
                 new_id = self.get_new_fw_id()
