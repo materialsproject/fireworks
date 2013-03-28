@@ -159,13 +159,11 @@ class FWSerializable():
         except AttributeError:
             return self.__class__.__name__
 
-    @classmethod
-    def to_dict(cls):
+    def to_dict(self):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
 
-    @classmethod
-    def to_db_dict(cls):
-        return cls.to_dict()
+    def to_db_dict(self):
+        return self.to_dict()
 
     @classmethod
     def from_dict(cls, m_dict):
