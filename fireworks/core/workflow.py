@@ -45,7 +45,7 @@ class Workflow(FWSerializable):
             m_dict = dict([(int(k), list(v)) for (k, v) in m_dict.iteritems()])
             return Workflow.Links(m_dict)
 
-    def __init__(self, fireworks, links_dict=None, metadata={}):
+    def __init__(self, fireworks, links_dict=None, metadata=None):
 
         """
         :param fireworks: a list of FireWork objects
@@ -76,7 +76,7 @@ class Workflow(FWSerializable):
         if set(self.links.nodes) != set(self.id_fw.keys()):
             raise ValueError("Specified links don't match given FW")
 
-        self.metadata = metadata
+        self.metadata = metadata if metadata else {}
 
     def apply_action(self, action, fw_id):
         updated_ids = []
