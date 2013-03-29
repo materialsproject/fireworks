@@ -82,7 +82,7 @@ def lpad():
                         default=FWConfig().CONFIG_FILE_DIR)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
-    parser.add_argument('--silencer', help='shortcut to mute log messages', action='store_true')
+    parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
     args = parser.parse_args()
 
