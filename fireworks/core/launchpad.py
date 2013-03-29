@@ -280,7 +280,7 @@ class LaunchPad(FWSerializable):
     def unreserve(self, launch_id):
         self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
         self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
-        self.connection.fsync()
+        # self.connection.fsync()
 
     def detect_unreserved(self, expiration_secs=FWConfig().RESERVATION_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
@@ -319,7 +319,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.set_reservation_id(reservation_id)
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
-        self.connection.fsync()
+        # self.connection.fsync()
 
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
@@ -369,7 +369,7 @@ class LaunchPad(FWSerializable):
             self._upsert_fws([fw])
 
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
-        self.connection.fsync()
+        # self.connection.fsync()
 
         return m_fw, l_id
 
@@ -438,7 +438,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
         # redo the links
         self.workflows.update({'nodes': fw_id}, wf.to_db_dict())
-        self.connection.fsync()  # fsync the changes
+        # self.connection.fsync()  # fsync the changes
 
     def _steal_launches(self, thief_fw):
         stolen = False
