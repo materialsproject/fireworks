@@ -6,6 +6,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 import os
 import traceback
+import yaml
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import FireWork
@@ -25,21 +26,23 @@ __date__ = 'Feb 7, 2013'
 
 def add(lp, filename):
     # TODO: make this cleaner, e.g. make TAR option explicit or just remove .TAR support altogether
-    # fwf = Workflow.from_FireWork(FireWork.from_file(args.wf_file))
-    # lp.add_wf(fwf)
     try:
-        fwf = Workflow.from_FireWork(FireWork.from_file(filename))
+        if '.tar' in filename:
+            fwf = Workflow.from_tarfile(filename)
+        else:
+            with open(filename) as f:
+                if '.json' in filename:
+                    obj_dict = json.loads(f.read())
+                else:
+                    obj_dict = yaml.load(f.read())
+                if 'fws' in obj_dict:
+                    fwf = Workflow.from_file(filename)
+                else:
+                    fwf = FireWork.from_file(filename)
         lp.add_wf(fwf)
     except:
-        try:
-            if '.tar' in filename:
-                fwf = Workflow.from_tarfile(filename)
-            else:
-                fwf = Workflow.from_file(filename)
-            lp.add_wf(fwf)
-        except:
-            print 'Error reading FireWork/Workflow file.'
-            traceback.print_exc()
+        print 'Error reading FireWork/Workflow file.'
+        traceback.print_exc()
 
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
