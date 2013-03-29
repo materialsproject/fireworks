@@ -74,7 +74,7 @@ def lpad():
     fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS, type=int)
     fizzled_parser.add_argument('--fix', help='mark fizzled', action='store_true')
 
-    version_parser = subparsers.add_parser('version', help='Print the version of FireWorks installed')
+    subparsers.add_parser('version', help='Print the version of FireWorks installed')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=FWConfig().LAUNCHPAD_LOC)
