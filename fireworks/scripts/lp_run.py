@@ -14,7 +14,7 @@ import ast
 import json
 from fireworks.core.workflow import Workflow
 from fireworks import __version__ as FW_VERSION
-from fireworks.utilities.fw_serializers import DATETIME_HANDLER
+from fireworks.utilities.fw_serializers import DATETIME_HANDLER, _get_obj_dict_from_file
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -25,24 +25,20 @@ __date__ = 'Feb 7, 2013'
 
 
 def add(lp, filename):
-    # TODO: make this cleaner, e.g. make TAR option explicit or just remove .TAR support altogether
     try:
         if '.tar' in filename:
             fwf = Workflow.from_tarfile(filename)
         else:
-            with open(filename) as f:
-                if '.json' in filename:
-                    obj_dict = json.loads(f.read())
-                else:
-                    obj_dict = yaml.load(f.read())
-                if 'fws' in obj_dict:
-                    fwf = Workflow.from_file(filename)
-                else:
-                    fwf = FireWork.from_file(filename)
+            obj_dict = _get_obj_dict_from_file(filename)
+            if 'fws' in obj_dict:
+                fwf = Workflow.from_file(filename)
+            else:
+                fwf = FireWork.from_file(filename)
         lp.add_wf(fwf)
     except:
         print 'Error reading FireWork/Workflow file.'
         traceback.print_exc()
+
 
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \

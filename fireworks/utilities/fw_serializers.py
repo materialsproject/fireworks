@@ -276,6 +276,13 @@ def load_object_from_file(filename, f_format='AUTO_DETECT'):
     :param filename: the filename to load an object from
     :param f_format: the serialization format (default is auto-detect based on filename extension)
     """
+    return load_object(_get_obj_dict_from_file(filename, f_format))
+
+
+def _get_obj_dict_from_file(filename, f_format='AUTO_DETECT'):
+    """
+    internal method to transofrm a file to a dict
+    """
     m_dict = {}
     if f_format == 'AUTO_DETECT':
         f_format = filename.split('.')[-1]
@@ -287,7 +294,8 @@ def load_object_from_file(filename, f_format='AUTO_DETECT'):
             m_dict = _reconstitute_dates(yaml.load(f.read()))
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
-        return load_object(m_dict)
+
+    return m_dict
 
 
 def _search_module_for_obj(m_module, obj_dict):
