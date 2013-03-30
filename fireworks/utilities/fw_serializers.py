@@ -45,6 +45,7 @@ __date__ = 'Dec 13, 2012'
 SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
+
 def _recursive_dict(obj):
 
     if obj is None:
@@ -64,6 +65,9 @@ def _recursive_dict(obj):
 
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
+
+    if isinstance(obj, unicode) and obj != obj.encode('ascii', 'ignore'):
+        return obj
 
     return str(obj)
 
