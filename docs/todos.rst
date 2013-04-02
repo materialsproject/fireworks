@@ -30,6 +30,10 @@ Major Features
 
 * More and better unit tests, e.g. unit tests of scripts
 
+* No negative fw_ids
+
+* GridFS interface
+
 
 FireTasks
 =========
