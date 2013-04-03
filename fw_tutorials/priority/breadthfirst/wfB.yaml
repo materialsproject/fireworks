@@ -1,6 +1,6 @@
 fws:
 - created_on: '2013-03-22T06:43:43.879697'
-  fw_id: -4
+  fw_id: 2
   spec:
     _priority: 3
     _tasks:
@@ -9,7 +9,7 @@ fws:
         script: echo "Task B-2"
         use_shell: true
 - created_on: '2013-03-22T06:43:43.879540'
-  fw_id: -3
+  fw_id: 1
   spec:
     _priority: 2
     _tasks:
@@ -18,7 +18,6 @@ fws:
         script: echo "Task B-1"
         use_shell: true
 links:
-  -4: []
-  -3:
-  - -4
+  1:
+  - 2
 metadata: {}

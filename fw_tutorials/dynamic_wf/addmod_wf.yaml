@@ -1,5 +1,5 @@
 fws:
-- fw_id: -1
+- fw_id: 1
   spec:
     _tasks:
     - _fw_name: Add and Modify Task
@@ -7,7 +7,7 @@ fws:
     input_array:
     - 1
     - 1
-- fw_id: -2
+- fw_id: 2
   spec:
     _tasks:
     - _fw_name: Add and Modify Task
@@ -15,6 +15,6 @@ fws:
     input_array:
     - 10
 links:
-  -1:
-  - -2
+  1:
+  - 2
 metadata: {}

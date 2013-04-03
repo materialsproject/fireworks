@@ -117,10 +117,9 @@ class LaunchPad(FWSerializable):
             wf = Workflow.from_FireWork(wf)
 
         # insert the FireWorks and get back mapping of old to new ids
-        old_new = self._upsert_fws(wf.id_fw.values())
+        old_new = self._upsert_fws(wf.id_fw.values(), reassign_all=True)
 
-        # TODO: refresh_workflow probably takes care of this now
-        # redo the Workflow based on new mappings
+        # update the Workflow with the new ids
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
@@ -407,14 +406,14 @@ class LaunchPad(FWSerializable):
         """
         return self.fw_id_assigner.find_and_modify(query={}, update={'$inc': {'next_launch_id': 1}})['next_launch_id']
 
-    def _upsert_fws(self, fws):
+    def _upsert_fws(self, fws, reassign_all=False):
         old_new = {} # mapping between old and new FireWork ids
 
         # sort the FWs by id, then the new FW_ids will match the order of the old ones...
         fws.sort(key=lambda x: x.fw_id, reverse=True)
 
         for fw in fws:
-            if fw.fw_id < 0:
+            if fw.fw_id < 0 or reassign_all:
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id

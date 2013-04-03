@@ -1,12 +1,12 @@
 fws:
-- fw_id: -1
+- fw_id: 1
   spec:
     _tasks:
     - _fw_name: Script Task
       parameters:
         script: echo 'To be, or not to be,'
         use_shell: true
-- fw_id: -2
+- fw_id: 2
   spec:
     _tasks:
     - _fw_name: Script Task
@@ -14,6 +14,6 @@ fws:
         script: echo 'that is the question:'
         use_shell: true
 links:
-  -1:
-  - -2
+  1:
+  - 2
 metadata: {}

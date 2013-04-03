@@ -1,5 +1,5 @@
 fws:
-- fw_id: -2
+- fw_id: 2
   spec:
     _dupefinder:
       _fw_name: Dupe Finder Exact
@@ -8,7 +8,7 @@ fws:
       parameters: {}
     input_array:
     - 2
-- fw_id: -1
+- fw_id: 1
   spec:
     _dupefinder:
       _fw_name: Dupe Finder Exact
@@ -19,7 +19,6 @@ fws:
     - 1
     - 1
 links:
-  -2: []
-  -1:
-  - -2
+  1:
+  - 2
 metadata: {}
