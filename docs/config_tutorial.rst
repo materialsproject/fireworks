@@ -36,14 +36,14 @@ It can be annoying to manually type in the ``-l``, ``-w``, and ``-q`` parameters
 
     LAUNCHPAD_LOC: fullpath/to/my_launchpad.yaml
     FWORKER_LOC: fullpath/to/my_fworker.yaml
-    QUEUEPARAMS_LOC: fullpath/to/my_queueparams.yaml
+    QUEUEPARAMS_LOC: fullpath/to/my_qadapter.yaml
 
 .. note:: be sure to use full paths, not relative paths or BASH shortcuts!
 
 Specifying default locations for the config files (alternate)
 -------------------------------------------------------------
 
-An alternate strategy is to set a single parameter in FWConfig called ``CONFIG_FILE_DIR``. This should be the full path to a directory containing files named ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_queueparams.yaml``. FireWorks looks for these files in the ``CONFIG_FILE_DIR`` if it cannot find them elsewhere. If unset in the FWConfig, the ``CONFIG_FILE_DIR`` is automatically set to the directory you are running your FW script in.
+An alternate strategy is to set a single parameter in FWConfig called ``CONFIG_FILE_DIR``. This should be the full path to a directory containing files named ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_qadapter.yaml``. FireWorks looks for these files in the ``CONFIG_FILE_DIR`` if it cannot find them elsewhere. If unset in the FWConfig, the ``CONFIG_FILE_DIR`` is automatically set to the directory you are running your FW script in.
 
 Linking to FireTasks in external packages
 -----------------------------------------

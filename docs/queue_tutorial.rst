@@ -32,7 +32,7 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
 #. Copy your chosen QueueParams file to a new name::
 
-    cp queueparams_<QUEUE>.yaml my_queueparams.yaml
+    cp queueparams_<QUEUE>.yaml my_qadapter.yaml
 
 #. Navigate to clean working directory on the FireWorker. For example::
 
@@ -41,7 +41,7 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
 #. Copy over your queue file and the test FW to this directory::
 
-    cp <INSTALL_DIR>/fw_tutorials/queue/my_queueparams.yaml .
+    cp <INSTALL_DIR>/fw_tutorials/queue/my_qadapter.yaml .
     cp <INSTALL_DIR>/fw_tutorials/queue/fw_test.yaml .
 
 #. Copy over your LaunchPad and FireWorker files from the second installation tutorial::
@@ -51,7 +51,7 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
    .. note:: If you do not have these files, please go back and regenerate them according to the instructions :doc:`here </installation_tutorial_pt2>`.
 
-#. Open ``my_queueparams.yaml`` and modify it as follows:
+#. Open ``my_qadapter.yaml`` and modify it as follows:
 
    a. In the part that specifies running ``rlaunch``, modify the ``path/to/my_fworker.yaml`` to contain the **absolute path** of the ``my_fworker.yaml`` file on your machine.
 
@@ -76,9 +76,9 @@ Submit a job
 
 1. Try submitting a job using the command::
 
-    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_queueparams.yaml singleshot
+    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_qadapter.yaml singleshot
 
-  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_queueparams.yaml``, then you don't need to specify the ``-l``, ``-w``, and ``-q`` options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuation directory that you specify with a single ``-c`` parameter. For this tutorial, we'll include the full command and avoid shortcuts.
+  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_qadapter.yaml``, then you don't need to specify the ``-l``, ``-w``, and ``-q`` options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuation directory that you specify with a single ``-c`` parameter. For this tutorial, we'll include the full command and avoid shortcuts.
 
 #. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
@@ -99,7 +99,7 @@ Adding more power: using rapid-fire mode
 
 While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. Like the Rocket Launcher, the Queue Launcher can be run in a "rapid-fire" mode that provides these features.
 
-1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
+1. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
 #. Let's reset our database and add three new FireWorks, all from our FireWorker::
 
@@ -110,9 +110,9 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
 #. Submit several jobs with a single command::
 
-    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_queueparams.yaml rapidfire -m 3
+    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_qadapter.yaml rapidfire -m 3
 
-   .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlaunch``.The second place is inside the ``my_queueparams.yaml`` file.  The locations when specifying arguments to ``qlaunch`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_queueparams.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
+   .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlaunch``.The second place is inside the ``my_qadapter.yaml`` file.  The locations when specifying arguments to ``qlaunch`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_qadapter.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
 
    .. important:: The Queue Launcher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
@@ -127,7 +127,7 @@ Continually submit jobs to the queue
 
 You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the FireServer. Let's set this up.
 
-#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
 #. Let's reset our database and add four new FireWorks this time::
 
@@ -152,11 +152,11 @@ Running multiple Rockets per queue job
 
 So far, each queue script we submitted has only one job. We can also submit multiple jobs per queue script by running the ``rapidfire`` option of the *Rocket Launcher* inside the Queue Launcher. Then, a single queue script will run multiple Rockets.
 
-#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
+#. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
 #. Copy your QueueParams file to ``my_qp_multi.yaml``::
 
-    cp my_queueparams.yaml my_qp_multi.yaml
+    cp my_qadapter.yaml my_qp_multi.yaml
 
 #. Edit ``my_qp_multi.yaml`` as follows:
 
@@ -212,4 +212,4 @@ Next step: reserving FireWorks to overcome limitations
 
 If you feel these limitations severely impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity.
 
-.. note:: If you are planning to complete the next tutorial, you should save your working directory with the files: ``fw_test.yaml``, ``my_queueparams.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.
+.. note:: If you are planning to complete the next tutorial, you should save your working directory with the files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.
