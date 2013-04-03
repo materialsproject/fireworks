@@ -28,7 +28,9 @@ class ScriptTask(FireTaskBase, FWSerializable):
         self['use_shell'] = self.get('use_shell', True)
 
         if self['use_shlex'] and not self['use_shell']:
-            self['script'] = shlex.split(str(self['script']))
+            self.script = shlex.split(str(self['script']))
+        else:
+            self.script = self['script']
 
     def run_task(self, fw_spec):
         # get the standard in and run task internally
@@ -43,8 +45,8 @@ class ScriptTask(FireTaskBase, FWSerializable):
         stdout = subprocess.PIPE if self['store_stdout'] or self['stdout_file'] else sys.stdout
         stderr = subprocess.PIPE if self['store_stderr'] or self['stderr_file'] else sys.stderr
 
-        p = subprocess.Popen(self['script'], executable=self['shell_exe'], stdin=stdin, stdout=stdout,
-                             stderr=stderr, shell=self['use_shell'])
+        p = subprocess.Popen(self.script, executable=self['shell_exe'], stdin=stdin, stdout=stdout, stderr=stderr,
+                             shell=self['use_shell'])
 
         # communicate in the standard in and get back the standard out and returncode
         if self['stdin_key']:
@@ -74,7 +76,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
 
         output['returncode'] = returncode
 
-        if  self['defuse_bad_rc'] and returncode != 0:
+        if self['defuse_bad_rc'] and returncode != 0:
             return FWAction('DEFUSE', output)
 
         return FWAction('CONTINUE', output)

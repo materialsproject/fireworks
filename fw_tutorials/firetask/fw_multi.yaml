@@ -1,10 +1,6 @@
 spec:
   _tasks:
   - _fw_name: Script Task
-    parameters:
-      script: echo "howdy, your job launched successfully!" > howdy.txt
-      use_shell: true
+    script: echo "howdy, your job launched successfully!" > howdy.txt
   - _fw_name: Script Task
-    parameters:
-      script: wc -w < howdy.txt > words.txt
-      use_shell: true
+    script: wc -w < howdy.txt > words.txt

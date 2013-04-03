@@ -1,7 +1,6 @@
 spec:
   _tasks:
   - _fw_name: Addition Task
-    parameters: {}
   input_array:
   - 1
   - 2
