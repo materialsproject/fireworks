@@ -17,6 +17,8 @@ FW Docs
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
+* Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
+
 Major Features
 ==============
 
@@ -32,15 +34,20 @@ Major Features
 
 * No negative fw_ids needed when returning FWAction
 
-* GridFS interface
-
 * QueueParams should be part of QueueAdapter
+
+* A way to refresh WF manually before marking them as fizzled - sometimes the "push" just doesn't work...
+    * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
+
+* Add way to monitor a file during the durn
 
 FireTasks
 =========
 
 * Something to commit data to MongoDB
+
 * Maybe a GridFS file storage task
+
 * File movement tasks? including ssh transfer?
 
 Misc.
@@ -48,15 +55,9 @@ Misc.
 
 * Detect a blank config dir and give a proper error.
 
-* It's too easy to mess up the FWAction, and then debugging is a pain. e.g. need a dict_mods key, make sure the dict_mods is a list, make sure no $ sign, etc... One option is to allow a simple dict.update() instead of the Mongo language.
-
 * RUNTIME key not there in launches?
 
-* allow environment varialbe to set config dir location
-
 * Finish all planned tutorials
-
-* Add warning or reject if you try to add a FW with FW_id > 1
 
 * Add user database indices for faster querying of certain specs
 
@@ -76,13 +77,6 @@ Misc.
 
 * Change priority / defuse when state < RESERVED. Do this for an entire workflow or an individual FW.
 
-* Tell people how to run different EXE based on machine, ie.. by changing bashrc.
-
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
-* Add workflow state=
-
-Potential bugs?
-===============
-
-1) Add two duplicated workflows. Run the rapidfire rocketlauncher.
+* Add workflow state
