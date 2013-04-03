@@ -23,8 +23,8 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. The workflow is encapsulated in the ``addmod_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of FireWork objects:
 
- * ``fw_id`` -1 looks like it adds the numbers 1 and 1 (defined in the **input_array**) within an ``Add and Modify`` FireTask. This is clearly the first step of our desired workflow. Although we don't yet know what the ``Add and Modify`` FireTask is, we can guess that it at least adds the numbers in the **input_array**.
- * ``fw_id`` -2 only adds the number 10 thus far. It is unclear how this FireWork will obtain the output of the previous FireWork without knowing the details of the ``Add and Modify`` FireTask. We'll explain that in the next step.
+ * ``fw_id`` 1 looks like it adds the numbers 1 and 1 (defined in the **input_array**) within an ``Add and Modify`` FireTask. This is clearly the first step of our desired workflow. Although we don't yet know what the ``Add and Modify`` FireTask is, we can guess that it at least adds the numbers in the **input_array**.
+ * ``fw_id`` 2 only adds the number 10 thus far. It is unclear how this FireWork will obtain the output of the previous FireWork without knowing the details of the ``Add and Modify`` FireTask. We'll explain that in the next step.
  * The second section, labeled ``links``, connects these FireWorks into a workflow in the same manner as the previous example.
 
 #. We pass information by defining a custom FireTask that returns an instruction to modify the workflow. To see how this happens, we need to look inside the definition of our custom ``Add and Modify`` FireTask. Look inside the file ``addmod_task.py``:

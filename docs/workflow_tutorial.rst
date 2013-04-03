@@ -27,10 +27,10 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. The workflow is encapsulated in the ``hamlet_wf.yaml`` file. Look inside this file. The first section, labeled ``fws``, contains a list of FireWork objects:
 
-    * We define a FireWork with ``fw_id`` set to -1, and that prints *"To be, or not to be,"*.
-    * We define another FireWork with ``fw_id`` set to -2, and that prints *"that is the question:"*
+    * We define a FireWork with ``fw_id`` set to 1, and that prints *"To be, or not to be,"*.
+    * We define another FireWork with ``fw_id`` set to 2, and that prints *"that is the question:"*
 
-    .. note:: A negative ``fw_id`` means that the ``fw_id`` should be reassigned by the LaunchPad so as not to conflict with existing ``fw_ids``. When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned. The ``fw_id`` is assigned in an arbitrary order, so don't interpret any meaning in the value of the ``fw_id``.
+    .. note:: When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned. The value of the ``fw_id`` has no meaning or effect on the operation of FireWorks.
 
     The second section, labeled ``links``, connects these FireWorks into a workflow:
 
