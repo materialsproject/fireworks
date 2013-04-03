@@ -24,15 +24,11 @@ __date__ = 'Dec 12, 2012'
 class SLURMAdapterUCL(QueueAdapterBase):
     _fw_name = 'SLURMAdapter (UCL)'
 
-    def __init__(self, params, logging_dir='.'):
-        # TODO: explicitly list the parameters here!! rather than put them in get_script_str
-        QueueAdapterBase.__init__(self, params, logging_dir)
-
     def get_script_str(self, launch_dir):
         """
         Create a UCL-style SLURM script. For more documentation, see parent object.
         
-        Supported QueueParams.params are:
+        Supported properties are:
             - ntasks: number of tasks (default : 1)
             - ntasks_per_node: maximum number of tasks to be invoked for each node
             - cpus_per_task: number of cpus per task (default : 1)
@@ -48,44 +44,42 @@ class SLURMAdapterUCL(QueueAdapterBase):
         # convert launch_dir to absolute path
         launch_dir = os.path.abspath(launch_dir)
 
-        p = self.params
-
         outs = []
         outs.append('#!/bin/bash')
         outs.append('')
 
         outs.append('#SBATCH --ntasks={}'.format(p.get('ntasks',1)))
 
-        if p.get('ntasks-per-node', None):
-            outs.append('#SBATCH --ntasks-per-node={}'.format(p['ntasks-per-node']))
+        if self['ntasks-per-node']:
+            outs.append('#SBATCH --ntasks-per-node={}'.format(self['ntasks-per-node']))
 
-        outs.append('#SBATCH --cpus-per-task={}'.format(p.get('cpus-per-task',1)))
+        outs.append('#SBATCH --cpus-per-task={}'.format(self.get('cpus-per-task',1)))
 
-        if p.get('walltime', None):
-            outs.append('#SBATCH --time={}'.format(p['walltime']))
+        if self['walltime']:
+            outs.append('#SBATCH --time={}'.format(self['walltime']))
 
-        if p.get('queue', None):
-            outs.append('#SBATCH --partition={}'.format(p['queue']))
+        if self['queue']:
+            outs.append('#SBATCH --partition={}'.format(self['queue']))
 
-        if p.get('account', None):
-            outs.append('#SBATCH --account={}'.format(p['account']))
+        if self['account']:
+            outs.append('#SBATCH --account={}'.format(self['account']))
 
-        for k, v in p.get('slurm_options', {}).items():
+        for k, v in self.get('slurm_options', {}).items():
             outs.append('#SBATCH --{k}={v}'.format(k=k, v=v))
 
-        for tag in p.get('slurm_tags', []):
+        for tag in self.get('slurm_tags', []):
             outs.append('#SBATCH --{}'.format(tag))
 
         job_name = 'FW_job'
-        if p.get('jobname', None):
-            job_name = p['jobname']
+        if self['jobname']:
+            job_name = self['jobname']
         outs.append('#SBATCH --job-name={}'.format(job_name))
         outs.append('#SBATCH --output={}'.format(job_name + '-%j.out'))
         outs.append('#SBATCH --error={}'.format(job_name + '-%j.error'))
 
         outs.append('')
         outs.append('# loading modules')
-        for m in p.get('modules', []):
+        for m in self.get('modules', []):
             outs.append('module load {m}'.format(m=m))
 
         outs.append('')
@@ -94,8 +88,8 @@ class SLURMAdapterUCL(QueueAdapterBase):
         outs.append('')
 
         outs.append('# running executable')
-        if p.get('exe', None):
-            outs.append(p['exe'])
+        if self['exe']:
+            outs.append(self['exe'])
 
         outs.append('')
         outs.append('# {f} completed writing Template'.format(f=self.__class__.__name__))
@@ -111,7 +105,10 @@ class SLURMAdapterUCL(QueueAdapterBase):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
 
         # initialize logger
-        slurm_logger = get_fw_logger('rocket.slurm', self.logging_dir)
+        if self['logging_dir']:
+            slurm_logger = get_fw_logger('qadapter.slurm', self['logging_dir'])
+        else:
+            slurm_logger = get_fw_logger('qadapter.slurm', stream_level='CRITICAL')
 
         # submit the job
         try:
@@ -145,12 +142,11 @@ class SLURMAdapterUCL(QueueAdapterBase):
         for documentation, see parent object
         """
 
-        # TODO: (low-priority) parse the qstat -x output as an alternate way to get this working
-        # tmp_file_name = 'tmp_qstat.xml'
-        # cmd = ['qstat', '-x']\n
-
         # initialize logger
-        slurm_logger = get_fw_logger('rocket.slurm', self.logging_dir)
+        if self['logging_dir']:
+            slurm_logger = get_fw_logger('qadapter.slurm', self['logging_dir'])
+        else:
+            slurm_logger = get_fw_logger('qadapter.slurm', stream_level='CRITICAL')
 
         # initialize username
         if username is None:

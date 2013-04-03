@@ -1,14 +1,13 @@
-params:
-  exe: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
-  ncores: 1
-  walltime: '00:02:00'
-  queue: debug
-  account: null
-  pbs_options: {}
-  pbs_tags: []
-  job_name: null
-  modules: []
-
+_fw_name: PBSAdapter (NERSC)
+exe: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
+ncores: 1
+walltime: '00:02:00'
+queue: debug
+account: null
+pbs_options: {}
+pbs_tags: []
+job_name: null
+modules: []
 logging_dir: path/to/logging
 
-qa_name: PBSAdapter (NERSC)
+

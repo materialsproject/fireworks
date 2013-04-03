@@ -29,7 +29,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         """
         Create a NERSC-style PBS script. For more documentation, see parent object.
         
-        Supported QueueParams.params are:
+        Supported properties are:
             - mppwidth: number of cores (for queues that specify ncores as mppwidth)
             - nnodes: number of nodes (if you are not specifying mppwidth)
             - ppnode: processors per node (if you are not specifying mppwidth)
@@ -106,9 +106,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
 
         # initialize logger
         if self['logging_dir']:
-            pbs_logger = get_fw_logger('rocket.pbs', self['logging_dir'])
+            pbs_logger = get_fw_logger('qadapter.pbs', self['logging_dir'])
         else:
-            pbs_logger = get_fw_logger('rocket.pbs', stream_level='CRITICAL')
+            pbs_logger = get_fw_logger('qadapter.pbs', stream_level='CRITICAL')
 
         # submit the job
         try:
@@ -148,9 +148,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
 
         # initialize logger
         if self['logging_dir']:
-            pbs_logger = get_fw_logger('rocket.pbs', self['logging_dir'])
+            pbs_logger = get_fw_logger('qadapter.pbs', self['logging_dir'])
         else:
-            pbs_logger = get_fw_logger('rocket.pbs', stream_level='CRITICAL')
+            pbs_logger = get_fw_logger('qadapter.pbs', stream_level='CRITICAL')
 
         # initialize username
         if username is None:
@@ -179,9 +179,3 @@ class PBSAdapterNERSC(QueueAdapterBase):
         msgs.append('The error response reads: {}'.format(p.stderr.read()))
         log_fancy(pbs_logger, 'error', msgs)
         return None
-
-"""
-if __name__ == '__main__':
-    a = PBSAdapterNERSC({'param1': 3})
-    print a.get('param1', {})
-"""

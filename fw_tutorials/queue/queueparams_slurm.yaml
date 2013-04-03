@@ -1,16 +1,14 @@
-params:
-  exe: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
-  ntasks: 1
-  cpus-per-task: 1
-  ntasks-per-node: 1
-  walltime: '00:02:00'
-  queue: null
-  account: null
-  slurm_options: {}
-  slurm_tags: []
-  job_name: null
-  modules: [some/module,some/other/module]
-
+_fw_name: SLURMAdapter (UCL)
+exe: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
+ntasks: 1
+cpus-per-task: 1
+ntasks-per-node: 1
+walltime: '00:02:00'
+queue: null
+account: null
+slurm_options: {}
+slurm_tags: []
+job_name: null
+modules: [some/module,some/other/module]
 logging_dir: path/to/logging
 
-qa_name: SLURMAdapter (UCL)
