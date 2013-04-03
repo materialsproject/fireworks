@@ -1,3 +1,4 @@
+from collections import defaultdict
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw, load_object
 
 __author__ = 'Anubhav Jain'
@@ -8,7 +9,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 28, 2013'
 
 
-class QueueAdapterBase(FWSerializable):
+class QueueAdapterBase(dict, FWSerializable):
     """
     The QueueAdapter is responsible for all interactions with a specific \
     queue management system. This includes handling all details of queue \
@@ -19,14 +20,6 @@ class QueueAdapterBase(FWSerializable):
     """
 
     _fw_name = 'QueueAdapterBase'
-
-    def __init__(self, params, logging_dir='.'):
-        """
-        :param params: Additional parameters (dict) that the QueueAdapter might need.
-        :param logging_dir: Directory (String) to write logs to
-        """
-        self.params = params
-        self.logging_dir = logging_dir
 
     def get_script_str(self, launch_dir):
         """
@@ -53,10 +46,19 @@ class QueueAdapterBase(FWSerializable):
         """
         raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')
 
+    def __getitem__(self, key):
+        """
+        Reproduce a simple defaultdict-like behavior - any unset parameters return None
+        """
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
+            return None
+
     @serialize_fw
     def to_dict(self):
-        return {'params': self.params, 'logging_dir': self.logging_dir}
+        return dict(self)
 
     @classmethod
     def from_dict(cls, m_dict):
-        return cls(m_dict['params'], m_dict['logging_dir'])
+        return cls(m_dict)

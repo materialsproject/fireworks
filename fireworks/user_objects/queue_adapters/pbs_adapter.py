@@ -9,6 +9,7 @@ import subprocess
 import getpass
 import re
 from fireworks.queue.queue_adapter import QueueAdapterBase
+from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import get_fw_logger, \
     log_fancy, log_exception
 
@@ -23,10 +24,6 @@ __date__ = 'Dec 12, 2012'
 
 class PBSAdapterNERSC(QueueAdapterBase):
     _fw_name = 'PBSAdapter (NERSC)'
-
-    def __init__(self, params, logging_dir='.'):
-        # TODO: explicitly list the parameters here!! rather than put them in get_script_str
-        QueueAdapterBase.__init__(self, params, logging_dir)
 
     def get_script_str(self, launch_dir):
         """
@@ -48,43 +45,41 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # convert launch_dir to absolute path
         launch_dir = os.path.abspath(launch_dir)
 
-        p = self.params
-
         outs = []
         outs.append('#!/bin/bash')
         outs.append('')
 
-        if p.get('mppwidth', None):
-            outs.append('#PBS -l mppwidth={}'.format(p['mppwidth']))
+        if self['mppwidth']:
+            outs.append('#PBS -l mppwidth={}'.format(self['mppwidth']))
 
-        elif p.get('nnodes') and p.get('ppnode'):
-            outs.append('#PBS -l nodes={}:ppn={}'.format(p['nnodes'], p['ppnode']))
+        elif self['nnodes'] and self['ppnode']:
+            outs.append('#PBS -l nodes={}:ppn={}'.format(self['nnodes'], self['ppnode']))
 
-        if p.get('walltime', None):
-            outs.append('#PBS -l walltime={}'.format(p['walltime']))
+        if self['walltime']:
+            outs.append('#PBS -l walltime={}'.format(self['walltime']))
 
-        if p.get('queue', None):
-            outs.append('#PBS -q {}'.format(p['queue']))
+        if self['queue']:
+            outs.append('#PBS -q {}'.format(self['queue']))
 
-        if p.get('account', None):
-            outs.append('#PBS -A {}'.format(p['account']))
+        if self['account']:
+            outs.append('#PBS -A {}'.format(self['account']))
 
-        for k, v in p.get('pbs_options', {}).items():
+        for k, v in self.get('pbs_options', {}).items():
             outs.append('#PBS -l {k}={v}'.format(k=k, v=v))
 
-        for tag in p.get('pbs_tags', []):
+        for tag in self.get('pbs_tags', []):
             outs.append('#PBS -{}'.format(tag))
 
         job_name = 'FW_job'
-        if p.get('jobname', None):
-            job_name = p['jobname']
+        if self['jobname']:
+            job_name = self['jobname']
         outs.append('#PBS -N {}'.format(job_name))
         outs.append('#PBS -o {}'.format(job_name + '.out'))
         outs.append('#PBS -e {}'.format(job_name + '.error'))
 
         outs.append('')
         outs.append('# loading modules')
-        for m in p.get('modules', []):
+        for m in self.get('modules', []):
             outs.append('module load {m}'.format(m=m))
 
         outs.append('')
@@ -93,8 +88,8 @@ class PBSAdapterNERSC(QueueAdapterBase):
         outs.append('')
 
         outs.append('# running executable')
-        if p.get('exe', None):
-            outs.append(p['exe'])
+        if self['exe']:
+            outs.append(self['exe'])
 
         outs.append('')
         outs.append('# {f} completed writing Template'.format(f=self.__class__.__name__))
@@ -110,7 +105,10 @@ class PBSAdapterNERSC(QueueAdapterBase):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
 
         # initialize logger
-        pbs_logger = get_fw_logger('rocket.pbs', self.logging_dir)
+        if self['logging_dir']:
+            pbs_logger = get_fw_logger('rocket.pbs', self['logging_dir'])
+        else:
+            pbs_logger = get_fw_logger('rocket.pbs', stream_level='CRITICAL')
 
         # submit the job
         try:
@@ -149,7 +147,10 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # cmd = ['qstat', '-x']\n
 
         # initialize logger
-        pbs_logger = get_fw_logger('rocket.pbs', self.logging_dir)
+        if self['logging_dir']:
+            pbs_logger = get_fw_logger('rocket.pbs', self['logging_dir'])
+        else:
+            pbs_logger = get_fw_logger('rocket.pbs', stream_level='CRITICAL')
 
         # initialize username
         if username is None:
@@ -178,3 +179,9 @@ class PBSAdapterNERSC(QueueAdapterBase):
         msgs.append('The error response reads: {}'.format(p.stderr.read()))
         log_fancy(pbs_logger, 'error', msgs)
         return None
+
+"""
+if __name__ == '__main__':
+    a = PBSAdapterNERSC({'param1': 3})
+    print a.get('param1', {})
+"""
