@@ -34,6 +34,7 @@ Major Features
 
 * GridFS interface
 
+* QueueParams should be part of QueueAdapter
 
 FireTasks
 =========
@@ -79,9 +80,9 @@ Misc.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
+* Add workflow state=
+
 Potential bugs?
 ===============
 
 1) Add two duplicated workflows. Run the rapidfire rocketlauncher.
-
-2) Fix the reservation as a new launch bug.

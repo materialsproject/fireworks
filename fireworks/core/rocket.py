@@ -5,9 +5,7 @@ TODO: add docs
 """
 import os
 import traceback
-import json
 import threading
-import time
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_config import FWConfig
 
@@ -19,8 +17,8 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def ping_launch(launchpad, launch_id, stop_event):
-    while not stop_event.is_set():
+def ping_launch(launchpad, launch_id, stop_event, master_thread):
+    while not stop_event.is_set() and master_thread.isAlive():
         launchpad._ping_launch(launch_id)
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
@@ -65,7 +63,7 @@ class Rocket():
         # set up heartbeat (pinging the server that we're still alive)
         try:
             ping_stop = threading.Event()
-            ping_thread = threading.Thread(target=ping_launch,  args=(lp, launch_id, ping_stop))
+            ping_thread = threading.Thread(target=ping_launch,  args=(lp, launch_id, ping_stop, threading.currentThread()))
             ping_thread.start()
 
             for my_task in m_fw.tasks:
