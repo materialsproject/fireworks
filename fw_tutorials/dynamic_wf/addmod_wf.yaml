@@ -3,7 +3,6 @@ fws:
   spec:
     _tasks:
     - _fw_name: Add and Modify Task
-      parameters: {}
     input_array:
     - 1
     - 1
@@ -11,7 +10,6 @@ fws:
   spec:
     _tasks:
     - _fw_name: Add and Modify Task
-      parameters: {}
     input_array:
     - 10
 links:

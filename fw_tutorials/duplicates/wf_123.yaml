@@ -5,7 +5,6 @@ fws:
       _fw_name: Dupe Finder Exact
     _tasks:
     - _fw_name: Add and Modify Task
-      parameters: {}
     input_array:
     - 2
 - fw_id: 1
@@ -14,7 +13,6 @@ fws:
       _fw_name: Dupe Finder Exact
     _tasks:
     - _fw_name: Add and Modify Task
-      parameters: {}
     input_array:
     - 1
     - 1
@@ -24,7 +22,6 @@ fws:
       _fw_name: Dupe Finder Exact
     _tasks:
     - _fw_name: Add and Modify Task
-      parameters: {}
     input_array:
     - 3
 links:

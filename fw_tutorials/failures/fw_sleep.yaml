@@ -1,7 +1,4 @@
-fw_id: -1
 spec:
   _tasks:
   - _fw_name: Script Task
-    parameters:
-      script: echo "starting"; sleep 10; echo "ending"
-      use_shell: true
+    script: echo "starting"; sleep 10; echo "ending"

@@ -1,7 +1,6 @@
 spec:
   _tasks:
   - _fw_name: Fibonacci Adder Task
-    parameters: {}
   smaller: 0
   larger: 1
   stop_point: 100
