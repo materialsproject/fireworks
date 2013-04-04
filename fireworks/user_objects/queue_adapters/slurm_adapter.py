@@ -7,10 +7,8 @@ TODO: add docs!
 import os
 import subprocess
 import getpass
-import re
 from fireworks.queue.queue_adapter import QueueAdapterBase
-from fireworks.utilities.fw_utilities import get_fw_logger, \
-    log_fancy, log_exception
+from fireworks.utilities.fw_utilities import log_fancy, log_exception
 
 
 __author__ = 'David Waroquiers, Anubhav Jain, Michael Kocher'
@@ -27,18 +25,10 @@ class SLURMAdapterUCL(QueueAdapterBase):
     defaults = {'ntasks': 1, 'cpus_per_task': 1}
 
     def submit_to_queue(self, script_file):
-        """
-        for documentation, see parent object
-        """
-
         if not os.path.exists(script_file):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
 
-        # initialize logger
-        if self['logging_dir']:
-            slurm_logger = get_fw_logger('qadapter.slurm', self['logging_dir'])
-        else:
-            slurm_logger = get_fw_logger('qadapter.slurm', stream_level='CRITICAL')
+        slurm_logger = self.get_qlogger('qadapter.slurm')
 
         # submit the job
         try:
@@ -59,8 +49,8 @@ class SLURMAdapterUCL(QueueAdapterBase):
 
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
-                msgs = ['Error in job submission with SLURM file {f} and cmd {c}'.format(f=script_file, c=cmd)]
-                msgs.append('The error response reads: {}'.format(p.stderr.read()))
+                msgs = ['Error in job submission with SLURM file {f} and cmd {c}'.format(f=script_file, c=cmd),
+                        'The error response reads: {}'.format(p.stderr.read())]
                 log_fancy(slurm_logger, 'error', msgs)
 
         except:
@@ -68,21 +58,11 @@ class SLURMAdapterUCL(QueueAdapterBase):
             log_exception(slurm_logger, 'Running slurm caused an error...')
 
     def get_njobs_in_queue(self, username=None):
-        """
-        for documentation, see parent object
-        """
+        slurm_logger = self.get_qlogger('qadapter.slurm')
 
-        # initialize logger
-        if self['logging_dir']:
-            slurm_logger = get_fw_logger('qadapter.slurm', self['logging_dir'])
-        else:
-            slurm_logger = get_fw_logger('qadapter.slurm', stream_level='CRITICAL')
-
-        # initialize username
         if username is None:
             username = getpass.getuser()
 
-        # run qstat
         cmd = ['squeue', '-o "%u"', '-u', username]
         p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
         p.wait()
@@ -94,13 +74,12 @@ class SLURMAdapterUCL(QueueAdapterBase):
             # count lines that include the username in it
 
             outs = p.stdout.readlines()
-            rx = re.compile(username)
-            njobs = len([line.split() for line in outs if rx.search(line) is not None])
+            njobs = len([line.split() for line in outs if username in line])
             slurm_logger.info('The number of jobs currently in the queue is: {}'.format(njobs))
             return njobs
 
-        # there's a problem talking to qstat server?
-        msgs = ['Error trying to get the number of jobs in the queue using squeue service']
-        msgs.append('The error response reads: {}'.format(p.stderr.read()))
+        # there's a problem talking to squeue server?
+        msgs = ['Error trying to get the number of jobs in the queue using squeue service',
+                'The error response reads: {}'.format(p.stderr.read())]
         log_fancy(slurm_logger, 'error', msgs)
         return None

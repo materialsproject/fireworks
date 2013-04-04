@@ -30,11 +30,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
         if not os.path.exists(script_file):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
 
-        # initialize logger
-        if self['logging_dir']:
-            pbs_logger = get_fw_logger('qadapter.pbs', self['logging_dir'])
-        else:
-            pbs_logger = get_fw_logger('qadapter.pbs', stream_level='CRITICAL')
+        pbs_logger = self.get_qlogger('qadapter.pbs')
 
         # submit the job
         try:
@@ -55,8 +51,8 @@ class PBSAdapterNERSC(QueueAdapterBase):
 
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
-                msgs = ['Error in job submission with PBS file {f} and cmd {c}'.format(f=script_file, c=cmd)]
-                msgs.append('The error response reads: {}'.format(p.stderr.read()))
+                msgs = ['Error in job submission with PBS file {f} and cmd {c}'.format(f=script_file, c=cmd),
+                        'The error response reads: {}'.format(p.stderr.read())]
                 log_fancy(pbs_logger, 'error', msgs)
 
         except:
@@ -64,19 +60,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
             log_exception(pbs_logger, 'Running qsub caused an error...')
 
     def get_njobs_in_queue(self, username=None):
-        """
-        for documentation, see parent object
-        """
-
-        # TODO: (low-priority) parse the qstat -x output as an alternate way to get this working
-        # tmp_file_name = 'tmp_qstat.xml'
-        # cmd = ['qstat', '-x']\n
-
-        # initialize logger
-        if self['logging_dir']:
-            pbs_logger = get_fw_logger('qadapter.pbs', self['logging_dir'])
-        else:
-            pbs_logger = get_fw_logger('qadapter.pbs', stream_level='CRITICAL')
+        pbs_logger = self.get_qlogger('qadapter.pbs')
 
         # initialize username
         if username is None:
@@ -95,13 +79,12 @@ class PBSAdapterNERSC(QueueAdapterBase):
 
             # TODO: only count running or queued jobs. or rather, *don't* count jobs that are 'C'.
             outs = p.stdout.readlines()
-            rx = re.compile(username)
-            njobs = len([line.split() for line in outs if rx.search(line) is not None])
+            njobs = len([line.split() for line in outs if username in line])
             pbs_logger.info('The number of jobs currently in the queue is: {}'.format(njobs))
             return njobs
 
         # there's a problem talking to qstat server?
-        msgs = ['Error trying to get the number of jobs in the queue using qstat service']
-        msgs.append('The error response reads: {}'.format(p.stderr.read()))
+        msgs = ['Error trying to get the number of jobs in the queue using qstat service',
+                'The error response reads: {}'.format(p.stderr.read())]
         log_fancy(pbs_logger, 'error', msgs)
         return None

@@ -1,6 +1,7 @@
 import os
 import string
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -85,6 +86,14 @@ class QueueAdapterBase(dict, FWSerializable):
     @classmethod
     def from_dict(cls, m_dict):
         return cls(m_dict)
+
+    def get_qlogger(self, name):
+        if self['logging_dir']:
+            return get_fw_logger(name, self['logging_dir'])
+        else:
+            return get_fw_logger(name, stream_level='CRITICAL')
+
+
 
 
 class QScriptTemplate(string.Template):
