@@ -142,7 +142,8 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
-        self.workflows.insert(wf.to_db_dict())
+        # make the first part query something that always returns False so we can use f&modify
+        self.workflows.find_and_modify({'_id': -1}, wf.to_db_dict(), upsert=True)
 
         # refresh WF states, starting from all roots
         for fw_id in wf.root_fw_ids:
@@ -237,7 +238,7 @@ class LaunchPad(FWSerializable):
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.insert({"next_fw_id": next_fw_id, "next_launch_id": next_launch_id})
+        self.fw_id_assigner.find_and_modify({}, {"next_fw_id": next_fw_id, "next_launch_id": next_launch_id}, upsert=True)
         self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
     def _check_fw_for_uniqueness(self, m_fw):
@@ -285,7 +286,7 @@ class LaunchPad(FWSerializable):
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id, fw_id=m_fw.fw_id)
-        self.launches.insert(m_launch.to_db_dict())
+        self.launches.find_and_modify({'_id': -1}, m_launch.to_db_dict())  # use f&modify for atomicity
 
         # add launch to FW
         m_fw.launches.append(m_launch)
