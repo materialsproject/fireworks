@@ -23,78 +23,8 @@ __date__ = 'Dec 12, 2012'
 
 class SLURMAdapterUCL(QueueAdapterBase):
     _fw_name = 'SLURMAdapter (UCL)'
-
-    def get_script_str(self, launch_dir):
-        """
-        Create a UCL-style SLURM script. For more documentation, see parent object.
-        
-        Supported properties are:
-            - ntasks: number of tasks (default : 1)
-            - ntasks_per_node: maximum number of tasks to be invoked for each node
-            - cpus_per_task: number of cpus per task (default : 1)
-            - walltime: looks like "hh:mm:ss"
-            - queue: the queue to run on
-            - account: the account to charge 
-            - slurm_options: a dict that sets the SLURM -l key-value pairs
-            - slurm_tags: a list of SLURM tags
-            - job_name: the name of the job to run
-            - modules: a list of modules to load
-            - exe: the executable to run, after moving to the launch_dir
-        """
-        # convert launch_dir to absolute path
-        launch_dir = os.path.abspath(launch_dir)
-
-        outs = []
-        outs.append('#!/bin/bash')
-        outs.append('')
-
-        outs.append('#SBATCH --ntasks={}'.format(p.get('ntasks',1)))
-
-        if self['ntasks-per-node']:
-            outs.append('#SBATCH --ntasks-per-node={}'.format(self['ntasks-per-node']))
-
-        outs.append('#SBATCH --cpus-per-task={}'.format(self.get('cpus-per-task',1)))
-
-        if self['walltime']:
-            outs.append('#SBATCH --time={}'.format(self['walltime']))
-
-        if self['queue']:
-            outs.append('#SBATCH --partition={}'.format(self['queue']))
-
-        if self['account']:
-            outs.append('#SBATCH --account={}'.format(self['account']))
-
-        for k, v in self.get('slurm_options', {}).items():
-            outs.append('#SBATCH --{k}={v}'.format(k=k, v=v))
-
-        for tag in self.get('slurm_tags', []):
-            outs.append('#SBATCH --{}'.format(tag))
-
-        job_name = 'FW_job'
-        if self['jobname']:
-            job_name = self['jobname']
-        outs.append('#SBATCH --job-name={}'.format(job_name))
-        outs.append('#SBATCH --output={}'.format(job_name + '-%j.out'))
-        outs.append('#SBATCH --error={}'.format(job_name + '-%j.error'))
-
-        outs.append('')
-        outs.append('# loading modules')
-        for m in self.get('modules', []):
-            outs.append('module load {m}'.format(m=m))
-
-        outs.append('')
-        outs.append('# moving to working directory')
-        outs.append('cd {}'.format(launch_dir))
-        outs.append('')
-
-        outs.append('# running executable')
-        if self['exe']:
-            outs.append(self['exe'])
-
-        outs.append('')
-        outs.append('# {f} completed writing Template'.format(f=self.__class__.__name__))
-        outs.append('')
-        return '\n'.join(outs)
+    template_file = os.path.join(os.path.dirname(__file__), 'SLURM_template.txt')
+    defaults = {'ntasks': 1, 'cpus_per_task': 1}
 
     def submit_to_queue(self, script_file):
         """

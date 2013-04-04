@@ -1,3 +1,5 @@
+import os
+import string
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 
 __author__ = 'Anubhav Jain'
@@ -19,6 +21,8 @@ class QueueAdapterBase(dict, FWSerializable):
     """
 
     _fw_name = 'QueueAdapterBase'
+    template_file = 'OVERRIDE_ME'
+    defaults = {}
 
     def get_script_str(self, launch_dir):
         """
@@ -27,7 +31,27 @@ class QueueAdapterBase(dict, FWSerializable):
 
         :param launch_dir: The directory the job will be launched in
         """
-        raise NotImplementedError('get_script_str() not implemented for this queue adapter!')
+        with open(self.template_file) as f:
+            a = QScriptTemplate(f.read())
+
+            # set substitution dict
+            subs_dict = dict(self)
+            subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
+
+            for k, v in self.defaults:
+                subs_dict[k] = subs_dict.get(k, v)
+
+            launch_dir = os.path.abspath(launch_dir)
+            subs_dict['launch_dir'] = launch_dir
+
+            unclean_template = a.safe_substitute(subs_dict)
+
+            clean_template = []
+            for line in unclean_template.split('\n'):
+                if '$$' not in line:
+                    clean_template.append(line)
+
+            return '\n'.join(clean_template)
 
     def submit_to_queue(self, script_file):
         """
@@ -61,3 +85,7 @@ class QueueAdapterBase(dict, FWSerializable):
     @classmethod
     def from_dict(cls, m_dict):
         return cls(m_dict)
+
+
+class QScriptTemplate(string.Template):
+    delimiter = '$$'

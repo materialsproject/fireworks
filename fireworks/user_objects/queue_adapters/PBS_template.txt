@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#PBS -l mppwidth=$${mppwidth}
+#PBS -l nodes=$${nnodes}:ppn=$${ppnode}
+#PBS -l walltime=$${walltime}
+#PBS -q $${queue}
+#PBS -A $${account}
+#PBS -N $${job_name}
+#PBS -o $${job_name}.out
+#PBS -e $${job_name}.error
+
+$${pre_rocket}
+
+# moving to working directory
+cd $${launch_dir}
+$${rocket_launch}
+$${post_rocket}
+
+# PBSAdapterNERSC completed writing Template

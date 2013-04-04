@@ -9,9 +9,7 @@ import subprocess
 import getpass
 import re
 from fireworks.queue.queue_adapter import QueueAdapterBase
-from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.fw_utilities import get_fw_logger, \
-    log_fancy, log_exception
+from fireworks.utilities.fw_utilities import get_fw_logger, log_fancy, log_exception
 
 
 __author__ = 'Anubhav Jain, Michael Kocher'
@@ -24,82 +22,10 @@ __date__ = 'Dec 12, 2012'
 
 class PBSAdapterNERSC(QueueAdapterBase):
     _fw_name = 'PBSAdapter (NERSC)'
-
-    def get_script_str(self, launch_dir):
-        """
-        Create a NERSC-style PBS script. For more documentation, see parent object.
-        
-        Supported properties are:
-            - mppwidth: number of cores (for queues that specify ncores as mppwidth)
-            - nnodes: number of nodes (if you are not specifying mppwidth)
-            - ppnode: processors per node (if you are not specifying mppwidth)
-            - walltime: looks like "hh:mm:ss"
-            - queue: the queue to run on
-            - account: the account to charge 
-            - pbs_options: a dict that sets the PBS -l key-value pairs
-            - pbs_tags: a list of PBS tags
-            - job_name: the name of the job to run
-            - modules: a list of modules to load
-            - exe: the executable to run, after moving to the launch_dir
-        """
-        # convert launch_dir to absolute path
-        launch_dir = os.path.abspath(launch_dir)
-
-        outs = []
-        outs.append('#!/bin/bash')
-        outs.append('')
-
-        if self['mppwidth']:
-            outs.append('#PBS -l mppwidth={}'.format(self['mppwidth']))
-
-        elif self['nnodes'] and self['ppnode']:
-            outs.append('#PBS -l nodes={}:ppn={}'.format(self['nnodes'], self['ppnode']))
-
-        if self['walltime']:
-            outs.append('#PBS -l walltime={}'.format(self['walltime']))
-
-        if self['queue']:
-            outs.append('#PBS -q {}'.format(self['queue']))
-
-        if self['account']:
-            outs.append('#PBS -A {}'.format(self['account']))
-
-        for k, v in self.get('pbs_options', {}).items():
-            outs.append('#PBS -l {k}={v}'.format(k=k, v=v))
-
-        for tag in self.get('pbs_tags', []):
-            outs.append('#PBS -{}'.format(tag))
-
-        job_name = 'FW_job'
-        if self['jobname']:
-            job_name = self['jobname']
-        outs.append('#PBS -N {}'.format(job_name))
-        outs.append('#PBS -o {}'.format(job_name + '.out'))
-        outs.append('#PBS -e {}'.format(job_name + '.error'))
-
-        outs.append('')
-        outs.append('# loading modules')
-        for m in self.get('modules', []):
-            outs.append('module load {m}'.format(m=m))
-
-        outs.append('')
-        outs.append('# moving to working directory')
-        outs.append('cd {}'.format(launch_dir))
-        outs.append('')
-
-        outs.append('# running executable')
-        if self['exe']:
-            outs.append(self['exe'])
-
-        outs.append('')
-        outs.append('# {f} completed writing Template'.format(f=self.__class__.__name__))
-        outs.append('')
-        return '\n'.join(outs)
+    template_file = os.path.join(os.path.dirname(__file__), 'PBS_template.txt')
+    defaults = {}
 
     def submit_to_queue(self, script_file):
-        """
-        for documentation, see parent object
-        """
 
         if not os.path.exists(script_file):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
