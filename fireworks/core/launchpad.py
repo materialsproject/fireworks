@@ -386,6 +386,7 @@ class LaunchPad(FWSerializable):
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
 
         # block until the change is readable, so workflow refreshes are "safe"
+        # it's very important that this change is committed to db before proceeding
         self.connection.fsync()
         while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
             time.sleep(1)
