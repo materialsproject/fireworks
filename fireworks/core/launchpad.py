@@ -279,7 +279,6 @@ class LaunchPad(FWSerializable):
     def unreserve(self, launch_id):
         self.launches.find_and_modify({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
         self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
-        # self.connection.fsync()
 
     def detect_unreserved(self, expiration_secs=FWConfig().RESERVATION_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
@@ -318,7 +317,6 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.set_reservation_id(reservation_id)
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
-        # self.connection.fsync()
 
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
@@ -370,7 +368,6 @@ class LaunchPad(FWSerializable):
             self._upsert_fws([fw])
 
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
-        # self.connection.fsync()
 
         return m_fw, l_id
 
@@ -385,13 +382,6 @@ class LaunchPad(FWSerializable):
         m_launch.state = state
         m_launch.action = action
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
-
-        # TODO: remove this?
-        # block until the change is readable, so workflow refreshes are "safe"
-        # it's very important that this change is committed to db before proceeding
-        #self.connection.fsync()
-        #while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
-        #    time.sleep(1)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -446,7 +436,6 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
         # redo the links
         self.workflows.find_and_modify({'nodes': fw_id}, wf.to_db_dict())
-        # self.connection.fsync()  # fsync the changes
 
     def _steal_launches(self, thief_fw):
         stolen = False
