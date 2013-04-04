@@ -32,12 +32,12 @@ Major Features
 
 * More and better unit tests, e.g. unit tests of scripts
 
-* No negative fw_ids needed when returning FWAction
-
 * A way to refresh WF manually before marking them as fizzled - sometimes the "push" just doesn't work...
     * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
 
-* Add way to monitor a file during the durn
+* Add way to monitor a file during the run
+
+* Add a looping maintenance script
 
 FireTasks
 =========
@@ -80,3 +80,5 @@ Misc.
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
 * Add workflow state
+
+* No negative fw_ids needed when returning FWAction

@@ -42,8 +42,6 @@ def rapidfire(launchpad, fworker=None, m_dir=None, logdir=None, strm_lvl=None, n
     l_logger = get_fw_logger('rocket.launcher', l_dir=logdir, stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
 
-    # TODO: wrap in try-except. Use log_exception for exceptions EXCEPT running out of jobs.
-    # TODO: always chdir() back to curdir when finished...then delete cruft from MongoTests
     num_launched = 0
     num_loops = 0
     while num_loops != max_loops:

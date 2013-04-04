@@ -103,11 +103,9 @@ def lpad():
             lp.reset(args.password)
 
         elif args.command == 'detect_fizzled':
-            # TODO: report when fixed
             print lp.detect_fizzled(args.time, args.fix)
 
         elif args.command == 'detect_unreserved':
-            # TODO: report when fixed
             print lp.detect_unreserved(args.time, args.fix)
 
         elif args.command == 'add':
