@@ -7,8 +7,6 @@ FW Docs
 
 * describe passing of information as being like 'ports'
 
-* describe how to pause jobs. (defuse them, and then when 'refusing' them you need to just set the state to 'WAITING' and then refresh the workflow).
-
 * Note: reserved spec keywords:
     * _tasks - a list of FireTasks to run
     * _priority - the priority of the FW
@@ -23,7 +21,9 @@ FW Docs
 
 * Document all the features of Script Task
 
-* Document use of database compact() during scheduled downtime in maintenance tutorial
+* Document use of maintain() and tuneup()
+
+* Test and document defuse / reignite FW
 
 Major Features
 ==============
@@ -78,8 +78,6 @@ Misc.
 * Clean up job_exists() calls - they are currently expensive!
 
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify. Or add a launchpad command to tell you where the tutorial dir is.
-
-* Allow user to changea FW's priority or defuse it (when state < RESERVED). Do this for an entire workflow or an individual FW.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 

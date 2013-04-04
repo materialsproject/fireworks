@@ -7,7 +7,7 @@ import datetime
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.workflow import Workflow
-from fireworks.utilities.fw_serializers import FWSerializable, load_object
+from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch
 from pymongo import DESCENDING
@@ -21,7 +21,6 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 30, 2013'
 
 
-# TODO: be able to terminate / un-terminate a FW
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
 # least set the state to FIZZLED or ERROR and add traceback...
 
@@ -236,6 +235,26 @@ class LaunchPad(FWSerializable):
         self.m_logger.debug('Compacting database...')
         self.database.command({'compact': 'fireworks'})
         self.database.command({'compact': 'launches'})
+
+    def defuse_fw(self, fw_id):
+        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
+        return self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}}, {'$set': {'state': 'DEFUSED'}})
+
+    def reignite_fw(self, fw_id):
+        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': 'DEFUSED'}, {'$set': {'state': 'WAITING'}})
+        if f:
+            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+        return f
+
+    def defuse_wf(self, fw_id):
+        wf = self.get_wf_by_fw_id(fw_id)
+        for fw in wf.fws:
+            self.defuse_fw(fw.fw_id)
+
+    def reignite_wf(self, fw_id):
+        wf = self.get_wf_by_fw_id(fw_id)
+        for fw in wf.fws:
+            self.reignite_fw(fw.fw_id)
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         """

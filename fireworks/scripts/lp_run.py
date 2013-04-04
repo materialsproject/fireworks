@@ -76,6 +76,18 @@ def lpad():
                                 type=int)
     fizzled_parser.add_argument('--fix', help='mark fizzled', action='store_true')
 
+    defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
+    defuse_parser.add_argument('fw_id', help='Any FireWork id in the workflow to defuse', type=int)
+
+    reignite_parser = subparsers.add_parser('reignite', help='reignite (un-cancel) an entire Workflow')
+    reignite_parser.add_argument('fw_id', help='Any FireWork id in the workflow to reignite', type=int)
+
+    defuse_fw_parser = subparsers.add_parser('defuse_fw', help='cancel (de-fuse) a single FireWork')
+    defuse_fw_parser.add_argument('fw_id', help='FireWork id to defuse', type=int)
+
+    reignite_fw_parser = subparsers.add_parser('reignite_fw', help='reignite (un-cancel) a single FireWork')
+    reignite_fw_parser.add_argument('fw_id', help='FireWork id to reignite', type=int)
+
     maintain_parser = subparsers.add_parser('maintain', help='Run database maintenance')
     maintain_parser.add_argument('--infinite', help='loop infinitely', action='store_true')
     maintain_parser.add_argument('--maintain_interval', help='sleep time between maintenance loops (infinite mode)',
@@ -144,6 +156,18 @@ def lpad():
             if args.query:
                 args.query = ast.literal_eval(args.query)
             print lp.get_fw_ids(args.query)
+
+        elif args.command == 'defuse':
+            lp.defuse_wf(args.fw_id)
+
+        elif args.command == 'reignite':
+            lp.reignite_wf(args.fw_id)
+
+        elif args.command == 'defuse_fw':
+            lp.defuse_fw(args.fw_id)
+
+        elif args.command == 'reignite_fw':
+            lp.reignite_fw(args.fw_id)
 
 
 if __name__ == '__main__':
