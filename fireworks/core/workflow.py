@@ -86,8 +86,7 @@ class Workflow(FWSerializable):
     def apply_action(self, action, fw_id):
         updated_ids = []
 
-        if action.command in ['CONTINUE', 'BREAK']:
-            # Do nothing
+        if action.command == 'CONTINUE':
             pass
 
         if action.command == 'DEFUSE':

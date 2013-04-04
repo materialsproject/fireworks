@@ -64,24 +64,21 @@ class FWAction(FWSerializable):
      FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.
     """
 
-    commands = ['CONTINUE', 'CREATE', 'DEFUSE', 'MODIFY', 'BREAK']
+    commands = ['CONTINUE', 'CREATE', 'DEFUSE', 'MODIFY']
 
-    def __init__(self, command, stored_data=None, mod_spec=None):
-        """
-        :param command: (str) an item from the list of FWAction.commands
-        :param stored_data: (dict) any output data to store. Intended to be brief, not store a ton of data.
-        :param mod_spec: description of how to modify the Workflow according to a set of rules (see tutorial docs)
-        """
+    def __init__(self, command, stored_data=None, mod_spec=None, exit=False):
+
         if command not in FWAction.commands:
             raise ValueError("Invalid command: " + command)
 
         self.command = command
         self.stored_data = stored_data if stored_data else {}
         self.mod_spec = mod_spec if mod_spec else {}
+        self.exit = exit
 
     @recursive_serialize
     def to_dict(self):
-        return {"action": self.command, "stored_data": self.stored_data, "mod_spec": self.mod_spec}
+        return {'action': self.command, "stored_data": self.stored_data, 'exit': self.exit, 'mod_spec': self.mod_spec}
 
     @classmethod
     @recursive_deserialize
@@ -89,6 +86,12 @@ class FWAction(FWSerializable):
         if 'create_fw' in m_dict['mod_spec']:
             m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
         return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
+
+    @property
+    def stop_tasks(self):
+        if self.exit:
+            return True
+        return False
 
 
 class FireWork(FWSerializable):

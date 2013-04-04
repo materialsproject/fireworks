@@ -79,7 +79,7 @@ class Rocket():
                 # update the global stored data with the data to store from this particular Task
                 all_stored_data.update(m_action.stored_data)
 
-                if m_action.command != 'CONTINUE':
+                if m_action.stop_tasks:
                     break;
 
             # perform finishing operation
@@ -90,5 +90,5 @@ class Rocket():
         except:
             ping_stop.set()
             traceback.print_exc()
-            m_action = FWAction('BREAK', {'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()})
+            m_action = FWAction('CONTINUE', stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()}, exit=True)
             lp._complete_launch(launch_id, m_action, 'FIZZLED')
