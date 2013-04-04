@@ -266,8 +266,11 @@ class Launch(FWSerializable, object):
                 'ip': self.ip, 'action': self.action, 'state': self.state, 'state_history': self.state_history,
                 'launch_id': self.launch_id}
 
+    @recursive_serialize
     def to_db_dict(self):
         m_d = self.to_dict()
+        m_d['time_start'] = self.time_start
+        m_d['time_end'] = self.time_end
         m_d['runtime_secs'] = self.runtime_secs
         if self.reservedtime_secs:
             m_d['reservedtime_secs'] = self.reservedtime_secs

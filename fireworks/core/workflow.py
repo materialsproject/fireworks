@@ -14,7 +14,7 @@ __date__ = 'Feb 27, 2013'
 
 
 class Workflow(FWSerializable):
-    # TODO: if performance of parent_links is an issue, override delitem/setitem to ensure it's always updated
+
     class Links(dict, FWSerializable):
 
         @property
@@ -23,6 +23,7 @@ class Workflow(FWSerializable):
 
         @property
         def parent_links(self):
+            # TODO: if performance of parent_links is an issue, override delitem/setitem to ensure it's always updated
             d = defaultdict(list)
             for (parent, children) in self.iteritems():
                 # add the parents

@@ -21,10 +21,12 @@ FW Docs
 
 * update the security tutorial to have a database-level administrator
 
+* Document all the features of Script Task
+
+* Document use of database compact() during scheduled downtime in maintenance tutorial
+
 Major Features
 ==============
-
-* Figure out what to do about fsync (in progress...)
 
 * Add a checkpoint/restart function
 
@@ -84,3 +86,5 @@ Misc.
 * Add workflow state
 
 * No negative fw_ids needed when returning FWAction
+
+* Go through logging, make sure it's sane

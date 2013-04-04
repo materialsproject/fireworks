@@ -4,6 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.workflow import Workflow
 from fireworks.utilities.fw_serializers import FWSerializable, load_object
@@ -98,14 +99,32 @@ class LaunchPad(FWSerializable):
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
-    def maintain(self):
-        # TODO: compact the database / collections
-        # TODO: track down launches that have not pinged the server in awhile...
-        # TODO: update FIZZLED and long RESERVED states...
+    def maintain(self, infinite=True, sleep_time=120, update_indices_interval=100):
+        n = 1  # loop number
+        while True:
+            self.m_logger.info('Performing maintenance on Launchpad, loop no: {}'.format(n))
 
-        self.m_logger.info('Performing maintenance on Launchpad, please wait....')
-        self._update_indices()
-        self.m_logger.info('LaunchPad was MAINTAINED.')
+            self.m_logger.debug('Tracking down FIZZLED jobs...')
+            fl = self.detect_fizzled(fix=True)
+            if fl:
+                self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
+
+            self.m_logger.debug('Tracking down stuck RESERVED jobs...')
+            ur = self.detect_unreserved(fix=True)
+            if ur:
+                self.m_logger.info('Unreserved {} RESERVED launches: {}'.format(len(ur), ur))
+
+            if n % update_indices_interval == 0:
+                self.m_logger.debug('Updating indices...')
+                self._update_indices()
+
+            self.m_logger.info('LaunchPad was MAINTAINED.')
+
+            if not infinite:
+                break
+            self.m_logger.debug('Sleeping for {} secs...'.format(sleep_time))
+            time.sleep(sleep_time)
+            n += 1
 
     def add_wf(self, wf):
         """
@@ -205,8 +224,8 @@ class LaunchPad(FWSerializable):
 
         self.launches.ensure_index('launch_id', unique=True)
         self.launches.ensure_index('state')
-        self.launches.ensure_index('start')
-        self.launches.ensure_index('end')
+        self.launches.ensure_index('time_start')
+        self.launches.ensure_index('time_end')
         self.launches.ensure_index('host')
         self.launches.ensure_index('ip')
 

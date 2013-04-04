@@ -58,8 +58,6 @@ class Rocket():
         if FWConfig().PRINT_FW_YAML:
             m_fw.to_file('FW.yaml')
 
-        # TODO: add checkpoint stuff
-
         # set up heartbeat (pinging the server that we're still alive)
         try:
             ping_stop = threading.Event()
