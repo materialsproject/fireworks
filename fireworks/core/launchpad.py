@@ -3,6 +3,7 @@
 """
 The LaunchPad manages the FireWorks database.
 """
+import time
 import datetime
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.workflow import Workflow
@@ -383,6 +384,11 @@ class LaunchPad(FWSerializable):
         m_launch.state = state
         m_launch.action = action
         self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+
+        # block until the change is readable, so workflow refreshes are "safe"
+        # TODO: not 100% sure this is necessary, but problems noticed earlier and can't hurt much
+        while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
+            time.sleep(1)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
