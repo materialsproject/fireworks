@@ -10,8 +10,6 @@
 #PBS -e $${job_name}.error
 
 $${pre_rocket}
-
-# moving to working directory
 cd $${launch_dir}
 $${rocket_launch}
 $${post_rocket}

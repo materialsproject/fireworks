@@ -11,8 +11,6 @@
 #SBATCH --error=$${job_name}-%j.error
 
 $${pre_rocket}
-
-# moving to working directory
 cd $${launch_dir}
 $${rocket_launch}
 $${post_rocket}
