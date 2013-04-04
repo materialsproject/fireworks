@@ -11,7 +11,7 @@ from fireworks.utilities.fw_serializers import FWSerializable
 from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch
 from pymongo import DESCENDING
-from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -233,8 +233,11 @@ class LaunchPad(FWSerializable):
         self.launches.ensure_index('ip')
 
         self.m_logger.debug('Compacting database...')
-        self.database.command({'compact': 'fireworks'})
-        self.database.command({'compact': 'launches'})
+        try:
+            self.database.command({'compact': 'fireworks'})
+            self.database.command({'compact': 'launches'})
+        except:
+            log_exception(self.m_logger, 'Error while compacting database! (make sure your Mongo version is 2.0+)')
 
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
