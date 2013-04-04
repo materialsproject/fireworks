@@ -19,6 +19,8 @@ FW Docs
 
 * Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
 
+* update the security tutorial to have a database-level administrator
+
 Major Features
 ==============
 
@@ -71,9 +73,9 @@ Misc.
 
 * Fully support .tar?
 
-* Clean up job_exists() calls - they are now expensive!
+* Clean up job_exists() calls - they are currently expensive!
 
-* <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.
+* <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify. Or add a launchpad command to tell you where the tutorial dir is.
 
 * Allow user to changea FW's priority or defuse it (when state < RESERVED). Do this for an entire workflow or an individual FW.
 
