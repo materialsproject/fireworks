@@ -383,13 +383,14 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = state
         m_launch.action = action
-        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
+        # TODO: remove this?
         # block until the change is readable, so workflow refreshes are "safe"
         # it's very important that this change is committed to db before proceeding
-        self.connection.fsync()
-        while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
-            time.sleep(1)
+        #self.connection.fsync()
+        #while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
+        #    time.sleep(1)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
