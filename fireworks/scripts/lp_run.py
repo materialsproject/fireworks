@@ -67,18 +67,29 @@ def lpad():
                                    default=None)
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
-    reservation_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
+    reservation_parser.add_argument('--time', help='expiration time (seconds)',
+                                    default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
     reservation_parser.add_argument('--fix', help='cancel bad reservations', action='store_true')
 
     fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
-    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS, type=int)
+    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
+                                type=int)
     fizzled_parser.add_argument('--fix', help='mark fizzled', action='store_true')
+
+    maintain_parser = subparsers.add_parser('maintain', help='Run database maintenance')
+    maintain_parser.add_argument('--infinite', help='loop infinitely', action='store_true')
+    maintain_parser.add_argument('--maintain_interval', help='sleep time between maintenance loops (infinite mode)',
+                                 default=FWConfig().MAINTAIN_INTERVAL, type=int)
+
+    tuneup_parser = subparsers.add_parser('tuneup',
+                                          help='Tune-up the database (should be performed during scheduled downtime)')
 
     subparsers.add_parser('version', help='Print the version of FireWorks installed')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=FWConfig().LAUNCHPAD_LOC)
-    parser.add_argument('-c', '--config_dir', help='path to a directory containing the LaunchPad file (used if -l unspecified)',
+    parser.add_argument('-c', '--config_dir',
+                        help='path to a directory containing the LaunchPad file (used if -l unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
@@ -115,6 +126,12 @@ def lpad():
             for filename in os.listdir(args.wf_dir):
                 add(lp, filename)
 
+        elif args.command == 'maintain':
+            lp.maintain(args.infinite, args.maintain_interval)
+
+        elif args.command == 'tuneup':
+            lp.tuneup()
+
         elif args.command == 'get_fw':
             fw = lp.get_fw_by_id(args.fw_id)
             fw_dict = fw.to_dict()
@@ -127,6 +144,7 @@ def lpad():
             if args.query:
                 args.query = ast.literal_eval(args.query)
             print lp.get_fw_ids(args.query)
+
 
 if __name__ == '__main__':
     lpad()

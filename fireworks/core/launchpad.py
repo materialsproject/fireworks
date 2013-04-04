@@ -25,6 +25,10 @@ __date__ = 'Jan 30, 2013'
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
 # least set the state to FIZZLED or ERROR and add traceback...
 
+# Note: Always use find_and_modify() for *all* database updates. Otherwise you will run into synchronization /
+# delayed write errors from Mongo.
+
+
 class LaunchPad(FWSerializable):
     """
     The LaunchPad manages the FireWorks database.
@@ -94,15 +98,16 @@ class LaunchPad(FWSerializable):
             self.launches.remove()
             self.workflows.remove()
             self._restart_ids(1, 1)
-            self._update_indices()
+            self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
-    def maintain(self, infinite=True, sleep_time=120, update_indices_interval=100):
-        n = 1  # loop number
+    def maintain(self, infinite=True, maintain_interval=None):
+        maintain_interval = maintain_interval if maintain_interval else FWConfig().MAINTAIN_INTERVAL
+
         while True:
-            self.m_logger.info('Performing maintenance on Launchpad, loop no: {}'.format(n))
+            self.m_logger.info('Performing maintenance on Launchpad...')
 
             self.m_logger.debug('Tracking down FIZZLED jobs...')
             fl = self.detect_fizzled(fix=True)
@@ -114,17 +119,13 @@ class LaunchPad(FWSerializable):
             if ur:
                 self.m_logger.info('Unreserved {} RESERVED launches: {}'.format(len(ur), ur))
 
-            if n % update_indices_interval == 0:
-                self.m_logger.debug('Updating indices...')
-                self._update_indices()
-
             self.m_logger.info('LaunchPad was MAINTAINED.')
 
             if not infinite:
                 break
-            self.m_logger.debug('Sleeping for {} secs...'.format(sleep_time))
-            time.sleep(sleep_time)
-            n += 1
+
+            self.m_logger.debug('Sleeping for {} secs...'.format(maintain_interval))
+            time.sleep(maintain_interval)
 
     def add_wf(self, wf):
         """
@@ -219,16 +220,22 @@ class LaunchPad(FWSerializable):
         """
         return bool(self._get_a_fw_to_run(checkout=False))
 
-    def _update_indices(self):
+    def tuneup(self):
+        self.m_logger.info('Performing db tune-up')
+
+        self.m_logger.debug('Updating indices...')
         self.fireworks.ensure_index('fw_id', unique=True)
         self.fireworks.ensure_index('state')
-
         self.launches.ensure_index('launch_id', unique=True)
         self.launches.ensure_index('state')
         self.launches.ensure_index('time_start')
         self.launches.ensure_index('time_end')
         self.launches.ensure_index('host')
         self.launches.ensure_index('ip')
+
+        self.m_logger.debug('Compacting database...')
+        self.database.command({'compact': 'fireworks'})
+        self.database.command({'compact': 'launches'})
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
@@ -238,7 +245,8 @@ class LaunchPad(FWSerializable):
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.find_and_modify({'_id': -1}, {'next_fw_id': next_fw_id, 'next_launch_id': next_launch_id}, upsert=True)
+        self.fw_id_assigner.find_and_modify({'_id': -1}, {'next_fw_id': next_fw_id, 'next_launch_id': next_launch_id},
+                                            upsert=True)
         self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
     def _check_fw_for_uniqueness(self, m_fw):

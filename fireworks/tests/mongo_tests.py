@@ -33,11 +33,11 @@ class MongoTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lp = None
-        try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
-            cls.lp.reset(password=None, require_password=False)
-        except:
-            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+        #try:
+        cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+        cls.lp.reset(password=None, require_password=False)
+        #except:
+        #    raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     def setUp(self):
         self.old_wd = os.getcwd()

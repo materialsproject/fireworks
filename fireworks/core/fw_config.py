@@ -54,6 +54,8 @@ class FWConfig(object):
         self.RUN_EXPIRATION_SECS = self.PING_TIME_SECS * 4  # if a job is not pinged in this much time,
         # we mark it FIZZLED
 
+        self.MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals
+
         self.RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue for 14 days before we
         # cancel its reservation
 
