@@ -33,11 +33,11 @@ class MongoTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lp = None
-        #try:
-        cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
-        cls.lp.reset(password=None, require_password=False)
-        #except:
-        #    raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     def setUp(self):
         self.old_wd = os.getcwd()
@@ -80,16 +80,6 @@ class MongoTests(unittest.TestCase):
         fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 3})
         self.lp.add_wf(fw)
         rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=3)
-
-        """
-        # give a few seconds for update - mainly for circle CI
-        nloops = 0
-        while self.lp.get_launch_by_id(3).state != 'COMPLETED' and nloops < 45:
-            print self.lp.get_launch_by_id(3).to_dict()
-            time.sleep(3)
-            self.assertTrue(True)  # helps keep Circle going during this time...
-            nloops += 1
-        """
 
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
