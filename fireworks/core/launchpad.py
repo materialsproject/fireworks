@@ -238,7 +238,7 @@ class LaunchPad(FWSerializable):
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.find_and_modify({}, {"next_fw_id": next_fw_id, "next_launch_id": next_launch_id}, upsert=True)
+        self.fw_id_assigner.find_and_modify({'_id': -1}, {'next_fw_id': next_fw_id, 'next_launch_id': next_launch_id}, upsert=True)
         self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
     def _check_fw_for_uniqueness(self, m_fw):
@@ -286,7 +286,7 @@ class LaunchPad(FWSerializable):
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id, fw_id=m_fw.fw_id)
-        self.launches.find_and_modify({'_id': -1}, m_launch.to_db_dict())  # use f&modify for atomicity
+        self.launches.find_and_modify({'_id': -1}, m_launch.to_db_dict(), upsert=True)  # use f&modify for atomicity
 
         # add launch to FW
         m_fw.launches.append(m_launch)
