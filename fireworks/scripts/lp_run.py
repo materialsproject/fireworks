@@ -26,14 +26,11 @@ __date__ = 'Feb 7, 2013'
 
 def add(lp, filename):
     try:
-        if '.tar' in filename:
-            fwf = Workflow.from_tarfile(filename)
+        obj_dict = _get_obj_dict_from_file(filename)
+        if 'fws' in obj_dict:
+            fwf = Workflow.from_file(filename)
         else:
-            obj_dict = _get_obj_dict_from_file(filename)
-            if 'fws' in obj_dict:
-                fwf = Workflow.from_file(filename)
-            else:
-                fwf = FireWork.from_file(filename)
+            fwf = FireWork.from_file(filename)
         lp.add_wf(fwf)
     except:
         print 'Error reading FireWork/Workflow file.'

@@ -73,8 +73,6 @@ Misc.
 
 * Add stats
 
-* Fully support .tar?
-
 * Clean up job_exists() calls - they are currently expensive!
 
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify. Or add a launchpad command to tell you where the tutorial dir is.

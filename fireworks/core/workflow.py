@@ -14,7 +14,6 @@ __date__ = 'Feb 27, 2013'
 
 
 class Workflow(FWSerializable):
-
     class Links(dict, FWSerializable):
 
         @property
@@ -23,7 +22,8 @@ class Workflow(FWSerializable):
 
         @property
         def parent_links(self):
-            # TODO: if performance of parent_links is an issue, override delitem/setitem to ensure it's always updated
+            # note: if performance of parent_links becomes an issue, override delitem/setitem to ensure it's always
+            # updated
             d = defaultdict(list)
             for (parent, children) in self.iteritems():
                 # add the parents
@@ -115,9 +115,7 @@ class Workflow(FWSerializable):
         return updated_ids
 
     def refresh(self, fw_id, updated_ids=None):
-        #TODO: document this better
-
-        updated_ids = updated_ids if updated_ids else set()
+        updated_ids = updated_ids if updated_ids else set()  # these are the fw_ids to re-enter into the database
 
         fw = self.id_fw[fw_id]
         prev_state = fw.state
@@ -133,7 +131,7 @@ class Workflow(FWSerializable):
             m_state = 'WAITING'
 
         else:
-            # my state depends on launch
+            # my state depends on launch whose state has the highest 'score' in STATE_RANKS
             max_score = 0
             m_state = 'READY'
             m_action = None
@@ -181,7 +179,8 @@ class Workflow(FWSerializable):
         self.links = Workflow.Links(new_l)
 
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links.to_dict(), 'metadata': self.metadata}
+        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()], 'links': self.links.to_dict(),
+                'metadata': self.metadata}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
@@ -190,45 +189,9 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']), m_dict['metadata'])
+        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']),
+                        m_dict['metadata'])
 
     @classmethod
     def from_FireWork(cls, fw):
         return Workflow([fw], None)
-
-    #TODO: add .gz support
-    def to_tarfile(self, f_name='fwf.tar', f_format='json'):
-        try:
-            out = tarfile.open(f_name, "w")
-
-            # write out the links
-            l_str = self.links.to_format(f_format)
-            l_info = tarfile.TarInfo('links.' + f_format)
-            l_info.size = len(l_str)
-            out.addfile(l_info, StringIO(l_str))
-
-            # write out fws
-            for fw in self.id_fw.itervalues():
-                fw_str = fw.to_format(f_format)
-                fw_info = tarfile.TarInfo('fw_{}.{}'.format(fw.fw_id, f_format))
-                fw_info.size = len(fw_str)
-                out.addfile(fw_info, StringIO(fw_str))
-
-        finally:
-            out.close()
-
-    @classmethod
-    def from_tarfile(cls, tar_filename):
-        t = tarfile.open(tar_filename, 'r')
-        links = None
-        fws = []
-        for f_name in t.getnames():
-            m_file = t.extractfile(f_name)
-            m_format = m_file.name.split('.')[-1]
-            m_contents = m_file.read()
-            if 'links' in f_name:
-                links = Workflow.Links.from_format(m_contents, m_format)
-            else:
-                fws.append(FireWork.from_format(m_contents, m_format))
-
-        return Workflow(fws, dict(links))
