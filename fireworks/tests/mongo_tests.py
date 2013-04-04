@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 import unittest
+import time
 from fireworks.core.firework import FireWork
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -74,20 +75,22 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'], 'test2\n')
 
-
     def test_fibadder(self):
-        import socket
-        # TODO: fix me! make sure this unit test runs correctly on all machines, not just my local machine!!
-        # if 'computron' in socket.gethostname():
         fib = FibonacciAdderTask()
         fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 3})
         self.lp.add_wf(fw)
         rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=3)
+
+        # give a few seconds for update
+        nloops = 0
+        while self.lp.get_launch_by_id(3).state != 'COMPLETED' and nloops < 45:
+            time.sleep(1)
+            nloops += 1
+
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
         self.assertFalse(self.lp.run_exists())
-
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
