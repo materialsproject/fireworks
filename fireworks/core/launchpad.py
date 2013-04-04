@@ -278,7 +278,7 @@ class LaunchPad(FWSerializable):
         return m_fw, launch_id
 
     def unreserve(self, launch_id):
-        self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
+        self.launches.find_and_modify({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
         self.fireworks.update({'launches': launch_id, 'state': 'RESERVED'}, {'$set': {'state': 'READY'}}, multi=True)
         # self.connection.fsync()
 
@@ -296,7 +296,7 @@ class LaunchPad(FWSerializable):
         return bad_launch_ids
 
     def mark_fizzled(self, launch_id):
-        self.launches.update({'launch_id': launch_id}, {'$set': {'state': 'FIZZLED'}})
+        self.launches.find_and_modify({'launch_id': launch_id}, {'$set': {'state': 'FIZZLED'}})
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw_data['fw_id']
             wf = self.get_wf_by_fw_id(fw_id)
@@ -318,7 +318,7 @@ class LaunchPad(FWSerializable):
     def _set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.set_reservation_id(reservation_id)
-        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
         # self.connection.fsync()
 
     def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
@@ -348,7 +348,7 @@ class LaunchPad(FWSerializable):
         l_id = reserved_launch.launch_id if reserved_launch else self.get_new_launch_id()
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history, launch_id=l_id, fw_id=m_fw.fw_id)
 
-        self.launches.update({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
         if not reserved_launch:
@@ -400,7 +400,7 @@ class LaunchPad(FWSerializable):
     def _ping_launch(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history()
-        self.launches.update({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
     def get_new_fw_id(self):
         """
@@ -425,7 +425,7 @@ class LaunchPad(FWSerializable):
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-            self.fireworks.update({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
+            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
 
         return old_new
 
@@ -444,7 +444,7 @@ class LaunchPad(FWSerializable):
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
         # redo the links
-        self.workflows.update({'nodes': fw_id}, wf.to_db_dict())
+        self.workflows.find_and_modify({'nodes': fw_id}, wf.to_db_dict())
         # self.connection.fsync()  # fsync the changes
 
     def _steal_launches(self, thief_fw):
