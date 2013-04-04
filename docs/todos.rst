@@ -34,8 +34,6 @@ Major Features
 
 * No negative fw_ids needed when returning FWAction
 
-* QueueParams should be part of QueueAdapter
-
 * A way to refresh WF manually before marking them as fizzled - sometimes the "push" just doesn't work...
     * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
 
@@ -69,13 +67,15 @@ Misc.
 
 * Install using pip only, not Github devleopers! Package the tutorial separately.
 
+* Add stats
+
 * Fully support .tar?
 
 * Clean up job_exists() calls - they are now expensive!
 
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify.
 
-* Change priority / defuse when state < RESERVED. Do this for an entire workflow or an individual FW.
+* Allow user to changea FW's priority or defuse it (when state < RESERVED). Do this for an entire workflow or an individual FW.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
