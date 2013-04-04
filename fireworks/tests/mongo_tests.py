@@ -81,10 +81,12 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=3)
 
-        # give a few seconds for update
+        # give a few seconds for update - mainly for circle CI
         nloops = 0
         while self.lp.get_launch_by_id(3).state != 'COMPLETED' and nloops < 45:
-            time.sleep(1)
+            print self.lp.get_launch_by_id(3).to_dict()
+            time.sleep(3)
+            self.assertTrue(True)  # helps keep Circle going during this time...
             nloops += 1
 
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
