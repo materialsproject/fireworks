@@ -64,7 +64,7 @@ class FWAction(FWSerializable):
      FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.
     """
 
-    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'DETOUR', 'CREATE', 'PHOENIX', 'BREAK']
+    commands = ['CONTINUE', 'DEFUSE', 'MODIFY', 'BREAK']
 
     def __init__(self, command, stored_data=None, mod_spec=None):
         """
