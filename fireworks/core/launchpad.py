@@ -402,9 +402,10 @@ class LaunchPad(FWSerializable):
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
         # TODO: Fizzle the FW if there is really an unconfirm-able write
-        nloops = 1
+        nloops = 0
         while not self.launches.find_one({'launch_id': l_id, 'state': 'RUNNING'}):
             self.m_logger.debug('Waiting for a delayed write... (checkout_fw)')
+            nloops += 1
             if nloops % 20 == 0:
                 self.m_logger.info('Fixing a lost write!! (checkout_fw)')
                 self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
@@ -447,9 +448,10 @@ class LaunchPad(FWSerializable):
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
         # I can't believe this is actually necessary (and yes, it's necessary)
-        nloops = 1
+        nloops = 0
         while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
             self.m_logger.debug('Waiting for a delayed write... (complete_launch)')
+            nloops += 1
             if nloops % 20 == 0:
                 self.m_logger.debug('Fixing a lost write!! (complete_launch)')
                 self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
