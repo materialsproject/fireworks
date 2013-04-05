@@ -55,7 +55,7 @@ class LaunchPad(FWSerializable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        self.connection = MongoClient(host, port)
+        self.connection = MongoClient(host, port, j=True)
         self.database = self.connection[name]
         if username:
             self.database.authenticate(username, password)
@@ -401,6 +401,7 @@ class LaunchPad(FWSerializable):
 
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
+        # TODO: Fizzle the FW if there is really an unconfirm-able write
         nloops = 1
         while not self.launches.find_one({'launch_id': l_id, 'state': 'RUNNING'}):
             self.m_logger.debug('Waiting for a delayed write... (checkout_fw)')
