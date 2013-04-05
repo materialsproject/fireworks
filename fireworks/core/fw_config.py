@@ -14,7 +14,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
-
 def singleton(class_):
     instances = {}
 
@@ -24,7 +23,6 @@ def singleton(class_):
         return instances[class_]
 
     return getinstance
-
 
 @singleton
 class FWConfig(object):
@@ -42,7 +40,7 @@ class FWConfig(object):
 
         self.FW_LOGGING_FORMAT = '%(asctime)s %(levelname)s %(message)s'  # format for loggers
 
-        self.QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in certain cases
+        self.QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in failures
         self.QUEUE_UPDATE_INTERVAL = 15  # max interval (seconds) needed for queue to update after submitting a job
 
         self.SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
@@ -51,12 +49,11 @@ class FWConfig(object):
         self.PRINT_FW_YAML = False
 
         self.PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
-        self.RUN_EXPIRATION_SECS = self.PING_TIME_SECS * 4  # if a job is not pinged in this much time,
-        # we mark it FIZZLED
+        self.RUN_EXPIRATION_SECS = self.PING_TIME_SECS * 4  # mark job as FIZZLED if not pinged in this time
 
-        self.MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals
+        self.MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals when running infinite maintenance
 
-        self.RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue for 14 days before we
+        self.RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue this long before we
         # cancel its reservation
 
         self.LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
