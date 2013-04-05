@@ -401,7 +401,7 @@ class LaunchPad(FWSerializable):
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
         while not self.launches.find_one({'launch_id': l_id, 'state': 'RUNNING'}):
-            self.m_logger.info('Fixed a lost write!! (position 1)')
+            self.m_logger.debug('Fixed a lost write!! (position 1)')
             self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
             time.sleep(2)
 
@@ -443,6 +443,7 @@ class LaunchPad(FWSerializable):
 
         # I can't believe this is actually necessary (and yes, it's necessary)
         while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
+            self.m_logger.debug('Fixed a lost write! (in _complete_launch)')
             self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
             time.sleep(2)
 
