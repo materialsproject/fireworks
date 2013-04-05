@@ -1,0 +1,38 @@
+{
+    "launches": [
+        {
+            "fworker": {
+                "category": "general worker", 
+                "query": "{}", 
+                "name": "anonymous worker"
+            }, 
+            "ip": "131.243.240.109", 
+            "fw_id": 5, 
+            "state": "RUNNING", 
+            "host": "computron-7.dhcp.lbl.gov", 
+            "launch_dir": "/Users/ajain/Documents/code_matgen/fireworks/fw_tutorials/dynamic_wf", 
+            "action": null, 
+            "launch_id": 5, 
+            "state_history": [
+                {
+                    "updated_on": "2013-04-05T00:38:39.327740", 
+                    "state": "RUNNING", 
+                    "created_on": "2013-04-05T00:38:39.327728"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 5, 
+    "spec": {
+        "stop_point": 100, 
+        "larger": 5, 
+        "smaller": 3, 
+        "_tasks": [
+            {
+                "_fw_name": "Fibonacci Adder Task"
+            }
+        ]
+    }, 
+    "created_on": "2013-04-05T00:38:38.230773", 
+    "state": "RUNNING"
+}

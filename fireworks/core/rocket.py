@@ -74,7 +74,7 @@ class Rocket():
                     m_action = FWAction.from_file('FWAction.yaml')
 
                 if not m_action:
-                    m_action = FWAction('CONTINUE')
+                    m_action = FWAction()
 
                 # update the global stored data with the data to store from this particular Task
                 all_stored_data.update(m_action.stored_data)
@@ -90,5 +90,5 @@ class Rocket():
         except:
             ping_stop.set()
             traceback.print_exc()
-            m_action = FWAction('CONTINUE', stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()}, exit=True)
+            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()}, exit=True)
             lp._complete_launch(launch_id, m_action, 'FIZZLED')

@@ -1,0 +1,38 @@
+{
+    "launches": [
+        {
+            "fworker": {
+                "category": "general worker", 
+                "query": "{}", 
+                "name": "anonymous worker"
+            }, 
+            "ip": "131.243.240.109", 
+            "fw_id": 1, 
+            "state": "RUNNING", 
+            "host": "computron-7.dhcp.lbl.gov", 
+            "launch_dir": "/Users/ajain/Documents/code_matgen/fireworks/fw_tutorials/installation", 
+            "action": null, 
+            "launch_id": 1, 
+            "state_history": [
+                {
+                    "updated_on": "2013-04-05T00:17:34.149461", 
+                    "state": "RUNNING", 
+                    "created_on": "2013-04-05T00:17:34.149453"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 1, 
+    "spec": {
+        "_tasks": [
+            {
+                "use_shell": true, 
+                "_fw_name": "Script Task", 
+                "use_shlex": true, 
+                "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
+            }
+        ]
+    }, 
+    "created_on": "2013-04-05T00:17:29.728253", 
+    "state": "RUNNING"
+}

@@ -1,7 +1,6 @@
-from fireworks.core.firework import FireWork
+from fireworks.core.firework import FireWork, Workflow
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
-from fireworks.core.workflow import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
 __author__ = 'Anubhav Jain'

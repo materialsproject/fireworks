@@ -77,9 +77,9 @@ class ScriptTask(FireTaskBase, FWSerializable):
         output['returncode'] = returncode
 
         if self['defuse_bad_rc'] and returncode != 0:
-            return FWAction('DEFUSE', output)
+            return FWAction(stored_data=output, defuse_children=True)
 
-        return FWAction('CONTINUE', output)
+        return FWAction(stored_data=output)
 
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):

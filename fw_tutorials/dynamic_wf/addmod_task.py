@@ -24,5 +24,4 @@ class AddModifyTask(FireTaskBase):
         print "The sum of {} is: {}".format(input_array, m_sum)
 
         # store the sum; push the sum to the input array of the next sum
-        return FWAction('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
-
+        return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])

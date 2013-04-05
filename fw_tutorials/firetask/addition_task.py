@@ -24,4 +24,4 @@ class AdditionTask(FireTaskBase, FWSerializable):
 
         print "The sum of {} is: {}".format(input_array, m_sum)
 
-        return FWAction('CONTINUE', {'sum': m_sum})
+        return FWAction(stored_data={'sum': m_sum})

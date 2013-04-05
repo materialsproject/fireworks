@@ -9,10 +9,9 @@ import traceback
 import yaml
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import FireWork
+from fireworks.core.firework import FireWork, Workflow
 import ast
 import json
-from fireworks.core.workflow import Workflow
 from fireworks import __version__ as FW_VERSION
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, _get_obj_dict_from_file
 
