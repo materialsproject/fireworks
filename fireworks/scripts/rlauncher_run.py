@@ -64,7 +64,7 @@ def rlaunch():
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.loglvl, args.nlaunches, args.sleep)
+        rapidfire(launchpad, fworker, None, args.nlaunches, args.sleep, args.loglvl)
 
     else:
         launch_rocket(launchpad, fworker, args.loglvl, args.fw_id)

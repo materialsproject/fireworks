@@ -19,15 +19,14 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
-def launch_rocket(launchpad, fworker=None, strm_lvl=None, fw_id=None):
+def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     """
     Run a single rocket in the current directory
     :param launchpad: (LaunchPad)
     :param fworker: (FWorker)
-    :param strm_lvl: (str) level at which to output logs to stdout
     :param fw_id: (int) if set, a particular FireWork to run
+    :param strm_lvl: (str) level at which to output logs to stdout
     """
-    fworker = fworker if fworker else FWorker()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
 
     l_logger.info('Launching Rocket')
@@ -36,7 +35,7 @@ def launch_rocket(launchpad, fworker=None, strm_lvl=None, fw_id=None):
     l_logger.info('Rocket finished')
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, strm_lvl=None, nlaunches=0, sleep_time=None, max_loops=-1):
+def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, sleep_time=None, max_loops=-1, strm_lvl='INFO'):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -45,11 +44,13 @@ def rapidfire(launchpad, fworker=None, m_dir=None, strm_lvl=None, nlaunches=0, s
     :param fworker: (FWorker object)
     :param m_dir: (str) the directory in which to loop Rocket running
     :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
+    :param sleep_time: (int) secs to sleep between rapidfire loop iterations
+    :param max_loops: (int) maximum number of loops
+    :param strm_lvl: (str) level at which to output logs to stdout
     """
 
     sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
-    fworker = fworker if fworker else FWorker()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
 
@@ -60,7 +61,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, strm_lvl=None, nlaunches=0, s
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
-            launch_rocket(launchpad, fworker, strm_lvl)
+            launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
             num_launched += 1
             if num_launched == nlaunches:
                 break

@@ -11,6 +11,8 @@ import os
 import glob
 import time
 from fireworks.core.fworker import FWorker
+from fireworks.queue.queue_adapter import QueueAdapterBase
+from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
 from fireworks.core.fw_config import FWConfig
 
@@ -22,31 +24,26 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(qadapter, launcher_dir='.', strm_lvl=None, launchpad=None, fworker=None, reserve=False):
+def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO'):
     """
     Submit a single job to the queue.
     
+    :param launchpad:
+    :param fworker: The FireWorker for this resource
     :param qadapter: A QueueAdapterBase instance
     :param launcher_dir: The directory where to submit the job
+    :param reserve: Whether to queue in reservation mode
+    :param strm_lvl: level at which to stream log messages
     """
-
-    #TODO: move the jobs_exist code here, so the singleshot() also knows if a job exists before submitting to the queue!
     fworker = fworker if fworker else FWorker()
-
-    # convert launch_dir to absolute path
     launcher_dir = os.path.abspath(launcher_dir)
-
-    # initialize logger
-    l_dir = None if not launchpad else launchpad.logdir
-    l_logger = get_fw_logger('queue.launcher', l_dir=l_dir, stream_level=strm_lvl)
+    l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
 
     # make sure launch_dir exists:
     if not os.path.exists(launcher_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
 
-    jobs_exist = not launchpad or launchpad.run_exists()
-
-    if jobs_exist:
+    if launchpad.run_exists():
         try:
             # get the queue adapter
             l_logger.debug('getting queue adapter')
@@ -58,11 +55,12 @@ def launch_rocket_to_queue(qadapter, launcher_dir='.', strm_lvl=None, launchpad=
             if reserve:
                 l_logger.debug('finding a FW to reserve...')
                 fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
-                l_logger.debug('reserved FW with fw_id: {}'.format(fw.fw_id))
+                l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
                 if '_queueadapter' in fw.spec:
                     l_logger.debug('updating queue params using FireWork spec..')
-                    # TODO: make sure this does not affect future FireWorks!!
+                    qadapter = load_object(qadapter.to_dict())  # make a defensive copy
                     qadapter.update(fw.spec['_queueadapter'])
+
                 # update the exe to include the FW_id
                 if 'singleshot' not in qadapter.get('exe', ''):
                     raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
@@ -72,8 +70,6 @@ def launch_rocket_to_queue(qadapter, launcher_dir='.', strm_lvl=None, launchpad=
             l_logger.debug('writing queue script')
             with open(FWConfig().SUBMIT_SCRIPT_NAME, 'w') as f:
                 queue_script = qadapter.get_script_str(launcher_dir)
-                if not queue_script:
-                    raise RuntimeError('queue script could not be written, check job params and queue adapter!')
                 f.write(queue_script)
             l_logger.info('submitting queue script')
             reservation_id = qadapter.submit_to_queue(FWConfig().SUBMIT_SCRIPT_NAME)
@@ -88,7 +84,8 @@ def launch_rocket_to_queue(qadapter, launcher_dir='.', strm_lvl=None, launchpad=
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
 
 
-def rapidfire(qadapter, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lvl=None, nlaunches=0, sleep_time=60, launchpad=None, fworker=None, reserve=False):
+def rapidfire(launchpad, qadapter, fworker, launch_dir='.', njobs_queue=10, njobs_block=500, nlaunches=0,
+              sleep_time=None, reserve=False, strm_lvl='INFO'):
     """
     Submit many jobs to the queue.
     
@@ -98,13 +95,10 @@ def rapidfire(qadapter, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lv
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     """
 
-    # convert launch_dir to absolute path
+    sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
     launch_dir = os.path.abspath(launch_dir)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
-
-    # initialize logger
-    l_dir = None if not launchpad else launchpad.logdir
-    l_logger = get_fw_logger('queue.launcher', l_dir=l_dir, stream_level=strm_lvl)
+    l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
 
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
@@ -119,9 +113,8 @@ def rapidfire(qadapter, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lv
         while True:
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
-            jobs_exist = not launchpad or launchpad.run_exists()
 
-            while jobs_in_queue < njobs_queue and jobs_exist:
+            while jobs_in_queue < njobs_queue and launchpad.run_exists():
                 l_logger.info('Launching a rocket!')
 
                 # switch to new block dir if it got too big
@@ -132,14 +125,13 @@ def rapidfire(qadapter, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lv
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(qadapter, launcher_dir, strm_lvl, launchpad, fworker, reserve)
+                launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir, reserve, strm_lvl)
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
                 time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
                 num_launched += 1
                 if num_launched == nlaunches:
                     break
-                jobs_exist = not launchpad or launchpad.run_exists()
                 jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
             if num_launched == nlaunches or nlaunches == 0:
@@ -155,7 +147,8 @@ def rapidfire(qadapter, launch_dir='.', njobs_queue=10, njobs_block=500, strm_lv
 def _njobs_in_dir(block_dir):
     """
     Internal method to count the number of jobs inside a block
-    :param block_dir: the block directory we want to count the jobs in
+
+    :param block_dir: (str) the block directory we want to count the jobs in
     """
     return len(glob.glob('%s/launcher_*' % os.path.abspath(block_dir)))
 
@@ -165,9 +158,9 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
     Internal method to get the number of jobs in the queue using the given job params. \
     In case of failure, automatically retries at certain intervals...
     
-    :param qadapter: a QueueAdapter instance
-    :param njobs_queue: The maximum number of jobs in the queue desired
-    :param l_logger: A logger to put errors/info/warnings/etc.
+    :param qadapter: (QueueAdapter)
+    :param njobs_queue: (int) The desired maximum number of jobs in the queue
+    :param l_logger: (logger) A logger to put errors/info/warnings/etc.
     """
 
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure

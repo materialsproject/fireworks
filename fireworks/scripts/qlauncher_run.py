@@ -49,7 +49,7 @@ def qlaunch():
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block', help='maximum jobs to put in a block', default=500, type=int)
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite")', default=0)
-    rapid_parser.add_argument('--sleep', help='sleep time between loops', default=60, type=int)
+    rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 
     args = parser.parse_args()
 
@@ -67,12 +67,11 @@ def qlaunch():
     queueadapter = load_object_from_file(args.queueadapter_file)
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
-    # TODO: the number of arguments here is crazy!
     if args.command == 'rapidfire':
-        rapidfire(queueadapter, args.launch_dir, args.maxjobs_queue, args.maxjobs_block, args.loglvl, args.nlaunches,
-                  args.sleep, launchpad, fworker, args.reserve)
+        rapidfire(launchpad, fworker, queueadapter, args.launch_dir, args.maxjobs_queue, args.maxjobs_block, args.nlaunches,
+                  args.sleep, fworker, args.reserve, args.loglvl)
     else:
-        launch_rocket_to_queue(queueadapter, args.launch_dir, args.loglvl, launchpad, fworker, args.reserve)
+        launch_rocket_to_queue(launchpad, fworker, queueadapter, args.launch_dir, args.reserve, args.loglvl)
 
 
 if __name__ == '__main__':
