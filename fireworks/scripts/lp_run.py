@@ -30,7 +30,7 @@ def lpad():
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
 
-    reset_parser = subparsers.add_parser('reset', help='reset a FireWorks database')
+    reset_parser = subparsers.add_parser('reset', help='reset and re-initialize the FireWorks database')
     reset_parser.add_argument('password', help="Today's date, e.g. 2012-02-25. Required to prevent \
     against accidental initializations.")
 

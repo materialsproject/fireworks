@@ -88,7 +88,7 @@ class FWAction(FWSerializable):
 
         self.stored_data = stored_data if stored_data else {}
         self.exit = exit
-        self.update_spec = update_spec
+        self.update_spec = update_spec if update_spec else {}
         self.mod_spec = mod_spec if isinstance(mod_spec, list) else [mod_spec]
         self.additions = additions if isinstance(additions, list) else [additions]
         self.detours = detours if isinstance(detours, list) else [detours]

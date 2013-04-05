@@ -24,10 +24,10 @@ class ScriptTask(FireTaskBase, FWSerializable):
         if self['stdin_file'] and self['stdin_key']:
             raise ValueError("Script Task cannot process both a key and file as the standard in!")
 
-        self['use_shlex'] = self.get('use_shlex', True)
-        self['use_shell'] = self.get('use_shell', True)
+        self.use_shlex = self.get('use_shlex', True)
+        self.use_shell = self.get('use_shell', True)
 
-        if self['use_shlex'] and not self['use_shell']:
+        if self.use_shlex and not self.use_shell:
             self.script = shlex.split(str(self['script']))
         else:
             self.script = self['script']
@@ -46,7 +46,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
         stderr = subprocess.PIPE if self['store_stderr'] or self['stderr_file'] else sys.stderr
 
         p = subprocess.Popen(self.script, executable=self['shell_exe'], stdin=stdin, stdout=stdout, stderr=stderr,
-                             shell=self['use_shell'])
+                             shell=self.use_shell)
 
         # communicate in the standard in and get back the standard out and returncode
         if self['stdin_key']:
