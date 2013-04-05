@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-This module contains classes relevant for a FireWorker (worker computing resource)
+This module contains FireWorker, which encapsulates information about a computing resource
 """
 
 import json

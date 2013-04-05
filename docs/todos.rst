@@ -83,3 +83,5 @@ Misc.
     * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
 
 * Do something interesting with Workflow metadata
+
+* Make the FireWorker category actually do something
