@@ -64,34 +64,30 @@ class FWAction(FWSerializable):
      FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.
     """
 
-    commands = ['CONTINUE', 'CREATE', 'DEFUSE', 'MODIFY']
-
-    def __init__(self, command, stored_data=None, mod_spec=None, exit=False):
-
-        if command not in FWAction.commands:
-            raise ValueError("Invalid command: " + command)
-
-        self.command = command
+    def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, detour=None, create=None, defuse_children=False, retain_children=False):
         self.stored_data = stored_data if stored_data else {}
-        self.mod_spec = mod_spec if mod_spec else {}
         self.exit = exit
+        self.update_spec = update_spec
+        self.mod_spec = mod_spec
+        self.retain_children = retain_children
+        self.detour = detour
+        self.create = create
+        self.defuse_children = defuse_children
 
     @recursive_serialize
     def to_dict(self):
-        return {'action': self.command, "stored_data": self.stored_data, 'exit': self.exit, 'mod_spec': self.mod_spec}
+        return {'stored_data': self.stored_data, 'exit': self.exit, 'update_spec': self.update_spec,
+                'mod_spec': self.mod_spec, 'detour': self.detour, 'create': self.create, 'defuse_children': self.defuse_children, 'retain_children': self.retain_children}
 
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
-        if 'create_fw' in m_dict['mod_spec']:
-            m_dict['mod_spec']['create_fw'] = FireWork.from_dict(m_dict['mod_spec']['create_fw'])
-        return FWAction(m_dict['action'], m_dict['stored_data'], m_dict['mod_spec'])
+        d = m_dict
+        return FWAction(d['stored_data'], d['exit'], d['update_spec'], d['mod_spec'], d['detour'], d['create'], d['defuse_children'], d['retain_children'])
 
     @property
     def stop_tasks(self):
-        if self.exit:
-            return True
-        return False
+        return self.exit or self.update_spec or self.mod_spec or self.append or self.create or self.defuse_children
 
 
 class FireWork(FWSerializable):

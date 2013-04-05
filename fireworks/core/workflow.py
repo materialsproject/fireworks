@@ -84,34 +84,63 @@ class Workflow(FWSerializable):
         return self.id_fw.values()
 
     def apply_action(self, action, fw_id):
+        # TODO: better comment this method
         updated_ids = []
 
-        if action.command == 'CONTINUE':
-            pass
+        if action.update_spec:
+            for cfid in self.links[fw_id]:
+                self.id_fw[cfid].spec.update(action.update_spec)
+                updated_ids.append(cfid)
 
-        if action.command == 'DEFUSE':
-            # mark all children as defused
+        if action.mod_spec:
+            for cfid in self.links[fw_id]:
+                for mod in action.mod_spec:
+                    apply_mod(mod, self.id_fw[cfid].spec)
+                    updated_ids.append(cfid)
+
+        if action.defuse_children:
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].state = 'DEFUSED'
                 updated_ids.append(cfid)
 
-        if action.command == 'MODIFY' or 'CREATE':
-            for cfid in self.links[fw_id]:
-                self.id_fw[cfid].spec.update(action.mod_spec.get('dict_update', {}))
+        if action.create:
+            action.create = action.create if isinstance(action.create, list) else [action.create]
+            for wf in action.create:
+                updated_ids.extend(self._add_wf_to_fw(wf, fw_id, False))
 
-                for mod in action.mod_spec.get('dict_mods', []):
-                    apply_mod(mod, self.id_fw[cfid].spec)
-                    updated_ids.append(cfid)
+        if action.detour:
+            action.detour = action.detour if isinstance(action.detour, list) else [action.detour]
+            for wf in action.detour:
+                updated_ids.extend(self._add_wf_to_fw(wf, fw_id, True))
+            if not action.retain_children:
+                self.links[fw_id] = []
 
-        if action.command == 'CREATE':
-            create_fw = action.mod_spec['create_fw']
-            self.links[fw_id].append(create_fw.fw_id)
-            self.links[create_fw.fw_id] = []  # TODO: allow this to be children of original FW
-            self.id_fw[create_fw.fw_id] = create_fw
-            updated_ids.append(create_fw.fw_id)
-
-        # TODO: implement the remaining actions
         return updated_ids
+
+    def _add_wf_to_fw(self, wf, fw_id, detour):
+        updated_ids = []
+
+        if isinstance(wf, FireWork):
+            wf = Workflow.from_FireWork(wf)
+
+        root_ids = wf.root_fw_ids
+        leaf_ids = wf.leaf_fw_ids
+
+        for fw in wf.fws:
+            self.id_fw[fw.fw_id] = fw.fw_id
+            if fw.fw_id in leaf_ids and detour:
+                self.links[fw.fw_id] = self.links[fw_id]
+            elif fw.fw_id in leaf_ids:
+                self.links[fw.fw_id] = []
+            else:
+                self.links[fw.fw_id] = wf.links[fw.fw_id]
+            updated_ids.append(fw.fw_id)
+
+        for root_id in root_ids:
+            self.links[fw_id].append(root_id)  # add the root id as my child
+
+        return updated_ids
+
 
     def refresh(self, fw_id, updated_ids=None):
         updated_ids = updated_ids if updated_ids else set()  # these are the fw_ids to re-enter into the database
@@ -162,6 +191,14 @@ class Workflow(FWSerializable):
         child_ids = set(self.links.parent_links.keys())
         root_ids = all_ids.difference(child_ids)
         return list(root_ids)
+
+    @property
+    def leaf_fw_ids(self):
+        leaves = []
+        for id, children in self.links.iteritems():
+            if len(children==0):
+                leaves.append(id)
+        return leaves
 
     def _reassign_ids(self, old_new):
         # update id_fw
