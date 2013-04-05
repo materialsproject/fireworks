@@ -327,7 +327,11 @@ class LaunchPad(FWSerializable):
         return m_fw, launch_id
 
     def unreserve(self, launch_id):
-        self.launches.find_and_modify({'launch_id': launch_id}, {'$set': {'state': 'READY'}})
+        # Do a confirmed write and make sure state_history is preserved
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.state = 'READY'
+        self._upsert_launch(m_launch)
+
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
             self.fireworks.find_and_modify({'fw_id': fw['fw_id']}, {'$set': {'state': 'READY'}})
 
@@ -345,7 +349,11 @@ class LaunchPad(FWSerializable):
         return bad_launch_ids
 
     def mark_fizzled(self, launch_id):
-        self.launches.find_and_modify({'launch_id': launch_id}, {'$set': {'state': 'FIZZLED'}})
+        # Do a confirmed write and make sure state_history is preserved
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.state = 'FIZZLED'
+        self._upsert_launch(m_launch)
+
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw_data['fw_id']
             wf = self.get_wf_by_fw_id(fw_id)
@@ -528,6 +536,11 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug('Waiting for a delayed write of Launch...')
             nloops += 1
             if nloops == 80:
+                if m_launch.state == 'FIZZLED':
+                    # We're unable to mark the launch as FIZZLED
+                    self.m_logger.critical('UNABLE to mark launch_id: {} as fizzled!'.format(l_id))
+                    break
+                # mark the launch as FIZZLED because we're unable to update its state...
                 self.m_logger.error('FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
                 self.mark_fizzled(l_id)
                 break

@@ -25,6 +25,8 @@ FW Docs
 
 * Test and document defuse / reignite FW
 
+* Update all tutorials so config file is handled smoothly, not terribly...m
+
 Major Features
 ==============
 
@@ -35,9 +37,6 @@ Major Features
 * Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
 
 * More and better unit tests, e.g. unit tests of scripts
-
-* A way to refresh WF manually before marking them as fizzled - sometimes the "push" just doesn't work...
-    * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
 
 * Add way to monitor a file during the run
 
@@ -59,9 +58,7 @@ Misc.
 
 * Finish all planned tutorials
 
-* Add user database indices for faster querying of certain specs
-
-* Update all tutorials for the config directory option rather than individual files.
+* Add user database indices for faster querying of certain user specs
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
@@ -82,3 +79,6 @@ Misc.
 * No negative fw_ids needed when returning FWAction
 
 * Go through logging, make sure it's sane
+
+* A way to refresh WF manually before marking them as fizzled - sometimes the "push" just doesn't work...
+    * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
