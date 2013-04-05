@@ -2,7 +2,7 @@
 Installation Tutorial (part 2: the Worker)
 ==========================================
 
-If you've set up your FireServer, the next step is to set up worker nodes to run your jobs on a large scale (perhaps through a queuing system). This tutorial will guide you through FireWorks installation on a worker node. Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
+If you've set up your FireServer, the next step is to set up worker nodes to run your jobs on a large scale. This tutorial will guide you through FireWorks installation on a worker node. Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
 
 This tutorial can be safely completed from the command line, and requires no programming.
 
@@ -38,35 +38,29 @@ The FireWorker needs to know the login information for the FireServer. On the **
 
     cd <INSTALL_DIR>/fw_tutorials/installation_pt2
 
-where <INSTALL_DIR> is your FireWorks installation directory.
+   where <INSTALL_DIR> is your FireWorks installation directory.
 
-#. Copy the LaunchPad file to a new name::
+#. Modify the ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address of your FireServer.
 
-    cp launchpad.yaml my_launchpad.yaml
+   .. tip:: If you do not know the IP address of your FireServer and you are on a Linux machine, you can try running ``/sbin/ifconfig``.
 
-#. Modify your ``my_launchpad.yaml`` to contain the credentials of your FireServer. In particular, the ``host`` parameter must be changed to the IP address of your FireServer.
-
-.. tip:: If you do not know the IP address of your FireServer and you are on a Linux machine, you can try running ``/sbin/ifconfig``.
+   .. note:: The name ``my_launchpad.yaml`` is a special filename that contains your database credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-l`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
 #. Confirm that you can query the FireServer from your FireWorker::
 
-    lpad -l my_launchpad.yaml get_fw 1
+    lpad get_fw 1
 
    This should print out the description of a FireWork that is *READY* to run.
 
-.. tip:: If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports. If you're still having problems, you can use telnet to check if a port is open: ``telnet <HOSTNAME> <PORTNAME>``, where ``<HOSTNAME>`` is your FireServer hostname and ``<PORTNAME>`` is your Mongo port (probably 27017).
+   .. tip:: If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports. If you're still having problems, you can use telnet to check if a port is open: ``telnet <HOSTNAME> <PORTNAME>``, where ``<HOSTNAME>`` is your FireServer hostname and ``<PORTNAME>`` is your Mongo port (probably 27017).
 
 
 Configure your FireWorker
 -------------------------
 
-Staying in the ``installation_pt2`` tutorial directory on the FireWorker,
+The FireWorker file contains information about this worker's configuration. Staying in the ``installation_pt2`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
 
-1. Copy the FireWorker file to a new name::
-
-    cp fworker.yaml my_fworker.yaml
-
-2. Modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
+   .. note:: The name ``my_fworker.yaml`` is a special filename that contains your FireWorker's credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-w`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
 Launch a Rocket on the FireWorker
 ---------------------------------
