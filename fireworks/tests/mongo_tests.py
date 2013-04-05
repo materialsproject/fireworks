@@ -58,7 +58,7 @@ class MongoTests(unittest.TestCase):
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})
         self.lp.add_wf(fw)
-        rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=1)
+        rapidfire(self.lp, m_dir=MODULE_DIR)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['sum'], 12)
 
     def test_org_wf(self):
@@ -77,7 +77,7 @@ class MongoTests(unittest.TestCase):
         fib = FibonacciAdderTask()
         fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 3})
         self.lp.add_wf(fw)
-        rapidfire(self.lp, m_dir=MODULE_DIR, nlaunches=3)
+        rapidfire(self.lp, m_dir=MODULE_DIR)
 
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
