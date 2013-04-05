@@ -316,7 +316,7 @@ class LaunchPad(FWSerializable):
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id, fw_id=m_fw.fw_id)
-        self.launches.find_and_modify({'_id': -1}, m_launch.to_db_dict(), upsert=True)  # use f&modify for atomicity
+        self._upsert_launch(m_launch)
 
         # add launch to FW
         m_fw.launches.append(m_launch)
@@ -397,19 +397,7 @@ class LaunchPad(FWSerializable):
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history, launch_id=l_id,
                           fw_id=m_fw.fw_id)
 
-        l = self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
-
-        # confirm write
-        # I can't believe this is actually necessary (and yes, it appears to be necessary)
-        # TODO: Fizzle the FW if there is really an unconfirm-able write
-        nloops = 0
-        while not self.launches.find_one({'launch_id': l_id, 'state': 'RUNNING'}):
-            self.m_logger.debug('Waiting for a delayed write... (checkout_fw)')
-            nloops += 1
-            if nloops % 20 == 0:
-                self.m_logger.info('Fixing a lost write!! (checkout_fw)')
-                self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
-            time.sleep(2)
+        self._upsert_launch(m_launch)
 
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
@@ -445,17 +433,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = state
         m_launch.action = action
-        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
-
-        # I can't believe this is actually necessary (and yes, it's necessary)
-        nloops = 0
-        while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
-            self.m_logger.debug('Waiting for a delayed write... (complete_launch)')
-            nloops += 1
-            if nloops % 20 == 0:
-                self.m_logger.debug('Fixing a lost write!! (complete_launch)')
-                self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
-            time.sleep(2)
+        self._upsert_launch(m_launch)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -535,5 +513,25 @@ class LaunchPad(FWSerializable):
                         stolen = True
                         self.m_logger.info(
                             'Duplicate found! fwids {} and {}'.format(thief_fw.fw_id, potential_match['fw_id']))
-
         return stolen
+
+    def _upsert_launch(self, m_launch):
+        # Do a confirmed write of Launch
+
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+
+        l_id = m_launch.launch_id
+        # confirm write
+        # I can't believe this is actually necessary (and yes, it appears to be necessary)
+        nloops = 0
+        while not self.launches.find_one({'launch_id': l_id, 'state': m_launch.state}):
+            self.m_logger.debug('Waiting for a delayed write of Launch...')
+            nloops += 1
+            if nloops % 20 == 0:
+                self.m_logger.info('Fixing a lost write of Launch!!')
+                self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
+            time.sleep(4)
+            if nloops == 100:
+                self.m_logger.error('FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
+                self.mark_fizzled(l_id)
+                break
