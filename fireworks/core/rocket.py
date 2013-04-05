@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-TODO: add docs
+A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
 import os
 import traceback
@@ -33,6 +33,7 @@ class Rocket():
         
         :param launchpad: A LaunchPad object for interacting with the FW database
         :param fworker: A FWorker object describing the computing resource
+        :param fw_id: id of a specific FireWork to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -40,7 +41,7 @@ class Rocket():
 
     def run(self):
         """
-        Run the rocket (actually check out a job from the database and execute it)
+        Run the rocket (check out a job from the database and execute it)
         """
         all_stored_data = {}  # stored data for *all* the Tasks
 
@@ -61,9 +62,11 @@ class Rocket():
         # set up heartbeat (pinging the server that we're still alive)
         try:
             ping_stop = threading.Event()
-            ping_thread = threading.Thread(target=ping_launch,  args=(lp, launch_id, ping_stop, threading.currentThread()))
+            ping_thread = threading.Thread(target=ping_launch,
+                                           args=(lp, launch_id, ping_stop, threading.currentThread()))
             ping_thread.start()
 
+            # execute the FireTasks!
             for my_task in m_fw.tasks:
                 m_action = my_task.run_task(m_fw.spec)
 
@@ -90,5 +93,6 @@ class Rocket():
         except:
             ping_stop.set()
             traceback.print_exc()
-            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(), '_exception': traceback.format_exc()}, exit=True)
+            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
+                                             '_exception': traceback.format_exc()}, exit=True)
             lp._complete_launch(launch_id, m_action, 'FIZZLED')

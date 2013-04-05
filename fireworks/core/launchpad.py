@@ -20,11 +20,14 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 30, 2013'
 
 
+# TODO: lots of duplication reduction and cleanup possible
+
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
 # least set the state to FIZZLED or ERROR and add traceback...
 
 # Note: Always use find_and_modify() for *all* database updates. Otherwise you will run into synchronization /
-# delayed write errors from Mongo.
+# delayed write errors from Mongo. Even find_and_modify() does not guarantee zero errors, but it reduces incidents
+# considerably.
 
 
 class LaunchPad(FWSerializable):
@@ -349,6 +352,8 @@ class LaunchPad(FWSerializable):
         return bad_launch_ids
 
     def mark_fizzled(self, launch_id):
+        # TODO: this seems a lot like the code in _complete_launch...DRY
+
         # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'FIZZLED'
