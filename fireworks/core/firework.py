@@ -120,6 +120,10 @@ class FWAction(FWSerializable):
 
 
 class FireWork(FWSerializable):
+    """
+    A FireWork is a workflow step and might be contain several FireTasks
+    """
+
     # 'Canceled' is the dominant spelling over 'cancelled' in the US starting around 1985...(Google n-grams)
     STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'CANCELED': 6,
                    'COMPLETED': 7}
@@ -174,6 +178,10 @@ class FireWork(FWSerializable):
 
 
 class Launch(FWSerializable, object):
+    """
+    A Launch encapsulates data about a specific run of a FireWork on a computing resource
+    """
+
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, action=None, state_history=None,
                  launch_id=None, fw_id=None):
         """
@@ -337,8 +345,14 @@ class Launch(FWSerializable, object):
 
 
 class Workflow(FWSerializable):
+    """
+    A Workflow connects a group of FireWorks in an execution order
+    """
 
     class Links(dict, FWSerializable):
+        """
+        An inner class for storing the DAG links between FireWorks
+        """
 
         @property
         def nodes(self):
@@ -358,28 +372,27 @@ class Workflow(FWSerializable):
 
         def to_db_dict(self):
             # convert to str form for Mongo, which cannot have int keys
-            m_dict = {'links': dict([(str(k), list(v)) for (k, v) in self.iteritems()]),
+            m_dict = {'links': dict([(str(k), v) for (k, v) in self.iteritems()]),
                       'parent_links': dict([(str(k), v) for (k, v) in self.parent_links.iteritems()]),
                       'nodes': self.nodes}
             return m_dict
 
         @classmethod
         def from_dict(cls, m_dict):
-            m_dict = dict([(int(k), list(v)) for (k, v) in m_dict.iteritems()])
+            m_dict = dict([(int(k), v) for (k, v) in m_dict.iteritems()])
             return Workflow.Links(m_dict)
 
     def __init__(self, fireworks, links_dict=None, metadata=None):
         """
         :param fireworks: ([FireWork]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(child_id1, child_id2)]
-        :param metadata: metadata for this Workflow
+        :param metadata: (dict) metadata for this Workflow
         """
 
         links_dict = links_dict if links_dict else {}
 
         self.id_fw = {}  # main dict containing mapping of an id to a FireWork object
         for fw in fireworks:
-            # check uniqueness, cannot have two FWs with the same id!
             if fw.fw_id in self.id_fw:
                 raise ValueError('FW ids must be unique!')
             self.id_fw[fw.fw_id] = fw
