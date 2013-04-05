@@ -433,6 +433,11 @@ class LaunchPad(FWSerializable):
         m_launch.action = action
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
+        while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
+            self.m_logger.debug('Fixed a lost write!!')
+            self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
+            time.sleep(5)
+
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
