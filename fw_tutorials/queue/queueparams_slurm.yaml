@@ -10,5 +10,5 @@ slurm_options: {}
 slurm_tags: []
 job_name: null
 modules: [some/module,some/other/module]
-logging_dir: path/to/logging
+logdir: path/to/logging
 

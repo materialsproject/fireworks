@@ -8,6 +8,6 @@ pbs_options: {}
 pbs_tags: []
 job_name: null
 modules: []
-logging_dir: path/to/logging
+logdir: path/to/logging
 
 
