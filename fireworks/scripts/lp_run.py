@@ -5,15 +5,13 @@ A runnable script for managing a FireWorks database (a command-line interface to
 """
 from argparse import ArgumentParser
 import os
-import traceback
-import yaml
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import FireWork, Workflow
+from fireworks.core.firework import Workflow
 import ast
 import json
 from fireworks import __version__ as FW_VERSION
-from fireworks.utilities.fw_serializers import DATETIME_HANDLER, _get_obj_dict_from_file
+from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -21,19 +19,6 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
-
-
-def add(lp, filename):
-    try:
-        obj_dict = _get_obj_dict_from_file(filename)
-        if 'fws' in obj_dict:
-            fwf = Workflow.from_file(filename)
-        else:
-            fwf = FireWork.from_file(filename)
-        lp.add_wf(fwf)
-    except:
-        print 'Error reading FireWork/Workflow file.'
-        traceback.print_exc()
 
 
 def lpad():
@@ -128,11 +113,13 @@ def lpad():
             print lp.detect_unreserved(args.time, args.fix)
 
         elif args.command == 'add':
-            add(lp, args.wf_file)
+            fwf = Workflow.from_file(args.wf_file)
+            lp.add_wf(fwf)
 
         elif args.command == 'add_dir':
             for filename in os.listdir(args.wf_dir):
-                add(lp, filename)
+                fwf = Workflow.from_file(filename)
+                lp.add_wf(fwf)
 
         elif args.command == 'maintain':
             lp.maintain(args.infinite, args.maintain_interval)

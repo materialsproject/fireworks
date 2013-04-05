@@ -3,12 +3,14 @@
 """
 This module contains some of the most central FireWorks classes:
 
+
+- A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph)
+- A FireWork defines a workflow step and contains one or more FireTasks along with its Launches.
+- A Launch describes the run of a FireWork on a computing resource.
 - A FireTaskBase defines the contract for tasks that run within a FireWork (FireTasks)
 - A FWAction encapsulates the output of a FireTask and tells FireWorks what to do next after a job completes
-- A FireWork defines a workflow step and contains one or more FireTasks.
-- A Launch describes the run of a FireWork on a computing resource.
-- A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph)
 """
+
 from collections import defaultdict
 
 import datetime
@@ -27,8 +29,10 @@ __date__ = "Feb 5, 2013"
 
 class FireTaskBase(dict, FWSerializable):
     """
-    FireTaskBase is used as an abstract class that defines a computing task (FireTask). All FireTasks
+    FireTaskBase is used like an abstract class that defines a computing task (FireTask). All FireTasks
     should inherit from FireTaskBase.
+
+    You can set parameters of a FireTask like you'd use a dict.
     """
 
     def run_task(self, fw_spec):
@@ -67,44 +71,43 @@ class FWAction(FWSerializable):
      FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.
     """
 
-    def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, detours=None, additions=None, defuse_children=False, retain_children=False):
+    def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, additions=None, detours=None,
+                 defuse_children=False):
+        """
+        :param stored_data: (dict) data to store from the run. Does not affect the operation of FireWorks.
+        :param exit: (bool) if set to True, any subsequent FireTasks within the same FireWork are skipped.
+        :param update_spec: (dict) specifies how to update the child FW's spec
+        :param mod_spec: ([dict]) update the child FW's spec using the DictMod language (more flexible than update_spec)
+        :param additions: ([Workflow]) a list of WFs/FWs to add as children
+        :param detours: ([Workflow]) a list of WFs/FWs to add as children (they will inherit the current FW's children)
+        :param defuse_children: (bool) defuse all the original children of this FireWork
+        """
         mod_spec = mod_spec if mod_spec is not None else []
-        detours = detours if detours is not None else []
         additions = additions if additions is not None else []
+        detours = detours if detours is not None else []
 
         self.stored_data = stored_data if stored_data else {}
         self.exit = exit
         self.update_spec = update_spec
         self.mod_spec = mod_spec if isinstance(mod_spec, list) else [mod_spec]
-        self.retain_children = retain_children
-        self.detours = detours if isinstance(detours, list) else [detours]
         self.additions = additions if isinstance(additions, list) else [additions]
+        self.detours = detours if isinstance(detours, list) else [detours]
         self.defuse_children = defuse_children
 
     @recursive_serialize
     def to_dict(self):
         return {'stored_data': self.stored_data, 'exit': self.exit, 'update_spec': self.update_spec,
-                'mod_spec': self.mod_spec, 'detours': self.detours, 'additions': self.additions, 'defuse_children': self.defuse_children, 'retain_children': self.retain_children}
+                'mod_spec': self.mod_spec, 'additions': self.additions, 'detours': self.detours,
+                'defuse_children': self.defuse_children}
 
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
         d = m_dict
-        additions = []
-        detours = []
-        for f in d['additions']:
-            if 'fws' in f:
-                additions.append(Workflow.from_dict(f))
-            else:
-                additions.append(FireWork.from_dict(f))
-
-        for f in d['detours']:
-            if 'fws' in f:
-                detours.append(Workflow.from_dict(f))
-            else:
-                detours.append(FireWork.from_dict(f))
-
-        return FWAction(d['stored_data'], d['exit'], d['update_spec'], d['mod_spec'], detours, additions, d['defuse_children'], d['retain_children'])
+        additions = [Workflow.from_dict(f) for f in d['additions']]
+        detours = [Workflow.from_dict(f) for f in d['detours']]
+        return FWAction(d['stored_data'], d['exit'], d['update_spec'], d['mod_spec'], additions, detours,
+                        d['defuse_children'])
 
     @property
     def stop_tasks(self):
@@ -429,12 +432,10 @@ class Workflow(FWSerializable):
         if action.detours:
             for wf in action.detours:
                 updated_ids.extend(self._add_wf_to_fw(wf, fw_id, True))
-            if not action.retain_children:
-                self.links[fw_id] = []
 
         return updated_ids
 
-    def _add_wf_to_fw(self, wf, fw_id, detours):
+    def _add_wf_to_fw(self, wf, fw_id, detour):
         updated_ids = []
 
         if isinstance(wf, FireWork):
@@ -445,7 +446,7 @@ class Workflow(FWSerializable):
 
         for fw in wf.fws:
             self.id_fw[fw.fw_id] = fw
-            if fw.fw_id in leaf_ids and detours:
+            if fw.fw_id in leaf_ids and detour:
                 self.links[fw.fw_id] = self.links[fw_id]
             elif fw.fw_id in leaf_ids:
                 self.links[fw.fw_id] = []
@@ -541,8 +542,11 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']),
-                        m_dict['metadata'])
+        # accept either a Workflow dict or a FireWork dict
+        if 'fws' in m_dict:
+            return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']), m_dict['metadata'])
+        else:
+            return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 
     @classmethod
     def from_FireWork(cls, fw):
