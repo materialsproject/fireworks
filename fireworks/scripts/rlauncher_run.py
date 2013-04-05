@@ -33,14 +33,13 @@ def rlaunch():
     single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
 
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite")', default=0)
-    rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=60, type=int)
+    rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
 
-    parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
@@ -57,7 +56,7 @@ def rlaunch():
     if args.launchpad_file:
         launchpad = LaunchPad.from_file(args.launchpad_file)
     else:
-        launchpad = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
+        launchpad = LaunchPad(strm_lvl=args.loglvl)
 
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)
@@ -65,10 +64,10 @@ def rlaunch():
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.logdir, args.loglvl, args.nlaunches, args.sleep)
+        rapidfire(launchpad, fworker, None, args.loglvl, args.nlaunches, args.sleep)
 
     else:
-        launch_rocket(launchpad, fworker, args.logdir, args.loglvl, args.fw_id)
+        launch_rocket(launchpad, fworker, args.loglvl, args.fw_id)
 
 if __name__ == '__main__':
     rlaunch()

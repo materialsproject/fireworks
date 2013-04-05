@@ -56,6 +56,8 @@ class FWConfig(object):
         self.RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue this long before we
         # cancel its reservation
 
+        self.RAPIDFIRE_SLEEP_SECS = 60  # seconds to sleep between rapidfire loops
+
         self.LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
         self.FWORKER_LOC = None  # where to find the my_fworker.yaml file
         self.QUEUEADAPTER_LOC = None  # where to find the my_fworker.yaml file
