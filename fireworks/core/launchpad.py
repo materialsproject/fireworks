@@ -396,7 +396,15 @@ class LaunchPad(FWSerializable):
         m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history, launch_id=l_id,
                           fw_id=m_fw.fw_id)
 
-        self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
+        l = self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(), upsert=True)
+
+        # confirm write
+        # I can't believe this is actually necessary (and yes, it appears to be necessary)
+        while not self.launches.find_one({'launch_id': l_id, 'state': 'RUNNING'}):
+            self.m_logger.info('Fixed a lost write!! (position 1)')
+            self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
+            time.sleep(2)
+
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
         if not reserved_launch:
@@ -433,10 +441,10 @@ class LaunchPad(FWSerializable):
         m_launch.action = action
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
+        # I can't believe this is actually necessary (and yes, it's necessary)
         while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
-            self.m_logger.debug('Fixed a lost write!!')
             self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
-            time.sleep(5)
+            time.sleep(2)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
