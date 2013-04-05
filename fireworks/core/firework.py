@@ -66,48 +66,48 @@ class FWAction(FWSerializable):
      FWAction allows a user to store rudimentary output data as well as return commands that alter the workflow.
     """
 
-    def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, detour=None, create=None, defuse_children=False, retain_children=False):
+    def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, detours=None, additions=None, defuse_children=False, retain_children=False):
         mod_spec = mod_spec if mod_spec is not None else []
-        detour = detour if detour is not None else []
-        create = create if create is not None else []
+        detours = detours if detours is not None else []
+        additions = additions if additions is not None else []
 
         self.stored_data = stored_data if stored_data else {}
         self.exit = exit
         self.update_spec = update_spec
         self.mod_spec = mod_spec if isinstance(mod_spec, list) else [mod_spec]
         self.retain_children = retain_children
-        self.detour = detour if isinstance(detour, list) else [detour]
-        self.create = create if isinstance(create, list) else [create]
+        self.detours = detours if isinstance(detours, list) else [detours]
+        self.additions = additions if isinstance(additions, list) else [additions]
         self.defuse_children = defuse_children
 
     @recursive_serialize
     def to_dict(self):
         return {'stored_data': self.stored_data, 'exit': self.exit, 'update_spec': self.update_spec,
-                'mod_spec': self.mod_spec, 'detour': self.detour, 'create': self.create, 'defuse_children': self.defuse_children, 'retain_children': self.retain_children}
+                'mod_spec': self.mod_spec, 'detours': self.detours, 'additions': self.additions, 'defuse_children': self.defuse_children, 'retain_children': self.retain_children}
 
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
         d = m_dict
-        creations = []
+        additions = []
         detours = []
-        for c in d['create']:
-            if 'fws' in c:
-                creations.append(Workflow.from_dict(c))
+        for f in d['additions']:
+            if 'fws' in f:
+                additions.append(Workflow.from_dict(f))
             else:
-                creations.append(FireWork.from_dict(c))
+                additions.append(FireWork.from_dict(f))
 
-        for c in d['detour']:
-            if 'fws' in c:
-                detours.append(Workflow.from_dict(c))
+        for f in d['detours']:
+            if 'fws' in f:
+                detours.append(Workflow.from_dict(f))
             else:
-                detours.append(FireWork.from_dict(c))
+                detours.append(FireWork.from_dict(f))
 
-        return FWAction(d['stored_data'], d['exit'], d['update_spec'], d['mod_spec'], detours, creations, d['defuse_children'], d['retain_children'])
+        return FWAction(d['stored_data'], d['exit'], d['update_spec'], d['mod_spec'], detours, additions, d['defuse_children'], d['retain_children'])
 
     @property
     def stop_tasks(self):
-        return self.exit or self.update_spec or self.mod_spec or self.detour or self.create or self.defuse_children
+        return self.exit or self.update_spec or self.mod_spec or self.detours or self.additions or self.defuse_children
 
 
 class FireWork(FWSerializable):
@@ -422,19 +422,19 @@ class Workflow(FWSerializable):
                 self.id_fw[cfid].state = 'DEFUSED'
                 updated_ids.append(cfid)
 
-        if action.create:
-            for wf in action.create:
+        if action.additions:
+            for wf in action.additions:
                 updated_ids.extend(self._add_wf_to_fw(wf, fw_id, False))
 
-        if action.detour:
-            for wf in action.detour:
+        if action.detours:
+            for wf in action.detours:
                 updated_ids.extend(self._add_wf_to_fw(wf, fw_id, True))
             if not action.retain_children:
                 self.links[fw_id] = []
 
         return updated_ids
 
-    def _add_wf_to_fw(self, wf, fw_id, detour):
+    def _add_wf_to_fw(self, wf, fw_id, detours):
         updated_ids = []
 
         if isinstance(wf, FireWork):
@@ -445,7 +445,7 @@ class Workflow(FWSerializable):
 
         for fw in wf.fws:
             self.id_fw[fw.fw_id] = fw
-            if fw.fw_id in leaf_ids and detour:
+            if fw.fw_id in leaf_ids and detours:
                 self.links[fw.fw_id] = self.links[fw_id]
             elif fw.fw_id in leaf_ids:
                 self.links[fw.fw_id] = []
