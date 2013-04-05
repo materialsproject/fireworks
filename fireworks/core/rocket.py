@@ -79,7 +79,7 @@ class Rocket():
                 # update the global stored data with the data to store from this particular Task
                 all_stored_data.update(m_action.stored_data)
 
-                if m_action.stop_tasks:
+                if m_action.skip_remaining_tasks:
                     break;
 
             # perform finishing operation

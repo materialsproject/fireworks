@@ -75,7 +75,7 @@ class FWAction(FWSerializable):
                  defuse_children=False):
         """
         :param stored_data: (dict) data to store from the run. Does not affect the operation of FireWorks.
-        :param exit: (bool) if set to True, any subsequent FireTasks within the same FireWork are skipped.
+        :param exit: (bool) if set to True, any remaining FireTasks within the same FireWork are skipped.
         :param update_spec: (dict) specifies how to update the child FW's spec
         :param mod_spec: ([dict]) update the child FW's spec using the DictMod language (more flexible than update_spec)
         :param additions: ([Workflow]) a list of WFs/FWs to add as children
@@ -110,7 +110,12 @@ class FWAction(FWSerializable):
                         d['defuse_children'])
 
     @property
-    def stop_tasks(self):
+    def skip_remaining_tasks(self):
+        """
+        If the FWAction gives any dynamic action, we skip the subsequent FireTasks
+
+        :return: (bool)
+        """
         return self.exit or self.update_spec or self.mod_spec or self.detours or self.additions or self.defuse_children
 
 
@@ -121,17 +126,14 @@ class FireWork(FWSerializable):
 
     def __init__(self, tasks, spec=None, launches=None, state='WAITING', created_on=None, fw_id=-1):
         """
-        :param tasks: (list) a list of FireTasks to run in sequence
+        :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the FireTask
-        :param fw_id: (int) the FW's database id (negative numbers will be re-assigned dynamically when they are
-         entered in the database through the LaunchPad.
-        :param launches: (list) a list of Launch objects of this FireWork
+        :param launches: ([Launch]) a list of Launch objects of this FireWork
         :param state: (str) the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
+        :param fw_id: (int) an identification number for this FireWork
         """
 
-        # automatically transform tasks into a list, if not in that format
-        if not isinstance(tasks, list):
-            tasks = [tasks]
+        tasks = tasks if isinstance(tasks, list) else [tasks]
 
         self.tasks = tasks
         self.spec = spec if spec else {}
@@ -163,14 +165,12 @@ class FireWork(FWSerializable):
     @recursive_deserialize
     def from_dict(cls, m_dict):
         tasks = m_dict['spec']['_tasks']
-        l = m_dict.get('launches', None)
-        if l:
-            l = [Launch.from_dict(tmp) for tmp in l]
+        launches = [Launch.from_dict(tmp) for tmp in m_dict.get('launches', [])]
         fw_id = m_dict.get('fw_id', -1)
         state = m_dict.get('state', 'WAITING')
         created_on = m_dict.get('created_on', None)
 
-        return FireWork(tasks, m_dict['spec'], l, state, created_on, fw_id)
+        return FireWork(tasks, m_dict['spec'], launches, state, created_on, fw_id)
 
 
 class Launch(FWSerializable, object):
@@ -183,7 +183,7 @@ class Launch(FWSerializable, object):
         :param host: (str) the hostname where the launch took place (set automatically if None)
         :param ip: (str) the IP address where the launch took place (set automatically if None)
         :param action: (FWAction) the output of the Launch
-        :param state_history: (list) a history of all states of the Launch and when they occurred
+        :param state_history: ([dict]) a history of all states of the Launch and when they occurred
         :param launch_id: (int) launch_id set by the LaunchPad
         :param fw_id: (int) id of the FireWork this Launch is running
         """
@@ -191,15 +191,15 @@ class Launch(FWSerializable, object):
         if state not in FireWork.STATE_RANKS:
             raise ValueError("Invalid launch state: {}".format(state))
 
+        self.launch_dir = launch_dir
         self.fworker = fworker
-        self.fw_id = fw_id
         self.host = host if host else get_my_host()
         self.ip = ip if ip else get_my_ip()
-        self.launch_dir = launch_dir
         self.action = action if action else None
         self.state_history = state_history if state_history else []
         self.state = state
         self.launch_id = launch_id
+        self.fw_id = fw_id
 
     def touch_history(self):
         """
@@ -211,11 +211,11 @@ class Launch(FWSerializable, object):
         """
         Adds the job_id to the reservation
 
-        :param reservation_id: the id of the reservation (e.g., queue reservation)
+        :param reservation_id: (str) the id of the reservation (e.g., queue reservation)
         """
         for data in self.state_history:
-            if data['state'] == 'RESERVED':
-                data['reservation_id'] = reservation_id
+            if data['state'] == 'RESERVED' and 'reservation_id' not in data:
+                data['reservation_id'] = str(reservation_id)
                 break
 
     @property
@@ -228,9 +228,9 @@ class Launch(FWSerializable, object):
     @state.setter
     def state(self, state):
         """
-        Setter the the Launch's state. Automatically trigger an update to state_history when state is changed.
+        Setter for the the Launch's state. Automatically triggers an update to state_history.
 
-        :param state: (str) the Launch state
+        :param state: (str) the state to set for the Launch
         """
         self._state = state
         self._update_state_history(state)
@@ -276,7 +276,7 @@ class Launch(FWSerializable, object):
     @property
     def reservedtime_secs(self):
         """
-        :return: (int) number of seconds the Launch was queued
+        :return: (int) number of seconds the Launch was stuck as RESERVED in a queue
         """
         start = self.time_reserved
         if start:
@@ -337,6 +337,7 @@ class Launch(FWSerializable, object):
 
 
 class Workflow(FWSerializable):
+
     class Links(dict, FWSerializable):
 
         @property
@@ -345,14 +346,12 @@ class Workflow(FWSerializable):
 
         @property
         def parent_links(self):
-            # note: if performance of parent_links becomes an issue, override delitem/setitem to ensure it's always
-            # updated
-            d = defaultdict(list)
+            # note: if performance of parent_links becomes an issue, override delitem/setitem to update parent_links
+            child_parents = defaultdict(list)
             for (parent, children) in self.iteritems():
-                # add the parents
                 for child in children:
-                    d[child].append(parent)
-            return dict(d)
+                    child_parents[child].append(parent)
+            return dict(child_parents)
 
         def to_dict(self):
             return dict(self)
@@ -371,8 +370,8 @@ class Workflow(FWSerializable):
 
     def __init__(self, fireworks, links_dict=None, metadata=None):
         """
-        :param fireworks: a list of FireWork objects
-        :param links_dict: A dict representing workflow links
+        :param fireworks: ([FireWork]) - all FireWorks in this workflow
+        :param links_dict: (dict) links between the FWs as (parent_id):[(child_id1, child_id2)]
         :param metadata: metadata for this Workflow
         """
 
