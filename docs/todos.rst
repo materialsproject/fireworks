@@ -41,8 +41,6 @@ Major Features
 
 * Add way to monitor a file during the run
 
-* Add a looping maintenance script
-
 FireTasks
 =========
 

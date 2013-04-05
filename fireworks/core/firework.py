@@ -7,6 +7,7 @@ This module contains some of the most central FireWorks classes:
 - A FWAction encapsulates the output of a FireTask and tells FireWorks what to do next after a job completes
 - A FireWork defines a workflow step and contains one or more FireTasks.
 - A Launch describes the run of a FireWork on a computing resource.
+- A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph)
 """
 from collections import defaultdict
 
@@ -366,7 +367,6 @@ class Workflow(FWSerializable):
             return Workflow.Links(m_dict)
 
     def __init__(self, fireworks, links_dict=None, metadata=None):
-
         """
         :param fireworks: a list of FireWork objects
         :param links_dict: A dict representing workflow links
