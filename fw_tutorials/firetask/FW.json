@@ -1,0 +1,39 @@
+{
+    "launches": [
+        {
+            "fworker": {
+                "category": "general worker", 
+                "query": "{}", 
+                "name": "anonymous worker"
+            }, 
+            "ip": "131.243.240.109", 
+            "fw_id": 1, 
+            "state": "RUNNING", 
+            "host": "computron-8.dhcp.lbl.gov", 
+            "launch_dir": "/Users/ajain/Documents/code_matgen/fireworks/fw_tutorials/firetask", 
+            "action": null, 
+            "launch_id": 1, 
+            "state_history": [
+                {
+                    "updated_on": "2013-04-05T23:36:39.944256", 
+                    "state": "RUNNING", 
+                    "created_on": "2013-04-05T23:36:39.944248"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 1, 
+    "spec": {
+        "_tasks": [
+            {
+                "_fw_name": "Addition Task"
+            }
+        ], 
+        "input_array": [
+            1, 
+            2
+        ]
+    }, 
+    "created_on": "2013-04-05T23:36:31.891491", 
+    "state": "RUNNING"
+}
