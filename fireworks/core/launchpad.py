@@ -55,7 +55,7 @@ class LaunchPad(FWSerializable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        self.connection = MongoClient(host, port, j=True)
+        self.connection = MongoClient(host, port)
         self.database = self.connection[name]
         if username:
             self.database.authenticate(username, password)
@@ -240,7 +240,8 @@ class LaunchPad(FWSerializable):
 
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
-        return self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}}, {'$set': {'state': 'DEFUSED'}})
+        return self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}},
+                                              {'$set': {'state': 'DEFUSED'}})
 
     def reignite_fw(self, fw_id):
         f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': 'DEFUSED'}, {'$set': {'state': 'WAITING'}})
@@ -400,9 +401,12 @@ class LaunchPad(FWSerializable):
 
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
+        nloops = 1
         while not self.launches.find_one({'launch_id': l_id, 'state': 'RUNNING'}):
-            self.m_logger.debug('Fixed a lost write!! (position 1)')
-            self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
+            self.m_logger.debug('Waiting for a delayed write... (checkout_fw)')
+            if nloops % 20 == 0:
+                self.m_logger.info('Fixing a lost write!! (checkout_fw)')
+                self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
             time.sleep(2)
 
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
@@ -442,9 +446,12 @@ class LaunchPad(FWSerializable):
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
         # I can't believe this is actually necessary (and yes, it's necessary)
+        nloops = 1
         while not self.launches.find_one({'launch_id': launch_id, 'state': state}):
-            self.m_logger.debug('Fixed a lost write! (in _complete_launch)')
-            self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
+            self.m_logger.debug('Waiting for a delayed write... (complete_launch)')
+            if nloops % 20 == 0:
+                self.m_logger.debug('Fixing a lost write!! (complete_launch)')
+                self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
             time.sleep(2)
 
         # find all the fws that have this launch
