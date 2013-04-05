@@ -418,53 +418,75 @@ class Workflow(FWSerializable):
         return self.id_fw.values()
 
     def apply_action(self, action, fw_id):
-        # TODO: better comment this method
+        """
+        Apply a FWAction on a FireWork in the Workflow
+
+        :param action: (FWAction) action to apply
+        :param fw_id: (int) id of FireWork on which to apply the action
+        :return: ([int]) list of FireWork ids that were updated or new
+        """
+
         updated_ids = []
 
+        # update the spec of the children FireWorks
         if action.update_spec:
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].spec.update(action.update_spec)
                 updated_ids.append(cfid)
 
+        # update the spec of the children FireWorks using DictMod language
         if action.mod_spec:
             for cfid in self.links[fw_id]:
                 for mod in action.mod_spec:
                     apply_mod(mod, self.id_fw[cfid].spec)
                     updated_ids.append(cfid)
 
+        # defuse children
         if action.defuse_children:
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].state = 'DEFUSED'
                 updated_ids.append(cfid)
 
-        if action.additions:
-            for wf in action.additions:
-                updated_ids.extend(self._add_wf_to_fw(wf, fw_id, False))
-
+        # add detour FireWorks
+        # this should be done *before* additions
         if action.detours:
             for wf in action.detours:
                 updated_ids.extend(self._add_wf_to_fw(wf, fw_id, True))
 
-        return updated_ids
+        # add additional FireWorks
+        if action.additions:
+            for wf in action.additions:
+                updated_ids.extend(self._add_wf_to_fw(wf, fw_id, False))
+
+        return list(set(updated_ids))
 
     def _add_wf_to_fw(self, wf, fw_id, detour):
-        updated_ids = []
+        """
+        Internal method to add a workflow as a child to a FireWork
 
-        if isinstance(wf, FireWork):
-            wf = Workflow.from_FireWork(wf)
+        :param wf: New Workflow to add
+        :param fw_id: id of the FireWork on which to add the Workflow
+        :param detour: whether to add the children of the current FireWork to the Workflow's leaves
+        :return: ([int]) list of FireWork ids that were updated or new
+        """
+        updated_ids = []
 
         root_ids = wf.root_fw_ids
         leaf_ids = wf.leaf_fw_ids
 
-        for fw in wf.fws:
-            self.id_fw[fw.fw_id] = fw
-            if fw.fw_id in leaf_ids and detour:
-                self.links[fw.fw_id] = self.links[fw_id]
-            elif fw.fw_id in leaf_ids:
-                self.links[fw.fw_id] = []
+        for new_fw in wf.fws:
+            if new_fw.fw_id > 0:
+                raise ValueError('FireWorks to add must use a negative fw_id! Got fw_id: {}'.format(new_fw.fw_id))
+
+            self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
+
+            if new_fw.fw_id in leaf_ids and detour:
+                self.links[new_fw.fw_id] = self.links[fw_id]  # add children of current FW to new FW
+            elif new_fw.fw_id in leaf_ids:
+                self.links[new_fw.fw_id] = []
             else:
-                self.links[fw.fw_id] = wf.links[fw.fw_id]
-            updated_ids.append(fw.fw_id)
+                self.links[new_fw.fw_id] = wf.links[new_fw.fw_id]
+            updated_ids.append(new_fw.fw_id)
 
         for root_id in root_ids:
             self.links[fw_id].append(root_id)  # add the root id as my child
@@ -472,6 +494,14 @@ class Workflow(FWSerializable):
         return updated_ids
 
     def refresh(self, fw_id, updated_ids=None):
+        """
+        Refreshes the state of a FireWork and any affected children.
+
+        :param fw_id: (int) id of the FireWork on which to perform the refresh
+        :param updated_ids: ([int])
+        :return: ([int]) list of FireWork ids that were updated
+        """
+
         updated_ids = updated_ids if updated_ids else set()  # these are the fw_ids to re-enter into the database
 
         fw = self.id_fw[fw_id]
@@ -484,7 +514,11 @@ class Workflow(FWSerializable):
         # what are the parent states?
         parent_states = [self.id_fw[p].state for p in self.links.parent_links.get(fw_id, [])]
 
-        if len(parent_states) != 0 and not all([s == 'COMPLETED' for s in parent_states]):
+        completed_parent_states = ['COMPLETED']
+        if fw.spec.get('_allow_fizzled_parents', False):
+            completed_parent_states.append('FIZZLED')
+
+        if len(parent_states) != 0 and not all([s in completed_parent_states for s in parent_states]):
             m_state = 'WAITING'
 
         else:
@@ -504,10 +538,11 @@ class Workflow(FWSerializable):
         fw.state = m_state
 
         if m_state != prev_state:
-            if m_state == 'COMPLETED':
-                updated_ids = updated_ids.union(self.apply_action(m_action, fw.fw_id))
-
             updated_ids.add(fw_id)
+
+            if m_state == 'COMPLETED':
+                updated_ids = updated_ids.union(self.apply_action(m_action, fw.fw_id))  # apply action on children
+
             # refresh all the children
             for child_id in self.links[fw_id]:
                 updated_ids = updated_ids.union(self.refresh(child_id, updated_ids))
@@ -516,6 +551,12 @@ class Workflow(FWSerializable):
 
     @property
     def root_fw_ids(self):
+        """
+        Gets root FireWorks of this workflow (those with no parents)
+
+        :return: ([int]) FireWork ids of root FWs
+        """
+
         all_ids = set(self.links.nodes)
         child_ids = set(self.links.parent_links.keys())
         root_ids = all_ids.difference(child_ids)
@@ -523,13 +564,25 @@ class Workflow(FWSerializable):
 
     @property
     def leaf_fw_ids(self):
-        leaves = []
+        """
+        Gets leaf FireWorks of this workflow (those with no children)
+
+        :return: ([int]) FireWork ids of leaf FWs
+        """
+
+        leaf_ids = []
         for id, children in self.links.iteritems():
             if len(children) == 0:
-                leaves.append(id)
-        return leaves
+                leaf_ids.append(id)
+        return leaf_ids
 
     def _reassign_ids(self, old_new):
+        """
+        Internal method to reassign FireWork ids, e.g. due to database insertion
+
+        :param old_new: (dict)
+        """
+
         # update id_fw
         new_id_fw = {}
         for (fwid, fws) in self.id_fw.iteritems():
@@ -539,8 +592,7 @@ class Workflow(FWSerializable):
         # update the Links
         new_l = {}
         for (parent, children) in self.links.iteritems():
-            new_parent = old_new.get(parent, parent)
-            new_l[new_parent] = [old_new.get(child, child) for child in children]
+            new_l[old_new.get(parent, parent)] = [old_new.get(child, child) for child in children]
         self.links = Workflow.Links(new_l)
 
     def to_dict(self):

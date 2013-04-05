@@ -12,6 +12,7 @@ FW Docs
     * _priority - the priority of the FW
     * _dupefinder - a DupeFinder object, for avoiding duplicates
     * _queueadapter - values of the QueueAdapter dict to override
+    * _allow_fizzled_parents - continue on FIZZLED parents
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
