@@ -3,7 +3,7 @@
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
 or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure. \
-The details of job submission and queue communication are handled using QueueParams, \
+The details of job submission and queue communication are handled using Queueadapter, \
 which specifies a QueueAdapter as well as desired properties of the submit script.
 """
 
@@ -59,10 +59,10 @@ def launch_rocket_to_queue(qadapter, launcher_dir='.', strm_lvl=None, launchpad=
                 l_logger.debug('finding a FW to reserve...')
                 fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
                 l_logger.debug('reserved FW with fw_id: {}'.format(fw.fw_id))
-                if '_queueparams' in fw.spec:
+                if '_queueadapter' in fw.spec:
                     l_logger.debug('updating queue params using FireWork spec..')
                     # TODO: make sure this does not affect future FireWorks!!
-                    qadapter.update(fw.spec['_queueparams'])
+                    qadapter.update(fw.spec['_queueadapter'])
                 # update the exe to include the FW_id
                 if 'singleshot' not in qadapter.get('exe', ''):
                     raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')

@@ -11,7 +11,7 @@ FW Docs
     * _tasks - a list of FireTasks to run
     * _priority - the priority of the FW
     * _dupefinder - a DupeFinder object, for avoiding duplicates
-    * _queueparams - values of the QueueParams dict to override
+    * _queueadapter - values of the QueueAdapter dict to override
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
@@ -61,8 +61,6 @@ Misc.
 * Add user database indices for faster querying of certain user specs
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
-
-* Standard setup instructures for big supercomputing facilities  - NERSC. Teragrid, etc (e.g. things like module load Python/2.7, also virtualenv)
 
 * Install using pip only, not Github devleopers! Package the tutorial separately.
 

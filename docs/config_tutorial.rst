@@ -32,11 +32,11 @@ You should see text printed to the Terminal saying ``successfully loaded your cu
 Specifying default locations for the config files
 -------------------------------------------------
 
-It can be annoying to manually type in the ``-l``, ``-w``, and ``-q`` parameters in FireWorks scripts (corresponding to the locations of the LaunchPad, FireWorker, and QueueParams files, respectively). You can set these parameters once and for all by specifying the following variables in your FWConfig::
+It can be annoying to manually type in the ``-l``, ``-w``, and ``-q`` parameters in FireWorks scripts (corresponding to the locations of the LaunchPad, FireWorker, and QueueAdapter files, respectively). You can set these parameters once and for all by specifying the following variables in your FWConfig::
 
     LAUNCHPAD_LOC: fullpath/to/my_launchpad.yaml
     FWORKER_LOC: fullpath/to/my_fworker.yaml
-    QUEUEPARAMS_LOC: fullpath/to/my_qadapter.yaml
+    QUEUEADAPTER_LOC: fullpath/to/my_qadapter.yaml
 
 .. note:: be sure to use full paths, not relative paths or BASH shortcuts!
 

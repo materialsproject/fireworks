@@ -9,7 +9,7 @@ In this tutorial, we'll introduce the notion of *reserving* FireWorks on queue s
 ===============================  ======================================  =============================================
 Situation                               Simple Queue Launching              Reservation Queue Launching
 ===============================  ======================================  =============================================
-write/submit queue script        write generic script using QueueParams  | 1. **reserve** a FW from the database
+write/submit queue script        write generic script using QueueAdapter  | 1. **reserve** a FW from the database
                                  file alone                              | 2. use FW's spec to modify queue script
 queue manager runs queue script  determine a FW to run and run it        run the **reserved** FW
 job is deleted from queue        no action needed by the user            any affected **reserved** jobs must be
@@ -67,7 +67,7 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 Overriding Queue Parameters within the FireWork
 ===============================================
 
-Another key feature of reserving FireWorks before queue submission is that the FireWork can override queue parameters. This is done by specifying the ``_queueparams`` reserved key in the ``spec``. For example, let's override the walltime parameter.
+Another key feature of reserving FireWorks before queue submission is that the FireWork can override queue parameters. This is done by specifying the ``_queueadapter`` reserved key in the ``spec``. For example, let's override the walltime parameter.
 
 #. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
@@ -77,7 +77,7 @@ Another key feature of reserving FireWorks before queue submission is that the F
 
     cp <INSTALL_DIR>/fw_tutorials/queue_pt2/fw_walltime.yaml .
 
-#. Look inside ``fw_walltime.yaml``. You will see a ``_queueparams`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueparams`` key will override the corresponding parameter in ``my_qadapter.yaml`` when the Queue Launcher is run in reservation mode. So now, the FireWork itself is determining key properties of the queue submission.
+#. Look inside ``fw_walltime.yaml``. You will see a ``_queueadapter`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueadapter`` key will override the corresponding parameter in ``my_qadapter.yaml`` when the Queue Launcher is run in reservation mode. So now, the FireWork itself is determining key properties of the queue submission.
 
 #. Let's add and run this FireWork::
 
@@ -134,4 +134,4 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 Conclusion
 ==========
 
-As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueparams`` parameter in your ``spec``. Jobs launched from the Simple Queue Launcher will not carry out this override!
+As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``. Jobs launched from the Simple Queue Launcher will not carry out this override!

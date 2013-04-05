@@ -2,5 +2,5 @@ spec:
   _tasks:
   - _fw_name: Script Task
     script: echo "howdy, your job launched successfully!" >> howdy.txt
-  _queueparams:
+  _queueadapter:
     walltime: '00:10:00'

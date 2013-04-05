@@ -40,7 +40,7 @@ def qlaunch():
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
     parser.add_argument('-q', '--queueadapter_file', help='path to queueadapter file',
-                        default=FWConfig().QUEUEPARAMS_LOC)
+                        default=FWConfig().QUEUEADAPTER_LOC)
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)

@@ -7,11 +7,7 @@
    :width: 300 px
    :alt: FireWorks
 
-*Note: FireWorks is under active development; major features are yet to be implemented, and the internal code is refactored often and not suitable for production. However, certain components of the code are available for initial testing.*
-
-.. warning:: **The latest version of FireWorks renames the lp_run.py, rlauncher.py, and qlauncher.py scripts**. The .py extension has been removed and the names shortened as requested by some users. If you are upgrading from an old installation, you should delete the old scripts (e.g., by typing ``which lp_run.py`` and deleting it from that location). If you have set up queueparams, you will also want to update the script specified in the ``exe`` section to read ``rlaunch`` instead of ``rlauncher_run.py``. If you encounter problems with your configuration, please contact the developer.
-
-.. warning:: The syntax for the QueueLauncher has changed recently, i.e. you no longer need to specify ``my_qadapter.yaml`` if you specify a config dir.
+*Note: FireWorks is in beta. Please be extremely cautious about using it in production environments.*
 
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
@@ -79,13 +75,14 @@ To get started with FireWorks, we suggest that you follow our core tutorials. Th
    workflow_tutorial
    dynamic_wf_tutorial
 
-To get things running on a shared resource with a queueing system (e.g., a supercomputing center), you should complete the following tutorials:
+To get things running on a shared resource with a queueing system (e.g., a supercomputing center), you will be interested in the following tutorials:
 
 .. toctree::
     :maxdepth: 1
 
     queue_tutorial
     queue_tutorial_pt2
+    installation_notes
 
 More!
 =====
@@ -107,6 +104,7 @@ Python users and Power users will be interested in the following:
 
     python_tutorial
     config_tutorial
+
 
 Planned future tutorials:
 

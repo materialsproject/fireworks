@@ -20,19 +20,19 @@ To get warmed up, let's set up a *Queue Launcher* to run a single FireWork throu
 Configure the Queue Launcher
 ----------------------------
 
-The Queue Launcher needs to write and submit a queue script that contains an executable (in our case, a Rocket Launcher). This is achieved through a QueueParams file.
+The Queue Launcher needs to write and submit a queue script that contains an executable (in our case, a Rocket Launcher). This is achieved through a QueueAdapter file.
 
 1. Move to the ``queue`` tutorial directory on your FireWorker::
 
     cd <INSTALL_DIR>/fw_tutorials/queue
 
-#. Locate an appropriate QueueParams file. The files are usually named ``queueparams_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
+#. Locate an appropriate QueueAdapter file. The files are usually named ``queueadapter_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
 
-.. note:: If you cannot find a working QueueParams file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) We would like to support more queueing systems in FireWorks.
+.. note:: If you cannot find a working QueueAdapter file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) We would like to support more queueing systems in FireWorks.
 
-#. Copy your chosen QueueParams file to a new name::
+#. Copy your chosen QueueAdapter file to a new name::
 
-    cp queueparams_<QUEUE>.yaml my_qadapter.yaml
+    cp queueadapter_<QUEUE>.yaml my_qadapter.yaml
 
 #. Navigate to clean working directory on the FireWorker. For example::
 
@@ -154,7 +154,7 @@ So far, each queue script we submitted has only one job. We can also submit mult
 
 #. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
-#. Copy your QueueParams file to ``my_qp_multi.yaml``::
+#. Copy your QueueAdapter file to ``my_qp_multi.yaml``::
 
     cp my_qadapter.yaml my_qp_multi.yaml
 

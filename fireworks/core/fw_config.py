@@ -61,7 +61,7 @@ class FWConfig(object):
 
         self.LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
         self.FWORKER_LOC = None  # where to find the my_fworker.yaml file
-        self.QUEUEPARAMS_LOC = None  # where to find the my_fworker.yaml file
+        self.QUEUEADAPTER_LOC = None  # where to find the my_fworker.yaml file
 
         self.CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
 
