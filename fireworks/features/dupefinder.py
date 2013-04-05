@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""
+This module contains the base class for implementing Duplicate Finders
+"""
+
 from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -10,16 +16,26 @@ __date__ = 'Mar 01, 2013'
 
 class DupeFinderBase(FWSerializable):
     """
-    TODO: add docs
+    This serves an Abstract class for implementing Duplicate Finders
     """
 
     def __init__(self):
         pass
 
     def verify(self, spec1, spec2):
+        """
+        Method that checks whether two specs are identical enough to be considered duplicates. Return true if duplicated.
+        :param spec1: (dict)
+        :param spec2: (dict)
+        """
         raise NotImplementedError
 
     def query(self, spec):
+        """
+        Given a spec, returns a database query that gives potential candidates for duplicated FireWorks.
+
+        :param spec: spec to check for duplicates
+        """
         raise NotImplementedError
 
     @serialize_fw

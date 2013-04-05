@@ -94,7 +94,5 @@ class QueueAdapterBase(dict, FWSerializable):
             return get_fw_logger(name, stream_level='CRITICAL')
 
 
-
-
 class QScriptTemplate(string.Template):
     delimiter = '$$'
