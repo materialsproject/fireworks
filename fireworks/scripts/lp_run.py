@@ -3,6 +3,7 @@
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
+
 from argparse import ArgumentParser
 import os
 from fireworks.core.fw_config import FWConfig

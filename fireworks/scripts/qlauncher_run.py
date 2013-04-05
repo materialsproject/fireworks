@@ -68,8 +68,8 @@ def qlaunch():
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, queueadapter, args.launch_dir, args.maxjobs_queue, args.maxjobs_block, args.nlaunches,
-                  args.sleep, fworker, args.reserve, args.loglvl)
+        rapidfire(launchpad, fworker, queueadapter, args.launch_dir, args.nlaunches, args.maxjobs_queue,
+                  args.maxjobs_block, args.sleep, args.reserve, args.loglvl)
     else:
         launch_rocket_to_queue(launchpad, fworker, queueadapter, args.launch_dir, args.reserve, args.loglvl)
 

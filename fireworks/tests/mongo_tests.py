@@ -3,6 +3,7 @@ import shutil
 import glob
 import unittest
 from fireworks.core.firework import FireWork, Workflow
+from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -31,6 +32,7 @@ class MongoTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lp = None
+        cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
@@ -44,7 +46,7 @@ class MongoTests(unittest.TestCase):
         test1 = ScriptTask.from_str("python -c 'print \"test1\"'", {'store_stdout': True})
         fw = FireWork(test1)
         self.lp.add_wf(fw)
-        launch_rocket(self.lp)
+        launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
 
     def test_multi_fw(self):
@@ -52,13 +54,13 @@ class MongoTests(unittest.TestCase):
         test2 = ScriptTask.from_str("python -c 'print \"test2\"'", {'store_stdout': True})
         fw = FireWork([test1, test2])
         self.lp.add_wf(fw)
-        launch_rocket(self.lp)
+        launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test2\n')
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})
         self.lp.add_wf(fw)
-        rapidfire(self.lp, m_dir=MODULE_DIR)
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['sum'], 12)
 
     def test_org_wf(self):
@@ -68,16 +70,16 @@ class MongoTests(unittest.TestCase):
         fw2 = FireWork(test2, fw_id=-2)
         wf = Workflow([fw1, fw2], {-1: -2})
         self.lp.add_wf(wf)
-        launch_rocket(self.lp)
+        launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
-        launch_rocket(self.lp)
+        launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'], 'test2\n')
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()
         fw = FireWork(fib, {'smaller': 0, 'larger': 1, 'stop_point': 3})
         self.lp.add_wf(fw)
-        rapidfire(self.lp, m_dir=MODULE_DIR)
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)

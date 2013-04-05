@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-A runnable script to launch a single Rocket (a command-line interface to rocket.py)
+A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """
 from argparse import ArgumentParser
 import os
@@ -64,10 +64,10 @@ def rlaunch():
         fworker = FWorker()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.nlaunches, args.sleep, args.loglvl)
+        rapidfire(launchpad, fworker, None, args.nlaunches, -1, args.sleep, args.loglvl)
 
     else:
-        launch_rocket(launchpad, fworker, args.loglvl, args.fw_id)
+        launch_rocket(launchpad, fworker, args.fw_id, args.loglvl)
 
 if __name__ == '__main__':
     rlaunch()

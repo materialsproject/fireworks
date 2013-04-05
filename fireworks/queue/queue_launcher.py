@@ -11,7 +11,6 @@ import os
 import glob
 import time
 from fireworks.core.fworker import FWorker
-from fireworks.queue.queue_adapter import QueueAdapterBase
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir
 from fireworks.core.fw_config import FWConfig
@@ -23,18 +22,20 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
+# TODO: clean up method signatures
 
 def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO'):
     """
     Submit a single job to the queue.
     
-    :param launchpad:
-    :param fworker: The FireWorker for this resource
-    :param qadapter: A QueueAdapterBase instance
-    :param launcher_dir: The directory where to submit the job
-    :param reserve: Whether to queue in reservation mode
-    :param strm_lvl: level at which to stream log messages
+    :param launchpad: (LaunchPad)
+    :param fworker: (FWorker)
+    :param qadapter: (QueueAdapterBase)
+    :param launcher_dir: (str) The directory where to submit the job
+    :param reserve: (bool) Whether to queue in reservation mode
+    :param strm_lvl: (str) level at which to stream log messages
     """
+
     fworker = fworker if fworker else FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
@@ -84,15 +85,21 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
 
 
-def rapidfire(launchpad, qadapter, fworker, launch_dir='.', njobs_queue=10, njobs_block=500, nlaunches=0,
+def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=10, njobs_block=500,
               sleep_time=None, reserve=False, strm_lvl='INFO'):
     """
     Submit many jobs to the queue.
     
-    :param qadapter: A QueueAdapterBase instance
+    :param launchpad: (LaunchPad)
+    :param fworker: (FWorker)
+    :param qadapter: (QueueAdapterBase)
     :param launch_dir: directory where we want to write the blocks
+    :param nlaunches: total number of launches desired
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
+    :param sleep_time: (int) secs to sleep between rapidfire loop iterations
+    :param reserve: (bool) Whether to queue in reservation mode
+    :param strm_lvl: (str) level at which to stream log messages
     """
 
     sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
