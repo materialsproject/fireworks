@@ -2,7 +2,7 @@
 Creating Workflows
 ==================
 
-Thus far, the only way to run multiple jobs in sequence was to define a list of several FireTasks inside a single FireWork. In this tutorial, we'll explore how Workflows let us deifne complex sequences of FireWorks. We'll start with a simple example and then move to more complicated workflows.
+Thus far, the only way to run multiple jobs in sequence was to define a list of several FireTasks inside a single FireWork. In this tutorial, we'll explore how Workflows let us define complex sequences of FireWorks. We'll start with a simple example and then move to more complicated workflows.
 
 This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
@@ -30,27 +30,29 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     * We define a FireWork with ``fw_id`` set to 1, and that prints *"To be, or not to be,"*.
     * We define another FireWork with ``fw_id`` set to 2, and that prints *"that is the question:"*
 
-    .. note:: When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned. The value of the ``fw_id`` has no meaning or effect on the operation of FireWorks.
-
     The second section, labeled ``links``, connects these FireWorks into a workflow:
 
-    * In the ``children_links`` subsection, we are specifying that the child of FW with id -1 is the FW with id -2. This means hold off on running *"that is the question:"* until we've first run *"To be, or not to be,"*.
+    * In the ``links`` subsection, we are specifying that the child of FW with id 1 is the FW with id 2. This means hold off on running *"that is the question:"* until we've first run *"To be, or not to be,"*.
 
 #. Let's insert this workflow into our database::
 
     lpad reset <TODAY'S DATE>
     lpad add hamlet_wf.yaml
 
+   .. note:: When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned. The value of the ``fw_id`` has no meaning or effect on the operation of FireWorks.
+
 #. Let's look at our two FireWorks::
 
     lpad get_fw 1
     lpad get_fw 2
 
-#. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*.
+#. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*. The second line will not run until the first line is complete.
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
-    rlaunch --silencer singleshot
+    rlaunch -s singleshot
+
+   .. note:: The ``-s`` option is a shortcut to the ``--silencer`` option that suppresses log messages.
 
 #. You should have seen the text *"To be, or not to be"* printed to your standard out. Let's examine our FireWorks again to examine our new situation::
 
@@ -61,7 +63,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. Let's now launch a Rocket that will run the second FireWork of this Workflow::
 
-    rlaunch --silencer singleshot
+    rlaunch -s singleshot
 
 #. This should print the second step of the workflow (*"That is the question"*). You can verify that both steps are completed::
 
@@ -82,9 +84,10 @@ Let's continue with a very similar example, but make the workflow a little more 
 
 Let's quickly define and execute this workflow.
 
-1. Stay in the same ``workflow`` tutorial directory on your FireServer::
+1. Stay in the same ``workflow`` tutorial directory on your FireServer and clean it up::
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
+    rm FW.json
 
 #. The workflow is encapsulated in the ``org_wf.yaml`` file. Look inside this file.
 
@@ -95,9 +98,9 @@ Let's quickly define and execute this workflow.
 
     lpad reset <TODAY'S DATE>
     lpad add org_wf.yaml
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
-#. You should notice that the CEO correctly gets printed above the managers, who in turn are printed above the intern. There is no preference amongst the two managers as written; FireWorks might print either manager first. If you want to distinguish between them, you can use priorities (covered in a future tutorial).
+#. You should notice that the CEO correctly gets printed above the managers, who in turn are printed above the intern. There is no preference amongst the two managers as written; FireWorks might print either manager first. If you want to distinguish between them, you can use :doc:`priorities <priority_tutorial>`.
 
 #. Finally, you can clean up your rapid directory if you are not interested in saving the contents of each launch::
 

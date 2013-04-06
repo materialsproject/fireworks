@@ -474,7 +474,7 @@ class LaunchPad(FWSerializable):
         old_new = {} # mapping between old and new FireWork ids
 
         # sort the FWs by id, then the new FW_ids will match the order of the old ones...
-        fws.sort(key=lambda x: x.fw_id, reverse=True)
+        fws.sort(key=lambda x: x.fw_id)
 
         for fw in fws:
             if fw.fw_id < 0 or reassign_all:
