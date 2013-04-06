@@ -1,4 +1,5 @@
 from fireworks.core.firework import FireWork, Workflow
+from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -32,7 +33,7 @@ def basic_fw_ex():
     launchpad.add_wf(firework)
 
     # launch Rocket
-    launch_rocket(launchpad)
+    launch_rocket(launchpad, FWorker())
 
 
 def rapid_fire_ex():
@@ -53,7 +54,7 @@ def rapid_fire_ex():
     launchpad.add_wf(fw3)
 
     # launch Rocket
-    rapidfire(launchpad)
+    rapidfire(launchpad, FWorker())
 
 
 def multiple_tasks_ex():
@@ -70,7 +71,7 @@ def multiple_tasks_ex():
     launchpad.add_wf(fw)
 
     # launch Rocket
-    rapidfire(launchpad)
+    rapidfire(launchpad, FWorker())
 
 
 def basic_wf_ex():
@@ -85,17 +86,17 @@ def basic_wf_ex():
     task3 = ScriptTask.from_str('echo "Jack is a manager."')
     task4 = ScriptTask.from_str('echo "Kip is an intern."')
 
-    fw1 = FireWork(task1, fw_id=-1)
-    fw2 = FireWork(task2, fw_id=-2)
-    fw3 = FireWork(task3, fw_id=-3)
-    fw4 = FireWork(task4, fw_id=-4)
+    fw1 = FireWork(task1, fw_id=1)
+    fw2 = FireWork(task2, fw_id=2)
+    fw3 = FireWork(task3, fw_id=3)
+    fw4 = FireWork(task4, fw_id=4)
 
     # make workflow
-    workflow = Workflow([fw1, fw2, fw3, fw4], {-1: [-2, -3], -2: [-4], -3: [-4]})
+    workflow = Workflow([fw1, fw2, fw3, fw4], {1: [2, 3], 2: [4], 3: [4]})
     launchpad.add_wf(workflow)
 
     # launch Rocket
-    rapidfire(launchpad)
+    rapidfire(launchpad, FWorker())
 
 if __name__ == '__main__':
     basic_fw_ex()

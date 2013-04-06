@@ -37,7 +37,7 @@ Let's examine how we can set up such an execution model.
 
     lpad reset <TODAY'S DATE>
     lpad add_dir .
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
 #. You should have noticed text printed to the Terminal in the following order::
 
@@ -66,7 +66,7 @@ Let's now try another execution order: A-1, B-1, B-2, A-2.
 
     lpad reset <TODAY'S DATE>
     lpad add_dir .
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
 #. You should have noticed text printed to the Terminal in the following order::
 
