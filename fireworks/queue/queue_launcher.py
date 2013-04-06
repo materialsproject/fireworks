@@ -63,7 +63,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     qadapter.update(fw.spec['_queueadapter'])
 
                 # update the exe to include the FW_id
-                if 'singleshot' not in qadapter.get('exe', ''):
+                if 'singleshot' not in qadapter.get('rocket_launch', ''):
                     raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
                 qadapter['exe'] += ' --fw_id {}'.format(fw.fw_id)
 

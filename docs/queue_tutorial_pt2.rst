@@ -6,16 +6,16 @@ Before we begin - if you're here and haven't completed the :doc:`first tutorial 
 
 In this tutorial, we'll introduce the notion of *reserving* FireWorks on queue submission. Some differences between the simple method of the previous tutorial and the reservation method are outlined below:
 
-===============================  ======================================  =============================================
+===============================  =======================================  =============================================
 Situation                               Simple Queue Launching              Reservation Queue Launching
-===============================  ======================================  =============================================
+===============================  =======================================  =============================================
 write/submit queue script        write generic script using QueueAdapter  | 1. **reserve** a FW from the database
-                                 file alone                              | 2. use FW's spec to modify queue script
-queue manager runs queue script  determine a FW to run and run it        run the **reserved** FW
-job is deleted from queue        no action needed by the user            any affected **reserved** jobs must be
-                                                                         unreserved by user manually
-run multiple FWs in one script   simple / fully supported                currently unsupported
-===============================  ======================================  =============================================
+                                 file alone                               | 2. use FW's spec to modify queue script
+queue manager runs queue script  determine a FW to run and run it         run the **reserved** FW
+job is deleted from queue        no action needed by the user             any affected **reserved** jobs must be
+                                                                          unreserved by user manually
+run multiple FWs in one script   simple / fully supported                 currently unsupported
+===============================  =======================================  =============================================
 
 Reserving jobs allows for more flexibility, but also adds maintenance overhead when queues go down or jobs in the queue are cancelled. Hence, there are some advantages to sticking with Simple Queue Launching. With that out of the way, let's explore the reservation method of queue submission!
 
@@ -23,8 +23,6 @@ Reserving FireWorks
 ===================
 
 1. Begin in your working directory from the :doc:`previous tutorial </queue_tutorial>`. You should have four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
-
-   .. note:: Because we are using standard filenames for the LaunchPad and FireWorker, we will omit the ``-l`` and ``-w`` parameters when running scripts for the remainder of this tutorial.
 
 #. Let's reset our database and add a FireWork for testing::
 

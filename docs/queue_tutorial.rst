@@ -135,8 +135,6 @@ You might want to set up your worker so that it maintains a certain number of jo
 
     qlaunch rapidfire -m 2 --nlaunches infinite
 
-   .. note:: We have used the shortcut of omitting the ``-l``, ``w``, and ``q`` parameters when using standard file names.
-
 #. This command will always maintain 2 jobs in the queue. When a job finishes, another will be submitted to take its place!
 
 Running multiple Rockets per queue job
@@ -164,7 +162,7 @@ So far, each queue script we submitted has only one job. We can also submit mult
 
 #. You should confirm that only a single job got submitted to the queue. However, when the job starts running, you'll see that all three of your jobs completed in separate ``launcher_`` directories!
 
-.. warning:: Currently, we do not recommend running in this mode unless you are confident that all jobs can finish before the walltime expires. Otherwise, you might run into a situation where the walltime kills one of your jobs mid-run. In future tutorials and FireWorks versions, we'll demonstrate how to handle this case cleanly. For now, we suggest you stick to 1 FireWork per queue script unless you know what you are doing!
+.. warning:: Currently, we do not recommend running in this mode unless you are confident that all jobs can finish before the walltime expires. Otherwise, you might run into a situation where the walltime kills one of your jobs mid-run. In future tutorials and FireWorks versions, we'll demonstrate how to handle this case cleanly. For now, we suggest you stick to one FireWork per queue script unless you know what you are doing!
 
 
 More information
