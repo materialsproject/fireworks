@@ -24,19 +24,18 @@ The text in blue lettering is not known in advance and can only be determined af
 #. The workflow is encapsulated in the ``addmod_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of FireWork objects:
 
  * ``fw_id`` 1 looks like it adds the numbers 1 and 1 (defined in the **input_array**) within an ``Add and Modify`` FireTask. This is clearly the first step of our desired workflow. Although we don't yet know what the ``Add and Modify`` FireTask is, we can guess that it at least adds the numbers in the **input_array**.
- * ``fw_id`` 2 only adds the number 10 thus far. It is unclear how this FireWork will obtain the output of the previous FireWork without knowing the details of the ``Add and Modify`` FireTask. We'll explain that in the next step.
- * The second section, labeled ``links``, connects these FireWorks into a workflow in the same manner as the previous example.
+ * ``fw_id`` 2 only adds the number 10 thus far. Without knowing the details of the ``Add and Modify`` FireTask, it is unclear how this FireWork will obtain the output of the previous FireWork.  We'll explain that in the next step.
+ * The second section, labeled ``links``, connects these FireWorks into a workflow in the same manner as in the :doc:`first workflow tutorial <workflow_tutorial>`.
 
 #. We pass information by defining a custom FireTask that returns an instruction to modify the workflow. To see how this happens, we need to look inside the definition of our custom ``Add and Modify`` FireTask. Look inside the file ``addmod_task.py``:
 
  * Most of this FireTask should now be familiar to you; it is very similar to the ``Addition Task`` we investigated when :ref:`customtask-label`.
  * The last line of this file, however, is different. It reads::
 
-        return FWAction('MODIFY', {'sum': m_sum}, {'dict_mods': [{'_push': {'input_array': m_sum}}]})
+        return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])
 
- * The first argument, *MODIFY*, indicates that we want to modify the inputs of the next FireWork (somehow!)
- * The second argument, *{'sum': m_sum}*, is the data we want to store in our database for future reference. It does not affect this FireWork's operation.
- * The final argument, *{'dict_mods': [{'_push': {'input_array': m_sum}}]}*, is the most complex. This argument describes the modifications to make to the next FireWork using a special language. For now, it's sufficient to know that when using the *MODIFY* command, one must specify a *dict_mods* key that contains a list of *modifications*. In our case, we have just a single modification: *{'_push': {'input_array': m_sum}}*.
+ * The first argument, *{'sum': m_sum}*, is the data we want to store in our database for future reference. (We've explored this before when :ref:`customtask-label`). It does not affect this FireWork's operation.
+ * The second argument, *mod_spec=[{'_push': {'input_array': m_sum}}]*, is more complex. This argument describes a list of modifications to make to the next FireWork's **spec** using a special language.
  * The instruction *{'_push': {'input_array': m_sum}}* means that the *input_array* key of the next FireWork(s) will have another item *pushed* to the end of it. In our case, we will be pushing the sum of (1 + 1) to the ``input_array`` of the next FireWork.
 
 #. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next FireWork. Let's see how this operates in practice by inserting the workflow in our database::
@@ -51,7 +50,7 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. Let's now run the first step of the workflow::
 
-    rlaunch --silencer singleshot
+    rlaunch -s singleshot
 
 #. This prints out ``The sum of [1, 1] is: 2`` - no surprise there. But let's look what happens when we look at our FireWorks again::
 
@@ -62,11 +61,11 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. Finally, let's run the second step to ensure we successfully passed information between FireWorks::
 
-    rlaunch --silencer singleshot
+    rlaunch -s singleshot
 
 #. This prints out ``The sum of [10, 2] is: 12`` - just as we desired!
 
-You've now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible. We will present details in a different document. For now, we will continue by demonstrating another type of dynamic workflow.
+You've now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including some that involve a simpler (but less flexible) language than what we just demonstrated. We will present details in a different document. For now, we will continue by demonstrating another type of dynamic workflow.
 
 A Fibonacci Adder
 =================
@@ -94,9 +93,10 @@ Our single FireWork will contain a custom FireTask that does the following:
 
 Let's see how this is achieved:
 
-1. Stay in the ``dynamic_wf`` tutorial directory on your FireServer::
+1. Stay in the ``dynamic_wf`` tutorial directory on your FireServer and clear it::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
+    rm FW.json
 
 #. The initial FireWork is in the file ``fw_fibnum.yaml``. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, along with the **stop_point** of 100, and asking to run the ``Fibonacci Adder Task``.
 
@@ -104,13 +104,12 @@ Let's see how this is achieved:
 
  * The most important part of the code are the lines::
 
-        new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
-        return FWAction('CREATE', {'next_fibnum': m_sum}, {'create_fw': new_fw})
+    new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
+    return FWAction(stored_data={'next_fibnum': m_sum}, additions=new_fw)
 
  * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the **smaller** number of the new FireWork is the larger number of the current FireWork, and the **larger** number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram). The **stop_point** is kept the same.
- * Next, we are returning an instruction to *CREATE* a child FireWork to the workflow.
- * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect operation.
- * The *{'create_fw': new_fw}* means that we want to add a single child FireWork, the ``new_fw`` that we just defined in the previous command. The *create_fw* key is a special key that can be defined when returning an *CREATE* instruction. The LaunchPad will interpret this command after the FireWork completes.
+ * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect the FireWork's operation.
+ * The *additions* argument contains our dynamicism. Here, you can add a FireWork to the workflow (as shown), or even add lists of FireWorks or entire lists of Workflows!
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
@@ -120,7 +119,7 @@ Let's see how this is achieved:
 
 #. That last command should prove that there is only one FireWork in the database. Let's run it::
 
-    rlaunch --silencer singleshot
+    rlaunch -s singleshot
 
 #. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one FireWork, one Rocket. But let's try to again to get all the FireWorks in the database::
 
@@ -128,34 +127,34 @@ Let's see how this is achieved:
 
 #. Now there are *two* FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
 
-    rlaunch --silencer singleshot
+    rlaunch -s singleshot
 
 #. This should print out the next Fibonacci number (2). You can repeat this until our FireTask detects we have gone above our limit of 100::
 
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 3
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 5
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 8
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 13
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 21
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 34
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 55
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     The next Fibonacci number is: 89
-    $ rlaunch --silencer singleshot
+    $ rlaunch -s singleshot
     We have now exceeded our limit; (the next Fibonacci number would have been: 144)
 
 #. If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We'll instead look at all the different FireWorks created dynamically by our program::
 
     lpad get_fw_ids
 
-There are 11 FireWorks in all, and 10 of them were created by other FireWorks rather than a human!
+There are 11 FireWorks in all, and 10 of them were created automatically by other FireWorks!
 
 A Fibonacci Adder: The Quick Way
 ================================
@@ -163,11 +162,11 @@ A Fibonacci Adder: The Quick Way
 Let's see how quickly we can add and run our entire workflow consisting of 11 steps::
 
     lpad add fw_fibnum.yaml
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
-That was quick!
+That was quick! You might even try again with the **stop_point** in fw_fibnum.yaml raised to a higher value.
 
-.. note:: The rapidfire option creates a new directory for each launch. At the end of the last script you will have many directories starting with ``launcher_``. You might want to clean these up after running (or store them for future provenance!)
+.. note:: The rapidfire option creates a new directory for each launch. At the end of the last script you will have many directories starting with ``launcher_``. You might want to clean these up after running.
 
 The end is just the beginning
 =============================
