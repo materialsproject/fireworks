@@ -47,9 +47,9 @@ class QueueAdapterBase(dict, FWSerializable):
                 subs_dict[k] = subs_dict.get(k, v)
 
             # remove null values
-            for k, v in self:
+            for k, v in subs_dict.iteritems():
                 if v is None:
-                    del self[k]
+                    del subs_dict[k]
 
             subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
 
