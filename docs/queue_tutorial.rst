@@ -32,7 +32,7 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
 #. Copy your chosen QueueAdapter file to a new name::
 
-    cp q_<QUEUE>.yaml my_qadapter.yaml
+    cp qadapter_<QUEUE>.yaml my_qadapter.yaml
 
 #. Navigate to clean working directory on the FireWorker. For example::
 
@@ -68,15 +68,15 @@ Add some FireWorks
 
 Staying in your testing directory, let's reset our database and add a new FireWork, all from our FireWorker::
 
-    lpad -l my_launchpad.yaml reset <TODAY'S DATE>
-    lpad -l my_launchpad.yaml add fw_test.yaml
+    lpad reset <TODAY'S DATE>
+    lpad add fw_test.yaml
 
 Submit a job
 ------------
 
 1. Try submitting a job using the command::
 
-    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_qadapter.yaml singleshot
+    qlaunch singleshot
 
   .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_qadapter.yaml``, then you don't need to specify the ``-l``, ``-w``, and ``-q`` options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuation directory that you specify with a single ``-c`` parameter. For this tutorial, we'll include the full command and avoid shortcuts.
 

@@ -46,6 +46,11 @@ class QueueAdapterBase(dict, FWSerializable):
             for k, v in self.defaults:
                 subs_dict[k] = subs_dict.get(k, v)
 
+            # remove null values
+            for k, v in self:
+                if v is None:
+                    del self[k]
+
             subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
 
             launch_dir = os.path.abspath(launch_dir)
