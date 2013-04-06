@@ -78,7 +78,7 @@ Submit a job
 
     qlaunch singleshot
 
-  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_qadapter.yaml``, then you don't need to specify the ``-l``, ``-w``, and ``-q`` options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuation directory that you specify with a single ``-c`` parameter. For this tutorial, we'll include the full command and avoid shortcuts.
+  .. tip:: Similar to the Rocket Launcher, if you use the names ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_qadapter.yaml``, then you don't need to specify the ``-l``, ``-w``, and ``-q`` options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuration directory that you specify with a single ``-c`` parameter, or in the directories specified by your :doc:`FWConfig file <config_tutorial>`.
 
 #. This should have submitted a job to the queue in the current directory. You can read the log files in the logging directory, and/or check the status of your queue to ensure your job appeared.
 
@@ -86,13 +86,7 @@ Submit a job
 
    .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
 
-If everything ran successfully, congratulations! You just executed a complicated sequence of instructions:
-
-   a. The Queue Launcher submitted a Rocket Launcher to your queue manager
-   b. Your queue manager executed the Rocket Launcher when resources were ready
-   c. The Rocket Launcher launched a Rocket
-   d. The Rocket fetched a FireWork from the FireServer and ran the specification inside
-
+If everything ran successfully, congratulations! You just executed a FireWork through a queue!
 
 Adding more power: using rapid-fire mode
 ========================================
@@ -103,24 +97,22 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
 #. Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    lpad -l my_launchpad.yaml reset <TODAY'S DATE>
-    lpad -l my_launchpad.yaml add fw_test.yaml
-    lpad -l my_launchpad.yaml add fw_test.yaml
-    lpad -l my_launchpad.yaml add fw_test.yaml
+    lpad reset <TODAY'S DATE>
+    lpad add fw_test.yaml
+    lpad add fw_test.yaml
+    lpad add fw_test.yaml
 
 #. Submit several jobs with a single command::
 
-    qlaunch -l my_launchpad.yaml -w my_fworker.yaml -q my_qadapter.yaml rapidfire -m 3
-
-   .. note:: You may have noticed that the paths to ``my_fworker.yaml`` and ``my_launchpad.yaml`` are needed in two places. The first place is when specifying the ``-l`` and ``-w`` arguments to ``qlaunch``.The second place is inside the ``my_qadapter.yaml`` file.  The locations when specifying arguments to ``qlaunch`` are read by the head node during submission of your jobs to the queue manager. The locations inside ``my_qadapter.yaml``are read by the compute nodes that run your job. These locations can be different or the same, but we suggest that they be the same unless your compute nodes cannot access the same filesystem as your head nodes.
+    qlaunch rapidfire -m 3
 
    .. important:: The Queue Launcher sleeps between each job submission to give time for the queue manager to 'breathe'. It might take a few minutes to submit all the jobs.
 
-   .. important:: The command above submits jobs until you have at most 3 jobs in the queue under your username. If you had some jobs existing in the queue before running this command, you might need to increase the ``-q`` parameter.
+   .. important:: The command above submits jobs until you have at most 3 jobs in the queue under your username. If you had some jobs existing in the queue before running this command, you might need to increase the ``-m`` parameter.
 
 #. The rapid-fire command should have created a directory beginning with the tag ``block_``. Navigate inside this directory, and confirm that three directories starting with the tag ``launch`` were created. The ``launch`` directories contain your individual jobs.
 
-You've now launched multiple Rockets with a single command!
+You've now launched multiple Rockets with a single command, all through a queueing system!
 
 Continually submit jobs to the queue
 ====================================

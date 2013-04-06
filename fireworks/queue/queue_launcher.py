@@ -172,7 +172,7 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
 
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
-    jobs_in_queue = qadapter.qa.get_njobs_in_queue()
+    jobs_in_queue = qadapter.get_njobs_in_queue()
     for i in range(FWConfig().QUEUE_RETRY_ATTEMPTS):
         if jobs_in_queue is not None:
             l_logger.info('{} jobs in queue. Maximum allowed by user: {}'.format(jobs_in_queue, njobs_queue))
@@ -180,6 +180,6 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
         l_logger.warn('Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
         time.sleep(RETRY_INTERVAL)
         RETRY_INTERVAL *= 2
-        jobs_in_queue = qadapter.qa.get_njobs_in_queue()
+        jobs_in_queue = qadapter.get_njobs_in_queue()
 
     raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')
