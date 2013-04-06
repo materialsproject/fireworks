@@ -46,8 +46,10 @@ class QueueAdapterBase(dict, FWSerializable):
             for k, v in self.defaults:
                 subs_dict[k] = subs_dict.get(k, v)
 
+            # TODO: make this cleaner
             # remove null values
-            for k, v in subs_dict.iteritems():
+            d_copy = dict(subs_dict)
+            for k, v in d_copy.iteritems():
                 if v is None:
                     del subs_dict[k]
 
