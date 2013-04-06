@@ -5,8 +5,8 @@ Handling Duplicates Automatically
 If you are running just a few jobs, or if your set of jobs is well-constrained, you may never have to worry about the possibility of duplicated runs. However, in some applications, duplicate jobs need to be explicitly prevented. This may be the case if:
 
 * Each job is a costly calculation that would be expensive to run again
-* The set of input data and/or the number of workflow steps for each input changes and grows over time. In this case, it might be difficult take a lot of bookkeeping to track what input data was already processed and what workflow steps were already submitted.
-* Multiple users are submitting Workflows, and two or more users might submit the same thing.
+* The input data changes and grows over time. In this case, it might be difficult take a lot of bookkeeping to track what input data was already processed and what workflow steps were already submitted.
+* Multiple users are submitting workflows, and two or more users might submit the same thing.
 
 One way to prevent duplicate jobs is to pre-filter workflows yourself before submitting them to FireWorks. However, FireWorks includes a built-in, customizable duplicate checker. One advantage of this built-in duplicate checker is that it detects duplicates at the FireWork (*sub-workflow*) level. Let's see how this works.
 
@@ -33,13 +33,13 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
     _dupefinder:
       _fw_name: Dupe Finder Exact
 
-   * The ``_dupefinder`` key is a special key inside the FireWork ``spec`` that tells us how to identify duplicates. The ``Dupe Finder Exact`` text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same ``spec``.
+   * The ``_dupefinder`` key is a special key inside the FireWork **spec** that tells us how to identify duplicates. The ``Dupe Finder Exact`` text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same **spec**.
 
 #. Let's add our workflow to the database and run it::
 
     lpad reset <TODAY'S DATE>
     lpad add wf_12.yaml
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
 #. You should see two output directories, one corresponding to each section of the workflow. The standard out should have also printed the lines::
 
@@ -52,9 +52,9 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. This completes successfully; the built-in duplicate checker will allow you to add in the same workflow twice. Let's see what happens when we try to run this workflow::
 
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
-#. You will get a ``No FireWorks are ready to run and match query! {}`` error! Even though we added a new workflow, FireWorks did not actually run it because it was a duplicate of the previous workflow.
+#. Nothing runs! Even though we added a new workflow, FireWorks did not actually run it because it was a duplicate of the previous workflow.
 
 #. Instead of actually running the new FireWorks, FireWorks simply copied the launch data from the earlier, duplicated FireWorks. Let's confirm that this is the case. Our first workflow had FireWorks with``fw_id`` 1 and 2, and our second workflow had FireWorks with ``fw_id`` 3 and 4::
 
@@ -65,12 +65,12 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. All four FireWorks - both the ones we ran explicitly and the second set of duplicated runs - show Launch data as if they had been *all* been run explicitly.
 
-In summary, when the ``_dupefinder`` key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow will has its run data copied from an earlier run. This process occurs when you run the Rocket Launcher - before running a FireWork, the Rocket will check to see if it's been run before. If so, it will just copy the Launch output from the previous FireWork that had the same ``spec``.
+In summary, when the ``_dupefinder`` key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow has its run data copied from an earlier run (in other words, the duplicate run *steals* the launches of the original run). This process occurs when you run the Rocket Launcher - before running a FireWork, the Rocket will check to see if it's been run before. If so, it will just copy the Launch output from the previous FireWork that had the same **spec**.
 
 Sub-Workflow Duplicate Detection
 ================================
 
-One nice feature of FireWorks' built-in duplicate detection is that it operates on a *sub-workflow* level. If only a portion of a workflow has been run before, FireWorks can avoid re-running that portion while still running unique sections.
+One nice feature of FireWorks' built-in duplicate detection is that it operates on a *sub-workflow* level. If only a portion of a workflow has been run before, FireWorks can avoid re-running that portion while still running unique sections, even within dynamic workflows.
 
 1. Clear out your previous output in the ``duplicate`` tutorials directory::
 
@@ -80,7 +80,7 @@ One nice feature of FireWorks' built-in duplicate detection is that it operates 
 
     lpad reset <TODAY'S DATE>
     lpad add wf_12.yaml
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
 #. As before, we should have run two FireWorks in agreement with our desired workflow. Now, let's consider a situation where we insert a three-step workflow, but **two of the steps are duplicated from before**:
 
@@ -94,7 +94,7 @@ One nice feature of FireWorks' built-in duplicate detection is that it operates 
 #. Ideally, we would want to only run the third step of the workflow from scratch, since it is unique. The first two steps we've already run before, and we can just copy the results from a past run. Let's confirm that this is what happens when we run our new three-step workflow::
 
     lpad add wf_123.yaml
-    rlaunch --silencer rapidfire
+    rlaunch -s rapidfire
 
 #. You should see text in the standard out that reads::
 
