@@ -60,7 +60,7 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
 #. You should see that the first submission went OK, but the second one told us ``No jobs exist in the LaunchPad for submission to queue!``. If we repeated this sequence without the ``-r`` option, we would submit too many jobs to the queue.
 
-   .. note:: Once the job starts *running* or *completes*, both the Simple version of the queue launcher and the Reservation version will stop you from submitting jobs. However, only the Reservation version will identify that a job is already queued.
+   .. note:: Once the job starts *running* or *completes*, both the simple version of the QueueLauncher and the reservation mode will stop you from submitting jobs. However, only the reservation mode will identify that a job is already queued.
 
 Overriding Queue Parameters within the FireWork
 ===============================================
@@ -80,7 +80,7 @@ Another key feature of reserving FireWorks before queue submission is that the F
 #. Let's add and run this FireWork::
 
     lpad reset <TODAY'S DATE>
-    lpad add fw_test.yaml
+    lpad add fw_walltime.yaml
     qlaunch -r singleshot
 
 #. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_qadapter.yaml``.
@@ -132,4 +132,6 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 Conclusion
 ==========
 
-As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``. Jobs launched from the Simple Queue Launcher will not carry out this override!
+As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
+
+If you are using the QueueLauncher in reservation mode, we suggest that you look at the tutorial on maintaining your FireWorks database (future). This will show you how to automatically clear out bad reservations periodically without needing human intervention.
