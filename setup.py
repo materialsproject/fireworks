@@ -26,7 +26,7 @@ if __name__ == "__main__":
           packages=find_packages(),
           zip_safe=False,
           install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2'],
-          classifiers=["Programming Language :: Python :: 2.7", "Development Status :: 2 - Pre-Alpha",
+          classifiers=["Programming Language :: Python :: 2.7", "Development Status :: 4 - Beta",
                        "Intended Audience :: Science/Research", "Intended Audience :: System Administrators",
                        "Intended Audience :: Information Technology",
                        "Operating System :: OS Independent", "Topic :: Other/Nonlisted Topic",
