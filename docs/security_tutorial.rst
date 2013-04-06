@@ -20,7 +20,9 @@ On your FireServer (which hosts your Mongo database), you must set up at least o
 2. Connect to the admin database and add your user in the Mongo shell::
 
     use admin;
-    db.addUser('write_user', 'my_password');
+    db.addUser('admin_user', 'admin_password');
+    use fireworks
+    db.addUser('FW_user', 'FW_password');
     db.shutdownServer();
     exit
 
@@ -41,8 +43,10 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
 
 #. Add your username and password to your launchpad file by adding or editing the following lines::
 
-    username: <YOUR_USERNAME>
-    password: <YOUR_PASSWORD>
+    username: <YOUR_FW_USERNAME>
+    password: <YOUR_FW_PASSWORD>
+
+.. note:: Make sure you use the username/password for your FireWorks database, not your database admin username and password.
 
 #. **Make sure you store your LaunchPad file in a secure location with protected filesystem access.** It contains your password as plain text!
 
@@ -55,23 +59,6 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
     rlaunch -l my_launchpad.yaml singleshot
 
 To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on :ref:`configfile-label`.
-
-Database-specific passwords
-===========================
-
-Our example assumes that FireWorks is the only database in your Mongo instance. If you have several databases (e.g., for your personal use) and want to separately configure a password for each one, you can use the following sequence of commands::
-
-    mongo
-    use admin;
-    db.auth(<USERNAME>, <PASS>)
-    use fireworks
-    db.addUser('FW_user', 'FW_password');
-    db.shutdownServer();
-    exit
-    mongod --auth
-
-You should now be able to use the credentials for ``FW_user`` in order to log into your FireWorks database.
-
 
 
 
