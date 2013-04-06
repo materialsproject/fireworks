@@ -4,7 +4,7 @@ Launch Rockets through a queue
 
 If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer resources.
 
-The simplest way to submit jobs through a queue is to submit scripts to your queue manager that run ``rlaunch``. This method is just like typing ``rlaunch`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
+The simplest way to execute jobs through a queue is to submit scripts to your queue manager that run ``rlaunch``. This method is just like typing ``rlaunch`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
 
 The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script "wakes" up and runs the Rocket Launcher, which then figures out what FireWork to run.
 
@@ -26,13 +26,13 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
     cd <INSTALL_DIR>/fw_tutorials/queue
 
-#. Locate an appropriate QueueAdapter file. The files are usually named ``queueadapter_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
+#. Locate an appropriate QueueAdapter file. The files are usually named ``qadapter_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
 
 .. note:: If you cannot find a working QueueAdapter file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) We would like to support more queueing systems in FireWorks.
 
 #. Copy your chosen QueueAdapter file to a new name::
 
-    cp queueadapter_<QUEUE>.yaml my_qadapter.yaml
+    cp q_<QUEUE>.yaml my_qadapter.yaml
 
 #. Navigate to clean working directory on the FireWorker. For example::
 
