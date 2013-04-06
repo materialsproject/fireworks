@@ -55,3 +55,23 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
     rlaunch -l my_launchpad.yaml singleshot
 
 To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on :ref:`configfile-label`.
+
+Database-specific passwords
+===========================
+
+Our example assumes that FireWorks is the only database in your Mongo instance. If you have several databases (e.g., for your personal use) and want to separately configure a password for each one, you can use the following sequence of commands::
+
+    mongo
+    use admin;
+    db.auth(<USERNAME>, <PASS>)
+    use fireworks
+    db.addUser('FW_user', 'FW_password');
+    db.shutdownServer();
+    exit
+    mongod --auth
+
+You should now be able to use the credentials for ``FW_user`` in order to log into your FireWorks database.
+
+
+
+

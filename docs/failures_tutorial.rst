@@ -35,7 +35,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
     lpad reset <TODAY'S DATE>
     lpad add fw_sleep.yaml
 
-#. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C or Ctrl+\). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
+#. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C or Ctrl+\\). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
 
     rlaunch singleshot
     (Ctrl+C or Ctrl+\)
@@ -46,7 +46,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
     lpad get_fw 1
 
-#. You should notice the state of this FireWork is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run.
+#. You should notice the state of this FireWork is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
 
 #. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
 
@@ -100,3 +100,5 @@ Life after *FIZZLED*
 ====================
 
 Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. Currently, your only option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you'll need to rerun your entire workflow from the beginning, and any steps that came prior to the failure will be repeated unless you omit them from the new workflow.
+
+You can also continue on with the Workflow even after *FIZZLED* by setting the ``_allow_fizzled_parents`` parameter in your **spec**. This will allow you to algorithmically fix errors using FireWorks' dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.
