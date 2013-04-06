@@ -21,8 +21,10 @@ On your FireServer (which hosts your Mongo database), you must set up at least o
 
     use admin;
     db.addUser('admin_user', 'admin_password');
+    db.auth('admin_user', 'admin_password')
     use fireworks
     db.addUser('FW_user', 'FW_password');
+    use admin
     db.shutdownServer();
     exit
 
