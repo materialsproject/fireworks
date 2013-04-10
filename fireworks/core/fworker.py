@@ -36,3 +36,9 @@ class FWorker(FWSerializable):
     @recursive_deserialize
     def from_dict(cls, m_dict):
         return FWorker(m_dict['name'], m_dict['category'], json.loads(m_dict['query']))
+
+    @property
+    def query(self):
+        q = self.query
+        if self.category:
+            q['spec._category'] = self.category
