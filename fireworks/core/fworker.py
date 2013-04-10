@@ -42,3 +42,4 @@ class FWorker(FWSerializable):
         q = self.query
         if self.category:
             q['spec._category'] = self.category
+        return q
