@@ -26,7 +26,7 @@ class FWorker(FWSerializable):
         """
         self.name = name
         self.category = category
-        self.query = query if query else {}
+        self._query = query if query else {}
 
     @recursive_serialize
     def to_dict(self):
@@ -39,7 +39,7 @@ class FWorker(FWSerializable):
 
     @property
     def query(self):
-        q = self.query
+        q = self._query
         if self.category:
             q['spec._category'] = self.category
         return q
