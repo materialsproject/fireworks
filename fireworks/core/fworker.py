@@ -18,7 +18,7 @@ __date__ = 'Dec 12, 2012'
 
 
 class FWorker(FWSerializable):
-    def __init__(self, name="anonymous worker", category="general worker", query=None):
+    def __init__(self, name="Automatically generated Worker", category='', query=None):
         """
         :param name: the name of the resource, should be unique
         :param category: a String describing the computing resource, does not need to be unique
