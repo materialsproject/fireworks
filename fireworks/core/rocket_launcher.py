@@ -57,7 +57,7 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
     num_launched = 0
     num_loops = 0
     while num_loops != max_loops:
-        while launchpad.run_exists():
+        while launchpad.run_exists(fworker):
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)

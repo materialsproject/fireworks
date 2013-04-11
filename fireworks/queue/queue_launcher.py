@@ -44,7 +44,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     if not os.path.exists(launcher_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
 
-    if launchpad.run_exists():
+    if launchpad.run_exists(fworker):
         try:
             # get the queue adapter
             l_logger.debug('getting queue adapter')
@@ -121,7 +121,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
-            while jobs_in_queue < njobs_queue and launchpad.run_exists():
+            while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker):
                 l_logger.info('Launching a rocket!')
 
                 # switch to new block dir if it got too big

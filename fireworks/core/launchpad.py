@@ -214,12 +214,13 @@ class LaunchPad(FWSerializable):
 
         return fw_ids
 
-    def run_exists(self):
+    def run_exists(self, fworker=None):
         """
         Checks to see if the database contains any FireWorks that are ready to run
         :return: (T/F)
         """
-        return bool(self._get_a_fw_to_run(checkout=False))
+        q = fworker.query if fworker else {}
+        return bool(self._get_a_fw_to_run(query=q, checkout=False))
 
     def tuneup(self):
         self.m_logger.info('Performing db tune-up')
