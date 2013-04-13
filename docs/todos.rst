@@ -41,6 +41,9 @@ Major Features
 
 * Add way to monitor a file during the run
 
+* Add a way to reset FireWork
+    * Move all launches to 'archived' launch
+
 FireTasks
 =========
 

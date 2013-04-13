@@ -128,11 +128,13 @@ class FireWork(FWSerializable):
     STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'CANCELED': 6,
                    'COMPLETED': 7}
 
-    def __init__(self, tasks, spec=None, launches=None, state='WAITING', created_on=None, fw_id=-1):
+    def __init__(self, tasks, spec=None, launches=None, archived_launches=None, state='WAITING', created_on=None,
+                 fw_id=-1):
         """
         :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the FireTask
         :param launches: ([Launch]) a list of Launch objects of this FireWork
+        :param archived_launches: ([Launch]) a list of archived Launch objects of this FireWork
         :param state: (str) the state of the FW (e.g. WAITING, RUNNING, COMPLETED, CANCELED)
         :param fw_id: (int) an identification number for this FireWork
         """
@@ -144,6 +146,7 @@ class FireWork(FWSerializable):
         self.spec['_tasks'] = [t.to_dict() for t in tasks]  # put tasks in a special location of the spec
         self.fw_id = fw_id
         self.launches = launches if launches else []
+        self.archived_launches = archived_launches if archived_launches else []
         self.created_on = created_on if created_on else datetime.datetime.utcnow()
         self.state = state
 
@@ -151,17 +154,35 @@ class FireWork(FWSerializable):
     def to_dict(self):
         m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_on': self.created_on}
 
+        # only serialize these fields if non-empty
         if len(self.launches) > 0:
             m_dict['launches'] = self.launches
+
+        if len(self.archived_launches) > 0:
+            m_dict['archived_launches'] = self.archived_launches
 
         if self.state != 'WAITING':
             m_dict['state'] = self.state
 
         return m_dict
 
+    def _reset(self):
+        """
+        Moves all Launches to archived Launches and resets the state to 'WAITING'. The FireWork can thus be re-run \
+        even if it was Launched in the past. This method should be called by a Workflow because a refresh is needed \
+        after calling this method.
+
+        """
+
+        self.archived_launches.extend(self.launches)
+        self.launches = []
+        self.state = 'WAITING'
+
     def to_db_dict(self):
         m_dict = self.to_dict()
         m_dict['launches'] = [l.launch_id for l in self.launches]  # the launches are stored separately
+        m_dict['archived_launches'] = [l.launch_id for l in
+                                       self.archived_launches]  # the archived launches are stored separately
         m_dict['state'] = self.state
         return m_dict
 
@@ -170,11 +191,12 @@ class FireWork(FWSerializable):
     def from_dict(cls, m_dict):
         tasks = m_dict['spec']['_tasks']
         launches = [Launch.from_dict(tmp) for tmp in m_dict.get('launches', [])]
+        archived_launches = [Launch.from_dict(tmp) for tmp in m_dict.get('archived_launches', [])]
         fw_id = m_dict.get('fw_id', -1)
         state = m_dict.get('state', 'WAITING')
         created_on = m_dict.get('created_on', None)
 
-        return FireWork(tasks, m_dict['spec'], launches, state, created_on, fw_id)
+        return FireWork(tasks, m_dict['spec'], launches, archived_launches, state, created_on, fw_id)
 
 
 class Launch(FWSerializable, object):
@@ -460,6 +482,15 @@ class Workflow(FWSerializable):
 
         return list(set(updated_ids))
 
+    def reset_fw(self, fw_id):
+        """
+        Archives the launches of a FireWork so that it can be re-run.
+        :param fw_id: (int)
+        """
+        m_fw = self.id_fw[fw_id]
+        m_fw._reset()
+        self.refresh(fw_id)
+
     def _add_wf_to_fw(self, wf, fw_id, detour):
         """
         Internal method to add a workflow as a child to a FireWork
@@ -608,7 +639,8 @@ class Workflow(FWSerializable):
     def from_dict(cls, m_dict):
         # accept either a Workflow dict or a FireWork dict
         if 'fws' in m_dict:
-            return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']), m_dict['metadata'])
+            return Workflow([FireWork.from_dict(f) for f in m_dict['fws']], Workflow.Links.from_dict(m_dict['links']),
+                            m_dict['metadata'])
         else:
             return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 
