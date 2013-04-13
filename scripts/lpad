@@ -1,4 +1,4 @@
-from fireworks.scripts.lp_run import lpad
+from fireworks.scripts.lpad_run import lpad
 
 if __name__ == '__main__':
     lpad()
