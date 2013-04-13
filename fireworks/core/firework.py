@@ -482,17 +482,24 @@ class Workflow(FWSerializable):
 
         return list(set(updated_ids))
 
-    def rerun_fw(self, fw_id):
+    def rerun_fw(self, fw_id, updated_ids=None):
         """
         Archives the launches of a FireWork so that it can be re-run.
         :param fw_id: (int)
         :return: ([int]) list of FireWork ids that were updated
         """
 
+        updated_ids = updated_ids if updated_ids else set()
         m_fw = self.id_fw[fw_id]
         m_fw._rerun()
-        updated_ids = [fw_id]
-        return self.refresh(fw_id)
+        updated_ids.add(fw_id)
+
+        # re-run all the children
+        for child_id in self.links[fw_id]:
+            updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
+
+        # refresh the WF to get the states updated
+        return self.refresh(fw_id, updated_ids)
 
     def _add_wf_to_fw(self, wf, fw_id, detour):
         """
