@@ -235,14 +235,14 @@ class LaunchPad(FWSerializable):
         self.launches.ensure_index('time_end')
         self.launches.ensure_index('host')
         self.launches.ensure_index('ip')
-        '''
+
         self.m_logger.debug('Compacting database...')
         try:
             self.database.command({'compact': 'fireworks'})
             self.database.command({'compact': 'launches'})
         except:
-            log_exception(self.m_logger, 'Error while compacting database! (make sure your Mongo version is 2.0+)')
-        '''
+            self.m_logger.debug('Database compaction failed (not critical)')
+
 
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
