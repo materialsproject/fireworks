@@ -41,8 +41,11 @@ def lpad():
     adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
 
     get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
-    get_fw_parser.add_argument('fw_id', help="FireWork id", type=int)
+    get_fw_parser.add_argument('fw_id', help='FireWork id', type=int)
     get_fw_parser.add_argument('-f', '--filename', help='output filename', default=None)
+
+    rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
+    rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
 
     get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
@@ -152,6 +155,9 @@ def lpad():
 
         elif args.command == 'reignite_fw':
             lp.reignite_fw(args.fw_id)
+
+        elif args.command == 'rerun_fw':
+            lp.rerun_fw(args.fw_id)
 
 
 if __name__ == '__main__':

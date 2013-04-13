@@ -166,7 +166,7 @@ class FireWork(FWSerializable):
 
         return m_dict
 
-    def _reset(self):
+    def _rerun(self):
         """
         Moves all Launches to archived Launches and resets the state to 'WAITING'. The FireWork can thus be re-run \
         even if it was Launched in the past. This method should be called by a Workflow because a refresh is needed \
@@ -482,14 +482,17 @@ class Workflow(FWSerializable):
 
         return list(set(updated_ids))
 
-    def reset_fw(self, fw_id):
+    def rerun_fw(self, fw_id):
         """
         Archives the launches of a FireWork so that it can be re-run.
         :param fw_id: (int)
+        :return: ([int]) list of FireWork ids that were updated
         """
+
         m_fw = self.id_fw[fw_id]
-        m_fw._reset()
-        self.refresh(fw_id)
+        m_fw._rerun()
+        updated_ids = [fw_id]
+        return self.refresh(fw_id)
 
     def _add_wf_to_fw(self, wf, fw_id, detour):
         """

@@ -181,7 +181,14 @@ class LaunchPad(FWSerializable):
         launches = []
         for launch_id in fw_dict['launches']:
             launches.append(self.get_launch_by_id(launch_id).to_dict())
+
         fw_dict['launches'] = launches
+
+        archived_launches = []
+        for launch_id in fw_dict['archived_launches']:
+            archived_launches.append(self.get_launch_by_id(launch_id).to_dict())
+
+        fw_dict['archived_launches'] = archived_launches
 
         return FireWork.from_dict(fw_dict)
 
@@ -488,6 +495,11 @@ class LaunchPad(FWSerializable):
 
         return old_new
 
+    def rerun_fw(self, fw_id):
+        wf = self.get_wf_by_fw_id(fw_id)
+        updated_ids = wf.rerun_fw(fw_id)
+        self._upsert_wf(wf, updated_ids)
+
     def _refresh_wf(self, wf, fw_id):
 
         """
@@ -499,11 +511,15 @@ class LaunchPad(FWSerializable):
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
 
         updated_ids = wf.refresh(fw_id)
+        self._upsert_wf(wf, updated_ids)
+
+
+    def _upsert_wf(self, wf, updated_ids):
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
         # redo the links
-        self.workflows.find_and_modify({'nodes': fw_id}, wf.to_db_dict())
+        self.workflows.find_and_modify({'nodes': wf.fws[0].fw_id}, wf.to_db_dict())
 
     def _steal_launches(self, thief_fw):
         stolen = False
