@@ -87,6 +87,7 @@ We recommend that all users read (or at least browse) the following tutorials be
 
     failures_tutorial
     maintain_tutorial
+    defuse_tutorial
     rerun_tutorial
     security_tutorial
     duplicates_tutorial

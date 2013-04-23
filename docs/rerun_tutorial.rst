@@ -2,8 +2,6 @@
 Rerunning a FireWork or Workflow
 ================================
 
-.. note:: This tutorial is under construction
-
 In some instances, you may want to rerun a FireWork or Workflow. For example, your computing resource may have crashed or been configured incorrectly during the first run, leading to your first launch being *FIZZLED*. When you rerun a FireWork:
 
 * All the FireWork's previous launches are *archived* into a special section of the FireWork called *archived_launches*. This process also occurs for all the children of the FireWork (but not the parents).

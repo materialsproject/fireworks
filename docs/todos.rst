@@ -22,8 +22,6 @@ FW Docs
 
 * Document all the features of Script Task
 
-* Test and document defuse / reignite FW
-
 * Update all tutorials so config file is handled smoothly, not terribly...m
 
 * Document allow_fizzled_parents
