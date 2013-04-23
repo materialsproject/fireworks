@@ -9,16 +9,16 @@ scripts Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`lp_run` Module
---------------------
+:mod:`lpad_run` Module
+----------------------
 
-.. automodule:: fireworks.scripts.lp_run
+.. automodule:: fireworks.scripts.lpad_run
     :members:
     :undoc-members:
     :show-inheritance:
 
 :mod:`qlaunch_run` Module
----------------------------
+-------------------------
 
 .. automodule:: fireworks.scripts.qlaunch_run
     :members:
@@ -26,7 +26,7 @@ scripts Package
     :show-inheritance:
 
 :mod:`rlaunch_run` Module
----------------------------
+-------------------------
 
 .. automodule:: fireworks.scripts.rlaunch_run
     :members:

@@ -22,8 +22,6 @@ FW Docs
 
 * Document all the features of Script Task
 
-* Document use of maintain() and tuneup()
-
 * Test and document defuse / reignite FW
 
 * Update all tutorials so config file is handled smoothly, not terribly...m
