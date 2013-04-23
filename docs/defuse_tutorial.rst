@@ -1,5 +1,5 @@
 ===================================
-Canceling and restarting a workflow
+Canceling and restarting a Workflow
 ===================================
 
 You can cancel a FireWork using the *defuse* command of the LaunchPad::

@@ -2,8 +2,7 @@
 Dealing with Failures and Crashes
 =================================
 
-.. warning:: This documentation is written as a **tutorial** that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do **not** reset your FireWorks database as the tutorial instructs. Instead, read through the documentation to get an idea on how to proceed and refer to the :doc:`database maintenance instructions </maintain_tutorial>`.
-
+.. warning:: This documentation is written as a **tutorial** that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do **not** reset your FireWorks database as the tutorial instructs. Instead, first read through this tutorial to get an idea on how failures work in FireWorks. Then, refer to the :doc:`database maintenance instructions </maintain_tutorial>`.
 
 Job exceptions, node failures, and system outages are all unfortunate realities of executing workflows. You'll likely encounter some of these events when running FireWorks. This tutorial will simulate some of these events, so you can see how FireWorks detects job failures and what you can do about it.
 
@@ -97,7 +96,9 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     lpad detect_fizzled --fix
     lpad get_fw 1
 
-.. note:: You can shorten the ping times and detection times by editing the settings in the file ``fw_config.py``, but we suggest you leave them alone unless really needed.
+.. note:: You can shorten the ping times and detection times by editing the settings in your :doc:`FW configuration </config_tutorial>`, but we suggest you leave them alone unless really needed.
+
+.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_fizzled --fix``.
 
 Life after *FIZZLED*
 ====================
