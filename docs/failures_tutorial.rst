@@ -2,6 +2,9 @@
 Dealing with Failures and Crashes
 =================================
 
+.. warning:: This documentation is written as a **tutorial** that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do **not** reset your FireWorks database as the tutorial instructs. Instead, simply read through the documentation to see how to proceed and refer to the :doc:`database maintenance instructions </maintain_tutorial>`.
+
+
 Job exceptions, node failures, and system outages are all unfortunate realities of executing workflows. You'll likely encounter some of these events when running FireWorks. This tutorial will simulate some of these events, so you can see how FireWorks detects job failures and what you can do about it.
 
 Normal operation

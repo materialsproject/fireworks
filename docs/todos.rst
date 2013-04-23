@@ -28,6 +28,8 @@ FW Docs
 
 * Update all tutorials so config file is handled smoothly, not terribly...m
 
+* Document allow_fizzled_parents
+
 Major Features
 ==============
 

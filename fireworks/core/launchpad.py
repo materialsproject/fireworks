@@ -496,8 +496,10 @@ class LaunchPad(FWSerializable):
         return old_new
 
     def rerun_fw(self, fw_id):
+        # note: the issue is that the child FW spec might have been modified already in an irreversible way...
         self.m_logger.warn(
             'Known bug: Rerunning FireWorks that contain a "mod_spec" action might have unpredictable results!')
+
         wf = self.get_wf_by_fw_id(fw_id)
         updated_ids = wf.rerun_fw(fw_id)
         self._upsert_wf(wf, updated_ids)
