@@ -2,7 +2,7 @@
 Dealing with Failures and Crashes
 =================================
 
-.. warning:: This documentation is written as a **tutorial** that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do **not** reset your FireWorks database as the tutorial instructs. Instead, simply read through the documentation to see how to proceed and refer to the :doc:`database maintenance instructions </maintain_tutorial>`.
+.. warning:: This documentation is written as a **tutorial** that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do **not** reset your FireWorks database as the tutorial instructs. Instead, read through the documentation to get an idea on how to proceed and refer to the :doc:`database maintenance instructions </maintain_tutorial>`.
 
 
 Job exceptions, node failures, and system outages are all unfortunate realities of executing workflows. You'll likely encounter some of these events when running FireWorks. This tutorial will simulate some of these events, so you can see how FireWorks detects job failures and what you can do about it.
@@ -102,6 +102,6 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 Life after *FIZZLED*
 ====================
 
-Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. Currently, your only option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you'll need to rerun your entire workflow from the beginning, and any steps that came prior to the failure will be repeated unless you omit them from the new workflow.
+Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you can also :doc:`rerun your workflow </rerun_tutorial>`, starting from the failed job. The only caveat to this latter method is that dynamic actions already taken by your workflow will **not** be reset to their initial state.
 
 You can also continue on with the Workflow even after *FIZZLED* by setting the ``_allow_fizzled_parents`` parameter in your **spec**. This will allow you to algorithmically fix errors using FireWorks' dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.

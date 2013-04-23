@@ -93,6 +93,8 @@ We recommend that all users read (or at least browse) the following tutorials be
     :maxdepth: 1
 
     failures_tutorial
+    maintain_tutorial
+    rerun_tutorial
     security_tutorial
     duplicates_tutorial
     priority_tutorial
@@ -108,7 +110,6 @@ Python users and Power users will be interested in the following:
 
 Planned future tutorials:
 
-* Performance and maintenance of the FW database
 * Detailed tutorial on implementing dynamic jobs
 * Detailed tutorial on Script Task
 * File movement Task Operations
