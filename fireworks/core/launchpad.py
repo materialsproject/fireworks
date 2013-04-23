@@ -496,6 +496,8 @@ class LaunchPad(FWSerializable):
         return old_new
 
     def rerun_fw(self, fw_id):
+        self.m_logger.warn(
+            'Known bug: Rerunning FireWorks that contain a "mod_spec" action might have unpredictable results!')
         wf = self.get_wf_by_fw_id(fw_id)
         updated_ids = wf.rerun_fw(fw_id)
         self._upsert_wf(wf, updated_ids)
@@ -564,7 +566,7 @@ class LaunchPad(FWSerializable):
                     # We're unable to mark the launch as FIZZLED
                     self.m_logger.critical('UNABLE to mark launch_id: {} as fizzled!'.format(l_id))
                     break
-                # mark the launch as FIZZLED because we're unable to update its state...
+                    # mark the launch as FIZZLED because we're unable to update its state...
                 self.m_logger.error('FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
                 self.mark_fizzled(l_id)
                 break
