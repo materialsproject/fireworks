@@ -7,12 +7,12 @@
    :width: 300 px
    :alt: FireWorks
 
-*Note: FireWorks is in beta. Please be extremely cautious about using it in production environments.*
+*Note: FireWorks is in beta. Please be cautious about using it in production environments.*
 
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
-Features
-========
+Is FireWorks for me?
+====================
 
 FireWorks is intended to be a friendly workflow software that is easy to get started with, but flexible enough to handle complicated use cases.
 
@@ -35,7 +35,7 @@ Some (but not all) of its features include:
 * Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs). *(future)*
 
 Limitations
-===========
+-----------
 
 Some limitations of FireWorks include:
 
@@ -49,17 +49,10 @@ Some limitations of FireWorks include:
 
 If you encounter any problems while using FireWorks, please let us know (see :ref:`contributing-label`).
 
-
-Is FireWorks for me?
-====================
+Quick information
+-----------------
 
 It can be time-consuming to evaluate whether a workflow software will meet your computing needs from documentation alone. If you just want to know whether FireWorks is a potential solution to your workflow problem, one option is to e-mail a description of your problem to the developer at: |Mail|
-   
-We can tell you if:
-
-* Your problem is a great match for FireWorks
-* Your problem requires implementing minor extensions or modifications to FireWorks, but FireWorks is still a potential solution
-* Your problem is not easily solved with FireWorks and you should probably look elsewhere!
 
 Getting Started!
 ================
