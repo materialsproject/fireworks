@@ -439,6 +439,23 @@ class Workflow(FWSerializable):
     def fws(self):
         return self.id_fw.values()
 
+    @property
+    def state(self):
+
+        # get state of workflow
+        m_state = 'READY'
+        states = [fw.state for fw in self.fws]
+        if all([s == 'COMPLETED' or s == 'CANCELED' for s in states]):
+            m_state = 'COMPLETED'
+        elif any([s == 'DEFUSED' for s in states]):
+            m_state = 'DEFUSED'
+        elif any([s == 'FIZZLED' for s in states]):
+            m_state = 'FIZZLED'
+        elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
+            m_state = 'RUNNING'
+
+        return m_state
+
     def apply_action(self, action, fw_id):
         """
         Apply a FWAction on a FireWork in the Workflow
@@ -643,6 +660,7 @@ class Workflow(FWSerializable):
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
         m_dict['metadata'] = self.metadata
+        m_dict['state'] = self.state
         return m_dict
 
     @classmethod
