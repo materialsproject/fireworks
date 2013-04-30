@@ -44,6 +44,10 @@ def lpad():
     get_fw_parser.add_argument('fw_id', help='FireWork id', type=int)
     get_fw_parser.add_argument('-f', '--filename', help='output filename', default=None)
 
+    get_wf_parser = subparsers.add_parser('get_wf', help='get a Workflow by FireWork id')
+    get_wf_parser.add_argument('fw_id', help='FireWork id', type=int)
+    get_wf_parser.add_argument('-f', '--filename', help='output filename', default=None)
+
     rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
     rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
 
@@ -138,6 +142,14 @@ def lpad():
                 fw.to_file(args.filename)
             else:
                 print json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
+
+        elif args.command == 'get_wf':
+            wf = lp.get_wf_by_fw_id(args.fw_id)
+            wf_dict = wf.to_db_dict()
+            if args.filename:
+                wf.to_file(args.filename)
+            else:
+                print json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
 
         elif args.command == 'get_fw_ids':
             if args.query:
