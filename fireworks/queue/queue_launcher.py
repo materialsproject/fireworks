@@ -39,6 +39,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     fworker = fworker if fworker else FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
+    qadapter = load_object(qadapter.to_dict())  # make a defensive copy, mainly for reservation mode
 
     # make sure launch_dir exists:
     if not os.path.exists(launcher_dir):
@@ -59,7 +60,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
                 if '_queueadapter' in fw.spec:
                     l_logger.debug('updating queue params using FireWork spec..')
-                    qadapter = load_object(qadapter.to_dict())  # make a defensive copy
                     qadapter.update(fw.spec['_queueadapter'])
 
                 # update the exe to include the FW_id
