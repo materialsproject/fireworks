@@ -611,9 +611,8 @@ class Workflow(FWSerializable):
         for new_fw in wf.fws:
             if new_fw.fw_id > 0:
                 raise ValueError(
-                    'FireWorks to add must use a negative fw_id! Got fw_id: {
-
-                }'.format(
+                    'FireWorks to add must use a negative fw_id! Got fw_id: '
+                    '{}'.format(
                         new_fw.fw_id))
 
             self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
