@@ -54,9 +54,9 @@ FireTasks
 Misc.
 =====
 
-* Detect a blank config dir and give a proper error.
+* The CANCELED state is pointless
 
-* RUNTIME key not there in launches?
+* Detect a blank config dir and give a proper error.
 
 * Finish all planned tutorials
 
