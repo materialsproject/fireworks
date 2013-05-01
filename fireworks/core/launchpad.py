@@ -204,9 +204,8 @@ class LaunchPad(FWSerializable):
         fws = []
         for fw_id in links_dict['nodes']:
             fws.append(self.get_fw_by_id(fw_id))
-        links = Workflow.Links.from_dict(links_dict['links']).to_dict()  # necessary because Mongo no like int keys
 
-        return Workflow(fws, links, links_dict['metadata'])
+        return Workflow(fws, links_dict['links'], links_dict['metadata'])
 
     def get_fw_ids(self, query=None, sort=False):
         """

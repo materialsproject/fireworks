@@ -376,6 +376,19 @@ class Workflow(FWSerializable):
         An inner class for storing the DAG links between FireWorks
         """
 
+        def __init__(self, *args, **kwargs):
+            super(Workflow.Links, self).__init__(*args, **kwargs)
+
+            for k, v in self.items():
+                if not isinstance(v, list):
+                    self[k] = [v]  # v must be list
+                if not isinstance(k, int):
+                    try:
+                        self[int(k)] = self[k]  # k must be int
+                    except:
+                        pass  # garbage input
+                    del self[k]
+
         @property
         def nodes(self):
             return self.keys()
@@ -390,7 +403,8 @@ class Workflow(FWSerializable):
             return dict(child_parents)
 
         def to_dict(self):
-            return dict(self)
+            # convert to str form for Mongo, which cannot have int keys
+            return dict([(str(k), v) for (k, v) in self.iteritems()])
 
         def to_db_dict(self):
             # convert to str form for Mongo, which cannot have int keys
@@ -401,7 +415,6 @@ class Workflow(FWSerializable):
 
         @classmethod
         def from_dict(cls, m_dict):
-            m_dict = dict([(int(k), v) for (k, v) in m_dict.iteritems()])
             return Workflow.Links(m_dict)
 
     def __init__(self, fireworks, links_dict=None, metadata=None):
@@ -422,15 +435,10 @@ class Workflow(FWSerializable):
             if fw.fw_id not in links_dict:
                 links_dict[fw.fw_id] = []
 
-            # transform any non-iterable values to iterables
-            for k, v in links_dict.iteritems():
-                if not isinstance(v, list):
-                    links_dict[k] = [v]
-
         self.links = Workflow.Links(links_dict)
 
         # sanity: make sure the set of nodes from the links_dict is equal to the set of nodes from id_fw
-        if set(self.links.nodes) != set(self.id_fw.keys()):
+        if set(self.links.nodes) != set([int(k) for k in self.id_fw.keys()]):
             raise ValueError("Specified links don't match given FW")
 
         self.metadata = metadata if metadata else {}
