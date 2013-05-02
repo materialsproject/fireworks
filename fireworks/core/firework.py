@@ -137,7 +137,7 @@ class FWAction(FWSerializable):
 
         :return: (bool)
         """
-        return self.exit or self.update_spec or self.mod_spec or self.detours\
+        return self.exit or self.update_spec or self.mod_spec or self.detours \
                    or self.additions or self.defuse_children
 
 
@@ -173,11 +173,11 @@ class FireWork(FWSerializable):
         self.spec = spec if spec else {}
         self.spec['_tasks'] = [t.to_dict() for t in
                                tasks]  # put tasks in a special location of
-                               # the spec
+        # the spec
         self.fw_id = fw_id
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
-        self.created_on = created_on if created_on else datetime.datetime\
+        self.created_on = created_on if created_on else datetime.datetime \
             .utcnow()
         self.state = state
 
@@ -216,10 +216,10 @@ class FireWork(FWSerializable):
         m_dict = self.to_dict()
         m_dict['launches'] = [l.launch_id for l in
                               self.launches]  # the launches are stored
-                              # separately
+        # separately
         m_dict['archived_launches'] = [l.launch_id for l in
                                        self.archived_launches]  # the
-                                       # archived launches are stored separately
+        # archived launches are stored separately
         m_dict['state'] = self.state
         return m_dict
 
@@ -359,7 +359,7 @@ class Launch(FWSerializable, object):
         """
         start = self.time_reserved
         if start:
-            end = self.time_start if self.time_start else datetime.datetime\
+            end = self.time_start if self.time_start else datetime.datetime \
                 .utcnow()
             return (end - start).total_seconds()
 
@@ -469,17 +469,17 @@ class Workflow(FWSerializable):
         def to_db_dict(self):
             # convert to str form for Mongo, which cannot have int keys
             m_dict = {
-            'links': dict([(str(k), v) for (k, v) in self.iteritems()]),
-            'parent_links': dict(
-                [(str(k), v) for (k, v) in self.parent_links.iteritems()]),
-            'nodes': self.nodes}
+                'links': dict([(str(k), v) for (k, v) in self.iteritems()]),
+                'parent_links': dict(
+                    [(str(k), v) for (k, v) in self.parent_links.iteritems()]),
+                'nodes': self.nodes}
             return m_dict
 
         @classmethod
         def from_dict(cls, m_dict):
             return Workflow.Links(m_dict)
 
-    def __init__(self, fireworks, links_dict=None, metadata=None):
+    def __init__(self, fireworks, links_dict=None, name='unnamed WF', metadata=None):
         """
         :param fireworks: ([FireWork]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
@@ -500,6 +500,8 @@ class Workflow(FWSerializable):
                 links_dict[fw.fw_id] = []
 
         self.links = Workflow.Links(links_dict)
+
+        self.name = name
 
         # sanity: make sure the set of nodes from the links_dict is equal to
         # the set of nodes from id_fw
@@ -686,9 +688,9 @@ class Workflow(FWSerializable):
             if m_state == 'COMPLETED':
                 updated_ids = updated_ids.union(self.apply_action(m_action,
                                                                   fw.fw_id))
-                                                                   # apply
-                                                                   # action
-                                                                   # on children
+                # apply
+                # action
+                # on children
 
             # refresh all the children
             for child_id in self.links[fw_id]:
@@ -747,12 +749,14 @@ class Workflow(FWSerializable):
     def to_dict(self):
         return {'fws': [f.to_dict() for f in self.id_fw.itervalues()],
                 'links': self.links.to_dict(),
+                'name': self.name,
                 'metadata': self.metadata}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
         m_dict['metadata'] = self.metadata
         m_dict['state'] = self.state
+        m_dict['name'] = self.name
         return m_dict
 
     @classmethod
@@ -760,8 +764,7 @@ class Workflow(FWSerializable):
         # accept either a Workflow dict or a FireWork dict
         if 'fws' in m_dict:
             return Workflow([FireWork.from_dict(f) for f in m_dict['fws']],
-                            Workflow.Links.from_dict(m_dict['links']),
-                            m_dict['metadata'])
+                            Workflow.Links.from_dict(m_dict['links']), m_dict['name'], m_dict['metadata'])
         else:
             return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 
