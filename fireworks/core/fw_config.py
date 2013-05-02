@@ -14,6 +14,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
+
 def singleton(class_):
     instances = {}
 
@@ -23,6 +24,7 @@ def singleton(class_):
         return instances[class_]
 
     return getinstance
+
 
 @singleton
 class FWConfig(object):
@@ -84,6 +86,8 @@ class FWConfig(object):
                     elif key == 'ECHO_TEST':
                         print v
                     elif not getattr(self, key, None):
-                        raise ValueError('Invalid FW_config file has unknown parameter: {}'.format(key))
+                        raise ValueError(
+                            'Invalid FW_config file has unknown parameter: {}'.format(
+                                key))
                     else:
                         self.__setattr__(key, v)
