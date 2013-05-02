@@ -220,6 +220,18 @@ class LaunchPad(FWSerializable):
 
         return fw_ids
 
+    def get_wf_ids(self, query=None):
+        """
+        Return one fw id for all workflows that match a query,
+        :param query: a dict representing a Mongo query
+        """
+        fw_ids = []
+        criteria = query if query else {}
+        for fw in self.workflows.find(criteria, {"nodes": True}):
+            fw_ids.append(fw["nodes"][0])
+
+        return fw_ids
+
     def run_exists(self, fworker=None):
         """
         Checks to see if the database contains any FireWorks that are ready to run

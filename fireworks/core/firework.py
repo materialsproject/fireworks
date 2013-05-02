@@ -479,13 +479,15 @@ class Workflow(FWSerializable):
         def from_dict(cls, m_dict):
             return Workflow.Links(m_dict)
 
-    def __init__(self, fireworks, links_dict=None, name='unnamed WF', metadata=None):
+    def __init__(self, fireworks, links_dict=None, name=None, metadata=None):
         """
         :param fireworks: ([FireWork]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
         child_id1, child_id2)]
         :param metadata: (dict) metadata for this Workflow
         """
+
+        name = 'unnamed FW' if not name else name  # do it this way to prevent None names
 
         links_dict = links_dict if links_dict else {}
 
@@ -764,7 +766,7 @@ class Workflow(FWSerializable):
         # accept either a Workflow dict or a FireWork dict
         if 'fws' in m_dict:
             return Workflow([FireWork.from_dict(f) for f in m_dict['fws']],
-                            Workflow.Links.from_dict(m_dict['links']), m_dict['name'], m_dict['metadata'])
+                            Workflow.Links.from_dict(m_dict['links']), m_dict.get('name'), m_dict['metadata'])
         else:
             return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 

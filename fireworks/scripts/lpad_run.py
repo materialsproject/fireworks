@@ -54,6 +54,8 @@ def lpad():
     get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
     get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
                                    default=None)
+    get_fw_ids_parser.add_argument('-w', '--wfquery', help='query workflows (as pymongo string, enclose in single-quotes)',
+                                   default=None)
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
@@ -152,9 +154,13 @@ def lpad():
                 print json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
 
         elif args.command == 'get_fw_ids':
-            if args.query:
-                args.query = ast.literal_eval(args.query)
-            print lp.get_fw_ids(args.query)
+            if args.wfquery:
+                args.wfquery = ast.literal_eval(args.wfquery)
+                results = lp.get_wf_ids(args.wfquery)
+            else:
+                args.query = ast.literal_eval(args.query) if args.query else None
+                results = lp.get_fw_ids(args.query)
+            print results
 
         elif args.command == 'defuse':
             lp.defuse_wf(args.fw_id)
