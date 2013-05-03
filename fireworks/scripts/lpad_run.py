@@ -158,12 +158,12 @@ def lpad():
             else:
                 for id in ids:
                     wf = lp.get_wf_by_fw_id(id)
-                    d = wf.to_named_dict()
+                    d = wf.to_display_dict()
                     if args.display_format == 'more' or args.display_format == 'less':
                         del d['parent_links']
                         del d['nodes']
                     if args.display_format == 'less':
-                        del d['metadata']
+                        del d['links']
 
                     wfs.append(d)
             if len(wfs) == 1:
