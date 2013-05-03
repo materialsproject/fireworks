@@ -4,7 +4,7 @@ Modifying the FW Config
 
 Many parameters used by FireWorks can be changed to suit your needs. Some examples include:
 
-* specifying the default locations of your configuration files. This will save you **a lot** of typing when running FireWorks scripts, e.g. ``lpad -l my_launchpad.yaml get_fw_ids`` becomes ``lpad get_fw_ids`` once you've set your default LaunchPad location.
+* specifying the default locations of your configuration files. This will save you **a lot** of typing when running FireWorks scripts, e.g. ``lpad -l my_launchpad.yaml get_fws`` becomes ``lpad get_fws`` once you've set your default LaunchPad location.
 * enabling FireTasks for which the code is located outside of the FireWorks package
 * smaller adjustments, e.g. whether to print a ``FW.json`` file in your run directory
 * performance tweaks (not recommended!)

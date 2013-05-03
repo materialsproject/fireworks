@@ -86,3 +86,5 @@ Misc.
 * Do something interesting with Workflow metadata
 
 * Make the FireWorker category actually do something
+
+* Add names in test workflows

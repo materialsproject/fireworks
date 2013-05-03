@@ -152,9 +152,8 @@ class FireWork(FWSerializable):
                    'FIZZLED': 4, 'RUNNING': 5, 'CANCELED': 6,
                    'COMPLETED': 7}
 
-    def __init__(self, tasks, spec=None, launches=None, archived_launches=None,
-                 state='WAITING', created_on=None,
-                 fw_id=-1):
+    def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
+                 state='WAITING', created_on=None, fw_id=-1):
         """
         :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the
@@ -171,14 +170,15 @@ class FireWork(FWSerializable):
 
         self.tasks = tasks
         self.spec = spec if spec else {}
-        self.spec['_tasks'] = [t.to_dict() for t in
-                               tasks]  # put tasks in a special location of
-        # the spec
+        self.spec['_tasks'] = [t.to_dict() for t in tasks]  # put tasks in a special location of the spec
+
+        self.name = name if name else 'Unnamed FW'  # do it this way to prevent None names
         self.fw_id = fw_id
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
         self.created_on = created_on if created_on else datetime.datetime \
             .utcnow()
+
         self.state = state
 
     @recursive_serialize
@@ -195,6 +195,8 @@ class FireWork(FWSerializable):
 
         if self.state != 'WAITING':
             m_dict['state'] = self.state
+
+        m_dict['name'] = self.name
 
         return m_dict
 
@@ -233,8 +235,9 @@ class FireWork(FWSerializable):
         fw_id = m_dict.get('fw_id', -1)
         state = m_dict.get('state', 'WAITING')
         created_on = m_dict.get('created_on', None)
+        name = m_dict.get('name', None)
 
-        return FireWork(tasks, m_dict['spec'], launches, archived_launches,
+        return FireWork(tasks, m_dict['spec'], name, launches, archived_launches,
                         state, created_on, fw_id)
 
 
@@ -487,7 +490,7 @@ class Workflow(FWSerializable):
         :param metadata: (dict) metadata for this Workflow
         """
 
-        name = 'unnamed FW' if not name else name  # do it this way to prevent None names
+        name = 'unnamed WF' if not name else name  # do it this way to prevent None names
 
         links_dict = links_dict if links_dict else {}
 
@@ -759,6 +762,13 @@ class Workflow(FWSerializable):
         m_dict['metadata'] = self.metadata
         m_dict['state'] = self.state
         m_dict['name'] = self.name
+        return m_dict
+
+    def to_named_dict(self):
+        m_dict = self.to_db_dict()
+        m_dict['nodes'] = [self.id_fw[int(x)].name for x in m_dict['nodes']]
+        m_dict['links'] = dict([(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in m_dict['links'].iteritems()])
+        m_dict['parent_links'] = dict([(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in m_dict['parent_links'].iteritems()])
         return m_dict
 
     @classmethod

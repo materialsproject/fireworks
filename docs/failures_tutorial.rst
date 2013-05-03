@@ -52,7 +52,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
 #. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
 
-    lpad get_fw_ids -q '{"state":"FIZZLED"}'
+    lpad get_fws -q '{"state":"FIZZLED"}' -d 'ids'
 
 Catastrophic Failure
 ====================

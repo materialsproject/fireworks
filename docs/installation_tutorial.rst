@@ -130,11 +130,11 @@ If you just want to run many jobs on the central server itself, the simplest way
 
 #. Confirm that the three FireWorks got added to the database, in addition to the one from before (4 total)::
 
-    lpad get_fw_ids
+    lpad get_fws
 
 #. We could also just get the ``fw_id`` of jobs that are ready to run (our 3 new FireWorks)::
 
-    lpad get_fw_ids -q '{"state":"READY"}'
+    lpad get_fws -q '{"state":"READY"}' -d 'ids'
 
 #. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks to run::
 

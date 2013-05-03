@@ -115,7 +115,7 @@ Let's see how this is achieved:
 
     lpad reset <TODAY'S DATE>
     lpad add fw_fibnum.yaml
-    lpad get_fw_ids
+    lpad get_fws
 
 #. That last command should prove that there is only one FireWork in the database. Let's run it::
 
@@ -123,7 +123,7 @@ Let's see how this is achieved:
 
 #. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one FireWork, one Rocket. But let's try to again to get all the FireWorks in the database::
 
-    lpad get_fw_ids
+    lpad get_fws
 
 #. Now there are *two* FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
 
@@ -152,7 +152,7 @@ Let's see how this is achieved:
 
 #. If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We'll instead look at all the different FireWorks created dynamically by our program::
 
-    lpad get_fw_ids
+    lpad get_fws
 
 There are 11 FireWorks in all, and 10 of them were created automatically by other FireWorks!
 

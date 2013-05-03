@@ -54,7 +54,7 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
 
 #. Whenever running any FireWork scripts, make sure to specify the ``-l`` option and link to your configuration file. For example::
 
-    lpad -l my_launchpad.yaml get_fw_ids
+    lpad -l my_launchpad.yaml get_fws
 
    or::
 

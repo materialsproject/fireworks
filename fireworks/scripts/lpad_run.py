@@ -40,22 +40,20 @@ def lpad():
     adddir_parser = subparsers.add_parser('add_dir', help='insert all FWs/Workflows in a directory')
     adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
 
-    get_fw_parser = subparsers.add_parser('get_fw', help='get a FireWork by id')
-    get_fw_parser.add_argument('fw_id', help='FireWork id', type=int)
-    get_fw_parser.add_argument('-f', '--filename', help='output filename', default=None)
+    get_fw_parser = subparsers.add_parser('get_fws', help='get information about FireWorks')
+    get_fw_parser.add_argument('-i', '--fw_id', help='fw_id', default=None, type=int)
+    get_fw_parser.add_argument('-n', '--name', help='name', default=None)
+    get_fw_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
+    get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
 
-    get_wf_parser = subparsers.add_parser('get_wf', help='get a Workflow by FireWork id')
-    get_wf_parser.add_argument('fw_id', help='FireWork id', type=int)
-    get_wf_parser.add_argument('-f', '--filename', help='output filename', default=None)
+    get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
+    get_wf_parser.add_argument('-i', '--fw_id', help='fw_id', default=None, type=int)
+    get_wf_parser.add_argument('-n', '--name', help='name', default=None)
+    get_wf_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
+    get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
 
     rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
     rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
-
-    get_fw_ids_parser = subparsers.add_parser('get_fw_ids', help='get FireWork ids by query')
-    get_fw_ids_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)',
-                                   default=None)
-    get_fw_ids_parser.add_argument('-w', '--wfquery', help='query workflows (as pymongo string, enclose in single-quotes)',
-                                   default=None)
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
@@ -137,30 +135,80 @@ def lpad():
         elif args.command == 'tuneup':
             lp.tuneup()
 
-        elif args.command == 'get_fw':
-            fw = lp.get_fw_by_id(args.fw_id)
-            fw_dict = fw.to_dict()
-            if args.filename:
-                fw.to_file(args.filename)
+        elif args.command == 'get_wfs':
+            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) > 1:
+                raise ValueError('Pleases specify exactly one of (fw_id, name, query)')
+            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) == 0:
+                args.query = '{}'
+                args.display_format = args.display_format if args.display_format else 'ids'
             else:
-                print json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
+                args.display_format = args.display_format if args.display_format else 'all'
 
-        elif args.command == 'get_wf':
-            wf = lp.get_wf_by_fw_id(args.fw_id)
-            wf_dict = wf.to_db_dict()
-            if args.filename:
-                wf.to_file(args.filename)
+            if args.fw_id:
+                query = {'nodes': args.fw_id}
+            elif args.name:
+                query = {'name': args.name}
             else:
-                print json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
+                query = ast.literal_eval(args.query)
 
-        elif args.command == 'get_fw_ids':
-            if args.wfquery:
-                args.wfquery = ast.literal_eval(args.wfquery)
-                results = lp.get_wf_ids(args.wfquery)
+            ids = lp.get_wf_ids(query)
+            wfs = []
+            if args.display_format == 'ids':
+                wfs = ids
             else:
-                args.query = ast.literal_eval(args.query) if args.query else None
-                results = lp.get_fw_ids(args.query)
-            print results
+                for id in ids:
+                    wf = lp.get_wf_by_fw_id(id)
+                    d = wf.to_named_dict()
+                    if args.display_format == 'more' or args.display_format == 'less':
+                        del d['parent_links']
+                        del d['nodes']
+                    if args.display_format == 'less':
+                        del d['metadata']
+
+                    wfs.append(d)
+            if len(wfs) == 1:
+                wfs = wfs[0]
+
+            print json.dumps(wfs, default=DATETIME_HANDLER, indent=4)
+
+        elif args.command == 'get_fws':
+            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) > 1:
+                raise ValueError('Pleases specify exactly one of (fw_id, name, query)')
+            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) == 0:
+                args.query = '{}'
+                args.display_format = args.display_format if args.display_format else 'ids'
+            else:
+                args.display_format = args.display_format if args.display_format else 'all'
+
+            if args.fw_id:
+                query = {'fw_id': args.fw_id}
+            elif args.name:
+                query = {'name': args.name}
+            else:
+                query = ast.literal_eval(args.query)
+
+            ids = lp.get_fw_ids(query)
+            fws = []
+            if args.display_format == 'ids':
+                fws = ids
+            else:
+                for id in ids:
+                    fw = lp.get_fw_by_id(id)
+                    d = fw.to_dict()
+                    if args.display_format == 'more' or args.display_format == 'less':
+                        if 'archived_launches' in d:
+                            del d['archived_launches']
+                        if 'launches' in d:
+                            del d['launches']
+                    if args.display_format == 'less':
+                        del d['spec']
+
+                    fws.append(d)
+            if len(fws) == 1:
+                fws = fws[0]
+
+            print json.dumps(fws, default=DATETIME_HANDLER, indent=4)
+
 
         elif args.command == 'defuse':
             lp.defuse_wf(args.fw_id)
