@@ -170,7 +170,8 @@ class FireWork(FWSerializable):
 
         self.tasks = tasks
         self.spec = spec if spec else {}
-        self.spec['_tasks'] = [t.to_dict() for t in tasks]  # put tasks in a special location of the spec
+        self.spec['_tasks'] = [t.to_dict() for t in
+                               tasks]  # put tasks in a special location of the spec
 
         self.name = name if name else 'Unnamed FW'  # do it this way to prevent None names
         self.fw_id = fw_id
@@ -766,12 +767,15 @@ class Workflow(FWSerializable):
 
     def to_display_dict(self):
         m_dict = self.to_db_dict()
-        m_dict['states'] = [{self.id_fw[x].name+'--'+str(x):self.id_fw[x].state} for x in m_dict['nodes']]
+        m_dict['states'] = [{self.id_fw[x].name + '--' + str(x): self.id_fw[x].state} for x in
+                            m_dict['nodes']]
         m_dict['nodes'] = [self.id_fw[x].name for x in m_dict['nodes']]
-        m_dict['links'] = dict([(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in m_dict['links'].iteritems()])
-        m_dict['parent_links'] = dict([(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in m_dict['parent_links'].iteritems()])
-
-
+        m_dict['links'] = dict(
+            [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
+             m_dict['links'].iteritems()])
+        m_dict['parent_links'] = dict(
+            [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
+             m_dict['parent_links'].iteritems()])
         return m_dict
 
     @classmethod
@@ -779,7 +783,8 @@ class Workflow(FWSerializable):
         # accept either a Workflow dict or a FireWork dict
         if 'fws' in m_dict:
             return Workflow([FireWork.from_dict(f) for f in m_dict['fws']],
-                            Workflow.Links.from_dict(m_dict['links']), m_dict.get('name'), m_dict['metadata'])
+                            Workflow.Links.from_dict(m_dict['links']), m_dict.get('name'),
+                            m_dict['metadata'])
         else:
             return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 
