@@ -162,9 +162,10 @@ def lpad():
                     if args.display_format == 'more' or args.display_format == 'less':
                         del d['parent_links']
                         del d['nodes']
-                    if args.display_format == 'less':
                         del d['links']
-
+                    if args.display_format == 'less':
+                        del d['states']
+                        del d['metadata']
                     wfs.append(d)
             if len(wfs) == 1:
                 wfs = wfs[0]
