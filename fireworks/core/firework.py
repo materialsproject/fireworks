@@ -532,9 +532,10 @@ class Workflow(FWSerializable):
             m_state = 'DEFUSED'
         elif any([s == 'FIZZLED' for s in states]):
             m_state = 'FIZZLED'
-        elif any([s == 'COMPLETED' for s in states]) or any(
-                [s == 'RUNNING' for s in states]):
+        elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
             m_state = 'RUNNING'
+        elif any([s == 'RESERVED' for s in states]):
+            m_state = 'RESERVED'
 
         return m_state
 
