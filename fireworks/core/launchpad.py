@@ -59,14 +59,14 @@ class LaunchPad(FWSerializable):
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
         self.connection = MongoClient(host, port, j=True)
-        self.database = self.connection[name]
+        self.db = self.connection[name]
         if username:
-            self.database.authenticate(username, password)
+            self.db.authenticate(username, password)
 
-        self.fireworks = self.database.fireworks
-        self.launches = self.database.launches
-        self.fw_id_assigner = self.database.fw_id_assigner
-        self.workflows = self.database.workflows
+        self.fireworks = self.db.fireworks
+        self.launches = self.db.launches
+        self.fw_id_assigner = self.db.fw_id_assigner
+        self.workflows = self.db.workflows
 
     def to_dict(self):
         """
@@ -256,8 +256,8 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug('Compacting database...')
         try:
-            self.database.command({'compact': 'fireworks'})
-            self.database.command({'compact': 'launches'})
+            self.db.command({'compact': 'fireworks'})
+            self.db.command({'compact': 'launches'})
         except:
             self.m_logger.debug('Database compaction failed (not critical)')
 
