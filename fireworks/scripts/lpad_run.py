@@ -166,6 +166,7 @@ def lpad():
                     if args.display_format == 'less':
                         del d['states']
                         del d['metadata']
+                        del d['launch_dirs']
                     wfs.append(d)
             if len(wfs) == 1:
                 wfs = wfs[0]

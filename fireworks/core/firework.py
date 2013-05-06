@@ -769,6 +769,8 @@ class Workflow(FWSerializable):
 
     def to_display_dict(self):
         m_dict = self.to_db_dict()
+        m_dict['launch_dirs'] = dict([(self.id_fw[x].name + '--' + str(x), [l.launch_dir for l in self.id_fw[x].launches]) for x in
+                            m_dict['nodes']])
         m_dict['states'] = dict([(self.id_fw[x].name + '--' + str(x), self.id_fw[x].state) for x in
                             m_dict['nodes']])
         m_dict['nodes'] = [self.id_fw[x].name for x in m_dict['nodes']]
