@@ -199,10 +199,11 @@ def lpad():
                     if args.display_format == 'more' or args.display_format == 'less':
                         if 'archived_launches' in d:
                             del d['archived_launches']
+                        del d['spec']
+                    if args.display_format == 'less':
                         if 'launches' in d:
                             del d['launches']
-                    if args.display_format == 'less':
-                        del d['spec']
+
 
                     fws.append(d)
             if len(fws) == 1:
