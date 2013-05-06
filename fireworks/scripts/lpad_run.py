@@ -163,6 +163,8 @@ def lpad():
                 sort = [(args.sort, ASCENDING)]
             elif args.rsort:
                 sort = [(args.rsort, DESCENDING)]
+            else:
+                sort = None
 
             ids = lp.get_wf_ids(query, sort, args.max)
             wfs = []
@@ -206,6 +208,8 @@ def lpad():
                 sort = [(args.sort, ASCENDING)]
             elif args.rsort:
                 sort = [(args.rsort, DESCENDING)]
+            else:
+                sort = None
 
             ids = lp.get_fw_ids(query, sort, args.max)
             fws = []
