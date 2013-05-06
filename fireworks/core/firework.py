@@ -482,7 +482,7 @@ class Workflow(FWSerializable):
         def from_dict(cls, m_dict):
             return Workflow.Links(m_dict)
 
-    def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None):
+    def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None, updated_on=None):
         """
         :param fireworks: ([FireWork]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
@@ -515,6 +515,7 @@ class Workflow(FWSerializable):
 
         self.metadata = metadata if metadata else {}
         self.created_on = created_on if created_on else datetime.datetime.utcnow()
+        self.updated_on = updated_on if updated_on else datetime.datetime.utcnow()
 
     @property
     def fws(self):
@@ -704,6 +705,8 @@ class Workflow(FWSerializable):
                 updated_ids = updated_ids.union(
                     self.refresh(child_id, updated_ids))
 
+        self.updated_on = datetime.datetime.utcnow()
+
         return updated_ids
 
     @property
@@ -757,7 +760,7 @@ class Workflow(FWSerializable):
         return {'fws': [f.to_dict() for f in self.id_fw.itervalues()],
                 'links': self.links.to_dict(),
                 'name': self.name,
-                'metadata': self.metadata, 'created_on': self.created_on}
+                'metadata': self.metadata, 'updated_on': self.updated_on}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
@@ -765,6 +768,7 @@ class Workflow(FWSerializable):
         m_dict['state'] = self.state
         m_dict['name'] = self.name
         m_dict['created_on'] = self.created_on
+        m_dict['updated_on'] = self.updated_on
         return m_dict
 
     def to_display_dict(self):
@@ -787,9 +791,10 @@ class Workflow(FWSerializable):
         # accept either a Workflow dict or a FireWork dict
         if 'fws' in m_dict:
             created_on = m_dict.get('created_on')
+            updated_on = m_dict.get('updated_on')
             return Workflow([FireWork.from_dict(f) for f in m_dict['fws']],
                             Workflow.Links.from_dict(m_dict['links']), m_dict.get('name'),
-                            m_dict['metadata'], created_on)
+                            m_dict['metadata'], created_on, updated_on)
         else:
             return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 

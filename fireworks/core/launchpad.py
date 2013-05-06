@@ -207,27 +207,26 @@ class LaunchPad(FWSerializable):
 
         return Workflow(fws, links_dict['links'], links_dict['name'], links_dict['metadata'])
 
-    def get_fw_ids(self, query=None, sort=False):
+    def get_fw_ids(self, query=None, sort=None, limit=0):
         """
         Return all the fw ids that match a query,
         :param query: a dict representing a Mongo query
         """
         fw_ids = []
         criteria = query if query else {}
-        sort = [("spec._priority", DESCENDING)] if sort else None
-        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort):
+        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
 
         return fw_ids
 
-    def get_wf_ids(self, query=None):
+    def get_wf_ids(self, query=None, sort=None, limit=0):
         """
         Return one fw id for all workflows that match a query,
         :param query: a dict representing a Mongo query
         """
         fw_ids = []
         criteria = query if query else {}
-        for fw in self.workflows.find(criteria, {"nodes": True}):
+        for fw in self.workflows.find(criteria, {"nodes": True}, sort=sort).limit(limit):
             fw_ids.append(fw["nodes"][0])
 
         return fw_ids

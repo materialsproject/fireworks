@@ -6,6 +6,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 
 from argparse import ArgumentParser
 import os
+from pymongo import DESCENDING, ASCENDING
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import Workflow
@@ -45,12 +46,19 @@ def lpad():
     get_fw_parser.add_argument('-n', '--name', help='name', default=None)
     get_fw_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
     get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
+    get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
+    get_fw_parser.add_argument('-s', '--sort', help='sort results ("created_on")', default=None)
+    get_fw_parser.add_argument('-r', '--rsort', help='reverse sort results ("created_on")', default=None)
+
 
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
     get_wf_parser.add_argument('-i', '--fw_id', help='fw_id', default=None, type=int)
     get_wf_parser.add_argument('-n', '--name', help='name', default=None)
     get_wf_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
     get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
+    get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
+    get_wf_parser.add_argument('-s', '--sort', help='sort results ("created_on", "updated_on")', default=None)
+    get_wf_parser.add_argument('-r', '--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
 
     rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
     rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
@@ -151,7 +159,12 @@ def lpad():
             else:
                 query = ast.literal_eval(args.query)
 
-            ids = lp.get_wf_ids(query)
+            if args.sort:
+                sort = [(args.sort, ASCENDING)]
+            elif args.rsort:
+                sort = [(args.rsort, DESCENDING)]
+
+            ids = lp.get_wf_ids(query, sort, args.max)
             wfs = []
             if args.display_format == 'ids':
                 wfs = ids
@@ -189,7 +202,12 @@ def lpad():
             else:
                 query = ast.literal_eval(args.query)
 
-            ids = lp.get_fw_ids(query)
+            if args.sort:
+                sort = [(args.sort, ASCENDING)]
+            elif args.rsort:
+                sort = [(args.rsort, DESCENDING)]
+
+            ids = lp.get_fw_ids(query, sort, args.max)
             fws = []
             if args.display_format == 'ids':
                 fws = ids
