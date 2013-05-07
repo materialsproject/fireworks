@@ -36,7 +36,7 @@ class LaunchPad(FWSerializable):
     """
 
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, strm_lvl=None):
+                 logdir=None, strm_lvl=None, user_indices=None):
         """
         
         :param host:
@@ -46,6 +46,7 @@ class LaunchPad(FWSerializable):
         :param password:
         :param logdir:
         :param strm_lvl:
+        :param user_indices:
         """
         self.host = host
         self.port = port
@@ -58,6 +59,9 @@ class LaunchPad(FWSerializable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
+        self.user_indices = user_indices if user_indices else []
+
+        # get connection
         self.connection = MongoClient(host, port, j=True)
         self.db = self.connection[name]
         if username:
@@ -73,14 +77,17 @@ class LaunchPad(FWSerializable):
         Note: usernames/passwords are exported as unencrypted Strings!
         """
         d = {'host': self.host, 'port': self.port, 'name': self.name, 'username': self.username,
-             'password': self.password, 'logdir': self.logdir, 'strm_lvl': self.strm_lvl}
+             'password': self.password, 'logdir': self.logdir, 'strm_lvl': self.strm_lvl,
+             'user_indices': self.user_indices}
         return d
 
     @classmethod
     def from_dict(cls, d):
         logdir = d.get('logdir', None)
         strm_lvl = d.get('strm_lvl', None)
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir, strm_lvl)
+        user_indices = d.get('user_indices', [])
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir,
+                         strm_lvl, user_indices)
 
     def reset(self, password, require_password=True):
         """
@@ -246,12 +253,16 @@ class LaunchPad(FWSerializable):
         self.fireworks.ensure_index('fw_id', unique=True)
         self.fireworks.ensure_index('state')
         self.fireworks.ensure_index('spec._category')
+
         self.launches.ensure_index('launch_id', unique=True)
         self.launches.ensure_index('state')
         self.launches.ensure_index('time_start')
         self.launches.ensure_index('time_end')
         self.launches.ensure_index('host')
         self.launches.ensure_index('ip')
+
+        for idx in self.user_indices:
+            self.fireworks.ensure_index(idx)
 
         self.m_logger.debug('Compacting database...')
         try:
@@ -267,7 +278,8 @@ class LaunchPad(FWSerializable):
                                               {'$set': {'state': 'DEFUSED'}})
 
     def reignite_fw(self, fw_id):
-        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': 'DEFUSED'}, {'$set': {'state': 'WAITING'}})
+        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': 'DEFUSED'},
+                                           {'$set': {'state': 'WAITING'}})
         if f:
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
         return f
@@ -290,9 +302,11 @@ class LaunchPad(FWSerializable):
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.find_and_modify({'_id': -1}, {'next_fw_id': next_fw_id, 'next_launch_id': next_launch_id},
+        self.fw_id_assigner.find_and_modify({'_id': -1}, {'next_fw_id': next_fw_id,
+                                                          'next_launch_id': next_launch_id},
                                             upsert=True)
-        self.m_logger.debug('RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
+        self.m_logger.debug(
+            'RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
     def _check_fw_for_uniqueness(self, m_fw):
         # check if there are duplicates
@@ -322,7 +336,8 @@ class LaunchPad(FWSerializable):
                 m_fw = self.fireworks.find_and_modify(m_query, {'$set': {'state': 'RESERVED'}},
                                                       sort=[("spec._priority", DESCENDING)])
             else:
-                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1}, sort=[("spec._priority", DESCENDING)])
+                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1},
+                                               sort=[("spec._priority", DESCENDING)])
 
             if not m_fw:
                 return None
@@ -338,7 +353,8 @@ class LaunchPad(FWSerializable):
             # create a launch
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
-        m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id, fw_id=m_fw.fw_id)
+        m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id,
+                          fw_id=m_fw.fw_id)
         self._upsert_launch(m_launch)
 
         # add launch to FW
@@ -363,7 +379,8 @@ class LaunchPad(FWSerializable):
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find({'state': 'RESERVED', 'state_history': {
-            '$elemMatch': {'state': 'RESERVED', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
+            '$elemMatch': {'state': 'RESERVED', 'updated_on': {'$lte': cutoff_timestr}}}},
+                                             {'launch_id': 1})
         for ld in bad_launch_data:
             bad_launch_ids.append(ld['launch_id'])
         if fix:
@@ -389,7 +406,8 @@ class LaunchPad(FWSerializable):
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {
-            '$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}}, {'launch_id': 1})
+            '$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}},
+                                             {'launch_id': 1})
         for ld in bad_launch_data:
             bad_launch_ids.append(ld['launch_id'])
         if fix:
@@ -427,7 +445,8 @@ class LaunchPad(FWSerializable):
 
         state_history = reserved_launch.state_history if reserved_launch else None
         l_id = reserved_launch.launch_id if reserved_launch else self.get_new_launch_id()
-        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history, launch_id=l_id,
+        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history,
+                          launch_id=l_id,
                           fw_id=m_fw.fw_id)
 
         self._upsert_launch(m_launch)
@@ -439,14 +458,16 @@ class LaunchPad(FWSerializable):
             m_fw.launches.append(m_launch)
         else:
             # we're updating an existing launch
-            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
+            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in
+                             m_fw.launches]
 
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
 
         # update any duplicated runs
-        for fw in self.fireworks.find({'launches': l_id, 'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FIZZLED']}},
-                                      {'fw_id': 1}):
+        for fw in self.fireworks.find(
+                {'launches': l_id, 'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FIZZLED']}},
+                {'fw_id': 1}):
             fw_id = fw['fw_id']
             fw = self.get_fw_by_id(fw_id)
             fw.state = 'RUNNING'
@@ -488,7 +509,8 @@ class LaunchPad(FWSerializable):
         """
         Checkout the next Launch id
         """
-        return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_launch_id': 1}})['next_launch_id']
+        return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_launch_id': 1}})[
+            'next_launch_id']
 
     def _upsert_fws(self, fws, reassign_all=False):
         old_new = {} # mapping between old and new FireWork ids
@@ -542,25 +564,29 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug('Querying for duplicates, fw_id: {}'.format(thief_fw.fw_id))
             for potential_match in self.fireworks.find(m_query):
                 self.m_logger.debug(
-                    'Verifying for duplicates, fw_ids: {}, {}'.format(thief_fw.fw_id, potential_match['fw_id']))
+                    'Verifying for duplicates, fw_ids: {}, {}'.format(thief_fw.fw_id,
+                                                                      potential_match['fw_id']))
                 spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
                 spec2 = dict(potential_match['spec'])  # defensive copy
                 if m_dupefinder.verify(spec1, spec2):  # verify the match
                     # steal the launches
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
                     thief_launches = [l.launch_id for l in thief_fw.launches]
-                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
+                    valuable_launches = [l for l in victim_fw.launches if
+                                         l.launch_id not in thief_launches]
                     for launch in valuable_launches:
                         thief_fw.launches.append(launch)
                         stolen = True
                         self.m_logger.info(
-                            'Duplicate found! fwids {} and {}'.format(thief_fw.fw_id, potential_match['fw_id']))
+                            'Duplicate found! fwids {} and {}'.format(thief_fw.fw_id,
+                                                                      potential_match['fw_id']))
         return stolen
 
     def _upsert_launch(self, m_launch):
         # Do a confirmed write of Launch
 
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(),
+                                      upsert=True)
 
         l_id = m_launch.launch_id
         # confirm write
@@ -575,7 +601,8 @@ class LaunchPad(FWSerializable):
                     self.m_logger.critical('UNABLE to mark launch_id: {} as fizzled!'.format(l_id))
                     break
                     # mark the launch as FIZZLED because we're unable to update its state...
-                self.m_logger.error('FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
+                self.m_logger.error(
+                    'FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
                 self.mark_fizzled(l_id)
                 break
             if nloops % 20 == 0:

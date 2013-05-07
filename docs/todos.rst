@@ -60,8 +60,6 @@ Misc.
 
 * Finish all planned tutorials
 
-* Add user database indices for faster querying of certain user specs
-
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
 * Install using pip only, not Github devleopers! Package the tutorial separately.
