@@ -145,7 +145,7 @@ def lpad():
 
         elif args.command == 'get_wfs':
             if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) > 1:
-                raise ValueError('Pleases specify exactly one of (fw_id, name, query)')
+                raise ValueError('Please specify exactly one of (fw_id, name, query)')
             if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) == 0:
                 args.query = '{}'
                 args.display_format = args.display_format if args.display_format else 'ids'
@@ -175,6 +175,7 @@ def lpad():
                     wf = lp.get_wf_by_fw_id(id)
                     d = wf.to_display_dict()
                     if args.display_format == 'more' or args.display_format == 'less':
+                        del d['name']
                         del d['parent_links']
                         del d['nodes']
                         del d['links']
