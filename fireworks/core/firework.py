@@ -14,7 +14,7 @@ FireTasks)
 to do next after a job completes
 """
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 import datetime
 from fireworks.core.fworker import FWorker
@@ -776,16 +776,16 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict['nodes'])
         m_dict['name--id'] = self.name + '--' + str(nodes[0])
-        m_dict['launch_dirs'] = dict(
+        m_dict['launch_dirs'] = OrderedDict(
             [(self.id_fw[x].name + '--' + str(x), [l.launch_dir for l in self.id_fw[x].launches])
              for x in nodes])
-        m_dict['states'] = dict(
+        m_dict['states'] = OrderedDict(
             [(self.id_fw[x].name + '--' + str(x), self.id_fw[x].state) for x in nodes])
         m_dict['nodes'] = [self.id_fw[x].name for x in nodes]
-        m_dict['links'] = dict(
+        m_dict['links'] = OrderedDict(
             [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
              m_dict['links'].iteritems()])
-        m_dict['parent_links'] = dict(
+        m_dict['parent_links'] = OrderedDict(
             [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
              m_dict['parent_links'].iteritems()])
         return m_dict
