@@ -593,7 +593,7 @@ class LaunchPad(FWSerializable):
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
         nloops = 0
         while not self.launches.find_one({'launch_id': l_id, 'state': m_launch.state}):
-            self.m_logger.debug('Waiting for a delayed write of Launch...')
+            self.m_logger.debug('Waiting for a delayed write of launch_id: {} ...'.format(l_id))
             nloops += 1
             if nloops == 80:
                 if m_launch.state == 'FIZZLED':
@@ -605,7 +605,7 @@ class LaunchPad(FWSerializable):
                     'FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
                 self.mark_fizzled(l_id)
                 break
-            if nloops % 20 == 0:
-                self.m_logger.info('Fixing a lost write of Launch!!')
+            if nloops % 40 == 0:
+                self.m_logger.warning('Fixing a lost write of launch_id: {}'.format(l_id))
                 self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
-            time.sleep(4)
+            time.sleep(5)
