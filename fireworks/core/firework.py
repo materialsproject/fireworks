@@ -482,7 +482,8 @@ class Workflow(FWSerializable):
         def from_dict(cls, m_dict):
             return Workflow.Links(m_dict)
 
-    def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None, updated_on=None):
+    def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
+                 updated_on=None):
         """
         :param fireworks: ([FireWork]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
@@ -775,8 +776,11 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict['nodes'])
         m_dict['name--id'] = self.name + '--' + str(nodes[0])
-        m_dict['launch_dirs'] = dict([(self.id_fw[x].name + '--' + str(x), [l.launch_dir for l in self.id_fw[x].launches]) for x in nodes])
-        m_dict['states'] = dict([(self.id_fw[x].name + '--' + str(x), self.id_fw[x].state) for x in nodes])
+        m_dict['launch_dirs'] = dict(
+            [(self.id_fw[x].name + '--' + str(x), [l.launch_dir for l in self.id_fw[x].launches])
+             for x in nodes])
+        m_dict['states'] = dict(
+            [(self.id_fw[x].name + '--' + str(x), self.id_fw[x].state) for x in nodes])
         m_dict['nodes'] = [self.id_fw[x].name for x in nodes]
         m_dict['links'] = dict(
             [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
