@@ -628,11 +628,11 @@ class Workflow(FWSerializable):
 
             self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
 
-            if new_fw.fw_id in leaf_ids and detour:
-                self.links[new_fw.fw_id] = self.links[
-                    fw_id]  # add children of current FW to new FW
-            elif new_fw.fw_id in leaf_ids:
-                self.links[new_fw.fw_id] = []
+            if new_fw.fw_id in leaf_ids:
+                if detour:
+                    self.links[new_fw.fw_id] = list(self.links[fw_id])  # add children of current FW to new FW
+                else:
+                    self.links[new_fw.fw_id] = []
             else:
                 self.links[new_fw.fw_id] = wf.links[new_fw.fw_id]
             updated_ids.append(new_fw.fw_id)
