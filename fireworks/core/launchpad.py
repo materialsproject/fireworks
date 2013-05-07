@@ -497,7 +497,8 @@ class LaunchPad(FWSerializable):
     def _ping_launch(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history()
-        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RUNNING'},
+                                      m_launch.to_db_dict())
 
     def get_new_fw_id(self):
         """
@@ -585,10 +586,15 @@ class LaunchPad(FWSerializable):
     def _upsert_launch(self, m_launch):
         # Do a confirmed write of Launch
 
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(),
-                                      upsert=True)
-
         l_id = m_launch.launch_id
+        old_launch = self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(),
+                                                   new=False, fields={"state": True}, upsert=True)
+
+        if old_launch and old_launch['state'] == 'COMPLETED':
+            self.m_logger.error(
+                'launch id: {} tried to overwrite COMPLETED state! Marking as FIZZLED'.format(l_id))
+            self.mark_fizzled(l_id)
+
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
         nloops = 0
@@ -608,4 +614,4 @@ class LaunchPad(FWSerializable):
             if nloops % 40 == 0:
                 self.m_logger.warning('Fixing a lost write of launch_id: {}'.format(l_id))
                 self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
-            time.sleep(5)
+            time.sleep(4)
