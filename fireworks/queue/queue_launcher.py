@@ -61,13 +61,11 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
 
                 # set job name to the FW name
-                """
                 valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
                 job_name = ''.join(c for c in fw.name if c in valid_chars)
                 job_name = job_name.replace(' ', '_')
                 job_name = job_name[0:20] if len(job_name)>20 else job_name
                 qadapter.update({'job_name': job_name})  # set the job name to FW name
-                """
 
                 if '_queueadapter' in fw.spec:
                     l_logger.debug('updating queue params using FireWork spec..')

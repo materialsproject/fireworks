@@ -6,8 +6,8 @@
 #PBS -q $${queue}
 #PBS -A $${account}
 #PBS -N $${job_name}
-#PBS -o $${job_name}.out
-#PBS -e $${job_name}.error
+#PBS -o FW_job.out
+#PBS -e FW_job.error
 
 $${pre_rocket}
 cd $${launch_dir}
