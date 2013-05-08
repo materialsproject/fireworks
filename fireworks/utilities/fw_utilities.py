@@ -2,6 +2,7 @@
 
 import logging
 import datetime
+import string
 import sys
 import os
 import traceback
@@ -122,3 +123,9 @@ def get_my_ip():
 
 def get_my_host():
     return socket.gethostname()
+
+
+def get_slug(m_str):
+    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    m_str = ''.join(c for c in m_str if c in valid_chars)
+    return m_str.replace(' ', '_')
