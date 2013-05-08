@@ -183,6 +183,9 @@ def lpad():
                         del d['states']
                         del d['metadata']
                         del d['launch_dirs']
+                        del d['updated_on']
+                    if args.display_format == 'more' or args.display_format == 'all':
+                        del d['states_list']
                     wfs.append(d)
             if len(wfs) == 1:
                 wfs = wfs[0]

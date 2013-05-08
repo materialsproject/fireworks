@@ -788,6 +788,7 @@ class Workflow(FWSerializable):
         m_dict['parent_links'] = OrderedDict(
             [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
              m_dict['parent_links'].iteritems()])
+        m_dict['states_list'] = '-'.join([a[0:4] for a in m_dict['states'].values()])
         return m_dict
 
     @classmethod
