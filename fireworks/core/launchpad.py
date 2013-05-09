@@ -36,7 +36,7 @@ class LaunchPad(FWSerializable):
     """
 
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, strm_lvl=None, user_indices=None):
+                 logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None):
         """
         
         :param host:
@@ -47,6 +47,7 @@ class LaunchPad(FWSerializable):
         :param logdir:
         :param strm_lvl:
         :param user_indices:
+        :param wf_user_indices:
         """
         self.host = host
         self.port = port
@@ -60,6 +61,7 @@ class LaunchPad(FWSerializable):
         self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
         self.user_indices = user_indices if user_indices else []
+        self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
         self.connection = MongoClient(host, port, j=True)
@@ -78,7 +80,7 @@ class LaunchPad(FWSerializable):
         """
         d = {'host': self.host, 'port': self.port, 'name': self.name, 'username': self.username,
              'password': self.password, 'logdir': self.logdir, 'strm_lvl': self.strm_lvl,
-             'user_indices': self.user_indices}
+             'user_indices': self.user_indices, 'wf_user_indices': self.wf_user_indices}
         return d
 
     @classmethod
@@ -86,8 +88,9 @@ class LaunchPad(FWSerializable):
         logdir = d.get('logdir', None)
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
+        wf_user_indices = d.get('wf_user_indices', [])
         return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir,
-                         strm_lvl, user_indices)
+                         strm_lvl, user_indices, wf_user_indices)
 
     def reset(self, password, require_password=True):
         """
@@ -263,6 +266,9 @@ class LaunchPad(FWSerializable):
 
         for idx in self.user_indices:
             self.fireworks.ensure_index(idx)
+
+        for idx in self.wf_user_indices:
+            self.workflows.ensure_index(idx)
 
         self.m_logger.debug('Compacting database...')
         try:
