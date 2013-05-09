@@ -587,13 +587,8 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write of Launch
 
         l_id = m_launch.launch_id
-        old_launch = self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(),
+        self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(),
                                                    new=False, fields={"state": True}, upsert=True)
-
-        if old_launch and old_launch['state'] == 'COMPLETED':
-            self.m_logger.error(
-                'launch id: {} tried to overwrite COMPLETED state! Marking as FIZZLED'.format(l_id))
-            self.mark_fizzled(l_id)
 
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
