@@ -39,9 +39,6 @@ Major Features
 
 * Add way to monitor a file during the run
 
-* Add a way to reset FireWork
-    * Move all launches to 'archived' launch
-
 FireTasks
 =========
 
@@ -67,6 +64,8 @@ Misc.
 * Add stats
 
 * Clean up job_exists() calls - they are currently expensive!
+
+* Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
 
 * <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify. Or add a launchpad command to tell you where the tutorial dir is.
 

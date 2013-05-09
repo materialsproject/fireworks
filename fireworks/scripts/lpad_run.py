@@ -42,23 +42,25 @@ def lpad():
     adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
 
     get_fw_parser = subparsers.add_parser('get_fws', help='get information about FireWorks')
-    get_fw_parser.add_argument('-i', '--fw_id', help='fw_id', default=None, type=int)
-    get_fw_parser.add_argument('-n', '--name', help='name', default=None)
-    get_fw_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
+    get_fw_parser.add_argument('-i', '--fw_id', help='get FW with this fw_id', default=None, type=int)
+    get_fw_parser.add_argument('-n', '--name', help='get FWs with this name', default=None)
+    get_fw_parser.add_argument('-s', '--state', help='get FWs with this state', default=None)
+    get_fw_parser.add_argument('-q', '--query', help='get FWs matching this query (as pymongo string, enclose in single-quotes)', default=None)
     get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
-    get_fw_parser.add_argument('-s', '--sort', help='sort results ("created_on")', default=None)
-    get_fw_parser.add_argument('-r', '--rsort', help='reverse sort results ("created_on")', default=None)
+    get_fw_parser.add_argument('--sort', help='sort results ("created_on")', default=None)
+    get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")', default=None)
 
 
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
-    get_wf_parser.add_argument('-i', '--fw_id', help='fw_id', default=None, type=int)
-    get_wf_parser.add_argument('-n', '--name', help='name', default=None)
-    get_wf_parser.add_argument('-q', '--query', help='query (as pymongo string, enclose in single-quotes)', default=None)
+    get_wf_parser.add_argument('-i', '--fw_id', help='get WF with this fw_id', default=None, type=int)
+    get_wf_parser.add_argument('-n', '--name', help='get WFs with this name', default=None)
+    get_wf_parser.add_argument('-s', '--state', help='get WFs with this state', default=None)
+    get_wf_parser.add_argument('-q', '--query', help='get WFs matching this query (as pymongo string, enclose in single-quotes)', default=None)
     get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
     get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
-    get_wf_parser.add_argument('-s', '--sort', help='sort results ("created_on", "updated_on")', default=None)
-    get_wf_parser.add_argument('-r', '--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
+    get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
+    get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
 
     rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
     rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
@@ -144,18 +146,20 @@ def lpad():
             lp.tuneup()
 
         elif args.command == 'get_wfs':
-            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) > 1:
-                raise ValueError('Please specify exactly one of (fw_id, name, query)')
-            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) == 0:
+            if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
+                raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
+            if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
                 args.query = '{}'
                 args.display_format = args.display_format if args.display_format else 'ids'
             else:
-                args.display_format = args.display_format if args.display_format else 'all'
+                args.display_format = args.display_format if args.display_format else 'more'
 
             if args.fw_id:
                 query = {'nodes': args.fw_id}
             elif args.name:
                 query = {'name': args.name}
+            elif args.state:
+                query = {'state': args.state}
             else:
                 query = ast.literal_eval(args.query)
 
@@ -193,18 +197,20 @@ def lpad():
             print json.dumps(wfs, default=DATETIME_HANDLER, indent=4)
 
         elif args.command == 'get_fws':
-            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) > 1:
-                raise ValueError('Pleases specify exactly one of (fw_id, name, query)')
-            if sum([bool(x) for x in [args.fw_id, args.name, args.query]]) == 0:
+            if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
+                raise ValueError('Pleases specify exactly one of (fw_id, name, state, query)')
+            if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
                 args.query = '{}'
                 args.display_format = args.display_format if args.display_format else 'ids'
             else:
-                args.display_format = args.display_format if args.display_format else 'all'
+                args.display_format = args.display_format if args.display_format else 'more'
 
             if args.fw_id:
                 query = {'fw_id': args.fw_id}
             elif args.name:
                 query = {'name': args.name}
+            elif args.state:
+                query = {'state': args.state}
             else:
                 query = ast.literal_eval(args.query)
 
