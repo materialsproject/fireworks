@@ -777,19 +777,22 @@ class Workflow(FWSerializable):
         nodes = sorted(m_dict['nodes'])
         m_dict['name--id'] = self.name + '--' + str(nodes[0])
         m_dict['launch_dirs'] = OrderedDict(
-            [(self.id_fw[x].name + '--' + str(x), [l.launch_dir for l in self.id_fw[x].launches])
+            [(self._str_fw(x), [l.launch_dir for l in self.id_fw[x].launches])
              for x in nodes])
         m_dict['states'] = OrderedDict(
-            [(self.id_fw[x].name + '--' + str(x), self.id_fw[x].state) for x in nodes])
-        m_dict['nodes'] = [self.id_fw[x].name for x in nodes]
+            [(self._str_fw(x), self.id_fw[x].state) for x in nodes])
+        m_dict['nodes'] = [self._str_fw(x) for x in nodes]
         m_dict['links'] = OrderedDict(
-            [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
+            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in
              m_dict['links'].iteritems()])
         m_dict['parent_links'] = OrderedDict(
-            [(self.id_fw[int(k)].name, [self.id_fw[int(v)].name for v in a]) for k, a in
+            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in
              m_dict['parent_links'].iteritems()])
         m_dict['states_list'] = '-'.join([a[0:4] for a in m_dict['states'].values()])
         return m_dict
+
+    def _str_fw(self, fw_id):
+        return self.id_fw[int(fw_id)].name + '--' + str(fw_id)
 
     @classmethod
     def from_dict(cls, m_dict):
