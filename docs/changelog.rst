@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+v0.13
+=====
+
+* multiple query and output display options and enhancements added for ``get_fws`` and ``get_wfs``.
+* use FW's name to set more informative PBS job names
+* make sure ping_launch only writes on running jobs (prevent race condition)
+* minor bugfixes
+
 v0.12
 =====
 
