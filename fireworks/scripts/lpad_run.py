@@ -46,7 +46,7 @@ def lpad():
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name', default=None)
     get_fw_parser.add_argument('-s', '--state', help='get FWs with this state', default=None)
     get_fw_parser.add_argument('-q', '--query', help='get FWs matching this query (as pymongo string, enclose in single-quotes)', default=None)
-    get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
+    get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids", "count")', default=None)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
     get_fw_parser.add_argument('--sort', help='sort results ("created_on")', default=None)
     get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")', default=None)
@@ -57,7 +57,7 @@ def lpad():
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name', default=None)
     get_wf_parser.add_argument('-s', '--state', help='get WFs with this state', default=None)
     get_wf_parser.add_argument('-q', '--query', help='get WFs matching this query (as pymongo string, enclose in single-quotes)', default=None)
-    get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids")', default=None)
+    get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids", "count")', default=None)
     get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
     get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
     get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
@@ -174,6 +174,8 @@ def lpad():
             wfs = []
             if args.display_format == 'ids':
                 wfs = ids
+            elif args.display_format == 'count':
+                wfs = [len(ids)]
             else:
                 for id in ids:
                     wf = lp.get_wf_by_fw_id(id)
@@ -225,6 +227,8 @@ def lpad():
             fws = []
             if args.display_format == 'ids':
                 fws = ids
+            elif args.display_format == 'count':
+                fws = [len(ids)]
             else:
                 for id in ids:
                     fw = lp.get_fw_by_id(id)
