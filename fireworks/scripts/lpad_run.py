@@ -185,9 +185,9 @@ def lpad():
                         del d['parent_links']
                         del d['nodes']
                         del d['links']
+                        del d['metadata']
                     if args.display_format == 'less':
                         del d['states']
-                        del d['metadata']
                         del d['launch_dirs']
                         del d['updated_on']
                     if args.display_format == 'more' or args.display_format == 'all':
