@@ -597,6 +597,7 @@ class LaunchPad(FWSerializable):
         self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(),
                                                    new=False, fields={"state": True}, upsert=True)
 
+        """
         # confirm write
         # I can't believe this is actually necessary (and yes, it appears to be necessary)
         nloops = 0
@@ -617,3 +618,4 @@ class LaunchPad(FWSerializable):
                 self.m_logger.warning('Fixing a lost write of launch_id: {}'.format(l_id))
                 self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
             time.sleep(4)
+        """
