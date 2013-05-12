@@ -200,25 +200,25 @@ class FWSerializable():
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
-    def to_file(self, filename, f_format='AUTO_DETECT', *args, **kwargs):
+    def to_file(self, filename, f_format=None, *args, **kwargs):
         """
         Write a serialization of this object to a file
         :param filename: filename to write to
         :param f_format: serialization format, default checks the filename extension
         """
-        if f_format == 'AUTO_DETECT':
+        if f_format is None:
             f_format = filename.split('.')[-1]
         with open(filename, 'w') as f:
             f.write(self.to_format(f_format=f_format, *args, **kwargs))
 
     @classmethod
-    def from_file(cls, filename, f_format='AUTO_DETECT'):
+    def from_file(cls, filename, f_format=None):
         """
         Load a serialization of this object from a file
         :param filename: filename to read
         :param f_format: serialization format, default checks the filename extension
         """
-        if f_format == 'AUTO_DETECT':
+        if f_format is None:
             f_format = filename.split('.')[-1]
         with open(filename, 'r') as f:
             return cls.from_format(f.read(), f_format=f_format)
@@ -273,7 +273,7 @@ def load_object(obj_dict):
     raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
 
 
-def load_object_from_file(filename, f_format='AUTO_DETECT'):
+def load_object_from_file(filename, f_format=None):
     """
     implicitly load an object from a file. just a friendly wrapper to load_object()
     
@@ -282,7 +282,7 @@ def load_object_from_file(filename, f_format='AUTO_DETECT'):
     """
 
     m_dict = {}
-    if f_format == 'AUTO_DETECT':
+    if f_format is None:
         f_format = filename.split('.')[-1]
 
     with open(filename, 'r') as f:
