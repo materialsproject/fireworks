@@ -630,7 +630,8 @@ class Workflow(FWSerializable):
 
             if new_fw.fw_id in leaf_ids:
                 if detour:
-                    self.links[new_fw.fw_id] = list(self.links[fw_id])  # add children of current FW to new FW
+                    self.links[new_fw.fw_id] = list(
+                        self.links[fw_id])  # add children of current FW to new FW
                 else:
                     self.links[new_fw.fw_id] = []
             else:
@@ -689,6 +690,15 @@ class Workflow(FWSerializable):
                     if m_state == 'COMPLETED':
                         m_action = l.action
 
+            # This part is confusing and rare - *pull* the launch_dirs from any FIZZLED parents
+            # allows us to handle FIZZLED jobs
+            parent_launches = [self.id_fw[p].launches.to_dict() for p in
+                               self.links.parent_links.get(fw_id, []) if
+                               self.id_fw[p].state == 'FIZZLED']
+            if len(parent_launches) > 0:
+                fw.spec['_fizzled_parent_launches'] = parent_launches
+                updated_ids.add(fw_id)
+
         fw.state = m_state
 
         if m_state != prev_state:
@@ -697,9 +707,6 @@ class Workflow(FWSerializable):
             if m_state == 'COMPLETED':
                 updated_ids = updated_ids.union(self.apply_action(m_action,
                                                                   fw.fw_id))
-                # apply
-                # action
-                # on children
 
             # refresh all the children
             for child_id in self.links[fw_id]:
