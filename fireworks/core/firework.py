@@ -692,7 +692,7 @@ class Workflow(FWSerializable):
 
             # This part is confusing and rare - *pull* the launch_dirs from any FIZZLED parents
             # allows us to handle FIZZLED jobs
-            parent_launches = [self.id_fw[p].launches.to_dict() for p in
+            parent_launches = [self.id_fw[p].to_dict() for p in
                                self.links.parent_links.get(fw_id, []) if
                                self.id_fw[p].state == 'FIZZLED']
             if len(parent_launches) > 0:
