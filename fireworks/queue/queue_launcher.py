@@ -140,12 +140,12 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
                 launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir, reserve, strm_lvl)
-                # wait for the queue system to update
-                l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
-                time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
                 num_launched += 1
                 if num_launched == nlaunches:
                     break
+                # wait for the queue system to update
+                l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
+                time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
             if num_launched == nlaunches or nlaunches == 0:
