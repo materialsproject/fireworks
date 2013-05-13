@@ -667,7 +667,7 @@ class Workflow(FWSerializable):
                          self.links.parent_links.get(fw_id, [])]
 
         completed_parent_states = ['COMPLETED']
-        if fw.spec.get('_allow_fizzled_parents', False):
+        if fw.spec.get('_allow_fizzled_parents'):
             completed_parent_states.append('FIZZLED')
 
         if len(parent_states) != 0 and not all(
@@ -690,14 +690,15 @@ class Workflow(FWSerializable):
                     if m_state == 'COMPLETED':
                         m_action = l.action
 
-            # This part is confusing and rare - *pull* the launch_dirs from any FIZZLED parents
+            # This part is confusing and rare - report any FIZZLED parents if allow_fizzed
             # allows us to handle FIZZLED jobs
-            parent_launches = [self.id_fw[p].to_dict() for p in
-                               self.links.parent_links.get(fw_id, []) if
-                               self.id_fw[p].state == 'FIZZLED']
-            if len(parent_launches) > 0:
-                fw.spec['_fizzled_parent_launches'] = parent_launches
-                updated_ids.add(fw_id)
+            if fw.spec.get('_allow_fizzled_parents'):
+                parent_fws = [self.id_fw[p].to_dict() for p in
+                                   self.links.parent_links.get(fw_id, []) if
+                                   self.id_fw[p].state == 'FIZZLED']
+                if len(parent_fws) > 0:
+                    fw.spec['_fizzled_parents'] = parent_fws
+                    updated_ids.add(fw_id)
 
         fw.state = m_state
 
