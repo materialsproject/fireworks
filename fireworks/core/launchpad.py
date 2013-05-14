@@ -138,7 +138,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug('Sleeping for {} secs...'.format(maintain_interval))
             time.sleep(maintain_interval)
 
-    def add_wf(self, wf):
+    def add_wf(self, wf, reassign_all=True):
         """
 
         :param wf: a Workflow object.
@@ -148,7 +148,7 @@ class LaunchPad(FWSerializable):
             wf = Workflow.from_FireWork(wf)
 
         # insert the FireWorks and get back mapping of old to new ids
-        old_new = self._upsert_fws(wf.id_fw.values(), reassign_all=True)
+        old_new = self._upsert_fws(wf.id_fw.values(), reassign_all=reassign_all)
 
         # update the Workflow with the new ids
         wf._reassign_ids(old_new)
