@@ -173,13 +173,13 @@ class FWSerializable():
     def from_dict(cls, m_dict):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
 
-    def to_format(self, f_format='json', *args, **kwargs):
+    def to_format(self, f_format='json', **kwargs):
         """
         returns a String representation in the given format
         :param f_format: the format to output to (default json)
         """
         if f_format == 'json':
-            return json.dumps(self.to_dict(), *args, default=DATETIME_HANDLER, **kwargs)
+            return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
             return yaml.dump(self.to_dict(), default_flow_style=FWConfig().YAML_STYLE, allow_unicode=True)
@@ -200,7 +200,7 @@ class FWSerializable():
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
-    def to_file(self, filename, f_format=None, *args, **kwargs):
+    def to_file(self, filename, f_format=None, **kwargs):
         """
         Write a serialization of this object to a file
         :param filename: filename to write to
@@ -209,7 +209,7 @@ class FWSerializable():
         if f_format is None:
             f_format = filename.split('.')[-1]
         with open(filename, 'w') as f:
-            f.write(self.to_format(f_format=f_format, *args, **kwargs))
+            f.write(self.to_format(f_format=f_format, **kwargs))
 
     @classmethod
     def from_file(cls, filename, f_format=None):
