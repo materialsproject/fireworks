@@ -592,10 +592,7 @@ class LaunchPad(FWSerializable):
 
     def _upsert_launch(self, m_launch):
         # Do a confirmed write of Launch
-
-        l_id = m_launch.launch_id
-        self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict(),
-                                                   new=False, fields={"state": True}, upsert=True)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         """
         # confirm write
