@@ -815,5 +815,5 @@ class Workflow(FWSerializable):
             return Workflow.from_FireWork(FireWork.from_dict(m_dict))
 
     @classmethod
-    def from_FireWork(cls, fw):
-        return Workflow([fw], None)
+    def from_FireWork(cls, fw, name=None, metadata=None):
+        return Workflow([fw], None, name=name, metadata=metadata)
