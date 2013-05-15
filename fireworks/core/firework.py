@@ -269,7 +269,7 @@ class Launch(FWSerializable, object):
             raise ValueError("Invalid launch state: {}".format(state))
 
         self.launch_dir = launch_dir
-        self.fworker = fworker
+        self.fworker = fworker if fworker else FWorker()
         self.host = host if host else get_my_host()
         self.ip = ip if ip else get_my_ip()
         self.action = action if action else None
@@ -387,7 +387,7 @@ class Launch(FWSerializable, object):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
-        fworker = FWorker.from_dict(m_dict['fworker'])
+        fworker = FWorker.from_dict(m_dict['fworker']) if m_dict['fworker'] else None
         action = FWAction.from_dict(m_dict['action']) if m_dict.get(
             'action') else None
         return Launch(m_dict['state'], m_dict['launch_dir'], fworker,
