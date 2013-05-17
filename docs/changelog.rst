@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+v0.14
+=====
+
+* pin down and fix known issue of launches sometimes not being updated
+* further refine display options and enhancements for ``get_fws`` and ``get_wfs``.
+* minor enhancements to queue launcher and PBS adapter
+* support user indices for workflows
+* minor bugfixes and internal code cleanup
+
 v0.13
 =====
 
