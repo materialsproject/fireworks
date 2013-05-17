@@ -7,8 +7,6 @@
    :width: 300 px
    :alt: FireWorks
 
-*Note: FireWorks is in beta. Please be cautious about using it in production environments.*
-
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
 Is FireWorks for me?
