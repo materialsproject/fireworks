@@ -592,27 +592,5 @@ class LaunchPad(FWSerializable):
 
     def _upsert_launch(self, m_launch):
         # Do a confirmed write of Launch
+        # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
-
-        """
-        # confirm write
-        # I can't believe this is actually necessary (and yes, it appears to be necessary)
-        nloops = 0
-        while not self.launches.find_one({'launch_id': l_id, 'state': m_launch.state}):
-            self.m_logger.debug('Waiting for a delayed write of launch_id: {} ...'.format(l_id))
-            nloops += 1
-            if nloops == 80:
-                if m_launch.state == 'FIZZLED':
-                    # We're unable to mark the launch as FIZZLED
-                    self.m_logger.critical('UNABLE to mark launch_id: {} as fizzled!'.format(l_id))
-                    break
-                    # mark the launch as FIZZLED because we're unable to update its state...
-                self.m_logger.error(
-                    'FIZZLED launch id: {} because could not confirm write!!'.format(l_id))
-                self.mark_fizzled(l_id)
-                break
-            if nloops % 40 == 0:
-                self.m_logger.warning('Fixing a lost write of launch_id: {}'.format(l_id))
-                self.launches.find_and_modify({'launch_id': l_id}, m_launch.to_db_dict())
-            time.sleep(4)
-        """
