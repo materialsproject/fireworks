@@ -5,9 +5,11 @@ TODO: add docs!
 """
 
 import os
+import shlex
 import subprocess
 import getpass
 import threading
+import traceback
 from fireworks.queue.queue_adapter import QueueAdapterBase
 from fireworks.utilities.fw_utilities import log_fancy, log_exception
 
@@ -21,28 +23,47 @@ __date__ = 'Dec 12, 2012'
 
 
 class Command(object):
-    # from Stack Overflow
-    # http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+    """
+    From https://gist.github.com/kirpit/1306188
 
-    def __init__(self, cmd):
-        self.cmd = cmd
-        self.process = None
+    Enables to run subprocess commands in a different thread with TIMEOUT option.
 
-    def run(self, timeout):
-        def target():
-            self.process = subprocess.Popen(self.cmd, stdout=subprocess.PIPE,
-                                            stderr=subprocess.PIPE)
-            self.process.communicate()
+    Based on jcollado's solution:
+    http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
+    """
+    command = None
+    process = None
+    status = None
+    output, error = '', ''
 
-        thread = threading.Thread(target=target)
+    def __init__(self, command):
+        if isinstance(command, basestring):
+            command = shlex.split(command)
+        self.command = command
+
+    def run(self, timeout=None, **kwargs):
+        """ Run a command then return: (status, output, error). """
+        def target(**kwargs):
+            try:
+                self.process = subprocess.Popen(self.command, **kwargs)
+                self.output, self.error = self.process.communicate()
+                self.status = self.process.returncode
+            except:
+                self.error = traceback.format_exc()
+                self.status = -1
+        # default stdout and stderr
+        if 'stdout' not in kwargs:
+            kwargs['stdout'] = subprocess.PIPE
+        if 'stderr' not in kwargs:
+            kwargs['stderr'] = subprocess.PIPE
+        # thread
+        thread = threading.Thread(target=target, kwargs=kwargs)
         thread.start()
-
         thread.join(timeout)
         if thread.is_alive():
-            print 'Terminating process'
             self.process.terminate()
             thread.join()
-        return self.process
+        return self.status, self.output, self.error
 
 
 class PBSAdapterNERSC(QueueAdapterBase):
@@ -95,22 +116,22 @@ class PBSAdapterNERSC(QueueAdapterBase):
 
         # run qstat
         qstat = Command(['qstat', '-a', '-u', username])
-        p = qstat.run(timeout=3)
+        p = qstat.run(timeout=5)
 
         # parse the result
-        if p.returncode == 0:
+        if p[0] == 0:
             # lines should have this form
             # '1339044.sdb          username  queuename    2012-02-29-16-43  20460   --   --    --  00:20 C 00:09'
             # count lines that include the username in it
 
             # TODO: only count running or queued jobs. or rather, *don't* count jobs that are 'C'.
-            outs = p.stdout.readlines()
+            outs = p[1].split('\n')
             njobs = len([line.split() for line in outs if username in line])
             pbs_logger.info('The number of jobs currently in the queue is: {}'.format(njobs))
             return njobs
 
         # there's a problem talking to qstat server?
         msgs = ['Error trying to get the number of jobs in the queue using qstat service',
-                'The error response reads: {}'.format(p.stderr.read())]
+                'The error response reads: {}'.format(p[2])]
         log_fancy(pbs_logger, 'error', msgs)
         return None
