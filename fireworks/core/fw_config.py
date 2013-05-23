@@ -66,6 +66,8 @@ class FWConfig(object):
 
         self.CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
 
+        self.AVOID_MANY_QSTATS = True  # try to avoid calling qstat many times
+
         self.override_user_settings()
 
     def override_user_settings(self):

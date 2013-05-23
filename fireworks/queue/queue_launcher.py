@@ -146,7 +146,10 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
                 time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
-                jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
+                if FWConfig().AVOID_MANY_QSTATS:
+                    jobs_in_queue += 1
+                else:
+                    jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
             if num_launched == nlaunches or nlaunches == 0:
                 break
