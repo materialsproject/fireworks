@@ -7,6 +7,7 @@ TODO: add docs!
 import os
 import subprocess
 import getpass
+import threading
 from fireworks.queue.queue_adapter import QueueAdapterBase
 from fireworks.utilities.fw_utilities import log_fancy, log_exception
 
@@ -17,6 +18,31 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
+
+
+class Command(object):
+    # from Stack Overflow
+    # http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+
+    def __init__(self, cmd):
+        self.cmd = cmd
+        self.process = None
+
+    def run(self, timeout):
+        def target():
+            self.process = subprocess.Popen(self.cmd, stdout=subprocess.PIPE,
+                                            stderr=subprocess.PIPE)
+            self.process.communicate()
+
+        thread = threading.Thread(target=target)
+        thread.start()
+
+        thread.join(timeout)
+        if thread.is_alive():
+            print 'Terminating process'
+            self.process.terminate()
+            thread.join()
+        return self.process
 
 
 class PBSAdapterNERSC(QueueAdapterBase):
@@ -50,8 +76,10 @@ class PBSAdapterNERSC(QueueAdapterBase):
 
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
-                msgs = ['Error in job submission with PBS file {f} and cmd {c}'.format(f=script_file, c=cmd),
-                        'The error response reads: {}'.format(p.stderr.read())]
+                msgs = [
+                    'Error in job submission with PBS file {f} and cmd {c}'.format(f=script_file,
+                                                                                   c=cmd),
+                    'The error response reads: {}'.format(p.stderr.read())]
                 log_fancy(pbs_logger, 'error', msgs)
 
         except:
@@ -66,9 +94,8 @@ class PBSAdapterNERSC(QueueAdapterBase):
             username = getpass.getuser()
 
         # run qstat
-        cmd = ['qstat', '-a', '-u', username]
-        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
-        p.wait()
+        qstat = Command(['qstat', '-a', '-u', username])
+        p = qstat.run(timeout=3)
 
         # parse the result
         if p.returncode == 0:
