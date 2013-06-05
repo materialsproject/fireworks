@@ -280,8 +280,11 @@ class LaunchPad(FWSerializable):
 
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
-        return self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}},
+        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}},
                                               {'$set': {'state': 'DEFUSED'}})
+
+        self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+        return f
 
     def reignite_fw(self, fw_id):
         f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': 'DEFUSED'},
@@ -294,6 +297,9 @@ class LaunchPad(FWSerializable):
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
             self.defuse_fw(fw.fw_id)
+
+        self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+
 
     def reignite_wf(self, fw_id):
         wf = self.get_wf_by_fw_id(fw_id)
@@ -311,6 +317,8 @@ class LaunchPad(FWSerializable):
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
             self.fireworks.find_and_modify({'fw_id': fw.fw_id}, {'$set': {'state': 'ARCHIVED'}})
+
+        self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
