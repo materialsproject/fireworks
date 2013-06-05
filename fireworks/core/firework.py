@@ -146,11 +146,8 @@ class FireWork(FWSerializable):
     A FireWork is a workflow step and might be contain several FireTasks
     """
 
-    # 'Canceled' is the dominant spelling over 'cancelled' in the US starting
-    #  around 1985...(Google n-grams)
-    STATE_RANKS = {'DEFUSED': 0, 'WAITING': 1, 'READY': 2, 'RESERVED': 3,
-                   'FIZZLED': 4, 'RUNNING': 5, 'CANCELED': 6,
-                   'COMPLETED': 7}
+    STATE_RANKS = {'ARCHIVED': -1, 'DELETED': 0, 'WAITING': 1, 'READY': 2,
+                   'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'COMPLETED': 7}
 
     def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
                  state='WAITING', created_on=None, fw_id=-1):
@@ -162,7 +159,7 @@ class FireWork(FWSerializable):
         :param archived_launches: ([Launch]) a list of archived Launch
         objects of this FireWork
         :param state: (str) the state of the FW (e.g. WAITING, RUNNING,
-        COMPLETED, CANCELED)
+        COMPLETED, ARCHIVED)
         :param fw_id: (int) an identification number for this FireWork
         """
 
@@ -528,8 +525,10 @@ class Workflow(FWSerializable):
         # get state of workflow
         m_state = 'READY'
         states = [fw.state for fw in self.fws]
-        if all([s == 'COMPLETED' or s == 'CANCELED' for s in states]):
+        if all([s == 'COMPLETED' for s in states]):
             m_state = 'COMPLETED'
+        elif all([s == 'ARCHIVED' for s in states]):
+            m_state = 'ARCHIVED'
         elif any([s == 'DEFUSED' for s in states]):
             m_state = 'DEFUSED'
         elif any([s == 'FIZZLED' for s in states]):
@@ -658,8 +657,8 @@ class Workflow(FWSerializable):
         fw = self.id_fw[fw_id]
         prev_state = fw.state
 
-        # if we're defused, just skip altogether
-        if fw.state == 'DEFUSED':
+        # if we're defused or archived, just skip altogether
+        if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
             return updated_ids
 
         # what are the parent states?

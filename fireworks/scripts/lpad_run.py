@@ -78,6 +78,9 @@ def lpad():
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
     defuse_parser.add_argument('fw_id', help='Any FireWork id in the workflow to defuse', type=int)
 
+    archive_parser = subparsers.add_parser('archive', help='archive an entire Workflow (irreversible)')
+    archive_parser.add_argument('fw_id', help='Any FireWork id in the workflow to archive', type=int)
+
     reignite_parser = subparsers.add_parser('reignite', help='reignite (un-cancel) an entire Workflow')
     reignite_parser.add_argument('fw_id', help='Any FireWork id in the workflow to reignite', type=int)
 
@@ -248,9 +251,11 @@ def lpad():
 
             print json.dumps(fws, default=DATETIME_HANDLER, indent=4)
 
-
         elif args.command == 'defuse':
             lp.defuse_wf(args.fw_id)
+
+        elif args.command == 'archive':
+            lp.archive_wf(args.fw_id)
 
         elif args.command == 'reignite':
             lp.reignite_wf(args.fw_id)

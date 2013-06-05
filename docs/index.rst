@@ -41,7 +41,7 @@ Some limitations of FireWorks include:
 
 * FireWorks has not been stress-tested to millions of workflows.
 
-* FireWorks does not automatically optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement or to match jobs to appropriate hardware); you must define such optimizations yourself.
+* FireWorks does not *automatically* optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement or to match jobs to appropriate hardware); however, you can define such optimizations yourself.
 
 * FireWorks has only been tested on Linux and Macintosh machines (and not Windows).
 

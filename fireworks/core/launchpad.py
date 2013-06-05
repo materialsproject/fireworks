@@ -300,6 +300,11 @@ class LaunchPad(FWSerializable):
         for fw in wf.fws:
             self.reignite_fw(fw.fw_id)
 
+    def archive_wf(self, fw_id):
+        wf = self.get_wf_by_fw_id(fw_id)
+        for fw in wf.fws:
+            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, {'$set': {'state': 'ARCHIVED'}})
+
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
         (internal method) Used to reset id counters
