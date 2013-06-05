@@ -146,7 +146,7 @@ class FireWork(FWSerializable):
     A FireWork is a workflow step and might be contain several FireTasks
     """
 
-    STATE_RANKS = {'ARCHIVED': -1, 'DELETED': 0, 'WAITING': 1, 'READY': 2,
+    STATE_RANKS = {'ARCHIVED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
                    'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'COMPLETED': 7}
 
     def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
