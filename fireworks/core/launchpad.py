@@ -301,6 +301,13 @@ class LaunchPad(FWSerializable):
             self.reignite_fw(fw.fw_id)
 
     def archive_wf(self, fw_id):
+        # first archive all the launches, so they are not used in duplicate checks
+        wf = self.get_wf_by_fw_id(fw_id)
+        fw_ids = [f.fw_id for f in wf.fws]
+        for fw_id in fw_ids:
+            self.rerun_fw(fw_id)
+
+        # second set the state of all FWs to ARCHIVED
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
             self.fireworks.find_and_modify({'fw_id': fw.fw_id}, {'$set': {'state': 'ARCHIVED'}})
