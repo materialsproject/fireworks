@@ -22,14 +22,12 @@ FW Docs
 
 * Document all the features of Script Task
 
-* Update all tutorials so config file is handled smoothly, not terribly...m
+* Update all tutorials so config file is handled smoothly, not terribly...
 
 * Document allow_fizzled_parents
 
 Major Features
 ==============
-
-* Add a checkpoint/restart function
 
 * Allow the server to submit jobs to workers (maybe using ssh-commands?)
 
@@ -51,8 +49,6 @@ FireTasks
 Misc.
 =====
 
-* The CANCELED state is pointless
-
 * Detect a blank config dir and give a proper error.
 
 * Finish all planned tutorials
@@ -71,17 +67,6 @@ Misc.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
-* Add workflow state
-
 * No negative fw_ids needed when returning FWAction
 
 * Go through logging, make sure it's sane
-
-* A way to refresh WF manually before marking them as fizzled - sometimes the "push" just doesn't work...
-    * this should be simple - just find all RUNNING/RESERVED FWs and refresh their workflows...
-
-* Do something interesting with Workflow metadata
-
-* Make the FireWorker category actually do something
-
-* Add names in test workflows
