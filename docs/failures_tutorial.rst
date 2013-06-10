@@ -46,7 +46,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
 #. This behavior is what happens when your job throws an error (such as the *KeyboardInterrupt* error we just simulated). Let's see what became of this ill-fated FireWork::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
 #. You should notice the state of this FireWork is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
 
@@ -71,7 +71,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. Now let's re-open a terminal window and see what FireWorks thinks is happening with this job::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d more
 
 #. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
 
@@ -79,7 +79,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d more
 
 #. The FireWork should now be correctly listed as *FIZZLED*!
 
@@ -94,7 +94,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     ---(forcibly close your terminal window)
     ---(wait 4 or more hours!! or temporarily set your System Clock ahead by 5 hours)
     lpad detect_fizzled --fix
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
 .. note:: You can shorten the ping times and detection times by editing the settings in your :doc:`FW configuration </config_tutorial>`, but we suggest you leave them alone unless really needed.
 

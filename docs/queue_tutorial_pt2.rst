@@ -33,13 +33,13 @@ Reserving FireWorks
 
 
     qlaunch -r singleshot
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
 #. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
 
 #. When your queue runs and completes your job, you should see that the state is updated to *COMPLETED*::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d more
 
 Preventing too many jobs in the queue
 =====================================
@@ -105,7 +105,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. Now we have no jobs in the queue. But our FireWork still shows up as *RESERVED*::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d more
 
 #. Because our FireWork is *RESERVED*, we cannot run it::
 
@@ -121,7 +121,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. Now the FireWork should be in the *READY* state::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d more
 
 #. And we can run it again::
 

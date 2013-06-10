@@ -95,6 +95,13 @@ We recommend that all users read (or at least browse) the following tutorials be
     maintain_tutorial
     defuse_tutorial
     rerun_tutorial
+    query_tutorial
+
+You may be interested in the following features of FireWorks:
+
+.. toctree::
+    :maxdepth: 1
+
     security_tutorial
     duplicates_tutorial
     priority_tutorial

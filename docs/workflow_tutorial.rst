@@ -43,8 +43,8 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. Let's look at our two FireWorks::
 
-    lpad get_fw 1
-    lpad get_fw 2
+    lpad get_fws -i 1 -d all
+    lpad get_fws -i 2 -d all
 
 #. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*. The second line will not run until the first line is complete.
 
@@ -56,8 +56,8 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. You should have seen the text *"To be, or not to be"* printed to your standard out. Let's examine our FireWorks again to examine our new situation::
 
-    lpad get_fw 1
-    lpad get_fw 2
+    lpad get_fws -i 1 -d more
+    lpad get_fws -i 2 -d more
 
 #. We see now that the first step is ``COMPLETED``, and the second step has automatically graduated from ``WAITING`` to ``READY``.
 
@@ -67,8 +67,8 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. This should print the second step of the workflow (*"That is the question"*). You can verify that both steps are completed::
 
-    lpad get_fw 1
-    lpad get_fw 2
+    lpad get_fws -i 1 -d less
+    lpad get_fws -i 1 -d less
 
 .. note:: Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines. But at least we printed them in the correct order!
 

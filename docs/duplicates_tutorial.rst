@@ -58,10 +58,10 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. Instead of actually running the new FireWorks, FireWorks simply copied the launch data from the earlier, duplicated FireWorks. Let's confirm that this is the case. Our first workflow had FireWorks with``fw_id`` 1 and 2, and our second workflow had FireWorks with ``fw_id`` 3 and 4::
 
-    lpad get_fw 1
-    lpad get_fw 2
-    lpad get_fw 3
-    lpad get_fw 4
+    lpad get_fws -i 1 -d all
+    lpad get_fws -i 2 -d all
+    lpad get_fws -i 3 -d all
+    lpad get_fws -i 4 -d all
 
 #. All four FireWorks - both the ones we ran explicitly and the second set of duplicated runs - show Launch data as if they had been *all* been run explicitly.
 

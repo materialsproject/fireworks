@@ -53,12 +53,15 @@ A FireWork contains the computing job to be performed. For this tutorial, we wil
 
 #. You should have received confirmation that the FireWork got added. You can query the database for this FireWork as follows::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
-   This prints out the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
+   This prints out *all* details of the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
 
     {
         "fw_id": 1,
+        "state": "READY",
+        "name": "Unnamed FW",
+        "created_on": "2013-06-10T00:06:48.645253",
         "spec": {
             "_tasks": [
                 {
@@ -66,9 +69,7 @@ A FireWork contains the computing job to be performed. For this tutorial, we wil
                     "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
                 }
             ]
-        },
-        "created_on": "2013-04-05T22:53:24.552834",
-        "state": "READY"
+        }
     }
 
 #. Some of the FireWork is straightforward, but a few sections deserve further explanation:
@@ -77,10 +78,12 @@ A FireWork contains the computing job to be performed. For this tutorial, we wil
 * Within the **spec**, the **_tasks** section tells you what jobs will run. The ``Script Task`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**. Later on, we'll describe how to run multiple **_tasks** or customized **_tasks**.
 * This FireWork runs the script ``echo "howdy, your job launched successfully!" >> howdy.txt"``, which prints text to a file named ``howdy.txt``.
 * The **state** of *READY* means the FireWork is ready to be run.
+* The **name** is an optional field that we can set to help query for FireWorks later on. In this case, we did not specify one so a default name was used.
 
 You have now stored a FireWork in the LaunchPad, and it's ready to run!
 
-.. note:: More details on using the ``ScriptTask`` are presented in the later tutorials.
+.. note:: The ScriptTask provides more options than what's presented here; more details on using the ``ScriptTask`` will be presented in future tutorials.
+.. note:: The ``lpad get_fws`` command is a powerful way to search for FireWorks in the database. For details on its usage, see :doc:`Querying FireWorks and Workflows </query_tutorial>`
 
 Launch a Rocket on the FireServer
 =================================
@@ -103,7 +106,7 @@ A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be ru
 
 #. Check the status of your FireWork::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
     
    You will now see lots of information about your Rocket launch, such as the time and directory of the launch. A lot of it is probably unclear, but you should notice that the state of the FireWork is now ``COMPLETED``.
 
@@ -130,11 +133,11 @@ If you just want to run many jobs on the central server itself, the simplest way
 
 #. Confirm that the three FireWorks got added to the database, in addition to the one from before (4 total)::
 
-    lpad get_fws
+    lpad get_fws -d less
 
 #. We could also just get the ``fw_id`` of jobs that are ready to run (our 3 new FireWorks)::
 
-    lpad get_fws -q '{"state":"READY"}' -d 'ids'
+    lpad get_fws -s READY -d less
 
 #. Let's run launch Rockets in "rapidfire" mode, which will keep repeating until we run out of FireWorks to run::
 
@@ -179,9 +182,7 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 What just happened?
 ===================
 
-It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher. By running the Rocket Launcher from different locations, you can have different computing resources run your jobs.
-
-When we ran the Rocket Launcher in rapid-fire mode, the Rocket Launcher requests a new task from the LaunchPad immediately after completing its current task. It stops requesting tasks when none are left in the database. It might *appear* like the LaunchPad is feeding FireWorks to the Rocket Launcher, but in reality the Rocket Launcher must initiate the request for a FireWork. You might have noticed this when we ran the Rocket Launcher in infinite mode with a sleep time of 10. In this mode, we are requesting a new task every 10 seconds after completing the previous set of tasks. When you add a new FireWork to the LaunchPad, it does not start running automatically. We must wait up to 10 seconds for the Rocket Launcher to request it!
+It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher. By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.
 
 
 Next steps

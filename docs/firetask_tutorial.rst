@@ -109,7 +109,7 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
 #. Confirm that the *sum* is not only printed to the screen, but also stored in our FireWork in the ``stored_data`` section::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
 Next up: Workflows!
 -------------------

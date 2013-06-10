@@ -45,8 +45,8 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. If we examined our two FireWorks at this stage, nothing would be out of the ordinary. In particular, one of the FireWorks has only a single input, ``10``, and does not yet know what number to add to ``10``. To confirm::
 
-    lpad get_fw 1
-    lpad get_fw 2
+    lpad get_fws -i 1 -d all
+    lpad get_fws -i 2 -d all
 
 #. Let's now run the first step of the workflow::
 
@@ -54,8 +54,8 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. This prints out ``The sum of [1, 1] is: 2`` - no surprise there. But let's look what happens when we look at our FireWorks again::
 
-    lpad get_fw 1
-    lpad get_fw 2
+    lpad get_fws -i 1 -d all
+    lpad get_fws -i 2 -d all
 
 #. You should notice that the FireWork that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask has pushed its sum onto the ``input_array`` of the second FireWork!
 

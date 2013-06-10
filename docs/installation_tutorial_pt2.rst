@@ -48,7 +48,7 @@ The FireWorker needs to know the login information for the FireServer. On the **
 
 #. Confirm that you can query the FireServer from your FireWorker::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
    This should print out the description of a FireWork that is *READY* to run.
 
@@ -75,7 +75,7 @@ Launch a Rocket on the FireWorker
 
 #. Confirm that the FireWork was run::
 
-    lpad get_fw 1
+    lpad get_fws -i 1 -d all
 
 You should notice that the FireWork is listed as being *COMPLETED*. In addition, the ``name`` parameter under the ``launches.fworker`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``. If you have multiple FireWorkers, this can help you identify where your job ran later on.
 
