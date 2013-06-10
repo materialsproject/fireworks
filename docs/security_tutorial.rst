@@ -36,6 +36,8 @@ On your FireServer (which hosts your Mongo database), you must set up at least o
 
 Your admin user is now configured, and your Mongo instance is now protected from unauthorized access by outsiders without your credentials. Next we must set up your LaunchPad configuration file so that you can authenticate yourself when running FireWork scripts.
 
+.. note:: Your *admin_user* and *admin_password* can be used to set passwords for all databases in your Mongo installation, including databases that are unrelated to FireWorks. The *FW_user* and *FW_password* are used specifically to log in to the **fireworks** database.
+
 Add username and password keys to your LaunchPad file
 =====================================================
 

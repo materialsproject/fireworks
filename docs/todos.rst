@@ -16,13 +16,17 @@ FW Docs
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
-* Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
+* Running different FireWorks on different resouces (FWorker category, FWorker query)
 
-* update the security tutorial to have a database-level administrator
+* Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
 
 * Document all the features of Script Task
 
 * Update all tutorials so config file is handled smoothly, not terribly...
+
+* Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id.
+
+* Detailed tutorial on implementing dynamic jobs
 
 * Document allow_fizzled_parents
 

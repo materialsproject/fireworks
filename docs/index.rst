@@ -114,23 +114,6 @@ Python users and Power users will be interested in the following:
     python_tutorial
     config_tutorial
 
-
-Planned future tutorials:
-
-* Detailed tutorial on implementing dynamic jobs
-* Detailed tutorial on Script Task
-* File movement Task Operations
-* Database Task Operations
-* Assigning specific FireWorkers to run certain jobs
-* Using a web interface to monitor FireWorks
-* Checkpoint / restart of jobs
-* Using the QueueLauncher outside of FW
-* Searching for FireWorks and Workflows
-* Logging
-* FW design guide, e.g. FireTasks vs Workflows
-* JSON vs. YAML and serialization of FW objects (including WF serialiazation as TAR instead of JSON/YAML)
-
-
 .. _contributing-label:
 
 Contributing / Contact / Bug Reports
