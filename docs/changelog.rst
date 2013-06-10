@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+v0.15
+=====
+
+* add ability to *ARCHIVE* FireWorks
+* update docs regarding enhancements to querying FireWorks and Workflows
+* option to avoid overloading the queue management system with status requests
+* more robust PBS adapter implementation
+
 v0.14
 =====
 
