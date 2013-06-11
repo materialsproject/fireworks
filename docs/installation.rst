@@ -12,7 +12,7 @@ To prepare for installation, you should:
 2. Install `git <http://git-scm.com>`_, if not already packaged with your system. This will allow you to download the latest source code.
 3. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
 
-.. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``.
+.. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``. You should make sure that setuptools is installed using the proper Python version and probably without the ``--user`` option if running ``ez_setup.py``.
 
 Virtualenv installation option
 ------------------------------
@@ -25,7 +25,7 @@ Download FireWorks and dependencies
 
     git clone git@github.com:materialsproject/fireworks.git
 
-   .. note:: Make sure you have an account on GitHub set up, and have associated your SSH key on your computer with your GitHub account. Otherwise you might get a cryptic ``Permission denied (publickey)`` error.
+   .. note:: Make sure you have an account on GitHub set up, and have associated your SSH key on your computer with your GitHub account. Otherwise you might get a cryptic ``Permission denied (publickey)`` error. Help on ssh keys can be found `here <https://help.github.com/articles/generating-ssh-keys>`_.
 
 2. Navigate inside the FireWorks directory containing the file setup.py::
 
