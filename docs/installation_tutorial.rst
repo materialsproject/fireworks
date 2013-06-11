@@ -6,6 +6,9 @@ This tutorial will guide you through FireWorks installation on the central serve
 
 This tutorial can be safely completed from the command line, and requires no programming.
 
+.. note:: In order to keep the tutorial programming-free and to show the workflow data explicitly, we have defined workflows within flat files. You can also create, store, and run workflows using Python, without ever using flat files. We actually suggest this mode of operation for those familiar with Python. For more details, see the :doc:`Python tutorial </python_tutorial>` after completing this tutorial.
+
+
 Set up the central server (FireServer)
 ======================================
 
