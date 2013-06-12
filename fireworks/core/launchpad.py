@@ -4,6 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+import os
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
@@ -91,6 +92,15 @@ class LaunchPad(FWSerializable):
         wf_user_indices = d.get('wf_user_indices', [])
         return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir,
                          strm_lvl, user_indices, wf_user_indices)
+
+    @classmethod
+    def auto_load(cls):
+        if FWConfig().LAUNCHPAD_LOC:
+            return LaunchPad.from_file(FWConfig().LAUNCHPAD_LOC)
+        elif FWConfig().CONFIG_FILE_DIR:
+            return LaunchPad.from_file(os.path.join(FWConfig().CONFIG_FILE_DIR, 'my_launchpad.yaml'))
+        raise ValueError('No LaunchPad location set in configuration!')
+
 
     def reset(self, password, require_password=True):
         """
