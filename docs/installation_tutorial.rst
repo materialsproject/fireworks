@@ -2,12 +2,18 @@
 Installation Tutorial (part 1: the Server)
 ==========================================
 
-This tutorial will guide you through FireWorks installation on the central server. The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
+This tutorial will guide you through FireWorks installation on the central server. You will:
 
-This tutorial can be safely completed from the command line, and requires no programming.
+* Install the FireWorks codebase
+* Get a central MongoDB server up and running
+* Add a simple workflow to the central database
+* Run that workflow in a few modes
 
-.. note:: In order to keep the tutorial programming-free and to show the workflow data explicitly, we have defined workflows within flat files. You can also create, store, and run workflows using Python, without ever using flat files. We actually suggest this mode of operation for those familiar with Python. For more details, see the :doc:`Python tutorial </python_tutorial>` after completing this tutorial.
+The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.
 
+.. note:: In order to keep the tutorial programming-free and to show the workflow data explicitly, we have defined workflows within flat files in YAML format. You can also create, store, and run workflows completely within Python, without ever using flat files. We actually suggest this mode of operation for those familiar with Python. For more details, see the :doc:`Python tutorial </python_tutorial>` after completing this tutorial.
+
+.. important:: If you are having trouble with this tutorial, please post a message on the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_.
 
 Set up the central server (FireServer)
 ======================================
