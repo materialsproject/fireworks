@@ -30,6 +30,16 @@ FW Docs
 
 * Document allow_fizzled_parents
 
+* Show workflows and Python code in the very first tutorial
+
+* Document 'pip install' as a second option for installation, e.g. trouble with GIT keys
+
+* Show a workflow diagram with the relation between FireTasks, FireWorks, and Workflows
+
+* Separate out the tutorial on running arbitrary Python code
+
+* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
+
 Major Features
 ==============
 
@@ -55,11 +65,7 @@ Misc.
 
 * Detect a blank config dir and give a proper error.
 
-* Finish all planned tutorials
-
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
-
-* Install using pip only, not Github devleopers! Package the tutorial separately.
 
 * Add stats
 
