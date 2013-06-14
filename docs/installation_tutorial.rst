@@ -10,10 +10,9 @@ This tutorial will guide you through FireWorks installation on the central serve
 * Get a central MongoDB server up and running
 * Add a simple workflow to the central database
 * Run that workflow in a few modes
+* Get a flavor of the Python API
 
 The purpose of this tutorial is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.
-
-.. note:: In order to keep the tutorial programming-free and to show the workflow data explicitly, we have defined workflows within flat files in YAML format. You can also create, store, and run workflows completely within Python, without ever using flat files. We actually suggest this mode of operation for those familiar with Python. For more details, see the :doc:`Python tutorial </python_tutorial>` after completing this tutorial.
 
 .. important:: If you are having trouble with this tutorial, please post a message on the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_.
 
@@ -54,13 +53,18 @@ Reset the FireServer
 Add a FireWork to the FireServer database
 -----------------------------------------
 
-A FireWork contains the computing job to be performed. For this tutorial, we will use a FireWork that consists of only a single step. We'll tackle more complex workflows in other tutorials.
+A FireWork contains a list of computing tasks (FireTasks) to be performed. For this tutorial, we will use a FireWork that consists of only a single step. We'll tackle more complex workflows in other tutorials. Our workflow consisting of one FireWork and one FireTask thus looks like this:
+
+.. image:: _static/single_fw.png
+   :width: 200px
+   :align: center
+   :alt: Single FireWork
 
 #. Staying in the tutorial directory, run the following command::
 
     lpad add fw_test.yaml
 
-   .. note:: You can look inside the file ``fw_test.yaml`` with a text editor if you'd like; we'll explain its components shortly.
+   .. note:: You can look inside the file ``fw_test.yaml`` with a text editor if you'd like; we'll explain its components shortly. You could also define this file in JSON format, but we'll stick to YAML as it looks cleaner to those unfamiliar with JSON.
 
 #. You should have received confirmation that the FireWork got added. You can query the database for this FireWork as follows::
 
@@ -195,6 +199,64 @@ What just happened?
 
 It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher. By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.
 
+Python Example (optional)
+=========================
+
+While it's possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it::
+
+
+    from fireworks.core.firework import FireWork
+    from fireworks.core.fworker import FWorker
+    from fireworks.core.launchpad import LaunchPad
+    from fireworks.core.rocket_launcher import launch_rocket
+    from fireworks.user_objects.firetasks.script_task import ScriptTask
+
+    # set up the LaunchPad and reset it
+    launchpad = LaunchPad()
+    launchpad.reset('', require_password=False)
+
+    # create the FireWork consisting of a single task
+    firetask = ScriptTask.from_str('echo "howdy, your job launched successfully!"')
+    firework = FireWork(firetask)
+
+    # store workflow and launch it locally
+    launchpad.add_wf(firework)
+    launch_rocket(launchpad, FWorker())
+
+.. note:: You must have MongoDB running locally on port 27017 for the above example to work. Otherwise, see below.
+
+Here a few modifications that you might already find useful.
+
+Change the MongoDB configuration::
+
+    launchpad = LaunchPad(host="myhost", port=12345, \
+    name="fireworks_testing_db", username="my_user", \
+    password="my_pass")
+
+Run in rapid-fire mode::
+
+    from fireworks.core.rocket_launcher import rapidfire
+    rapidfire(launchpad, FWorker())
+
+Only output warnings and above::
+
+    launchpad = LaunchPad(strm_lvl='WARNING')
+    # <code omitted>
+    launch_rocket(launchpad, FWorker(), strm_lvl='WARNING')
+
+Write out the Workflow to a file, or load a FireWork object from a file::
+
+    fw_yaml = firework.to_file("my_firework.yaml")
+    fw = firework.from_file("my_firework.yaml")
+    print fw
+
+    fw_json = firework.to_file("my_firework.json")
+    fw = firework.from_file("my_firework.json")
+    print fw
+
+.. note:: FireWorks automatically detects what type of format you're writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you're using Python, there may not be any need to use files at all!
+
+The code above generally does not use a lot of the optional arguments to keep the examples clean and simple. You might try experimenting with some of the options - for example, to set up logging or control the parameters of rapid-fire mode.
 
 Next steps
 ==========

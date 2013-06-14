@@ -40,6 +40,8 @@ FW Docs
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
+* Setting up logging
+
 Major Features
 ==============
 
