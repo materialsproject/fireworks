@@ -2,6 +2,8 @@
 Installation Tutorial (part 1: the Server)
 ==========================================
 
+.. note:: If you haven't already, we strongly suggest you begin by reading the :doc:`bird's eye view of FireWorks </nutshell>`.
+
 This tutorial will guide you through FireWorks installation on the central server. You will:
 
 * Install the FireWorks codebase

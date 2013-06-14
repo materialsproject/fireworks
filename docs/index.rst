@@ -18,6 +18,8 @@ Some (but not all) of its features include:
 
 * Storage and management of workflows through MongoDB, a noSQL datastore that is flexible and easy to use.
 
+* A clean and powerful Python API for defining, submitting, running, and maintaining workflows.
+
 * Ability to distribute calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
 
 * Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a job (e.g., terminate a workflow, add a new step, or completely alter the workflow)
@@ -50,7 +52,7 @@ If you encounter any problems while using FireWorks, please let us know (see :re
 Quick information
 -----------------
 
-It can be time-consuming to evaluate whether a workflow software will meet your computing needs from documentation alone. If you just want to know whether FireWorks is a potential solution to your workflow problem, one option is to e-mail a description of your problem to the developer at: |Mail|
+It can be time-consuming to evaluate whether a workflow software will meet your computing needs from documentation alone. If you just want to know whether FireWorks is a potential solution to your workflow problem, one option is to e-mail a description of your problem to the developer at: |Mail|. You might also look at the :doc:`bird's eye view of FireWorks </nutshell>` to get started.
 
 Changelog
 =========
@@ -67,7 +69,8 @@ To get started with FireWorks, we suggest that you follow our core tutorials. Th
 
 .. toctree::
    :maxdepth: 1
-   
+
+   nutshell
    installation_tutorial
    installation_tutorial_pt2
    firetask_tutorial
