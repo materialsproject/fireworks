@@ -14,7 +14,7 @@ The ``Script Task`` is one type of *FireTask*, which is a predefined job templat
 This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
 Running multiple FireTasks
---------------------------
+==========================
 
 You can run multiple tasks within the same FireWork. For example, the first step of your FireWork might write an input file that the second step processes. Let's create a FireWork where the first step prints ``howdy.txt``, and the second step counts the number of words in that file.
 
@@ -43,10 +43,35 @@ You should see two files written out to the system, ``howdy.txt`` and ``words.tx
 
 .. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead.
 
+Python Example (optional)
+-------------------------
+
+Here is a complete Python example that runs multiple FireTasks within a single FireWork::
+
+    from fireworks.core.firework import FireWork
+    from fireworks.core.fworker import FWorker
+    from fireworks.core.launchpad import LaunchPad
+    from fireworks.core.rocket_launcher import rapidfire
+    from fireworks.user_objects.firetasks.script_task import ScriptTask
+
+    # set up the LaunchPad and reset it
+    launchpad = LaunchPad()
+    launchpad.reset('', require_password=False)
+
+    # create the FireWork consisting of multiple tasks
+    firetask1 = ScriptTask.from_str('echo "This is TASK #1"')
+    firetask2 = ScriptTask.from_str('echo "This is TASK #2"')
+    firetask3 = ScriptTask.from_str('echo "This is TASK #3"')
+    fw = FireWork([firetask1, firetask2, firetask3])
+
+    # store workflow and launch it locally, rapid-fire
+    launchpad.add_wf(fw)
+    rapidfire(launchpad, FWorker())
+
 .. _customtask-label:
 
 Creating a custom FireTask
---------------------------
+==========================
 
 Because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of job and is an 'all-encompassing' FireTask. Script Task also has many additional features that will be covered in a future tutorial.
 
@@ -111,8 +136,30 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 
     lpad get_fws -i 1 -d all
 
+Python example (optional)
+-------------------------
+
+Here is a complete Python example that runs a custom FireTask::
+
+    from fireworks.core.firework import FireWork
+    from fireworks.core.fworker import FWorker
+    from fireworks.core.launchpad import LaunchPad
+    from fireworks.core.rocket_launcher import launch_rocket
+    from fw_tutorials.firetask.addition_task import AdditionTask
+
+    # set up the LaunchPad and reset it
+    launchpad = LaunchPad()
+    launchpad.reset('', require_password=False)
+
+    # create the FireWork consisting of a custom "Addition" task
+    firework = FireWork(AdditionTask(), spec={"input_array": [1, 2]})
+
+    # store workflow and launch it locally
+    launchpad.add_wf(firework)
+    launch_rocket(launchpad, FWorker())
+
 Next up: Workflows!
--------------------
+===================
 
 With custom FireTasks, you can go beyond the limitations of running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on data from the **spec** of the FireWork. For example, the ``Addition Task`` used the ``input_array`` from the **spec** to decide what numbers to add. By using the same FireWork with different values in the **spec** (try it!), one could execute a data-parallel application.
 

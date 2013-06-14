@@ -106,6 +106,39 @@ Let's quickly define and execute this workflow.
 
     rm -r launcher_*
 
+Python example (optional)
+-------------------------
+
+Here is a complete Python example that runs a Workflow::
+
+    from fireworks.core.firework import FireWork, Workflow
+    from fireworks.core.fworker import FWorker
+    from fireworks.core.launchpad import LaunchPad
+    from fireworks.core.rocket_launcher import rapidfire
+    from fireworks.user_objects.firetasks.script_task import ScriptTask
+
+    # set up the LaunchPad and reset it
+    launchpad = LaunchPad()
+    launchpad.reset('', require_password=False)
+
+    # define four individual FireWorks used in the Workflow
+    task1 = ScriptTask.from_str('echo "Ingrid is the CEO."')
+    task2 = ScriptTask.from_str('echo "Jill is a manager."')
+    task3 = ScriptTask.from_str('echo "Jack is a manager."')
+    task4 = ScriptTask.from_str('echo "Kip is an intern."')
+
+    fw1 = FireWork(task1, fw_id=1)
+    fw2 = FireWork(task2, fw_id=2)
+    fw3 = FireWork(task3, fw_id=3)
+    fw4 = FireWork(task4, fw_id=4)
+
+    # assemble Workflow from FireWorks and their connections by id
+    workflow = Workflow([fw1, fw2, fw3, fw4], {1: [2, 3], 2: [4], 3: [4]})
+
+    # store workflow and launch it locally
+    launchpad.add_wf(workflow)
+    rapidfire(launchpad, FWorker())
+
 Next steps
 ==========
 

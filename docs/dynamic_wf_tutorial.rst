@@ -168,6 +168,28 @@ That was quick! You might even try again with the **stop_point** in fw_fibnum.ya
 
 .. note:: The rapidfire option creates a new directory for each launch. At the end of the last script you will have many directories starting with ``launcher_``. You might want to clean these up after running.
 
+Python example (optional)
+-------------------------
+
+Here is complete Python code for running a dynamic workflow. Note that this code is no different than running any other custom FireWork - it is almost identical to the code we used to run the AdditionTask() two tutorials ago::
+
+    from fireworks.core.firework import FireWork
+    from fireworks.core.fworker import FWorker
+    from fireworks.core.launchpad import LaunchPad
+    from fireworks.core.rocket_launcher import rapidfire
+    from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
+
+    # set up the LaunchPad and reset it
+    launchpad = LaunchPad()
+    launchpad.reset('', require_password=False)
+
+    # create the FireWork consisting of a custom "Fibonacci" task
+    firework = FireWork(FibonacciAdderTask(), spec={"smaller": 0, "larger": 1, "stop_point": 100})
+
+    # store workflow and launch it locally
+    launchpad.add_wf(firework)
+    rapidfire(launchpad, FWorker())
+
 The end is just the beginning
 =============================
 
