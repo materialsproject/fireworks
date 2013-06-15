@@ -237,6 +237,12 @@ class FireWork(FWSerializable):
         return FireWork(tasks, m_dict['spec'], name, launches, archived_launches,
                         state, created_on, fw_id)
 
+    def __str__(self):
+        return 'FireWork object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
+
+    def __unicode__(self):
+        return str(self)
+
 
 class Launch(FWSerializable, object):
     """
