@@ -254,6 +254,8 @@ Write out the Workflow to a file, or load a FireWork object from a file::
     fw = firework.from_file("my_firework.json")
     print fw
 
+.. note:: The *to_file()* and *from_file()* functions are available for many FireWork objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* will allow serialization/deserialization.
+
 .. note:: FireWorks automatically detects what type of format you're writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you're using Python, there may not be any need to use files at all!
 
 The code above generally does not use a lot of the optional arguments to keep the examples looking clean and sharp. You might experiment with some of the options - for example, to set up logging when initializing the LaunchPad or control the parameters of rapid-fire mode.
