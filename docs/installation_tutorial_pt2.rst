@@ -2,9 +2,11 @@
 Installation Tutorial (part 2: the Worker)
 ==========================================
 
-If you've set up your FireServer, the next step is to set up worker nodes to run your jobs on a large scale. This tutorial will guide you through FireWorks installation on a worker node. Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail.
+If you've set up your FireServer, this tutorial will help you to:
 
-This tutorial can be safely completed from the command line, and requires no programming.
+* Set up a remote worker that connects to the FireServer to retrieve and execute jobs
+
+Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn't intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.
 
 Launch a Rocket on a worker machine (FireWorker)
 ================================================

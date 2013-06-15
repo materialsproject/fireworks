@@ -2,9 +2,11 @@
 Creating Workflows
 ==================
 
-Thus far, the only way to run multiple jobs in sequence was to define a list of several FireTasks inside a single FireWork. In this tutorial, we'll explore how Workflows let us define complex sequences of FireWorks. We'll start with a simple example and then move to more complicated workflows.
+In this tutorial, we'll explore how to:
 
-This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
+* connect together multiple FireWorks into Workflows
+
+This tutorial can be completed from the command line. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
 
 The simplest workflow

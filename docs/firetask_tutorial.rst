@@ -2,6 +2,16 @@
 Defining Jobs using FireTasks
 =============================
 
+This tutorial show you how to:
+
+* Run multiple tasks within a single FireWork
+* Run tasks that are defined within a Python function, rather than a shell script
+
+This tutorial can be completed from the command line, but some knowledge of Python is helpful. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
+
+Introduction to FireTasks
+=========================
+
 In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, recall that the command was defined within a task labeled ``Script Task``::
 
     spec:
@@ -11,7 +21,7 @@ In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple scr
 
 The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up custom job templates that are more explicit and reusable. In this section, we'll demonstrate how to accomplish this with *FireTasks*.
 
-This tutorial can be completed from the command line. Some knowledge of Python is helpful, but not required. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
+It might be helpful to review the :ref:`wfmodel-label` diagram.
 
 Running multiple FireTasks
 ==========================

@@ -199,7 +199,7 @@ What just happened?
 
 It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher. By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.
 
-Python Example (optional)
+Python Examples (optional)
 =========================
 
 While it's possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it::
@@ -256,7 +256,7 @@ Write out the Workflow to a file, or load a FireWork object from a file::
 
 .. note:: FireWorks automatically detects what type of format you're writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you're using Python, there may not be any need to use files at all!
 
-The code above generally does not use a lot of the optional arguments to keep the examples clean and simple. You might try experimenting with some of the options - for example, to set up logging or control the parameters of rapid-fire mode.
+The code above generally does not use a lot of the optional arguments to keep the examples looking clean and sharp. You might experiment with some of the options - for example, to set up logging when initializing the LaunchPad or control the parameters of rapid-fire mode.
 
 Next steps
 ==========

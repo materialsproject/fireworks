@@ -22,6 +22,8 @@ Thus, the basic infrastructure looks like this:
 
 The components are largely decoupled, which makes installation of FireWorks straightforward. You can manage the LaunchPad (for example add new workflows) without interfering with the running operation of the FireWorkers. Similarly, if one of the FireWorkers has a failure, it won't affect the operation of the LaunchPad. Finally, this setup makes running on a heterogeneous set of FireWorkers simple - essentially the same code is used for running on a simple workstation versus a large supercomputing center.
 
+.. _wfmodel-label:
+
 Workflow Model
 ==============
 

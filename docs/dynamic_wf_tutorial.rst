@@ -2,9 +2,12 @@
 Dynamic Workflows
 =================
 
-Many workflows require some type of dynamicism. For example, a FireWork might need data from a previous FireWork in order to perform its task. The second FireWork won't know what to run until the first one completes. In a more complicated example, we might even want to create new FireWorks automatically depending on the results of the current FireWork.
+In this tutorial, we'll explore how to:
 
-This tutorial can be completed from the command line, but some knowledge of Python is suggested. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
+* pass information between FireWorks in a Workflow
+* define FireTasks that automatically create more FireWorks that depend on the output of the task
+
+This tutorial can be completed from the command line, but basic knowledge of Python is suggested. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
 A workflow that passes data
 ===========================
