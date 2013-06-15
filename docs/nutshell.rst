@@ -50,4 +50,4 @@ While the description above sounds simplistic, sophisticated types of workflow o
 * create and modify job priorities
 * handle failures and crashes dynamically, by automatically creating FireWorks that fix crashed jobs in the FWAction object. You might even set up a workflow where a crashed job is automatically rerun at a different FireWorker, and with somewhat different parameters - no human intervention required!
 
-We encourage you to explore all the possibilities by following the :doc:`installation tutorial</installation_tutorial>`.
+If this sounds good, we encourage you to get started by following the :doc:`installation tutorial</installation_tutorial>`.
