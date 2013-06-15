@@ -240,9 +240,6 @@ class FireWork(FWSerializable):
     def __str__(self):
         return 'FireWork object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
-    def __unicode__(self):
-        return str(self)
-
 
 class Launch(FWSerializable, object):
     """
@@ -822,3 +819,6 @@ class Workflow(FWSerializable):
     @classmethod
     def from_FireWork(cls, fw, name=None, metadata=None):
         return Workflow([fw], None, name=name, metadata=metadata)
+
+    def __str__(self):
+        return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)
