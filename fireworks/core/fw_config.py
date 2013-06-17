@@ -87,7 +87,7 @@ class FWConfig(object):
                         self.USER_PACKAGES.extend(v)
                     elif key == 'ECHO_TEST':
                         print v
-                    elif not getattr(self, key, None):
+                    elif not hasattr(self, key):
                         raise ValueError(
                             'Invalid FW_config file has unknown parameter: {}'.format(
                                 key))
