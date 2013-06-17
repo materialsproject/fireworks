@@ -99,7 +99,7 @@ class LaunchPad(FWSerializable):
             return LaunchPad.from_file(FWConfig().LAUNCHPAD_LOC)
         elif FWConfig().CONFIG_FILE_DIR:
             return LaunchPad.from_file(os.path.join(FWConfig().CONFIG_FILE_DIR, 'my_launchpad.yaml'))
-        raise ValueError('No LaunchPad location set in configuration!')
+        return LaunchPad()
 
 
     def reset(self, password, require_password=True):
