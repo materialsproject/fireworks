@@ -122,7 +122,12 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     try:
         l_logger.info('getting queue adapter')
 
-        block_dir = create_datestamp_dir(launch_dir, l_logger)
+        prev_blocks = sorted(glob.glob(os.path.join(launch_dir, 'block_*')), reverse=True)
+        if prev_blocks:
+            block_dir = os.path.abspath(os.path.join(launch_dir, prev_blocks[0]))
+            l_logger.info('Found previous block, using {}'.format(block_dir))
+        else:
+            block_dir = create_datestamp_dir(launch_dir, l_logger)
 
         while True:
             # get number of jobs in queue
