@@ -1,41 +1,37 @@
 import json
+from pymongo import DESCENDING
 from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad() #LaunchPad.auto_load()
+lp = LaunchPad() # LaunchPad.auto_load()
 
 def home(request):
-    arc_fws = lp.fireworks.find({'state':'READY'}).count()
-    # arc_fws = len(lp.fireworks.find({'state':'ARCHIVED'}))
-    # arc_fws = lp.fireworks.count({'state':'ARCHIVED'})
-    print arc_fws
-    '''
-    arc_fws   = len(lp.get_fw_ids(query={'state':"ARCHIVED"}))
-    arc_wfs   = len(lp.get_wf_ids(query={'state':"ARCHIVED"}))
-    def_fws   = len(lp.get_fw_ids(query={'state':"DEFUSED"}))
-    def_wfs   = len(lp.get_wf_ids(query={'state':"DEFUSED"}))
-    wait_fws  = len(lp.get_fw_ids(query={'state':"WAITING"}))
-    wait_wfs  = len(lp.get_wf_ids(query={'state':"WAITING"}))
-    ready_fws = len(lp.get_fw_ids(query={'state':"READY"}))
-    ready_wfs = len(lp.get_wf_ids(query={'state':"READY"}))
-    res_fws   = len(lp.get_fw_ids(query={'state':"RESERVED"}))
-    res_wfs   = len(lp.get_wf_ids(query={'state':"RESERVED"}))
-    fizz_fws  = len(lp.get_fw_ids(query={'state':"FIZZLED"}))
-    fizz_wfs  = len(lp.get_wf_ids(query={'state':"FIZZLED"}))
-    run_fws   = len(lp.get_fw_ids(query={'state':"RUNNING"}))
-    run_wfs   = len(lp.get_wf_ids(query={'state':"RUNNING"}))
-    comp_fws  = len(lp.get_fw_ids(query={'state':"COMPLETED"}))
-    comp_wfs  = len(lp.get_wf_ids(query={'state':"COMPLETED"}))
-    tot_fws   = len(lp.get_fw_ids())
-    tot_wfs   = len(lp.get_wf_ids())
-    '''
+    # len(lp.get_fw_ids(query={'state':"ARCHIVED"}))
+    arc_fws   = lp.fireworks.find({'state':'ARCHIVED'}).count()
+    arc_wfs   = lp.workflows.find({'state':'ARCHIVED'}).count()
+    def_fws   = lp.fireworks.find({'state':'DEFUSED'}).count()
+    def_wfs   = lp.workflows.find({'state':'DEFUSED'}).count()
+    wait_fws  = lp.fireworks.find({'state':'WAITING'}).count()
+    wait_wfs  = lp.workflows.find({'state':'WAITING'}).count()
+    ready_fws = lp.fireworks.find({'state':'READY'}).count()
+    ready_wfs = lp.workflows.find({'state':'READY'}).count()
+    res_fws   = lp.fireworks.find({'state':'RESERVED'}).count()
+    res_wfs   = lp.workflows.find({'state':'RESERVED'}).count()
+    fizz_fws  = lp.fireworks.find({'state':'FIZZLED'}).count()
+    fizz_wfs  = lp.workflows.find({'state':'FIZZLED'}).count()
+    run_fws   = lp.fireworks.find({'state':'RUNNING'}).count()
+    run_wfs   = lp.workflows.find({'state':'RUNNING'}).count()
+    comp_fws  = lp.fireworks.find({'state':'COMPLETED'}).count()
+    comp_wfs  = lp.workflows.find({'state':'COMPLETED'}).count()
+    tot_fws   = lp.fireworks.count()
+    tot_wfs   = lp.workflows.count()
     url = request.get_full_path()
-    return render_to_response('home.html', {'arc_fws': arc_fws, ''''arc_wfs': arc_wfs,
+    return render_to_response('home.html', {'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
         'def_fws': def_fws, 'def_wfs': def_wfs, 'wait_fws': wait_fws, 'wait_wfs': wait_wfs,
         'ready_fws': ready_fws, 'ready_wfs': ready_wfs, 'res_fws': res_fws, 'res_wfs': res_wfs,
         'fizz_fws': fizz_fws, 'fizz_wfs': fizz_wfs, 'run_fws': run_fws, 'run_wfs': run_wfs,
-        'comp_fws': comp_fws, 'comp_wfs': comp_wfs, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs,'''
+        'comp_fws': comp_fws, 'comp_wfs': comp_wfs, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs,
         'url': url})
 
 def fw(request):
