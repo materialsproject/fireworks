@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Current Workflows{% endblock %}
+
+{% block content %}
+<h3>{{ wf_ids|length }} Workflow{{ wf_ids|pluralize }} currently in database</h3>
+
+<table border="1">
+    <tr>
+        <th>Workflow IDs</th>
+    </tr>
+    {% for ids in wf_ids %}
+        <tr>
+            <td><center><a href="{{ url }}{{ ids }}">{{ ids }}</a></center></td>
+        </tr>
+    {% endfor %}
+    <tfoot>Click an ID for more information about that Workflow.</tfoot>
+    </table>
+
+{% endblock %}
