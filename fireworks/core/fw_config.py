@@ -68,6 +68,8 @@ class FWConfig(object):
 
         self.AVOID_MANY_QSTATS = True  # try to avoid calling qstat many times
 
+        self.ALWAYS_CREATE_NEW_BLOCK = False  # always create new block on queue launcher call
+
         self.override_user_settings()
 
     def override_user_settings(self):

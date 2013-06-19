@@ -123,7 +123,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         l_logger.info('getting queue adapter')
 
         prev_blocks = sorted(glob.glob(os.path.join(launch_dir, 'block_*')), reverse=True)
-        if prev_blocks:
+        if prev_blocks and not FWConfig().ALWAYS_CREATE_NEW_BLOCK:
             block_dir = os.path.abspath(os.path.join(launch_dir, prev_blocks[0]))
             l_logger.info('Found previous block, using {}'.format(block_dir))
         else:
