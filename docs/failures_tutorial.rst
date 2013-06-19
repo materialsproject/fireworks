@@ -75,7 +75,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
 
-    lpad detect_fizzled --time 1 --fix
+    lpad detect_fizzled --time 1 --mark
 
 #. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
@@ -93,12 +93,12 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     rlaunch singleshot
     ---(forcibly close your terminal window)
     ---(wait 4 or more hours!! or temporarily set your System Clock ahead by 5 hours)
-    lpad detect_fizzled --fix
+    lpad detect_fizzled --mark
     lpad get_fws -i 1 -d all
 
 .. note:: You can shorten the ping times and detection times by editing the settings in your :doc:`FW configuration </config_tutorial>`, but we suggest you leave them alone unless really needed.
 
-.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_fizzled --fix``.
+.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_fizzled --mark``.
 
 Life after *FIZZLED*
 ====================

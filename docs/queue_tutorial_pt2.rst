@@ -115,7 +115,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then unreserve ("fix") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
 
-    lpad detect_unreserved --time 1 --fix
+    lpad detect_unreserved --time 1 --mark
 
    .. note:: In production, you will want to increase the ``--time`` parameter considerably. The default value is 2 weeks (``--time 1209600``).
 

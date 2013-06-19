@@ -68,12 +68,12 @@ def lpad():
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
                                     default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
-    reservation_parser.add_argument('--fix', help='cancel bad reservations', action='store_true')
+    reservation_parser.add_argument('--mark', help='cancel bad reservations', action='store_true')
 
     fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
     fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
                                 type=int)
-    fizzled_parser.add_argument('--fix', help='mark fizzled', action='store_true')
+    fizzled_parser.add_argument('--mark', help='mark fizzled', action='store_true')
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
     defuse_parser.add_argument('fw_id', help='Any FireWork id in the workflow to defuse', type=int)
