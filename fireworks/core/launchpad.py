@@ -266,6 +266,8 @@ class LaunchPad(FWSerializable):
         self.fireworks.ensure_index('fw_id', unique=True)
         self.fireworks.ensure_index('state')
         self.fireworks.ensure_index('spec._category')
+        self.fireworks.ensure_index('created_on')
+        self.fireworks.ensure_index('name')
 
         self.launches.ensure_index('launch_id', unique=True)
         self.launches.ensure_index('state')
@@ -273,6 +275,10 @@ class LaunchPad(FWSerializable):
         self.launches.ensure_index('time_end')
         self.launches.ensure_index('host')
         self.launches.ensure_index('ip')
+
+        self.workflows.ensure_index('name')
+        self.workflows.ensure_index('created_on')
+        self.workflows.ensure_index('updated_on')
 
         for idx in self.user_indices:
             self.fireworks.ensure_index(idx)
