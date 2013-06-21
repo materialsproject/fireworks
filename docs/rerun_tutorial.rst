@@ -19,3 +19,12 @@ Rerunning a FireWork is simple - just type::
     lpad rerun_fw <FW_ID>
 
 where ``<FW_ID>`` is the numerical id of the FireWork you want to re-run. Note that all children of this FireWork will also be re-run.
+
+Rerunning all FIZZLED FireWorks
+===============================
+
+There is a shortcut to rerun all FireWorks that have FIZZLED - just use::
+
+    lpad rerun_fizzled
+
+and you will rerun all FIZZLED FireWorks.
