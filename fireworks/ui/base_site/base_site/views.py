@@ -43,8 +43,14 @@ def home(request):
 
 def fw(request):
     fws = lp.get_fw_ids()
+    ids_shown = 20
+    fws_shown = lp.get_fw_ids(limit=ids_shown)
+    lt_twenty = False
+    if len(fws) <= 20:
+        lt_twenty = True
     url = request.get_full_path()
-    return render_to_response('fw.html', {'fw_ids': fws, 'url': url})
+    return render_to_response('fw.html', {'fw_ids': fws, 'fws_shown': fws_shown,
+        'lt_twenty': lt_twenty, 'url': url})
 
 def fw_id(request, id):
     fw = lp.get_fw_by_id(int(id))
@@ -53,8 +59,14 @@ def fw_id(request, id):
 
 def wf(request):
     wfs = lp.get_wf_ids()
+    ids_shown = 20
+    wfs_shown = lp.get_wf_ids(limit=ids_shown)
+    lt_twenty = False
+    if len(wfs) <= 20:
+        lt_twenty = True
     url = request.get_full_path()
-    return render_to_response('wf.html', {'wf_ids': wfs, 'url': url})
+    return render_to_response('wf.html', {'wf_ids': wfs, 'wfs_shown': wfs_shown,
+        'lt_twenty': lt_twenty, 'url': url})
 
 def wf_id(request, id):
     wf = lp.get_wf_by_fw_id(int(id))
