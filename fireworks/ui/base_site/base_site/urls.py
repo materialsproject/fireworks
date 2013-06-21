@@ -5,8 +5,9 @@ __maintainer__ = 'Morgan Hargrove'
 __email__ = 'mhargrove@lbl.gov'
 __date__ = 'Jun 13, 2013'
 
+import os
 from django.conf.urls import patterns, include, url
-from base_site.views import *
+from views import *
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -27,6 +28,9 @@ urlpatterns = patterns('',
     ('^wf/$', wf),
     # WorkFlow info pages
     (r'^wf/(\d+)/$', wf_id),
+
+    # Chart (testing)
+    ('^chart/$', chart)
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

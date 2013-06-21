@@ -44,7 +44,7 @@ def home(request):
 def fw(request):
     fws = lp.get_fw_ids()
     ids_shown = 20
-    fws_shown = lp.get_fw_ids(limit=ids_shown)
+    fws_shown = lp.get_fw_ids(limit=ids_shown, sort=[('updated_on', DESCENDING)])
     lt_twenty = False
     if len(fws) <= 20:
         lt_twenty = True
@@ -58,9 +58,9 @@ def fw_id(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': str_to_print})
 
 def wf(request):
-    wfs = lp.get_wf_ids()
+    wfs = lp.get_wf_ids(sort=[('updated_on', DESCENDING)])
     ids_shown = 20
-    wfs_shown = lp.get_wf_ids(limit=ids_shown)
+    wfs_shown = lp.get_wf_ids(limit=ids_shown, sort=[('updated_on', DESCENDING)])
     lt_twenty = False
     if len(wfs) <= 20:
         lt_twenty = True
@@ -72,3 +72,6 @@ def wf_id(request, id):
     wf = lp.get_wf_by_fw_id(int(id))
     str_to_print = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': str_to_print})
+
+def chart(request):
+    return render_to_response('chart.html')
