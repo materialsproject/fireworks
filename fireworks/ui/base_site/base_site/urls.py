@@ -22,18 +22,15 @@ urlpatterns = patterns('',
     # url(r'^base_site/', include('base_site.foo.urls')),
 
     # FireWorks index
-    ('^fw/$', fw),
+    (r'^fw/$', fw),
     # FireWork info pages
     (r'^fw/(\d+)/$', fw_id),
     # (r'^fw/(\d+)/(more|less|all)/$', fw),
 
     # WorkFlows index
-    ('^wf/$', wf),
+    (r'^wf/$', wf),
     # WorkFlow info pages
     (r'^wf/(\d+)/$', wf_id),
-
-    # Chart (testing)
-    ('^chart/$', chart),
 
     # Static files
     url(r'^static/(.*)', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),

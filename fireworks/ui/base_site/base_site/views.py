@@ -33,24 +33,21 @@ def home(request):
     comp_wfs  = lp.workflows.find({'state':'COMPLETED'}).count()
     tot_fws   = lp.fireworks.count()
     tot_wfs   = lp.workflows.count()
-    url = request.get_full_path()
     return render_to_response('home.html', {'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
         'def_fws': def_fws, 'def_wfs': def_wfs, 'wait_fws': wait_fws, 'wait_wfs': wait_wfs,
         'ready_fws': ready_fws, 'ready_wfs': ready_wfs, 'res_fws': res_fws, 'res_wfs': res_wfs,
         'fizz_fws': fizz_fws, 'fizz_wfs': fizz_wfs, 'run_fws': run_fws, 'run_wfs': run_wfs,
-        'comp_fws': comp_fws, 'comp_wfs': comp_wfs, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs,
-        'url': url})
+        'comp_fws': comp_fws, 'comp_wfs': comp_wfs, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs})
 
 def fw(request):
-    fws = lp.get_fw_ids()
+    fws = lp.fireworks.count()
     ids_shown = 20
     fws_shown = lp.get_fw_ids(limit=ids_shown, sort=[('created_on', DESCENDING)])
     lt_twenty = False
-    if len(fws) <= 20:
+    if fws <= 20:
         lt_twenty = True
-    url = request.get_full_path()
     return render_to_response('fw.html', {'fw_ids': fws, 'fws_shown': fws_shown,
-        'lt_twenty': lt_twenty, 'url': url})
+        'lt_twenty': lt_twenty})
 
 def fw_id(request, id):
     fw = lp.get_fw_by_id(int(id))
@@ -58,20 +55,16 @@ def fw_id(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': str_to_print})
 
 def wf(request):
-    wfs = lp.get_wf_ids(sort=[('updated_on', DESCENDING)])
+    wfs = lp.workflows.count()
     ids_shown = 20
     wfs_shown = lp.get_wf_ids(limit=ids_shown, sort=[('updated_on', DESCENDING)])
     lt_twenty = False
-    if len(wfs) <= 20:
+    if wfs <= 20:
         lt_twenty = True
-    url = request.get_full_path()
     return render_to_response('wf.html', {'wf_ids': wfs, 'wfs_shown': wfs_shown,
-        'lt_twenty': lt_twenty, 'url': url})
+        'lt_twenty': lt_twenty})
 
 def wf_id(request, id):
     wf = lp.get_wf_by_fw_id(int(id))
     str_to_print = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': str_to_print})
-
-def chart(request):
-    return render_to_response('chart.html')

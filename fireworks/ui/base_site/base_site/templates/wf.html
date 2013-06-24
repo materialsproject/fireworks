@@ -13,14 +13,14 @@
     {% if lt_twenty %}
         {% for ids in wf_ids %}
             <tr>
-                <td><center><a href="{{ url }}{{ ids }}">{{ ids }}</a></center></td>
+                <td><center><a href="/wf/{{ ids }}">{{ ids }}</a></center></td>
             </tr>
         {% endfor %}
     {% endif %}
     {% if not lt_twenty %}
         {% for ids in wfs_shown %}
             <tr>
-                <td><center><a href="{{ url }}{{ ids }}">{{ ids }}</a></center></td>
+                <td><center><a href="/wf/{{ ids }}">{{ ids }}</a></center></td>
             </tr>
         {% endfor %}
     {% endif %}
