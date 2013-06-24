@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad() # LaunchPad.auto_load()
+lp = LaunchPad.auto_load()
 
 def home(request):
     # len(lp.get_fw_ids(query={'state':"ARCHIVED"}))
@@ -44,7 +44,7 @@ def home(request):
 def fw(request):
     fws = lp.get_fw_ids()
     ids_shown = 20
-    fws_shown = lp.get_fw_ids(limit=ids_shown, sort=[('updated_on', DESCENDING)])
+    fws_shown = lp.get_fw_ids(limit=ids_shown, sort=[('created_on', DESCENDING)])
     lt_twenty = False
     if len(fws) <= 20:
         lt_twenty = True

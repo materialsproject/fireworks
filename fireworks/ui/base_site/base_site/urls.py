@@ -18,6 +18,7 @@ import settings
 urlpatterns = patterns('',
     # home index page
     ('^$', home),
+    ('^home/$', home),
     # url(r'^base_site/', include('base_site.foo.urls')),
 
     # FireWorks index

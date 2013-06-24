@@ -5,6 +5,7 @@
 {% block content %}
 <h3>{{ num_ids }} Current Activity:</h3>
 
+<!-- TABLE -->
 <table border="1">
     <tr>
         <th></th>
@@ -57,4 +58,112 @@
         <td><center><a href="{{ url }}wf">{{ tot_wfs }}</a></center></td>
     </tr>
     </table>
+
+<!-- CHARTS -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<div id="fw_container" style="width:50%; height:400px; float:left;"></div>
+<div id="wf_container" style="width:50%; height:400px; float:right;"></div>
+
+<!--<script type="text/javascript" src='{{ STATIC_URL }}chart.js'></script>-->
+
+<script>
+    var arc_fws = {{ arc_fws }};
+    var arc_wfs = {{ arc_wfs }};
+    var def_fws = {{ def_fws }};
+    var def_wfs = {{ def_wfs }};
+    var wait_fws = {{ wait_fws }};
+    var ready_fws = {{ ready_fws }};
+    var ready_wfs = {{ ready_wfs }};
+    var res_fws = {{ res_fws }};
+    var fizz_fws = {{ fizz_fws }};
+    var fizz_wfs = {{ fizz_wfs }};
+    var run_fws = {{ run_fws }};
+    var run_wfs = {{ run_wfs }};
+    var comp_fws = {{ comp_fws }};
+    var comp_wfs = {{ comp_wfs }};
+
+    $(function () {
+    $('#fw_container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Current Fireworks Activity'
+        },
+        tooltip: {
+    	    pointFormat: '<b>{point.y}</b> ({point.percentage:.2f}%)'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: 35,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '{point.name}:<br> <b>{point.y}</b> ({point.percentage:.2f}%)'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Fireworks',
+            data: [
+                ['ARCHIVED', arc_fws],
+                ['DEFUSED', def_fws],
+                ['WAITING', wait_fws],
+                ['READY', ready_fws],
+                ['RESERVED', res_fws],
+                ['FIZZLED', fizz_fws],
+                ['RUNNING', run_fws],
+                ['COMPLETED', comp_fws]
+            ]
+        }]
+    });
+
+    $('#wf_container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Current Workflow Activity'
+        },
+        tooltip: {
+    	    pointFormat: '<b>{point.y}</b> ({point.percentage:.2f}%)'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: 35,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '{point.name}:<br> <b>{point.y}</b> ({point.percentage:.2f}%)'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Workflows',
+            data: [
+                ['ARCHIVED', arc_wfs],
+                ['DEFUSED', def_wfs],
+                ['READY', ready_wfs],
+                ['FIZZLED', fizz_wfs],
+                ['RUNNING', run_wfs],
+                ['COMPLETED', comp_wfs]
+            ]
+        }]
+    });
+});
+</script>
 {% endblock %}
