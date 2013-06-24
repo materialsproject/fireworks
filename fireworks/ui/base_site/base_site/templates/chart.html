@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-
 {% block title %}Chart (testing){% endblock %}
 
 {% block content %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
 <h3>Chart (testing)</h3>
 
 <div id="fw_container" style="width:50%; height:400px; float:left;"></div>
 <div id="wf_container" style="width:50%; height:400px; float:right;"></div>
+
+<script type="text/javascript" src='{{ STATIC_URL }}chart.js'></script>
 
 <script>
     $(function () {
@@ -96,6 +98,7 @@
     });
 });
 </script>
+
 <!--
 {% load chart_tags %}
 {% chart %}

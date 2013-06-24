@@ -8,6 +8,8 @@ __date__ = 'Jun 13, 2013'
 import os
 from django.conf.urls import patterns, include, url
 from views import *
+import settings
+
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -30,7 +32,10 @@ urlpatterns = patterns('',
     (r'^wf/(\d+)/$', wf_id),
 
     # Chart (testing)
-    ('^chart/$', chart)
+    ('^chart/$', chart),
+
+    # Static files
+    url(r'^static/(.*)', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
