@@ -3,26 +3,17 @@
 {% block title %}Current FireWorks{% endblock %}
 
 {% block content %}
-<h3>{{ fw_ids|length }} FireWork{{ fw_ids|pluralize }} currently in database</h3>
+<h3>{{ fws }} FireWork{{ fws|pluralize }} currently in database</h3>
 
 <table border="1">
     <tfoot>Click an ID for more information about that FireWork.</tfoot>
     <tr>
         <th>FireWork IDs</th>
     </tr>
-    {% if lt_twenty %}
-        {% for ids in fw_ids %}
-            <tr>
-                <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
-            </tr>
-        {% endfor %}
-    {% endif %}
-    {% if not lt_twenty %}
         {% for ids in fws_shown %}
             <tr>
                 <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
             </tr>
         {% endfor %}
-    {% endif %}
     </table>
 {% endblock %}

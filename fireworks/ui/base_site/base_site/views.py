@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad.auto_load()
+lp = LaunchPad() # LaunchPad.auto_load()
 
 def home(request):
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
@@ -43,11 +43,7 @@ def fw(request):
     fws = lp.get_fw_ids(count_only=True)
     ids_shown = 20
     fws_shown = lp.get_fw_ids(limit=ids_shown, sort=[('created_on', DESCENDING)])
-    lt_twenty = False
-    if fws <= 20:
-        lt_twenty = True
-    return render_to_response('fw.html', {'fw_ids': fws, 'fws_shown': fws_shown,
-        'lt_twenty': lt_twenty})
+    return render_to_response('fw.html', {'fws': fws, 'fws_shown': fws_shown})
 
 def fw_id(request, id):
     fw = lp.get_fw_by_id(int(id))
@@ -58,13 +54,15 @@ def wf(request):
     wfs = lp.get_wf_ids(count_only=True)
     ids_shown = 20
     wfs_shown = lp.get_wf_ids(limit=ids_shown, sort=[('updated_on', DESCENDING)])
-    lt_twenty = False
-    if wfs <= 20:
-        lt_twenty = True
-    return render_to_response('wf.html', {'wf_ids': wfs, 'wfs_shown': wfs_shown,
-        'lt_twenty': lt_twenty})
+    return render_to_response('wf.html', {'wfs': wfs, 'wfs_shown': wfs_shown})
 
 def wf_id(request, id):
     wf = lp.get_wf_by_fw_id(int(id))
     str_to_print = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': str_to_print})
+
+def testing(request):
+    shown = 5
+    fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
+
+    return render_to_response('testing.html')

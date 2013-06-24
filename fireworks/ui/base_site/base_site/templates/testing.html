@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Testing{% endblock %}
+
+{% block content %}
+<h3>Testing</h3>
+
+<table border="1">
+    <tr>
+        <th>Testing (fw info)</th>
+    </tr>
+    {% if lt_twenty %}
+        {% for ids in fw_ids %}
+            <tr>
+                <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    {% if not lt_twenty %}
+        {% for ids in fws_shown %}
+            <tr>
+                <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </table>
+{% endblock %}
