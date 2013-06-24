@@ -227,29 +227,41 @@ class LaunchPad(FWSerializable):
 
         return Workflow(fws, links_dict['links'], links_dict['name'], links_dict['metadata'])
 
-    def get_fw_ids(self, query=None, sort=None, limit=0):
+    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
         Return all the fw ids that match a query,
-        :param query: a dict representing a Mongo query
+        :param query: (dict) representing a Mongo query
+        :param sort: [(str,str)] sort argument in Pymongo format
+        :param limit: (int) limit the results
+        :param count_only: (bool) only return the count rather than explicit ids
         """
         fw_ids = []
         criteria = query if query else {}
+
+        if count_only:
+            return self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit).count()
+
         for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
-
         return fw_ids
 
-    def get_wf_ids(self, query=None, sort=None, limit=0):
+    def get_wf_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
         Return one fw id for all workflows that match a query,
-        :param query: a dict representing a Mongo query
+        :param query: (dict) representing a Mongo query
+        :param sort: [(str,str)] sort argument in Pymongo format
+        :param limit: (int) limit the results
+        :param count_only: (bool) only return the count rather than explicit ids
         """
-        fw_ids = []
+        wf_ids = []
         criteria = query if query else {}
-        for fw in self.workflows.find(criteria, {"nodes": True}, sort=sort).limit(limit):
-            fw_ids.append(fw["nodes"][0])
+        if count_only:
+            return self.workflows.find(criteria, {"nodes": True}, sort=sort).limit(limit).count()
 
-        return fw_ids
+        for fw in self.workflows.find(criteria, {"nodes": True}, sort=sort).limit(limit):
+            wf_ids.append(fw["nodes"][0])
+
+        return wf_ids
 
     def run_exists(self, fworker=None):
         """
