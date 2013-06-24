@@ -175,12 +175,12 @@ def lpad():
             else:
                 sort = None
 
-            ids = lp.get_wf_ids(query, sort, args.max)
+            ids = lp.get_wf_ids(query, sort, args.max, count_only=args.display_format == 'count')
             wfs = []
             if args.display_format == 'ids':
                 wfs = ids
             elif args.display_format == 'count':
-                wfs = [len(ids)]
+                wfs = [ids]
             else:
                 for id in ids:
                     wf = lp.get_wf_by_fw_id(id)
@@ -228,12 +228,12 @@ def lpad():
             else:
                 sort = None
 
-            ids = lp.get_fw_ids(query, sort, args.max)
+            ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count')
             fws = []
             if args.display_format == 'ids':
                 fws = ids
             elif args.display_format == 'count':
-                fws = [len(ids)]
+                fws = [ids]
             else:
                 for id in ids:
                     fw = lp.get_fw_by_id(id)
