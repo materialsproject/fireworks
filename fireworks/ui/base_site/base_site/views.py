@@ -64,5 +64,7 @@ def wf_id(request, id):
 def testing(request):
     shown = 5
     fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
-
-    return render_to_response('testing.html')
+    fw_names = []
+    for fw in fws:
+        fw_names.append(lp.get_fw_by_id(fw).name)
+    return render_to_response('testing.html', {'fws': fws, 'fw_names': fw_names})

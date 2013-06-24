@@ -5,23 +5,24 @@
 {% block content %}
 <h3>Testing</h3>
 
-<table border="1">
+<table border="1" style="display:inline-block;">
     <tr>
-        <th>Testing (fw info)</th>
+        <th>IDs</th>
     </tr>
-    {% if lt_twenty %}
-        {% for ids in fw_ids %}
-            <tr>
-                <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
-            </tr>
-        {% endfor %}
-    {% endif %}
-    {% if not lt_twenty %}
-        {% for ids in fws_shown %}
-            <tr>
-                <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
-            </tr>
-        {% endfor %}
-    {% endif %}
+    {% for ids in fws %}
+    <tr>
+        <td><a href="/fw/{{ ids }}">{{ ids }}</a></td>
+    </tr>
+    {% endfor %}
     </table>
+<table border="1" style="display: inline-block;">
+    <tr>
+        <th>Names</th>
+    </tr>
+    {% for names in fw_names %}
+    <tr>
+        <td>{{ names }}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}
