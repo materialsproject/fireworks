@@ -27,6 +27,23 @@
     {% endfor %}
 </table>
 
+<br><br>
+
+<table border="1">
+    <tr>
+        <th>IDs</th>
+        <th>Names</th>
+    </tr>
+    {% for ids in fws %}
+        <tr>
+            <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
+            <td>{{ forloop.counter0 }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br>
+
 <!--CHART-->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
@@ -68,14 +85,7 @@
                 title: {
                     text: 'Number of Fireworks'
                 },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                valueSuffix: '°C'
+                min: 0
             },
             legend: {
                 layout: 'vertical',
@@ -87,31 +97,31 @@
             },
             series: [{
                 name: 'ARCHIVED',
-                data: [0, 0]
+                data: [1, arc_fws]
             }, {
                 name: 'DEFUZED',
-                data: [0, 1]
+                data: [1, def_fws]
             }, {
                 name: 'WAITING',
-                data: [0, 2]
+                data: [1, wait_fws]
             }, {
                 name: 'READY',
-                data: [0, 3]
+                data: [1, ready_fws]
             }, {
                 name: 'RESERVED',
-                data: [0, 4]
+                data: [1, res_fws]
             }, {
                 name: 'FIZZLED',
-                data: [0, 5]
+                data: [1, fizz_fws]
             }, {
                 name: 'RUNNING',
-                data: [0, 6]
+                data: [1, run_fws]
             }, {
                 name: 'COMPLETED',
-                data: [0, 7]
+                data: [1, comp_fws]
             }, {
                 name: 'TOTAL',
-                data: [0, 8]
+                data: [1, tot_fws]
             }]
         });
     });
