@@ -67,4 +67,29 @@ def testing(request):
     fw_names = []
     for fw in fws:
         fw_names.append(lp.get_fw_by_id(fw).name)
-    return render_to_response('testing.html', {'fws': fws, 'fw_names': fw_names})
+
+    arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
+    arc_wfs   = lp.get_wf_ids(query={'state':'ARCHIVED'}, count_only=True)
+    def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
+    def_wfs   = lp.get_wf_ids(query={'state':'DEFUSED'}, count_only=True)
+    wait_fws  = lp.get_fw_ids(query={'state':'WAITING'}, count_only=True)
+    wait_wfs  = lp.get_wf_ids(query={'state':'WAITING'}, count_only=True)
+    ready_fws = lp.get_fw_ids(query={'state':'READY'}, count_only=True)
+    ready_wfs = lp.get_wf_ids(query={'state':'READY'}, count_only=True)
+    res_fws   = lp.get_fw_ids(query={'state':'RESERVED'}, count_only=True)
+    res_wfs   = lp.get_wf_ids(query={'state':'RESERVED'}, count_only=True)
+    fizz_fws  = lp.get_fw_ids(query={'state':'FIZZLED'}, count_only=True)
+    fizz_wfs  = lp.get_wf_ids(query={'state':'FIZZLED'}, count_only=True)
+    run_fws   = lp.get_fw_ids(query={'state':'RUNNING'}, count_only=True)
+    run_wfs   = lp.get_wf_ids(query={'state':'RUNNING'}, count_only=True)
+    # run_wfs   = lp.workflows.find({'state':'RUNNING'}).count()
+    comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
+    comp_wfs  = lp.get_wf_ids(query={'state':'COMPLETED'}, count_only=True)
+    tot_fws   = lp.get_fw_ids(count_only=True)
+    tot_wfs   = lp.get_wf_ids(count_only=True)
+
+    return render_to_response('testing.html', {'fws': fws, 'fw_names': fw_names, 'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
+        'def_fws': def_fws, 'def_wfs': def_wfs, 'wait_fws': wait_fws, 'wait_wfs': wait_wfs,
+        'ready_fws': ready_fws, 'ready_wfs': ready_wfs, 'res_fws': res_fws, 'res_wfs': res_wfs,
+        'fizz_fws': fizz_fws, 'fizz_wfs': fizz_wfs, 'run_fws': run_fws, 'run_wfs': run_wfs,
+        'comp_fws': comp_fws, 'comp_wfs': comp_wfs, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs})

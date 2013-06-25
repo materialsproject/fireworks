@@ -5,6 +5,7 @@
 {% block content %}
 <h3>Testing</h3>
 
+<!--TABLES-->
 <table border="1" style="display:inline-block;">
     <tr>
         <th>IDs</th>
@@ -25,4 +26,95 @@
     </tr>
     {% endfor %}
 </table>
+
+<!--CHART-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+<!--<script type="text/javascript" src='{{ STATIC_URL }}chart.js'></script>-->
+
+<script>
+    var arc_fws   = {{ arc_fws }};
+    var def_fws   = {{ def_fws }};
+    var wait_fws  = {{ wait_fws }};
+    var ready_fws = {{ ready_fws }};
+    var res_fws   = {{ res_fws }};
+    var fizz_fws  = {{ fizz_fws }};
+    var run_fws   = {{ run_fws }};
+    var comp_fws  = {{ comp_fws }};
+    var tot_fws   = {{ tot_fws }};
+
+    $(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'line',
+                marginRight: 130,
+                marginBottom: 25
+            },
+            title: {
+                text: 'Activity',
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Fireworks',
+                x: -20
+            },
+            xAxis: {
+                categories: ['start', 'now']
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Fireworks'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '°C'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            series: [{
+                name: 'ARCHIVED',
+                data: [0, 0]
+            }, {
+                name: 'DEFUZED',
+                data: [0, 1]
+            }, {
+                name: 'WAITING',
+                data: [0, 2]
+            }, {
+                name: 'READY',
+                data: [0, 3]
+            }, {
+                name: 'RESERVED',
+                data: [0, 4]
+            }, {
+                name: 'FIZZLED',
+                data: [0, 5]
+            }, {
+                name: 'RUNNING',
+                data: [0, 6]
+            }, {
+                name: 'COMPLETED',
+                data: [0, 7]
+            }, {
+                name: 'TOTAL',
+                data: [0, 8]
+            }]
+        });
+    });
+</script>
+
 {% endblock %}
