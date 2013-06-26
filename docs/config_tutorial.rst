@@ -77,5 +77,6 @@ Some parameters that you can change, but probably shouldn't, are:
 * ``RUN_EXPIRATION_SECS: 14400`` - means that the LaunchPad will mark a Rocket FIZZLED if it hasn't received a ping in 14400 seconds. See the :doc:`failures tutorial <failures_tutorial>`.
 * ``RESERVATION_EXPIRATION_SECS: 1209600`` - means that the LaunchPad will unreserve a FireWork that's been in the queue for 1209600 seconds (14 days). See the :doc:`queue reservation tutorial <queue_tutorial_pt2>`.
 * ``FW_BLOCK_FORMAT: %Y-%m-%d-%H-%M-%S-%f`` - the ``launcher_`` and ``block_`` directories written by the Rocket and Queue Launchers add a date stamp to the directory. You can change this if desired.
+* ``QSTAT_FREQUENCY: 50`` - number of jobs submitted to queue before re-executing a qstat. 1 means always do qstat, higher avoids unnecessarily loading the qstat server.
 
 For a full list of parameters that can be changed, you can browse the ``fw_config.py`` file in the FireWorks source.
