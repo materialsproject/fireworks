@@ -6,38 +6,15 @@
 <h3>Testing</h3>
 
 <!--TABLES-->
-<table border="1" style="display:inline-block;">
-    <tr>
-        <th>IDs</th>
-    </tr>
-    {% for ids in fws %}
-    <tr>
-        <td><a href="/fw/{{ ids }}">{{ ids }}</a></td>
-    </tr>
-    {% endfor %}
-    </table>
-<table border="1" style="display: inline-block;">
-    <tr>
-        <th>Names</th>
-    </tr>
-    {% for names in fw_names %}
-    <tr>
-        <td>{{ names }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<br><br>
-
 <table border="1">
     <tr>
         <th>IDs</th>
         <th>Names</th>
     </tr>
-    {% for ids in fws %}
+    {% for ids, names in info %}
         <tr>
             <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
-            <td>{{ forloop.counter0 }}</td>
+            <td>{{ names }}</td>
         </tr>
     {% endfor %}
 </table>
@@ -71,11 +48,11 @@
                 marginBottom: 25
             },
             title: {
-                text: 'Activity',
+                text: 'Fireworks',
                 x: -20 //center
             },
             subtitle: {
-                text: 'Fireworks',
+                text: 'Activity',
                 x: -20
             },
             xAxis: {

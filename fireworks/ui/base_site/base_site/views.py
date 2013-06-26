@@ -67,6 +67,7 @@ def testing(request):
     fw_names = []
     for fw in fws:
         fw_names.append(lp.get_fw_by_id(fw).name)
+    info = zip(fws, fw_names)
 
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
     def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
@@ -78,7 +79,7 @@ def testing(request):
     comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
     tot_fws   = lp.get_fw_ids(count_only=True)
 
-    return render_to_response('testing.html', {'fws': fws, 'fw_names': fw_names,
+    return render_to_response('testing.html', {'info': info,
         'arc_fws': arc_fws, 'def_fws': def_fws, 'wait_fws': wait_fws,
         'ready_fws': ready_fws, 'res_fws': res_fws, 'fizz_fws': fizz_fws,
         'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})
