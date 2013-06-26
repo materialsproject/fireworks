@@ -7,15 +7,17 @@
 
 <!-- TABLES -->
 <table border="1" style="display: inline-block; margin: 10px;">
-    <tr><th colspan="2">Newest Fireworks</th></tr>
+    <tr><th colspan="3">Newest Fireworks</th></tr>
     <tr>
-        <th>IDs</th>
-        <th>Names</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>State</th>
     </tr>
-    {% for ids, names in fw_info %}
+    {% for ids, names, states in fw_info %}
         <tr>
             <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
             <td>{{ names }}</td>
+            <td>{{ states }}</td>
         </tr>
     {% endfor %}
 </table>
@@ -75,15 +77,17 @@
 </table>
 
 <table border="1" style="display: inline-block; margin: 10px;">
-    <tr><th colspan="2">Newest Workflows</th></tr>
+    <tr><th colspan="3">Newest Workflows</th></tr>
     <tr>
-        <th>IDs</th>
-        <th>Names</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>State</th>
     </tr>
-    {% for ids, names in wf_info %}
+    {% for ids, names, states in wf_info %}
         <tr>
             <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
             <td>{{ names }}</td>
+            <td>{{ states }}</td>
         </tr>
     {% endfor %}
 </table>

@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad() # LaunchPad.auto_load()
+lp = LaunchPad.auto_load()
 
 def home(request):
     shown = 9
@@ -19,7 +19,10 @@ def home(request):
     fw_names = []
     for fw in fws_shown:
         fw_names.append(lp.get_fw_by_id(fw).name)
-    fw_info = zip(fws_shown, fw_names)
+    fw_states = []
+    for fw in fws_shown:
+        fw_states.append(lp.get_fw_by_id(fw).state)
+    fw_info = zip(fws_shown, fw_names, fw_states)
 
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
     arc_wfs   = lp.get_wf_ids(query={'state':'ARCHIVED'}, count_only=True)
@@ -45,7 +48,10 @@ def home(request):
     wf_names = []
     for wf in wfs_shown:
         wf_names.append(lp.get_wf_by_fw_id(wf).name)
-    wf_info = zip(wfs_shown, wf_names)
+    wf_states = []
+    for wf in wfs_shown:
+        wf_states.append(lp.get_wf_by_fw_id(wf).state)
+    wf_info = zip(wfs_shown, wf_names, wf_states)
 
     return render_to_response('home.html', {'fw_info': fw_info, 'wf_info': wf_info,
         'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
