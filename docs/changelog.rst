@@ -2,6 +2,17 @@
 FireWorks Changelog
 ===================
 
+v0.16
+=====
+
+* refactor AVOID_MANY_STATS into more tunable QSTAT_FREQUENCY
+* speed up counting operations
+* add more indices
+* better log queue submission errors
+* auto_load() function for LaunchPad
+* queue launcher fills in previous block if not full (modifiable in FWConfig)
+* many doc updates
+
 v0.15
 =====
 
