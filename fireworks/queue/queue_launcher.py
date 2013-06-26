@@ -132,6 +132,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         while True:
             # get number of jobs in queue
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
+            job_counter = 0  # this is for QSTAT_FREQUENCY option
 
             while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker):
                 l_logger.info('Launching a rocket!')
@@ -151,9 +152,10 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
                 time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
-                if FWConfig().AVOID_MANY_QSTATS:
-                    jobs_in_queue += 1
-                else:
+                jobs_in_queue += 1
+                job_counter += 1
+                if job_counter % FWConfig().QSTAT_FREQUENCY == 0:
+                    job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
             if num_launched == nlaunches or nlaunches == 0:

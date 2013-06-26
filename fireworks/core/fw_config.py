@@ -66,7 +66,7 @@ class FWConfig(object):
 
         self.CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
 
-        self.AVOID_MANY_QSTATS = True  # try to avoid calling qstat many times
+        self.QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to alwas
 
         self.ALWAYS_CREATE_NEW_BLOCK = False  # always create new block on queue launcher call
 
