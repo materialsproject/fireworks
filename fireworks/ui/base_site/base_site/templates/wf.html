@@ -8,16 +8,14 @@
 <table border="1">
     <tfoot>Click an ID for more information about that Workflow.</tfoot>
     <tr>
-        <th>Workflow IDs</th>
+        <th>IDs</th>
+        <th>Names</th>
     </tr>
-        {% for ids in wfs_shown %}
-            <tr>
-                <td><center><a href="/wf/{{ ids }}">{{ ids }}</a></center></td>
-            </tr>
-        {% empty %}
+    {% for ids, names in wf_info %}
         <tr>
-            <td>&ltdatabase is currently empty&gt</td>
+            <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
+            <td>{{ names }}</td>
         </tr>
-        {% endfor %}
-    </table>
+    {% endfor %}
+</table>
 {% endblock %}

@@ -14,6 +14,13 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 lp = LaunchPad() # LaunchPad.auto_load()
 
 def home(request):
+    shown = 9
+    fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    fw_names = []
+    for fw in fws_shown:
+        fw_names.append(lp.get_fw_by_id(fw).name)
+    fw_info = zip(fws_shown, fw_names)
+
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
     arc_wfs   = lp.get_wf_ids(query={'state':'ARCHIVED'}, count_only=True)
     def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
@@ -33,7 +40,15 @@ def home(request):
     comp_wfs  = lp.get_wf_ids(query={'state':'COMPLETED'}, count_only=True)
     tot_fws   = lp.get_fw_ids(count_only=True)
     tot_wfs   = lp.get_wf_ids(count_only=True)
-    return render_to_response('home.html', {'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
+
+    wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    wf_names = []
+    for wf in wfs_shown:
+        wf_names.append(lp.get_wf_by_fw_id(wf).name)
+    wf_info = zip(wfs_shown, wf_names)
+
+    return render_to_response('home.html', {'fw_info': fw_info, 'wf_info': wf_info,
+        'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
         'def_fws': def_fws, 'def_wfs': def_wfs, 'wait_fws': wait_fws, 'wait_wfs': wait_wfs,
         'ready_fws': ready_fws, 'ready_wfs': ready_wfs, 'res_fws': res_fws, 'res_wfs': res_wfs,
         'fizz_fws': fizz_fws, 'fizz_wfs': fizz_wfs, 'run_fws': run_fws, 'run_wfs': run_wfs,
@@ -41,9 +56,13 @@ def home(request):
 
 def fw(request):
     fws = lp.get_fw_ids(count_only=True)
-    ids_shown = 20
-    fws_shown = lp.get_fw_ids(limit=ids_shown, sort=[('created_on', DESCENDING)])
-    return render_to_response('fw.html', {'fws': fws, 'fws_shown': fws_shown})
+    shown = 20
+    fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    fw_names = []
+    for fw in fws_shown:
+        fw_names.append(lp.get_fw_by_id(fw).name)
+    fw_info = zip(fws_shown, fw_names)
+    return render_to_response('fw.html', {'fws': fws, 'fw_info': fw_info})
 
 def fw_id(request, id):
     fw = lp.get_fw_by_id(int(id))
@@ -51,10 +70,14 @@ def fw_id(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': str_to_print})
 
 def wf(request):
+    shown = 20
     wfs = lp.get_wf_ids(count_only=True)
-    ids_shown = 20
-    wfs_shown = lp.get_wf_ids(limit=ids_shown, sort=[('updated_on', DESCENDING)])
-    return render_to_response('wf.html', {'wfs': wfs, 'wfs_shown': wfs_shown})
+    wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    wf_names = []
+    for wf in wfs_shown:
+        wf_names.append(lp.get_wf_by_fw_id(wf).name)
+    wf_info = zip(wfs_shown, wf_names)
+    return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})
 
 def wf_id(request, id):
     wf = lp.get_wf_by_fw_id(int(id))
@@ -62,13 +85,6 @@ def wf_id(request, id):
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': str_to_print})
 
 def testing(request):
-    shown = 5
-    fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    fw_names = []
-    for fw in fws:
-        fw_names.append(lp.get_fw_by_id(fw).name)
-    info = zip(fws, fw_names)
-
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
     def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
     wait_fws  = lp.get_fw_ids(query={'state':'WAITING'}, count_only=True)
@@ -79,7 +95,6 @@ def testing(request):
     comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
     tot_fws   = lp.get_fw_ids(count_only=True)
 
-    return render_to_response('testing.html', {'info': info,
-        'arc_fws': arc_fws, 'def_fws': def_fws, 'wait_fws': wait_fws,
-        'ready_fws': ready_fws, 'res_fws': res_fws, 'fizz_fws': fizz_fws,
-        'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})
+    return render_to_response('testing.html', {'arc_fws': arc_fws, 'def_fws': def_fws,
+        'wait_fws': wait_fws, 'ready_fws': ready_fws, 'res_fws': res_fws,
+        'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})

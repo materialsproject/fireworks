@@ -5,22 +5,6 @@
 {% block content %}
 <h3>Testing</h3>
 
-<!--TABLES-->
-<table border="1">
-    <tr>
-        <th>IDs</th>
-        <th>Names</th>
-    </tr>
-    {% for ids, names in info %}
-        <tr>
-            <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
-            <td>{{ names }}</td>
-        </tr>
-    {% endfor %}
-</table>
-
-<br>
-
 <!--CHART-->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
