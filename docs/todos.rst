@@ -30,8 +30,6 @@ FW Docs
 
 * Document allow_fizzled_parents
 
-* Show workflows and Python code in the very first tutorial
-
 * Document 'pip install' as a second option for installation, e.g. trouble with GIT keys
 
 * Show a workflow diagram with the relation between FireTasks, FireWorks, and Workflows
@@ -41,6 +39,8 @@ FW Docs
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
 * Setting up logging
+
+* Re-organize the documentation into "trails", e.g. a quickstart, a Workflows trail, and running on resources trail
 
 Major Features
 ==============
