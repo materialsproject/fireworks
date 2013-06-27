@@ -7,6 +7,7 @@ __date__ = 'Jun 13, 2013'
 
 import json
 from pymongo import DESCENDING
+from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
@@ -71,9 +72,14 @@ def fw(request):
     return render_to_response('fw.html', {'fws': fws, 'fw_info': fw_info})
 
 def fw_id(request, id):
-    fw = lp.get_fw_by_id(int(id))
-    str_to_print = json.dumps(fw.to_dict(), default=DATETIME_HANDLER, indent=4)
-    return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': str_to_print})
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    fw = lp.get_fw_by_id(id)
+    fw_data = json.dumps(fw.to_dict(), default=DATETIME_HANDLER, indent=4)
+    return HttpResponse(fw_data, mimetype='application/json')
+    # return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
     shown = 20
@@ -86,9 +92,14 @@ def wf(request):
     return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})
 
 def wf_id(request, id):
-    wf = lp.get_wf_by_fw_id(int(id))
-    str_to_print = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
-    return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': str_to_print})
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    wf = lp.get_wf_by_fw_id(id)
+    wf_data = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
+    return HttpResponse(wf_data, mimetype='application/json')
+    # return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 
 def testing(request):
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
@@ -100,7 +111,6 @@ def testing(request):
     run_fws   = lp.get_fw_ids(query={'state':'RUNNING'}, count_only=True)
     comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
     tot_fws   = lp.get_fw_ids(count_only=True)
-
     return render_to_response('testing.html', {'arc_fws': arc_fws, 'def_fws': def_fws,
         'wait_fws': wait_fws, 'ready_fws': ready_fws, 'res_fws': res_fws,
         'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})
