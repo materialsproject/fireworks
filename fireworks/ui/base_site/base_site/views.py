@@ -78,7 +78,6 @@ def fw_id(request, id):
         raise Http404()
     fw = lp.get_fw_by_id(id)
     fw_data = json.dumps(fw.to_dict(), default=DATETIME_HANDLER, indent=4)
-    # return HttpResponse(fw_data, mimetype='text/plain')
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
@@ -98,8 +97,7 @@ def wf_id(request, id):
         raise Http404()
     wf = lp.get_wf_by_fw_id(id)
     wf_data = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
-    return HttpResponse(wf_data, mimetype='application/json')
-    # return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
+    return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 
 def testing(request):
     arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
