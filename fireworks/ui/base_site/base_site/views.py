@@ -18,10 +18,9 @@ def home(request):
     shown = 9
     fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
     fw_names = []
-    for fw in fws_shown:
-        fw_names.append(lp.get_fw_by_id(fw).name)
     fw_states = []
     for fw in fws_shown:
+        fw_names.append(lp.get_fw_by_id(fw).name)
         fw_states.append(lp.get_fw_by_id(fw).state)
     fw_info = zip(fws_shown, fw_names, fw_states)
 
@@ -30,11 +29,9 @@ def home(request):
     def_fws   = lp.get_fw_ids(query={'state': 'DEFUSED'}, count_only=True)
     def_wfs   = lp.get_wf_ids(query={'state': 'DEFUSED'}, count_only=True)
     wait_fws  = lp.get_fw_ids(query={'state': 'WAITING'}, count_only=True)
-    wait_wfs  = lp.get_wf_ids(query={'state': 'WAITING'}, count_only=True)
     ready_fws = lp.get_fw_ids(query={'state': 'READY'}, count_only=True)
     ready_wfs = lp.get_wf_ids(query={'state': 'READY'}, count_only=True)
     res_fws   = lp.get_fw_ids(query={'state': 'RESERVED'}, count_only=True)
-    res_wfs   = lp.get_wf_ids(query={'state': 'RESERVED'}, count_only=True)
     fizz_fws  = lp.get_fw_ids(query={'state': 'FIZZLED'}, count_only=True)
     fizz_wfs  = lp.get_wf_ids(query={'state': 'FIZZLED'}, count_only=True)
     run_fws   = lp.get_fw_ids(query={'state': 'RUNNING'}, count_only=True)
@@ -47,17 +44,16 @@ def home(request):
 
     wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
     wf_names = []
-    for wf in wfs_shown:
-        wf_names.append(lp.get_wf_by_fw_id(wf).name)
     wf_states = []
     for wf in wfs_shown:
+        wf_names.append(lp.get_wf_by_fw_id(wf).name)
         wf_states.append(lp.get_wf_by_fw_id(wf).state)
     wf_info = zip(wfs_shown, wf_names, wf_states)
 
     return render_to_response('home.html', {'fw_info': fw_info, 'wf_info': wf_info,
         'arc_fws': arc_fws, 'arc_wfs': arc_wfs,
-        'def_fws': def_fws, 'def_wfs': def_wfs, 'wait_fws': wait_fws, 'wait_wfs': wait_wfs,
-        'ready_fws': ready_fws, 'ready_wfs': ready_wfs, 'res_fws': res_fws, 'res_wfs': res_wfs,
+        'def_fws': def_fws, 'def_wfs': def_wfs, 'wait_fws': wait_fws,
+        'ready_fws': ready_fws, 'ready_wfs': ready_wfs, 'res_fws': res_fws,
         'fizz_fws': fizz_fws, 'fizz_wfs': fizz_wfs, 'run_fws': run_fws, 'run_wfs': run_wfs,
         'comp_fws': comp_fws, 'comp_wfs': comp_wfs, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs})
 
@@ -66,10 +62,9 @@ def fw(request):
     shown = 20
     fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
     fw_names = []
-    for fw in fws_shown:
-        fw_names.append(lp.get_fw_by_id(fw).name)
     fw_states = []
     for fw in fws_shown:
+        fw_names.append(lp.get_fw_by_id(fw).name)
         fw_states.append(lp.get_fw_by_id(fw).state)
     fw_info = zip(fws_shown, fw_names, fw_states)
     return render_to_response('fw.html', {'fws': fws, 'fw_info': fw_info})
@@ -126,10 +121,9 @@ def wf(request):
     shown = 20
     wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
     wf_names = []
-    for wf in wfs_shown:
-        wf_names.append(lp.get_wf_by_fw_id(wf).name)
     wf_states = []
     for wf in wfs_shown:
+        wf_names.append(lp.get_wf_by_fw_id(wf).name)
         wf_states.append(lp.get_wf_by_fw_id(wf).state)
     wf_info = zip(wfs_shown, wf_names, wf_states)
     return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})

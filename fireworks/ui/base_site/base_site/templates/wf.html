@@ -5,6 +5,14 @@
 {% block content %}
 <h3>{{ wfs }} Workflow{{ wfs|pluralize }} currently in database</h3>
 
+<h5><center><a href="/wf/ARCHIVED">ARCHIVED</a> |
+        <a href="/wf/DEFUSED">DEFUSED</a> |
+        <a href="/wf/READY">READY</a> |
+        <a href="/wf/FIZZLED">FIZZLED</a> |
+        <a href="/wf/RUNNING">RUNNING</a> |
+        <a href="/wf/COMPLETED">COMPLETED</a>
+</center></h5>
+
 <table border="1">
     <tfoot>Click an ID for more information about that Workflow.</tfoot>
     <tr>
