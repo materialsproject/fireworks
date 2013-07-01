@@ -29,12 +29,11 @@ def home(request):
     states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
         'FIZZLED', 'RUNNING', 'COMPLETED']
     fw_nums = []
-    for state in states:
-        fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
-    tot_fws   = lp.get_fw_ids(count_only=True)
     wf_nums = []
     for state in states:
+        fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
         wf_nums.append(lp.get_wf_ids(query={'state': state}, count_only=True))
+    tot_fws   = lp.get_fw_ids(count_only=True)
     tot_wfs   = lp.get_wf_ids(count_only=True)
     info = zip(states, fw_nums, wf_nums)
 
