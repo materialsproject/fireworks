@@ -122,8 +122,8 @@ def fw_id_less(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
-    shown = 20
     wfs = lp.get_wf_ids(count_only=True)
+    shown = 20
     wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
     wf_names = []
     for wf in wfs_shown:
@@ -133,6 +133,16 @@ def wf(request):
         wf_states.append(lp.get_wf_by_fw_id(wf).state)
     wf_info = zip(wfs_shown, wf_names, wf_states)
     return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})
+
+def wf_state(request, state):
+    wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
+    shown = 20
+    wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)], query={'state': state})
+    wf_names = []
+    for wf in wfs_shown:
+        wf_names.append(lp.get_wf_by_fw_id(wf).name)
+    wf_info = zip(wfs_shown, wf_names)
+    return render_to_response('wf_state.html', {'wfs': wfs, 'state': state, 'wf_info': wf_info})
 
 def wf_id(request, id):
     try:

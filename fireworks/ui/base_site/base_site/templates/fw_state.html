@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}{{ state|lower|capfirst }} FireWorks Index{% endblock %}
+{% block title %}{{ state }} Fireworks Index{% endblock %}
 
 {% block content %}
-<h3>{{ fws }} {{ state|lower|capfirst }} Firework{{ fws|pluralize }} currently in database</h3>
+<h3>{{ fws }} {{ state }} Firework{{ fws|pluralize }} currently in database</h3>
 
 <table border="1">
     <tfoot>Click an ID for more information about that Firework.</tfoot>
