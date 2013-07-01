@@ -1,12 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}{{ state }} Fireworks Index{% endblock %}
+{% block title %}{{ state|lower|capfirst }} Fireworks Index{% endblock %}
 
 {% block content %}
-<h3>{{ fws }} {{ state }} Firework{{ fws|pluralize }} currently in database</h3>
+<h3>{{ fws }} {{ state|lower|capfirst }} Firework{{ fws|pluralize }} currently in database</h3>
+
+<h5><center><a href="/fw/">NEWEST</a> |
+        <a href="/fw/ARCHIVED">ARCHIVED</a> |
+        <a href="/fw/DEFUSED">DEFUSED</a> |
+        <a href="/fw/WAITING">WAITING</a> |
+        <a href="/fw/READY">READY</a> |
+        <a href="/fw/RESERVED">RESERVED</a> |
+        <a href="/fw/FIZZLED">FIZZLED</a> |
+        <a href="/fw/RUNNING">RUNNING</a> |
+        <a href="/fw/COMPLETED">COMPLETED</a>
+</center></h5>
 
 <table border="1">
     <tfoot>Click an ID for more information about that Firework.</tfoot>
+    <tr><th colspan="2">{{ state|lower|capfirst }} Fireworks</th></tr>
     <tr>
         <th>ID</th>
         <th>Name</th>

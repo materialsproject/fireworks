@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}{{ state }} Workflows Index{% endblock %}
+{% block title %}{{ state|lower|capfirst }} Workflows Index{% endblock %}
 
 {% block content %}
-<h3>{{ wfs }} {{ state }} Workflow{{ wfs|pluralize }} currently in database</h3>
+<h3>{{ wfs }} {{ state|lower|capfirst }} Workflow{{ wfs|pluralize }} currently in database</h3>
+
+<h5><center><a href="/wf/">NEWEST</a> |
+        <a href="/wf/ARCHIVED">ARCHIVED</a> |
+        <a href="/wf/DEFUSED">DEFUSED</a> |
+        <a href="/wf/READY">READY</a> |
+        <a href="/wf/FIZZLED">FIZZLED</a> |
+        <a href="/wf/RUNNING">RUNNING</a> |
+        <a href="/wf/COMPLETED">COMPLETED</a>
+</center></h5>
 
 <table border="1">
     <tfoot>Click an ID for more information about that Workflow.</tfoot>
+    <tr><th colspan="2">{{ state|lower|capfirst }} Workflows</th></tr>
     <tr>
         <th>ID</th>
         <th>Name</th>

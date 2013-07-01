@@ -29,46 +29,13 @@
         <th><a href="/fw">Fireworks</a></th>
         <th><a href="/wf">Workflows</a></th>
     </tr>
-    <tr>
-        <td><div align="right">ARCHIVED</div></td>
-        <td><center><a href="/fw/ARCHIVED">{{ arc_fws }}</a></center></td>
-        <td><center><a href="/wf/ARCHIVED">{{ arc_wfs }}</a></center></td>
-    </tr>
-    <tr>
-        <td><div align="right">DEFUSED</div></td>
-        <td><center><a href="/fw/DEFUSED">{{ def_fws }}</a></center></td>
-        <td><center><a href="/wf/DEFUSED">{{ def_wfs }}</a></center></td>
-    </tr>
-    <tr>
-        <td><div align="right">WAITING</div></td>
-        <td><center><a href="/fw/WAITING">{{ wait_fws }}</a></center></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td><div align="right">READY</div></td>
-        <td><center><a href="/fw/READY">{{ ready_fws }}</a></center></td>
-        <td><center><a href="/wf/READY">{{ ready_wfs }}</a></center></td>
-    </tr>
-    <tr>
-        <td><div align="right">RESERVED</div></td>
-        <td><center><a href="/fw/RESERVED">{{ res_fws }}</a></center></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td><div align="right">FIZZLED</div></td>
-        <td><center><a href="/fw/FIZZLED">{{ fizz_fws }}</a></center></td>
-        <td><center><a href="/wf/FIZZLED">{{ fizz_wfs }}</a></center></td>
-    </tr>
-    <tr>
-        <td><div align="right">RUNNING</div></td>
-        <td><center><a href="/fw/RUNNING">{{ run_fws }}</a></center></td>
-        <td><center><a href="/wf/RUNNING">{{ run_wfs }}</a></center></td>
-    </tr>
-    <tr>
-        <td><div align="right">COMPLETED</div></td>
-        <td><center><a href="/fw/COMPLETED">{{ comp_fws }}</a></center></td>
-        <td><center><a href="/wf/COMPLETED">{{ comp_wfs }}</a></center></td>
-    </tr>
+    {% for states, fw_info, wf_info in info %}
+        <tr>
+            <td><div align="right">{{ states }}</div></td>
+            <td><center><a href="/fw/{{ states }}">{{ fw_info }}</a></center></td>
+            <td><center><a href="/wf/{{ states }}">{{ wf_info }}</a></center></td>
+        </tr>
+    {% endfor %}
     <tr>
         <th><div align="right">TOTAL</div></th>
         <td><center><a href="/fw">{{ tot_fws }}</a></center></td>
