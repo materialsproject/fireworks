@@ -25,23 +25,23 @@ def home(request):
         fw_states.append(lp.get_fw_by_id(fw).state)
     fw_info = zip(fws_shown, fw_names, fw_states)
 
-    arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
-    arc_wfs   = lp.get_wf_ids(query={'state':'ARCHIVED'}, count_only=True)
-    def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
-    def_wfs   = lp.get_wf_ids(query={'state':'DEFUSED'}, count_only=True)
-    wait_fws  = lp.get_fw_ids(query={'state':'WAITING'}, count_only=True)
-    wait_wfs  = lp.get_wf_ids(query={'state':'WAITING'}, count_only=True)
-    ready_fws = lp.get_fw_ids(query={'state':'READY'}, count_only=True)
-    ready_wfs = lp.get_wf_ids(query={'state':'READY'}, count_only=True)
-    res_fws   = lp.get_fw_ids(query={'state':'RESERVED'}, count_only=True)
-    res_wfs   = lp.get_wf_ids(query={'state':'RESERVED'}, count_only=True)
-    fizz_fws  = lp.get_fw_ids(query={'state':'FIZZLED'}, count_only=True)
-    fizz_wfs  = lp.get_wf_ids(query={'state':'FIZZLED'}, count_only=True)
-    run_fws   = lp.get_fw_ids(query={'state':'RUNNING'}, count_only=True)
-    run_wfs   = lp.get_wf_ids(query={'state':'RUNNING'}, count_only=True)
-    # run_wfs   = lp.workflows.find({'state':'RUNNING'}).count()
-    comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
-    comp_wfs  = lp.get_wf_ids(query={'state':'COMPLETED'}, count_only=True)
+    arc_fws   = lp.get_fw_ids(query={'state': 'ARCHIVED'}, count_only=True)
+    arc_wfs   = lp.get_wf_ids(query={'state': 'ARCHIVED'}, count_only=True)
+    def_fws   = lp.get_fw_ids(query={'state': 'DEFUSED'}, count_only=True)
+    def_wfs   = lp.get_wf_ids(query={'state': 'DEFUSED'}, count_only=True)
+    wait_fws  = lp.get_fw_ids(query={'state': 'WAITING'}, count_only=True)
+    wait_wfs  = lp.get_wf_ids(query={'state': 'WAITING'}, count_only=True)
+    ready_fws = lp.get_fw_ids(query={'state': 'READY'}, count_only=True)
+    ready_wfs = lp.get_wf_ids(query={'state': 'READY'}, count_only=True)
+    res_fws   = lp.get_fw_ids(query={'state': 'RESERVED'}, count_only=True)
+    res_wfs   = lp.get_wf_ids(query={'state': 'RESERVED'}, count_only=True)
+    fizz_fws  = lp.get_fw_ids(query={'state': 'FIZZLED'}, count_only=True)
+    fizz_wfs  = lp.get_wf_ids(query={'state': 'FIZZLED'}, count_only=True)
+    run_fws   = lp.get_fw_ids(query={'state': 'RUNNING'}, count_only=True)
+    run_wfs   = lp.get_wf_ids(query={'state': 'RUNNING'}, count_only=True)
+    # run_wfs   = lp.workflows.find({'state': 'RUNNING'}).count()
+    comp_fws  = lp.get_fw_ids(query={'state': 'COMPLETED'}, count_only=True)
+    comp_wfs  = lp.get_wf_ids(query={'state': 'COMPLETED'}, count_only=True)
     tot_fws   = lp.get_fw_ids(count_only=True)
     tot_wfs   = lp.get_wf_ids(count_only=True)
 
@@ -68,8 +68,34 @@ def fw(request):
     fw_names = []
     for fw in fws_shown:
         fw_names.append(lp.get_fw_by_id(fw).name)
-    fw_info = zip(fws_shown, fw_names)
+    fw_states = []
+    for fw in fws_shown:
+        fw_states.append(lp.get_fw_by_id(fw).state)
+    fw_info = zip(fws_shown, fw_names, fw_states)
     return render_to_response('fw.html', {'fws': fws, 'fw_info': fw_info})
+
+def fw_state(request, state):
+    fws = lp.get_fw_ids(query={'state': state}, count_only=True)
+    shown = 20
+    fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)], query={'state': state})
+    fw_names = []
+    for fw in fws_shown:
+        fw_names.append(lp.get_fw_by_id(fw).name)
+    fw_info = zip(fws_shown, fw_names)
+    return render_to_response('fw_state.html', {'fws': fws, 'state': state, 'fw_info': fw_info})
+
+def fw_id(request, id):
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    fw = lp.get_fw_by_id(id)
+    fw_dict = fw.to_dict()
+    if 'archived_launches' in fw_dict:
+        del fw_dict['archived_launches']
+    del fw_dict['spec']
+    fw_data = json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
+    return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def fw_id_all(request, id):
     try:
@@ -95,19 +121,6 @@ def fw_id_less(request, id):
     fw_data = json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
-def fw_id(request, id):
-    try:
-        id = int(id)
-    except ValueError:
-        raise Http404()
-    fw = lp.get_fw_by_id(id)
-    fw_dict = fw.to_dict()
-    if 'archived_launches' in fw_dict:
-        del fw_dict['archived_launches']
-    del fw_dict['spec']
-    fw_data = json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
-    return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
-
 def wf(request):
     shown = 20
     wfs = lp.get_wf_ids(count_only=True)
@@ -115,8 +128,27 @@ def wf(request):
     wf_names = []
     for wf in wfs_shown:
         wf_names.append(lp.get_wf_by_fw_id(wf).name)
-    wf_info = zip(wfs_shown, wf_names)
+    wf_states = []
+    for wf in wfs_shown:
+        wf_states.append(lp.get_wf_by_fw_id(wf).state)
+    wf_info = zip(wfs_shown, wf_names, wf_states)
     return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})
+
+def wf_id(request, id):
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    wf = lp.get_wf_by_fw_id(id)
+    wf_dict = wf.to_display_dict()
+    del wf_dict['name']
+    del wf_dict['parent_links']
+    del wf_dict['nodes']
+    del wf_dict['links']
+    del wf_dict['metadata']
+    del wf_dict['states_list']
+    wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
+    return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 
 def wf_id_all(request, id):
     try:
@@ -144,22 +176,6 @@ def wf_id_less(request, id):
     del wf_dict['states']
     del wf_dict['launch_dirs']
     del wf_dict['updated_on']
-    wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
-    return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
-
-def wf_id(request, id):
-    try:
-        id = int(id)
-    except ValueError:
-        raise Http404()
-    wf = lp.get_wf_by_fw_id(id)
-    wf_dict = wf.to_display_dict()
-    del wf_dict['name']
-    del wf_dict['parent_links']
-    del wf_dict['nodes']
-    del wf_dict['links']
-    del wf_dict['metadata']
-    del wf_dict['states_list']
     wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 

@@ -21,8 +21,10 @@ urlpatterns = patterns('',
     ('^home/$', home),
     # url(r'^base_site/', include('base_site.foo.urls')),
 
-    # Fireworks index
+    # Fireworks index pages
     ('^fw/$', fw),
+    (r'^fw/(\w+)/$', fw_state),
+
     # Firework info pages
     (r'^fw/(\d+)/$', fw_id),
     (r'^fw/(\d+)/less/$', fw_id_less),
@@ -31,6 +33,7 @@ urlpatterns = patterns('',
 
     # Workflows index
     ('^wf/$', wf),
+
     # Workflow info pages
     (r'^wf/(\d+)/$', wf_id),
     (r'^wf/(\d+)/less/$', wf_id_less),
