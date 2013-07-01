@@ -71,13 +71,41 @@ def fw(request):
     fw_info = zip(fws_shown, fw_names)
     return render_to_response('fw.html', {'fws': fws, 'fw_info': fw_info})
 
-def fw_id(request, id):
+def fw_id_all(request, id):
     try:
         id = int(id)
     except ValueError:
         raise Http404()
     fw = lp.get_fw_by_id(id)
     fw_data = json.dumps(fw.to_dict(), default=DATETIME_HANDLER, indent=4)
+    return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
+
+def fw_id_less(request, id):
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    fw = lp.get_fw_by_id(id)
+    fw_dict = fw.to_dict()
+    if 'archived_launches' in fw_dict:
+        del fw_dict['archived_launches']
+    del fw_dict['spec']
+    if 'launches' in fw_dict:
+        del fw_dict['launches']
+    fw_data = json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
+    return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
+
+def fw_id(request, id):
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    fw = lp.get_fw_by_id(id)
+    fw_dict = fw.to_dict()
+    if 'archived_launches' in fw_dict:
+        del fw_dict['archived_launches']
+    del fw_dict['spec']
+    fw_data = json.dumps(fw_dict, default=DATETIME_HANDLER, indent=4)
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
@@ -90,13 +118,49 @@ def wf(request):
     wf_info = zip(wfs_shown, wf_names)
     return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})
 
+def wf_id_all(request, id):
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    wf = lp.get_wf_by_fw_id(id)
+    wf_dict = wf.to_display_dict()
+    del wf_dict['states_list']
+    wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
+    return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
+
+def wf_id_less(request, id):
+    try:
+        id = int(id)
+    except ValueError:
+        raise Http404()
+    wf = lp.get_wf_by_fw_id(id)
+    wf_dict = wf.to_display_dict()
+    del wf_dict['name']
+    del wf_dict['parent_links']
+    del wf_dict['nodes']
+    del wf_dict['links']
+    del wf_dict['metadata']
+    del wf_dict['states']
+    del wf_dict['launch_dirs']
+    del wf_dict['updated_on']
+    wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
+    return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
+
 def wf_id(request, id):
     try:
         id = int(id)
     except ValueError:
         raise Http404()
     wf = lp.get_wf_by_fw_id(id)
-    wf_data = json.dumps(wf.to_dict(), default=DATETIME_HANDLER, indent=4)
+    wf_dict = wf.to_display_dict()
+    del wf_dict['name']
+    del wf_dict['parent_links']
+    del wf_dict['nodes']
+    del wf_dict['links']
+    del wf_dict['metadata']
+    del wf_dict['states_list']
+    wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 
 def testing(request):

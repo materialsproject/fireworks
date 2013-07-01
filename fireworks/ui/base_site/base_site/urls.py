@@ -16,21 +16,26 @@ import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    # home index page
+    # Home
     ('^$', home),
     ('^home/$', home),
     # url(r'^base_site/', include('base_site.foo.urls')),
 
-    # FireWorks index
+    # Fireworks index
     ('^fw/$', fw),
-    # FireWork info pages
+    # Firework info pages
     (r'^fw/(\d+)/$', fw_id),
-    # (r'^fw/(\d+)/(more|less|all)/$', fw),
+    (r'^fw/(\d+)/less/$', fw_id_less),
+    (r'^fw/(\d+)/more/$', fw_id),
+    (r'^fw/(\d+)/all/$', fw_id_all),
 
-    # WorkFlows index
+    # Workflows index
     ('^wf/$', wf),
-    # WorkFlow info pages
+    # Workflow info pages
     (r'^wf/(\d+)/$', wf_id),
+    (r'^wf/(\d+)/less/$', wf_id_less),
+    (r'^wf/(\d+)/more/$', wf_id),
+    (r'^wf/(\d+)/all/$', wf_id_all),
 
     # Testing
     ('^testing/$', testing),

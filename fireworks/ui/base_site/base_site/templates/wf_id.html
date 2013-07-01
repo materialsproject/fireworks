@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Workflow {{ wf_id }}{% endblock %}
+{% block title %}Workflow {{ wf_id }} Information{% endblock %}
 
 {% block content %}
 <h3>Workflow {{ wf_id }} Information </h3>
+<h5><center><a href="/wf/{{ wf_id }}/less">less</a> |
+        <a href="/wf/{{ wf_id }}/more">more</a> |
+        <a href="/wf/{{ wf_id }}/all">all</a>
+    </center></h5>
 <div></center><pre>{{ wf_data }}</pre></div>
 {% endblock %}
