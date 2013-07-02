@@ -32,7 +32,10 @@ def home(request):
     wf_nums = []
     for state in states:
         fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
-        wf_nums.append(lp.get_wf_ids(query={'state': state}, count_only=True))
+        if state == 'WAITING' or state == 'RESERVED':
+            wf_nums.append('')
+        else:
+            wf_nums.append(lp.get_wf_ids(query={'state': state}, count_only=True))
     tot_fws   = lp.get_fw_ids(count_only=True)
     tot_wfs   = lp.get_wf_ids(count_only=True)
     info = zip(states, fw_nums, wf_nums)
@@ -176,7 +179,7 @@ def wf_id_less(request, id):
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 
 def testing(request):
-    arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
+    '''arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
     def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
     wait_fws  = lp.get_fw_ids(query={'state':'WAITING'}, count_only=True)
     ready_fws = lp.get_fw_ids(query={'state':'READY'}, count_only=True)
@@ -187,4 +190,14 @@ def testing(request):
     tot_fws   = lp.get_fw_ids(count_only=True)
     return render_to_response('testing.html', {'arc_fws': arc_fws, 'def_fws': def_fws,
         'wait_fws': wait_fws, 'ready_fws': ready_fws, 'res_fws': res_fws,
-        'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})
+        'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})'''
+    states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
+        'FIZZLED', 'RUNNING', 'COMPLETED']
+    fw_nums = []
+    for state in states:
+        fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
+    tot_fws   = lp.get_fw_ids(count_only=True)
+    info = zip(states, fw_nums)
+    return render_to_response('testing.html', {
+        'info': info, 'tot_fws': tot_fws})
+
