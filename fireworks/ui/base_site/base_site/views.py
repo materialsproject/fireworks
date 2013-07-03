@@ -57,7 +57,7 @@ def fw(request):
     # table data
     fws = lp.get_fw_ids(count_only=True)
     shown = 15
-    fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)])
+    fws_shown = lp.get_fw_ids(limit= 15, sort=[('created_on', DESCENDING)])
     fw_names = []
     fw_states = []
     for fw in fws_shown:
@@ -67,6 +67,7 @@ def fw(request):
 
     # pagination
     paginator = Paginator(fw_info, shown)
+    paginator._count = fws
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
