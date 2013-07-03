@@ -7,6 +7,7 @@ __date__ = 'Jun 13, 2013'
 
 import json
 from pymongo import DESCENDING
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
@@ -53,26 +54,50 @@ def home(request):
         'info': info, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs})
 
 def fw(request):
+    # table data
     fws = lp.get_fw_ids(count_only=True)
-    shown = 20
-    fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    shown = 15
+    fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)])
     fw_names = []
     fw_states = []
     for fw in fws_shown:
         fw_names.append(lp.get_fw_by_id(fw).name)
         fw_states.append(lp.get_fw_by_id(fw).state)
     fw_info = zip(fws_shown, fw_names, fw_states)
-    return render_to_response('fw.html', {'fws': fws, 'fw_info': fw_info})
+
+    # pagination
+    paginator = Paginator(fw_info, shown)
+    page = request.GET.get('page')
+    try:
+        display = paginator.page(page)
+    except PageNotAnInteger:
+        display = paginator.page(1)
+    except EmptyPage:
+        display = paginator.page(paginator.num_pages)
+
+    return render_to_response('fw.html', {'fws': fws, 'display': display})
 
 def fw_state(request, state):
+    # table data
     fws = lp.get_fw_ids(query={'state': state}, count_only=True)
-    shown = 20
-    fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)], query={'state': state})
+    shown = 15
+    fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)], query={'state': state})
     fw_names = []
     for fw in fws_shown:
         fw_names.append(lp.get_fw_by_id(fw).name)
     fw_info = zip(fws_shown, fw_names)
-    return render_to_response('fw_state.html', {'fws': fws, 'state': state, 'fw_info': fw_info})
+
+    # pagination
+    paginator = Paginator(fw_info, shown)
+    page = request.GET.get('page')
+    try:
+        display = paginator.page(page)
+    except PageNotAnInteger:
+        display = paginator.page(1)
+    except EmptyPage:
+        display = paginator.page(paginator.num_pages)
+
+    return render_to_response('fw_state.html', {'fws': fws, 'state': state, 'display': display})
 
 def fw_id(request, id):
     try:
@@ -112,26 +137,50 @@ def fw_id_less(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
+    # table data
     wfs = lp.get_wf_ids(count_only=True)
-    shown = 20
-    wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    shown = 15
+    wfs_shown = lp.get_wf_ids(sort=[('created_on', DESCENDING)])
     wf_names = []
     wf_states = []
     for wf in wfs_shown:
         wf_names.append(lp.get_wf_by_fw_id(wf).name)
         wf_states.append(lp.get_wf_by_fw_id(wf).state)
     wf_info = zip(wfs_shown, wf_names, wf_states)
-    return render_to_response('wf.html', {'wfs': wfs, 'wf_info': wf_info})
+
+    # pagination
+    paginator = Paginator(wf_info, shown)
+    page = request.GET.get('page')
+    try:
+        display = paginator.page(page)
+    except PageNotAnInteger:
+        display = paginator.page(1)
+    except EmptyPage:
+        display = paginator.page(paginator.num_pages)
+
+    return render_to_response('wf.html', {'wfs': wfs, 'display': display})
 
 def wf_state(request, state):
+    # table data
     wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
-    shown = 20
-    wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)], query={'state': state})
+    shown = 15
+    wfs_shown = lp.get_wf_ids(sort=[('created_on', DESCENDING)], query={'state': state})
     wf_names = []
     for wf in wfs_shown:
         wf_names.append(lp.get_wf_by_fw_id(wf).name)
     wf_info = zip(wfs_shown, wf_names)
-    return render_to_response('wf_state.html', {'wfs': wfs, 'state': state, 'wf_info': wf_info})
+
+    # pagination
+    paginator = Paginator(wf_info, shown)
+    page = request.GET.get('page')
+    try:
+        display = paginator.page(page)
+    except PageNotAnInteger:
+        display = paginator.page(1)
+    except EmptyPage:
+        display = paginator.page(paginator.num_pages)
+
+    return render_to_response('wf_state.html', {'wfs': wfs, 'state': state, 'display': display})
 
 def wf_id(request, id):
     try:
@@ -200,4 +249,3 @@ def testing(request):
     info = zip(states, fw_nums)
     return render_to_response('testing.html', {
         'info': info, 'tot_fws': tot_fws})
-

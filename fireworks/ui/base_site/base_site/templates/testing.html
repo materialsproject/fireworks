@@ -5,12 +5,10 @@
 {% block content %}
 <h3>Testing</h3>
 
-<!--CHART-->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 
-<!--<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>-->
-
+<!-- TABLE -->
 <table id="datatable" border="1" style="display: inline-block; margin: 10px;">    <thead>
         <tr>
             <th>State</th>
@@ -27,10 +25,8 @@
     </tbody>
 </table>
 
-
-
+<!-- CHART -->
 <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-
 <script>
 Highcharts.visualize = function (table, options) {
     // the categories
@@ -57,7 +53,6 @@ Highcharts.visualize = function (table, options) {
             }
         });
     });
-
     var chart = new Highcharts.Chart(options);
 }
 
@@ -96,9 +91,9 @@ var table = document.getElementById('datatable'),
             }
         }
     };
-
 Highcharts.visualize(table, options);
 </script>
+
 <!--
 <script>
     var arc_fws   = {{ arc_fws }};

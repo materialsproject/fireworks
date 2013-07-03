@@ -5,6 +5,7 @@
 {% block content %}
 <h3>{{ wfs }} {{ state|lower|capfirst }} Workflow{{ wfs|pluralize }} currently in database</h3>
 
+<!-- FILTERS / NAVIGATION -->
 <h5><center><a href="/wf/">NEWEST</a> |
         <a href="/wf/ARCHIVED">ARCHIVED</a> |
         <a href="/wf/DEFUSED">DEFUSED</a> |
@@ -14,6 +15,7 @@
         <a href="/wf/COMPLETED">COMPLETED</a>
 </center></h5>
 
+<!-- TABLE -->
 <table border="1">
     <tfoot>Click an ID for more information about that Workflow.</tfoot>
     <tr><th colspan="2">{{ state|lower|capfirst }} Workflows</th></tr>
@@ -21,11 +23,34 @@
         <th>ID</th>
         <th>Name</th>
     </tr>
-    {% for ids, names in wf_info %}
+    {% for ids, names in display %}
         <tr>
             <td><center><a href="/wf/{{ ids }}">{{ ids }}</a></center></td>
             <td>{{ names }}</td>
         </tr>
     {% endfor %}
 </table>
+
+<!-- PAGINATION / NAVIGATION -->
+<div class="pagination">
+    <span class="step-links">
+        {% if display.has_previous %}
+            {% if display.previous_page_number != 1 %}
+                <a href="?page=1">&lt&lt</a>
+            {% endif %}
+            <a href="?page={{ display.previous_page_number }}">&lt</a>
+        {% endif %}
+
+        <span class="current">
+            {{ display.number }} of {{ display.paginator.num_pages }}
+        </span>
+
+        {% if display.has_next %}
+            <a href="?page={{ display.next_page_number }}">&gt</a>
+            {% if display.next_page_number != display.paginator.num_pages %}
+                <a href="?page={{ display.paginator.num_pages }}">&gt&gt</a>
+            {% endif %}
+        {% endif %}
+    </span>
+</div>
 {% endblock %}
