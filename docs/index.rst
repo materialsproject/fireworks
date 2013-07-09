@@ -59,8 +59,8 @@ It can be time-consuming to evaluate whether a workflow software will meet your 
 Quickstart and Tutorials
 ========================
 
-Quickstart
-==========
+Quickstart ("Wiggle your big toe")
+==================================
 
 To get started with FireWorks, we suggest that you follow our quickstart tutorial, which should take about half an hour for experienced Python users and covers basic installation and usage.
 
