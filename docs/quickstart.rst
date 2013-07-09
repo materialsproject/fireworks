@@ -265,6 +265,6 @@ Next steps
 
 At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlaunch rapidfire``, and looked for new jobs automatically using the **infinite** Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.
 
-Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation Tutorial (part 2: the Worker) </worker_tutorial>`. This is the path we recommend for most users, except in the simplest of circumstances in which you only want to run jobs on the FireServer itself.
+However, we still haven't covered many important topics. For example, we have not executed complex workflows, run arbitrary Python code, or run jobs on different types of computing resources. Nor have we really looked into how to monitor and manage jobs and deploy FireWorks in production.
 
-If you are only running on the FireServer, you can skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.
+We suggest that you continue by learning how to :doc:`define jobs using FireTasks </firetask_tutorial>`. Alternatively, you could return to the :doc:`home page </index>` and choose a tutorial topic that suits your application.

@@ -196,6 +196,6 @@ Here is complete Python code for running a dynamic workflow. Note that this code
 The end is just the beginning
 =============================
 
-You've made it to the end of the core tutorial! By now you should have a good feeling for the basic operation of FireWorks and the types of automation it allows. However, it is certainly not the end of the story. Job priorities, duplicate job detection, and running through queues are just some of the features we haven't discussed in the core tutorial.
+You've made it to the end of the workflows tutorial! By now you should have a good feeling for the basic operation of FireWorks and the types of automation it allows. However, it is certainly not the end of the story. Job priorities, duplicate job detection, and running through queues are just some of the features we haven't discussed in the core tutorial.
 
-If you are already itching to learn more about additional topics, please follow the additional tutorials on our main page. Otherwise, have fun playing with FireWorks! As always, let us know what you think.
+If you haven't already set up Worker computing resources to execute your jobs, you might do that now by following the :doc:`Worker tutorial <worker_tutorial>`. Otherwise, you might return to the :doc:`home page <index>` and choose what topic to pursue next.

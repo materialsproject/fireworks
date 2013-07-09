@@ -11,7 +11,7 @@ Like the previous tutorial, our purpose is to get you set up as quickly as possi
 Launch a Rocket on a worker machine (FireWorker)
 ================================================
 
-So far, we have added a FireWork (job) to the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
+In the Quickstart, we entered a FireWork (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
 
 A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). We'll next configure a worker machine.
 
@@ -105,6 +105,4 @@ You've now run multiple jobs on your FireWorker! You could even try running the 
 Next Steps
 ==========
 
-A central FireServer and one or more FireWorkers pulling jobs in ``rapidfire`` mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlaunch`` on your FireWorker. A description of how to run through a queue is given here:  :doc:`Launching Rockets through a queue </queue_tutorial>`. You can complete that tutorial now, or (our recommendation) save it for later.
-
-Meanwhile, we will move on to :doc:`defining jobs using FireTasks </firetask_tutorial>`.
+A central FireServer and one or more FireWorkers pulling jobs in ``rapidfire`` mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlaunch`` on your FireWorker. A description of how to run through a queue is given here:  :doc:`Launching Rockets through a queue </queue_tutorial>`. Or, you might return to the :doc:`home page <index>` and pursue a different tutorial.
