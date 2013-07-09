@@ -41,6 +41,8 @@ Reset the FireServer
     cd <INSTALL_DIR>/fw_tutorials/installation
 
    where <INSTALL_DIR> is your FireWorks installation directory.
+
+.. note:: If you do not know your <INSTALL_DIR>, use the command ``lpad version`` to print it to the terminal.
  
 #. Reset the FireWorks database (the LaunchPad)::
 
