@@ -40,7 +40,7 @@ FW Docs
 
 * Setting up logging
 
-* Re-organize the documentation into "trails", e.g. a quickstart, a Workflows trail, and running on resources trail
+* Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
 Major Features
 ==============

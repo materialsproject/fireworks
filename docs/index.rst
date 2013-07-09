@@ -23,7 +23,7 @@ Some (but not all) of its features include:
 
 * Ability to distribute calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
 
-* Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify what actions to take depending on the output of a job (e.g., terminate a workflow, add a new step, or completely alter the workflow)
+* Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify code that performs actions based on the output of a job (e.g., terminate a workflow, add a new step, or completely alter the workflow)
 
 * Automatic detection of duplicate sub-workflows - skip duplicated portions between two workflows while still running unique sections
 
