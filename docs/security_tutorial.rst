@@ -43,7 +43,7 @@ Add username and password keys to your LaunchPad file
 
 Your LaunchPad file contains the location of the LaunchPad as well as any credentials needed to connect. To connect to an authenticated database:
 
-1. Locate your ``my_launchpad.yaml`` file (perhaps from when you completed the :doc:`Worker tutorial <installation_tutorial_pt2>`). If you never created such a file, you can find a template in ``<INSTALL_DIR>/fw_tutorials/installation_pt2/launchpad.yaml``. You might copy it to ``my_launchpad.yaml`` and edit it as necessary.
+1. Locate your ``my_launchpad.yaml`` file (perhaps from when you completed the :doc:`Worker tutorial <worker_tutorial>`). If you never created such a file, you can find a template in ``<INSTALL_DIR>/fw_tutorials/worker/launchpad.yaml``. You might copy it to ``my_launchpad.yaml`` and edit it as necessary.
 
 #. Add your username and password to your launchpad file by adding or editing the following lines::
 

@@ -9,6 +9,7 @@
 
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
 
+====================
 Is FireWorks for me?
 ====================
 
@@ -35,7 +36,7 @@ Some (but not all) of its features include:
 * Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs). *(future)*
 
 Limitations
------------
+===========
 
 Some limitations of FireWorks include:
 
@@ -50,75 +51,97 @@ Some limitations of FireWorks include:
 If you encounter any problems while using FireWorks, please let us know (see :ref:`contributing-label`).
 
 Quick information
------------------
+=================
 
 It can be time-consuming to evaluate whether a workflow software will meet your computing needs from documentation alone. If you just want to know whether FireWorks is a potential solution to your workflow problem, one option is to e-mail a description of your problem to the developer at: |Mail|. You might also look at the :doc:`bird's eye view of FireWorks </nutshell>` to get started.
 
-Changelog
-=========
+========================
+Quickstart and Tutorials
+========================
 
-.. toctree::
-   :maxdepth: 1
+Quickstart
+==========
 
-   changelog
-
-Getting Started!
-================
-
-To get started with FireWorks, we suggest that you follow our core tutorials. These tutorials will set up a central server as well as worker computers. They will also demonstrate how to define and run basic workflows. We expect that completing all of the core tutorials will take between one and three hours. (You might want to get a snack...)
+To get started with FireWorks, we suggest that you follow our quickstart tutorial, which should take about half an hour for experienced Python users and covers basic installation and usage.
 
 .. toctree::
    :maxdepth: 1
 
    nutshell
-   installation_tutorial
-   installation_tutorial_pt2
+   quickstart
+
+Basic usage
+===========
+
+After completing the quickstart, we suggest that you follow our core tutorials that cover the primary features of FireWorks. Depending on your application, you may not need to complete all the tutorials.
+
+Designing workflows
+-------------------
+
+.. toctree::
+   :maxdepth: 1
+
    firetask_tutorial
    workflow_tutorial
    dynamic_wf_tutorial
 
-To get things running on a shared resource with a queueing system (e.g., a supercomputing center), you will be interested in the following tutorials:
+Executing workflows on different types of computing resources
+-------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   worker_tutorial
+   queue_tutorial
+   queue_tutorial_pt2
+   installation_notes
+
+Managing jobs and deployment
+============================
+
+This series of tutorials cover how to manage your jobs and deploy FireWorks in a production environment.
+
+Job priority, cancellation, restart, and failure
+------------------------------------------------
 
 .. toctree::
     :maxdepth: 1
 
-    queue_tutorial
-    queue_tutorial_pt2
-    installation_notes
-
-More!
-=====
-
-We recommend that all users read (or at least browse) the following tutorials before using FireWorks seriously:
-
-.. toctree::
-    :maxdepth: 1
-
-    failures_tutorial
-    maintain_tutorial
+    priority_tutorial
     defuse_tutorial
     rerun_tutorial
+    failures_tutorial
+    maintain_tutorial
+
+Monitoring FireWorks
+--------------------
+
+.. toctree::
+    :maxdepth: 1
+
     query_tutorial
 
-You may be interested in the following features of FireWorks:
+Deploying FireWorks in production
+---------------------------------
 
 .. toctree::
     :maxdepth: 1
 
     security_tutorial
-    duplicates_tutorial
-    priority_tutorial
+    config_tutorial
 
-Python users and Power users will be interested in the following:
+Additional features and topics
+==============================
 
 .. toctree::
     :maxdepth: 1
 
+    duplicates_tutorial
     python_tutorial
-    config_tutorial
 
 .. _contributing-label:
 
+====================================
 Contributing / Contact / Bug Reports
 ====================================
 
@@ -137,11 +160,22 @@ The collaborative way to submit questions, issues / bug reports, and all other c
 
 The list of contributors to FireWorks can be found :doc:`here </contributors>`.
 
+=========
+Changelog
+=========
+
+.. toctree::
+   :maxdepth: 1
+
+   changelog
+
+=======
 License
 =======
 
 FireWorks is released under a modified BSD license; the full text can be found :doc:`here</license>`.
 
+===========================
 Comprehensive Documentation
 ===========================
 

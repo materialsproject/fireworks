@@ -1,6 +1,6 @@
-==========================================
-Installation Tutorial (part 2: the Worker)
-==========================================
+===============
+Worker Tutorial
+===============
 
 If you've set up your FireServer, this tutorial will help you to:
 
@@ -26,7 +26,7 @@ Reset the FireWorks database
 1. Back at the **FireServer**, let's reset our database and add a FireWork::
 
     lpad reset <TODAY'S DATE>
-    cd <INSTALL_DIR>/fw_tutorials/installation_pt2
+    cd <INSTALL_DIR>/fw_tutorials/worker
     lpad add fw_test.yaml
 
 Make sure to keep the MongoDB running on the FireServer, and do not launch a Rocket yet!
@@ -36,9 +36,9 @@ Connect to the FireServer from the FireWorker
 
 The FireWorker needs to know the login information for the FireServer. On the **FireWorker**,
 
-1. Navigate to the new installation tutorial directory::
+1. Navigate to the worker tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorials/installation_pt2
+    cd <INSTALL_DIR>/fw_tutorials/worker
 
    where <INSTALL_DIR> is your FireWorks installation directory.
 
@@ -60,14 +60,14 @@ The FireWorker needs to know the login information for the FireServer. On the **
 Configure your FireWorker
 -------------------------
 
-The FireWorker file contains information about this worker's configuration. Staying in the ``installation_pt2`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
+The FireWorker file contains information about this worker's configuration. Staying in the ``worker`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
 
    .. note:: The name ``my_fworker.yaml`` is a special filename that contains your FireWorker's credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-w`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
 Launch a Rocket on the FireWorker
 ---------------------------------
 
-#. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, type::
+#. Staying in the ``worker`` tutorial directory on your FireWorker, type::
 
     rlaunch singleshot
 
@@ -86,7 +86,7 @@ Running rapidfire mode on the FireWorker
 
 Just like on the central server, you can run in rapidfire mode on the FireWorker to process many jobs.
 
-1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, clean up your directory::
+1. Staying in the ``worker`` tutorial directory on your FireWorker, clean up your directory::
 
     rm FW.json howdy.txt
 

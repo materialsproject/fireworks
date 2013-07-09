@@ -1,6 +1,6 @@
-==========================================
-Installation Tutorial (part 1: the Server)
-==========================================
+===========================
+Quickstart and Installation
+===========================
 
 .. note:: If you haven't already, we strongly suggest you begin by reading the :doc:`bird's eye view of FireWorks </nutshell>`.
 
@@ -36,7 +36,7 @@ You are now ready to start playing with FireWorks!
 Reset the FireServer
 --------------------
 
-#. Navigate to the FireWorks installation tutorial directory::
+#. Navigate to the FireWorks quickstart directory::
 
     cd <INSTALL_DIR>/fw_tutorials/installation
 
@@ -236,7 +236,7 @@ Change the MongoDB configuration::
 Run in rapid-fire mode::
 
     from fireworks.core.rocket_launcher import rapidfire
-    rapidfire(launchpad, FWorker())
+    rapidfire(launchpad, FWorker())  # use this line instead of launch_rocket()
 
 Only output warnings and above::
 
@@ -244,7 +244,7 @@ Only output warnings and above::
     # <code omitted>
     launch_rocket(launchpad, FWorker(), strm_lvl='WARNING')
 
-Write out the Workflow to a file, or load a FireWork object from a file::
+Write out the Workflow to a flat file, or load a FireWork object from a file::
 
     fw_yaml = firework.to_file("my_firework.yaml")
     fw = firework.from_file("my_firework.yaml")
@@ -254,7 +254,7 @@ Write out the Workflow to a file, or load a FireWork object from a file::
     fw = firework.from_file("my_firework.json")
     print fw
 
-.. note:: The *to_file()* and *from_file()* functions are available for many FireWork objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* will allow serialization/deserialization.
+.. note:: The *to_file()* and *from_file()* functions are available for many FireWork objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* will allow serialization/deserialization to files if desired.
 
 .. note:: FireWorks automatically detects what type of format you're writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you're using Python, there may not be any need to use files at all!
 
@@ -265,6 +265,6 @@ Next steps
 
 At this point, you've successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: ``rlaunch rapidfire``, and looked for new jobs automatically using the **infinite** Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.
 
-Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation Tutorial (part 2: the Worker) </installation_tutorial_pt2>`. This is the path we recommend for most users, except in the simplest of circumstances in which you only want to run jobs on the FireServer itself.
+Your next step depends on your application. If you want to stick with our simple script and automate it on at least one worker node, forge on to the next tutorial in the series: :doc:`Installation Tutorial (part 2: the Worker) </worker_tutorial>`. This is the path we recommend for most users, except in the simplest of circumstances in which you only want to run jobs on the FireServer itself.
 
 If you are only running on the FireServer, you can skip ahead to :doc:`defining jobs using FireTasks </firetask_tutorial>`.

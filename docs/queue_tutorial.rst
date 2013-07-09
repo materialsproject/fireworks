@@ -44,12 +44,12 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
     cp <INSTALL_DIR>/fw_tutorials/queue/my_qadapter.yaml .
     cp <INSTALL_DIR>/fw_tutorials/queue/fw_test.yaml .
 
-#. Copy over your LaunchPad and FireWorker files from the second installation tutorial::
+#. Copy over your LaunchPad and FireWorker files from the worker tutorial::
 
-    cp <INSTALL_DIR>/fw_tutorials/installation_pt2/my_fworker.yaml .
-    cp <INSTALL_DIR>/fw_tutorials/installation_pt2/my_launchpad.yaml .
+    cp <INSTALL_DIR>/fw_tutorials/worker/my_fworker.yaml .
+    cp <INSTALL_DIR>/fw_tutorials/worker/my_launchpad.yaml .
 
-   .. note:: If you do not have these files, please go back and regenerate them according to the instructions :doc:`here </installation_tutorial_pt2>`.
+   .. note:: If you do not have these files, please go back and regenerate them according to the instructions :doc:`here </worker_tutorial>`.
 
 #. Open ``my_qadapter.yaml`` and modify it as follows:
 
