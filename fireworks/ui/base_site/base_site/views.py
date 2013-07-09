@@ -55,19 +55,32 @@ def home(request):
 
 def fw(request):
     # table data
-    fws = lp.get_fw_ids(count_only=True)
+    fw_count = lp.get_fw_ids(count_only=True)
     shown = 15
-    fws_shown = lp.get_fw_ids(limit= 15, sort=[('created_on', DESCENDING)])
+    start = 0
+    stop = shown
     fw_names = []
     fw_states = []
-    for fw in fws_shown:
-        fw_names.append(lp.get_fw_by_id(fw).name)
-        fw_states.append(lp.get_fw_by_id(fw).state)
-    fw_info = zip(fws_shown, fw_names, fw_states)
+    fws = lp.get_fw_ids(sort=[('created_on', DESCENDING)])
+    for fw in fws:
+        fws_shown = fws[start:stop]
+        if stop < fw_count:
+            start = start+shown
+            stop = stop+shown
+            for fw in fws_shown:
+                fw_names.append(lp.get_fw_by_id(fw).name)
+                fw_states.append(lp.get_fw_by_id(fw).state)
+        if stop > fw_count:
+            fws_shown = fws[start:stop]
+            for fw in fws_shown:
+                fw_names.append(lp.get_fw_by_id(fw).name)
+                fw_states.append(lp.get_fw_by_id(fw).state)
+            break
+    fw_info = zip(fws, fw_names, fw_states)
 
     # pagination
     paginator = Paginator(fw_info, shown)
-    paginator._count = fws
+    paginator._count = fw_count
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
@@ -76,7 +89,7 @@ def fw(request):
     except EmptyPage:
         display = paginator.page(paginator.num_pages)
 
-    return render_to_response('fw.html', {'fws': fws, 'display': display})
+    return render_to_response('fw.html', {'fws': fw_count, 'display': display})
 
 def fw_state(request, state):
     # table data
@@ -151,6 +164,7 @@ def wf(request):
 
     # pagination
     paginator = Paginator(wf_info, shown)
+    paginator._count = wfs
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
