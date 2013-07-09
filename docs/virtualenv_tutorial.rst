@@ -2,7 +2,7 @@
 Virtualenv installation
 =======================
 
-In this tutorial, we'll cover just the basics of setting up a *virtualenv* for your FireWorks installation. Virtualenv allows you to isolate your FireWorks installation from your other Python installations. This is often done when there are conflicts (e.g., two codes require different versions of Python), and sometimes done just for cleanliness or to host separate testing and production environments. Another reason to use virtualenv is when you don't have permission to access the global "site-packages directory", e.g. on a shared machine.
+In this tutorial, we'll cover just the basics of setting up a *virtualenv* for your FireWorks installation. Virtualenv allows you to isolate your FireWorks installation from your other Python installations. This is often done when there are conflicts (e.g., two codes require different versions of Python), and sometimes done just for cleanliness or to host separate testing and production environments. Another reason to use virtualenv is when you don't have permission to access the global Python "site-packages" directory, e.g. on a shared machine like a supercomputing center.
 
 Introduction to virtualenv
 ==========================
