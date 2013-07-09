@@ -8,7 +8,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 
-<!-- TABLE -->
+<!-- TABLE
 <table id="datatable" border="1" style="display: inline-block; margin: 10px;">    <thead>
         <tr>
             <th>State</th>
@@ -25,7 +25,7 @@
     </tbody>
 </table>
 
-<!-- CHART -->
+<!-- CHART
 <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 <script>
 Highcharts.visualize = function (table, options) {
@@ -93,18 +93,19 @@ var table = document.getElementById('datatable'),
     };
 Highcharts.visualize(table, options);
 </script>
+-->
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
-<!--
 <script>
-    var arc_fws   = {{ arc_fws }};
-    var def_fws   = {{ def_fws }};
-    var wait_fws  = {{ wait_fws }};
-    var ready_fws = {{ ready_fws }};
-    var res_fws   = {{ res_fws }};
-    var fizz_fws  = {{ fizz_fws }};
-    var run_fws   = {{ run_fws }};
-    var comp_fws  = {{ comp_fws }};
-    var tot_fws   = {{ tot_fws }};
+    var arc_fws   = parseInt('{{ arc_fws }}');
+    var def_fws   = parseInt('{{ def_fws }}');
+    var wait_fws  = parseInt('{{ wait_fws }}');
+    var ready_fws = parseInt('{{ ready_fws }}');
+    var res_fws   = parseInt('{{ res_fws }}');
+    var fizz_fws  = parseInt('{{ fizz_fws }}');
+    var run_fws   = parseInt('{{ run_fws }}');
+    var comp_fws  = parseInt('{{ comp_fws }}');
+    var tot_fws   = parseInt('{{ tot_fws }}');
 
     $(function () {
         $('#container').highcharts({
@@ -168,5 +169,5 @@ Highcharts.visualize(table, options);
             }]
         });
     });
-</script>-->
+</script>
 {% endblock %}
