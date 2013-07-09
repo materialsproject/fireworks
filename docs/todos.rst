@@ -30,10 +30,6 @@ FW Docs
 
 * Document allow_fizzled_parents
 
-* Document 'pip install' as a second option for installation, e.g. trouble with GIT keys
-
-* Show a workflow diagram with the relation between FireTasks, FireWorks, and Workflows
-
 * Separate out the tutorial on running arbitrary Python code
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
@@ -71,13 +67,11 @@ Misc.
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
-* Add stats
+* Add stats, preferably using a MapReduce call for speed
 
 * Clean up job_exists() calls - they are currently expensive!
 
 * Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
-
-* <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify. Or add a launchpad command to tell you where the tutorial dir is.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
