@@ -129,6 +129,7 @@ Deploying FireWorks in production
 
     security_tutorial
     config_tutorial
+    performance_tutorial
 
 Additional features and topics
 ==============================

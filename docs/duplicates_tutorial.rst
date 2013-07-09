@@ -112,4 +112,4 @@ The built-in duplicate finder, ``Exact Dupe Finder``, suffers from two limitatio
 * performance is not great when the number of FireWorks is large
 * matching is limited to *exact* matches of the FireWork spec. You cannot, for example, define two FireWorks to be duplicated if a portion of the spec matches within some numerical tolerance.
 
-In the future, we will include a tutorial on implementing custom Dupe Finders for your application that overcome these limitations. For now, we suggest that you refer to the internal docs or contact us for help. (see :ref:`contributing-label`)
+In the future, we will include a tutorial on implementing custom Dupe Finders for your application that overcome these limitations. For now, we suggest that you refer to the internal docs or contact us for help. (see :ref:`contributing-label`). You can also try to improve performance by manually adding database indices to :doc:`improve performance <performance_tutorial>`.

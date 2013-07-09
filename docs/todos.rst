@@ -28,8 +28,6 @@ FW Docs
 
 * Detailed tutorial on implementing dynamic jobs
 
-* Document allow_fizzled_parents
-
 * Separate out the tutorial on running arbitrary Python code
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
