@@ -552,7 +552,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history()
         self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RUNNING'},
-                                      m_launch.to_db_dict())
+            {'$set':{'state_history':m_launch.to_db_dict()['state_history']}})
 
     def get_new_fw_id(self):
         """
