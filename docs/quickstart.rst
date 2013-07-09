@@ -38,7 +38,7 @@ Reset the FireServer
 
 #. Navigate to the FireWorks quickstart directory::
 
-    cd <INSTALL_DIR>/fw_tutorials/installation
+    cd <INSTALL_DIR>/fw_tutorials/quickstart
 
    where <INSTALL_DIR> is your FireWorks installation directory.
 
