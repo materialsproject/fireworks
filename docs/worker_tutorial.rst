@@ -1,6 +1,6 @@
-==========================================
-Installation Tutorial (part 2: the Worker)
-==========================================
+===============
+Worker Tutorial
+===============
 
 If you've set up your FireServer, this tutorial will help you to:
 
@@ -11,7 +11,7 @@ Like the previous tutorial, our purpose is to get you set up as quickly as possi
 Launch a Rocket on a worker machine (FireWorker)
 ================================================
 
-So far, we have added a FireWork (job) to the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
+In the Quickstart, we entered a FireWork (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
 
 A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). We'll next configure a worker machine.
 
@@ -26,7 +26,7 @@ Reset the FireWorks database
 1. Back at the **FireServer**, let's reset our database and add a FireWork::
 
     lpad reset <TODAY'S DATE>
-    cd <INSTALL_DIR>/fw_tutorials/installation_pt2
+    cd <INSTALL_DIR>/fw_tutorials/worker
     lpad add fw_test.yaml
 
 Make sure to keep the MongoDB running on the FireServer, and do not launch a Rocket yet!
@@ -36,9 +36,9 @@ Connect to the FireServer from the FireWorker
 
 The FireWorker needs to know the login information for the FireServer. On the **FireWorker**,
 
-1. Navigate to the new installation tutorial directory::
+1. Navigate to the worker tutorial directory::
 
-    cd <INSTALL_DIR>/fw_tutorials/installation_pt2
+    cd <INSTALL_DIR>/fw_tutorials/worker
 
    where <INSTALL_DIR> is your FireWorks installation directory.
 
@@ -60,14 +60,14 @@ The FireWorker needs to know the login information for the FireServer. On the **
 Configure your FireWorker
 -------------------------
 
-The FireWorker file contains information about this worker's configuration. Staying in the ``installation_pt2`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
+The FireWorker file contains information about this worker's configuration. Staying in the ``worker`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
 
    .. note:: The name ``my_fworker.yaml`` is a special filename that contains your FireWorker's credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-w`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
 Launch a Rocket on the FireWorker
 ---------------------------------
 
-#. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, type::
+#. Staying in the ``worker`` tutorial directory on your FireWorker, type::
 
     rlaunch singleshot
 
@@ -86,7 +86,7 @@ Running rapidfire mode on the FireWorker
 
 Just like on the central server, you can run in rapidfire mode on the FireWorker to process many jobs.
 
-1. Staying in the ``installation_pt2`` tutorial directory on your FireWorker, clean up your directory::
+1. Staying in the ``worker`` tutorial directory on your FireWorker, clean up your directory::
 
     rm FW.json howdy.txt
 
@@ -105,6 +105,4 @@ You've now run multiple jobs on your FireWorker! You could even try running the 
 Next Steps
 ==========
 
-A central FireServer and one or more FireWorkers pulling jobs in ``rapidfire`` mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlaunch`` on your FireWorker. A description of how to run through a queue is given here:  :doc:`Launching Rockets through a queue </queue_tutorial>`. You can complete that tutorial now, or (our recommendation) save it for later.
-
-Meanwhile, we will move on to :doc:`defining jobs using FireTasks </firetask_tutorial>`.
+A central FireServer and one or more FireWorkers pulling jobs in ``rapidfire`` mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run ``rlaunch`` on your FireWorker. A description of how to run through a queue is given here:  :doc:`Launching Rockets through a queue </queue_tutorial>`. Or, you might return to the :doc:`home page <index>` and pursue a different tutorial.

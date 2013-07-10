@@ -13,6 +13,7 @@ from fireworks.core.firework import Workflow
 import ast
 import json
 from fireworks import __version__ as FW_VERSION
+from fireworks import FW_INSTALL_DIR
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
@@ -100,7 +101,7 @@ def lpad():
     tuneup_parser = subparsers.add_parser('tuneup',
                                           help='Tune-up the database (should be performed during scheduled downtime)')
 
-    subparsers.add_parser('version', help='Print the version of FireWorks installed')
+    subparsers.add_parser('version', help='Print the version and location of FireWorks installation')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
                         default=FWConfig().LAUNCHPAD_LOC)
@@ -114,7 +115,8 @@ def lpad():
     args = parser.parse_args()
 
     if args.command == 'version':
-        print FW_VERSION
+        print 'FireWorks version:', FW_VERSION
+        print 'located in:', FW_INSTALL_DIR
 
     else:
         if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):

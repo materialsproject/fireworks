@@ -40,7 +40,7 @@ Between FireWorks, you can return a **FWAction** that can store data or modify t
    :align: center
    :alt: FireWorks Workflow
 
-At this point, you may be wondering how to organize a set of computations into FireTasks, FireWorks, and Workflows. For example, to run 3 shell scripts in succession, one might choose a single FireWork with 3 FireTasks or three FireWorks that each have 1 FireTask. Both are viable options with different strengths and possibilities. Over the course of the installation tutorials, we'll distinguish these a little more.
+At this point, you may be wondering how to organize a set of computations into FireTasks, FireWorks, and Workflows. For example, to run 3 shell scripts in succession, one might choose a single FireWork with 3 FireTasks or three FireWorks that each have 1 FireTask. Both are viable options with different strengths and possibilities. Over the course of the FireWorks tutorials, we'll distinguish these a little more.
 
 But wait - there's more!
 ========================
@@ -52,4 +52,4 @@ While the description above sounds simplistic, sophisticated types of workflow o
 * create and modify job priorities
 * handle failures and crashes dynamically, by automatically creating FireWorks that fix crashed jobs in the FWAction object. You might even set up a workflow where a crashed job is automatically rerun at a different FireWorker, and with somewhat different parameters - no human intervention required!
 
-If this sounds good, we encourage you to get started by following the :doc:`installation tutorial</installation_tutorial>`.
+If this sounds good, we encourage you to get started by following the :doc:`quickstart</quickstart>`.

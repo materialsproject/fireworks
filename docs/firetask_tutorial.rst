@@ -12,7 +12,7 @@ This tutorial can be completed from the command line, but some knowledge of Pyth
 Introduction to FireTasks
 =========================
 
-In the :doc:`installation tutorial <installation_tutorial>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, recall that the command was defined within a task labeled ``Script Task``::
+In the :doc:`quickstart <quickstart>`, we ran a simple script that performed ``echo "howdy, your job launched successfully!" >> howdy.txt"``. Looking inside ``fw_test.yaml``, recall that the command was defined within a task labeled ``Script Task``::
 
     spec:
       _tasks:

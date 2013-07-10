@@ -101,7 +101,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     :param fworker: (FWorker)
     :param qadapter: (QueueAdapterBase)
     :param launch_dir: directory where we want to write the blocks
-    :param nlaunches: total number of launches desired
+    :param nlaunches: total number of launches desired; "infinite" for loop, 0 for one round
     :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations

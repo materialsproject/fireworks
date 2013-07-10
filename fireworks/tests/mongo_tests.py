@@ -18,7 +18,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Mar 06, 2013'
 
 TESTDB_NAME = 'fireworks_unittest'
-MODULE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 #TODO: make these tests much better. Right now they are just a crude first line of defense.
 

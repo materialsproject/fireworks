@@ -28,19 +28,13 @@ FW Docs
 
 * Detailed tutorial on implementing dynamic jobs
 
-* Document allow_fizzled_parents
-
-* Document 'pip install' as a second option for installation, e.g. trouble with GIT keys
-
-* Show a workflow diagram with the relation between FireTasks, FireWorks, and Workflows
-
 * Separate out the tutorial on running arbitrary Python code
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
 * Setting up logging
 
-* Re-organize the documentation into "trails", e.g. a quickstart, a Workflows trail, and running on resources trail
+* Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
 Major Features
 ==============
@@ -71,13 +65,11 @@ Misc.
 
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
-* Add stats
+* Add stats, preferably using a MapReduce call for speed
 
 * Clean up job_exists() calls - they are currently expensive!
 
 * Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
-
-* <INSTALL_DIR> is only installation from the perspective the the "develop" command to setup.py, which users won't think of as installation. Maybe clarify. Or add a launchpad command to tell you where the tutorial dir is.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
