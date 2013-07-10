@@ -18,7 +18,7 @@ Setting up virtualenv
 
     pip install virtualenv
 
-   .. note:: At supercomputing centers, virtualenv might be available as a module and loadable using ``module load virtualenv``. Contact your system administrator if you have questions about this.
+   .. note:: You may need administrator privileges, i.e. ``sudo pip install virtualenv``. At supercomputing centers, virtualenv might be available as a module and loadable using ``module load virtualenv``. Contact your system administrator if you have questions about this.
 
 2. Create a directory that will contain your virtualenv files (Python exe and libraries for FireWorks). We'll call this ``FW_env`` but you can name it whatever you like::
 
