@@ -8,7 +8,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 
-<!-- SEARCH -->
+<!-- SEARCH -
 <p><b>Search for</b></p>
 <form id="search-box" name="URL" onsubmit="javascript:window.location.href=this.form.URL.options [this.form.URL.selectedIndex].value">
     <input type="checkbox" name="fw" value="/fw/"/>Fireworks
@@ -49,8 +49,9 @@
     <option value="/home/">home</option>
 </select>
 </form>
+-->
 
-<!-- TABLE
+<!-- TABLE -->
 <table id="datatable" border="1" style="display: inline-block; margin: 10px;">    <thead>
         <tr>
             <th>State</th>
@@ -67,8 +68,8 @@
     </tbody>
 </table>
 
-<!-- CHART
-<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+<!-- CHART -->
+<div id="picontainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 <script>
 Highcharts.visualize = function (table, options) {
     // the categories
@@ -101,7 +102,7 @@ Highcharts.visualize = function (table, options) {
 var table = document.getElementById('datatable'),
     options = {
         chart: {
-            renderTo: 'container',
+            renderTo: 'picontainer',
             type: 'pie'
         },
         title: {
@@ -137,7 +138,6 @@ Highcharts.visualize(table, options);
 </script>
 
 <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-
 <script>
     var arc_fws   = parseInt('{{ arc_fws }}');
     var def_fws   = parseInt('{{ def_fws }}');
@@ -211,5 +211,5 @@ Highcharts.visualize(table, options);
             }]
         });
     });
-</script>-->
+</script>
 {% endblock %}

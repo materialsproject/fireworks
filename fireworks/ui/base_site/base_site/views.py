@@ -113,7 +113,7 @@ def fw_state(request, state):
 
     return render_to_response('fw_state.html', {'fws': fws, 'state': state, 'display': display})
 
-def fw_id(request, id):
+def fw_id(request, id): # same as fw_id_more
     try:
         id = int(id)
     except ValueError:
@@ -197,7 +197,7 @@ def wf_state(request, state):
 
     return render_to_response('wf_state.html', {'wfs': wfs, 'state': state, 'display': display})
 
-def wf_id(request, id):
+def wf_id(request, id): # same as wf_id_more
     try:
         id = int(id)
     except ValueError:
@@ -251,15 +251,13 @@ def testing(request):
     fizz_fws  = lp.get_fw_ids(query={'state':'FIZZLED'}, count_only=True)
     run_fws   = lp.get_fw_ids(query={'state':'RUNNING'}, count_only=True)
     comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
-    tot_fws   = lp.get_fw_ids(count_only=True)
-    return render_to_response('testing.html', {'arc_fws': arc_fws, 'def_fws': def_fws,
-        'wait_fws': wait_fws, 'ready_fws': ready_fws, 'res_fws': res_fws,
-        'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws, 'tot_fws': tot_fws})
-    '''states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
+    states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
         'FIZZLED', 'RUNNING', 'COMPLETED']
     fw_nums = []
     for state in states:
         fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
     tot_fws   = lp.get_fw_ids(count_only=True)
-    info = zip(states, fw_nums)'''
-    return render_to_response('testing.html')
+    info = zip(states, fw_nums)
+    return render_to_response('testing.html', {'tot_fws': tot_fws, 'info': info, 'arc_fws': arc_fws, 'def_fws': def_fws,
+        'wait_fws': wait_fws, 'ready_fws': ready_fws, 'res_fws': res_fws,
+        'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws})
