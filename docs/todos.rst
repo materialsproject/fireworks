@@ -24,9 +24,13 @@ FW Docs
 
 * Document all the features of Script Task
 
+* Now that the "bird's eye view" does a good job of explaining the features of FireWorks, remind users of these good attributes of the code within the other tutorials. e.g. point out how compact the *spec* is in the first quickstart tutorial.
+
 * Update all tutorials so config file is handled smoothly, not terribly...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id.
+
+* Update docs from the written FW docs notes in my blue folder...
 
 * Detailed tutorial on implementing dynamic jobs
 
