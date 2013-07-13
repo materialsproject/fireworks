@@ -14,6 +14,8 @@ FW Docs
     * _queueadapter - values of the QueueAdapter dict to override
     * _allow_fizzled_parents - continue on FIZZLED parents
 
+* Highlight the fact that the spec doesn't contain anything about run configuration (unless you want it to). Thus the person designing the spec or submitting jobs doesn't need to know anything about the resource it's running on. They can just set things that matter (like walltime or machine).
+
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
 * Running different FireWorks on different resouces (FWorker category, FWorker query)

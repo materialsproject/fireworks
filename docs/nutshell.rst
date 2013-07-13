@@ -20,7 +20,9 @@ The basic infrastructure looks like this:
    :align: center
    :alt: FireWorks Model
 
-The components are largely decoupled, which makes installation of FireWorks straightforward. You can manage the LaunchPad (for example add new workflows) without interfering with the running operation of the FireWorkers. Similarly, if one of the FireWorkers has a failure, it won't affect the operation of the LaunchPad. Running on a heterogeneous set of worker computers is simple because essentially the same code is used for running on a simple workstation versus a large supercomputing center; no modifications to the LaunchPad code is needed to support additional FireWorker types.
+The components are largely decoupled, which makes FireWorks easier to use. End users can add new workflows to the LaunchPad without worrying about the details of how and where the workflows will be run (unless they really want to tailor the details of job execution). This keeps the workflow specifications lightweight, tidy, and easy to learn and use (if you've ever seen lengthy XML-based specifications in other workflow software, you'll notice the difference in FireWorks right away).
+
+On the opposite end, administrators can configure worker computers without worrying about where workflows are coming from or what they look like (although you can easily and flexibly assign jobs to certain resources if desired). Running on a heterogeneous set of worker computers is simple because essentially the same code is used internally by FireWorks for running on a simple workstation versus a large supercomputing center.
 
 .. _wfmodel-label:
 
@@ -29,7 +31,7 @@ Workflow Model
 
 Workflows in FireWorks are made up of three main components:
 
-* A **FireTask** is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package).
+* A **FireTask** is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package). Each FireTask receives input data in the form of a JSON specification.
 * A **FireWork** contains a *spec* that includes all the information needed to bootstrap your job. For example, the spec contains an array of FireTasks to execute in sequence. The spec also includes any input parameters to pass to your FireTasks. You can easily perform the same function over different input data by creating FireWorks with identical FireTasks but different specs. You can design your spec however you'd like, as long as it's valid JSON. This gives you a lot of flexibility in defining your input data.
 * A **Workflow** is a set of FireWorks with dependencies between them. For example, you might need a parent FireWork to finish and generate some output files before running two child FireWorks.
 
