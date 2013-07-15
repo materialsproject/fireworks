@@ -42,6 +42,8 @@ FW Docs
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
+* In the get_fws command line script, give an example and say that it must be valid JSON.
+
 Major Features
 ==============
 
