@@ -121,7 +121,6 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'chart_tools',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
