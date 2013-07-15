@@ -61,7 +61,7 @@ def fw(request):
     stop = shown
     fw_names = []
     fw_states = []
-    fws = lp.get_fw_ids(sort=[('created_on', DESCENDING)])
+    fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
     for fw in fws:
         fws_shown = fws[start:stop]
         if stop < fw_count:
