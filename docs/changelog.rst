@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+v0.17
+=====
+
+* minor update to ping()
+* major docs reorganization and updates
+* document and better support 'pip' installation
+
 v0.16
 =====
 

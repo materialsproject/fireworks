@@ -14,6 +14,8 @@ FW Docs
     * _queueadapter - values of the QueueAdapter dict to override
     * _allow_fizzled_parents - continue on FIZZLED parents
 
+* Highlight the fact that the spec doesn't contain anything about run configuration (unless you want it to). Thus the person designing the spec or submitting jobs doesn't need to know anything about the resource it's running on. They can just set things that matter (like walltime or machine).
+
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
 * Running different FireWorks on different resouces (FWorker category, FWorker query)
@@ -22,9 +24,13 @@ FW Docs
 
 * Document all the features of Script Task
 
+* Now that the "bird's eye view" does a good job of explaining the features of FireWorks, remind users of these good attributes of the code within the other tutorials. e.g. point out how compact the *spec* is in the first quickstart tutorial.
+
 * Update all tutorials so config file is handled smoothly, not terribly...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id.
+
+* Update docs from the written FW docs notes in my blue folder...
 
 * Detailed tutorial on implementing dynamic jobs
 
@@ -35,6 +41,8 @@ FW Docs
 * Setting up logging
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
+
+* In the get_fws command line script, give an example and say that it must be valid JSON.
 
 Major Features
 ==============
