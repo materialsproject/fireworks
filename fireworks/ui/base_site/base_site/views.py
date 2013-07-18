@@ -50,8 +50,8 @@ def home(request):
         wf_states.append(lp.get_wf_by_fw_id(wf).state)
     wf_info = zip(wfs_shown, wf_names, wf_states)
 
-    return render_to_response('home.html', {'fw_info': fw_info, 'wf_info': wf_info,
-        'info': info, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs})
+    return render_to_response('home.html', {'fw_info': fw_info, 'info': info,
+        'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
 
 def fw(request):
     # table data
