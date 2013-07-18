@@ -6,13 +6,13 @@
 <h3>{{ wfs }} Workflow{{ wfs|pluralize }} currently in database</h3>
 
 <!-- FILTERS / NAVIGATION -->
-<h5><center><a href="/wf/">NEWEST</a> |
-        <a href="/wf/ARCHIVED">ARCHIVED</a> |
-        <a href="/wf/DEFUSED">DEFUSED</a> |
-        <a href="/wf/READY">READY</a> |
-        <a href="/wf/FIZZLED">FIZZLED</a> |
-        <a href="/wf/RUNNING">RUNNING</a> |
-        <a href="/wf/COMPLETED">COMPLETED</a>
+<h5><center><a href="/wf/newest">NEWEST</a> |
+        <a href="/wf/archived">ARCHIVED</a> |
+        <a href="/wf/defused">DEFUSED</a> |
+        <a href="/wf/ready">READY</a> |
+        <a href="/wf/fizzled">FIZZLED</a> |
+        <a href="/wf/running">RUNNING</a> |
+        <a href="/wf/completed">COMPLETED</a>
 </center></h5>
 
 <!-- TABLE -->
@@ -30,6 +30,8 @@
             <td>{{ names }}</td>
             <td><center>{{ states }}</center></td>
         </tr>
+    {% empty %}
+        <tr><td colspan="3"><center>(no workflows in database)</center></td></tr>
     {% endfor %}
 </table>
 

@@ -93,6 +93,10 @@ def fw(request):
 
 def fw_state(request, state):
     # table data
+    try:
+        state = state.upper()
+    except ValueError:
+        raise Http404()
     fws = lp.get_fw_ids(query={'state': state}, count_only=True)
     shown = 15
     fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)], query={'state': state})
@@ -152,19 +156,32 @@ def fw_id_less(request, id):
 
 def wf(request):
     # table data
-    wfs = lp.get_wf_ids(count_only=True)
+    wf_count = lp.get_wf_ids(count_only=True)
     shown = 15
-    wfs_shown = lp.get_wf_ids(sort=[('created_on', DESCENDING)])
+    start = 0
+    stop = shown
     wf_names = []
     wf_states = []
-    for wf in wfs_shown:
-        wf_names.append(lp.get_wf_by_fw_id(wf).name)
-        wf_states.append(lp.get_wf_by_fw_id(wf).state)
-    wf_info = zip(wfs_shown, wf_names, wf_states)
+    wfs = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    for wf in wfs:
+        wfs_shown = wfs[start:stop]
+        if stop < wf_count:
+            start = start+shown
+            stop = stop+shown
+            for wf in wfs_shown:
+                wf_names.append(lp.get_wf_by_fw_id(wf).name)
+                wf_states.append(lp.get_wf_by_fw_id(wf).state)
+        if stop > wf_count:
+            wfs_shown = wfs[start:stop]
+            for wf in wfs_shown:
+                wf_names.append(lp.get_wf_by_fw_id(wf).name)
+                wf_states.append(lp.get_wf_by_fw_id(wf).state)
+            break
+    wf_info = zip(wfs, wf_names, wf_states)
 
     # pagination
     paginator = Paginator(wf_info, shown)
-    paginator._count = wfs
+    paginator._count = wf_count
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
@@ -173,10 +190,14 @@ def wf(request):
     except EmptyPage:
         display = paginator.page(paginator.num_pages)
 
-    return render_to_response('wf.html', {'wfs': wfs, 'display': display})
+    return render_to_response('wf.html', {'wfs': wf_count, 'display': display})
 
 def wf_state(request, state):
     # table data
+    try:
+        state = state.upper()
+    except ValueError:
+        raise Http404()
     wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
     shown = 15
     wfs_shown = lp.get_wf_ids(sort=[('created_on', DESCENDING)], query={'state': state})

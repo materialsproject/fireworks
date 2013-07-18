@@ -23,7 +23,8 @@ urlpatterns = patterns('',
 
     # Fireworks index pages
     ('^fw/$', fw),
-    (r'^fw/([A-Z]+)/$', fw_state),
+    ('^fw/newest/$', fw),
+    (r'^fw/([A-Za-z]+)/$', fw_state),
 
     # Firework info pages
     (r'^fw/(\d+)/$', fw_id),
@@ -33,7 +34,8 @@ urlpatterns = patterns('',
 
     # Workflows index pages
     ('^wf/$', wf),
-    (r'^wf/([A-Z]+)/$', wf_state),
+    ('^wf/newest/$', wf),
+    (r'^wf/([A-Za-z]+)/$', wf_state),
 
     # Workflow info pages
     (r'^wf/(\d+)/$', wf_id),

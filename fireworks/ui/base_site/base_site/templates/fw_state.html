@@ -6,15 +6,15 @@
 <h3>{{ fws }} {{ state|lower|capfirst }} Firework{{ fws|pluralize }} currently in database</h3>
 
 <!-- FILTERS / NAVIGATION -->
-<h5><center><a href="/fw/">NEWEST</a> |
-        <a href="/fw/ARCHIVED">ARCHIVED</a> |
-        <a href="/fw/DEFUSED">DEFUSED</a> |
-        <a href="/fw/WAITING">WAITING</a> |
-        <a href="/fw/READY">READY</a> |
-        <a href="/fw/RESERVED">RESERVED</a> |
-        <a href="/fw/FIZZLED">FIZZLED</a> |
-        <a href="/fw/RUNNING">RUNNING</a> |
-        <a href="/fw/COMPLETED">COMPLETED</a>
+<h5><center><a href="/fw/newest">NEWEST</a> |
+        <a href="/fw/archived">ARCHIVED</a> |
+        <a href="/fw/defused">DEFUSED</a> |
+        <a href="/fw/waiting">WAITING</a> |
+        <a href="/fw/ready">READY</a> |
+        <a href="/fw/reserved">RESERVED</a> |
+        <a href="/fw/fizzled">FIZZLED</a> |
+        <a href="/fw/running">RUNNING</a> |
+        <a href="/fw/completed">COMPLETED</a>
 </center></h5>
 
 <!-- TABLE -->
@@ -30,6 +30,8 @@
             <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
             <td>{{ names }}</td>
         </tr>
+    {% empty %}
+        <tr><td colspan="2"><center>(no {{ state|lower }} fireworks in database)</center></td></tr>
     {% endfor %}
 </table>
 
