@@ -84,6 +84,7 @@ Designing workflows
    firetask_tutorial
    workflow_tutorial
    dynamic_wf_tutorial
+   design_tips
 
 Executing workflows on different types of computing resources
 -------------------------------------------------------------
