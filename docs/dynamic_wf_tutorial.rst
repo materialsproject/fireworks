@@ -193,9 +193,7 @@ Here is complete Python code for running a dynamic workflow. Note that this code
     launchpad.add_wf(firework)
     rapidfire(launchpad, FWorker())
 
-The end is just the beginning
-=============================
+Next step: Learning to design workflows
+=======================================
 
-You've made it to the end of the workflows tutorial! By now you should have a good feeling for the basic operation of FireWorks and the types of automation it allows. However, it is certainly not the end of the story. Job priorities, duplicate job detection, and running through queues are just some of the features we haven't discussed in the core tutorial.
-
-If you haven't already set up Worker computing resources to execute your jobs, you might do that now by following the :doc:`Worker tutorial <worker_tutorial>`. Otherwise, you might return to the :doc:`home page <index>` and choose what topic to pursue next.
+You've now explored examples of designing many types of workflows, ranging from very simple and deterministic to quite flexible and dynamic. In the :doc:`final workflow tutorial </design_tips>`, we'll provide some tips on mapping your computing workload into FireTasks, FireWorks, and Workflows.

@@ -21,12 +21,10 @@ In the :doc:`quickstart <quickstart>`, we ran a simple script that performed ``e
 
 The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up custom job templates that are more explicit and reusable. In this section, we'll demonstrate how to accomplish this with *FireTasks*.
 
-It might be helpful to review the :ref:`wfmodel-label` diagram.
-
 Running multiple FireTasks
 ==========================
 
-You can run multiple tasks within the same FireWork. For example, the first step of your FireWork might write an input file that the second step processes. Let's create a FireWork where the first step prints ``howdy.txt``, and the second step counts the number of words in that file.
+You can run multiple tasks within the same FireWork (it might be helpful to review the :ref:`wfmodel-label` diagram). For example, the first step of your FireWork might write an input file that the second step processes. Let's create a FireWork where the first step prints ``howdy.txt``, and the second step counts the number of words in that file.
 
 1. Navigate to the tasks tutorial directory on your FireServer::
 
@@ -51,7 +49,7 @@ You can run multiple tasks within the same FireWork. For example, the first step
 
 You should see two files written out to the system, ``howdy.txt`` and ``words.txt``, confirming that you successfully ran a two-step job!
 
-.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead.
+.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the *FWAction* object, but not between FireTasks within a FireWork (:ref:`wfmodel-label`).
 
 Python Example (optional)
 -------------------------
@@ -87,9 +85,30 @@ Because the ``Script Task`` can run arbitrary shell scripts, it can in theory ru
 
 However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks (job templates) for the codes you run. A custom FireTask can clarify the usage of your code and guard against unintended behavior by restricting the commands that can be executed.
 
-Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks:
+Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks.
 
-.. note:: You can place code for custom FireTasks anywhere in the **user_packages** directory of FireWorks; it will automatically be discovered there. If you want to place your FireTasks in a package outside of FireWorks, please read the :doc:`FireWorks configuration tutorial <config_tutorial>`.
+How FireWorks bootstraps a job
+------------------------------
+
+Before diving into an example of custom FireTask, it is worth understanding how FireWorks is bootstrapping jobs based on your specification. The basic process looks like this:
+
+.. image:: _static/spec_sketch.png
+   :width: 500px
+   :align: center
+   :alt: FireWorks Bootstrap
+
+1. The first step of the image just shows how the **spec** section of the FireWork is structured. There is a section that contains your FireTasks (one or many), as we saw in the previous examples. The **spec** also allows you to define arbitrary JSON data (labeled *input* in the diagram) to pass into your FireTasks as input. So far, we haven't seen an example of this; the only information we gave in the spec in the previous examples was within the **_tasks** section.
+
+2. In the second step, FireWorks dynamically loads Python objects based on your specified **_tasks**. It does this by searching a list of Python packages for Python objects that have a value of *_fw_name* that match your setting. When we set a *_fw_name* of ``ScriptTask`` in the previous examples, FireWorks was loading a Python object with a *_fw_name* class variable set to ``ScriptTask`` (and passing the ``script`` parameter to its constructor). The ``ScriptTask`` is just one type of FireTask that's built into FireWorks to help you run scripts easily. You can write code for custom FireTasks anywhere in the **user_packages** directory of FireWorks, and it will automatically be discovered. If you want to place your FireTasks in a package outside of FireWorks, please read the :doc:`FireWorks configuration tutorial <config_tutorial>`. You will just need to define what Python packages to search for your custom FireTasks.
+
+3. In the third step, we execute the code of the FireTask we loaded. Specifically, we execute the ``run_task`` method which must be implemented for every FireTask. FireWorks passes in the *entire* spec to the ``run_task`` method; the ``run_task`` method can therefore modify its behavior based on any input data present in the spec, or by detecting previous or future tasks in the spec.
+
+4. When the FireTask is done executing, it returns a *FWAction* object that can modify the workflow (or continue as usual) and pass information to downstream FireWorks.
+
+Custom FireTask example: Addition Task
+--------------------------------------
+
+Let's explore custom FireTasks with by writing custom Python for adding two numbers specified in the **spec**.
 
 1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
@@ -112,12 +131,10 @@ Even if you plan to only use ``Script Task``, we suggest that you still read thr
 #. A few notes about what's going on (things will be clearer after the next step):
 
    * In the class definition, we are extending *FireTaskBase* to tell FireWorks that this is a FireTask.
-   * A special parameter named *_fw_name* is set to ``Addition Task``. This parameter sets what this FireTask will be called by the outside world.
+   * A special parameter named *_fw_name* is set to ``Addition Task``. This parameter sets what this FireTask will be called by the outside world and is used to bootstrap the object, as described in the previous section.
    * The ``run_task()`` method is a special method name that gets called when the task is run. It can take in a FireWork specification (**spec**) in order to modify its behavior.
-   * This FireTask first reads the **input_array** parameter of the FireWork's **spec**.
-   * It then sums all the values it finds in the **input_array** parameter of the FireWork's **spec** using Python's ``sum()`` function.
-   * The FireTask then prints the inputs and the sum to the standard out.
-   * Finally, the task returns a *FWAction* object. We'll discuss this object in greater detail in future tutorials. For now, it is sufficient to know that this is an instruction that says we should store the sum we computed in the database (inside the FireWork's ``stored_data`` section).
+   * When executing ``run_task()``, the AdditionTask we defined first reads the **input_array** parameter of the FireWork's **spec**. It then sums all the values it finds in the **input_array** parameter of the FireWork's **spec** using Python's ``sum()`` function. Next, the FireTask prints the inputs and the sum to the standard out. Finally, the task returns a *FWAction* object.
+   * We'll discuss the FWAction object in greater detail in future tutorials. For now, it is sufficient to know that this is an instruction that says we should store the sum we computed in the database (inside the FireWork's ``stored_data`` section).
 
 #. Now let's define a FireWork that runs this FireTask to add the numbers ``1`` and ``2``. Look inside the file ``fw_adder.yaml`` for this new FireWork definition::
 

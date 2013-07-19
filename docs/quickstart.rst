@@ -33,8 +33,8 @@ You are now ready to start playing with FireWorks!
 
 .. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. In addition, if you are running it on a shared machine, make sure that the ``--dbpath`` variable is set to a directory that you can access.
 
-Reset the FireServer
---------------------
+Reset/Initialize the FireServer
+-------------------------------
 
 #. Navigate to the FireWorks quickstart directory::
 
@@ -66,13 +66,20 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
 
     lpad add fw_test.yaml
 
-   .. note:: You can look inside the file ``fw_test.yaml`` with a text editor if you'd like; we'll explain its components shortly. You could also define this file in JSON format, but we'll stick to YAML as it looks cleaner to those unfamiliar with JSON.
+#. This command added a simple workflow to the database which was serialized into a file called ``fw_test.yaml``. This workflow is just a single step that print some text to a file. Look inside ``fw_test.yaml`` with a text editor to see how that workflow was defined::
+
+    spec:
+      _tasks:
+      - _fw_name: Script Task
+        script: echo "howdy, your job launched successfully!" >> howdy.txt
+
+   If you've ever used other XML-based workflow systems, you might be surprised at how succintly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we'll provide more details and demonstrate how to add a workflow within Python code (rather than files).
 
 #. You should have received confirmation that the FireWork got added. You can query the database for this FireWork as follows::
 
     lpad get_fws -i 1 -d all
 
-   This prints out *all* details of the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
+   This prints, in JSON format, *all* details of the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
 
     {
         "fw_id": 1,
@@ -199,7 +206,9 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 What just happened?
 ===================
 
-It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher. By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.
+It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher.
+
+By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.
 
 Python Examples (optional)
 =========================
@@ -256,7 +265,7 @@ Write out the Workflow to a flat file, or load a FireWork object from a file::
     fw = firework.from_file("my_firework.json")
     print fw
 
-.. note:: The *to_file()* and *from_file()* functions are available for many FireWork objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* will allow serialization/deserialization to files if desired.
+.. note:: The *to_file()* and *from_file()* functions are available for many FireWork objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* (which is most of them) will allow serialization/deserialization to files if desired.
 
 .. note:: FireWorks automatically detects what type of format you're writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you're using Python, there may not be any need to use files at all!
 

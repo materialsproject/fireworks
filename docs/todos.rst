@@ -28,21 +28,17 @@ FW Docs
 
 * Update all tutorials so config file is handled smoothly, not terribly...
 
-* Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id.
+* Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
 
 * Update docs from the written FW docs notes in my blue folder...
 
 * Detailed tutorial on implementing dynamic jobs
-
-* Separate out the tutorial on running arbitrary Python code
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
 * Setting up logging
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
-
-* In the get_fws command line script, give an example and say that it must be valid JSON.
 
 Major Features
 ==============
