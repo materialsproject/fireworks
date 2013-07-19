@@ -6,6 +6,7 @@ __email__ = 'mhargrove@lbl.gov'
 __date__ = 'Jun 13, 2013'
 
 import json
+import datetime
 from pymongo import DESCENDING
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404
@@ -13,7 +14,7 @@ from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad() # LaunchPad.auto_load()
+lp = LaunchPad.auto_load()
 
 def home(request):
     shown = 9
@@ -264,21 +265,22 @@ def wf_id_less(request, id):
     return render_to_response('wf_id.html', {'wf_id': id, 'wf_data': wf_data})
 
 def testing(request):
-    arc_fws   = lp.get_fw_ids(query={'state':'ARCHIVED'}, count_only=True)
-    def_fws   = lp.get_fw_ids(query={'state':'DEFUSED'}, count_only=True)
-    wait_fws  = lp.get_fw_ids(query={'state':'WAITING'}, count_only=True)
-    ready_fws = lp.get_fw_ids(query={'state':'READY'}, count_only=True)
-    res_fws   = lp.get_fw_ids(query={'state':'RESERVED'}, count_only=True)
-    fizz_fws  = lp.get_fw_ids(query={'state':'FIZZLED'}, count_only=True)
-    run_fws   = lp.get_fw_ids(query={'state':'RUNNING'}, count_only=True)
-    comp_fws  = lp.get_fw_ids(query={'state':'COMPLETED'}, count_only=True)
-    states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
-        'FIZZLED', 'RUNNING', 'COMPLETED']
-    fw_nums = []
-    for state in states:
-        fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
-    tot_fws   = lp.get_fw_ids(count_only=True)
-    info = zip(states, fw_nums)
-    return render_to_response('testing.html', {'tot_fws': tot_fws, 'info': info, 'arc_fws': arc_fws, 'def_fws': def_fws,
-        'wait_fws': wait_fws, 'ready_fws': ready_fws, 'res_fws': res_fws,
-        'fizz_fws': fizz_fws, 'run_fws': run_fws, 'comp_fws': comp_fws})
+    return render_to_response('testing.html')
+
+def data(request):
+    # get list of all dates
+    start = datetime.datetime(2013, 05, 15)
+    current = datetime.datetime.now()
+    dates = []
+    query_dates = []
+    for i in range((current - start).days + 1):
+        new_date = start+datetime.timedelta(days = i)
+        dates.append(new_date.strftime('%Y,%m,%d'))
+        query_dates.append(new_date.strftime('%Y-%m-%d'))
+    # query for fws based on date
+    data = []
+    for day in query_dates:
+        query = day
+        data.append(lp.fireworks.find({'created_on': {'$lte': query}}).count())
+    info = zip(dates, data)
+    return render_to_response('data.html', {'info': info})

@@ -45,6 +45,7 @@ urlpatterns = patterns('',
 
     # Testing
     ('^testing/$', testing),
+    ('^data/$', data),
 
     # Static files
     url(r'^static/(.*)', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),

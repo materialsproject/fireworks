@@ -5,10 +5,7 @@
 {% block content %}
 <h3>Testing</h3>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-
-<!-- SEARCH -->
+<!-- SEARCH
 <p><b>Search for</b></p>
 <form id="search-box" name="URL" onsubmit="javascript:window.location.href=this.form.URL.options [this.form.URL.selectedIndex].value">
     <input type="checkbox" name="fw" value="/fw/"/>Fireworks
@@ -22,7 +19,6 @@
 
 <br>
 
-<!--
 <FORM NAME="myform" onSubmit="JavaScript:ExampleJS()">
     First name: <input type="text" id="fname" name="firstname" /><br />
     Last name:  <input type="text" id="lname" name="lastname" /><br />
@@ -49,165 +45,38 @@
 </form>
 -->
 
-<!-- TABLE -->
-<table id="datatable" border="1" style="display: inline-block; margin: 10px;">    <thead>
-        <tr>
-            <th>State</th>
-            <th># of FWs</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for states, fw_info in info %}
-        <tr>
-            <th><div align="right">{{ states }}</div></th>
-            <td><center><a href="/fw/{{ states }}">{{ fw_info }}</a></center></td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 
-<!-- CHART -->
-<div id="picontainer" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+<div id="container" style="height: 500px; min-width: 600px"></div>
+
 <script>
-Highcharts.visualize = function (table, options) {
-    // the categories
-	var sliceNames = [];
-	$('tbody th', table).each(function (i)
-	{
-    	sliceNames.push(this.innerHTML);
+$(function() {
+
+	$.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?', function(data) {
+		// Create the chart
+		$('#container').highcharts('StockChart', {
+
+
+			rangeSelector : {
+				selected : 1
+			},
+
+			title : {
+				text : 'Fireworks'
+			},
+
+			series : [{
+				name : 'TOTAL',
+				data : data,
+				tooltip: {
+					valueDecimals: 2
+				}
+			}]
+		});
 	});
 
-    // the data series
-    options.series = [];
-    $('tr', table).each(function (i) {
-        var tr = this;
-        $('th, td', tr).each(function (j) {
-            if (j > 0) { // skip first column
-                if (i == 0) { // get the name and init the series
-                    options.series[j - 1] = {
-                        name: this.innerHTML,
-                        data: []
-                    };
-                } else { // add values
-                    options.series[j - 1].data.push({name: sliceNames[i - 1], y: parseFloat(this.innerHTML)});
-                }
-            }
-        });
-    });
-    var chart = new Highcharts.Chart(options);
-}
-
-var table = document.getElementById('datatable'),
-    options = {
-        chart: {
-            renderTo: 'picontainer',
-            type: 'pie'
-        },
-        title: {
-            text: 'Data extracted from a HTML table in the page'
-        },
-        xAxis: {},
-        yAxis: {
-            title: {
-                text: 'Units'
-            }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.series.name + '</b><br/>' + this.y + ' ' + this.point.name;
-            }
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    formatter: function () {
-                        return '<b>' + this.point.name + '</b>: ' + this.percentage + ' %';
-                    }
-                }
-            }
-        }
-    };
-Highcharts.visualize(table, options);
-</script>
-
-<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-<script>
-    var arc_fws   = parseInt('{{ arc_fws }}');
-    var def_fws   = parseInt('{{ def_fws }}');
-    var wait_fws  = parseInt('{{ wait_fws }}');
-    var ready_fws = parseInt('{{ ready_fws }}');
-    var res_fws   = parseInt('{{ res_fws }}');
-    var fizz_fws  = parseInt('{{ fizz_fws }}');
-    var run_fws   = parseInt('{{ run_fws }}');
-    var comp_fws  = parseInt('{{ comp_fws }}');
-    var tot_fws   = parseInt('{{ tot_fws }}');
-
-    $(function () {
-        $('#container').highcharts({
-            chart: {
-                type: 'line',
-                marginRight: 130,
-                marginBottom: 25
-            },
-            title: {
-                text: 'Fireworks',
-                x: -20 //center
-            },
-            subtitle: {
-                text: 'Activity',
-                x: -20
-            },
-            xAxis: {
-                categories: ['start', 'now']
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Fireworks'
-                },
-                min: 0
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -10,
-                y: 100,
-                borderWidth: 0
-            },
-            series: [{
-                name: 'ARCHIVED',
-                data: [0, arc_fws]
-            }, {
-                name: 'DEFUSED',
-                data: [0, def_fws]
-            }, {
-                name: 'WAITING',
-                data: [0, wait_fws]
-            }, {
-                name: 'READY',
-                data: [0, ready_fws]
-            }, {
-                name: 'RESERVED',
-                data: [0, res_fws]
-            }, {
-                name: 'FIZZLED',
-                data: [0, fizz_fws]
-            }, {
-                name: 'RUNNING',
-                data: [0, run_fws]
-            }, {
-                name: 'COMPLETED',
-                data: [0, comp_fws]
-            }, {
-                name: 'TOTAL',
-                data: [0, tot_fws]
-            }]
-        });
-    });
+});
 </script>
 {% endblock %}

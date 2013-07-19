@@ -1,0 +1,1 @@
+<pre>?([<br>{% for dates, data in info %}{% if forloop.last %}[Date.UTC({{ dates }}),{{ data }}]<br>{% else %}[Date.UTC({{ dates }}),{{ data }}],<br>{% endif %}{% endfor %}]);</pre>
