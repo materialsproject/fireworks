@@ -14,7 +14,7 @@ from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad.auto_load()
+lp = LaunchPad() # LaunchPad.auto_load()
 
 def home(request):
     shown = 9
