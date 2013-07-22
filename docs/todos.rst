@@ -40,6 +40,8 @@ FW Docs
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
+* Put the bird's eye view on the Home Page rather than as something you need to click.
+
 Major Features
 ==============
 
