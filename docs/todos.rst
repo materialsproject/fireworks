@@ -13,16 +13,11 @@ FW Docs
     * _dupefinder - a DupeFinder object, for avoiding duplicates
     * _queueadapter - values of the QueueAdapter dict to override
     * _allow_fizzled_parents - continue on FIZZLED parents
-
-* Highlight the fact that the spec doesn't contain anything about run configuration (unless you want it to). Thus the person designing the spec or submitting jobs doesn't need to know anything about the resource it's running on. They can just set things that matter (like walltime or machine).
+    * _category - For directing jobs
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
-* Running different FireWorks on different resouces (FWorker category, FWorker query)
-
 * Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
-
-* Document all the features of Script Task
 
 * Now that the "bird's eye view" does a good job of explaining the features of FireWorks, remind users of these good attributes of the code within the other tutorials. e.g. point out how compact the *spec* is in the first quickstart tutorial.
 
@@ -36,11 +31,13 @@ FW Docs
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
-* Setting up logging
+* Setting up logging (in deployment section of tutorials)
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
 * Put the bird's eye view on the Home Page rather than as something you need to click.
+
+* Document the FWAction
 
 Major Features
 ==============

@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+v0.18
+=====
+
+* add fizzle_bad_rc option to ScriptTask
+* major doc additions and updates
+
 v0.17
 =====
 

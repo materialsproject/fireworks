@@ -2,7 +2,7 @@
 Quickstart and Installation
 ===========================
 
-.. note:: If you haven't already, we strongly suggest you begin by reading the :doc:`bird's eye view of FireWorks </nutshell>`.
+.. note:: If you haven't already, we strongly suggest you begin by reading the :doc:`bird's eye view of FireWorks </birdseyeview>`.
 
 This tutorial will guide you through FireWorks installation on the central server. You will:
 
@@ -106,7 +106,7 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
 
 You have now stored a FireWork in the LaunchPad, and it's ready to run!
 
-.. note:: The ScriptTask provides more options than what's presented here; more details on using the ``ScriptTask`` will be presented in future tutorials.
+.. note:: The ScriptTask provides more options than what's presented here; more details on using the ``ScriptTask`` can be found :doc:`here <scripttask>`.
 .. note:: The ``lpad get_fws`` command is a powerful way to search for FireWorks in the database. For details on its usage, see :doc:`Querying FireWorks and Workflows </query_tutorial>`
 
 Launch a Rocket on the FireServer
