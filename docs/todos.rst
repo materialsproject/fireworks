@@ -36,11 +36,13 @@ FW Docs
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
-* Setting up logging
+* Setting up logging (in deployment section of tutorials)
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
 * Put the bird's eye view on the Home Page rather than as something you need to click.
+
+* Document the FWAction
 
 Major Features
 ==============
