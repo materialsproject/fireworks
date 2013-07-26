@@ -15,13 +15,9 @@ FW Docs
     * _allow_fizzled_parents - continue on FIZZLED parents
     * _category - For directing jobs
 
-* Highlight the fact that the spec doesn't contain anything about run configuration (unless you want it to). Thus the person designing the spec or submitting jobs doesn't need to know anything about the resource it's running on. They can just set things that matter (like walltime or machine).
-
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
 * Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
-
-* Document all the features of Script Task
 
 * Now that the "bird's eye view" does a good job of explaining the features of FireWorks, remind users of these good attributes of the code within the other tutorials. e.g. point out how compact the *spec* is in the first quickstart tutorial.
 

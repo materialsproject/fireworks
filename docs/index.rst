@@ -140,7 +140,9 @@ Additional features and topics
 
     duplicates_tutorial
     python_tutorial
+    scripttask
     controlworker
+
 
 .. _contributing-label:
 
