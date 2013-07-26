@@ -42,7 +42,7 @@ Between FireWorks, you can return a **FWAction** that can store data or modify t
    :align: center
    :alt: FireWorks Workflow
 
-At this point, you may be wondering how to organize a set of computations into FireTasks, FireWorks, and Workflows. For example, to run 3 shell scripts in succession, one might choose a single FireWork with 3 FireTasks or three FireWorks that each have 1 FireTask. Both are viable options with different strengths and possibilities. Over the course of the FireWorks tutorials, we'll distinguish these a little more.
+At this point, you may be wondering how to organize a set of computations into FireTasks, FireWorks, and Workflows. For example, to run 3 shell scripts in succession, one might choose a single FireWork with 3 FireTasks or three FireWorks that each have 1 FireTask. Both are viable options with different strengths and possibilities. Over the course of the FireWorks tutorials, we'll distinguish these a little more (in particular, in the :doc:`FW design tips <design_tips>`).
 
 But wait - there's more!
 ========================
