@@ -79,6 +79,9 @@ class ScriptTask(FireTaskBase, FWSerializable):
         if self['defuse_bad_rc'] and returncode != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
+        elif self['fizzle_bad_rc'] and returncode != 0:
+            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
+
         return FWAction(stored_data=output)
 
     @classmethod
