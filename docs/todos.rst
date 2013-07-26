@@ -13,12 +13,11 @@ FW Docs
     * _dupefinder - a DupeFinder object, for avoiding duplicates
     * _queueadapter - values of the QueueAdapter dict to override
     * _allow_fizzled_parents - continue on FIZZLED parents
+    * _category - For directing jobs
 
 * Highlight the fact that the spec doesn't contain anything about run configuration (unless you want it to). Thus the person designing the spec or submitting jobs doesn't need to know anything about the resource it's running on. They can just set things that matter (like walltime or machine).
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
-
-* Running different FireWorks on different resouces (FWorker category, FWorker query)
 
 * Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
 
