@@ -50,11 +50,6 @@ Some limitations of FireWorks include:
 
 If you encounter any problems while using FireWorks, please let us know (see :ref:`contributing-label`).
 
-Quick information
-=================
-
-It can be time-consuming to evaluate whether a workflow software will meet your computing needs from documentation alone. If you just want to know whether FireWorks is a potential solution to your workflow problem, one option is to e-mail a description of your problem to the developer at: |Mail|. You might also look at the :doc:`bird's eye view of FireWorks </birdseyeview>` to get started.
-
 ========================
 Quickstart and Tutorials
 ========================
