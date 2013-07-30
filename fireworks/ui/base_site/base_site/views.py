@@ -17,17 +17,26 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 lp = LaunchPad.auto_load()
 
 def home(request):
+    import time
     shown = 9
+
     # Newest Fireworks table data
-    fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    fw_names = []
-    fw_states = []
-    for fw in fws_shown:
-        fw_names.append(lp.get_fw_by_id(fw).name)
-        fw_states.append(lp.get_fw_by_id(fw).state)
-    fw_info = zip(fws_shown, fw_names, fw_states)
+    t0 = time.time()
+    fws_shown = lp.fireworks.find({}, limit=shown, sort=[('created_on', DESCENDING)])
+    fw_info = []
+    for item in fws_shown:
+        fw_info.append((item['fw_id'], item['name'], item['state']))
+    print("@@ FW: {}".format(time.time() - t0))
+    # fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    # fw_names = []
+    # fw_states = []
+    # for fw in fws_shown:
+    #     fw_names.append(lp.get_fw_by_id(fw).name)
+    #     fw_states.append(lp.get_fw_by_id(fw).state)
+    # fw_info = zip(fws_shown, fw_names, fw_states)
 
     # Current Database Status table data
+    t0 = time.time()
     states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
         'FIZZLED', 'RUNNING', 'COMPLETED']
     fw_nums = []
@@ -41,15 +50,22 @@ def home(request):
     tot_fws   = lp.get_fw_ids(count_only=True)
     tot_wfs   = lp.get_wf_ids(count_only=True)
     info = zip(states, fw_nums, wf_nums)
+    print("@@ DB: {}".format(time.time() - t0))
 
     # Newest Workflows table data
-    wfs_shown = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    wf_names = []
-    wf_states = []
-    for wf in wfs_shown:
-        wf_names.append(lp.get_wf_by_fw_id(wf).name)
-        wf_states.append(lp.get_wf_by_fw_id(wf).state)
-    wf_info = zip(wfs_shown, wf_names, wf_states)
+    t0 = time.time()
+    wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
+    wf_info = []
+    for item in wfs_shown:
+        wf_info.append((item['nodes'][0], item['name'],item['state']))
+    print("@@ WF: {}".format(time.time() - t0))
+    # wfs_shown = lp.get_wf_ids(limit=shown, sort=[('updated_on', DESCENDING)])
+    # wf_names = []
+    # wf_states = []
+    # for wf in wfs_shown:
+    #     wf_names.append(lp.get_wf_by_fw_id(wf).name)
+    #     wf_states.append(lp.get_wf_by_fw_id(wf).state)
+    # wf_info = zip(wfs_shown, wf_names, wf_states)
 
     return render_to_response('home.html', {'fw_info': fw_info, 'info': info,
         'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
