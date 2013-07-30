@@ -19,7 +19,7 @@ In the :doc:`quickstart <quickstart>`, we ran a simple script that performed ``e
       - _fw_name: Script Task
         script: echo "howdy, your job launched successfully!" >> howdy.txt
 
-The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up custom job templates that are more explicit and reusable. In this section, we'll demonstrate how to accomplish this with *FireTasks*.
+The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up custom job templates that are more explicit and reusable. In this section, we'll demonstrate how to accomplish this with *FireTasks*, but first we'll demonstrate the simplest version to linearly run multiple tasks.
 
 Running multiple FireTasks
 ==========================
