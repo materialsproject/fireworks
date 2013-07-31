@@ -1,7 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 
-<style type="text/css">a {text-decoration: none}</style>
+<style type="text/css">
+    body {font-family: "Lucida Sans Unicode", sans-serif}
+    a {text-decoration: none}
+    table, td, th, thead {border: none; font-size: 95%}
+    th {background-color: #bbbbbb;}
+    table tr:nth-child(even) { background-color: #dddddd}
+</style>
 
 <head>
     <title>{% block title %}{% endblock %}</title>
@@ -16,12 +22,12 @@
     
     {% block footer %}
     <hr>
-    <h5><center><a href="/home">Home</a> |
+    <h5><a href="/home">Home</a> |
         <a href="/fw">Fireworks Index</a> |
         <a href="/wf">Workflows Index</a> |
         <a href="/testing">Testing</a>
-    </center></h5>
-    <p><center>&copy Copyright 2013, <a href="http://pythonhosted.org/FireWorks/">FireWorks</a>.</center></p>
+        <br><br>
+        &copy Copyright 2013, <a href="http://pythonhosted.org/FireWorks/">FireWorks</a>.</h5>
     {% endblock %}
 </center></body>
 </html>

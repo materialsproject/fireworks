@@ -16,17 +16,16 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 lp = LaunchPad.auto_load()
 
+import time
+
 def home(request):
-    import time
     shown = 9
 
     # Newest Fireworks table data
-    t0 = time.time()
     fws_shown = lp.fireworks.find({}, limit=shown, sort=[('created_on', DESCENDING)])
     fw_info = []
     for item in fws_shown:
         fw_info.append((item['fw_id'], item['name'], item['state']))
-    print("@@ FW: {}".format(time.time() - t0))
     # fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
     # fw_names = []
     # fw_states = []
@@ -36,7 +35,6 @@ def home(request):
     # fw_info = zip(fws_shown, fw_names, fw_states)
 
     # Current Database Status table data
-    t0 = time.time()
     states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
         'FIZZLED', 'RUNNING', 'COMPLETED']
     fw_nums = []
@@ -50,22 +48,12 @@ def home(request):
     tot_fws   = lp.get_fw_ids(count_only=True)
     tot_wfs   = lp.get_wf_ids(count_only=True)
     info = zip(states, fw_nums, wf_nums)
-    print("@@ DB: {}".format(time.time() - t0))
 
     # Newest Workflows table data
-    t0 = time.time()
     wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
     wf_info = []
     for item in wfs_shown:
         wf_info.append((item['nodes'][0], item['name'],item['state']))
-    print("@@ WF: {}".format(time.time() - t0))
-    # wfs_shown = lp.get_wf_ids(limit=shown, sort=[('updated_on', DESCENDING)])
-    # wf_names = []
-    # wf_states = []
-    # for wf in wfs_shown:
-    #     wf_names.append(lp.get_wf_by_fw_id(wf).name)
-    #     wf_states.append(lp.get_wf_by_fw_id(wf).state)
-    # wf_info = zip(wfs_shown, wf_names, wf_states)
 
     return render_to_response('home.html', {'fw_info': fw_info, 'info': info,
         'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
@@ -74,26 +62,31 @@ def fw(request):
     # table data
     fw_count = lp.get_fw_ids(count_only=True)
     shown = 15
-    start = 0
-    stop = shown
-    fw_names = []
-    fw_states = []
-    fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    for fw in fws:
-        fws_shown = fws[start:stop]
-        if stop < fw_count:
-            start = start+shown
-            stop = stop+shown
-            for fw in fws_shown:
-                fw_names.append(lp.get_fw_by_id(fw).name)
-                fw_states.append(lp.get_fw_by_id(fw).state)
-        if stop > fw_count:
-            fws_shown = fws[start:stop]
-            for fw in fws_shown:
-                fw_names.append(lp.get_fw_by_id(fw).name)
-                fw_states.append(lp.get_fw_by_id(fw).state)
-            break
-    fw_info = zip(fws, fw_names, fw_states)
+
+    fws_shown = lp.fireworks.find({}, limit=shown, sort=[('created_on', DESCENDING)])
+    fw_info = []
+    for item in fws_shown:
+        fw_info.append((item['fw_id'], item['name'], item['state']))
+    # start = 0
+    # stop = shown
+    # fw_names = []
+    # fw_states = []
+    # fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
+    # for fw in fws:
+    #     fws_shown = fws[start:stop]
+    #     if stop < fw_count:
+    #         start = start+shown
+    #         stop = stop+shown
+    #         for fw in fws_shown:
+    #             fw_names.append(lp.get_fw_by_id(fw).name)
+    #             fw_states.append(lp.get_fw_by_id(fw).state)
+    #     if stop > fw_count:
+    #         fws_shown = fws[start:stop]
+    #         for fw in fws_shown:
+    #             fw_names.append(lp.get_fw_by_id(fw).name)
+    #             fw_states.append(lp.get_fw_by_id(fw).state)
+    #         break
+    # fw_info = zip(fws, fw_names, fw_states)
 
     # pagination
     paginator = Paginator(fw_info, shown)
@@ -109,21 +102,29 @@ def fw(request):
     return render_to_response('fw.html', {'fws': fw_count, 'display': display})
 
 def fw_state(request, state):
-    # table data
+    shown = 15
+    fws = lp.get_fw_ids(query={'state': state}, count_only=True)
     try:
         state = state.upper()
     except ValueError:
         raise Http404()
-    fws = lp.get_fw_ids(query={'state': state}, count_only=True)
-    shown = 15
-    fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)], query={'state': state})
-    fw_names = []
-    for fw in fws_shown:
-        fw_names.append(lp.get_fw_by_id(fw).name)
-    fw_info = zip(fws_shown, fw_names)
+
+    t0 = time.time()
+    fws_shown = lp.fireworks.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
+    fw_count = lp.get_fw_ids(query={'state': state}, count_only=True)
+    fw_info = []
+    for item in fws_shown:
+        fw_info.append((item['fw_id'], item['name']))
+
+    # fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)], query={'state': state})
+    # fw_names = []
+    # for fw in fws_shown:
+    #     fw_names.append(lp.get_fw_by_id(fw).name)
+    # fw_info = zip(fws_shown, fw_names)
 
     # pagination
     paginator = Paginator(fw_info, shown)
+    paginator._count = fw_count
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
@@ -172,29 +173,13 @@ def fw_id_less(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
-    # table data
     wf_count = lp.get_wf_ids(count_only=True)
     shown = 15
-    start = 0
-    stop = shown
-    wf_names = []
-    wf_states = []
-    wfs = lp.get_wf_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    for wf in wfs:
-        wfs_shown = wfs[start:stop]
-        if stop < wf_count:
-            start = start+shown
-            stop = stop+shown
-            for wf in wfs_shown:
-                wf_names.append(lp.get_wf_by_fw_id(wf).name)
-                wf_states.append(lp.get_wf_by_fw_id(wf).state)
-        if stop > wf_count:
-            wfs_shown = wfs[start:stop]
-            for wf in wfs_shown:
-                wf_names.append(lp.get_wf_by_fw_id(wf).name)
-                wf_states.append(lp.get_wf_by_fw_id(wf).state)
-            break
-    wf_info = zip(wfs, wf_names, wf_states)
+
+    wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
+    wf_info = []
+    for item in wfs_shown:
+        wf_info.append((item['nodes'][0], item['name'],item['state']))
 
     # pagination
     paginator = Paginator(wf_info, shown)
@@ -210,21 +195,22 @@ def wf(request):
     return render_to_response('wf.html', {'wfs': wf_count, 'display': display})
 
 def wf_state(request, state):
-    # table data
+    shown = 15
+    wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
     try:
         state = state.upper()
     except ValueError:
         raise Http404()
-    wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
-    shown = 15
-    wfs_shown = lp.get_wf_ids(sort=[('created_on', DESCENDING)], query={'state': state})
-    wf_names = []
-    for wf in wfs_shown:
-        wf_names.append(lp.get_wf_by_fw_id(wf).name)
-    wf_info = zip(wfs_shown, wf_names)
+
+    wfs_shown = lp.workflows.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
+    wf_count = lp.get_wf_ids(query={'state': state}, count_only=True)
+    wf_info = []
+    for item in wfs_shown:
+        wf_info.append((item['nodes'][0], item['name']))
 
     # pagination
     paginator = Paginator(wf_info, shown)
+    paginator._count = wf_count
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
