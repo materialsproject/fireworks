@@ -16,10 +16,9 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 lp = LaunchPad.auto_load()
 
-import time
-
 def home(request):
     shown = 9
+    comp_fws = lp.get_fw_ids(query={'state': 'COMPLETED'}, count_only=True)
 
     # Newest Fireworks table data
     fws_shown = lp.fireworks.find({}, limit=shown, sort=[('created_on', DESCENDING)])
@@ -56,7 +55,7 @@ def home(request):
         wf_info.append((item['nodes'][0], item['name'],item['state']))
 
     return render_to_response('home.html', {'fw_info': fw_info, 'info': info,
-        'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
+        'comp_fws': comp_fws, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
 
 def fw(request):
     # table data
@@ -109,7 +108,6 @@ def fw_state(request, state):
     except ValueError:
         raise Http404()
 
-    t0 = time.time()
     fws_shown = lp.fireworks.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
     fw_count = lp.get_fw_ids(query={'state': state}, count_only=True)
     fw_info = []
