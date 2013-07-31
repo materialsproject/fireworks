@@ -132,10 +132,10 @@ def lpad():
             lp.reset(args.password)
 
         elif args.command == 'detect_fizzled':
-            print lp.detect_fizzled(args.time, args.fix)
+            print lp.detect_fizzled(args.time, args.mark)
 
         elif args.command == 'detect_unreserved':
-            print lp.detect_unreserved(args.time, args.fix)
+            print lp.detect_unreserved(args.time, args.mark)
 
         elif args.command == 'add':
             fwf = Workflow.from_file(args.wf_file)
