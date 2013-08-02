@@ -76,6 +76,8 @@ Misc.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
+* keep looking for FWs with the same _fw_name, and throw an error if you find 2 with the same _fw_name
+
 * No negative fw_ids needed when returning FWAction
 
 * Go through logging, make sure it's sane
