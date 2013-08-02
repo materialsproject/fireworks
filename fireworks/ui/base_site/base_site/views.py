@@ -30,8 +30,6 @@ def home(request):
     shown = 20
     comp_fws = lp.get_fw_ids(query={'state': 'COMPLETED'}, count_only=True)
 
-    ensure_indexes()
-
     # Newest Fireworks table data
     _dbg("fireworks.begin")
     fws_shown = lp.fireworks.find({}, limit=shown, sort=[('created_on', DESCENDING)])
@@ -103,7 +101,7 @@ def fw(request):
 
     # pagination
     paginator = Paginator(rows, pagelen)
-    page = int(request.GET.get('page'))
+    page = request.GET.get('page')
     try:
         display = paginator.page(page)
     except PageNotAnInteger:
@@ -114,18 +112,22 @@ def fw(request):
     return render_to_response('fw.html', {'fws': fw_count, 'display': display})
 
 def fw_state(request, state):
-    shown = 15
-    fws = lp.get_fw_ids(query={'state': state}, count_only=True)
+    pagelen = 15
+    db = lp.fireworks
     try:
         state = state.upper()
     except ValueError:
         raise Http404()
+    qry = {'state': state}
+    fw_count = lp.get_fw_ids(query=qry, count_only=True)
+    rows = QueryResult(pagelen, lp.fireworks, qry, fw_count, sort=('created_on', -1))
 
-    fws_shown = lp.fireworks.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
-    fw_count = lp.get_fw_ids(query={'state': state}, count_only=True)
-    fw_info = []
-    for item in fws_shown:
-        fw_info.append((item['fw_id'], item['name']))
+
+#    fws_shown = lp.fireworks.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
+#    fw_count = lp.get_fw_ids(query={'state': state}, count_only=True)
+#    fw_info = []
+#    for item in fws_shown:
+#        fw_info.append((item['fw_id'], item['name']))
 
     # fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)], query={'state': state})
     # fw_names = []
@@ -134,8 +136,7 @@ def fw_state(request, state):
     # fw_info = zip(fws_shown, fw_names)
 
     # pagination
-    paginator = Paginator(fw_info, shown)
-    paginator._count = fw_count
+    paginator = Paginator(rows, pagelen)
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
@@ -144,7 +145,7 @@ def fw_state(request, state):
     except EmptyPage:
         display = paginator.page(paginator.num_pages)
 
-    return render_to_response('fw_state.html', {'fws': fws, 'state': state, 'display': display})
+    return render_to_response('fw_state.html', {'fws': fw_count, 'state': state, 'display': display})
 
 def fw_id(request, id): # same as fw_id_more
     try:
