@@ -25,6 +25,7 @@ _log.addHandler(hndlr)
 _log.setLevel(logging.DEBUG)
 _dbg = _log.debug
 
+DEFAULT_PAGELEN = 10
 
 def home(request):
     shown = 20
@@ -74,9 +75,9 @@ def home(request):
         'comp_fws': comp_fws, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
 
 class QueryResult(object):
-    def __init__(self, n, db, qry, size, sort=None):
+    def __init__(self, db, qry, size, sort=None):
         self._db, self._q, self._srt = db, qry, sort
-        self._len = size / n
+        self._len = size
 
     def __len__(self):
         return self._len
@@ -89,15 +90,33 @@ class QueryResult(object):
         cursor.sort(*self._srt)
         cursor.limit(limit)
         return [(x['fw_id'], x['name'], x['state']) for x in cursor]
+
+class WFQueryResult(QueryResult):
+    def __getslice__(self,  a, b):
+        skip, limit = a, b - a 
+        _dbg("QueryResult a={} b={}".format(a,b))
+        cursor = self._db.find(self._q)
+        cursor.skip(skip)
+        cursor.sort(*self._srt)
+        cursor.limit(limit)
+        return [(x['nodes'][0], x['name'], x['state']) for x in cursor]
         
+class WFStateQueryResult(QueryResult):
+    def __getslice__(self,  a, b):
+        skip, limit = a, b - a 
+        _dbg("QueryResult a={} b={}".format(a,b))
+        cursor = self._db.find(self._q)
+        cursor.skip(skip)
+        cursor.sort(*self._srt)
+        cursor.limit(limit)
+        return [(x['nodes'][0], x['name']) for x in cursor]
+
 def fw(request):
-    pagelen = 15
+    pagelen = DEFAULT_PAGELEN
     db = lp.fireworks
     qry = {}
     fw_count = lp.get_fw_ids(count_only=True)
-    rows = QueryResult(pagelen, lp.fireworks, {}, fw_count, sort=('created_on', -1))
-
-    shown = 15
+    rows = QueryResult(lp.fireworks, {}, fw_count, sort=('created_on', -1))
 
     # pagination
     paginator = Paginator(rows, pagelen)
@@ -112,7 +131,7 @@ def fw(request):
     return render_to_response('fw.html', {'fws': fw_count, 'display': display})
 
 def fw_state(request, state):
-    pagelen = 15
+    pagelen = DEFAULT_PAGELEN
     db = lp.fireworks
     try:
         state = state.upper()
@@ -120,7 +139,7 @@ def fw_state(request, state):
         raise Http404()
     qry = {'state': state}
     fw_count = lp.get_fw_ids(query=qry, count_only=True)
-    rows = QueryResult(pagelen, lp.fireworks, qry, fw_count, sort=('created_on', -1))
+    rows = QueryResult(lp.fireworks, qry, fw_count, sort=('created_on', -1))
 
 
 #    fws_shown = lp.fireworks.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
@@ -185,17 +204,19 @@ def fw_id_less(request, id):
     return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
 
 def wf(request):
-    wf_count = lp.get_wf_ids(count_only=True)
-    shown = 15
+    pagelen = DEFAULT_PAGELEN
+    db = lp.workflows
+    qry = {}
+    wf_count = lp.get_wf_ids(query=qry, count_only=True)
+    rows = WFQueryResult(db, qry, wf_count, sort=('updated_on', -1))
 
-    wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
-    wf_info = []
-    for item in wfs_shown:
-        wf_info.append((item['nodes'][0], item['name'],item['state']))
+#    wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
+#    wf_info = []
+#    for item in wfs_shown:
+#        wf_info.append((item['nodes'][0], item['name'],item['state']))
 
     # pagination
-    paginator = Paginator(wf_info, shown)
-    paginator._count = wf_count
+    paginator = Paginator(rows, pagelen)
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
@@ -207,22 +228,27 @@ def wf(request):
     return render_to_response('wf.html', {'wfs': wf_count, 'display': display})
 
 def wf_state(request, state):
-    shown = 15
-    wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
     try:
         state = state.upper()
     except ValueError:
         raise Http404()
+    pagelen = DEFAULT_PAGELEN
+    db = lp.workflows
+    qry = {'state': state}
+    wf_count = lp.get_wf_ids(query=qry, count_only=True)
+    rows = WFStateQueryResult(db, qry, wf_count, sort=('created_on', -1))
 
-    wfs_shown = lp.workflows.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
-    wf_count = lp.get_wf_ids(query={'state': state}, count_only=True)
-    wf_info = []
-    for item in wfs_shown:
-        wf_info.append((item['nodes'][0], item['name']))
+#    shown = 15
+#    wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
+
+#    wfs_shown = lp.workflows.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
+#    wf_count = lp.get_wf_ids(query={'state': state}, count_only=True)
+#    wf_info = []
+#    for item in wfs_shown:
+#        wf_info.append((item['nodes'][0], item['name']))
 
     # pagination
-    paginator = Paginator(wf_info, shown)
-    paginator._count = wf_count
+    paginator = Paginator(rows, pagelen)
     page = request.GET.get('page')
     try:
         display = paginator.page(page)
@@ -231,7 +257,7 @@ def wf_state(request, state):
     except EmptyPage:
         display = paginator.page(paginator.num_pages)
 
-    return render_to_response('wf_state.html', {'wfs': wfs, 'state': state, 'display': display})
+    return render_to_response('wf_state.html', {'wfs': wf_count, 'state': state, 'display': display})
 
 def wf_id(request, id): # same as wf_id_more
     try:
