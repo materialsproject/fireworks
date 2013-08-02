@@ -25,9 +25,12 @@ _log.addHandler(hndlr)
 _log.setLevel(logging.DEBUG)
 _dbg = _log.debug
 
+
 def home(request):
     shown = 20
     comp_fws = lp.get_fw_ids(query={'state': 'COMPLETED'}, count_only=True)
+
+    ensure_indexes()
 
     # Newest Fireworks table data
     _dbg("fireworks.begin")
@@ -72,40 +75,35 @@ def home(request):
     return render_to_response('home.html', {'fw_info': fw_info, 'info': info,
         'comp_fws': comp_fws, 'tot_fws': tot_fws, 'tot_wfs': tot_wfs, 'wf_info': wf_info})
 
+class QueryResult(object):
+    def __init__(self, n, db, qry, size, sort=None):
+        self._db, self._q, self._srt = db, qry, sort
+        self._len = size / n
+
+    def __len__(self):
+        return self._len
+
+    def __getslice__(self,  a, b):
+        skip, limit = a, b - a 
+        _dbg("QueryResult a={} b={}".format(a,b))
+        cursor = self._db.find(self._q)
+        cursor.skip(skip)
+        cursor.sort(*self._srt)
+        cursor.limit(limit)
+        return [(x['fw_id'], x['name'], x['state']) for x in cursor]
+        
 def fw(request):
-    # table data
+    pagelen = 15
+    db = lp.fireworks
+    qry = {}
     fw_count = lp.get_fw_ids(count_only=True)
+    rows = QueryResult(pagelen, lp.fireworks, {}, fw_count, sort=('created_on', -1))
+
     shown = 15
 
-    fws_shown = lp.fireworks.find({}, limit=shown, sort=[('created_on', DESCENDING)])
-    fw_info = []
-    for item in fws_shown:
-        fw_info.append((item['fw_id'], item['name'], item['state']))
-    # start = 0
-    # stop = shown
-    # fw_names = []
-    # fw_states = []
-    # fws = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    # for fw in fws:
-    #     fws_shown = fws[start:stop]
-    #     if stop < fw_count:
-    #         start = start+shown
-    #         stop = stop+shown
-    #         for fw in fws_shown:
-    #             fw_names.append(lp.get_fw_by_id(fw).name)
-    #             fw_states.append(lp.get_fw_by_id(fw).state)
-    #     if stop > fw_count:
-    #         fws_shown = fws[start:stop]
-    #         for fw in fws_shown:
-    #             fw_names.append(lp.get_fw_by_id(fw).name)
-    #             fw_states.append(lp.get_fw_by_id(fw).state)
-    #         break
-    # fw_info = zip(fws, fw_names, fw_states)
-
     # pagination
-    paginator = Paginator(fw_info, shown)
-    paginator._count = fw_count
-    page = request.GET.get('page')
+    paginator = Paginator(rows, pagelen)
+    page = int(request.GET.get('page'))
     try:
         display = paginator.page(page)
     except PageNotAnInteger:
