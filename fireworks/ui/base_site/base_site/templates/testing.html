@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}Testing{% endblock %}
 
@@ -51,32 +52,6 @@
 
 <div id="container" style="height: 500px; min-width: 600px"></div>
 
-<script>
-$(function() {
+<script src="{% static "chart.js" %}"></script>
 
-	$.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?', function(data) {
-		// Create the chart
-		$('#container').highcharts('StockChart', {
-
-
-			rangeSelector : {
-				selected : 1
-			},
-
-			title : {
-				text : 'Fireworks'
-			},
-
-			series : [{
-				name : 'TOTAL',
-				data : data,
-				tooltip: {
-					valueDecimals: 2
-				}
-			}]
-		});
-	});
-
-});
-</script>
 {% endblock %}
