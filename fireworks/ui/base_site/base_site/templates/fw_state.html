@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}{{ state|lower|capfirst }} Fireworks Index{% endblock %}
 
 {% block content %}
-<h3>{{ fws }} {{ state|lower|capfirst }} Firework{{ fws|pluralize }} currently in database</h3>
+<h2>{{ fws|intcomma }} {{ state|lower|capfirst }} Firework{{ fws|pluralize }} currently in database</h2>
 
 <!-- FILTERS / NAVIGATION -->
 <h5><center><a href="/fw/newest">NEWEST</a> |

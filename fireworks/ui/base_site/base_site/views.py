@@ -37,13 +37,6 @@ def home(request):
     fw_info = []
     for item in fws_shown:
         fw_info.append((item['fw_id'], item['name'], item['state']))
-    # fws_shown = lp.get_fw_ids(limit=shown, sort=[('created_on', DESCENDING)])
-    # fw_names = []
-    # fw_states = []
-    # for fw in fws_shown:
-    #     fw_names.append(lp.get_fw_by_id(fw).name)
-    #     fw_states.append(lp.get_fw_by_id(fw).state)
-    # fw_info = zip(fws_shown, fw_names, fw_states)
     _dbg("fireworks.end")
 
     # Current Database Status table data
@@ -141,19 +134,6 @@ def fw_state(request, state):
     fw_count = lp.get_fw_ids(query=qry, count_only=True)
     rows = QueryResult(lp.fireworks, qry, fw_count, sort=('created_on', -1))
 
-
-#    fws_shown = lp.fireworks.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
-#    fw_count = lp.get_fw_ids(query={'state': state}, count_only=True)
-#    fw_info = []
-#    for item in fws_shown:
-#        fw_info.append((item['fw_id'], item['name']))
-
-    # fws_shown = lp.get_fw_ids(sort=[('created_on', DESCENDING)], query={'state': state})
-    # fw_names = []
-    # for fw in fws_shown:
-    #     fw_names.append(lp.get_fw_by_id(fw).name)
-    # fw_info = zip(fws_shown, fw_names)
-
     # pagination
     paginator = Paginator(rows, pagelen)
     page = request.GET.get('page')
@@ -210,11 +190,6 @@ def wf(request):
     wf_count = lp.get_wf_ids(query=qry, count_only=True)
     rows = WFQueryResult(db, qry, wf_count, sort=('updated_on', -1))
 
-#    wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
-#    wf_info = []
-#    for item in wfs_shown:
-#        wf_info.append((item['nodes'][0], item['name'],item['state']))
-
     # pagination
     paginator = Paginator(rows, pagelen)
     page = request.GET.get('page')
@@ -237,15 +212,6 @@ def wf_state(request, state):
     qry = {'state': state}
     wf_count = lp.get_wf_ids(query=qry, count_only=True)
     rows = WFStateQueryResult(db, qry, wf_count, sort=('created_on', -1))
-
-#    shown = 15
-#    wfs = lp.get_wf_ids(query={'state': state}, count_only=True)
-
-#    wfs_shown = lp.workflows.find({'state': state}, limit=shown, sort=[('created_on', DESCENDING)])
-#    wf_count = lp.get_wf_ids(query={'state': state}, count_only=True)
-#    wf_info = []
-#    for item in wfs_shown:
-#        wf_info.append((item['nodes'][0], item['name']))
 
     # pagination
     paginator = Paginator(rows, pagelen)

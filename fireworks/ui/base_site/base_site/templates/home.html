@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% load humanize %}
 <h2>{{ comp_fws|intcomma }} Completed FireWorks as of {% now "Y-m-d, H:i (T)" %}</h2>
 
 <h3>Recent Activity</h3>
@@ -37,14 +37,14 @@
     {% for states, fw_info, wf_info in info %}
         <tr>
             <td><div align="right">{{ states }}</div></td>
-            <td><center><a href="/fw/{{ states }}">{{ fw_info }}</a></center></td>
-            <td><center><a href="/wf/{{ states }}">{{ wf_info }}</a></center></td>
+            <td><center><a href="/fw/{{ states }}">{{ fw_info|intcomma }}</a></center></td>
+            <td><center><a href="/wf/{{ states }}">{{ wf_info|intcomma }}</a></center></td>
         </tr>
     {% endfor %}
     <tr>
         <th><div align="right">TOTAL</div></th>
-        <td><center><a href="/fw">{{ tot_fws }}</a></center></td>
-        <td><center><a href="/wf">{{ tot_wfs }}</a></center></td>
+        <td><center><a href="/fw">{{ tot_fws|intcomma }}</a></center></td>
+        <td><center><a href="/wf">{{ tot_wfs|intcomma }}</a></center></td>
     </tr>
 </table>
 
@@ -65,114 +65,4 @@
         <tr><td colspan="3"><center>(no workflows in database)</center></td></tr>
     {% endfor %}
 </table>
-
-<br>
-
-<!-- CHARTS
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-
-<div id="fw_container" style="width:50%; height:400px; float: left;"></div>
-<div id="wf_container" style="width:50%; height:400px; float: right;"></div>
-
-<script type="text/javascript" src='{{ STATIC_URL }}/chart.js'></script>
-
-<script>
-    var arc_fws   = parseInt('{{ arc_fws }}');
-    var arc_wfs   = parseInt('{{ arc_wfs }}');
-    var def_fws   = parseInt('{{ def_fws }}');
-    var def_wfs   = parseInt('{{ def_wfs }}');
-    var wait_fws  = parseInt('{{ wait_fws }}');
-    var ready_fws = parseInt('{{ ready_fws }}');;
-    var ready_wfs = parseInt('{{ ready_wfs }}');
-    var res_fws   = parseInt('{{ res_fws }}');
-    var fizz_fws  = parseInt('{{ fizz_fws }}');
-    var fizz_wfs  = parseInt('{{ fizz_wfs }}');
-    var run_fws   = parseInt('{{ run_fws }}');
-    var run_wfs   = parseInt('{{ run_wfs }}');
-    var comp_fws  = parseInt('{{ comp_fws }}');
-    var comp_wfs  = parseInt('{{ comp_wfs }}');
-
-    $(function () {
-    $('#fw_container').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Current Fireworks Status'
-        },
-        tooltip: {
-    	    pointFormat: '<b>{point.y}</b> ({point.percentage:.2f}%)'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    distance: 35,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '{point.name}:<br> <b>{point.y}</b> ({point.percentage:.2f}%)'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Fireworks',
-            data: [
-                ['ARCHIVED', arc_fws],
-                ['DEFUSED', def_fws],
-                ['WAITING', wait_fws],
-                ['READY', ready_fws],
-                ['RESERVED', res_fws],
-                ['FIZZLED', fizz_fws],
-                ['RUNNING', run_fws],
-                ['COMPLETED', comp_fws]
-            ]
-        }]
-    });
-
-    $('#wf_container').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Current Workflows Status'
-        },
-        tooltip: {
-    	    pointFormat: '<b>{point.y}</b> ({point.percentage:.2f}%)'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    distance: 35,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '{point.name}:<br> <b>{point.y}</b> ({point.percentage:.2f}%)'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Workflows',
-            data: [
-                ['ARCHIVED', arc_wfs],
-                ['DEFUSED', def_wfs],
-                ['READY', ready_wfs],
-                ['FIZZLED', fizz_wfs],
-                ['RUNNING', run_wfs],
-                ['COMPLETED', comp_wfs]
-            ]
-        }]
-    });
-});
-</script>-->
 {% endblock %}
