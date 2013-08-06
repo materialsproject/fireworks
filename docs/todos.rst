@@ -37,7 +37,7 @@ FW Docs
 
 * Put the bird's eye view on the Home Page rather than as something you need to click.
 
-* Document the FWAction
+* Document the FWAction (in context of writing dynamic workflows)
 
 Major Features
 ==============
@@ -63,6 +63,10 @@ FireTasks
 
 Misc.
 =====
+
+* FireTask name defaults to Class name.
+
+* Ensure that lpad commands work in a pip installation with virtualenv.
 
 * Detect a blank config dir and give a proper error.
 
