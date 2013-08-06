@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}Workflows Index{% endblock %}
 
 {% block content %}
-<h3>{{ wfs }} Workflow{{ wfs|pluralize }} currently in database</h3>
+<h2>{{ wfs|intcomma }} Workflow{{ wfs|pluralize }} currently in database</h2>
 
 <!-- FILTERS / NAVIGATION -->
 <h5><center><a href="/wf/newest">NEWEST</a> |
