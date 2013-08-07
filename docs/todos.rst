@@ -81,3 +81,5 @@ Misc.
 * No negative fw_ids needed when returning FWAction
 
 * Go through logging, make sure it's sane
+
+* Not require init.py in all tutorial dirs by fixing MANIFEST.in (somehow)
