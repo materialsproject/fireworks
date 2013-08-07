@@ -2,7 +2,7 @@
 FireWorks Changelog
 ===================
 
-v0.195
+v0.196
 =====
 
 * bugfix to detect_unreserved script
