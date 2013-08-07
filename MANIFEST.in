@@ -1,5 +1,5 @@
 include LICENSE *.txt
 recursive-include fireworks *.py *.json *.yaml *.cfg
 recursive-include docs *
-recursive-include fw_tutorials *.py *.json *.yaml *.cfg
+recursive-include fw_tutorials *
 recursive-include scripts *
