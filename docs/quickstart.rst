@@ -42,7 +42,7 @@ Reset/Initialize the FireServer
 
    where <INSTALL_DIR> is your FireWorks installation directory.
 
-.. note:: If you do not know your <INSTALL_DIR>, use the command ``lpad version`` to print it to the terminal.
+.. note:: If you do not know your <INSTALL_DIR>, use the command ``lpad version`` to print it to the terminal. If you used the `pip` installation, you'll need to download the tutorial files separately as explained in the :doc:`Basic FireWorks Installation </installation>`.
  
 #. Reset the FireWorks database (the LaunchPad)::
 
