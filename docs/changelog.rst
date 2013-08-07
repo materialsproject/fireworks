@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+v0.19
+=====
+
+* bugfix to detect_unreserved script
+* fixes to pip installation
+
 v0.18
 =====
 
