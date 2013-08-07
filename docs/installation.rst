@@ -21,11 +21,15 @@ Virtualenv is a tool that allows you to separate your FireWorks installation fro
 Installation Method 1: Use Pip
 ==============================
 
-The easiest way to install FireWorks is to simply run a one-liner in pip. The downside of this method is that it is more difficult to view and edit the source code. To install, simply type::
+The easiest way to install FireWorks is to simply run a one-liner in pip. The downside of this method is that it is more difficult to view and edit the source code.
+
+#. To install, simply type::
 
     pip install FireWorks
 
-.. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
+   .. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
+
+#. Separately, you will probably want to download the FireWork tutorial files if you plan on going through the tutorials. You can download these from the `FireWorks Github page <https://github.com/materialsproject/fireworks>`_. All you need is the ``fw_tutorial`` directory, but it might be easiest to download the entire source and just copy the ``fw_tutorial`` directory somewhere else.
 
 Installation Method 2: Use Git to install in developer mode
 ===========================================================
