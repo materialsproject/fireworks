@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+v0.2
+====
+
+* initial (alpha) release of Web GUI from Morgan Hargrove
+
 v0.196
 =====
 

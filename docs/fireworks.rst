@@ -9,11 +9,20 @@ fireworks Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`manage` Module
+--------------------
+
+.. automodule:: fireworks.manage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
 .. toctree::
 
+    fireworks.base_site
     fireworks.core
     fireworks.features
     fireworks.queue

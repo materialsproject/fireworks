@@ -29,9 +29,9 @@ Some (but not all) of its features include:
 
 * Loosely-coupled and modular infrastructure that is intentionally hackable. Use some FireWorks components without using *everything*, and more easily adapt FireWorks to your application.
 
-* Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
+* Monitoring of workflows through a web service
 
-* Monitoring of workflows through a web service *(future)*
+* Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
 
 * Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs). *(future)*
 
@@ -116,6 +116,7 @@ Monitoring FireWorks
     :maxdepth: 1
 
     query_tutorial
+    basesite_tutorial
 
 Deploying FireWorks in production
 ---------------------------------
