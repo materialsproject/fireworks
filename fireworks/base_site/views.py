@@ -1,3 +1,5 @@
+import os
+
 __author__ = 'Morgan Hargrove'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
@@ -10,12 +12,13 @@ import datetime
 import logging
 from pymongo import DESCENDING
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from django.shortcuts import render_to_response
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
-lp = LaunchPad.auto_load()
+
+lp = LaunchPad.from_dict(json.loads(os.environ['FWDB_CONFIG']))
 
 _log = logging.getLogger("fwdash")
 hndlr = logging.StreamHandler()

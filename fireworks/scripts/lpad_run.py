@@ -6,7 +6,9 @@ A runnable script for managing a FireWorks database (a command-line interface to
 
 from argparse import ArgumentParser
 import os
+import webbrowser
 from pymongo import DESCENDING, ASCENDING
+import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import Workflow
@@ -17,6 +19,7 @@ from fireworks import FW_INSTALL_DIR
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
+__credits__ = 'Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
@@ -112,6 +115,13 @@ def lpad():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
+    webgui_parser = subparsers.add_parser('webgui', help='launch the web GUI')
+    webgui_parser.add_argument("--port", dest="port", type=int, default=8000,
+                        help="Port to run the server on (default: 8000)")
+
+    webgui_parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
+                        help="Host to run the server on (default: 127.0.0.1)")
+    webgui_parser.add_argument('-b', '--browser', help='launch browser', action='store_true')
     args = parser.parse_args()
 
     if args.command == 'version':
@@ -278,6 +288,19 @@ def lpad():
             for fw_id in fw_ids:
                 lp.rerun_fw(fw_id)
                 print 'RERAN', fw_id
+
+        elif args.command == 'webgui':
+            os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
+            os.environ["FWDB_CONFIG"] = json.dumps(lp.to_dict())
+            from django.core.management import call_command
+            from multiprocessing import Process
+            p1 = Process(target=call_command,
+                         args=("runserver",  "{}:{}".format(args.host, args.port)))
+            p1.start()
+            if args.browser:
+                time.sleep(2)
+                webbrowser.open("http://{}:{}".format(args.host, args.port))
+            p1.join()
 
 
 if __name__ == '__main__':
