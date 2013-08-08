@@ -8,7 +8,7 @@ v0.2
 * initial (alpha) release of Web GUI from Morgan Hargrove
 
 v0.196
-=====
+======
 
 * bugfix to detect_unreserved script
 * fixes to pip installation and instructions
