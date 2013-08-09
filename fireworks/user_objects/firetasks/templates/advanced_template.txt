@@ -1,0 +1,12 @@
+option1 = {{opt1}}
+option2 = {{opt2}}
+
+{% if optparam %}
+OPTIONAL PARAMETER
+    {{ optparam }}
+{% endif %}
+
+LOOP PARAMETERS
+{% for param in param_list %}
+    {{ param }}
+{% endfor %}
