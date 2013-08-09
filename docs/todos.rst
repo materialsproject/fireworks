@@ -19,8 +19,6 @@ FW Docs
 
 * Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
 
-* Now that the "bird's eye view" does a good job of explaining the features of FireWorks, remind users of these good attributes of the code within the other tutorials. e.g. point out how compact the *spec* is in the first quickstart tutorial.
-
 * Update all tutorials so config file is handled smoothly, not terribly...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
@@ -29,7 +27,7 @@ FW Docs
 
 * Detailed tutorial on implementing dynamic jobs
 
-* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
+* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step. Or a templated input file example (this would be better) and runs a code
 
 * Setting up logging (in deployment section of tutorials)
 
@@ -64,6 +62,8 @@ FireTasks
 Misc.
 =====
 
+* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
+
 * FireTask name defaults to Class name.
 
 * Ensure that lpad commands work in a pip installation with virtualenv.
@@ -83,6 +83,8 @@ Misc.
 * keep looking for FWs with the same _fw_name, and throw an error if you find 2 with the same _fw_name
 
 * No negative fw_ids needed when returning FWAction
+
+* Document how to create a queue script for a new machine (and perhaps clean up the code)
 
 * Go through logging, make sure it's sane
 
