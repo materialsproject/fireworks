@@ -70,6 +70,8 @@ class FWConfig(object):
 
         self.ALWAYS_CREATE_NEW_BLOCK = False  # always create new block on queue launcher call
 
+        self.TEMPLATE_DIR = None  # default template dir for TemplateWriterTask
+
         self.override_user_settings()
 
     def override_user_settings(self):

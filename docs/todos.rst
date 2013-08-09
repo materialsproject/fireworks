@@ -37,6 +37,8 @@ FW Docs
 
 * Document the FWAction (in context of writing dynamic workflows)
 
+* Provide tutorial on template task
+
 Major Features
 ==============
 

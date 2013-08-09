@@ -1,6 +1,7 @@
 import os
 from django.template import Template, Context
 from fireworks.core.firework import FireTaskBase
+from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
@@ -9,8 +10,6 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
-
-# TODO: allow FWConfig() to set the template dir
 
 # TODO: remove this hack...
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
@@ -26,8 +25,13 @@ class TemplateWriterTask(FireTaskBase, FWSerializable):
         self.output_file = self['output_file']
         self.append_file = self.get('append', False)  # append to output file?
 
-        MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-        self.template_dir = self.get('template_dir', os.path.join(MODULE_DIR, 'templates'))
+        if self.get('template_dir'):
+            self.template_dir = self['template_dir']
+        elif FWConfig().TEMPLATE_DIR:
+            self.template_dir = FWConfig().TEMPLATE_DIR
+        else:
+            MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+            self.template_dir = os.path.join(MODULE_DIR, 'templates')
 
         self.template_file = os.path.join(self.template_dir, self['template_file'])
         if not os.path.exists(self.template_file):
