@@ -47,7 +47,6 @@ DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datet
 
 
 def _recursive_dict(obj):
-
     if obj is None:
         return None
 
@@ -125,6 +124,7 @@ def recursive_deserialize(func):
 
     return _decorator
 
+
 def serialize_fw(func):
     """
     a decorator to add FW serializations keys
@@ -182,7 +182,8 @@ class FWSerializable():
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_dict(), default_flow_style=FWConfig().YAML_STYLE, allow_unicode=True)
+            return yaml.dump(self.to_dict(), default_flow_style=FWConfig().YAML_STYLE,
+                             allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -261,14 +262,24 @@ def load_object(obj_dict):
 
     # failing that, look for the object within all of USER_PACKAGES
     # this will be slow, but only needed the first time
+
+    found_objects = [] # used to make sure we don't find multiple hits
     for package in FWConfig().USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__, package + '.'):
+        for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__,
+                                                                 package + '.'):
             m_module = loader.find_module(module_name).load_module(module_name)
             m_object = _search_module_for_obj(m_module, obj_dict)
             if m_object:
-                SAVED_FW_MODULES[fw_name] = module_name
-                return m_object
+                found_objects.append((m_object, module_name))
+
+    if len(found_objects) == 1:
+        SAVED_FW_MODULES[fw_name] = found_objects[0][1]
+        return found_objects[0][0]
+    elif len(found_objects) > 0:
+        raise ValueError(
+            'load_object() found multiple objects with cls._fw_name {} -- {}'.format(fw_name,
+                                                                                     found_objects))
 
     raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
 
