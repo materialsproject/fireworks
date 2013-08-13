@@ -52,6 +52,9 @@ Major Features
 
 * Change templating language to Django templates, adds dependency on Django
 
+* Implement job packing using multiprocessing first, threads later. (this probably needs some unit test)
+
+
 FireTasks
 =========
 

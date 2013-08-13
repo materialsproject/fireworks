@@ -11,6 +11,8 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
 
+# TODO: add documentation
+
 # TODO: remove this hack...
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
 
