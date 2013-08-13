@@ -24,20 +24,40 @@ The ``Script Task`` is one type of *FireTask*, which is a predefined job templat
 Running multiple FireTasks
 ==========================
 
-You can run multiple tasks within the same FireWork (it might be helpful to review the :ref:`wfmodel-label` diagram). For example, the first step of your FireWork might write an input file that the second step processes. Let's create a FireWork where the first step prints ``howdy.txt``, and the second step counts the number of words in that file.
+You can run multiple tasks within the same FireWork (it might be helpful to review the :ref:`wfmodel-label` diagram). For example, the first step of your FireWork might write an input file that the second step reads and processes.
+
+Let's create a FireWork that:
+
+#. Writes an input file based on a *template* with some substitutions applied. We'll do this using a built-in ``TemplateWriterTask`` that can help create such files.
+#. Executes a script that reads the input file and produces some output. In our test case, it will just count the number of words in that file. However, this code could be any program, for example a chemistry code.
+
+The two-step FireWork thus looks like this:
+
+.. image:: _static/templatetask.png
+   :width: 300px
+   :align: center
+   :alt: Template FireWork
 
 1. Navigate to the tasks tutorial directory on your FireServer::
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 
-#. Look inside the file ``fw_multi.yaml``. You should see two instances of ``Script Task`` inside our **spec**. Remember, our **spec** contains all the information needed to run our job. The second ``Script Task`` runs the ``wc -w`` command to count the number of characters in ``howdy.txt`` and exports the result to ``words.txt``::
+#. Look inside the file ``fw_multi.yaml``::
 
     spec:
       _tasks:
+      - _fw_name: Template Writer Task
+        template_file: simple_template.txt
+        context:
+          opt1: 5.0
+          opt2: fast method
+        output_file: inputs.txt
       - _fw_name: Script Task
-        script: echo "howdy, your job launched successfully!" > howdy.txt
-      - _fw_name: Script Task
-        script: wc -w < howdy.txt > words.txt
+        script: wc -w < inputs.txt > words.txt
+
+   There are now two tasks inside our **spec**: the ``Template Writer Task`` and the ``Script Task``. The ``Template Writer Task`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the outputs to ``input.txt``. The ``Script Task`` will then run a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``.
+
+   .. note:: If you would like to know more about how templated input writing works and define your own templated files, you should consult the :doc:`TemplateWriterTask tutorial <templatewritertask>`. A copy of ``simple_template.txt`` is given in the directory as ``simple_template_copy.txt`` (however, modifying the copy won't modify the actual template).
 
 #. Run this multi-step FireWork on your FireServer::
 
@@ -47,7 +67,7 @@ You can run multiple tasks within the same FireWork (it might be helpful to revi
 
 .. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will reset the database, insert a FW, and run it within a single command.
 
-You should see two files written out to the system, ``howdy.txt`` and ``words.txt``, confirming that you successfully ran a two-step job!
+You should see two files written out to the system, ``inputs.txt`` and ``words.txt``, confirming that you successfully ran a two-step job!
 
 .. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the *FWAction* object, but not between FireTasks within a FireWork (:ref:`wfmodel-label`).
 
@@ -59,33 +79,33 @@ Here is a complete Python example that runs multiple FireTasks within a single F
     from fireworks.core.firework import FireWork
     from fireworks.core.fworker import FWorker
     from fireworks.core.launchpad import LaunchPad
-    from fireworks.core.rocket_launcher import rapidfire
+    from fireworks.core.rocket_launcher import launch_rocket
     from fireworks.user_objects.firetasks.script_task import ScriptTask
+    from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()
     launchpad.reset('', require_password=False)
 
     # create the FireWork consisting of multiple tasks
-    firetask1 = ScriptTask.from_str('echo "This is TASK #1"')
-    firetask2 = ScriptTask.from_str('echo "This is TASK #2"')
-    firetask3 = ScriptTask.from_str('echo "This is TASK #3"')
-    fw = FireWork([firetask1, firetask2, firetask3])
+    firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})
+    firetask2 = ScriptTask.from_str('wc -w < inputs.txt > words.txt')
+    fw = FireWork([firetask1, firetask2])
 
-    # store workflow and launch it locally, rapid-fire
+    # store workflow and launch it locally, single shot
     launchpad.add_wf(fw)
-    rapidfire(launchpad, FWorker())
+    launch_rocket(launchpad, FWorker())
 
 .. _customtask-label:
 
 Creating a custom FireTask
 ==========================
 
-Because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of job and is an 'all-encompassing' FireTask. Script Task also has many additional features that will be covered in a future tutorial.
+Both the ``Template Writer Task`` and ``Script Task`` are built-into FireWorks and can be used to perform useful operations. In particular, because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. Script Task also has many additional features that are covered in the :doc:`Script Task tutorial <scripttask>`.
 
-However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks (job templates) for the codes you run. A custom FireTask can clarify the usage of your code and guard against unintended behavior by restricting the commands that can be executed.
+However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks for the codes you run. A custom FireTask gives you more control over your jbos, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
 
-Even if you plan to only use ``Script Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks.
+Even if you plan to only use ``Script Task`` and/or ``Template Writer Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks.
 
 How FireWorks bootstraps a job
 ------------------------------

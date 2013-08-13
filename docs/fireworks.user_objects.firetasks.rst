@@ -17,3 +17,11 @@ firetasks Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`templatewriter_task` Module
+---------------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.templatewriter_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

@@ -1,6 +1,12 @@
 spec:
   _tasks:
+  - _fw_name: Template Writer Task
+    template_file: simple_template.txt
+    context:
+      opt1: 5.0
+      opt2: fast method
+    output_file: inputs.txt
   - _fw_name: Script Task
-    script: echo "howdy, your job launched successfully!" > howdy.txt
-  - _fw_name: Script Task
-    script: wc -w < howdy.txt > words.txt
+    script: wc -w < inputs.txt > words.txt
+    use_shell: true
+
