@@ -55,7 +55,7 @@ The two-step FireWork thus looks like this:
       - _fw_name: Script Task
         script: wc -w < inputs.txt > words.txt
 
-   There are now two tasks inside our **spec**: the ``Template Writer Task`` and the ``Script Task``. The ``Template Writer Task`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the outputs to ``input.txt``. The ``Script Task`` will then run a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``.
+   There are now two tasks inside our **spec**: the ``Template Writer Task`` and the ``Script Task``. The ``Template Writer Task`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the result to ``input.txt``. Next, the ``Script Task` runs a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``.
 
    .. note:: If you would like to know more about how templated input writing works and define your own templated files, you should consult the :doc:`TemplateWriterTask tutorial <templatewritertask>`. A copy of ``simple_template.txt`` is given in the directory as ``simple_template_copy.txt`` (however, modifying the copy won't modify the actual template).
 
