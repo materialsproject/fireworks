@@ -1,3 +1,7 @@
+"""
+This module contains the TemplateWriterTask, which writes files based on a template file and a Context using Django's templating engine.
+"""
+
 import os
 from django.template import Template, Context
 from fireworks.core.firework import FireTaskBase
@@ -11,7 +15,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
 
-# TODO: add documentation
+
 
 # TODO: remove this hack...
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
@@ -21,6 +25,9 @@ class TemplateWriterTask(FireTaskBase, FWSerializable):
     _fw_name = "Template Writer Task"
 
     def __init__(self, parameters):
+        """
+        :param parameters: (dict) parameters. Required are "template_file" (str), "context" (dict), and "output_file" (str). Optional are "append" (T/F) and "template_dir" (str).
+        """
         self.update(parameters)
 
         self.context = self['context']

@@ -135,9 +135,10 @@ Additional features and topics
     :maxdepth: 1
 
     duplicates_tutorial
-    python_tutorial
     scripttask
+    templatewritertask
     controlworker
+    python_tutorial
 
 
 .. _contributing-label:

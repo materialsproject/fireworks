@@ -1,0 +1,14 @@
+spec:
+  _tasks:
+  - _fw_name: Template Writer Task
+    context:
+      opt1: 5.0
+      opt2: fast method
+      optparam: true
+      param_list:
+      - 1
+      - 2
+      - 3
+      - 4
+    output_file: inputs_advanced.txt
+    template_file: advanced_template.txt
