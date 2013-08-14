@@ -27,7 +27,7 @@ FW Docs
 
 * Detailed tutorial on implementing dynamic jobs
 
-* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step. Or a templated input file example (this would be better) and runs a code
+* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
 
 * Setting up logging (in deployment section of tutorials)
 
@@ -37,7 +37,6 @@ FW Docs
 
 * Document the FWAction (in context of writing dynamic workflows)
 
-* Provide tutorial on template task
 
 Major Features
 ==============
@@ -49,8 +48,6 @@ Major Features
 * More and better unit tests, e.g. unit tests of scripts
 
 * Add way to monitor a file during the run
-
-* Change templating language to Django templates, adds dependency on Django
 
 * Implement job packing using multiprocessing first, threads later. (this probably needs some unit test)
 
