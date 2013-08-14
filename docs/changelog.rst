@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+v0.21
+=====
+
+* add TemplateWriterTask plus documentation
+* check for duplicate serialized objects
+
 v0.2
 ====
 
