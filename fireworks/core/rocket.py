@@ -69,7 +69,7 @@ class Rocket():
         try:
             ping_stop = threading.Event()
             ping_thread = threading.Thread(target=ping_launch,
-                                           args=(lp, launch_id, ping_stop, threading.currentThread()))
+                                           args=(lp, launch_id, ping_stop, threading.currentThread(), self.lp_lock))
             ping_thread.start()
 
             # execute the FireTasks!
