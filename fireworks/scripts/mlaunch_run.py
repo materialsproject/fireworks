@@ -26,7 +26,7 @@ def create_launchpad(launchpad_file, strm_lvl):
     if launchpad_file:
         launchpad = LaunchPad.from_file(launchpad_file)
     else:
-        launchpad = LaunchPad(strm_lvl)
+        launchpad = LaunchPad(strm_lvl=strm_lvl)
     return launchpad
 
 def manager_initializer():
