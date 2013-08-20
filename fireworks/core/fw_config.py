@@ -72,6 +72,12 @@ class FWConfig(object):
 
         self.TEMPLATE_DIR = None  # default template dir for TemplateWriterTask
 
+        self.MULTIPROCESSING = None # default single process framework
+
+        self.PACKING_MANAGER_PORT = '27016'   # the internet port of the packing manager service
+
+        self.PACKING_MANAGER_PASSWORD ='123'  # the password to connect to packing manager service
+
         self.override_user_settings()
 
     def override_user_settings(self):

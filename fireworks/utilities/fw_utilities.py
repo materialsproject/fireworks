@@ -8,6 +8,11 @@ import os
 import traceback
 import socket
 from fireworks.core.fw_config import FWConfig
+import multiprocessing
+
+'''
+Revised by Xiaohui Qu on Aug 19, 2013 to support multiprocessing.
+'''
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -34,6 +39,9 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     :param clear_logs: whether to clear the logger with the same name
     """
 
+    fw_conf = FWConfig()
+    if fw_conf.MULTIPROCESSING:
+        name += multiprocessing.current_process().name
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
@@ -108,7 +116,11 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
 
     time_now = datetime.datetime.utcnow().strftime(FWConfig().FW_BLOCK_FORMAT)
-    block_path = prefix + time_now
+    fw_conf = FWConfig()
+    if not fw_conf.MULTIPROCESSING:
+        block_path = prefix + time_now
+    else:
+        block_path = prefix + multiprocessing.current_process().name + '_'
     full_path = os.path.join(root_dir, block_path)
     os.mkdir(full_path)
     l_logger.info('Created new dir {}'.format(full_path))

@@ -17,9 +17,12 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def ping_launch(launchpad, launch_id, stop_event, master_thread):
+def ping_launch(launchpad, launch_id, stop_event, master_thread, lp_lock):
     while not stop_event.is_set() and master_thread.isAlive():
+        # add mutex to ensure thread safety
+        lp_lock.acquire()
         launchpad._ping_launch(launch_id)
+        lp_lock.release()
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
@@ -38,6 +41,7 @@ class Rocket():
         self.launchpad = launchpad
         self.fworker = fworker
         self.fw_id = fw_id
+        self.lp_lock = threading.Lock()
 
     def run(self):
         """
@@ -49,7 +53,9 @@ class Rocket():
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad
+        self.lp_lock.acquire()
         m_fw, launch_id = lp._checkout_fw(self.fworker, launch_dir, self.fw_id)
+        self.lp_lock.release()
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
@@ -88,11 +94,15 @@ class Rocket():
             # perform finishing operation
             ping_stop.set()
             m_action.stored_data = all_stored_data
+            self.lp_lock.acquire()
             lp._complete_launch(launch_id, m_action, 'COMPLETED')
+            self.lp_lock.release()
 
         except:
             ping_stop.set()
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
+            self.lp_lock.acquire()
             lp._complete_launch(launch_id, m_action, 'FIZZLED')
+            self.lp_lock.release()
