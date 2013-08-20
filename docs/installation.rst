@@ -2,7 +2,7 @@
 Basic FireWorks installation
 ============================
 
-*Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.*
+.. note:: We suggest that you use Python 2.7.3 or higher, especialy in production (although Python 3+ is not tested). There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet).
 
 Preparing to Install
 ====================
