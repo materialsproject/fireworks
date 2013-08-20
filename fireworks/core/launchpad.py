@@ -46,6 +46,7 @@ def singleton(class_):
                 host = '127.0.0.1'
                 port = fw_conf.PACKING_MANAGER_PORT
                 m = PackingManager(address=(host, port), authkey=fw_conf.PACKING_MANAGER_PASSWORD)
+                m.connect()
                 instances[class_] = m.LaunchPad()
         return instances[class_]
 
