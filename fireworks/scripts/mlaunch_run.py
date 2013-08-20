@@ -44,7 +44,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     fw_conf.MULTIPROCESSING = True
     fw_conf.PACKING_MANAGER_PORT = port
     fw_conf.PACKING_MANAGER_PASSWORD = password
-    m = PackingManager()
+    m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.connect()
     launchpad = m.LaunchPad()
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
@@ -89,7 +89,7 @@ def mlaunch():
 
     parser.add_argument('--port', help='shared object service internet port number', default=27015, type=int)
     parser.add_argument('--password', help='shared object service password', default='123')
-    parser._add_action('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
+    parser.add_argument('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
 
     args = parser.parse_args()
 
@@ -120,4 +120,4 @@ def mlaunch():
 
 
 if __name__ == "__main__":
-    print '?'*20
+    mlaunch()
