@@ -22,19 +22,19 @@ __date__ = 'Aug 19, 2013'
 class PackingManager(BaseManager):
     pass
 
-def create_launchpad(launchpad_file):
+def create_launchpad(launchpad_file, strm_lvl):
     if launchpad_file:
-        launchpad = LaunchPad.from_file(args.launchpad_file)
+        launchpad = LaunchPad.from_file(launchpad_file)
     else:
-        launchpad = LaunchPad(strm_lvl=args.loglvl)
+        launchpad = LaunchPad(strm_lvl)
     return launchpad
 
 def manager_initializer():
     fw_conf = FWConfig()
     fw_conf.MULTIPROCESSING = None # don't confuse the server process
 
-def run_manager_server(lauchpad_file, port, password):
-    PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file))
+def run_manager_server(lauchpad_file, strm_lvl, port, password):
+    PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file, strm_lvl))
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.start(initializer=manager_initializer)
     return m
@@ -101,7 +101,7 @@ def mlaunch():
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
-    m = run_manager_server(args.launchpad_file, args.port, args.password)
+    m = run_manager_server(args.launchpad_file, args.loglvl, args.port, args.password)
 
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)
