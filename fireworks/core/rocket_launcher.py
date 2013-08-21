@@ -51,7 +51,8 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
 
     sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
-    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
+    fw_conf = FWConfig()
+    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
 
     num_launched = 0

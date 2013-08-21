@@ -46,7 +46,6 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
     stream_level = stream_level if stream_level else 'CRITICAL'
-
     # add handlers for the file_levels
     if l_dir:
         for lvl in file_levels:

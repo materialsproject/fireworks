@@ -642,3 +642,8 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write of Launch
         # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+
+    def get_logdir(self):
+        # multiprocessing.managers.BaseManager doesn't support Property proxy
+        # add a function to access the properties in case of MULTIPROCESSING
+        return self.logdir
