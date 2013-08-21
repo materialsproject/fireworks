@@ -2,7 +2,6 @@
 
 """
 The LaunchPad manages the FireWorks database.
-Revised by Xiaohui Qu on Aug 19, 2013 to support multiprocessing.
 """
 import datetime
 import os
@@ -13,8 +12,6 @@ from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch, Workflow
 from pymongo import DESCENDING
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception
-from fireworks.core.job_packing import PackingManager
-
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -34,26 +31,6 @@ __date__ = 'Jan 30, 2013'
 # considerably.
 
 
-def singleton(class_):
-    instances = {}
-
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            fw_conf = FWConfig()
-            if not fw_conf.MULTIPROCESSING:
-                instances[class_] = class_(*args, **kwargs)
-            else:
-                host = '127.0.0.1'
-                port = fw_conf.PACKING_MANAGER_PORT
-                m = PackingManager(address=(host, port), authkey=fw_conf.PACKING_MANAGER_PASSWORD)
-                m.connect()
-                instances[class_] = m.LaunchPad()
-        return instances[class_]
-
-    return getinstance
-
-
-@singleton
 class LaunchPad(FWSerializable):
     """
     The LaunchPad manages the FireWorks database.
