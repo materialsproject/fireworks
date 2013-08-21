@@ -78,6 +78,8 @@ class FWConfig(object):
 
         self.PACKING_MANAGER_PASSWORD ='123'  # the password to connect to packing manager service
 
+        self.PROCESS_LOCK = None # the shared Lock between processes
+
         self.override_user_settings()
 
     def override_user_settings(self):

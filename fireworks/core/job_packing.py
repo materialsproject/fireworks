@@ -4,6 +4,7 @@ PackingManager provides share objects for all the processing.
 """
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
+import multiprocessing
 import os
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
@@ -22,7 +23,6 @@ class PackingManager(BaseManager):
 
 
 PackingManager.register('LaunchPad')
-
 
 def create_launchpad(launchpad_file, strm_lvl):
     if launchpad_file:
@@ -44,11 +44,13 @@ def run_manager_server(lauchpad_file, strm_lvl, port, password):
     return m
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list):
+def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, lock):
     fw_conf = FWConfig()
     fw_conf.MULTIPROCESSING = True
     fw_conf.PACKING_MANAGER_PORT = port
     fw_conf.PACKING_MANAGER_PASSWORD = password
+    fw_conf.NODE_LIST = node_list
+    fw_conf.PROCESS_LOCK = lock
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.connect()
     launchpad = m.LaunchPad()
@@ -56,7 +58,8 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
 
 
 def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password, node_lists):
-    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, password, nl))
+    lock = multiprocessing.Lock()
+    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, password, nl, lock))
                  for nl in node_lists]
     for p in processes:
         p.start()

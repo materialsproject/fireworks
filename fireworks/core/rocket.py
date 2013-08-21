@@ -43,6 +43,7 @@ class Rocket():
         self.fw_id = fw_id
         self.lp_lock = threading.Lock()
 
+
     def run(self):
         """
         Run the rocket (check out a job from the database and execute it)
@@ -56,6 +57,9 @@ class Rocket():
         self.lp_lock.acquire()
         m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
         self.lp_lock.release()
+        fw_conf = FWConfig()
+        if fw_conf.MULTIPROCESSING:
+            fw_conf.PROCESS_LOCK.release()
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
