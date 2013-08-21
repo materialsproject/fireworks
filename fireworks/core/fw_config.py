@@ -80,6 +80,8 @@ class FWConfig(object):
 
         self.PROCESS_LOCK = None # the shared Lock between processes
 
+        self.NODE_LIST = None # the node list for sub jobs
+
         self.override_user_settings()
 
     def override_user_settings(self):
