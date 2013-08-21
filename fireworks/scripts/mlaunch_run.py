@@ -16,6 +16,15 @@ __email__ = 'xqu@lbl.gov'
 __date__ = 'Aug 19, 2013'
 
 
+def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches, num_rockets, password, port, sleep_time):
+    node_lists = split_node_lists(num_rockets)
+    m = run_manager_server(launchpad_file, loglvl, port, password)
+    processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
+                                           port, password, node_lists)
+    for p in processes:
+        p.join()
+    m.shutdown()
+
 
 def mlaunch():
     m_description = 'This program launches Job Packing Rockets. A Rocket grabs a job from the central database and ' \
@@ -48,22 +57,20 @@ def mlaunch():
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
-    m = run_manager_server(args.launchpad_file, args.loglvl, args.port, args.password)
-
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)
     else:
         fworker = FWorker()
 
-    node_lists = split_node_lists(args.num_rockets)
+    num_rockets = args.num_rockets
+    launchpad_file = args.launchpad_file
+    loglvl = args.loglvl
+    port = args.port
+    password = args.password
+    nlaunches = args.nlaunches
+    sleep_time = args.sleep
 
-    processes = launch_rapidfire_processes(fworker, args.nlaunches, args.sleep, args.loglvl,
-                                           args.port, args.password, node_lists)
-
-    for p in processes:
-        p.join()
-
-    m.shutdown()
+    launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches, num_rockets, password, port, sleep_time)
 
 
 if __name__ == "__main__":
