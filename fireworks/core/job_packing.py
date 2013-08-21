@@ -145,7 +145,9 @@ def split_node_lists(num_rockets):
             orig_node_list = [line.strip() for line in f.readlines()]
         n = len(orig_node_list)
         step = n/num_rockets
-        node_lists = [orig_node_list[i:i+step] for i in range(0, num_rockets, step)]
+        if step*num_rockets != n:
+            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(n, num_rockets))
+        node_lists = [orig_node_list[i:i+step] for i in range(0, n, step)]
     else:
         node_lists = [None] * num_rockets
     return node_lists
