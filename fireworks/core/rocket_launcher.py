@@ -9,6 +9,7 @@ import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir
+import multiprocessing
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -28,10 +29,17 @@ def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     """
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
 
-    l_logger.info('Launching Rocket')
+    fw_conf = FWConfig()
+    if not fw_conf.MULTIPROCESSING:
+        l_logger.info('Launching Rocket')
+    else:
+        l_logger.info(multiprocessing.current_process().name + ": Launching Rocket")
     rocket = Rocket(launchpad, fworker, fw_id)
     rocket.run()
-    l_logger.info('Rocket finished')
+    if not fw_conf.MULTIPROCESSING:
+        l_logger.info('Rocket finished')
+    else:
+        l_logger.info(multiprocessing.current_process().name + ": Rocket finished")
 
 
 def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
@@ -75,7 +83,14 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
             fw_conf.PROCESS_LOCK.release()
         if num_launched == nlaunches or nlaunches == 0:
             break
-        l_logger.info('Sleeping for {} secs'.format(sleep_time))
+        if not fw_conf.MULTIPROCESSING:
+            l_logger.info('Sleeping for {} secs'.format(sleep_time))
+        else:
+            l_logger.info(multiprocessing.current_process().name + ": " +'Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)
         num_loops += 1
-        l_logger.info('Checking for FWs to run...'.format(sleep_time))
+        if not fw_conf:
+            l_logger.info('Checking for FWs to run...'.format(sleep_time))
+        else:
+            l_logger.info(multiprocessing.current_process().name + ": " +
+                          'Checking for FWs to run...'.format(sleep_time))
