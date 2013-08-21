@@ -95,7 +95,7 @@ class Rocket():
             ping_stop.set()
             m_action.stored_data = all_stored_data
             self.lp_lock.acquire()
-            lp._complete_launch(launch_id, m_action, 'COMPLETED')
+            lp.complete_launch(launch_id, m_action, 'COMPLETED')
             self.lp_lock.release()
 
         except:
@@ -104,5 +104,5 @@ class Rocket():
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
             self.lp_lock.acquire()
-            lp._complete_launch(launch_id, m_action, 'FIZZLED')
+            lp.complete_launch(launch_id, m_action, 'FIZZLED')
             self.lp_lock.release()

@@ -650,8 +650,12 @@ class LaunchPad(FWSerializable):
 
     def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         # support for MULTIPROCESSING proxy
-        return self._checkout_fw(fworker, launch_dir, fw_id=None, host=None, ip=None)
+        return self._checkout_fw(fworker, launch_dir, fw_id, host, ip)
 
     def ping_launch(self, launch_id):
         # support for MULTIPROCESSING proxy
         return self._ping_launch(launch_id)
+
+    def complete_launch(self, launch_id, action, state='COMPLETED'):
+        # support for MULTIPROCESSING proxy
+        self._complete_launch(launch_id, action, state)
