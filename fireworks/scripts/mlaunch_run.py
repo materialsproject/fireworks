@@ -16,7 +16,20 @@ __email__ = 'xqu@lbl.gov'
 __date__ = 'Aug 19, 2013'
 
 
-def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches, num_rockets, password, port, sleep_time):
+def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
+                                 num_rockets, password, port, sleep_time):
+    '''
+    Launch the jobs in the job packing mode.
+    :param fworker: (FWorker) object
+    :param launchpad_file: (str) path to launchpad file
+    :param loglvl: (str) level at which to output logs
+    :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
+    :param num_rockets: (int) number of sub jobs
+    :param password: (str) security password to access the shared object server
+    :param port: (str) security password to access the shared object server
+    :param sleep_time: (int) secs to sleep between rapidfire loop iterations
+    :return:
+    '''
     node_lists = split_node_lists(num_rockets)
     m = run_manager_server(launchpad_file, loglvl, port, password)
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
@@ -62,15 +75,8 @@ def mlaunch():
     else:
         fworker = FWorker()
 
-    num_rockets = args.num_rockets
-    launchpad_file = args.launchpad_file
-    loglvl = args.loglvl
-    port = args.port
-    password = args.password
-    nlaunches = args.nlaunches
-    sleep_time = args.sleep
-
-    launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches, num_rockets, password, port, sleep_time)
+    launch_job_packing_processes(fworker, args.launchpad_file, args.loglvl, args.nlaunches,
+                                 args.num_rockets, args.password, args.port, args.sleep)
 
 
 if __name__ == "__main__":
