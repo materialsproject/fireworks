@@ -119,7 +119,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     if not fw_conf.MULTIPROCESSING:
         block_path = prefix + time_now
     else:
-        block_path = prefix + multiprocessing.current_process().name + '_'
+        block_path = prefix + multiprocessing.current_process().name + '_' + time_now
     full_path = os.path.join(root_dir, block_path)
     os.mkdir(full_path)
     l_logger.info('Created new dir {}'.format(full_path))
