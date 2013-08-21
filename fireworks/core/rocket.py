@@ -21,7 +21,7 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread, lp_lock):
     while not stop_event.is_set() and master_thread.isAlive():
         # add mutex to ensure thread safety
         lp_lock.acquire()
-        launchpad._ping_launch(launch_id)
+        launchpad.ping_launch(launch_id)
         lp_lock.release()
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
@@ -54,7 +54,7 @@ class Rocket():
 
         # check a FW job out of the launchpad
         self.lp_lock.acquire()
-        m_fw, launch_id = lp._checkout_fw(self.fworker, launch_dir, self.fw_id)
+        m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
         self.lp_lock.release()
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))

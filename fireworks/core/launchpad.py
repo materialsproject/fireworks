@@ -647,3 +647,11 @@ class LaunchPad(FWSerializable):
         # multiprocessing.managers.BaseManager doesn't support Property proxy
         # add a function to access the properties in case of MULTIPROCESSING
         return self.logdir
+
+    def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
+        # support for MULTIPROCESSING proxy
+        return self._checkout_fw(fworker, launch_dir, fw_id=None, host=None, ip=None)
+
+    def ping_launch(self, launch_id):
+        # support for MULTIPROCESSING proxy
+        return self._ping_launch(launch_id)
