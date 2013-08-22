@@ -5,7 +5,7 @@ Controlling the directory and Worker of execution
 Controlling the directory in which a FireWork is executed
 =========================================================
 
-By default, FireWorks creates a datestamped directory containing each job. This directory structure can be difficult to browse through manually, or you might need your runs in a particular directory format for another reason (e.g., to be compatible with a post-processing script). For these reasons you might want to manually control where jobs are executed.
+By default, FireWorks automatically creates a datestamped directory containing each job. This directory structure can be difficult to browse through manually, or you might need your runs in a particular directory format for another reason (e.g., to be compatible with a post-processing script).
 
 To set the directory where a FireWork will execute:
 
