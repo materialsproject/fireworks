@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+v0.22
+=====
+
+* allow user to control where a FW gets executed using ``_launch_dir``
+
 v0.21
 =====
 
