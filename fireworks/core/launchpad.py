@@ -531,6 +531,11 @@ class LaunchPad(FWSerializable):
 
         return m_fw, l_id
 
+    def _change_launch_dir(self, launch_id, launch_dir):
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.launch_dir = launch_dir
+        self._upsert_launch(m_launch)
+
     def _complete_launch(self, launch_id, action, state='COMPLETED'):
         """
         (internal method) used to mark a FireWork's Launch as completed.

@@ -53,6 +53,11 @@ class Rocket():
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
+        if '_launch_dir' in m_fw.spec:
+            os.chdir(m_fw.spec['_launch_dir'])
+            launch_dir = os.path.abspath(os.getcwd())
+            lp._change_launch_dir(launch_id, launch_dir)
+
         # write FW.json and/or FW.yaml to the directory
         if FWConfig().PRINT_FW_JSON:
             m_fw.to_file('FW.json', indent=4)

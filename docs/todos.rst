@@ -14,6 +14,7 @@ FW Docs
     * _queueadapter - values of the QueueAdapter dict to override
     * _allow_fizzled_parents - continue on FIZZLED parents
     * _category - For directing jobs
+    * _launch_dir - For directing jobs to a certain directory
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
