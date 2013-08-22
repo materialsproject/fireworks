@@ -94,3 +94,5 @@ Misc.
 * Go through logging, make sure it's sane
 
 * Not require init.py in all tutorial dirs by fixing MANIFEST.in (somehow)
+
+* In addition to mod_spec and dict_mod, allow a template_mod of the spec that directly acts on the JSON...
