@@ -59,7 +59,7 @@ class Rocket():
             launch_dir = os.path.abspath(os.getcwd())
             lp._change_launch_dir(launch_id, launch_dir)
 
-            if not os.listdir(prev_dir) and FWConfig().REMOVE_USELESS_DIR:
+            if not os.listdir(prev_dir) and FWConfig().REMOVE_USELESS_DIRS:
                 try:
                     os.rmdir(prev_dir)
                 except:

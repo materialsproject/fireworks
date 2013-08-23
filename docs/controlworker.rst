@@ -19,9 +19,9 @@ Potential pitfalls
 While setting execution directory is simple enough, we suggest that you avoid this feature of FireWorks unless absolutely necessary. Here are a few pitfalls to consider when using this feature:
 
 #. If you have multiple Workers, make sure that the ``_launch_dir`` you set is accessible from all Workers. Or, set things up so that only the correct Worker will pull your job (see next section).
-#. When running *rapid-fire* mode of many launchers, you will end up with empty date-stamped directories that you'll need to manually delete. This is because the launcher in rapid-fire mode generally creates the directory *before* pulling the FireWork, and thus before it knows that a ``_launch_dir`` will be set.
 #. If you direct multiple FireWorks into the same ``_launch_dir``, you might overwrite output files (like ``FW.json``).
 #. If your code depends on having a particular directory structure in order to function, it's perhaps a sign that your code could be strengthened. For example, if you direct a job to a critical directory and it *fails* (e.g., due to a node crash), a rerun of that job might overwrite your original run because it's being directed to the same directory. This might not be your intended behavior.
+#. Note that by default, FireWorks tries to clean (delete) the default FireWorks launch directory. If you find this is causing problems (it shouldn't), you can set ``REMOVE_USELESS_DIRS`` to False in the :doc:`FireWorks config </config_tutorial>`.
 
 Alternatives to using _launch_dir
 ---------------------------------
