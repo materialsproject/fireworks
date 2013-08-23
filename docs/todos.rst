@@ -5,8 +5,6 @@ FireWorks ToDo List
 FW Docs
 =======
 
-* document use_root in built-in tasks
-
 * describe passing of information as being like 'ports'
 
 * Note: reserved spec keywords:
@@ -25,8 +23,6 @@ FW Docs
 * Update all tutorials so config file is handled smoothly, not terribly...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
-
-* Update docs from the written FW docs notes in my blue folder...
 
 * Detailed tutorial on implementing dynamic jobs
 
