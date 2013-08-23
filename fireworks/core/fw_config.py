@@ -72,6 +72,8 @@ class FWConfig(object):
 
         self.TEMPLATE_DIR = None  # default template dir for TemplateWriterTask
 
+        self.REMOVE_USELESS_DIR = True  # deletes empty launch dir if _launch_dir set
+
         self.override_user_settings()
 
     def override_user_settings(self):

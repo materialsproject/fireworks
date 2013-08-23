@@ -5,6 +5,8 @@ FireWorks ToDo List
 FW Docs
 =======
 
+* document use_root in built-in tasks
+
 * describe passing of information as being like 'ports'
 
 * Note: reserved spec keywords:
