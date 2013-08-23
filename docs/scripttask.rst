@@ -32,6 +32,11 @@ The built-in ScriptTask options might not be flexible enough to handle all your 
 
 To accomplish this, your script can write a file called ``FWAction.json`` or ``FWAction.yaml`` in the launch directory, and that contains a serialization of the *FWAction* object. FireWorks will read this file and replace the simple *FWAction* returned by ScriptTask with the one you specify in this file.
 
+The _use_global_spec option
+===========================
+
+By default, the parameters for the ScriptTask should be defined within the ``_task`` section of the **spec** corresponding to the ScriptTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple ScriptTasks within the same FireWork.
+
 
 
 
