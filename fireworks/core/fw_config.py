@@ -72,7 +72,6 @@ class FWConfig(object):
 
         self.TEMPLATE_DIR = None  # default template dir for TemplateWriterTask
 
-<<<<<<< HEAD
         self.MULTIPROCESSING = None # default single process framework
 
         self.PACKING_MANAGER_PORT = '27016'   # the internet port of the packing manager service
@@ -82,9 +81,8 @@ class FWConfig(object):
         self.PROCESS_LOCK = None # the shared Lock between processes
 
         self.NODE_LIST = None # the node list for sub jobs
-=======
+
         self.REMOVE_USELESS_DIRS = True  # deletes empty launch dir if _launch_dir set
->>>>>>> master
 
         self.override_user_settings()
 
