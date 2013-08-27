@@ -2,7 +2,7 @@
 Basic FireWorks installation
 ============================
 
-*Currently, we suggest that you install FireWorks in developer mode using the instructions below rather than using pip or easy-install.*
+.. note:: We suggest that you use Python 2.7.3 or higher, especialy in production (although Python 3+ is not tested). There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet).
 
 Preparing to Install
 ====================
@@ -67,7 +67,7 @@ Run unit tests
 --------------
 1. Staying in the directory containing setup.py, run the following command::
 
-    nosetests
+    python setup.py test
     
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
 
@@ -90,4 +90,4 @@ If you installed FireWorks in developer mode:
     
     python setup.py develop
     
-    nosetests
+    python setup.py test

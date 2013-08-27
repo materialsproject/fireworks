@@ -1,13 +1,48 @@
-========================================
-Controlling where FireWorks are executed
-========================================
+=================================================
+Controlling the directory and Worker of execution
+=================================================
+
+Controlling the directory in which a FireWork is executed
+=========================================================
+
+By default, FireWorks automatically creates a datestamped directory containing each job. This directory structure can be difficult to browse through manually, or you might need your runs in a particular directory format for another reason (e.g., to be compatible with a post-processing script).
+
+To set the directory where a FireWork will execute:
+
+#. set the ``_launch_dir`` key in your FireWork *spec* to the *full path* of the directory you want to execute the FireWork in.
+
+*(that's it!)*
+
+Potential pitfalls
+------------------
+
+While setting execution directory is simple enough, we suggest that you avoid this feature of FireWorks unless absolutely necessary. Here are a few pitfalls to consider when using this feature:
+
+#. If you have multiple Workers, make sure that the ``_launch_dir`` you set is accessible from all Workers. Or, set things up so that only the correct Worker will pull your job (see next section).
+#. If you direct multiple FireWorks into the same ``_launch_dir``, you might overwrite output files (like ``FW.json``).
+#. If your code depends on having a particular directory structure in order to function, it's perhaps a sign that your code could be strengthened. For example, if you direct a job to a critical directory and it *fails* (e.g., due to a node crash), a rerun of that job might overwrite your original run because it's being directed to the same directory. This might not be your intended behavior.
+#. Note that by default, FireWorks tries to clean (delete) the default FireWorks launch directory. If you find this is causing problems (it shouldn't), you can set ``REMOVE_USELESS_DIRS`` to False in the :doc:`FireWorks config </config_tutorial>`.
+
+Alternatives to using _launch_dir
+---------------------------------
+
+Potential alternatives to using ``_launch_dir`` are:
+
+#. If you are worried about finding your jobs on the filesystem, try :doc:`exploring all the features of LaunchPad queries <query_tutorial>`. In general, the database method of searching for jobs is much more powerful than browsing filesystems, especially if you set up your FireWorks *name* and *spec* to include things you care about in your search.
+#. Another solution is to have your FireWork write an empty file in its directory that has a name like "JOB--Cadmium" or "JOB--Silicon". Then you can quickly see what kind of job is in a bunch of ``launcher`` directories using a command like ``ls launcher*/JOB*`` - you'll see a list of launcher directories and which one contains "Cadmium" or "Silicon".
+#. If you have a job that depends on knowing the location of other FireWork runs, try writing your FireTasks to pass the location of execution to children using the *FWAction* object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.
+
+Of course, these are just suggestions. In the end, do what works!
+
+Controlling the Worker that executes a FireWork
+===============================================
 
 By default, any FireWorker can pull and run any FireWork. However, in some cases you might want to control which computing resources should run a FireWork. For example, if some of your FireWorks require a lot of memory and fast processors, you might want to direct those jobs to only a subset of FireWorkers that have sufficiently high computing specifications.
 
 There are two methods to control where FireWorks are executed.
 
 Method 1: Using categories
-==========================
+--------------------------
 
 A simple method to direct FireWorks to FireWorks is by assigning *categories*. You can do this by:
 
@@ -28,7 +63,7 @@ And finally, a few final notes and limitations about this method:
 * A FireWork can have an array of Strings for the ``_category`` variable, but we suggest you stick to a simple String where possible.
 
 Method 2: Using raw queries
-===========================
+---------------------------
 
 A more flexible, but less intuitive method to restrict the FireWorks that a FireWorker through a raw MongoDB query. The query will restrict the FireWorker to only running FireWorks matching the query. For example, your query might specify that the ``spec.parameter1`` is under 100. In this case, FireWorks with ``spec.parameter1`` greater than 100 must be run elsewhere.
 

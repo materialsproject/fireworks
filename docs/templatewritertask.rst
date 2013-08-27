@@ -136,6 +136,11 @@ In addition to ``template_file``, ``context``, and ``output_file``, the followin
    * ``append`` - append to the output file, rather than overwriting it
    * ``template_dir`` - this is actually a third option for setting your template dir
 
+The _use_global_spec option
+===========================
+
+By default, the parameters for the Template Writer Task should be defined within the ``_task`` section of the **spec** corresponding to the Template Writer Task, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple Template Writer Tasks within the same FireWork.
+
 Python example
 ==============
 

@@ -14,6 +14,7 @@ FW Docs
     * _queueadapter - values of the QueueAdapter dict to override
     * _allow_fizzled_parents - continue on FIZZLED parents
     * _category - For directing jobs
+    * _launch_dir - For directing jobs to a certain directory
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
@@ -22,8 +23,6 @@ FW Docs
 * Update all tutorials so config file is handled smoothly, not terribly...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
-
-* Update docs from the written FW docs notes in my blue folder...
 
 * Detailed tutorial on implementing dynamic jobs
 
@@ -93,3 +92,5 @@ Misc.
 * Go through logging, make sure it's sane
 
 * Not require init.py in all tutorial dirs by fixing MANIFEST.in (somehow)
+
+* In addition to mod_spec and dict_mod, allow a template_mod of the spec that directly acts on the JSON...
