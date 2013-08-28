@@ -50,7 +50,6 @@ Major Features
 
 * Implement job packing using multiprocessing first, threads later. (this probably needs some unit test)
 
-
 FireTasks
 =========
 
@@ -62,6 +61,8 @@ FireTasks
 
 Misc.
 =====
+
+* Change default Lpad constructor to use auto_load() instead of 27017 db
 
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
 
