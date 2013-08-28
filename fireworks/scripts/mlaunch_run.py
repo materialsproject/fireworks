@@ -17,7 +17,7 @@ __date__ = 'Aug 19, 2013'
 
 
 def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
-                                 num_rockets, password, port, sleep_time):
+                                 num_rockets, password, sleep_time):
     '''
     Launch the jobs in the job packing mode.
     :param fworker: (FWorker) object
@@ -31,7 +31,8 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     :return:
     '''
     node_lists = split_node_lists(num_rockets)
-    m = run_manager_server(launchpad_file, loglvl, port, password)
+    m = run_manager_server(launchpad_file, loglvl, password)
+    port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, password, node_lists)
     for p in processes:
@@ -56,7 +57,6 @@ def mlaunch():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
-    parser.add_argument('--port', help='shared object service internet port number', default=27015, type=int)
     parser.add_argument('--password', help='shared object service password', default='123')
     parser.add_argument('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
 
@@ -76,7 +76,7 @@ def mlaunch():
         fworker = FWorker()
 
     launch_job_packing_processes(fworker, args.launchpad_file, args.loglvl, args.nlaunches,
-                                 args.num_rockets, args.password, args.port, args.sleep)
+                                 args.num_rockets, args.password, args.sleep)
 
 
 if __name__ == "__main__":

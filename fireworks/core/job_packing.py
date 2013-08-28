@@ -68,7 +68,7 @@ def manager_initializer():
     fw_conf.MULTIPROCESSING = None # don't confuse the server process
 
 
-def run_manager_server(lauchpad_file, strm_lvl, port, password):
+def run_manager_server(lauchpad_file, strm_lvl, password):
     '''
     Start the Manager server process. The shared LaunchPad object proxy will
     be available after calling this function. Nothing to do with process
@@ -81,7 +81,7 @@ def run_manager_server(lauchpad_file, strm_lvl, port, password):
     :return: (PackingManager) object
     '''
     PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file, strm_lvl))
-    m = PackingManager(address=('127.0.0.1', port), authkey=password)
+    m = PackingManager(address=('127.0.0.1', 0), authkey=password) # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
 
