@@ -62,8 +62,6 @@ FireTasks
 Misc.
 =====
 
-* Change default Lpad constructor to use auto_load() instead of 27017 db
-
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
 
 * Store FW templates in "cloud". Lpad has command to read/write template to Mongo, and templatewritertask can grab template from MongoDB.
