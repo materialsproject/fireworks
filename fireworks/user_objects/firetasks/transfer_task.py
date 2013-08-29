@@ -23,8 +23,8 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 29, 2013'
 
 
-class MoverTask(FireTaskBase, FWSerializable):
-    _fw_name = "Mover Task"
+class TransferTask(FireTaskBase, FWSerializable):
+    _fw_name = "Transfer Task"
 
     fn_list = {
         "move": shutil.move,
