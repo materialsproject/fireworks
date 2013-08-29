@@ -1,3 +1,4 @@
 PyYAML>=3.1.0
 pymongo>=2.4.2
 django>=1.5
+paramiko>=1.11
