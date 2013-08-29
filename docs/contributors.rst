@@ -8,9 +8,9 @@ Michael Kocher and Dan Gunter initiated the architecture of a central database w
 
 Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, continuous integration, etc. Shyue's custodian_ library was adapted (with permission) to create the DictMod language option for updating child FireWorks. Incidentally, the custodian library is a nice complement to FireWorks for use in FireTasks that is employed by the Materials Project.
 
-Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL.
+David Waroquiers wrote the SLURM queue adapter, helped write the TransferTask, and provided useful feedback.
 
-David Waroquiers wrote the SLURM queue adapter and provided useful feedback.
+Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL.
 
 William Davidson Richards Waroquiers wrote the SGE queue adapter and provided useful feedback.
 

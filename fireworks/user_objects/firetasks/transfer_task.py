@@ -35,7 +35,6 @@ class TransferTask(FireTaskBase, FWSerializable):
             "copy2": shutil.copy2,
             "copytree": shutil.copytree,
             "copyfile": shutil.copyfile,
-            "rtransfer": self._remotetransfer
         }
 
         if not parameters.get("use_root"):
@@ -46,33 +45,55 @@ class TransferTask(FireTaskBase, FWSerializable):
             self._load_parameters(fw_spec)
 
         o = self.options
+        shell_interpret = o.get('shell_interpret', True)
+        ignore_errors = o.get('ignore_errors')
+        mode = o.get('mode', 'move')
 
-        if o.get('mode') == 'rtransfer':
+        if mode == 'rtransfer':
             # remote transfers
-            pass
+            # Create SFTP connection
+            ssh = paramiko.SSHClient()
+            ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+            ssh.connect(o['server'])
+            sftp = ssh.open_sftp()
 
-        else:
-            # local transfers
-            for f in self.files:
-                shell_interpret = o.get('shell_interpret', True)
-                src = expanduser(expandvars(f['src'])) if shell_interpret else expandvars(f['src'])
-                dest = expanduser(expandvars(f['dest'])) if shell_interpret else expandvars(f['dest'])
-                ignore_errors = o.get('ignore_errors')
-                mode = o.get('mode', 'move')
+        for f in self.files:
+            try:
+                src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret else f[
+                    'src']
 
-                try:
+                if mode == 'rtransfer':
+                    dest = f['dest']
+                    if os.path.isdir(src):
+                        if not self._rexists(sftp, dest):
+                            sftp.mkdir(dest)
+
+                        for f in os.listdir(src):
+                            if os.path.isfile(os.path.join(src,f)):
+                                sftp.put(os.path.join(src, f), os.path.join(dest, f))
+                    else:
+                        sftp.put(src, dest)
+
+                else:
+                    dest = os.path.abspath(
+                        expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
                     self.fn_list[mode](src, dest)
-                except:
-                    if not ignore_errors:
-                        raise ValueError(
-                            "There was an error performing operation {} from {} to {}".format(mode, src,
-                                                                                              dest))
+
+            except:
+                traceback.print_exc()
+                if not ignore_errors:
+                    raise ValueError(
+                        "There was an error performing operation {} from {} to {}".format(mode, src,
+                                                                                          dest))
+        if mode == 'rtransfer':
+            sftp.close()
+            ssh.close()
 
     def _load_parameters(self, params):
         self.options = params.get('options', {})
         self.files = params['files']
 
-    def _rexists(sftp, path):
+    def _rexists(self, sftp, path):
         """
         os.path.exists for paramiko's SCP object
         """
@@ -84,29 +105,3 @@ class TransferTask(FireTaskBase, FWSerializable):
             raise
         else:
             return True
-
-    def _remotetransfer(self, src, dest, o):
-        # Connecting to the server
-        ssh = paramiko.SSHClient()
-        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-        ssh.connect(o['server'], username=o['username'], port=o['port'], key_filename=o['key_filename'])
-
-        # Create SFTP connection
-        sftp = ssh.open_sftp()
-
-        # Local and remote directories
-        try:
-            # Transfer files from local directory to remote directory
-            if not self._rexists(sftp, dest):
-                sftp.mkdir(dest)
-
-            sftp.put(src, dest)
-
-        except:
-            traceback.print_exc()
-            raise ValueError('Error during remote transfer from {} to {} on server {} '.format(src, dest, o['server']))
-
-        finally:
-            # Close the connections
-            sftp.close()
-            ssh.close()
