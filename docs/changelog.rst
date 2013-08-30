@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+v0.24
+-----
+
+* TransferTask added
+* fix ``_use_global_spec``
+
 v0.23
 -----
 
