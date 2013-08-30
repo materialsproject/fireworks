@@ -79,3 +79,8 @@ If all this is configured properly, you should be able to transfer files to a re
 * You require a password to SSH between machines and haven't configured passwordless SSH.
 * You are using a non-standard SSH port
 * Your ``known_hosts`` file is not located in ``~/.ssh/known_hosts``
+
+The _use_global_spec option
+===========================
+
+By default, the parameters for the Transfer Task should be defined within the ``_task`` section of the **spec** corresponding to the Transfer Task, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple Transfer Tasks within the same FireWork.
