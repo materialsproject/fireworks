@@ -133,15 +133,25 @@ Deploying FireWorks in production
 Additional features and topics
 ==============================
 
+The built-in FireTasks
+----------------------
+
 .. toctree::
     :maxdepth: 1
 
-    duplicates_tutorial
     scripttask
     templatewritertask
-    controlworker
-    python_tutorial
+    transfertask
 
+Misc. topics
+------------
+
+.. toctree::
+    :maxdepth: 1
+
+    controlworker
+    duplicates_tutorial
+    python_tutorial
 
 .. _contributing-label:
 

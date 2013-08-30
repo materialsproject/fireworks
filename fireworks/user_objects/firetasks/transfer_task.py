@@ -54,13 +54,12 @@ class TransferTask(FireTaskBase, FWSerializable):
             # Create SFTP connection
             ssh = paramiko.SSHClient()
             ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-            ssh.connect(self['server'])
+            ssh.connect(self['server'], key_filename=self.get['key_filename'])
             sftp = ssh.open_sftp()
 
         for f in self.files:
             try:
-                src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret else f[
-                    'src']
+                src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret else f['src']
 
                 if mode == 'rtransfer':
                     dest = f['dest']
@@ -75,8 +74,7 @@ class TransferTask(FireTaskBase, FWSerializable):
                         sftp.put(src, dest)
 
                 else:
-                    dest = os.path.abspath(
-                        expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
+                    dest = os.path.abspath(expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
                     self.fn_list[mode](src, dest)
 
             except:

@@ -104,7 +104,6 @@ Here is a complete Python example that runs multiple FireTasks within a single F
     firetask3 = TransferTask({'files': [{'src': 'words.txt', 'dest': '~/words.txt'}], 'mode': 'copy'})
     fw = FireWork([firetask1, firetask2, firetask3])
 
-    print fw.to_format('yaml')
     # store workflow and launch it locally, single shot
     launchpad.add_wf(fw)
     launch_rocket(launchpad, FWorker())

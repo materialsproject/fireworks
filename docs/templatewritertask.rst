@@ -1,6 +1,6 @@
-==============================
-Using the Template Writer Task
-==============================
+=============================================
+Using the Template Writer Task to write files
+=============================================
 
 A common task in scientific workflows is to write an input file in a format that can be read by a program, and then execute that program. When automating the same program for different inputs (like different molecules or sections of a galaxy), slight modifications to the input file are needed. This tutorial introduces the built-in *Template Writer Task* as a method for writing input files (or any other type of templated file).
 
