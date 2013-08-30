@@ -31,7 +31,7 @@ Some (but not all) of its features include:
 
 * Monitoring of workflows through a web service
 
-* Batteries included (useful built-in tasks for creating templated inputs, running scripts, and even copying files to remote machines)
+* Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines
 
 * Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
 

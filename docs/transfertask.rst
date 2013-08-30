@@ -10,16 +10,16 @@ The Transfer Task is a built-in FireTask for moving and copying files, perhaps t
 * a ``files`` key that contains a list of files to move or copy
 * additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors
 
-An example of a FireWork that copies two files - ``file1.txt`` and ``file2.txt`` to the home directory looks as follows::
+An example of a FireWork that copies two files, ``file1.txt`` and ``file2.txt``, to the home directory looks as follows::
 
     spec:
       _tasks:
       - _fw_name: Transfer Task
         files:
-        - dest: ~/file1.txt
-          src: file1.txt
-        - dest: ~/file2.txt
-          src: file2.txt
+        - src: file1.txt
+          dest: ~/file1.txt
+        - src: file2.txt
+          dest: ~/file2.txt
         mode: copy
 
 In Python code, the same task would be defined as::

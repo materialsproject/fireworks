@@ -113,11 +113,11 @@ Here is a complete Python example that runs multiple FireTasks within a single F
 Creating a custom FireTask
 ==========================
 
-Both the ``Template Writer Task`` and ``Script Task`` are built-into FireWorks and can be used to perform useful operations. In particular, because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. Script Task also has many additional features that are covered in the :doc:`Script Task tutorial <scripttask>`.
+The ``Template Writer Task``, ``Script Task``, ``Transfer Task`` are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. Script Task also has many additional features that are covered in the :doc:`Script Task tutorial <scripttask>`.
 
-However, if you are comfortable with some basic Python, it is better to define your own custom FireTasks for the codes you run. A custom FireTask gives you more control over your jbos, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
+However, if you are comfortable with some basic Python, you can define your own custom FireTasks for the codes you run. A custom FireTask gives you more control over your jbos, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
 
-Even if you plan to only use ``Script Task`` and/or ``Template Writer Task``, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks.
+Even if you plan to only use the built-in tasks, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom FireTask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) FireTasks.
 
 How FireWorks bootstraps a job
 ------------------------------
