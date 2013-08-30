@@ -21,11 +21,11 @@ class ScriptTask(FireTaskBase, FWSerializable):
     def __init__(self, parameters):
         self.update(parameters)
 
-        if not parameters.get("use_root"):
+        if not parameters.get("use_global_spec"):
             self._load_parameters(parameters)
 
     def run_task(self, fw_spec):
-        if self.get("use_root"):
+        if self.get("use_global_spec"):
             self._load_parameters(fw_spec)
 
         # get the standard in and run task internally

@@ -38,11 +38,11 @@ class TransferTask(FireTaskBase, FWSerializable):
             "copyfile": shutil.copyfile,
         }
 
-        if not parameters.get("use_root"):
+        if not parameters.get("use_global_spec"):
             self._load_parameters(parameters)
 
     def run_task(self, fw_spec):
-        if self.get("use_root"):
+        if self.get("use_global_spec"):
             self._load_parameters(fw_spec)
 
         shell_interpret = self.get('shell_interpret', True)
