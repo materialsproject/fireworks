@@ -1,12 +1,16 @@
 spec:
   _tasks:
   - _fw_name: Template Writer Task
-    template_file: simple_template.txt
     context:
       opt1: 5.0
       opt2: fast method
     output_file: inputs.txt
+    template_file: simple_template.txt
   - _fw_name: Script Task
     script: wc -w < inputs.txt > words.txt
     use_shell: true
-
+  - _fw_name: Transfer Task
+    files:
+    - dest: ~/words.txt
+      src: words.txt
+    mode: copy

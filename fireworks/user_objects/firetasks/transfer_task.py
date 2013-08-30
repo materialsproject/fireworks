@@ -17,6 +17,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 29, 2013'
 
+# TODO: write some unit tests - this is really an untested FireTask
 
 class TransferTask(FireTaskBase, FWSerializable):
     _fw_name = "Transfer Task"
@@ -44,17 +45,16 @@ class TransferTask(FireTaskBase, FWSerializable):
         if self.get("use_root"):
             self._load_parameters(fw_spec)
 
-        o = self.options
-        shell_interpret = o.get('shell_interpret', True)
-        ignore_errors = o.get('ignore_errors')
-        mode = o.get('mode', 'move')
+        shell_interpret = self.get('shell_interpret', True)
+        ignore_errors = self.get('ignore_errors')
+        mode = self.get('mode', 'move')
 
         if mode == 'rtransfer':
             # remote transfers
             # Create SFTP connection
             ssh = paramiko.SSHClient()
             ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-            ssh.connect(o['server'])
+            ssh.connect(self['server'])
             sftp = ssh.open_sftp()
 
         for f in self.files:
@@ -90,7 +90,6 @@ class TransferTask(FireTaskBase, FWSerializable):
             ssh.close()
 
     def _load_parameters(self, params):
-        self.options = params.get('options', {})
         self.files = params['files']
 
     def _rexists(self, sftp, path):

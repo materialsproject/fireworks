@@ -25,3 +25,11 @@ firetasks Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`transfer_task` Module
+---------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.transfer_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
