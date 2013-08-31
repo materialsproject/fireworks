@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+v0.25
+-----
+
+* make paramiko optional as it can cause install problems
+
 v0.24
 -----
 
