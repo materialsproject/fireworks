@@ -6,7 +6,6 @@ import os
 from os.path import expandvars, expanduser
 import shutil
 import traceback
-import paramiko
 from fireworks.core.firework import FireTaskBase
 from fireworks.utilities.fw_serializers import FWSerializable
 
@@ -52,6 +51,7 @@ class TransferTask(FireTaskBase, FWSerializable):
         if mode == 'rtransfer':
             # remote transfers
             # Create SFTP connection
+            import paramiko
             ssh = paramiko.SSHClient()
             ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
             ssh.connect(self['server'], key_filename=self.get['key_filename'])

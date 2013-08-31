@@ -25,13 +25,14 @@ if __name__ == "__main__":
           license='modified BSD',
           packages=find_packages(),
           zip_safe=False,
-          install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'django>=1.5', 'paramiko>=1.11'],
-          classifiers=["Programming Language :: Python :: 2.7", "Development Status :: 4 - Beta",
-                       "Intended Audience :: Science/Research", "Intended Audience :: System Administrators",
-                       "Intended Audience :: Information Technology",
-                       "Operating System :: OS Independent", "Topic :: Other/Nonlisted Topic",
-                       "Topic :: Scientific/Engineering"],
+          install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'django>=1.5'],
+          extras_require={'rtransfer': ['paramiko>=1.11']},
+          classifiers=['Programming Language :: Python :: 2.7', 'Development Status :: 4 - Beta',
+                       'Intended Audience :: Science/Research', 'Intended Audience :: System Administrators',
+                       'Intended Audience :: Information Technology',
+                       'Operating System :: OS Independent', 'Topic :: Other/Nonlisted Topic',
+                       'Topic :: Scientific/Engineering'],
           test_suite='nose.collector',
           tests_require=['nose'],
-          scripts=[os.path.join(os.path.join(module_dir, "scripts", f)) for f in
-                   os.listdir(os.path.join(module_dir, "scripts"))])
+          scripts=[os.path.join(os.path.join(module_dir, 'scripts', f)) for f in
+                   os.listdir(os.path.join(module_dir, 'scripts'))])
