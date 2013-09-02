@@ -5,13 +5,14 @@ Also, there is a PackingManager class which provides share objects
 Between processes.
 """
 from multiprocessing import Process
-from multiprocessing.managers import BaseManager
 import multiprocessing
 import os
+import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.jp_config import JPConfig, PackingManager
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
+
 
 __author__ = 'Xiaohui'
 __copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
@@ -61,9 +62,26 @@ def run_manager_server(lauchpad_file, strm_lvl, password):
     :return: (PackingManager) object
     '''
     PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file, strm_lvl))
+    PackingManager.register('Running_IDs', callable=lambda: [])
     m = PackingManager(address=('127.0.0.1', 0), authkey=password) # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
+
+
+def job_packing_ping_launch():
+    '''
+    The process version of ping_launch
+
+    :param job_processes: (multiprocessing.Process) Process object of sub jobs
+    :return:
+    '''
+    fw_conf = FWConfig()
+    jp_conf = JPConfig()
+    m = jp_conf.PACKING_MANAGER
+    lp = m.LaunchPad()
+    for i in m.Running_IDs():
+        lp.ping_launch(i)
+    time.sleep(fw_conf.PING_TIME_SECS)
 
 
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, lock):
@@ -152,6 +170,10 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, password, node_lists)
+    ping_process = Process(target=job_packing_ping_launch)
+    ping_process.start()
+
     for p in processes:
         p.join()
+    ping_process.terminate()
     m.shutdown()

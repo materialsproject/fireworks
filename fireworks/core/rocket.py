@@ -8,6 +8,7 @@ import traceback
 import threading
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_config import FWConfig
+from fireworks.core.jp_config import JPConfig
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -19,11 +20,34 @@ __date__ = 'Feb 7, 2013'
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread, lp_lock):
     while not stop_event.is_set() and master_thread.isAlive():
-        # add mutex to ensure thread safety
-        lp_lock.acquire()
         launchpad.ping_launch(launch_id)
-        lp_lock.release()
         stop_event.wait(FWConfig().PING_TIME_SECS)
+
+
+def start_ping_launch(launch_id, lp):
+    jp_conf = JPConfig()
+    if not jp_conf.MULTIPROCESSING:
+        ping_stop = threading.Event()
+        ping_thread = threading.Thread(target=ping_launch,
+                                       args=(lp, launch_id, ping_stop, threading.currentThread(), self.lp_lock))
+        ping_thread.start()
+        return ping_stop
+    else:
+        m = jp_conf.PACKING_MANAGER
+        running_ids = m.Running_IDs()
+        running_ids.append(launch_id)
+        return None
+
+
+def stop_ping_launch(ping_stop, launch_id):
+    jp_conf = JPConfig()
+    if not jp_conf.MULTIPROCESSING:
+        ping_stop.set()
+    else:
+        m = jp_conf.PACKING_MANAGER
+        running_ids = m.Running_IDs()
+        if launch_id in running_ids:
+            running_ids.remove(launch_id)
 
 
 class Rocket():
@@ -41,7 +65,6 @@ class Rocket():
         self.launchpad = launchpad
         self.fworker = fworker
         self.fw_id = fw_id
-        self.lp_lock = threading.Lock()
 
 
     def run(self):
@@ -54,9 +77,7 @@ class Rocket():
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad
-        self.lp_lock.acquire()
         m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-        self.lp_lock.release()
         fw_conf = FWConfig()
         if fw_conf.MULTIPROCESSING:
             fw_conf.PROCESS_LOCK.release()
@@ -83,10 +104,7 @@ class Rocket():
 
         # set up heartbeat (pinging the server that we're still alive)
         try:
-            ping_stop = threading.Event()
-            ping_thread = threading.Thread(target=ping_launch,
-                                           args=(lp, launch_id, ping_stop, threading.currentThread(), self.lp_lock))
-            ping_thread.start()
+            ping_stop = start_ping_launch(launch_id, lp)
 
             # execute the FireTasks!
             for my_task in m_fw.tasks:
@@ -105,20 +123,18 @@ class Rocket():
                 all_stored_data.update(m_action.stored_data)
 
                 if m_action.skip_remaining_tasks:
-                    break;
+                    break
 
             # perform finishing operation
-            ping_stop.set()
+            stop_ping_launch(ping_stop, launch_id)
             m_action.stored_data = all_stored_data
-            self.lp_lock.acquire()
             lp.complete_launch(launch_id, m_action, 'COMPLETED')
-            self.lp_lock.release()
+
 
         except:
-            ping_stop.set()
+            stop_ping_launch(ping_stop, launch_id)
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
-            self.lp_lock.acquire()
             lp.complete_launch(launch_id, m_action, 'FIZZLED')
-            self.lp_lock.release()
+
