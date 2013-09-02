@@ -443,7 +443,7 @@ class LaunchPad(FWSerializable):
         return bad_launch_ids
 
     def mark_fizzled(self, launch_id):
-        # TODO: this seems a lot like the code in _complete_launch...DRY
+        # TODO: this seems a lot like the code in complete_launch...DRY
 
         # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
@@ -474,7 +474,7 @@ class LaunchPad(FWSerializable):
         m_launch.set_reservation_id(reservation_id)
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
 
-    def _checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
+    def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,
         and returns it to the caller. The caller is responsible for running the FireWork.
@@ -536,7 +536,7 @@ class LaunchPad(FWSerializable):
         m_launch.launch_dir = launch_dir
         self._upsert_launch(m_launch)
 
-    def _complete_launch(self, launch_id, action, state='COMPLETED'):
+    def complete_launch(self, launch_id, action, state='COMPLETED'):
         """
         (internal method) used to mark a FireWork's Launch as completed.
         :param launch_id:
@@ -553,7 +553,7 @@ class LaunchPad(FWSerializable):
             fw_id = fw['fw_id']
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
-    def _ping_launch(self, launch_id):
+    def ping_launch(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history()
         self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RUNNING'},
@@ -653,14 +653,4 @@ class LaunchPad(FWSerializable):
         # add a function to access the properties in case of MULTIPROCESSING
         return self.logdir
 
-    def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
-        # support for MULTIPROCESSING proxy
-        return self._checkout_fw(fworker, launch_dir, fw_id, host, ip)
 
-    def ping_launch(self, launch_id):
-        # support for MULTIPROCESSING proxy
-        return self._ping_launch(launch_id)
-
-    def complete_launch(self, launch_id, action, state='COMPLETED'):
-        # support for MULTIPROCESSING proxy
-        self._complete_launch(launch_id, action, state)

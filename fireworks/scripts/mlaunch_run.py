@@ -1,8 +1,9 @@
 from argparse import ArgumentParser
-from fireworks.core.fw_config import FWConfig
 import os
+
+from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
-from fireworks.core.job_packing import run_manager_server, split_node_lists, launch_rapidfire_processes
+from fireworks.core.job_packing import launch_job_packing_processes
 
 
 """
