@@ -9,6 +9,7 @@ from multiprocessing.managers import BaseManager
 import multiprocessing
 import os
 from fireworks.core.fw_config import FWConfig
+from fireworks.core.jp_config import JPConfig, PackingManager
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
 
@@ -43,8 +44,8 @@ def manager_initializer():
     The intialization function for Manager server process.
     :return:
     '''
-    fw_conf = FWConfig()
-    fw_conf.MULTIPROCESSING = None # don't confuse the server process
+    jp_conf = JPConfig()
+    jp_conf.MULTIPROCESSING = None # don't confuse the server process
 
 
 def run_manager_server(lauchpad_file, strm_lvl, password):
@@ -79,15 +80,16 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     :param lock: (multiprocessing.Lock) Mutex
     :return:
     '''
-    fw_conf = FWConfig()
-    fw_conf.MULTIPROCESSING = True
-    fw_conf.PACKING_MANAGER_PORT = port
-    fw_conf.PACKING_MANAGER_PASSWORD = password
-    fw_conf.NODE_LIST = node_list
-    fw_conf.PROCESS_LOCK = lock
+    jp_conf = JPConfig()
+    jp_conf.MULTIPROCESSING = True
+    jp_conf.PACKING_MANAGER_PORT = port
+    jp_conf.PACKING_MANAGER_PASSWORD = password
+    jp_conf.NODE_LIST = node_list
+    jp_conf.PROCESS_LOCK = lock
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.connect()
     launchpad = m.LaunchPad()
+    jp_conf.PACKING_MANAGER = m
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
