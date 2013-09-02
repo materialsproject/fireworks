@@ -9,6 +9,7 @@ import threading
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.jp_config import JPConfig
+from fireworks.core.jp_config import release_jp_lock
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -46,7 +47,7 @@ def stop_ping_launch(ping_stop, launch_id):
     else:
         m = jp_conf.PACKING_MANAGER
         running_ids = m.Running_IDs()
-        if launch_id in running_ids:
+        if launch_id in running_ids[:]:
             running_ids.remove(launch_id)
 
 
@@ -78,9 +79,7 @@ class Rocket():
 
         # check a FW job out of the launchpad
         m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-        fw_conf = FWConfig()
-        if fw_conf.MULTIPROCESSING:
-            fw_conf.PROCESS_LOCK.release()
+        release_jp_lock()
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 

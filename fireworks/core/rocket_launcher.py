@@ -7,6 +7,7 @@ This module contains methods for launching Rockets, both singly and in rapid-fir
 import os
 import time
 from fireworks.core.fw_config import FWConfig
+from fireworks.core.jp_config import acquire_jp_lock, release_jp_lock
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir
 import multiprocessing
@@ -64,23 +65,20 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
     num_launched = 0
     num_loops = 0
 
-    fw_conf = FWConfig()
+
     while num_loops != max_loops:
-        if fw_conf.MULTIPROCESSING:
-            fw_conf.PROCESS_LOCK.acquire()
+        acquire_jp_lock()
         while launchpad.run_exists(fworker):
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
             launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
             num_launched += 1
-            if fw_conf.MULTIPROCESSING:
-                fw_conf.PROCESS_LOCK.acquire()
+            acquire_jp_lock()
             if num_launched == nlaunches:
                 break
             time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh, etc.
-        if fw_conf.MULTIPROCESSING:
-            fw_conf.PROCESS_LOCK.release()
+        release_jp_lock()
         if num_launched == nlaunches or nlaunches == 0:
             break
         if not fw_conf.MULTIPROCESSING:

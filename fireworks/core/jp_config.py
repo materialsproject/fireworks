@@ -37,6 +37,7 @@ class JPConfig(object):
 
         self.PACKING_MANAGER = None # the shared object manager
 
+
 class PackingManager(BaseManager):
     '''
     Customized Manager class.
@@ -58,3 +59,14 @@ class PackingManager(BaseManager):
 
 
 PackingManager.register('LaunchPad')
+PackingManager.register('Running_IDs')
+
+def acquire_jp_lock():
+    jp_conf = JPConfig()
+    if jp_conf.MULTIPROCESSING:
+        jp_conf.PROCESS_LOCK.acquire()
+
+def release_jp_lock():
+    jp_conf = JPConfig()
+    if jp_conf.MULTIPROCESSING:
+        jp_conf.PROCESS_LOCK.release()
