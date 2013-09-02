@@ -9,7 +9,7 @@ import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.jp_config import acquire_jp_lock, release_jp_lock
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir
+from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_info_jp
 import multiprocessing
 
 __author__ = 'Anubhav Jain'
@@ -30,17 +30,10 @@ def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     """
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
 
-    fw_conf = FWConfig()
-    if not fw_conf.MULTIPROCESSING:
-        l_logger.info('Launching Rocket')
-    else:
-        l_logger.info(multiprocessing.current_process().name + ": Launching Rocket")
+    log_info_jp('Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)
     rocket.run()
-    if not fw_conf.MULTIPROCESSING:
-        l_logger.info('Rocket finished')
-    else:
-        l_logger.info(multiprocessing.current_process().name + ": Rocket finished")
+    log_info_jp('Rocket finished')
 
 
 def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
@@ -81,14 +74,7 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
         release_jp_lock()
         if num_launched == nlaunches or nlaunches == 0:
             break
-        if not fw_conf.MULTIPROCESSING:
-            l_logger.info('Sleeping for {} secs'.format(sleep_time))
-        else:
-            l_logger.info(multiprocessing.current_process().name + ": " +'Sleeping for {} secs'.format(sleep_time))
+        log_info_jp('Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)
         num_loops += 1
-        if not fw_conf:
-            l_logger.info('Checking for FWs to run...'.format(sleep_time))
-        else:
-            l_logger.info(multiprocessing.current_process().name + ": " +
-                          'Checking for FWs to run...'.format(sleep_time))
+        log_info_jp('Checking for FWs to run...'.format(sleep_time))
