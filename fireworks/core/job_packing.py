@@ -78,11 +78,12 @@ def job_packing_ping_launch(port, password):
     :param password: (str) security password to access the server
     :return:
     '''
+
+    fw_conf = FWConfig()
+    m = PackingManager(address=('127.0.0.1', port), authkey=password)
+    m.connect()
+    lp = m.LaunchPad()
     while True:
-        fw_conf = FWConfig()
-        m = PackingManager(address=('127.0.0.1', port), authkey=password)
-        m.connect()
-        lp = m.LaunchPad()
         for i in m.Running_IDs():
             lp.ping_launch(i)
         time.sleep(fw_conf.PING_TIME_SECS)
