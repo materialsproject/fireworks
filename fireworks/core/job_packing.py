@@ -61,7 +61,8 @@ def run_manager_server(lauchpad_file, password):
     :param password: (str) security password to access the server
     :return: (PackingManager) object
     '''
-    PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file))
+    lp = create_launchpad(lauchpad_file)
+    PackingManager.register('LaunchPad', callable=lambda: lp)
     running_ids = []
     PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=ListProxy)
     m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
