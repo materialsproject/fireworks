@@ -23,7 +23,7 @@ __date__ = 'Aug 19, 2013'
 
 
 
-def create_launchpad(launchpad_file, strm_lvl):
+def create_launchpad(launchpad_file):
     '''
     Function to create the server side LaunchPad instance.
     This function will be called only once, only by the
@@ -36,7 +36,7 @@ def create_launchpad(launchpad_file, strm_lvl):
     if launchpad_file:
         launchpad = LaunchPad.from_file(launchpad_file)
     else:
-        launchpad = LaunchPad(strm_lvl=strm_lvl)
+        launchpad = LaunchPad.auto_load()
     return launchpad
 
 
@@ -49,7 +49,7 @@ def manager_initializer():
     jp_conf.MULTIPROCESSING = None # don't confuse the server process
 
 
-def run_manager_server(lauchpad_file, strm_lvl, password):
+def run_manager_server(lauchpad_file, password):
     '''
     Start the Manager server process. The shared LaunchPad object proxy will
     be available after calling this function. Nothing to do with process
@@ -61,9 +61,9 @@ def run_manager_server(lauchpad_file, strm_lvl, password):
     :param password: (str) security password to access the server
     :return: (PackingManager) object
     '''
-    PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file, strm_lvl))
+    PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file))
     PackingManager.register('Running_IDs', callable=lambda: [])
-    m = PackingManager(address=('127.0.0.1', 0), authkey=password) # randomly pick a port
+    m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
 
@@ -166,7 +166,7 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     :return:
     '''
     node_lists = split_node_lists(num_rockets)
-    m = run_manager_server(launchpad_file, loglvl, password)
+    m = run_manager_server(launchpad_file, password)
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, password, node_lists)
