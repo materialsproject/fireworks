@@ -80,7 +80,6 @@ def job_packing_ping_launch(port, password):
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.connect()
     lp = m.LaunchPad()
-    print m.Running_IDs()
     for i in m.Running_IDs():
         lp.ping_launch(i)
     time.sleep(fw_conf.PING_TIME_SECS)

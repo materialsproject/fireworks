@@ -60,8 +60,8 @@ def mlaunch():
 
     total_node_list = None
     if args.nodefile:
-        with open(args.nodefile, 'r') as f:
-            total_node_list = [line.strip() for line in f.readlines()]
+        total_node_list = [line.strip() for line in args.nodefile.readlines()]
+        args.nodefile.close()
 
     launch_job_packing_processes(fworker, args.launchpad_file, args.loglvl, args.nlaunches,
                                  args.num_rockets, args.password, args.sleep, total_node_list,
