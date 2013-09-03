@@ -6,12 +6,15 @@ The LaunchPad manages the FireWorks database.
 import datetime
 import os
 import time
+
+from pymongo.mongo_client import MongoClient
+from pymongo import DESCENDING
+
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
-from pymongo.mongo_client import MongoClient
 from fireworks.core.firework import FireWork, Launch, Workflow
-from pymongo import DESCENDING
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception
+from fireworks.utilities.fw_utilities import get_fw_logger
+
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

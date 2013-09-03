@@ -40,8 +40,8 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     :param clear_logs: whether to clear the logger with the same name
     """
 
-    fw_conf = FWConfig()
-    if fw_conf.MULTIPROCESSING:
+    jp_conf = JPConfig()
+    if jp_conf.MULTIPROCESSING:
         name += multiprocessing.current_process().name
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
@@ -122,8 +122,8 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
 
     time_now = datetime.datetime.utcnow().strftime(FWConfig().FW_BLOCK_FORMAT)
-    fw_conf = FWConfig()
-    if not fw_conf.MULTIPROCESSING:
+    jp_conf = JPConfig()
+    if not jp_conf.MULTIPROCESSING:
         block_path = prefix + time_now
     else:
         block_path = prefix + multiprocessing.current_process().name + '_' + time_now

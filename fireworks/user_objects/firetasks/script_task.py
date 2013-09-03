@@ -3,6 +3,7 @@ import subprocess
 import sys
 from fireworks.core.firework import FireTaskBase, FWAction
 from fireworks.core.fw_config import FWConfig
+from fireworks.core.jp_config import JPConfig
 from fireworks.utilities.fw_serializers import FWSerializable
 import multiprocessing
 
@@ -79,12 +80,12 @@ class ScriptTask(FireTaskBase, FWSerializable):
         elif self.fizzle_bad_rc and returncode != 0:
             raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
 
-        fw_conf = FWConfig()
+        jp_conf = JPConfig()
 
-        if fw_conf.MULTIPROCESSING:
+        if jp_conf.MULTIPROCESSING:
             output['execution_mode'] = 'Job Packing'
-            output['packing_manager_port'] = fw_conf.PACKING_MANAGER_PORT
-            output['node_list'] = fw_conf.NODE_LIST
+            output['packing_manager_port'] = jp_conf.PACKING_MANAGER_PORT
+            output['node_list'] = jp_conf.NODE_LIST
             output['process_name'] = multiprocessing.current_process().name
 
         else:

@@ -1,6 +1,7 @@
 '''
 A set of global variables for job packing
 '''
+from multiprocessing.managers import BaseManager
 
 __author__ = 'Xiaohui'
 __copyright__ = 'Copyright 2013, The Electrolyte Genome Project'

@@ -29,6 +29,7 @@ def mlaunch():
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
+    FWConfig().CONFIG_FILE_DIR = None
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
 
@@ -44,10 +45,10 @@ def mlaunch():
 
     args = parser.parse_args()
 
-    if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
+    if not args.launchpad_file and args.config_dir and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
 
-    if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
+    if not args.fworker_file and args.config_dir and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
         args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl

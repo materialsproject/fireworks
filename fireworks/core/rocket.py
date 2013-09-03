@@ -47,7 +47,7 @@ def stop_ping_launch(ping_stop, launch_id):
     else:
         m = jp_conf.PACKING_MANAGER
         running_ids = m.Running_IDs()
-        if launch_id in running_ids[:]:
+        if launch_id in list(running_ids):
             running_ids.remove(launch_id)
 
 

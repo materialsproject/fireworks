@@ -6,7 +6,7 @@ Between processes.
 """
 from multiprocessing import Process
 import multiprocessing
-import os
+from multiprocessing.managers import ListProxy
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.jp_config import JPConfig, PackingManager
@@ -62,23 +62,25 @@ def run_manager_server(lauchpad_file, password):
     :return: (PackingManager) object
     '''
     PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file))
-    PackingManager.register('Running_IDs', callable=lambda: [])
+    PackingManager.register('Running_IDs', callable=lambda: [], proxytype=ListProxy)
     m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
 
 
-def job_packing_ping_launch():
+def job_packing_ping_launch(port, password):
     '''
     The process version of ping_launch
 
-    :param job_processes: (multiprocessing.Process) Process object of sub jobs
+    :param port: (int) Listening port number of the shared object manage
+    :param password: (str) security password to access the server
     :return:
     '''
     fw_conf = FWConfig()
-    jp_conf = JPConfig()
-    m = jp_conf.PACKING_MANAGER
+    m = PackingManager(address=('127.0.0.1', port), authkey=password)
+    m.connect()
     lp = m.LaunchPad()
+    print m.Running_IDs()
     for i in m.Running_IDs():
         lp.ping_launch(i)
     time.sleep(fw_conf.PING_TIME_SECS)
@@ -92,7 +94,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
     :param sleep: (int) secs to sleep between rapidfire loop iterations
     :param loglvl: (str) level at which to output logs to stdout
-    :param port: (int) Listening port number
+    :param port: (int) Listening port number of the shared object manage
     :param password: (str) security password to access the server
     :param node_list: (list of str) computer node list
     :param sub_nproc: (int) number of processors of the sub job
@@ -154,6 +156,7 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
             sub_nproc_list = [1] * num_rockets
             node_lists = orig_node_list * job_per_node
         else:
+            sub_nproc_list = [1] * num_rockets
             node_lists = [None] * num_rockets
     else:
         if total_node_list:
@@ -165,6 +168,7 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
             sub_nproc_list = [sub_nnodes * ppn] * num_rockets
             node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
         else:
+            sub_nproc_list = [ppn] * num_rockets
             node_lists = [None] * num_rockets
     return node_lists, sub_nproc_list
 
@@ -179,7 +183,6 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
     :param num_rockets: (int) number of sub jobs
     :param password: (str) security password to access the shared object server
-    :param port: (str) security password to access the shared object server
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :return:
     '''
@@ -188,7 +191,7 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, password, node_lists, sub_nproc_list)
-    ping_process = Process(target=job_packing_ping_launch)
+    ping_process = Process(target=job_packing_ping_launch, args=(port, password))
     ping_process.start()
 
     for p in processes:
