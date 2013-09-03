@@ -133,6 +133,7 @@ def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
+        time.sleep(0.15)
     return processes
 
 
