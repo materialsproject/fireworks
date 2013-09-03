@@ -84,7 +84,7 @@ def job_packing_ping_launch():
     time.sleep(fw_conf.PING_TIME_SECS)
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, lock):
+def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, sub_nproc, lock):
     '''
     Starting point of a sub job launching process.
 
@@ -95,6 +95,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     :param port: (int) Listening port number
     :param password: (str) security password to access the server
     :param node_list: (list of str) computer node list
+    :param sub_nproc: (int) number of processors of the sub job
     :param lock: (multiprocessing.Lock) Mutex
     :return:
     '''
@@ -103,6 +104,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     jp_conf.PACKING_MANAGER_PORT = port
     jp_conf.PACKING_MANAGER_PASSWORD = password
     jp_conf.NODE_LIST = node_list
+    jp_conf.SUB_NPROCS = sub_nproc
     jp_conf.PROCESS_LOCK = lock
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.connect()
@@ -111,7 +113,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
-def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password, node_lists):
+def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password, node_lists, sub_nproc_list):
     '''
     Create the sub job launching processes
 
@@ -122,37 +124,53 @@ def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password
     :param port: (int) Listening port number
     :param password: (str) security password to access the server
     :param node_lists: (list of str) computer node list
+    :param sub_nproc_list: (list of int) list of the number of the process of sub jobs
     :return: (List of multiprocessing.Process) all the created processes
     '''
     lock = multiprocessing.Lock()
-    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, password, nl, lock))
-                 for nl in node_lists]
+    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, password, nl, sub_nproc, lock))
+                 for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
     return processes
 
 
-def split_node_lists(num_rockets):
+def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=False):
     '''
     Allocate node list of the large job to the sub jobs
+
     :param num_rockets: (int) number of sub jobs
+    :param total_node_list: (list of str) the node list of the whole large job
+    :param ppn: (int) number of procesors per node
     :return: (list of list) NODELISTs
     '''
-    if 'PBS_NODEFILE' in os.environ:
-        node_file = os.environ['PBS_NODEFILE']
-        with open(node_file) as f:
-            orig_node_list = [line.strip() for line in f.readlines()]
-        n = len(orig_node_list)
-        step = n/num_rockets
-        if step*num_rockets != n:
-            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(n, num_rockets))
-        node_lists = [orig_node_list[i:i+step] for i in range(0, n, step)]
+    if serial_mode:
+        if total_node_list:
+            orig_node_list = sorted(list(set(total_node_list)))
+            nnodes = len(orig_node_list)
+            job_per_node = num_rockets/nnodes
+            if job_per_node*nnodes != num_rockets:
+                raise ValueError("can't allocate processes, {} can't be divided by {}".format(num_rockets, nnodes))
+            sub_nproc_list = [1] * num_rockets
+            node_lists = orig_node_list * job_per_node
+        else:
+            node_lists = [None] * num_rockets
     else:
-        node_lists = [None] * num_rockets
-    return node_lists
+        if total_node_list:
+            orig_node_list = sorted(list(set(total_node_list)))
+            nnodes = len(orig_node_list)
+            sub_nnodes = nnodes/num_rockets
+            if sub_nnodes*num_rockets != nnodes:
+                raise ValueError("can't allocate nodes, {} can't be divided by {}".format(nnodes, num_rockets))
+            sub_nproc_list = [sub_nnodes * ppn] * num_rockets
+            node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
+        else:
+            node_lists = [None] * num_rockets
+    return node_lists, sub_nproc_list
 
 def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
-                                 num_rockets, password, sleep_time):
+                                 num_rockets, password, sleep_time,
+                                 total_node_list=None, ppn=24, serial_mode=False):
     '''
     Launch the jobs in the job packing mode.
     :param fworker: (FWorker) object
@@ -165,11 +183,11 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :return:
     '''
-    node_lists = split_node_lists(num_rockets)
+    node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn, serial_mode)
     m = run_manager_server(launchpad_file, password)
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
-                                           port, password, node_lists)
+                                           port, password, node_lists, sub_nproc_list)
     ping_process = Process(target=job_packing_ping_launch)
     ping_process.start()
 

@@ -1,4 +1,4 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, FileType
 import os
 
 from fireworks.core.fw_config import FWConfig
@@ -36,7 +36,11 @@ def mlaunch():
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
     parser.add_argument('--password', help='shared object service password', default='123')
+
     parser.add_argument('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
+    parser.add_argument('--nodefile', help='the node file of the whole job', default=None, type=FileType('r'))
+    parser.add_argument('--ppn', help='processors per node', default=24, type=int)
+    parser.add_argument('--serial_mode', help='is the sub job a serials one?', default=False, type=bool)
 
     args = parser.parse_args()
 
@@ -53,8 +57,14 @@ def mlaunch():
     else:
         fworker = FWorker()
 
+    total_node_list = None
+    if args.nodefile:
+        with open(args.nodefile, 'r') as f:
+            total_node_list = [line.strip() for line in f.readlines()]
+
     launch_job_packing_processes(fworker, args.launchpad_file, args.loglvl, args.nlaunches,
-                                 args.num_rockets, args.password, args.sleep)
+                                 args.num_rockets, args.password, args.sleep, total_node_list,
+                                 args.ppn, args.serial_mode)
 
 
 if __name__ == "__main__":
