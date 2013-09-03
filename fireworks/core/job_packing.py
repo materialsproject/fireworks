@@ -62,7 +62,8 @@ def run_manager_server(lauchpad_file, password):
     :return: (PackingManager) object
     '''
     PackingManager.register('LaunchPad', callable=lambda: create_launchpad(lauchpad_file))
-    PackingManager.register('Running_IDs', callable=lambda: [], proxytype=ListProxy)
+    running_ids = []
+    PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=ListProxy)
     m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
@@ -76,13 +77,14 @@ def job_packing_ping_launch(port, password):
     :param password: (str) security password to access the server
     :return:
     '''
-    fw_conf = FWConfig()
-    m = PackingManager(address=('127.0.0.1', port), authkey=password)
-    m.connect()
-    lp = m.LaunchPad()
-    for i in m.Running_IDs():
-        lp.ping_launch(i)
-    time.sleep(fw_conf.PING_TIME_SECS)
+    while True:
+        fw_conf = FWConfig()
+        m = PackingManager(address=('127.0.0.1', port), authkey=password)
+        m.connect()
+        lp = m.LaunchPad()
+        for i in m.Running_IDs():
+            lp.ping_launch(i)
+        time.sleep(fw_conf.PING_TIME_SECS)
 
 
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, sub_nproc, lock):
