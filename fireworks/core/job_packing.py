@@ -158,7 +158,7 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
             if job_per_node*nnodes != num_rockets:
                 raise ValueError("can't allocate processes, {} can't be divided by {}".format(num_rockets, nnodes))
             sub_nproc_list = [1] * num_rockets
-            node_lists = orig_node_list * job_per_node
+            node_lists = [[node] for node in orig_node_list * job_per_node]
         else:
             sub_nproc_list = [1] * num_rockets
             node_lists = [None] * num_rockets
