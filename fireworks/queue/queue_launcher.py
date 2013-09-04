@@ -40,6 +40,8 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     fworker = fworker if fworker else FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
+    # get the queue adapter
+    l_logger.debug('getting queue adapter')
     qadapter = load_object(qadapter.to_dict())  # make a defensive copy, mainly for reservation mode
 
     # make sure launch_dir exists:
@@ -48,9 +50,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
     if launchpad.run_exists(fworker):
         try:
-            # get the queue adapter
-            l_logger.debug('getting queue adapter')
-
             # move to the launch directory
             l_logger.info('moving to launch_dir {}'.format(launcher_dir))
             os.chdir(launcher_dir)
@@ -58,6 +57,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             if reserve:
                 l_logger.debug('finding a FW to reserve...')
                 fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
+                if not fw:
+                    l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
+                    return False
                 l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
 
                 # set job name to the FW name
@@ -85,11 +87,14 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
             elif reserve:
                 launchpad._set_reservation_id(launch_id, reservation_id)
+            return reservation_id
 
         except:
             log_exception(l_logger, 'Error writing/submitting queue script!')
+            return False
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
+        return False
 
 
 def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=10, njobs_block=500,
