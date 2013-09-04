@@ -390,9 +390,9 @@ class LaunchPad(FWSerializable):
                 m_fw = self.fireworks.find_and_modify(m_query, {'$set': {'state': 'RESERVED'}},
                                                       sort=[("spec._priority", DESCENDING)])
             else:
-                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1},
+                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1, 'spec': 1},
                                                sort=[("spec._priority", DESCENDING)])
-
+                
             if not m_fw:
                 return None
 
