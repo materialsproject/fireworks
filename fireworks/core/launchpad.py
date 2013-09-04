@@ -395,10 +395,14 @@ class LaunchPad(FWSerializable):
 
             if not m_fw:
                 return None
-            m_fw = self.get_fw_by_id(m_fw['fw_id'])
 
-            if self._check_fw_for_uniqueness(m_fw):
-                return m_fw
+            if not checkout and not '_dupefinder' in m_fw['spec']:
+                return True
+
+            # can't help but create the FW object...
+            fw = self.get_fw_by_id(m_fw['fw_id'])
+            if self._check_fw_for_uniqueness(fw):
+                return fw
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         m_fw = self._get_a_fw_to_run(fworker.query)
