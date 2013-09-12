@@ -2,6 +2,7 @@
 A set of global variables for job packing
 '''
 from multiprocessing.managers import BaseManager
+from fireworks.core.fw_config import singleton
 
 __author__ = 'Xiaohui'
 __copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
@@ -9,18 +10,6 @@ __version__ = '0.1'
 __maintainer__ = 'Xiaohui Qu'
 __email__ = 'xqu@lbl.gov'
 __date__ = 'Sep 2, 2013'
-
-
-
-def singleton(class_):
-    instances = {}
-
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-
-    return getinstance
 
 
 @singleton
@@ -39,7 +28,6 @@ class JPConfig(object):
         self.SUB_NPROCS = None  # the number of process of the sub job
 
         self.PACKING_MANAGER = None  # the shared object manager
-
 
 
 class PackingManager(BaseManager):
@@ -64,6 +52,7 @@ class PackingManager(BaseManager):
 
 PackingManager.register('LaunchPad')
 PackingManager.register('Running_IDs')
+
 
 def acquire_jp_lock():
     jp_conf = JPConfig()
