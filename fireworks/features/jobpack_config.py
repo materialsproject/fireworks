@@ -59,6 +59,7 @@ def acquire_jp_lock():
     if jp_conf.MULTIPROCESSING:
         jp_conf.PROCESS_LOCK.acquire()
 
+
 def release_jp_lock():
     jp_conf = JPConfig()
     if jp_conf.MULTIPROCESSING:

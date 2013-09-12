@@ -8,8 +8,8 @@ import traceback
 import threading
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_config import FWConfig
-from fireworks.core.jp_config import JPConfig
-from fireworks.core.jp_config import release_jp_lock
+from fireworks.features.jobpack_config import JPConfig
+from fireworks.features.jobpack_config import release_jp_lock
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

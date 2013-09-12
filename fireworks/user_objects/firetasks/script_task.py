@@ -1,11 +1,12 @@
 import shlex
 import subprocess
 import sys
-from fireworks.core.firework import FireTaskBase, FWAction
-from fireworks.core.fw_config import FWConfig
-from fireworks.core.jp_config import JPConfig
-from fireworks.utilities.fw_serializers import FWSerializable
 import multiprocessing
+
+from fireworks.core.firework import FireTaskBase, FWAction
+from fireworks.features.jobpack_config import JPConfig
+from fireworks.utilities.fw_serializers import FWSerializable
+
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

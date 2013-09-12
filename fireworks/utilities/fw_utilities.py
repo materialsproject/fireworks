@@ -7,9 +7,11 @@ import sys
 import os
 import traceback
 import socket
-from fireworks.core.fw_config import FWConfig
 import multiprocessing
-from fireworks.core.jp_config import JPConfig
+
+from fireworks.core.fw_config import FWConfig
+from fireworks.features.jobpack_config import JPConfig
+
 
 '''
 Revised by Xiaohui Qu on Aug 19, 2013 to support multiprocessing.

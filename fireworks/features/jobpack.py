@@ -9,7 +9,7 @@ import multiprocessing
 from multiprocessing.managers import ListProxy
 import time
 from fireworks.core.fw_config import FWConfig
-from fireworks.core.jp_config import JPConfig, PackingManager
+from fireworks.features.jobpack_config import JPConfig, PackingManager
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
 

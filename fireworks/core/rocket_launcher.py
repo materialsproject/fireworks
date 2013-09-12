@@ -7,7 +7,7 @@ This module contains methods for launching Rockets, both singly and in rapid-fir
 import os
 import time
 from fireworks.core.fw_config import FWConfig
-from fireworks.core.jp_config import acquire_jp_lock, release_jp_lock
+from fireworks.features.jobpack_config import acquire_jp_lock, release_jp_lock
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_info_jp
 
