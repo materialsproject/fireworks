@@ -19,7 +19,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def ping_launch(launchpad, launch_id, stop_event, master_thread, lp_lock):
+def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
         launchpad.ping_launch(launch_id)
         stop_event.wait(FWConfig().PING_TIME_SECS)
@@ -30,7 +30,7 @@ def start_ping_launch(launch_id, lp):
     if not jp_conf.MULTIPROCESSING:
         ping_stop = threading.Event()
         ping_thread = threading.Thread(target=ping_launch,
-                                       args=(lp, launch_id, ping_stop, threading.currentThread(), self.lp_lock))
+                                       args=(lp, launch_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
     else:
