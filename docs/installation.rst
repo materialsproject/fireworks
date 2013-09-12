@@ -51,9 +51,6 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
 
 #. Install the needed dependencies using pip with the following commands (with administrator privileges)::
 
-    pip install nose
-    pip install pyyaml
-    pip install pymongo
     pip install django
     pip install paramiko  # (only needed if using built-in remote file transfer!)
 
