@@ -15,8 +15,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
 
-
-
 # TODO: remove this hack...
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
 
@@ -30,11 +28,11 @@ class TemplateWriterTask(FireTaskBase, FWSerializable):
         """
         self.update(parameters)
 
-        if not parameters.get("use_root"):
+        if not parameters.get("use_global_spec"):
             self._load_parameters(parameters)
 
     def run_task(self, fw_spec):
-        if self.get("use_root"):
+        if self.get("use_global_spec"):
             self._load_parameters(fw_spec)
 
         with open(self.template_file) as f:

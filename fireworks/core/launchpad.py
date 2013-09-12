@@ -393,15 +393,19 @@ class LaunchPad(FWSerializable):
                 m_fw = self.fireworks.find_and_modify(m_query, {'$set': {'state': 'RESERVED'}},
                                                       sort=[("spec._priority", DESCENDING)])
             else:
-                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1},
+                m_fw = self.fireworks.find_one(m_query, {'fw_id': 1, 'spec': 1},
                                                sort=[("spec._priority", DESCENDING)])
-
+                
             if not m_fw:
                 return None
-            m_fw = self.get_fw_by_id(m_fw['fw_id'])
 
-            if self._check_fw_for_uniqueness(m_fw):
-                return m_fw
+            if not checkout and not '_dupefinder' in m_fw['spec']:
+                return True
+
+            # can't help but create the FW object...
+            fw = self.get_fw_by_id(m_fw['fw_id'])
+            if self._check_fw_for_uniqueness(fw):
+                return fw
 
     def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         m_fw = self._get_a_fw_to_run(fworker.query)
@@ -650,10 +654,3 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write of Launch
         # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
-
-    def get_logdir(self):
-        # multiprocessing.managers.BaseManager doesn't support Property proxy
-        # add a function to access the properties in case of MULTIPROCESSING
-        return self.logdir
-
-

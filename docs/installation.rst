@@ -26,6 +26,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 #. To install, simply type::
 
     pip install FireWorks
+    pip install paramiko  # (only needed if using built-in remote file transfer!)
 
    .. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
 
@@ -50,14 +51,10 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
 
 #. Install the needed dependencies using pip with the following commands (with administrator privileges)::
 
-    pip install nose
-    pip install pyyaml
-    pip install pymongo
     pip install django
+    pip install paramiko  # (only needed if using built-in remote file transfer!)
 
 .. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``. In particular, ensure that pymongo is >= 2.4.2 and includes MongoClient, and Django is greater than v1.5.
-
-.. note:: Django is only needed if you plan to use the web frontend.
 
 #. Run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
 

@@ -2,6 +2,17 @@
 FireWorks Changelog
 ===================
 
+v0.25
+-----
+
+* make paramiko optional as it can cause install problems
+
+v0.24
+-----
+
+* TransferTask added
+* fix ``_use_global_spec``
+
 v0.23
 -----
 

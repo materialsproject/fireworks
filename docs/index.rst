@@ -31,6 +31,8 @@ Some (but not all) of its features include:
 
 * Monitoring of workflows through a web service
 
+* Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines
+
 * Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
 
 * Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs). *(future)*
@@ -131,15 +133,25 @@ Deploying FireWorks in production
 Additional features and topics
 ==============================
 
+The built-in FireTasks
+----------------------
+
 .. toctree::
     :maxdepth: 1
 
-    duplicates_tutorial
     scripttask
     templatewritertask
-    controlworker
-    python_tutorial
+    transfertask
 
+Misc. topics
+------------
+
+.. toctree::
+    :maxdepth: 1
+
+    controlworker
+    duplicates_tutorial
+    python_tutorial
 
 .. _contributing-label:
 

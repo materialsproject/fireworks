@@ -50,7 +50,6 @@ Major Features
 
 * Implement job packing using multiprocessing first, threads later. (this probably needs some unit test)
 
-
 FireTasks
 =========
 
@@ -76,8 +75,6 @@ Misc.
 * Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
 
 * Add stats, preferably using a MapReduce call for speed
-
-* Clean up job_exists() calls - they are currently expensive!
 
 * Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
 

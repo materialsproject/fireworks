@@ -1,6 +1,6 @@
-====================
-Using the ScriptTask
-====================
+========================================
+Using the ScriptTask to execute commands
+========================================
 
 The ScriptTask is a FireTask built-in to FireWorks to help run non-Python programs through the command line. For example, you could use the ScriptTask to execute a Java "JAR" file or a C++ code. Internally,ScriptTask runs your script through a thin Python wrapper (the ScriptTask is really just another FireTask and doesn't have any special privileges).
 
