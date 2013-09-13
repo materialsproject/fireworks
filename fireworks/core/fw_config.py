@@ -76,6 +76,8 @@ class FWConfig(object):
 
         self.DS_PASSWORD = '1234'  # dummy password to access DataServer
 
+        self.STORE_PACKING_INFO = True  # automatically add job packing info to stored_data
+
         self.override_user_settings()
 
     def override_user_settings(self):

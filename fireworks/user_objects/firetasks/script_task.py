@@ -81,17 +81,6 @@ class ScriptTask(FireTaskBase, FWSerializable):
         elif self.fizzle_bad_rc and returncode != 0:
             raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
 
-        jp_conf = SharedData()
-
-        if jp_conf.MULTIPROCESSING:
-            output['execution_mode'] = 'Job Packing'
-            output['packing_manager_port'] = jp_conf.PACKING_MANAGER_PORT
-            output['node_list'] = jp_conf.NODE_LIST
-            output['process_name'] = multiprocessing.current_process().name
-
-        else:
-            output['execution_mode'] = 'Single Process'
-
         return FWAction(stored_data=output)
 
     def _load_parameters(self, params):

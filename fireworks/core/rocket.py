@@ -3,6 +3,7 @@
 """
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
+import multiprocessing
 import os
 import traceback
 import threading
@@ -119,6 +120,13 @@ class Rocket():
 
                 if m_action.skip_remaining_tasks:
                     break
+
+            # add job packing info if this is needed
+            if SharedData().MULTIPROCESSING and FWConfig().STORE_PACKING_INFO:
+                all_stored_data['execution_mode'] = 'Job Packing'
+                all_stored_data['packing_manager_port'] = SharedData().PACKING_MANAGER_PORT
+                all_stored_data['node_list'] = SharedData().NODE_LIST
+                all_stored_data['process_name'] = multiprocessing.current_process().name
 
             # perform finishing operation
             stop_ping_launch(ping_stop)
