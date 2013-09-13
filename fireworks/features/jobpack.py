@@ -6,13 +6,11 @@ Between processes.
 """
 from multiprocessing import Process
 import multiprocessing
-from multiprocessing.managers import DictProxy
 import os
 import threading
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.features.jobpack_config import JPConfig, DataServer
-from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
 
 
@@ -24,44 +22,12 @@ __email__ = 'xqu@lbl.gov'
 __date__ = 'Aug 19, 2013'
 
 
-
-def create_launchpad(launchpad_file):
-    '''
-    Function to create the server side LaunchPad instance.
-    This function will be called only once, only by the
-    Manager server process.
-
-    :param launchpad_file: (str) path to launchpad file
-    :param strm_lvl: (str) level at which to output logs to stdout
-    :return: (LaunchPad) object
-    '''
-    if launchpad_file:
-        launchpad = LaunchPad.from_file(launchpad_file)
-    else:
-        launchpad = LaunchPad.auto_load()
-    return launchpad
-
-
-def run_manager_server(launchpad_file):
-    '''
-    Start the Manager server process. The shared LaunchPad object proxy will
-    be available after calling this function. Nothing to do with process
-    management.
-
-    :param launchpad_file: (str) path to launchpad file
-    :param strm_lvl: (str) level at which to output logs
-    :param port: (int) Listening port number
-    :return: (DataServer) object
-    '''
-    lp = create_launchpad(launchpad_file)
-    return DataServer.setup(lp)
-
-
 def ping_launch_jp(port, stop_event):
     '''
     The process version of ping_launch
 
-    :param port: (int) Listening port number of the shared object manage
+    :param port: (int) Listening port number of the DataServer
+    :param stop_event:
     :return:
     '''
 
@@ -165,7 +131,8 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
             node_lists = [None] * num_rockets
     return node_lists, sub_nproc_list
 
-def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
+
+def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
                                  num_rockets, sleep_time,
                                  total_node_list=None, ppn=24, serial_mode=False):
     '''
@@ -179,7 +146,8 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     :return:
     '''
     node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn, serial_mode)
-    m = run_manager_server(launchpad_file)
+    # create dataserver
+    m = DataServer.setup(launchpad)
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, node_lists, sub_nproc_list)

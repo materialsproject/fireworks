@@ -62,7 +62,7 @@ def qlaunch():
     if not args.queueadapter_file and os.path.exists(os.path.join(args.config_dir, 'my_qadapter.yaml')):
         args.queueadapter_file = os.path.join(args.config_dir, 'my_qadapter.yaml')
 
-    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else None
+    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
     fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
     queueadapter = load_object_from_file(args.queueadapter_file)
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl

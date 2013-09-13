@@ -3,6 +3,7 @@ import os
 
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
+from fireworks.core.launchpad import LaunchPad
 from fireworks.features.jobpack import launch_job_packing_processes
 
 
@@ -51,6 +52,8 @@ def mlaunch():
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
+    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
+
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)
     else:
@@ -62,7 +65,7 @@ def mlaunch():
         with open(nodefile, 'r') as f:
             total_node_list = [line.strip() for line in f.readlines()]
 
-    launch_job_packing_processes(fworker, args.launchpad_file, args.loglvl, args.nlaunches,
+    launch_job_packing_processes(launchpad, fworker, args.loglvl, args.nlaunches,
                                  args.num_rockets, args.sleep, total_node_list,
                                  args.ppn, args.serial_mode)
 
