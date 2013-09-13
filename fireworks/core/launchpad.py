@@ -654,3 +654,7 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write of Launch
         # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+
+    def get_logdir(self):
+        # AJ: This is needed for job packing due to Proxy objects not being fully featured...
+        return self.logdir

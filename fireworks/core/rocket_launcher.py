@@ -27,7 +27,7 @@ def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     :param fw_id: (int) if set, a particular FireWork to run
     :param strm_lvl: (str) level at which to output logs to stdout
     """
-    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
+    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
 
     log_info_jp(l_logger, 'Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)
@@ -51,7 +51,7 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
 
     sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
-    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
+    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
 
     num_launched = 0
