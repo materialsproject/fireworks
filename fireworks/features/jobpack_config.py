@@ -1,8 +1,8 @@
 '''
 A set of global variables for job packing
 '''
-from multiprocessing.managers import BaseManager
-from fireworks.core.fw_config import singleton
+from multiprocessing.managers import BaseManager, DictProxy
+from fireworks.core.fw_config import singleton, FWConfig
 
 __author__ = 'Xiaohui Qu, Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Material Project & The Electrolyte Genome Project'
@@ -19,8 +19,6 @@ class JPConfig(object):
 
         self.PACKING_MANAGER_PORT = '27016'   # the internet port of the packing manager service
 
-        self.PACKING_MANAGER_PASSWORD ='123'  # the password to connect to packing manager service
-
         self.PROCESS_LOCK = None  # the shared Lock between processes
 
         self.NODE_LIST = None  # the node list for sub jobs
@@ -30,17 +28,33 @@ class JPConfig(object):
         self.PACKING_MANAGER = None  # the shared object manager
 
 
+def manager_initializer():
+    '''
+    The intialization function for Manager server process.
+    :return:
+    '''
+    jp_conf = JPConfig()
+    jp_conf.MULTIPROCESSING = None # don't confuse the server process
+
 class DataServer(BaseManager):
     """
     Provide a server that can host shared objects between multiprocessing
     Processes (that normally can't share data). For example, a common LaunchPad is
     shared between processes and pinging launches is coordinated to limit DB hits.
     """
-    pass
 
-# These variables will be regise
-DataServer.register('LaunchPad')
-DataServer.register('Running_IDs')
+    @classmethod
+    def setup(cls, lp):
+        """
+
+        :param lp:
+        :return:
+        """
+        DataServer.register('LaunchPad', callable=lambda: lp)
+        DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
+        m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # randomly pick a port
+        m.start(initializer=manager_initializer)
+        return m
 
 
 def acquire_jp_lock():

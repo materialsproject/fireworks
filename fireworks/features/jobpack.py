@@ -42,16 +42,7 @@ def create_launchpad(launchpad_file):
     return launchpad
 
 
-def manager_initializer():
-    '''
-    The intialization function for Manager server process.
-    :return:
-    '''
-    jp_conf = JPConfig()
-    jp_conf.MULTIPROCESSING = None # don't confuse the server process
-
-
-def run_manager_server(launchpad_file, password):
+def run_manager_server(launchpad_file):
     '''
     Start the Manager server process. The shared LaunchPad object proxy will
     be available after calling this function. Nothing to do with process
@@ -60,28 +51,21 @@ def run_manager_server(launchpad_file, password):
     :param launchpad_file: (str) path to launchpad file
     :param strm_lvl: (str) level at which to output logs
     :param port: (int) Listening port number
-    :param password: (str) security password to access the server
     :return: (DataServer) object
     '''
     lp = create_launchpad(launchpad_file)
-    DataServer.register('LaunchPad', callable=lambda: lp)
-    running_ids = {}
-    DataServer.register('Running_IDs', callable=lambda: running_ids, proxytype=DictProxy)
-    m = DataServer(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
-    m.start(initializer=manager_initializer)
-    return m
+    return DataServer.setup(lp)
 
 
-def ping_launch_jp(port, password, stop_event):
+def ping_launch_jp(port, stop_event):
     '''
     The process version of ping_launch
 
     :param port: (int) Listening port number of the shared object manage
-    :param password: (str) security password to access the server
     :return:
     '''
 
-    m = DataServer(address=('127.0.0.1', port), authkey=password)
+    m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     m.connect()
     lp = m.LaunchPad()
     while not stop_event.is_set():
@@ -96,7 +80,7 @@ def ping_launch_jp(port, password, stop_event):
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, sub_nproc, lock):
+def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, lock):
     '''
     Starting point of a sub job launching process.
 
@@ -114,18 +98,17 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     jp_conf = JPConfig()
     jp_conf.MULTIPROCESSING = True
     jp_conf.PACKING_MANAGER_PORT = port
-    jp_conf.PACKING_MANAGER_PASSWORD = password
     jp_conf.NODE_LIST = node_list
     jp_conf.SUB_NPROCS = sub_nproc
     jp_conf.PROCESS_LOCK = lock
-    m = DataServer(address=('127.0.0.1', port), authkey=password)
+    m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     m.connect()
     launchpad = m.LaunchPad()
     jp_conf.PACKING_MANAGER = m
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
-def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password, node_lists, sub_nproc_list):
+def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list):
     '''
     Create the sub job launching processes
 
@@ -134,13 +117,12 @@ def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, password
     :param sleep: (int) secs to sleep between rapidfire loop iterations
     :param loglvl: (str) level at which to output logs to stdout
     :param port: (int) Listening port number
-    :param password: (str) security password to access the server
     :param node_lists: (list of str) computer node list
     :param sub_nproc_list: (list of int) list of the number of the process of sub jobs
     :return: (List of multiprocessing.Process) all the created processes
     '''
     lock = multiprocessing.Lock()
-    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, password, nl, sub_nproc, lock))
+    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, lock))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
@@ -184,7 +166,7 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
     return node_lists, sub_nproc_list
 
 def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
-                                 num_rockets, password, sleep_time,
+                                 num_rockets, sleep_time,
                                  total_node_list=None, ppn=24, serial_mode=False):
     '''
     Launch the jobs in the job packing mode.
@@ -193,18 +175,17 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     :param loglvl: (str) level at which to output logs
     :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
     :param num_rockets: (int) number of sub jobs
-    :param password: (str) security password to access the shared object server
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :return:
     '''
     node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn, serial_mode)
-    m = run_manager_server(launchpad_file, password)
+    m = run_manager_server(launchpad_file)
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
-                                           port, password, node_lists, sub_nproc_list)
+                                           port, node_lists, sub_nproc_list)
 
     ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=ping_launch_jp, args=(port, password, ping_stop))
+    ping_thread = threading.Thread(target=ping_launch_jp, args=(port, ping_stop))
     ping_thread.start()
 
     for p in processes:

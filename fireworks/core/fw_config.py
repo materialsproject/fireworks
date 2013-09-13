@@ -74,6 +74,8 @@ class FWConfig(object):
 
         self.REMOVE_USELESS_DIRS = True  # deletes empty launch dir if _launch_dir set
 
+        self.DS_PASSWORD = '1234'  # dummy password to access DataServer
+
         self.override_user_settings()
 
     def override_user_settings(self):

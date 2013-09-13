@@ -36,8 +36,6 @@ def mlaunch():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
-    parser.add_argument('--password', help='shared object service password', default='123')
-
     parser.add_argument('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
     parser.add_argument('--nodefile_env', help='the environemntal variable name containing the node file name', default=None, type=str)
     parser.add_argument('--ppn', help='processors per node', default=24, type=int)
@@ -65,7 +63,7 @@ def mlaunch():
             total_node_list = [line.strip() for line in f.readlines()]
 
     launch_job_packing_processes(fworker, args.launchpad_file, args.loglvl, args.nlaunches,
-                                 args.num_rockets, args.password, args.sleep, total_node_list,
+                                 args.num_rockets, args.sleep, total_node_list,
                                  args.ppn, args.serial_mode)
 
 
