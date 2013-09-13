@@ -49,19 +49,19 @@ def manager_initializer():
     jp_conf.MULTIPROCESSING = None # don't confuse the server process
 
 
-def run_manager_server(lauchpad_file, password):
+def run_manager_server(launchpad_file, password):
     '''
     Start the Manager server process. The shared LaunchPad object proxy will
     be available after calling this function. Nothing to do with process
     management.
 
-    :param lauchpad_file: (str) path to launchpad file
+    :param launchpad_file: (str) path to launchpad file
     :param strm_lvl: (str) level at which to output logs
     :param port: (int) Listening port number
     :param password: (str) security password to access the server
     :return: (PackingManager) object
     '''
-    lp = create_launchpad(lauchpad_file)
+    lp = create_launchpad(launchpad_file)
     PackingManager.register('LaunchPad', callable=lambda: lp)
     running_ids = []
     PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=ListProxy)
@@ -78,6 +78,8 @@ def job_packing_ping_launch(port, password):
     :param password: (str) security password to access the server
     :return:
     '''
+
+    # TODO: use the Thread.wait() policy here...
 
     fw_conf = FWConfig()
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
