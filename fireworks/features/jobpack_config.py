@@ -4,8 +4,8 @@ A set of global variables for job packing
 from multiprocessing.managers import BaseManager
 from fireworks.core.fw_config import singleton
 
-__author__ = 'Xiaohui'
-__copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
+__author__ = 'Xiaohui Qu, Anubhav Jain'
+__copyright__ = 'Copyright 2013, The Material Project & The Electrolyte Genome Project'
 __version__ = '0.1'
 __maintainer__ = 'Xiaohui Qu'
 __email__ = 'xqu@lbl.gov'
@@ -30,28 +30,17 @@ class JPConfig(object):
         self.PACKING_MANAGER = None  # the shared object manager
 
 
-class PackingManager(BaseManager):
-    '''
-    Customized Manager class.
-    It spawns a child process which can be used as a server process to
-    provide shared objects.
-    When registered with the LaunchPad typeid, it will be able to return
-    a proxy for the LaunchPad running in the server process. All the access
-    for other processes will be forward to the instance in the server process.
-    This is how the inter-process Singleton is implemented. Please be noted
-    that the decorator singleton pattern only works for single process programs.
-    Also, please noted this class has nothing to do with process management. Its
-    only role is to provide shared objects.
-    Example:
-        m = PackingManager(address=('127.0.0.1', port), authkey=password)
-        m.connect()
-        launchpad = m.LaunchPad()
-    '''
+class DataServer(BaseManager):
+    """
+    Provide a server that can host shared objects between multiprocessing
+    Processes (that normally can't share data). For example, a common LaunchPad is
+    shared between processes and pinging launches is coordinated to limit DB hits.
+    """
     pass
 
-
-PackingManager.register('LaunchPad')
-PackingManager.register('Running_IDs')
+# These variables will be regise
+DataServer.register('LaunchPad')
+DataServer.register('Running_IDs')
 
 
 def acquire_jp_lock():

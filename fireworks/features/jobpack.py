@@ -1,7 +1,7 @@
 """
 Support module for job packing.
 This module contains function to prepare and launch the process.
-Also, there is a PackingManager class which provides share objects
+Also, there is a DataServer class which provides share objects
 Between processes.
 """
 from multiprocessing import Process
@@ -11,13 +11,13 @@ import os
 import threading
 import time
 from fireworks.core.fw_config import FWConfig
-from fireworks.features.jobpack_config import JPConfig, PackingManager
+from fireworks.features.jobpack_config import JPConfig, DataServer
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
 
 
 __author__ = 'Xiaohui Qu, Anubhav Jain'
-__copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
+__copyright__ = 'Copyright 2013, The Material Project & The Electrolyte Genome Project'
 __version__ = '0.1'
 __maintainer__ = 'Xiaohui Qu'
 __email__ = 'xqu@lbl.gov'
@@ -61,13 +61,13 @@ def run_manager_server(launchpad_file, password):
     :param strm_lvl: (str) level at which to output logs
     :param port: (int) Listening port number
     :param password: (str) security password to access the server
-    :return: (PackingManager) object
+    :return: (DataServer) object
     '''
     lp = create_launchpad(launchpad_file)
-    PackingManager.register('LaunchPad', callable=lambda: lp)
+    DataServer.register('LaunchPad', callable=lambda: lp)
     running_ids = {}
-    PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=DictProxy)
-    m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
+    DataServer.register('Running_IDs', callable=lambda: running_ids, proxytype=DictProxy)
+    m = DataServer(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
 
@@ -81,7 +81,7 @@ def ping_launch_jp(port, password, stop_event):
     :return:
     '''
 
-    m = PackingManager(address=('127.0.0.1', port), authkey=password)
+    m = DataServer(address=('127.0.0.1', port), authkey=password)
     m.connect()
     lp = m.LaunchPad()
     while not stop_event.is_set():
@@ -118,7 +118,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_li
     jp_conf.NODE_LIST = node_list
     jp_conf.SUB_NPROCS = sub_nproc
     jp_conf.PROCESS_LOCK = lock
-    m = PackingManager(address=('127.0.0.1', port), authkey=password)
+    m = DataServer(address=('127.0.0.1', port), authkey=password)
     m.connect()
     launchpad = m.LaunchPad()
     jp_conf.PACKING_MANAGER = m
