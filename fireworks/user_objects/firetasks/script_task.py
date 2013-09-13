@@ -4,7 +4,7 @@ import sys
 import multiprocessing
 
 from fireworks.core.firework import FireTaskBase, FWAction
-from fireworks.features.jobpack_config import JPConfig
+from fireworks.core.fw_config import SharedData
 from fireworks.utilities.fw_serializers import FWSerializable
 
 
@@ -81,7 +81,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
         elif self.fizzle_bad_rc and returncode != 0:
             raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
 
-        jp_conf = JPConfig()
+        jp_conf = SharedData()
 
         if jp_conf.MULTIPROCESSING:
             output['execution_mode'] = 'Job Packing'

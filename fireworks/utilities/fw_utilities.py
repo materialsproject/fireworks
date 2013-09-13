@@ -2,6 +2,7 @@
 
 import logging
 import datetime
+from multiprocessing.managers import BaseManager, DictProxy
 import string
 import sys
 import os
@@ -9,8 +10,7 @@ import traceback
 import socket
 import multiprocessing
 
-from fireworks.core.fw_config import FWConfig
-from fireworks.features.jobpack_config import JPConfig
+from fireworks.core.fw_config import FWConfig, SharedData
 
 
 '''
@@ -42,7 +42,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     :param clear_logs: whether to clear the logger with the same name
     """
 
-    jp_conf = JPConfig()
+    jp_conf = SharedData()
     if jp_conf.MULTIPROCESSING:
         name += multiprocessing.current_process().name
     logger = logging.getLogger(name)
@@ -72,7 +72,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     return logger
 
 def log_info_jp(m_logger, msg):
-    jp_conf = JPConfig()
+    jp_conf = SharedData()
     if not jp_conf.MULTIPROCESSING:
         m_logger.info(msg)
     else:
@@ -124,7 +124,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
 
     time_now = datetime.datetime.utcnow().strftime(FWConfig().FW_BLOCK_FORMAT)
-    jp_conf = JPConfig()
+    jp_conf = SharedData()
     if not jp_conf.MULTIPROCESSING:
         block_path = prefix + time_now
     else:
@@ -150,3 +150,35 @@ def get_slug(m_str):
     valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     m_str = ''.join(c for c in m_str if c in valid_chars)
     return m_str.replace(' ', '_')
+
+
+def acquire_jp_lock():
+    jp_conf = SharedData()
+    if jp_conf.MULTIPROCESSING:
+        jp_conf.PROCESS_LOCK.acquire()
+
+
+def release_jp_lock():
+    jp_conf = SharedData()
+    if jp_conf.MULTIPROCESSING:
+        jp_conf.PROCESS_LOCK.release()
+
+
+class DataServer(BaseManager):
+    """
+    Provide a server that can host shared objects between multiprocessing
+    Processes (that normally can't share data). For example, a common LaunchPad is
+    shared between processes and pinging launches is coordinated to limit DB hits.
+    """
+
+    @classmethod
+    def setup(cls, lp):
+        """
+        :param lp:
+        :return:
+        """
+        DataServer.register('LaunchPad', callable=lambda: lp)
+        DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
+        m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # random port
+        m.start()
+        return m

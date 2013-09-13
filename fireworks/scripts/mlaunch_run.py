@@ -4,7 +4,7 @@ import os
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.features.jobpack import launch_job_packing_processes
+from fireworks.features.jobpack_launcher import launch_job_packing_processes
 
 
 """

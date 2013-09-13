@@ -7,9 +7,8 @@ import os
 import traceback
 import threading
 from fireworks.core.firework import FWAction
-from fireworks.core.fw_config import FWConfig
-from fireworks.features.jobpack_config import JPConfig
-from fireworks.features.jobpack_config import release_jp_lock
+from fireworks.core.fw_config import FWConfig, SharedData
+from fireworks.utilities.fw_utilities import release_jp_lock
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -26,7 +25,7 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
 
 
 def start_ping_launch(launch_id, lp):
-    jp_conf = JPConfig()
+    jp_conf = SharedData()
     if jp_conf.MULTIPROCESSING:
         m = jp_conf.PACKING_MANAGER
         m.Running_IDs()[os.getpid()] = launch_id
@@ -40,7 +39,7 @@ def start_ping_launch(launch_id, lp):
 
 
 def stop_ping_launch(ping_stop):
-    jp_conf = JPConfig()
+    jp_conf = SharedData()
     if jp_conf.MULTIPROCESSING:
         m = jp_conf.PACKING_MANAGER
         m.Running_IDs()[os.getpid()] = None
