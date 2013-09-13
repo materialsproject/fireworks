@@ -27,28 +27,25 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
 
 def start_ping_launch(launch_id, lp):
     jp_conf = JPConfig()
-    if not jp_conf.MULTIPROCESSING:
+    if jp_conf.MULTIPROCESSING:
+        m = jp_conf.PACKING_MANAGER
+        m.Running_IDs()[os.getpid()] = launch_id
+        return None
+    else:
         ping_stop = threading.Event()
         ping_thread = threading.Thread(target=ping_launch,
                                        args=(lp, launch_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
-    else:
-        m = jp_conf.PACKING_MANAGER
-        running_ids = m.Running_IDs()
-        running_ids.append(launch_id)
-        return None
 
 
-def stop_ping_launch(ping_stop, launch_id):
+def stop_ping_launch(ping_stop):
     jp_conf = JPConfig()
-    if not jp_conf.MULTIPROCESSING:
-        ping_stop.set()
-    else:
+    if jp_conf.MULTIPROCESSING:
         m = jp_conf.PACKING_MANAGER
-        running_ids = m.Running_IDs()
-        if launch_id in list(running_ids):
-            running_ids.remove(launch_id)
+        m.Running_IDs()[os.getpid()] = None
+    else:
+        ping_stop.set()
 
 
 class Rocket():
@@ -125,13 +122,12 @@ class Rocket():
                     break
 
             # perform finishing operation
-            stop_ping_launch(ping_stop, launch_id)
+            stop_ping_launch(ping_stop)
             m_action.stored_data = all_stored_data
             lp.complete_launch(launch_id, m_action, 'COMPLETED')
 
-
         except:
-            stop_ping_launch(ping_stop, launch_id)
+            stop_ping_launch(ping_stop)
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)

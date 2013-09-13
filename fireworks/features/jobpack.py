@@ -7,6 +7,7 @@ Between processes.
 from multiprocessing import Process
 import multiprocessing
 from multiprocessing.managers import ListProxy
+import os
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.features.jobpack_config import JPConfig, PackingManager
@@ -63,7 +64,7 @@ def run_manager_server(launchpad_file, password):
     '''
     lp = create_launchpad(launchpad_file)
     PackingManager.register('LaunchPad', callable=lambda: lp)
-    running_ids = []
+    running_ids = {}
     PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=ListProxy)
     m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
     m.start(initializer=manager_initializer)
@@ -86,8 +87,14 @@ def job_packing_ping_launch(port, password):
     m.connect()
     lp = m.LaunchPad()
     while True:
-        for i in m.Running_IDs():
-            lp.ping_launch(i)
+        for pid, lid in m.Running_IDs().iteritems():
+            if lid:
+                try:
+                    os.kill(pid, 0)  # throws OSError if the process is dead
+                    lp.ping_launch(lid)
+                except OSError:
+                    pass
+
         time.sleep(fw_conf.PING_TIME_SECS)
 
 
