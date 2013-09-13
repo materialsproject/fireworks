@@ -17,7 +17,7 @@ class JPConfig(object):
     def __init__(self):
         self.MULTIPROCESSING = None # default single process framework
 
-        self.PACKING_MANAGER_PORT = '27016'   # the internet port of the packing manager service
+        self.PACKING_MANAGER_PORT = None   # the internet port of the packing manager service
 
         self.PROCESS_LOCK = None  # the shared Lock between processes
 

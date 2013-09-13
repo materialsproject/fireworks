@@ -134,6 +134,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     l_logger.info('Created new dir {}'.format(full_path))
     return full_path
 
+
 def get_my_ip():
     try:
         return socket.gethostbyname(socket.gethostname())
