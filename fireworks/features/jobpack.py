@@ -6,7 +6,7 @@ Between processes.
 """
 from multiprocessing import Process
 import multiprocessing
-from multiprocessing.managers import ListProxy
+from multiprocessing.managers import DictProxy
 import os
 import threading
 import time
@@ -66,7 +66,7 @@ def run_manager_server(launchpad_file, password):
     lp = create_launchpad(launchpad_file)
     PackingManager.register('LaunchPad', callable=lambda: lp)
     running_ids = {}
-    PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=ListProxy)
+    PackingManager.register('Running_IDs', callable=lambda: running_ids, proxytype=DictProxy)
     m = PackingManager(address=('127.0.0.1', 0), authkey=password)  # randomly pick a port
     m.start(initializer=manager_initializer)
     return m
@@ -85,7 +85,7 @@ def ping_launch_jp(port, password, stop_event):
     m.connect()
     lp = m.LaunchPad()
     while not stop_event.is_set():
-        for pid, lid in m.Running_IDs().iteritems():
+        for pid, lid in m.Running_IDs().items():
             if lid:
                 try:
                     os.kill(pid, 0)  # throws OSError if the process is dead
