@@ -28,14 +28,6 @@ class JPConfig(object):
         self.PACKING_MANAGER = None  # the shared object manager
 
 
-def manager_initializer():
-    '''
-    The intialization function for Manager server process.
-    :return:
-    '''
-    jp_conf = JPConfig()
-    jp_conf.MULTIPROCESSING = None # don't confuse the server process
-
 class DataServer(BaseManager):
     """
     Provide a server that can host shared objects between multiprocessing
@@ -46,14 +38,13 @@ class DataServer(BaseManager):
     @classmethod
     def setup(cls, lp):
         """
-
         :param lp:
         :return:
         """
         DataServer.register('LaunchPad', callable=lambda: lp)
         DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
-        m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # randomly pick a port
-        m.start(initializer=manager_initializer)
+        m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # random port
+        m.start()
         return m
 
 
