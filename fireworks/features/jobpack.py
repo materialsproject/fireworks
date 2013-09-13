@@ -8,6 +8,7 @@ from multiprocessing import Process
 import multiprocessing
 from multiprocessing.managers import ListProxy
 import os
+import threading
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.features.jobpack_config import JPConfig, PackingManager
@@ -71,7 +72,7 @@ def run_manager_server(launchpad_file, password):
     return m
 
 
-def job_packing_ping_launch(port, password):
+def job_packing_ping_launch(port, password, stop_event):
     '''
     The process version of ping_launch
 
@@ -80,22 +81,19 @@ def job_packing_ping_launch(port, password):
     :return:
     '''
 
-    # TODO: use the Thread.wait() policy here...
-
-    fw_conf = FWConfig()
     m = PackingManager(address=('127.0.0.1', port), authkey=password)
     m.connect()
     lp = m.LaunchPad()
-    while True:
+    while not stop_event.is_set():
         for pid, lid in m.Running_IDs().iteritems():
             if lid:
                 try:
                     os.kill(pid, 0)  # throws OSError if the process is dead
                     lp.ping_launch(lid)
                 except OSError:
-                    pass
+                    pass  # means this process is dead!
 
-        time.sleep(fw_conf.PING_TIME_SECS)
+        stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, password, node_list, sub_nproc, lock):
@@ -204,10 +202,13 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
     port = m.address[1]
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, password, node_lists, sub_nproc_list)
-    ping_process = Process(target=job_packing_ping_launch, args=(port, password))
-    ping_process.start()
+
+    ping_stop = threading.Event()
+    ping_thread = threading.Thread(target=job_packing_ping_launch,
+                                       args=(port, password, ping_stop))
+    ping_thread.start()
 
     for p in processes:
         p.join()
-    ping_process.terminate()
+    ping_stop.set()
     m.shutdown()
