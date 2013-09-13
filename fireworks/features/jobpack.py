@@ -16,7 +16,7 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
 
 
-__author__ = 'Xiaohui'
+__author__ = 'Xiaohui Qu, Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
 __version__ = '0.1'
 __maintainer__ = 'Xiaohui Qu'
@@ -72,7 +72,7 @@ def run_manager_server(launchpad_file, password):
     return m
 
 
-def job_packing_ping_launch(port, password, stop_event):
+def ping_launch_jp(port, password, stop_event):
     '''
     The process version of ping_launch
 
@@ -204,8 +204,7 @@ def launch_job_packing_processes(fworker, launchpad_file, loglvl, nlaunches,
                                            port, password, node_lists, sub_nproc_list)
 
     ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=job_packing_ping_launch,
-                                       args=(port, password, ping_stop))
+    ping_thread = threading.Thread(target=ping_launch_jp, args=(port, password, ping_stop))
     ping_thread.start()
 
     for p in processes:
