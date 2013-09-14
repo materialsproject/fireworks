@@ -25,8 +25,8 @@ def mlaunch():
 
     parser = ArgumentParser(description=m_description)
 
-    parser.add_argument('num_rockets', help='the numbers of sub jobs to split into', type=int)
-    parser.add_argument('--nlaunches', help='num_launches (int or "infinite")', default=0)
+    parser.add_argument('num_rockets', help='the number of jobs to run in parallel', type=int)
+    parser.add_argument('--nlaunches', help='number of FireWorks to run per parallel job (int or "infinite"; default 0 is all jobs in DB)', default=0)
     parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
