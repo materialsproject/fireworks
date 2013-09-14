@@ -33,6 +33,7 @@ def ping_launch_jp(port, stop_event):
 
     m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     m.connect()
+    
     lp = m.LaunchPad()
     while not stop_event.is_set():
         for pid, lid in m.Running_IDs().items():
@@ -159,4 +160,5 @@ def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
     for p in processes:
         p.join()
     ping_stop.set()
+    ping_thread.join()
     m.shutdown()
