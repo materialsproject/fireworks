@@ -25,6 +25,7 @@ def mlaunch():
 
     parser = ArgumentParser(description=m_description)
 
+    parser.add_argument('num_rockets', help='the numbers of sub jobs to split into', type=int)
     parser.add_argument('--nlaunches', help='num_launches (int or "infinite")', default=0)
     parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
 
@@ -37,9 +38,8 @@ def mlaunch():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
-    parser.add_argument('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
-    parser.add_argument('--nodefile_env', help='the environemntal variable name containing the node file name', default=None, type=str)
-    parser.add_argument('--ppn', help='processors per node', default=24, type=int)
+    parser.add_argument('--nodefile_env', help='environment variable name containing the node file name (for populating FWData, does not affect execution)', default=None, type=str)
+    parser.add_argument('--ppn', help='processors per node (for populating FWData, does not affect execution)', default=1, type=int)
 
     args = parser.parse_args()
 

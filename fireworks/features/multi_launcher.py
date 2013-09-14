@@ -119,9 +119,8 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24):
     return node_lists, sub_nproc_list
 
 
-def launch_multiprocess(launchpad, fworker, loglvl, nlaunches,
-                                 num_rockets, sleep_time,
-                                 total_node_list=None, ppn=24):
+def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_rockets, sleep_time,
+                        total_node_list=None, ppn=24):
     '''
     Launch the jobs in the job packing mode.
     :param fworker: (FWorker) object
