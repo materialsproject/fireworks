@@ -40,7 +40,6 @@ def mlaunch():
     parser.add_argument('--num_rockets', help='the numbers of sub jobs to split into', default=2, type=int)
     parser.add_argument('--nodefile_env', help='the environemntal variable name containing the node file name', default=None, type=str)
     parser.add_argument('--ppn', help='processors per node', default=24, type=int)
-    parser.add_argument('--serial_mode', help='is the sub job a serials one?', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -67,7 +66,7 @@ def mlaunch():
 
     launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches,
                                  args.num_rockets, args.sleep, total_node_list,
-                                 args.ppn, args.serial_mode)
+                                 args.ppn)
 
 
 if __name__ == "__main__":

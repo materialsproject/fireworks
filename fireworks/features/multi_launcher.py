@@ -96,7 +96,7 @@ def process_rocket(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_npro
     return processes
 
 
-def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=False):
+def split_node_lists(num_rockets, total_node_list=None, ppn=24):
     '''
     Allocate node list of the large job to the sub jobs
 
@@ -105,36 +105,23 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
     :param ppn: (int) number of procesors per node
     :return: (list of list) NODELISTs
     '''
-    if serial_mode:
-        if total_node_list:
-            orig_node_list = sorted(list(set(total_node_list)))
-            nnodes = len(orig_node_list)
-            job_per_node = num_rockets/nnodes
-            if job_per_node*nnodes != num_rockets:
-                raise ValueError("can't allocate processes, {} can't be divided by {}".format(num_rockets, nnodes))
-            sub_nproc_list = [1] * num_rockets
-            node_lists = [[node] for node in orig_node_list * job_per_node]
-        else:
-            sub_nproc_list = [1] * num_rockets
-            node_lists = [None] * num_rockets
+    if total_node_list:
+        orig_node_list = sorted(list(set(total_node_list)))
+        nnodes = len(orig_node_list)
+        if nnodes%num_rockets != 0:
+            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(nnodes, num_rockets))
+        sub_nnodes = nnodes/num_rockets
+        sub_nproc_list = [sub_nnodes * ppn] * num_rockets
+        node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
     else:
-        if total_node_list:
-            orig_node_list = sorted(list(set(total_node_list)))
-            nnodes = len(orig_node_list)
-            sub_nnodes = nnodes/num_rockets
-            if sub_nnodes*num_rockets != nnodes:
-                raise ValueError("can't allocate nodes, {} can't be divided by {}".format(nnodes, num_rockets))
-            sub_nproc_list = [sub_nnodes * ppn] * num_rockets
-            node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
-        else:
-            sub_nproc_list = [ppn] * num_rockets
-            node_lists = [None] * num_rockets
+        sub_nproc_list = [ppn] * num_rockets
+        node_lists = [None] * num_rockets
     return node_lists, sub_nproc_list
 
 
 def launch_multiprocess(launchpad, fworker, loglvl, nlaunches,
                                  num_rockets, sleep_time,
-                                 total_node_list=None, ppn=24, serial_mode=False):
+                                 total_node_list=None, ppn=24):
     '''
     Launch the jobs in the job packing mode.
     :param fworker: (FWorker) object
@@ -145,13 +132,13 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches,
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :return:
     '''
-    node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn, serial_mode)
+    node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn)
     # create dataserver
     ds = DataServer.setup(launchpad)
     port = ds.address[1]
     # launch rapidfire processes
     processes = process_rocket(fworker, nlaunches, sleep_time, loglvl,
-                                           port, node_lists, sub_nproc_list)
+                               port, node_lists, sub_nproc_list)
 
     # start pinging service
     ping_stop = threading.Event()
