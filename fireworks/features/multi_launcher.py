@@ -7,7 +7,6 @@ Between processes.
 from multiprocessing import Process
 import multiprocessing
 import os
-import shlex
 import subprocess
 import threading
 import time
@@ -74,7 +73,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     launchpad = ds.LaunchPad()
     jp_conf.DATASERVER = ds
     if rocket_cmd:
-        subprocess.call(shlex.split(rocket_cmd), shell=True)
+        subprocess.call(rocket_cmd, shell=True)
     else:
         rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
