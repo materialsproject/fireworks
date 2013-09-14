@@ -39,9 +39,9 @@ def start_ping_launch(launch_id, lp):
         return ping_stop
 
 def stop_ping_launch(ping_stop):
-    jp_conf = SharedData()
-    if jp_conf.MULTIPROCESSING:
-        m = jp_conf.DATASERVER
+    sd = SharedData()
+    if sd.MULTIPROCESSING:
+        m = sd.DATASERVER
         m.Running_IDs()[os.getpid()] = None
     else:
         ping_stop.set()
