@@ -7,7 +7,9 @@
    :width: 300 px
    :alt: FireWorks
 
-FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate most types of calculations over arbitrary computing resources, including those that have a queueing system.
+FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
+
+Some features that distinguish FireWorks are the capability to program dynamic workflows, and built-in tools for running high-throughput computations at large computing centers. As one example, you could define 1000 workflows that each involve programs written in serial, then use FireWorks to automatically execute them in parallel over 100 processors.
 
 ====================
 Is FireWorks for me?
@@ -33,9 +35,10 @@ Some (but not all) of its features include:
 
 * Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines
 
-* Plug-and-play on several large supercomputing clusters and queueing systems *(future)*
+* Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs)
 
-* Package many small jobs into a single large job (useful for running on HPC machines that prefer a small number of large-CPU jobs). *(future)*
+* Support for several queueing systems
+
 
 Limitations
 ===========

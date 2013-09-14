@@ -22,7 +22,7 @@ The basic infrastructure looks like this:
 
 The components are largely decoupled, which makes FireWorks easier to use. End users can add new workflows to the LaunchPad without worrying about the details of how and where the workflows will be run (unless they really want to tailor the details of job execution). This keeps the workflow specifications lightweight, tidy, and easy to learn and use (if you've ever seen lengthy XML-based specifications in other workflow software, you'll notice the difference in FireWorks right away).
 
-On the opposite end, administrators can configure worker computers without worrying about where workflows are coming from or what they look like (although you can easily and flexibly assign jobs to certain resources if desired). Running on a heterogeneous set of worker computers is simple because essentially the same code is used internally by FireWorks for running on a simple workstation versus a large supercomputing center.
+On the opposite end, administrators can configure worker computers without worrying about where workflows are coming from or what they look like (although you can assign jobs to certain resources if desired). Running on a heterogeneous set of worker computers is simple because essentially the same code is used internally by FireWorks for running on a simple workstation, a large supercomputing center, or packing together many jobs into a single queue submission.
 
 .. _wfmodel-label:
 
@@ -52,6 +52,7 @@ While the description above sounds simplistic, sophisticated types of workflow o
 * send different categories of FireWorks to different FireWorkers
 * get the status of your all your jobs, where they're running, and how long they took to run or waited in the queue
 * create and modify job priorities
+* pack small jobs into larger ones (e.g define 1000 serial workflows and automatically parallelize them over 100 processors).
 * handle failures and crashes dynamically, by automatically creating FireWorks that fix crashed jobs in the FWAction object. You might even set up a workflow where a crashed job is automatically rerun at a different FireWorker, and with somewhat different parameters - no human intervention required!
 
 If this sounds good, we encourage you to get started by following the :doc:`quickstart</quickstart>`.
