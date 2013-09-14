@@ -122,15 +122,12 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
 
     time_now = datetime.datetime.utcnow().strftime(FWConfig().FW_BLOCK_FORMAT)
-    jp_conf = SharedData()
-    if not jp_conf.MULTIPROCESSING:
-        block_path = prefix + time_now
-    else:
-        block_path = prefix + multiprocessing.current_process().name + '_' + time_now
+    block_path = prefix + time_now
     full_path = os.path.join(root_dir, block_path)
     os.mkdir(full_path)
     l_logger.info('Created new dir {}'.format(full_path))
     return full_path
+
 
 
 def get_my_ip():
