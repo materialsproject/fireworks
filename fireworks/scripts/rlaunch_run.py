@@ -9,6 +9,7 @@ from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
+from fireworks.utilities.fw_utilities import DataServer
 
 
 __author__ = 'Anubhav Jain'
@@ -40,6 +41,8 @@ def rlaunch():
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
 
+    parser.add_argument('--dataserver_port', help='used internally by FW to share LaunchPad connections in multi launch',
+                        default=FWConfig().CONFIG_FILE_DIR)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
@@ -53,7 +56,12 @@ def rlaunch():
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
-    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
+    if args.dataserver_port:  # used by multi-job launcher to share LaunchPad connections
+        ds = DataServer(address=('127.0.0.1', args.dataserver_port), authkey=FWConfig().DS_PASSWORD)
+        ds.connect()
+        launchpad = ds.LaunchPad()
+    else:
+        launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
 
 
     if args.fworker_file:

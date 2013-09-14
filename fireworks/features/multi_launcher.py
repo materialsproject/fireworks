@@ -73,6 +73,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     launchpad = ds.LaunchPad()
     fd.DATASERVER = ds
     if rocket_cmd:
+        rocket_cmd = rocket_cmd.replace('rlaunch', 'rlaunch --dataserver_port {}'.format(port))
         subprocess.call(rocket_cmd, shell=True)
     else:
         rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
