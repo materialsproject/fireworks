@@ -38,9 +38,6 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     :param clear_logs: whether to clear the logger with the same name
     """
 
-    jp_conf = FWData()
-    if jp_conf.MULTIPROCESSING:
-        name += multiprocessing.current_process().name
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
