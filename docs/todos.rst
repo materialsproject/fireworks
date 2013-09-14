@@ -22,6 +22,8 @@ FW Docs
 
 * Update all tutorials so config file is handled smoothly, not terribly...
 
+* Quickstart and Installation are completely separate tutorials.
+
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
 
 * Detailed tutorial on implementing dynamic jobs
