@@ -22,7 +22,7 @@ __email__ = 'xqu@lbl.gov'
 __date__ = 'Aug 19, 2013'
 
 
-def ping_launch_jp(port, stop_event):
+def ping_multilaunch(port, stop_event):
     '''
     The process version of ping_launch
 
@@ -74,7 +74,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
-def launch_rapidfire_processes(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list):
+def process_rocket(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list):
     '''
     Create the sub job launching processes
 
@@ -132,7 +132,7 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24, serial_mode=Fals
     return node_lists, sub_nproc_list
 
 
-def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
+def launch_multiprocess(launchpad, fworker, loglvl, nlaunches,
                                  num_rockets, sleep_time,
                                  total_node_list=None, ppn=24, serial_mode=False):
     '''
@@ -150,12 +150,12 @@ def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
     ds = DataServer.setup(launchpad)
     port = ds.address[1]
     # launch rapidfire processes
-    processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
+    processes = process_rocket(fworker, nlaunches, sleep_time, loglvl,
                                            port, node_lists, sub_nproc_list)
 
     # start pinging service
     ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=ping_launch_jp, args=(port, ping_stop))
+    ping_thread = threading.Thread(target=ping_multilaunch, args=(port, ping_stop))
     ping_thread.start()
 
     # wait for completion

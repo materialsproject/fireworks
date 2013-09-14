@@ -68,12 +68,11 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     return logger
 
 
-def log_info_jp(m_logger, msg):
-    jp_conf = FWData()
-    if not jp_conf.MULTIPROCESSING:
-        m_logger.info(msg)
-    else:
+def log_info_multi(m_logger, msg):
+    if FWData().MULTIPROCESSING:
         m_logger.info("{} : ({})".format(msg, multiprocessing.current_process().name))
+    else:
+        m_logger.info(msg)
 
 
 def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):

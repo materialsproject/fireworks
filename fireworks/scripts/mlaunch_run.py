@@ -4,13 +4,13 @@ import os
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.features.jobpack_launcher import launch_job_packing_processes
+from fireworks.features.multi_launcher import launch_multiprocess
 
 
 """
-A runnable script to launch Job Packing Rockets (a command-line interface to rocket_launcher.py)
+A runnable script to launch Job Packing Rockets
 """
-__author__ = 'Xiaohui'
+__author__ = 'Xiaohui Qu'
 __copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
 __version__ = '0.1'
 __maintainer__ = 'Xiaohui Qu'
@@ -65,7 +65,7 @@ def mlaunch():
         with open(nodefile, 'r') as f:
             total_node_list = [line.strip() for line in f.readlines()]
 
-    launch_job_packing_processes(launchpad, fworker, args.loglvl, args.nlaunches,
+    launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches,
                                  args.num_rockets, args.sleep, total_node_list,
                                  args.ppn, args.serial_mode)
 
