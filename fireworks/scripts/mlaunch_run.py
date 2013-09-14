@@ -40,7 +40,7 @@ def mlaunch():
 
     parser.add_argument('--nodefile_env', help='environment variable name containing the node file name (for populating FWData, does not affect execution)', default=None, type=str)
     parser.add_argument('--ppn', help='processors per node (for populating FWData, does not affect execution)', default=1, type=int)
-    parser.add_argument('-r', '--rocket_cmd', help='set the rocket command manually as shell script', default=None)
+    parser.add_argument('-r', '--rocket_cmd', help='explicitly set the rocket command to run per sub-rocket. Can be used for further parallelization of serial jobs (see docs)', default=None)
 
     args = parser.parse_args()
 
