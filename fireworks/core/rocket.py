@@ -8,8 +8,8 @@ import os
 import traceback
 import threading
 from fireworks.core.firework import FWAction
-from fireworks.core.fw_config import FWConfig, SharedData
-from fireworks.utilities.fw_utilities import release_sd_lock
+from fireworks.core.fw_config import FWConfig, FWData
+from fireworks.utilities.fw_utilities import release_db_lock
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -26,9 +26,9 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
 
 
 def start_ping_launch(launch_id, lp):
-    sd = SharedData()
-    if sd.MULTIPROCESSING:
-        m = sd.DATASERVER
+    fd = FWData()
+    if fd.MULTIPROCESSING:
+        m = fd.DATASERVER
         m.Running_IDs()[os.getpid()] = launch_id
         return None
     else:
@@ -39,9 +39,9 @@ def start_ping_launch(launch_id, lp):
         return ping_stop
 
 def stop_ping_launch(ping_stop):
-    sd = SharedData()
-    if sd.MULTIPROCESSING:
-        m = sd.DATASERVER
+    fd = FWData()
+    if fd.MULTIPROCESSING:
+        m = fd.DATASERVER
         m.Running_IDs()[os.getpid()] = None
     else:
         ping_stop.set()
@@ -75,7 +75,7 @@ class Rocket():
 
         # check a FW job out of the launchpad
         m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-        release_sd_lock()
+        release_db_lock()
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
@@ -121,9 +121,9 @@ class Rocket():
                     break
 
             # add job packing info if this is needed
-            if SharedData().MULTIPROCESSING and FWConfig().STORE_PACKING_INFO:
+            if FWData().MULTIPROCESSING and FWConfig().STORE_PACKING_INFO:
                 all_stored_data['execution_mode'] = 'Job Packing'
-                all_stored_data['node_list'] = SharedData().NODE_LIST
+                all_stored_data['node_list'] = FWData().NODE_LIST
                 all_stored_data['process_name'] = multiprocessing.current_process().name
 
             # perform finishing operation

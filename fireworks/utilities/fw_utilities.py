@@ -10,7 +10,7 @@ import traceback
 import socket
 import multiprocessing
 
-from fireworks.core.fw_config import FWConfig, SharedData
+from fireworks.core.fw_config import FWConfig, FWData
 
 
 __author__ = 'Anubhav Jain, Xiaohui Qu'
@@ -38,7 +38,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     :param clear_logs: whether to clear the logger with the same name
     """
 
-    jp_conf = SharedData()
+    jp_conf = FWData()
     if jp_conf.MULTIPROCESSING:
         name += multiprocessing.current_process().name
     logger = logging.getLogger(name)
@@ -69,7 +69,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
 
 
 def log_info_jp(m_logger, msg):
-    jp_conf = SharedData()
+    jp_conf = FWData()
     if not jp_conf.MULTIPROCESSING:
         m_logger.info(msg)
     else:
@@ -147,15 +147,15 @@ def get_slug(m_str):
     return m_str.replace(' ', '_')
 
 
-def acquire_sd_lock():
-    if SharedData().MULTIPROCESSING:
-        SharedData().PROCESS_LOCK.acquire()
+def acquire_db_lock():
+    if FWData().MULTIPROCESSING:
+        FWData().PROCESS_LOCK.acquire()
 
 
-def release_sd_lock(safe=True):
-    if SharedData().MULTIPROCESSING:
+def release_db_lock(safe=True):
+    if FWData().MULTIPROCESSING:
         try:
-            SharedData().PROCESS_LOCK.release()
+            FWData().PROCESS_LOCK.release()
         except ValueError, ve:
             if safe:
                 raise ValueError(ve)

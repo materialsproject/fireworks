@@ -106,7 +106,7 @@ class FWConfig(object):
 
 
 @singleton
-class SharedData(object):
+class FWData(object):
     def __init__(self):
         self.MULTIPROCESSING = None # default single process framework
         self.PROCESS_LOCK = None  # the shared Lock between processes

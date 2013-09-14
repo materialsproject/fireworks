@@ -9,7 +9,7 @@ import multiprocessing
 import os
 import threading
 import time
-from fireworks.core.fw_config import FWConfig, SharedData
+from fireworks.core.fw_config import FWConfig, FWData
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.utilities.fw_utilities import DataServer
 
@@ -62,7 +62,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     :param lock: (multiprocessing.Lock) Mutex
     :return:
     '''
-    jp_conf = SharedData()
+    jp_conf = FWData()
     jp_conf.MULTIPROCESSING = True
     jp_conf.NODE_LIST = node_list
     jp_conf.SUB_NPROCS = sub_nproc

@@ -4,7 +4,7 @@ import sys
 import multiprocessing
 
 from fireworks.core.firework import FireTaskBase, FWAction
-from fireworks.core.fw_config import SharedData
+from fireworks.core.fw_config import FWData
 from fireworks.utilities.fw_serializers import FWSerializable
 
 
