@@ -62,13 +62,13 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
-            launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+            launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)  # releases lock inside
             num_launched += 1
             if num_launched == nlaunches:
                 break
             time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh, etc.
             acquire_sd_lock()
-        release_sd_lock(safe=False)
+        release_sd_lock(safe=False)  # possible no lock was acquired at this point
         if num_launched == nlaunches or nlaunches == 0:
             break
         log_info_jp(l_logger, 'Sleeping for {} secs'.format(sleep_time))

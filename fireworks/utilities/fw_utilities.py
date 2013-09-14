@@ -166,7 +166,6 @@ def release_sd_lock(safe=True):
                 raise ValueError(ve)
 
 
-
 class DataServer(BaseManager):
     """
     Provide a server that can host shared objects between multiprocessing
