@@ -109,7 +109,6 @@ class FWConfig(object):
 class SharedData(object):
     def __init__(self):
         self.MULTIPROCESSING = None # default single process framework
-        self.PACKING_MANAGER_PORT = None   # the internet port of the packing manager service
         self.PROCESS_LOCK = None  # the shared Lock between processes
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job

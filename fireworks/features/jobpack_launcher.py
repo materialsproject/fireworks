@@ -33,7 +33,7 @@ def ping_launch_jp(port, stop_event):
 
     m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     m.connect()
-    
+
     lp = m.LaunchPad()
     while not stop_event.is_set():
         for pid, lid in m.Running_IDs().items():
@@ -64,7 +64,6 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     '''
     jp_conf = SharedData()
     jp_conf.MULTIPROCESSING = True
-    jp_conf.PACKING_MANAGER_PORT = port
     jp_conf.NODE_LIST = node_list
     jp_conf.SUB_NPROCS = sub_nproc
     jp_conf.PROCESS_LOCK = lock
@@ -150,13 +149,16 @@ def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
     # create dataserver
     m = DataServer.setup(launchpad)
     port = m.address[1]
+    # launch rapidfire processes
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, node_lists, sub_nproc_list)
 
+    # start pinging service
     ping_stop = threading.Event()
     ping_thread = threading.Thread(target=ping_launch_jp, args=(port, ping_stop))
     ping_thread.start()
 
+    # wait for completion
     for p in processes:
         p.join()
     ping_stop.set()

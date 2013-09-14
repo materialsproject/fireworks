@@ -124,7 +124,6 @@ class Rocket():
             # add job packing info if this is needed
             if SharedData().MULTIPROCESSING and FWConfig().STORE_PACKING_INFO:
                 all_stored_data['execution_mode'] = 'Job Packing'
-                all_stored_data['packing_manager_port'] = SharedData().PACKING_MANAGER_PORT
                 all_stored_data['node_list'] = SharedData().NODE_LIST
                 all_stored_data['process_name'] = multiprocessing.current_process().name
 
