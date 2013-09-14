@@ -51,7 +51,7 @@ class SLURMAdapterUCL(QueueAdapterBase):
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = ['Error in job submission with SLURM file {f} and cmd {c}'.format(f=script_file, c=cmd),
                         'The error response reads: {}'.format(p.stderr.read())]
-                log_fancy(slurm_logger, 'error', msgs)
+                log_fancy(slurm_logger, msgs, 'error')
 
         except:
             # random error, e.g. no qsub on machine!
@@ -81,5 +81,5 @@ class SLURMAdapterUCL(QueueAdapterBase):
         # there's a problem talking to squeue server?
         msgs = ['Error trying to get the number of jobs in the queue using squeue service',
                 'The error response reads: {}'.format(p.stderr.read())]
-        log_fancy(slurm_logger, 'error', msgs)
+        log_fancy(slurm_logger, msgs, 'error')
         return None

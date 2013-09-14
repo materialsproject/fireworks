@@ -8,7 +8,7 @@ import os
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_info_multi, acquire_db_lock, release_db_lock
+from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, acquire_db_lock, release_db_lock, log_multi
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -28,10 +28,10 @@ def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     """
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
 
-    log_info_multi(l_logger, 'Launching Rocket')
+    log_multi(l_logger, 'Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)
     rocket.run()
-    log_info_multi(l_logger, 'Rocket finished')
+    log_multi(l_logger, 'Rocket finished')
 
 
 def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
@@ -71,7 +71,7 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
         release_db_lock(safe=False)  # possible no lock was acquired at this point
         if num_launched == nlaunches or nlaunches == 0:
             break
-        log_info_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
+        log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)
         num_loops += 1
-        log_info_multi(l_logger, 'Checking for FWs to run...'.format(sleep_time))
+        log_multi(l_logger, 'Checking for FWs to run...'.format(sleep_time))

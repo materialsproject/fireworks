@@ -65,24 +65,30 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     return logger
 
 
-def log_info_multi(m_logger, msg):
+def log_multi(m_logger, msg, log_lvl='info'):
+    """
+    :param m_logger: (logger) The logger object
+    :param msg: (str) a String to log
+    :param log_lvl: (str) The level to log at
+    """
+    _log_fnc = getattr(m_logger, log_lvl.lower())
     if FWData().MULTIPROCESSING:
-        m_logger.info("{} : ({})".format(msg, multiprocessing.current_process().name))
+        _log_fnc("{} : ({})".format(msg, multiprocessing.current_process().name))
     else:
-        m_logger.info(msg)
+        _log_fnc(msg)
 
 
-def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
+def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
     """
     A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,
     which enhances readability of log lines meant to be read
     as a unit.
     
-    :param m_logger: The logger object
-    :param log_lvl: The level to log at
-    :param msgs: a String or iterable of Strings
-    :param add_traceback: add traceback text, useful when logging exceptions (default False)
+    :param m_logger: (logger) The logger object
+    :param log_lvl: (str) The level to log at
+    :param msgs: ([str]) a String or iterable of Strings
+    :param add_traceback: (bool) add traceback text, useful when logging exceptions (default False)
     """
 
     if isinstance(msgs, basestring):
@@ -101,10 +107,10 @@ def log_exception(m_logger, msgs):
     """
     A shortcut wrapper around log_fancy for exceptions
     
-    :param m_logger: The logger object
-    :param msgs: An iterable of Strings, will be joined by newlines
+    :param m_logger: (logger) The logger object
+    :param msgs: ([str]) String or iterable of Strings, will be joined by newlines
     """
-    return log_fancy(m_logger, 'error', msgs, add_traceback=True)
+    return log_fancy(m_logger, msgs, 'error', add_traceback=True)
 
 
 def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
@@ -144,11 +150,18 @@ def get_slug(m_str):
 
 
 def acquire_db_lock():
+    """
+    Acquire lock on database
+    """
     if FWData().MULTIPROCESSING:
         FWData().PROCESS_LOCK.acquire()
 
 
 def release_db_lock(safe=True):
+    """
+    Release lock on database
+    :param safe: (bool) ignore errors (e.g., lock never acquired)
+    """
     if FWData().MULTIPROCESSING:
         try:
             FWData().PROCESS_LOCK.release()
@@ -165,12 +178,12 @@ class DataServer(BaseManager):
     """
 
     @classmethod
-    def setup(cls, lp):
+    def setup(cls, launchpad):
         """
-        :param lp:
+        :param launchpad: (LaunchPad) object
         :return:
         """
-        DataServer.register('LaunchPad', callable=lambda: lp)
+        DataServer.register('LaunchPad', callable=lambda: launchpad)
         DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
         m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # random port
         m.start()

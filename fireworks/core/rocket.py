@@ -122,9 +122,7 @@ class Rocket():
 
             # add job packing info if this is needed
             if FWData().MULTIPROCESSING and FWConfig().STORE_PACKING_INFO:
-                all_stored_data['execution_mode'] = 'Job Packing'
-                all_stored_data['node_list'] = FWData().NODE_LIST
-                all_stored_data['process_name'] = multiprocessing.current_process().name
+                all_stored_data['multiprocess_name'] = multiprocessing.current_process().name
 
             # perform finishing operation
             stop_ping_launch(ping_stop)

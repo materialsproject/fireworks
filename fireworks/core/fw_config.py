@@ -107,6 +107,10 @@ class FWConfig(object):
 
 @singleton
 class FWData(object):
+    """
+    This class stores data that a FireTask might want to access, e.g. to see the runtime params
+    """
+
     def __init__(self):
         self.MULTIPROCESSING = None # default single process framework
         self.PROCESS_LOCK = None  # the shared Lock between processes

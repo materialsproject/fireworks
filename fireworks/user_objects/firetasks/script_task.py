@@ -1,12 +1,9 @@
 import shlex
 import subprocess
 import sys
-import multiprocessing
 
 from fireworks.core.firework import FireTaskBase, FWAction
-from fireworks.core.fw_config import FWData
 from fireworks.utilities.fw_serializers import FWSerializable
-
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

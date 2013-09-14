@@ -101,7 +101,7 @@ class PBSAdapterNERSC(QueueAdapterBase):
                     'Error in job submission with PBS file {f} and cmd {c}'.format(f=script_file,
                                                                                    c=cmd),
                     'The error response reads: {}'.format(p.stderr.read())]
-                log_fancy(pbs_logger, 'error', msgs)
+                log_fancy(pbs_logger, msgs, 'error')
 
         except:
             # random error, e.g. no qsub on machine!
@@ -133,5 +133,5 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # there's a problem talking to qstat server?
         msgs = ['Error trying to get the number of jobs in the queue using qstat service',
                 'The error response reads: {}'.format(p[2])]
-        log_fancy(pbs_logger, 'error', msgs)
+        log_fancy(pbs_logger, msgs, 'error')
         return None
