@@ -7,6 +7,8 @@ Between processes.
 from multiprocessing import Process
 import multiprocessing
 import os
+import shlex
+import subprocess
 import threading
 import time
 from fireworks.core.fw_config import FWConfig, FWData
@@ -47,7 +49,7 @@ def ping_multilaunch(port, stop_event):
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, lock):
+def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, lock, rocket_cmd):
     '''
     Starting point of a sub job launching process.
 
@@ -71,10 +73,13 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     ds.connect()
     launchpad = ds.LaunchPad()
     jp_conf.DATASERVER = ds
-    rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
+    if rocket_cmd:
+        subprocess.call(shlex.split(rocket_cmd), shell=True)
+    else:
+        rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
-def process_rocket(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list):
+def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, rocket_cmd):
     '''
     Create the sub job launching processes
 
@@ -88,7 +93,7 @@ def process_rocket(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_npro
     :return: (List of multiprocessing.Process) all the created processes
     '''
     lock = multiprocessing.Lock()
-    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, lock))
+    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, lock, rocket_cmd))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
@@ -120,7 +125,7 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24):
 
 
 def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_rockets, sleep_time,
-                        total_node_list=None, ppn=24):
+                        total_node_list=None, ppn=24, rocket_cmd=None):
     '''
     Launch the jobs in the job packing mode.
     :param fworker: (FWorker) object
@@ -136,8 +141,8 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_rockets, slee
     ds = DataServer.setup(launchpad)
     port = ds.address[1]
     # launch rapidfire processes
-    processes = process_rocket(fworker, nlaunches, sleep_time, loglvl,
-                               port, node_lists, sub_nproc_list)
+    processes = start_rockets(fworker, nlaunches, sleep_time, loglvl,
+                               port, node_lists, sub_nproc_list, rocket_cmd)
 
     # start pinging service
     ping_stop = threading.Event()
