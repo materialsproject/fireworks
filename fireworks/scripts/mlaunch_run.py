@@ -8,10 +8,10 @@ from fireworks.features.multi_launcher import launch_multiprocess
 
 
 """
-A runnable script to launch Job Packing Rockets
+A runnable script to launch Job Packing (Multiple) Rockets
 """
-__author__ = 'Xiaohui Qu'
-__copyright__ = 'Copyright 2013, The Electrolyte Genome Project'
+__author__ = 'Xiaohui Qu, Anubhav Jain'
+__copyright__ = 'Copyright 2013, The Materials Project & Electrolyte Genome Project'
 __version__ = '0.1'
 __maintainer__ = 'Xiaohui Qu'
 __email__ = 'xqu@lbl.gov'
@@ -25,22 +25,20 @@ def mlaunch():
 
     parser = ArgumentParser(description=m_description)
 
-    parser.add_argument('num_rockets', help='the number of jobs to run in parallel', type=int)
-    parser.add_argument('--nlaunches', help='number of FireWorks to run per parallel job (int or "infinite"; default 0 is all jobs in DB)', default=0)
-    parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
+    parser.add_argument('num_jobs', help='the number of jobs to run in parallel', type=int)
+    parser.add_argument('--nlaunches', help='number of FireWorks to run in series per parallel job (int or "infinite"; default 0 is all jobs in DB)', default=0)
+    parser.add_argument('--sleep', help='sleep time between loops in infinite launch mode (secs)', default=None, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
-    FWConfig().CONFIG_FILE_DIR = None
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
 
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
-    parser.add_argument('--nodefile_env', help='environment variable name containing the node file name (for populating FWData, does not affect execution)', default=None, type=str)
-    parser.add_argument('--ppn', help='processors per node (for populating FWData, does not affect execution)', default=1, type=int)
-    parser.add_argument('-r', '--rocket_cmd', help='explicitly set the rocket command to run per sub-rocket. Can be used for further parallelization of serial jobs (see docs)', default=None)
+    parser.add_argument('--nodefile', help='nodefile name or environment variable name containing the node file name (for populating FWData only)', default=None, type=str)
+    parser.add_argument('--ppn', help='processors per node (for populating FWData only)', default=1, type=int)
 
     args = parser.parse_args()
 
@@ -60,14 +58,14 @@ def mlaunch():
         fworker = FWorker()
 
     total_node_list = None
-    if args.nodefile_env:
-        nodefile = os.environ[args.nodefile_env]
-        with open(nodefile, 'r') as f:
+    if args.nodefile:
+        if args.nodefile in os.environ:
+            args.nodefile = os.environ[args.nodefile]
+        with open(args.nodefile, 'r') as f:
             total_node_list = [line.strip() for line in f.readlines()]
 
-    launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches,
-                                 args.num_rockets, args.sleep, total_node_list,
-                                 args.ppn, args.rocket_cmd)
+    launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_rockets,
+                        args.sleep, total_node_list, args.ppn)
 
 
 if __name__ == "__main__":
