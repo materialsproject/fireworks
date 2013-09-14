@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""
+A runnable script to launch Job Packing (Multiple) Rockets
+"""
+
 from argparse import ArgumentParser
 import os
 
@@ -7,9 +13,6 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
 
 
-"""
-A runnable script to launch Job Packing (Multiple) Rockets
-"""
 __author__ = 'Xiaohui Qu, Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project & Electrolyte Genome Project'
 __version__ = '0.1'
@@ -18,10 +21,9 @@ __email__ = 'xqu@lbl.gov'
 __date__ = 'Aug 19, 2013'
 
 
-
 def mlaunch():
-    m_description = 'This program launches Job Packing Rockets. A Rocket grabs a job from the central database and ' \
-                    'runs it.'
+
+    m_description = 'This program launches multiple Rockets simultaneously'
 
     parser = ArgumentParser(description=m_description)
 

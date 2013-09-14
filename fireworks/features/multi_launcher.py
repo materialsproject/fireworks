@@ -1,13 +1,10 @@
 """
-Support module for job packing.
-This module contains function to prepare and launch the process.
-Also, there is a DataServer class which provides share objects
-Between processes.
+This module contains methods for launching several Rockets in a parallel environment
 """
+
 from multiprocessing import Process
 import multiprocessing
 import os
-import subprocess
 import threading
 import time
 from fireworks.core.fw_config import FWConfig, FWData
@@ -24,13 +21,12 @@ __date__ = 'Aug 19, 2013'
 
 
 def ping_multilaunch(port, stop_event):
-    '''
-    The process version of ping_launch
+    """
+    A single manager to ping all launches during multiprocess launches
 
     :param port: (int) Listening port number of the DataServer
-    :param stop_event:
-    :return:
-    '''
+    :param stop_event: (Thread.Event) stop event
+    """
 
     ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     ds.connect()
@@ -49,8 +45,8 @@ def ping_multilaunch(port, stop_event):
 
 
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, lock):
-    '''
-    Starting point of a sub job launching process.
+    """
+    Initializes shared data with multiprocessing parameters and starts a rapidfire
 
     :param fworker: (FWorker) object
     :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
@@ -58,36 +54,35 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     :param loglvl: (str) level at which to output logs to stdout
     :param port: (int) Listening port number of the shared object manage
     :param password: (str) security password to access the server
-    :param node_list: (list of str) computer node list
+    :param node_list: ([str]) computer node list
     :param sub_nproc: (int) number of processors of the sub job
     :param lock: (multiprocessing.Lock) Mutex
-    :return:
-    '''
-    fd = FWData()
-    fd.MULTIPROCESSING = True
-    fd.NODE_LIST = node_list
-    fd.SUB_NPROCS = sub_nproc
-    fd.PROCESS_LOCK = lock
+    """
     ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
-    fd.DATASERVER = ds
+    FWData().DATASERVER = ds
+    FWData().MULTIPROCESSING = True
+    FWData().NODE_LIST = node_list
+    FWData().SUB_NPROCS = sub_nproc
+    FWData().PROCESS_LOCK = lock
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
 def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list):
-    '''
-    Create the sub job launching processes
+    """
+    Create each sub job and start a rocket launch in each one
 
     :param fworker: (FWorker) object
     :param nlaunches: nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
     :param sleep: (int) secs to sleep between rapidfire loop iterations
     :param loglvl: (str) level at which to output logs to stdout
     :param port: (int) Listening port number
-    :param node_lists: (list of str) computer node list
-    :param sub_nproc_list: (list of int) list of the number of the process of sub jobs
-    :return: (List of multiprocessing.Process) all the created processes
-    '''
+    :param node_lists: ([str]) computer node list
+    :param sub_nproc_list: ([int]) list of the number of the process of sub jobs
+    :return: ([multiprocessing.Process]) all the created processes
+    """
+
     lock = multiprocessing.Lock()
     processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, lock))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
@@ -98,14 +93,14 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
 
 
 def split_node_lists(num_rockets, total_node_list=None, ppn=24):
-    '''
-    Allocate node list of the large job to the sub jobs
+    """
+    Parse node list and processor list from nodefile contents
 
     :param num_rockets: (int) number of sub jobs
     :param total_node_list: (list of str) the node list of the whole large job
     :param ppn: (int) number of procesors per node
-    :return: (list of list) NODELISTs
-    '''
+    :return: (([int],[int])) the node list and processor list for each job
+    """
     if total_node_list:
         orig_node_list = sorted(list(set(total_node_list)))
         nnodes = len(orig_node_list)
@@ -120,25 +115,29 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24):
     return node_lists, sub_nproc_list
 
 
-def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_rockets, sleep_time,
-                        total_node_list=None, ppn=24):
-    '''
+def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_time,
+                        total_node_list=None, ppn=1):
+    """
     Launch the jobs in the job packing mode.
+    :param launchpad: (LaunchPad) object
     :param fworker: (FWorker) object
-    :param launchpad_file: (str) path to launchpad file
     :param loglvl: (str) level at which to output logs
     :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
-    :param num_rockets: (int) number of sub jobs
+    :param num_jobs: (int) number of sub jobs
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
-    :return:
-    '''
-    node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn)
-    # create dataserver
+    :param total_node_list: ([str]) contents of NODEFILE (doesn't affect execution)
+    :param ppn: (int) processors per node (doesn't affect execution)
+    """
+    # parse node file contents
+    node_lists, sub_nproc_list = split_node_lists(num_jobs, total_node_list, ppn)
+
+    # create shared dataserver
     ds = DataServer.setup(launchpad)
     port = ds.address[1]
+
     # launch rapidfire processes
-    processes = start_rockets(fworker, nlaunches, sleep_time, loglvl,
-                               port, node_lists, sub_nproc_list)
+    processes = start_rockets(fworker, nlaunches, sleep_time, loglvl, port, node_lists,
+                              sub_nproc_list)
 
     # start pinging service
     ping_stop = threading.Event()
