@@ -31,12 +31,12 @@ def ping_launch_jp(port, stop_event):
     :return:
     '''
 
-    m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
-    m.connect()
+    ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
+    ds.connect()
 
-    lp = m.LaunchPad()
+    lp = ds.LaunchPad()
     while not stop_event.is_set():
-        for pid, lid in m.Running_IDs().items():
+        for pid, lid in ds.Running_IDs().items():
             if lid:
                 try:
                     os.kill(pid, 0)  # throws OSError if the process is dead
@@ -67,10 +67,10 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     jp_conf.NODE_LIST = node_list
     jp_conf.SUB_NPROCS = sub_nproc
     jp_conf.PROCESS_LOCK = lock
-    m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
-    m.connect()
-    launchpad = m.LaunchPad()
-    jp_conf.DATASERVER = m
+    ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
+    ds.connect()
+    launchpad = ds.LaunchPad()
+    jp_conf.DATASERVER = ds
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
@@ -147,8 +147,8 @@ def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
     '''
     node_lists, sub_nproc_list = split_node_lists(num_rockets, total_node_list, ppn, serial_mode)
     # create dataserver
-    m = DataServer.setup(launchpad)
-    port = m.address[1]
+    ds = DataServer.setup(launchpad)
+    port = ds.address[1]
     # launch rapidfire processes
     processes = launch_rapidfire_processes(fworker, nlaunches, sleep_time, loglvl,
                                            port, node_lists, sub_nproc_list)
@@ -163,4 +163,4 @@ def launch_job_packing_processes(launchpad, fworker, loglvl, nlaunches,
         p.join()
     ping_stop.set()
     ping_thread.join()
-    m.shutdown()
+    ds.shutdown()

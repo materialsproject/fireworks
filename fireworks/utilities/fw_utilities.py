@@ -152,16 +152,19 @@ def get_slug(m_str):
     return m_str.replace(' ', '_')
 
 
-def acquire_jp_lock():
-    jp_conf = SharedData()
-    if jp_conf.MULTIPROCESSING:
-        jp_conf.PROCESS_LOCK.acquire()
+def acquire_sd_lock():
+    if SharedData().MULTIPROCESSING:
+        SharedData().PROCESS_LOCK.acquire()
 
 
-def release_jp_lock():
-    jp_conf = SharedData()
-    if jp_conf.MULTIPROCESSING:
-        jp_conf.PROCESS_LOCK.release()
+def release_sd_lock(safe=True):
+    if SharedData().MULTIPROCESSING:
+        try:
+            SharedData().PROCESS_LOCK.release()
+        except ValueError, ve:
+            if safe:
+                raise ValueError(ve)
+
 
 
 class DataServer(BaseManager):

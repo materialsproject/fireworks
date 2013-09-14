@@ -9,7 +9,7 @@ import traceback
 import threading
 from fireworks.core.firework import FWAction
 from fireworks.core.fw_config import FWConfig, SharedData
-from fireworks.utilities.fw_utilities import release_jp_lock
+from fireworks.utilities.fw_utilities import release_sd_lock
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -26,9 +26,9 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
 
 
 def start_ping_launch(launch_id, lp):
-    jp_conf = SharedData()
-    if jp_conf.MULTIPROCESSING:
-        m = jp_conf.DATASERVER
+    sd = SharedData()
+    if sd.MULTIPROCESSING:
+        m = sd.DATASERVER
         m.Running_IDs()[os.getpid()] = launch_id
         return None
     else:
@@ -37,7 +37,6 @@ def start_ping_launch(launch_id, lp):
                                        args=(lp, launch_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
-
 
 def stop_ping_launch(ping_stop):
     jp_conf = SharedData()
@@ -76,7 +75,7 @@ class Rocket():
 
         # check a FW job out of the launchpad
         m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-        release_jp_lock()
+        release_sd_lock()
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
