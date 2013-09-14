@@ -28,7 +28,7 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
 def start_ping_launch(launch_id, lp):
     jp_conf = SharedData()
     if jp_conf.MULTIPROCESSING:
-        m = jp_conf.PACKING_MANAGER
+        m = jp_conf.DATASERVER
         m.Running_IDs()[os.getpid()] = launch_id
         return None
     else:
@@ -42,7 +42,7 @@ def start_ping_launch(launch_id, lp):
 def stop_ping_launch(ping_stop):
     jp_conf = SharedData()
     if jp_conf.MULTIPROCESSING:
-        m = jp_conf.PACKING_MANAGER
+        m = jp_conf.DATASERVER
         m.Running_IDs()[os.getpid()] = None
     else:
         ping_stop.set()

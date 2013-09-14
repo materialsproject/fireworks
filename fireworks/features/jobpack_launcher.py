@@ -70,7 +70,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     m = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     m.connect()
     launchpad = m.LaunchPad()
-    jp_conf.PACKING_MANAGER = m
+    jp_conf.DATASERVER = m
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
