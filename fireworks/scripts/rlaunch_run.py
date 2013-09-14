@@ -41,8 +41,7 @@ def rlaunch():
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
 
-    parser.add_argument('--dataserver_port', help='used internally by FW to share LaunchPad connections in multi launch',
-                        default=FWConfig().CONFIG_FILE_DIR)
+    parser.add_argument('--dataserver_port', help='used internally by FW to share LaunchPad connections in multi launch', type=int)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
