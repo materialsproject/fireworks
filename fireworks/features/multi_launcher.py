@@ -63,15 +63,15 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     :param lock: (multiprocessing.Lock) Mutex
     :return:
     '''
-    jp_conf = FWData()
-    jp_conf.MULTIPROCESSING = True
-    jp_conf.NODE_LIST = node_list
-    jp_conf.SUB_NPROCS = sub_nproc
-    jp_conf.PROCESS_LOCK = lock
+    fd = FWData()
+    fd.MULTIPROCESSING = True
+    fd.NODE_LIST = node_list
+    fd.SUB_NPROCS = sub_nproc
+    fd.PROCESS_LOCK = lock
     ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
-    jp_conf.DATASERVER = ds
+    fd.DATASERVER = ds
     if rocket_cmd:
         subprocess.call(rocket_cmd, shell=True)
     else:
