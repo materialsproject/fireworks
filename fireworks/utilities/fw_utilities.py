@@ -13,11 +13,7 @@ import multiprocessing
 from fireworks.core.fw_config import FWConfig, SharedData
 
 
-'''
-Revised by Xiaohui Qu on Aug 19, 2013 to support multiprocessing.
-'''
-
-__author__ = 'Anubhav Jain'
+__author__ = 'Anubhav Jain, Xiaohui Qu'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
@@ -71,12 +67,14 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
 
     return logger
 
+
 def log_info_jp(m_logger, msg):
     jp_conf = SharedData()
     if not jp_conf.MULTIPROCESSING:
         m_logger.info(msg)
     else:
         m_logger.info(multiprocessing.current_process().name + ": " + msg)
+
 
 def log_fancy(m_logger, log_lvl, msgs, add_traceback=False):
     """
