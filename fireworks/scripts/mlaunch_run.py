@@ -66,7 +66,7 @@ def mlaunch():
         with open(args.nodefile, 'r') as f:
             total_node_list = [line.strip() for line in f.readlines()]
 
-    launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_rockets,
+    launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,
                         args.sleep, total_node_list, args.ppn)
 
 

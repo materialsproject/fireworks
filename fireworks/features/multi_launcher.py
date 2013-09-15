@@ -92,11 +92,11 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
     return processes
 
 
-def split_node_lists(num_rockets, total_node_list=None, ppn=24):
+def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     """
     Parse node list and processor list from nodefile contents
 
-    :param num_rockets: (int) number of sub jobs
+    :param num_jobs: (int) number of sub jobs
     :param total_node_list: (list of str) the node list of the whole large job
     :param ppn: (int) number of procesors per node
     :return: (([int],[int])) the node list and processor list for each job
@@ -104,14 +104,14 @@ def split_node_lists(num_rockets, total_node_list=None, ppn=24):
     if total_node_list:
         orig_node_list = sorted(list(set(total_node_list)))
         nnodes = len(orig_node_list)
-        if nnodes%num_rockets != 0:
-            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(nnodes, num_rockets))
-        sub_nnodes = nnodes/num_rockets
-        sub_nproc_list = [sub_nnodes * ppn] * num_rockets
+        if nnodes%num_jobs != 0:
+            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(nnodes, num_jobs))
+        sub_nnodes = nnodes/num_jobs
+        sub_nproc_list = [sub_nnodes * ppn] * num_jobs
         node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
     else:
-        sub_nproc_list = [ppn] * num_rockets
-        node_lists = [None] * num_rockets
+        sub_nproc_list = [ppn] * num_jobs
+        node_lists = [None] * num_jobs
     return node_lists, sub_nproc_list
 
 
