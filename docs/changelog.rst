@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+v0.3
+-----
+
+* multi job launcher to 'pack' jobs (Xiaohui Qu)
+
 v0.25
 -----
 
