@@ -17,3 +17,11 @@ features Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`multi_launcher` Module
+----------------------------
+
+.. automodule:: fireworks.features.multi_launcher
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

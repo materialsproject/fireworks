@@ -17,6 +17,14 @@ scripts Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`mlaunch_run` Module
+-------------------------
+
+.. automodule:: fireworks.scripts.mlaunch_run
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`qlaunch_run` Module
 -------------------------
 
