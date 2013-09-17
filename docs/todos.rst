@@ -38,6 +38,8 @@ FW Docs
 
 * Document the FWAction (in context of writing dynamic workflows)
 
+* Add "chopping tree" analogy
+
 
 Major Features
 ==============
@@ -63,6 +65,8 @@ FireTasks
 
 Misc.
 =====
+
+* rename FireWork to Job, FireTask to task, FireWorker to Worker
 
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
 
