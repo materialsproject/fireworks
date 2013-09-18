@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+v0.31
+-----
+
+* fix bug related to interaction between multi job packer and job checkout optimization
+
+
 v0.3
 -----
 
