@@ -69,7 +69,7 @@ def lpad():
     rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
     rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
 
-    rerun_fizzled = subparsers.add_parser('rerun_fizzled', help='re-run FIZZLED FireWorks)')
+    rerun_fizzled = subparsers.add_parser('rerun_fizzled', help='re-run FIZZLED FireWorks')
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
