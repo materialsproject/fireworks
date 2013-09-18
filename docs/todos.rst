@@ -2,6 +2,60 @@
 FireWorks ToDo List
 ===================
 
+Major Features
+==============
+
+* Allow the server to submit jobs to workers (maybe using ssh-commands?)
+
+* Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
+
+* More and better unit tests, e.g. unit tests of scripts
+
+* Add way to monitor a file during the run
+
+
+Built-in FireTasks
+==================
+
+* Maybe a GridFS file storage task
+
+
+Misc.
+=====
+
+* rename FireWork to Job, FireTask to task, FireWorker to Worker
+
+* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
+
+* Store FW templates in "cloud". Lpad has command to read/write template to Mongo, and templatewritertask can grab template from MongoDB.
+
+* FireTask name defaults to Class name.
+
+* Ensure that lpad commands work in a pip installation with virtualenv.
+
+* Detect a blank config dir and give a proper error.
+
+* Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
+
+* Add stats, preferably using a MapReduce call for speed
+
+* Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
+
+* Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
+
+* keep looking for FWs with the same _fw_name, and throw an error if you find 2 with the same _fw_name
+
+* No negative fw_ids needed when returning FWAction
+
+* Document how to create a queue script for a new machine (and perhaps clean up the code)
+
+* Go through logging, make sure it's sane
+
+* Not require init.py in all tutorial dirs by fixing MANIFEST.in (somehow)
+
+* In addition to mod_spec and dict_mod, allow a template_mod of the spec that directly acts on the JSON...
+
+
 FW Docs
 =======
 
@@ -39,61 +93,3 @@ FW Docs
 * Document the FWAction (in context of writing dynamic workflows)
 
 * Add "chopping tree" analogy
-
-
-Major Features
-==============
-
-* Allow the server to submit jobs to workers (maybe using ssh-commands?)
-
-* Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
-
-* More and better unit tests, e.g. unit tests of scripts
-
-* Add way to monitor a file during the run
-
-* Implement job packing using multiprocessing first, threads later. (this probably needs some unit test)
-
-FireTasks
-=========
-
-* Something to commit data to MongoDB
-
-* Maybe a GridFS file storage task
-
-* File movement tasks? including ssh transfer?
-
-Misc.
-=====
-
-* rename FireWork to Job, FireTask to task, FireWorker to Worker
-
-* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
-
-* Store FW templates in "cloud". Lpad has command to read/write template to Mongo, and templatewritertask can grab template from MongoDB.
-
-* FireTask name defaults to Class name.
-
-* Ensure that lpad commands work in a pip installation with virtualenv.
-
-* Detect a blank config dir and give a proper error.
-
-* Allow FireWorks to block ports so that a parent job cannot override a setting. Maybe this is not needed?
-
-* Add stats, preferably using a MapReduce call for speed
-
-* Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
-
-* Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
-
-* keep looking for FWs with the same _fw_name, and throw an error if you find 2 with the same _fw_name
-
-* No negative fw_ids needed when returning FWAction
-
-* Document how to create a queue script for a new machine (and perhaps clean up the code)
-
-* Go through logging, make sure it's sane
-
-* Not require init.py in all tutorial dirs by fixing MANIFEST.in (somehow)
-
-* In addition to mod_spec and dict_mod, allow a template_mod of the spec that directly acts on the JSON...
