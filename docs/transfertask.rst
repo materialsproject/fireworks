@@ -66,7 +66,7 @@ Either *True* or *False* (default=*True*). If False, the *src* and *dest* of fil
 Remote Transfers
 ================
 
-Remote transfers are handled via SFTP using the *paramiko* Python library. To do a remote transfer, you set ``files`` as before but:
+Remote transfers are handled via SFTP using the *paramiko* Python library (make sure you've installed it via ``pip install paramiko``). To do a remote transfer, you set ``files`` as before but:
 
 * You'll first need to configure passwordless login via ssh between the two machines that are transferring files
 * Set the **mode** of transfer to *rtransfer* (see previous section)
