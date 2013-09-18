@@ -104,6 +104,9 @@ def lpad():
     tuneup_parser = subparsers.add_parser('tuneup',
                                           help='Tune-up the database (should be performed during scheduled downtime)')
 
+    refresh_parser = subparsers.add_parser('refresh_wf', help='manually force a workflow refresh (not usually needed)')
+    refresh_parser.add_argument('fw_id', help='FireWork id to refresh', type=int)
+
     subparsers.add_parser('version', help='Print the version and location of FireWorks installation')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
@@ -288,6 +291,10 @@ def lpad():
             for fw_id in fw_ids:
                 lp.rerun_fw(fw_id)
                 print 'RERAN', fw_id
+
+        elif args.command == 'refresh_wf':
+            wf = lp.get_wf_by_fw_id(args.fw_id)
+            lp._refresh_wf(wf, args.fw_id)
 
         elif args.command == 'webgui':
             os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
