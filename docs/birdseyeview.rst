@@ -53,6 +53,7 @@ While the description above sounds simplistic, sophisticated types of workflow o
 * get the status of your all your jobs, where they're running, and how long they took to run or waited in the queue
 * create and modify job priorities
 * pack small jobs into larger ones (e.g define 1000 serial workflows and automatically parallelize them over 100 processors).
+* automatically prevent duplicating runs, even if different users submit the same thing to the LaunchPad
 * handle failures and crashes dynamically, by automatically creating FireWorks that fix crashed jobs in the FWAction object. You might even set up a workflow where a crashed job is automatically rerun at a different FireWorker, and with somewhat different parameters - no human intervention required!
 
 If this sounds good, we encourage you to get started by following the :doc:`quickstart</quickstart>`.
