@@ -1,9 +1,9 @@
 """
-This module contains the TemplateWriterTask, which writes files based on a template file and a Context using Django's templating engine.
+This module contains the TemplateWriterTask, which writes files based on a template file and a Context using Jinja2's templating engine.
 """
 
 import os
-from django.template import Template, Context
+from jinja2 import Template
 from fireworks.core.firework import FireTaskBase
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
@@ -14,9 +14,6 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
-
-# TODO: remove this hack...
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
 
 
 class TemplateWriterTask(FireTaskBase, FWSerializable):
@@ -37,7 +34,7 @@ class TemplateWriterTask(FireTaskBase, FWSerializable):
 
         with open(self.template_file) as f:
             t = Template(f.read())
-            output = t.render(Context(self.context))
+            output = t.render(self.context)
 
             write_mode = 'w+' if self.append_file else 'w'
             with open(self.output_file, write_mode) as of:

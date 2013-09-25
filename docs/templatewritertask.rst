@@ -6,7 +6,7 @@ A common task in scientific workflows is to write an input file in a format that
 
 We presented an example of using the *Template Writer Task* and subsequently running a program in the :doc:`FireTask tutorial <firetask_tutorial>`. If you didn't already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the *Template Writer Task* works.
 
-.. note:: The *Template Writer Task* is uses the Django templating engine, which provides a simple, extensible templating language.
+.. note:: The *Template Writer Task* is uses the Jinja2 templating engine, which provides a simple, extensible templating language.
 
 A simple template - variable substitutions
 ==========================================
@@ -109,7 +109,7 @@ Template files are not restricted to simple variable substitutions with curly br
 
 #. Now, try deleting the line containing the ``optparam`` and repeating the launch process. You'll see that the lines pertaining to the ``OPTIONAL PARAMETER`` are no longer written!
 
-Therefore, with Django's templating language we can write fairly general templates. While variable substitutions, *if/then* statements, and *for loops* should cover the majority of cases, you can see even more features in the `official Django documentation <https://docs.djangoproject.com/en/dev/topics/templates/>`_. For example, you can use template inheritance or insert templates into other templates.
+Therefore, with Jinja2's templating language we can write fairly general templates. While variable substitutions, *if/then* statements, and *for loops* should cover the majority of cases, you can see even more features in the `official Jinja2 documentation <http://jinja.pocoo.org>`_. For example, you can use template inheritance or insert templates into other templates.
 
 Writing your own templates
 ==========================

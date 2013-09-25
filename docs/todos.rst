@@ -13,6 +13,7 @@ Major Features
 
 * Add way to monitor a file during the run
 
+* checkpointing
 
 Built-in FireTasks
 ==================

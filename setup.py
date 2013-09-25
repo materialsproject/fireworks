@@ -25,7 +25,7 @@ if __name__ == "__main__":
           license='modified BSD',
           packages=find_packages(),
           zip_safe=False,
-          install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'django>=1.5'],
+          install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'Jinja2>=2.7.1'],
           extras_require={'rtransfer': ['paramiko>=1.11']},
           classifiers=['Programming Language :: Python :: 2.7', 'Development Status :: 4 - Beta',
                        'Intended Audience :: Science/Research', 'Intended Audience :: System Administrators',

@@ -49,16 +49,16 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
 
     cd fireworks
 
-#. Install the needed dependencies using pip with the following commands (with administrator privileges)::
-
-    pip install django
-    pip install paramiko  # (only needed if using built-in remote file transfer!)
-
-.. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``. In particular, ensure that pymongo is >= 2.4.2 and includes MongoClient, and Django is greater than v1.5.
-
 #. Run the following command (you might need administrator privileges, so pre-pend the word 'sudo' as needed)::
 
     python setup.py develop
+
+#. Install optional dependencies using pip with the following commands (with administrator privileges)::
+
+    pip install django  # (only needed if using the web gui!)
+    pip install paramiko  # (only needed if using built-in remote file transfer!)
+
+.. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``. In particular, ensure that Django is greater than v1.5.
     
 Run unit tests
 --------------

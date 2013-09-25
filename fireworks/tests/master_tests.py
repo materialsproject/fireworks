@@ -23,7 +23,7 @@ class TestImports(unittest.TestCase):
     def test_imports(self):
         import yaml
         import pymongo
-        import django
+        import jinja2
         # test that MongoClient is available (newer pymongo)
         from pymongo import MongoClient
 

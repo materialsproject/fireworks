@@ -1,6 +1,8 @@
-========================================
+===========================
 Using the Web GUI *(alpha)*
-========================================
+===========================
+
+.. note:: You must have Django installed as an optional dependency (just type 'pip install Django') in order to use the web gui
 
 An easy way to monitor FireWorks is to use its web interface (in *alpha* mode), which provides an overview of the state of your workflows and provides clickable links to see details on any FireWork or Workflow:
 
