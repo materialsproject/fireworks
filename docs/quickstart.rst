@@ -2,8 +2,6 @@
 Quickstart and Installation
 ===========================
 
-.. note:: If you haven't already, we strongly suggest you begin by reading the :doc:`bird's eye view of FireWorks </birdseyeview>`.
-
 This tutorial will guide you through FireWorks installation on the central server. You will:
 
 * Install the FireWorks codebase

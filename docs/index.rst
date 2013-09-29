@@ -21,7 +21,7 @@ Some (but not all) of its features include:
 
 * Storage and management of workflows through MongoDB, a noSQL datastore that is flexible and easy to use.
 
-* A clean and powerful Python API for defining, submitting, running, and maintaining workflows.
+* A clean and powerful Python API for defining, running, and maintaining workflows.
 
 * Ability to distribute calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
 
@@ -31,29 +31,62 @@ Some (but not all) of its features include:
 
 * Loosely-coupled and modular infrastructure that is intentionally hackable. Use some FireWorks components without using *everything*, and more easily adapt FireWorks to your application.
 
-* Monitoring of workflows through a web service
+* Monitoring workflows with a *built-in*, easy-to-use web service
 
 * Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines
 
 * Package many small jobs into a single large job (e.g., *automatically* run 100 serial workflows in parallel over 100 cores).
 
+* Have fine control of job execution, including priorities and where jobs run.
+
 * Support for several queueing systems such as PBE/Torque, Sun Grid Engine, and SLURM.
 
+==============================
+A bird's eye view of FireWorks
+==============================
 
-Limitations
-===========
+While FireWorks provides many features, its basic operation is simple. You can run FireWorks on a single laptop or at a supercomputing center.
 
-Some limitations of FireWorks include:
+Centralized Server and Worker Model
+===================================
 
-* FireWorks has not been stress-tested to hundreds of jobs within a single workflow.
+There are essentially just two components of a FireWorks installation:
 
-* FireWorks has not been stress-tested to millions of workflows.
+* A **server** ("LaunchPad") that manages workflows. You can add workflows (a DAG of "FireWorks") to the LaunchPad, query for the state of your workflows, or rerun workflows.
 
-* FireWorks does not *automatically* optimize the distribution of computing tasks over worker nodes (e.g., to minimize data movement or to match jobs to appropriate hardware); however, you can define such optimizations yourself.
+* One or more **workers** ("FireWorkers") that run your jobs. The FireWorkers request workflows from the LaunchPad, execute them, and send back information. The FireWorker can be as simple as the same workstation used to host the LaunchPad, or complicated like a national supercomputing center with a queueing system.
 
-* FireWorks has only been tested on Linux and Macintosh machines (and not Windows).
+The basic infrastructure looks like this:
 
-If you encounter any problems while using FireWorks, please let us know (see :ref:`contributing-label`).
+.. image:: _static/fw_model.png
+   :width: 400px
+   :align: center
+   :alt: FireWorks Model
+
+The components are largely decoupled, which makes FireWorks easier to use. End users can add new workflows to the LaunchPad without worrying about the details of how and where the workflows will be run (unless they really want to tailor the details of job execution). This keeps the workflow specifications lightweight, tidy, and easy to learn and use (if you've ever seen lengthy XML-based specifications in other workflow software, you'll notice the difference in FireWorks right away).
+
+On the opposite end, administrators can configure worker computers without worrying about where workflows are coming from or what they look like (although you can assign jobs to certain resources if desired). Running on a heterogeneous set of worker computers is simple because essentially the same code is used internally by FireWorks for running on a simple workstation, a large supercomputing center, or packing together many jobs into a single queue submission.
+
+.. _wfmodel-label:
+
+Workflow Model
+==============
+
+Workflows in FireWorks are made up of three main components:
+
+* A **FireTask** is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package). Each FireTask receives input data in the form of a JSON specification. *Note: if you want to run non-Python code (e.g., C++ or Java code), you must either call the code as a shell script or write a Python function that executes your code (perhaps using a Python binding to that language for tighter integration).*
+* A **FireWork** contains the JSON *spec* that includes all the information needed to bootstrap your job. For example, the spec contains an array of FireTasks to execute in sequence. The spec also includes any input parameters to pass to your FireTasks. You can easily perform the same function over different input data by creating FireWorks with identical FireTasks but different input parameters in the spec. You can design your spec however you'd like, as long as it's valid JSON. The JSON format used for FireWork specs is extremely flexible, very easy to learn (Python users familiar with *dicts* and *arrays* essentially already know JSON), and immediately makes rich searches over the input data available to end users through MongoDB's JSON document search capabilities.
+* A **Workflow** is a set of FireWorks with dependencies between them. For example, you might need a parent FireWork to finish and generate some output files before running two child FireWorks.
+
+Between FireWorks, you can return a **FWAction** that can store data or modify the Workflow depending on the output (e.g., pass data to the next step, cancel the remaining parts of the Workflow, or even add new FireWorks that are defined within the object).
+
+.. image:: _static/multiple_fw.png
+   :width: 400px
+   :align: center
+   :alt: FireWorks Workflow
+
+The FireWorks tutorials and :doc:`FW design tips <design_tips>` explain how to connect these components to achieve the desired behavior.
+
 
 ========================
 Quickstart and Tutorials
@@ -62,12 +95,11 @@ Quickstart and Tutorials
 Quickstart ("Wiggle your big toe")
 ==================================
 
-To get started with FireWorks, we suggest that you follow our quickstart tutorial, which should take about half an hour for experienced Python users and covers basic installation and usage.
+To get started with FireWorks, we suggest that you follow our quickstart tutorial, which should take 15 minutes for experienced Python users and covers basic installation and usage.
 
 .. toctree::
    :maxdepth: 1
 
-   birdseyeview
    quickstart
 
 Basic usage

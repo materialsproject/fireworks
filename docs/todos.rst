@@ -56,6 +56,7 @@ Misc.
 
 * In addition to mod_spec and dict_mod, allow a template_mod of the spec that directly acts on the JSON...
 
+* update_spec and mod_spec should not skip remaining tasks.
 
 FW Docs
 =======
@@ -94,3 +95,5 @@ FW Docs
 * Document the FWAction (in context of writing dynamic workflows)
 
 * Add "chopping tree" analogy
+
+* Thank Marat for Jinja2 templating language suggestion
