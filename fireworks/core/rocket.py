@@ -68,7 +68,9 @@ class Rocket():
         """
         Run the rocket (check out a job from the database and execute it)
         """
-        all_stored_data = {}  # stored data for *all* the Tasks
+        all_stored_data = {}  # combined stored data for *all* the Tasks
+        all_update_spec = {}  # combined update_spec for *all* the Tasks
+        all_mod_spec = []  # combined mod_spec for *all* the Tasks
 
         lp = self.launchpad
         launch_dir = os.path.abspath(os.getcwd())
@@ -116,6 +118,8 @@ class Rocket():
 
                 # update the global stored data with the data to store from this particular Task
                 all_stored_data.update(m_action.stored_data)
+                all_update_spec.update(m_action.update_spec)
+                all_mod_spec.extend(m_action.mod_spec)
 
                 if m_action.skip_remaining_tasks:
                     break
@@ -127,6 +131,8 @@ class Rocket():
             # perform finishing operation
             stop_ping_launch(ping_stop)
             m_action.stored_data = all_stored_data
+            m_action.mod_spec = all_mod_spec
+            m_action.update_spec = all_update_spec
             lp.complete_launch(launch_id, m_action, 'COMPLETED')
 
         except:

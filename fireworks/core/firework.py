@@ -137,8 +137,7 @@ class FWAction(FWSerializable):
 
         :return: (bool)
         """
-        return self.exit or self.update_spec or self.mod_spec or self.detours \
-                   or self.additions or self.defuse_children
+        return self.exit or self.detours or self.additions or self.defuse_children
 
 
 class FireWork(FWSerializable):
