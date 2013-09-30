@@ -8,8 +8,7 @@
  * :license: BSD, see LICENSE for details.
  *
  */
- 
-@import url("basic.css");
+
  
 /* -- page layout ----------------------------------------------------------- */
  
@@ -133,7 +132,7 @@ div.sphinxsidebar input[type=text]{
 /* -- body styles ----------------------------------------------------------- */
  
 a {
-    color: ≈;
+    color: #706bff;
     text-decoration: none;
 }
  
