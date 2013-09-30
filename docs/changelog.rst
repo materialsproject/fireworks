@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v0.33**
+
+* concatenate the update_spec and mod_spec of all FireTasks, instead of exiting as soon as a FireTask updates a spec.
+
 **v0.32**
 
 * change templating language to Jinja2 (and remove heavyweight dependency to Django)
