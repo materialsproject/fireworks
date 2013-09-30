@@ -93,7 +93,3 @@ FW Docs
 * Put the bird's eye view on the Home Page rather than as something you need to click.
 
 * Document the FWAction (in context of writing dynamic workflows)
-
-* Add "chopping tree" analogy
-
-* Thank Marat for Jinja2 templating language suggestion

@@ -3,13 +3,22 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. title:: Introduction
+
 .. image:: _static/FireWorks_logo.png
    :width: 300 px
    :alt: FireWorks
 
+.. raw::<div>
+
+.. pull-quote:: | "Give me six hours to chop down a tree and I will spend the first four sharpening the axe."
+                |    - Abraham Lincoln
+
 FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
 
 Some features that distinguish FireWorks are the capability to program dynamic workflows and built-in tools for running high-throughput computations at large computing centers.
+
+.. raw::</div>
 
 ====================
 Is FireWorks for me?

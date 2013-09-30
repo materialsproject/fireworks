@@ -133,7 +133,7 @@ div.sphinxsidebar input[type=text]{
 /* -- body styles ----------------------------------------------------------- */
  
 a {
-    color: #706bff;
+    color: ≈;
     text-decoration: none;
 }
  
@@ -250,4 +250,13 @@ div.viewcode-block:target {
 p.caption {
     font-family: Times, serif;
     font-weight: bold;
+}
+
+.pull-quote {
+    color: #555;
+    font-family: Georgia, serif;
+    font-size: 90%;
+    background-color: #eee;
+    width: 65%;
+    padding: 10px 10px;
 }
