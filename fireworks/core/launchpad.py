@@ -27,7 +27,7 @@ __date__ = 'Jan 30, 2013'
 # TODO: lots of duplication reduction and cleanup possible
 
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
-# least set the state to FAILED or ERROR and add traceback...
+# least set the state to FIZZLED or ERROR and add traceback...
 
 # Note: Always use find_and_modify() for *all* database updates. Otherwise you will run into synchronization /
 # delayed write errors from Mongo. Even find_and_modify() does not guarantee zero errors, but it reduces incidents
@@ -133,10 +133,10 @@ class LaunchPad(FWSerializable):
         while True:
             self.m_logger.info('Performing maintenance on Launchpad...')
 
-            self.m_logger.debug('Tracking down FAILED jobs...')
-            fl = self.detect_failed(fix=True)
+            self.m_logger.debug('Tracking down FIZZLED jobs...')
+            fl = self.detect_fizzled(fix=True)
             if fl:
-                self.m_logger.info('Detected {} FAILED launches: {}'.format(len(fl), fl))
+                self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
 
             self.m_logger.debug('Tracking down stuck RESERVED jobs...')
             ur = self.detect_unreserved(fix=True)
@@ -310,7 +310,7 @@ class LaunchPad(FWSerializable):
 
 
     def defuse_fw(self, fw_id):
-        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FAILED']
+        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
         f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}},
                                               {'$set': {'state': 'DEFUSED'}})
 
@@ -445,12 +445,12 @@ class LaunchPad(FWSerializable):
                 self.unreserve(lid)
         return bad_launch_ids
 
-    def mark_failed(self, launch_id):
+    def mark_fizzled(self, launch_id):
         # TODO: this seems a lot like the code in complete_launch...DRY
 
         # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
-        m_launch.state = 'FAILED'
+        m_launch.state = 'FIZZLED'
         self._upsert_launch(m_launch)
 
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -458,7 +458,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_failed(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fix=False):
+    def detect_fizzled(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
@@ -469,7 +469,7 @@ class LaunchPad(FWSerializable):
             bad_launch_ids.append(ld['launch_id'])
         if fix:
             for lid in bad_launch_ids:
-                self.mark_failed(lid)
+                self.mark_fizzled(lid)
         return bad_launch_ids
 
     def _set_reservation_id(self, launch_id, reservation_id):
@@ -523,7 +523,7 @@ class LaunchPad(FWSerializable):
 
         # update any duplicated runs
         for fw in self.fireworks.find(
-                {'launches': l_id, 'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FAILED']}},
+                {'launches': l_id, 'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FIZZLED']}},
                 {'fw_id': 1}):
             fw_id = fw['fw_id']
             fw = self.get_fw_by_id(fw_id)

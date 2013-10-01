@@ -48,7 +48,7 @@ def lpad():
     get_fw_parser = subparsers.add_parser('get_fws', help='get information about FireWorks')
     get_fw_parser.add_argument('-i', '--fw_id', help='get FW with this fw_id', default=None, type=int)
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name', default=None)
-    get_fw_parser.add_argument('-s', '--state', help='get FWs with this state ("ARCHIVED", "DEFUSED", "WAITING", "READY", "RESERVED", "FAILED", "RUNNING", "COMPLETED")', default=None)
+    get_fw_parser.add_argument('-s', '--state', help='get FWs with this state ("ARCHIVED", "DEFUSED", "WAITING", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
     get_fw_parser.add_argument('-q', '--query', help='get FWs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids", "count")', default=None)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
@@ -59,7 +59,7 @@ def lpad():
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
     get_wf_parser.add_argument('-i', '--fw_id', help='get WF with this fw_id', default=None, type=int)
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name', default=None)
-    get_wf_parser.add_argument('-s', '--state', help='get WFs with this state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FAILED", "RUNNING", "COMPLETED")', default=None)
+    get_wf_parser.add_argument('-s', '--state', help='get WFs with this state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
     get_wf_parser.add_argument('-q', '--query', help='get WFs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids", "count")', default=None)
     get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
@@ -69,17 +69,17 @@ def lpad():
     rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
     rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
 
-    rerun_failed = subparsers.add_parser('rerun_failed', help='re-run FAILED FireWorks')
+    rerun_fizzled = subparsers.add_parser('rerun_fizzled', help='re-run FIZZLED FireWorks')
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
                                     default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
     reservation_parser.add_argument('--mark', help='cancel bad reservations', action='store_true')
 
-    failed_parser = subparsers.add_parser('detect_failed', help='Find launches that have FAILED')
-    failed_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
+    fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
+    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
                                 type=int)
-    failed_parser.add_argument('--mark', help='mark failed', action='store_true')
+    fizzled_parser.add_argument('--mark', help='mark fizzled', action='store_true')
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
     defuse_parser.add_argument('fw_id', help='Any FireWork id in the workflow to defuse', type=int)
@@ -144,8 +144,8 @@ def lpad():
         if args.command == 'reset':
             lp.reset(args.password)
 
-        elif args.command == 'detect_failed':
-            print lp.detect_failed(args.time, args.mark)
+        elif args.command == 'detect_fizzled':
+            print lp.detect_fizzled(args.time, args.mark)
 
         elif args.command == 'detect_unreserved':
             print lp.detect_unreserved(args.time, args.mark)
@@ -286,8 +286,8 @@ def lpad():
         elif args.command == 'rerun_fw':
             lp.rerun_fw(args.fw_id)
 
-        elif args.command == 'rerun_failed':
-            fw_ids = lp.get_fw_ids({"state": "FAILED"})
+        elif args.command == 'rerun_fizzled':
+            fw_ids = lp.get_fw_ids({"state": "FIZZLED"})
             for fw_id in fw_ids:
                 lp.rerun_fw(fw_id)
                 print 'RERAN', fw_id

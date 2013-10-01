@@ -62,7 +62,7 @@ v0.2
 
 **v0.18**
 
-* add fizzle_bad_rc option to ScriptTask *(later renamed fail_bad_rc)*
+* add fizzle_bad_rc option to ScriptTask
 * major doc additions and updates
 
 **v0.17**

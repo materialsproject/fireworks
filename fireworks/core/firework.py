@@ -146,7 +146,7 @@ class FireWork(FWSerializable):
     """
 
     STATE_RANKS = {'ARCHIVED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
-                   'RESERVED': 3, 'FAILED': 4, 'RUNNING': 5, 'COMPLETED': 7}
+                   'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'COMPLETED': 7}
 
     def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
                  state='WAITING', created_on=None, fw_id=-1):
@@ -324,9 +324,9 @@ class Launch(FWSerializable, object):
     @property
     def time_end(self):
         """
-        :return: (datetime) the time the Launch was COMPLETED or FAILED
+        :return: (datetime) the time the Launch was COMPLETED or FIZZLED
         """
-        return self._get_time(['COMPLETED', 'FAILED'])
+        return self._get_time(['COMPLETED', 'FIZZLED'])
 
     @property
     def time_reserved(self):
@@ -533,8 +533,8 @@ class Workflow(FWSerializable):
             m_state = 'ARCHIVED'
         elif any([s == 'DEFUSED' for s in states]):
             m_state = 'DEFUSED'
-        elif any([s == 'FAILED' for s in states]):
-            m_state = 'FAILED'
+        elif any([s == 'FIZZLED' for s in states]):
+            m_state = 'FIZZLED'
         elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
             m_state = 'RUNNING'
         elif any([s == 'RESERVED' for s in states]):
@@ -668,8 +668,8 @@ class Workflow(FWSerializable):
                          self.links.parent_links.get(fw_id, [])]
 
         completed_parent_states = ['COMPLETED']
-        if fw.spec.get('_allow_failed_parents'):
-            completed_parent_states.append('FAILED')
+        if fw.spec.get('_allow_fizzled_parents'):
+            completed_parent_states.append('FIZZLED')
 
         if len(parent_states) != 0 and not all(
                 [s in completed_parent_states for s in parent_states]):
@@ -691,14 +691,14 @@ class Workflow(FWSerializable):
                     if m_state == 'COMPLETED':
                         m_action = l.action
 
-            # This part is confusing and rare - report any FAILED parents if allow_fizzed
-            # allows us to handle FAILED jobs
-            if fw.spec.get('_allow_failed_parents'):
+            # This part is confusing and rare - report any FIZZLED parents if allow_fizzed
+            # allows us to handle FIZZLED jobs
+            if fw.spec.get('_allow_fizzled_parents'):
                 parent_fws = [self.id_fw[p].to_dict() for p in
                                    self.links.parent_links.get(fw_id, []) if
-                                   self.id_fw[p].state == 'FAILED']
+                                   self.id_fw[p].state == 'FIZZLED']
                 if len(parent_fws) > 0:
-                    fw.spec['_failed_parents'] = parent_fws
+                    fw.spec['_fizzled_parents'] = parent_fws
                     updated_ids.add(fw_id)
 
         fw.state = m_state

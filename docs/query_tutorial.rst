@@ -16,9 +16,9 @@ Example queries - FireWorks
 
     lpad get_fws -s COMPLETED -d count
 
-#. Show all information for the 3 most recently updated FAILED FireWorks::
+#. Show all information for the 3 most recently updated FIZZLED FireWorks::
 
-    lpad get_fws -s FAILED -d all -m 3 --rsort updated_on
+    lpad get_fws -s FIZZLED -d all -m 3 --rsort updated_on
 
 #. Show all information of the FireWork with *name* set to ``my_fw``::
 
@@ -39,9 +39,9 @@ Example queries - Workflows
 
     lpad get_wfs -s COMPLETED -d count
 
-#. Show all information for the 3 most recently updated FAILED Workflows::
+#. Show all information for the 3 most recently updated FIZZLED Workflows::
 
-    lpad get_wfs -s FAILED -d all -m 3 --rsort updated_on
+    lpad get_wfs -s FIZZLED -d all -m 3 --rsort updated_on
 
 #. Show all information of the Workflow with *name* set to ``my_wf``::
 

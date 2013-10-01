@@ -140,5 +140,5 @@ class Rocket():
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
-            lp.complete_launch(launch_id, m_action, 'FAILED')
+            lp.complete_launch(launch_id, m_action, 'FIZZLED')
 

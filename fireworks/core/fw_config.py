@@ -51,7 +51,7 @@ class FWConfig(object):
         self.PRINT_FW_YAML = False
 
         self.PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
-        self.RUN_EXPIRATION_SECS = self.PING_TIME_SECS * 4  # mark job as FAILED if not pinged in this time
+        self.RUN_EXPIRATION_SECS = self.PING_TIME_SECS * 4  # mark job as FIZZLED if not pinged in this time
 
         self.MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals when running infinite maintenance
 
