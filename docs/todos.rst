@@ -40,7 +40,7 @@ Misc.
 
 * Add stats, preferably using a MapReduce call for speed
 
-* Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
+* Only allow a job to be rerun if it and all children are in {FAILED, READY, WAITING, COMPLETED}
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
@@ -68,7 +68,7 @@ FW Docs
     * _priority - the priority of the FW
     * _dupefinder - a DupeFinder object, for avoiding duplicates
     * _queueadapter - values of the QueueAdapter dict to override
-    * _allow_fizzled_parents - continue on FIZZLED parents
+    * _allow_failed_parents - continue on FAILED parents
     * _category - For directing jobs
     * _launch_dir - For directing jobs to a certain directory
 

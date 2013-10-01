@@ -10,7 +10,7 @@ There are two types of maintainence operations that can be performed through the
 Maintain to mark failed jobs and queue reservations
 ===================================================
 
-We recommend that all users periodically run the *maintain* command from the LaunchPad. This will detect failed jobs and queue reservations - for details, refer to the :doc:`failures tutorial </failures_tutorial>` and :doc:`queue reservation tutorial </queue_tutorial_pt2>`. In summary, the command will mark the state of failed jobs as *FIZZLED* and will move any long-waiting *RESERVED* FireWorks back to *READY*. The maintenance command can be run using::
+We recommend that all users periodically run the *maintain* command from the LaunchPad. This will detect failed jobs and queue reservations - for details, refer to the :doc:`failures tutorial </failures_tutorial>` and :doc:`queue reservation tutorial </queue_tutorial_pt2>`. In summary, the command will mark the state of failed jobs as *FAILED* and will move any long-waiting *RESERVED* FireWorks back to *READY*. The maintenance command can be run using::
 
     lpad maintain
 

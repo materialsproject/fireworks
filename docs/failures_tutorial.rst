@@ -27,10 +27,10 @@ Let's first introduce normal operation of a FireWork that prints ``starting``, s
 
 #. Hopefully, your patience was rewarded with ``ending`` printed to your terminal. If so, let's keep going!
 
-Error during run - a *FIZZLED* Firework!
+Error during run - a *FAILED* Firework!
 ========================================
 
-If your job throws an exception (error), FireWorks will automatically mark your job as *FIZZLED*. Any jobs that depend on this job will not run until you fix things. Let's simulate this situation.
+If your job throws an exception (error), FireWorks will automatically mark your job as *FAILED*. Any jobs that depend on this job will not run until you fix things. Let's simulate this situation.
 
 #. Reset your database and add back the sleeping FireWork::
 
@@ -48,16 +48,16 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
     lpad get_fws -i 1 -d all
 
-#. You should notice the state of this FireWork is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
+#. You should notice the state of this FireWork is automatically marked as *FAILED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
 
-#. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
+#. If at any point you want to review what FireWorks have *FAILED*, you can use the following query::
 
-    lpad get_fws -q '{"state":"FIZZLED"}' -d 'ids'
+    lpad get_fws -q '{"state":"FAILED"}' -d 'ids'
 
 Catastrophic Failure
 ====================
 
-The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as *FIZZLED*. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let's see how to handle this case.
+The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as *FAILED*. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let's see how to handle this case.
 
 #. Reset your database and add back the sleeping FireWork::
 
@@ -75,17 +75,17 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
 
-    lpad detect_fizzled --time 1 --mark
+    lpad detect_failed --time 1 --mark
 
-#. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
+#. This command will mark all jobs that have been running for more than 1 second as *FAILED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
     lpad get_fws -i 1 -d more
 
-#. The FireWork should now be correctly listed as *FIZZLED*!
+#. The FireWork should now be correctly listed as *FAILED*!
 
-#. Of course, in production you'll never want to mark all jobs running for 1 second as being *FIZZLED*; this will mark jobs that are running properly as *FIZZLED*!
+#. Of course, in production you'll never want to mark all jobs running for 1 second as being *FAILED*; this will mark jobs that are running properly as *FAILED*!
 
-#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lpad detect_fizzled``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
+#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FAILED* after 4 hours of idle time when you run ``lpad detect_failed``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FAILED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FAILED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
 
 
     lpad reset <TODAY'S DATE>
@@ -93,16 +93,16 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     rlaunch singleshot
     ---(forcibly close your terminal window)
     ---(wait 4 or more hours!! or temporarily set your System Clock ahead by 5 hours)
-    lpad detect_fizzled --mark
+    lpad detect_failed --mark
     lpad get_fws -i 1 -d all
 
 .. note:: You can shorten the ping times and detection times by editing the settings in your :doc:`FW configuration </config_tutorial>`, but we suggest you leave them alone unless really needed.
 
-.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_fizzled --mark``.
+.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_failed --mark``.
 
-Life after *FIZZLED*
+Life after *FAILED*
 ====================
 
-Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you can also :doc:`rerun your workflow </rerun_tutorial>`, starting from the failed job. The only caveat to this latter method is that dynamic actions already taken by your workflow will **not** be reset to their initial state.
+Once FireWorks has identified a job as *FAILED*, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you can also :doc:`rerun your workflow </rerun_tutorial>`, starting from the failed job. The only caveat to this latter method is that dynamic actions already taken by your workflow will **not** be reset to their initial state.
 
-You can also continue on with the Workflow even after *FIZZLED* by setting the ``_allow_fizzled_parents`` parameter in your **spec**. This will allow you to algorithmically fix errors using FireWorks' dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.
+You can also continue on with the Workflow even after *FAILED* by setting the ``_allow_failed_parents`` parameter in your **spec**. This will allow you to algorithmically fix errors using FireWorks' dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.

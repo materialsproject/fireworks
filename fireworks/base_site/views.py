@@ -45,7 +45,7 @@ def home(request):
     # Current Database Status table data
     _dbg("status.begin")
     states = ['ARCHIVED', 'DEFUSED', 'WAITING', 'READY', 'RESERVED',
-        'FIZZLED', 'RUNNING', 'COMPLETED']
+        'FAILED', 'RUNNING', 'COMPLETED']
     fw_nums = []
     wf_nums = []
     for state in states:
