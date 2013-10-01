@@ -24,9 +24,7 @@ Built-in FireTasks
 Misc.
 =====
 
-* rename FireWork to Job, FireTask to task, FireWorker to Worker
-
-* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial?
+* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command?
 
 * Store FW templates in "cloud". Lpad has command to read/write template to Mongo, and templatewritertask can grab template from MongoDB.
 
@@ -44,19 +42,16 @@ Misc.
 
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
-* keep looking for FWs with the same _fw_name, and throw an error if you find 2 with the same _fw_name
-
 * No negative fw_ids needed when returning FWAction
 
 * Document how to create a queue script for a new machine (and perhaps clean up the code)
 
 * Go through logging, make sure it's sane
 
-* Not require init.py in all tutorial dirs by fixing MANIFEST.in (somehow)
+Tests
+=====
 
-* In addition to mod_spec and dict_mod, allow a template_mod of the spec that directly acts on the JSON...
-
-* update_spec and mod_spec should not skip remaining tasks.
+* test that if two classes have the same _fw_name, that we will get an error
 
 FW Docs
 =======
@@ -74,11 +69,7 @@ FW Docs
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
-* Tell people how to run different EXE based on machine, ie.. by changing bashrc and using an alias
-
 * Update all tutorials so config file is handled smoothly, not terribly...
-
-* Quickstart and Installation are completely separate tutorials.
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
 
@@ -89,7 +80,5 @@ FW Docs
 * Setting up logging (in deployment section of tutorials)
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
-
-* Put the bird's eye view on the Home Page rather than as something you need to click.
 
 * Document the FWAction (in context of writing dynamic workflows)
