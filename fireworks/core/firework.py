@@ -668,7 +668,7 @@ class Workflow(FWSerializable):
                          self.links.parent_links.get(fw_id, [])]
 
         completed_parent_states = ['COMPLETED']
-        if fw.spec.get('_allow_failed_parents'):
+        if fw.spec.get('_allow_failed_parents') or fw.spec.get('_allow_fizzled_parents'):
             completed_parent_states.append('FAILED')
 
         if len(parent_states) != 0 and not all(
@@ -693,7 +693,7 @@ class Workflow(FWSerializable):
 
             # This part is confusing and rare - report any FAILED parents if allow_fizzed
             # allows us to handle FAILED jobs
-            if fw.spec.get('_allow_failed_parents'):
+            if fw.spec.get('_allow_failed_parents') or fw.spec.get('_allow_fizzled_parents'):
                 parent_fws = [self.id_fw[p].to_dict() for p in
                                    self.links.parent_links.get(fw_id, []) if
                                    self.id_fw[p].state == 'FAILED']
