@@ -2,12 +2,6 @@
 FireWorks Changelog
 ===================
 
-**v0.34**
-
-.. caution:: The nomenclature for failed jobs has changed with this release.
-
-* rename "FIZZLED" to "FAILED"
-
 **v0.33**
 
 * concatenate the update_spec and mod_spec of all FireTasks, instead of exiting as soon as a FireTask updates a spec.
