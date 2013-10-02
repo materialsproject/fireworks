@@ -817,6 +817,7 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_FireWork(cls, fw, name=None, metadata=None):
+        name = name if name else fw.name
         return Workflow([fw], None, name=name, metadata=metadata)
 
     def __str__(self):
