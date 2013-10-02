@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v0.35**
+
+* restore behavior back to v0.33
+
+**v0.34**
+
+* *deprecated* - rename FIZZLED to FAILED
+
 **v0.33**
 
 * concatenate the update_spec and mod_spec of all FireTasks, instead of exiting as soon as a FireTask updates a spec.

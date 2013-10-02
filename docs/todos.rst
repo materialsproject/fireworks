@@ -56,6 +56,8 @@ Tests
 FW Docs
 =======
 
+* create a reference sheet for things like all the FW and WF states
+
 * describe passing of information as being like 'ports'
 
 * Note: reserved spec keywords:
