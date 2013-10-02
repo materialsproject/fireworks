@@ -187,9 +187,10 @@ def lpad():
                         help="Host to run the server on (default: 127.0.0.1)")
     webgui_parser.add_argument('-b', '--browser', help='launch browser', action='store_true')
 
-    addscript_parser = subparsers.add_parser('add_script', help='quickly add a script (or several scripts) to run in sequence')
-    addscript_parser.add_argument('script', help="Script to run, or delimiter-separated scripts (default comma-separated)")
-    addscript_parser.add_argument('-n', '--name', help='name to apply to FireWork and Workflow', default=None)
+    addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script (or several scripts) to run in sequence')
+    addscript_parser.add_argument('scripts', help="Script to run, or delimiter-separated scripts (default comma-separated)")
+    addscript_parser.add_argument('-n', '--names', help='FireWork name, or delimiter-separated names (default comma-separated)', default=None)
+    addscript_parser.add_argument('-w', '--wf_name', help='Workflow name', default=None)
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
 
     args = parser.parse_args()
@@ -391,10 +392,18 @@ def lpad():
                 webbrowser.open("http://{}:{}".format(args.host, args.port))
             p1.join()
 
-        elif args.command == 'add_script':
-            scripts = args.script.split(args.delimiter)
-            tasks = [ScriptTask({'script': s, 'use_shell': True}) for s in scripts]
-            lp.add_wf(FireWork(tasks, name=args.name))
+        elif args.command == 'add_scripts':
+            scripts = args.scripts.split(args.delimiter)
+            names = args.names.split(args.delimiter) if args.names else [None] * len(scripts)
+            wf_name = args.wf_name if args.wf_name else names[0]
+            fws = []
+            links = {}
+            for idx, s in enumerate(scripts):
+                fws.append(FireWork(ScriptTask({'script': s, 'use_shell': True}), name=names[idx], fw_id=idx))
+                if idx != 0:
+                    links[idx-1] = idx
+
+            lp.add_wf(Workflow(fws, links, wf_name))
 
 if __name__ == '__main__':
     lpad()
