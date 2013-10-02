@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v0.36**
+
+.. caution:: The ``rerun_fw``, ``defuse_fw``, and ``reignite_fw`` commands are now pluralized, ``refresh_wf`` is simply ``refresh``, and ``rerun_fizzled`` has been incorporated into ``rerun_fws``.
+
+* much more powerful control for ``rerun_fws``, ``defuse``, ``archive``, ``reignite``, ``defuse_fws``, ``reignite_fws``, ``refresh``.
+
 **v0.35**
 
 * restore behavior back to v0.33
