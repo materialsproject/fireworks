@@ -99,7 +99,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
         self.store_stdout = params.get('store_stdout')
         self.store_stderr = params.get('store_stderr')
         self.defuse_bad_rc = params.get('defuse_bad_rc')
-        self.fizzle_bad_rc = params.get('fizzle_bad_rc')
+        self.fizzle_bad_rc = params.get('fizzle_bad_rc', True)
         self.shell_exe = params.get('shell_exe')
 
     @classmethod
