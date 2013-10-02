@@ -55,7 +55,6 @@ def lpad():
     get_fw_parser.add_argument('--sort', help='sort results ("created_on")', default=None)
     get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")', default=None)
 
-
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
     get_wf_parser.add_argument('-i', '--fw_id', help='get WF with this fw_id', default=None, type=int)
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name', default=None)
@@ -66,8 +65,8 @@ def lpad():
     get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
     get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
 
-    rerun_fw = subparsers.add_parser('rerun_fw', help='re-run a FireWork (reset its previous launches)')
-    rerun_fw.add_argument('fw_id', help='FireWork id', type=int)
+    rerun_fws = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
+    rerun_fws.add_argument('fw_id', help='FireWork id or comma separated list of FW ids')
 
     rerun_fizzled = subparsers.add_parser('rerun_fizzled', help='re-run FIZZLED FireWorks')
 
@@ -283,8 +282,10 @@ def lpad():
         elif args.command == 'reignite_fw':
             lp.reignite_fw(args.fw_id)
 
-        elif args.command == 'rerun_fw':
-            lp.rerun_fw(args.fw_id)
+        elif args.command == 'rerun_fws':
+            fw_ids = args.fw_id.split(',')
+            for f in fw_ids:
+                lp.rerun_fw(int(f))
 
         elif args.command == 'rerun_fizzled':
             fw_ids = lp.get_fw_ids({"state": "FIZZLED"})
