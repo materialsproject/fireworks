@@ -14,6 +14,7 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import Workflow
 import ast
 import json
+import datetime
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
@@ -26,6 +27,40 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
+
+def pw_check(ids, args):
+    if len(ids) > FWConfig().PW_CHECK_NUM:
+        m_password = datetime.datetime.now().strftime('%Y-%m-%d')
+        if args.password != m_password:
+            raise ValueError("Modifying more than {} entries requires setting the --password parameter! (Today's date, e.g. 2012-02-25)".format(FWConfig().PW_CHECK_NUM))
+
+    return ids
+
+
+def parse_helper(lp, args, wf_mode=False):
+    """
+    Helper method to parse args that can take either id, name, state or query
+    :param args:
+    :return:
+    """
+
+    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) != 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
+
+    query = {}
+    if args.fw_id:
+        return pw_check([int(x) for x in args.fw_id.split(',')], args)
+    elif args.name:
+        query = {'name': args.name}
+    elif args.state:
+        query = {'state': args.state}
+    elif args.query:
+        query = ast.literal_eval(args.query)
+
+    if wf_mode:
+        return pw_check(lp.get_wf_ids(query), args)
+
+    return pw_check(lp.get_fw_ids(query), args)
 
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
@@ -65,10 +100,12 @@ def lpad():
     get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
     get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
 
-    rerun_fws = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
-    rerun_fws.add_argument('fw_id', help='FireWork id or comma separated list of FW ids')
-
-    rerun_fizzled = subparsers.add_parser('rerun_fizzled', help='re-run FIZZLED FireWorks')
+    rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
+    rerun_fws_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    rerun_fws_parser.add_argument('-n', '--name', help='name', default=None)
+    rerun_fws_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    rerun_fws_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
@@ -81,19 +118,39 @@ def lpad():
     fizzled_parser.add_argument('--mark', help='mark fizzled', action='store_true')
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
-    defuse_parser.add_argument('fw_id', help='Any FireWork id in the workflow to defuse', type=int)
+    defuse_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    defuse_parser.add_argument('-n', '--name', help='name', default=None)
+    defuse_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    defuse_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    defuse_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
     archive_parser = subparsers.add_parser('archive', help='archive an entire Workflow (irreversible)')
-    archive_parser.add_argument('fw_id', help='Any FireWork id in the workflow to archive', type=int)
+    archive_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    archive_parser.add_argument('-n', '--name', help='name', default=None)
+    archive_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    archive_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    archive_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
     reignite_parser = subparsers.add_parser('reignite', help='reignite (un-cancel) an entire Workflow')
-    reignite_parser.add_argument('fw_id', help='Any FireWork id in the workflow to reignite', type=int)
+    reignite_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    reignite_parser.add_argument('-n', '--name', help='name', default=None)
+    reignite_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    reignite_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    reignite_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
-    defuse_fw_parser = subparsers.add_parser('defuse_fw', help='cancel (de-fuse) a single FireWork')
-    defuse_fw_parser.add_argument('fw_id', help='FireWork id to defuse', type=int)
+    defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single FireWork')
+    defuse_fw_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    defuse_fw_parser.add_argument('-n', '--name', help='name', default=None)
+    defuse_fw_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    defuse_fw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    defuse_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
-    reignite_fw_parser = subparsers.add_parser('reignite_fw', help='reignite (un-cancel) a single FireWork')
-    reignite_fw_parser.add_argument('fw_id', help='FireWork id to reignite', type=int)
+    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single FireWork')
+    reignite_fw_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    reignite_fw_parser.add_argument('-n', '--name', help='name', default=None)
+    reignite_fw_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    reignite_fw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    reignite_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
     maintain_parser = subparsers.add_parser('maintain', help='Run database maintenance')
     maintain_parser.add_argument('--infinite', help='loop infinitely', action='store_true')
@@ -103,8 +160,12 @@ def lpad():
     tuneup_parser = subparsers.add_parser('tuneup',
                                           help='Tune-up the database (should be performed during scheduled downtime)')
 
-    refresh_parser = subparsers.add_parser('refresh_wf', help='manually force a workflow refresh (not usually needed)')
-    refresh_parser.add_argument('fw_id', help='FireWork id to refresh', type=int)
+    refresh_parser = subparsers.add_parser('refresh', help='manually force a workflow refresh (not usually needed)')
+    refresh_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    refresh_parser.add_argument('-n', '--name', help='name', default=None)
+    refresh_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    refresh_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    refresh_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
     subparsers.add_parser('version', help='Print the version and location of FireWorks installation')
 
@@ -268,34 +329,47 @@ def lpad():
             print json.dumps(fws, default=DATETIME_HANDLER, indent=4)
 
         elif args.command == 'defuse':
-            lp.defuse_wf(args.fw_id)
+            fw_ids = parse_helper(lp, args, wf_mode=True)
+            for f in fw_ids:
+                lp.defuse_wf(f)
+                print f
 
         elif args.command == 'archive':
-            lp.archive_wf(args.fw_id)
+            fw_ids = parse_helper(lp, args, wf_mode=True)
+            for f in fw_ids:
+                lp.archive_wf(f)
+                print f
 
         elif args.command == 'reignite':
-            lp.reignite_wf(args.fw_id)
+            fw_ids = parse_helper(lp, args, wf_mode=True)
+            for f in fw_ids:
+                lp.reignite_wf(f)
+                print f
 
-        elif args.command == 'defuse_fw':
-            lp.defuse_fw(args.fw_id)
+        elif args.command == 'defuse_fws':
+            fw_ids = parse_helper(lp, args)
+            for f in fw_ids:
+                lp.defuse_fw(f)
+                print f
 
-        elif args.command == 'reignite_fw':
-            lp.reignite_fw(args.fw_id)
+        elif args.command == 'reignite_fws':
+            fw_ids = parse_helper(lp, args)
+            for f in fw_ids:
+                lp.reignite_fw(f)
+                print f
 
         elif args.command == 'rerun_fws':
-            fw_ids = args.fw_id.split(',')
+            fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 lp.rerun_fw(int(f))
+                print f
 
-        elif args.command == 'rerun_fizzled':
-            fw_ids = lp.get_fw_ids({"state": "FIZZLED"})
-            for fw_id in fw_ids:
-                lp.rerun_fw(fw_id)
-                print 'RERAN', fw_id
-
-        elif args.command == 'refresh_wf':
-            wf = lp.get_wf_by_fw_id(args.fw_id)
-            lp._refresh_wf(wf, args.fw_id)
+        elif args.command == 'refresh':
+            fw_ids = parse_helper(lp, args, wf_mode=True)
+            for f in fw_ids:
+                wf = lp.get_wf_by_fw_id(f)
+                lp._refresh_wf(wf, f)
+                print f
 
         elif args.command == 'webgui':
             os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")

@@ -78,6 +78,8 @@ class FWConfig(object):
 
         self.STORE_PACKING_INFO = True  # automatically add job packing info to stored_data
 
+        self.PW_CHECK_NUM = 10  # number of entries that can be modified in single lpad command w/o password
+
         self.override_user_settings()
 
     def override_user_settings(self):
