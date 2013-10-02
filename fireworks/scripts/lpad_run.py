@@ -11,12 +11,13 @@ from pymongo import DESCENDING, ASCENDING
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import Workflow
+from fireworks.core.firework import Workflow, FireWork
 import ast
 import json
 import datetime
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
+from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
@@ -185,6 +186,12 @@ def lpad():
     webgui_parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
                         help="Host to run the server on (default: 127.0.0.1)")
     webgui_parser.add_argument('-b', '--browser', help='launch browser', action='store_true')
+
+    addscript_parser = subparsers.add_parser('add_script', help='quickly add a script (or several scripts) to run in sequence')
+    addscript_parser.add_argument('script', help="Script to run, or delimiter-separated scripts (default comma-separated)")
+    addscript_parser.add_argument('-n', '--name', help='name to apply to FireWork and Workflow', default=None)
+    addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
+
     args = parser.parse_args()
 
     if args.command == 'version':
@@ -384,6 +391,10 @@ def lpad():
                 webbrowser.open("http://{}:{}".format(args.host, args.port))
             p1.join()
 
+        elif args.command == 'add_script':
+            scripts = args.script.split(args.delimiter)
+            tasks = [ScriptTask({'script': s, 'use_shell': True}) for s in scripts]
+            lp.add_wf(FireWork(tasks, name=args.name))
 
 if __name__ == '__main__':
     lpad()
