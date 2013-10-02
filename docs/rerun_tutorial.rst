@@ -16,15 +16,21 @@ Rerunning a FireWork
 
 Rerunning a FireWork is simple - just type::
 
-    lpad rerun_fws <FW_IDS>
+    lpad rerun_fws -i <FW_IDS>
 
 where ``<FW_IDS>`` is the numerical id of the FireWork you want to re-run (or a list of comma-separated ids). Note that all children of a re-run FireWork will also be re-run.
 
-Rerunning all FIZZLED FireWorks
-===============================
+Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 
-There is a shortcut to rerun all FireWorks that have FIZZLED - just use::
+     lpad rerun_fws [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
 
-    lpad rerun_fizzled
+Refer to the documentation (``lpad rerun_fws -h``) for more information.
 
-and you will rerun all FIZZLED FireWorks.
+Example: Rerunning all FIZZLED FireWorks
+========================================
+
+A common use case is to rerun all FIZZLED fireworks. You can do this via::
+
+    lpad rerun_fws -s FIZZLED --password <TODAY'S DATE>
+
+where ``<TODAY'S DATE>`` is formatted like ``2013-02-25`` and is only required when modifying more than 10 FireWorks simultaneously.
