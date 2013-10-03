@@ -7,6 +7,7 @@ This module contains methods for launching Rockets, both singly and in rapid-fir
 import os
 import time
 from fireworks.core.fw_config import FWConfig
+from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, acquire_db_lock, release_db_lock, log_multi
 
@@ -18,7 +19,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
-def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     """
     Run a single rocket in the current directory
     :param launchpad: (LaunchPad)
@@ -26,6 +27,7 @@ def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     :param fw_id: (int) if set, a particular FireWork to run
     :param strm_lvl: (str) level at which to output logs to stdout
     """
+    fworker = fworker if fworker else FWorker()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
 
     log_multi(l_logger, 'Launching Rocket')
@@ -34,7 +36,7 @@ def launch_rocket(launchpad, fworker, fw_id=None, strm_lvl='INFO'):
     log_multi(l_logger, 'Rocket finished')
 
 
-def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
+def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -52,6 +54,7 @@ def rapidfire(launchpad, fworker, m_dir=None, nlaunches=0, max_loops=-1, sleep_t
     curdir = m_dir if m_dir else os.getcwd()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
+    fworker = fworker if fworker else FWorker()
 
     num_launched = 0
     num_loops = 0
