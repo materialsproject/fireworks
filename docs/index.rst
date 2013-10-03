@@ -28,25 +28,21 @@ FireWorks is intended to be a friendly workflow software that is easy to get sta
 
 Some (but not all) of its features include:
 
-* Storage and management of workflows through MongoDB, a noSQL datastore that is flexible and easy to use.
+* A clean and flexible Python API plus a powerful command-line interface
 
-* A clean and powerful Python API for defining, running, and maintaining workflows.
+* A database backend (MongoDB) lets you add, remove, and rerun workflows or search for the status of certain workflows.
 
-* Ability to distribute calculations over multiple worker nodes, each of which might use different a queueing system and process a different type of calculation.
+* Multiple execution modes - directly on a multicore machines or through a queue, on a single machine or multiple machines. Assign priorities and where jobs run.
 
-* Support for *dynamic* workflows that that react to results programmatically.  You can pre-specify code that performs actions based on the output of a job (e.g., terminate a workflow, add a new step, or completely alter the workflow)
+* Support for *dynamic* workflows - workflows that modify themselves or create new ones based on what happens during execution.
 
-* Automatic detection of duplicate sub-workflows - skip duplicated portions between two workflows while still running unique sections
+* Automatic duplicate handling at the *sub*workflow level - skip duplicated portions between two workflows while still running unique sections
 
-* Loosely-coupled and modular infrastructure that is intentionally hackable. Use some FireWorks components without using *everything*, and more easily adapt FireWorks to your application.
-
-* Monitoring workflows with a *built-in*, easy-to-use web service
+* A *built-in*, easy-to-use web service for monitoring workflows
 
 * Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines
 
 * Package many small jobs into a single large job (e.g., *automatically* run 100 serial workflows in parallel over 100 cores).
-
-* Have fine control of job execution, including priorities and where jobs run.
 
 * Support for several queueing systems such as PBE/Torque, Sun Grid Engine, and SLURM.
 
