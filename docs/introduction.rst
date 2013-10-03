@@ -19,7 +19,7 @@ Reset/Initialize the FireServer
 
     mongod &
 
-.. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. In addition, if you are running it on a shared machine, make sure that the ``--dbpath`` variable is set to a directory that you can access.
+   .. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. In addition, if you are running it on a shared machine, make sure that the ``--dbpath`` variable is set to a directory that you can access.
 
 #. Navigate to the FireWorks introduction directory::
 
@@ -27,7 +27,7 @@ Reset/Initialize the FireServer
 
    where <INSTALL_DIR> is your FireWorks installation directory.
 
-.. note:: If you do not know your <INSTALL_DIR>, use the command ``lpad version`` to print it to the terminal. If you used the `pip` installation, you'll need to download the tutorial files separately as explained in the :doc:`Basic FireWorks Installation </installation>`.
+   .. note:: If you do not know your <INSTALL_DIR>, use the command ``lpad version`` to print it to the terminal. If you used the `pip` installation, you'll need to download the tutorial files separately as explained in the :doc:`Basic FireWorks Installation </installation>`.
  
 #. Reset the FireWorks database (the LaunchPad)::
 
@@ -35,7 +35,7 @@ Reset/Initialize the FireServer
 
    where <TODAY'S DATE> is formatted like '2012-01-31' (this serves as a safeguard to accidentally overwriting an existing database). You should receive confirmation that the LaunchPad was reset.
 
-.. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h``. The ``-h`` help option is available for all of the scripts in FireWorks.
+   .. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h``. The ``-h`` help option is available for all of the scripts in FireWorks.
 
 Add a FireWork to the FireServer database
 -----------------------------------------
