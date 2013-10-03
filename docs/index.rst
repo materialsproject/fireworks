@@ -109,6 +109,7 @@ To get started with FireWorks, we suggest that you follow our quickstart tutoria
 .. toctree::
    :maxdepth: 1
 
+   installation
    quickstart
 
 Basic usage
@@ -122,6 +123,7 @@ Designing workflows
 .. toctree::
    :maxdepth: 1
 
+   introduction
    firetask_tutorial
    workflow_tutorial
    dynamic_wf_tutorial

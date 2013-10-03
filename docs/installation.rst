@@ -1,14 +1,21 @@
-============================
-Basic FireWorks installation
-============================
-
-.. note:: We suggest that you use Python 2.7.3 or higher, especialy in production (although Python 3+ is not tested). There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet).
-
-Preparing to Install
 ====================
+Installing FireWorks
+====================
+
+.. note:: We suggest that you use Python 2.7.3 or higher, especially in production (although Python 3+ is not tested). There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet).
+
+Install MongoDB
+===============
+
+MongoDB powers the database backend of FireWorks. You need to install MongoDB on one machine to host the FireWorks database (the same machine can also be used to run jobs). Additional machines (i.e., that are used to run FireWorks jobs) do not require a MongoDB installation.
+
+To install MongoDB, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
+
+Preparing to Install FireWorks (Python and pip)
+===============================================
 To prepare for installation, you should:
 
-#. Install `python 2.7 <http://www.python.org>`_ (preferably Python 2.7.3), if not already packaged with your system. To check your python version, use the command ``python --version``.
+#. Install `python 2.7 <http://www.python.org>`_ (preferably Python 2.7.3 or higher), if not already packaged with your system. To check your python version, use the command ``python --version``.
 #. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
 
 .. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``. You should make sure that setuptools is installed using the proper Python version and probably without the ``--user`` option if running ``ez_setup.py``.
@@ -27,6 +34,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 
     pip install FireWorks
     pip install paramiko  # (only needed if using built-in remote file transfer!)
+    pip install django  # (only needed if you want to use the built-in web frontend!)
 
    .. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
 
@@ -55,7 +63,7 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
 
 #. Install optional dependencies using pip with the following commands (with administrator privileges)::
 
-    pip install django  # (only needed if using the web gui!)
+    pip install django  # (only needed if you want to use the built-in web frontend!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
 
 .. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``. In particular, ensure that Django is greater than v1.5.

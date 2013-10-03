@@ -9,7 +9,7 @@ The advantage of the built-in ScriptTask is that a lot of features and options h
 ScriptTask options
 ==================
 
-The ScriptTask can take in many parameters. We already examined the ``script`` parameter of ScriptTask in the :doc:`Quickstart <quickstart>`; this parameter sets the script to run. It is the only required parameter. Other optional parameters are:
+The ScriptTask can take in many parameters. We already examined the ``script`` parameter of ScriptTask in the :doc:`Introductory tutorial <introduction>`; this parameter sets the script to run. It is the only required parameter. Other optional parameters are:
 
 * ``defuse_bad_rc`` - *(default:False)* - if set True, a non-zero returncode from the Script (indicating error) will cause FireWorks to defuse the child FireWorks rather than continuing.
 * ``fizzle_bad_rc`` - *(default:False)* - if set True, a non-zero returncode from the Script (indicating error) will cause the FireWork to raise an error and FIZZLE.
@@ -23,7 +23,7 @@ The ScriptTask can take in many parameters. We already examined the ``script`` p
 * ``store_stderr`` - *(default:False)* - store the entire standard error in the FireWork Launch object's *stored_data*
 * ``stderr_file`` - *(default:None)* - store the entire standard error in this filepath. If None, the standard error will be streamed to  *sys.stderr*
 
-.. note:: These parameters do not go in the root of the FW **spec**. Rather, they go as parameters to the ``ScriptTask`` in the ``_tasks`` section of the **spec** (in the same section as the ``script`` parameter in the :doc:`Quickstart <quickstart>`).
+.. note:: These parameters do not go in the root of the FW **spec**. Rather, they go as parameters to the ``ScriptTask`` in the ``_tasks`` section of the **spec** (in the same section as the ``script`` parameter in the :doc:`Introductory tutorial <introduction>`).
 
 Manually setting the ScriptTask FWAction
 ========================================

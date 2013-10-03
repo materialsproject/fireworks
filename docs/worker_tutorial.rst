@@ -11,7 +11,7 @@ Like the previous tutorial, our purpose is to get you set up as quickly as possi
 Launch a Rocket on a worker machine (FireWorker)
 ================================================
 
-In the Quickstart, we entered a FireWork (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
+In the Introductory tutorial, we entered a FireWork (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
 
 A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). We'll next configure a worker machine.
 
