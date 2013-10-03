@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v0.37**
+
+.. caution:: The default behavior in ScriptTask is now ``fizzle_bad_rc``.
+
+* add ``lpad add_scripts``
+* ``fizzle_bad_rc`` by default in ScriptTask
+* add FWorker() by default in rlaunch
+* quickstart tutorial
+
 **v0.36**
 
 .. caution:: The ``rerun_fw``, ``defuse_fw``, and ``reignite_fw`` commands are now pluralized, ``refresh_wf`` is simply ``refresh``, and ``rerun_fizzled`` has been incorporated into ``rerun_fws``.
