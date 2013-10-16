@@ -45,18 +45,18 @@ def parse_helper(lp, args, wf_mode=False):
     :return:
     """
 
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) != 1:
-        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
+    if args.fw_id and sum([bool(x) for x in [args.name, args.state, args.query]]) >= 1:
+        raise ValueError('Cannot specify both fw_id and name/state/query)')
 
     query = {}
     if args.fw_id:
         return pw_check([int(x) for x in args.fw_id.split(',')], args)
-    elif args.name:
-        query = {'name': args.name}
-    elif args.state:
-        query = {'state': args.state}
-    elif args.query:
+    if args.query:
         query = ast.literal_eval(args.query)
+    if args.name:
+        query['name'] = args.name
+    if args.state:
+        query['state'] = args.state
 
     if wf_mode:
         return pw_check(lp.get_wf_ids(query), args)
