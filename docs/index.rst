@@ -36,7 +36,7 @@ Some (but not all) of its features include:
 
 * Support for *dynamic* workflows - workflows that modify themselves or create new ones based on what happens during execution.
 
-* Automatic duplicate handling at the *sub*workflow level - skip duplicated portions between two workflows while still running unique sections
+* Automatic duplicate handling at the sub-workflow level - skip duplicated portions between two workflows while still running unique sections
 
 * A *built-in*, easy-to-use web service for monitoring workflows
 
@@ -79,7 +79,7 @@ Workflow Model
 
 Workflows in FireWorks are made up of three main components:
 
-* A **FireTask** is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package). Each FireTask receives input data in the form of a JSON specification. *Note: if you want to run non-Python code (e.g., C++ or Java code), you must either call the code as a shell script or write a Python function that executes your code (perhaps using a Python binding to that language for tighter integration).*
+* A **FireTask** is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package).
 * A **FireWork** contains the JSON *spec* that includes all the information needed to bootstrap your job. For example, the spec contains an array of FireTasks to execute in sequence. The spec also includes any input parameters to pass to your FireTasks. You can easily perform the same function over different input data by creating FireWorks with identical FireTasks but different input parameters in the spec. You can design your spec however you'd like, as long as it's valid JSON. The JSON format used for FireWork specs is extremely flexible, very easy to learn (Python users familiar with *dicts* and *arrays* essentially already know JSON), and immediately makes rich searches over the input data available to end users through MongoDB's JSON document search capabilities.
 * A **Workflow** is a set of FireWorks with dependencies between them. For example, you might need a parent FireWork to finish and generate some output files before running two child FireWorks.
 

@@ -9,7 +9,7 @@ FireWorks Changelog
 * add ``lpad add_scripts``
 * ``fizzle_bad_rc`` by default in ScriptTask
 * add FWorker() by default in rlaunch
-* quickstart tutorial
+
 
 **v0.36**
 

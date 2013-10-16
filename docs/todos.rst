@@ -24,13 +24,13 @@ Built-in FireTasks
 Misc.
 =====
 
-* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command?
+* Speed up database queries
+
+* Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command? e.g. lpad setup
 
 * Store FW templates in "cloud". Lpad has command to read/write template to Mongo, and templatewritertask can grab template from MongoDB.
 
 * FireTask name defaults to Class name.
-
-* Ensure that lpad commands work in a pip installation with virtualenv.
 
 * Detect a blank config dir and give a proper error.
 
