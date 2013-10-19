@@ -57,7 +57,7 @@ Centralized Server and Worker Model
 
 There are essentially just two components of a FireWorks installation:
 
-* A **server** ("LaunchPad") that manages workflows. You can add workflows (a DAG of "FireWorks") to the LaunchPad, query for the state of your workflows, or rerun workflows.
+* A **server** ("LaunchPad") that manages workflows. You can add workflows (a DAG of "FireWorks") to the LaunchPad, query for the state of your workflows, or rerun workflows. The workflows can be a straightforward series of scripts or dynamically adapt depending on the results obtained.
 
 * One or more **workers** ("FireWorkers") that run your jobs. The FireWorkers request workflows from the LaunchPad, execute them, and send back information. The FireWorker can be as simple as the same workstation used to host the LaunchPad, or complicated like a national supercomputing center with a queueing system.
 
@@ -100,7 +100,7 @@ Quickstart and Tutorials
 Quickstart ("Wiggle your big toe")
 ==================================
 
-To get started with FireWorks, we suggest that you follow our quickstart tutorial, which should take 15 minutes for experienced Python users and covers basic installation and usage.
+To get a first glimpse of FireWorks, we suggest that you follow our installation and quickstart tutorials.
 
 .. toctree::
    :maxdepth: 1
