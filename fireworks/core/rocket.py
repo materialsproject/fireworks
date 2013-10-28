@@ -3,6 +3,7 @@
 """
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
+from datetime import datetime
 import multiprocessing
 import os
 import traceback
@@ -21,13 +22,19 @@ __date__ = 'Feb 7, 2013'
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
-        launchpad.ping_launch(launch_id)
+        if launchpad:
+            launchpad.ping_launch(launch_id)
+        else:
+            with open("FWPing.json") as f:
+                f.write('{"ping_time":%s}' % datetime.utcnow())
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
 def start_ping_launch(launch_id, lp):
     fd = FWData()
     if fd.MULTIPROCESSING:
+        if not launch_id:
+            raise ValueError("Multiprocessing cannot be run in offline mode!")
         m = fd.DATASERVER
         m.Running_IDs()[os.getpid()] = launch_id
         return None
@@ -148,7 +155,7 @@ class Rocket():
             else:
                 m_action.to_file("FWAction.json")
                 with open("FWState.json") as f:
-                    f.write('{"state":"COMPLETED"}')
+                    f.write('{"state":"COMPLETED"}')  # TODO: put launch id here??
 
         except:
             stop_ping_launch(ping_stop)
@@ -160,6 +167,6 @@ class Rocket():
             else:
                 m_action.to_file("FWAction.json")
                 with open("FWState.json") as f:
-                    f.write('{"state":"FIZZLED"}')
+                    f.write('{"state":"FIZZLED"}')  # TODO: put launch id here??
 
 
