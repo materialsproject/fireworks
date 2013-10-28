@@ -7,7 +7,7 @@ import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction
+from fireworks.core.firework import FWAction, FireWork
 from fireworks.core.fw_config import FWConfig, FWData
 from fireworks.utilities.fw_utilities import release_db_lock
 
@@ -55,9 +55,9 @@ class Rocket():
     def __init__(self, launchpad, fworker, fw_id):
         """
         
-        :param launchpad: A LaunchPad object for interacting with the FW database
-        :param fworker: A FWorker object describing the computing resource
-        :param fw_id: id of a specific FireWork to run (quit if it cannot be found)
+        :param launchpad: (LaunchPad) A LaunchPad object for interacting with the FW database. If none, reads FireWorks from FW.json and writes to FWAction.json
+        :param fworker: (FWorker) A FWorker object describing the computing resource
+        :param fw_id: (int) id of a specific FireWork to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -76,8 +76,13 @@ class Rocket():
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad
-        m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-        release_db_lock()
+        if lp:
+            m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
+            release_db_lock()
+        else:
+            m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
+            launch_id = None  # TODO: is this OK??
+
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
@@ -85,7 +90,12 @@ class Rocket():
             prev_dir = launch_dir
             os.chdir(m_fw.spec['_launch_dir'])
             launch_dir = os.path.abspath(os.getcwd())
-            lp._change_launch_dir(launch_id, launch_dir)
+
+            if lp:
+                lp._change_launch_dir(launch_id, launch_dir)
+            else:
+                # TODO: fix me!!
+                raise ValueError("_launch_dir cannot be used without a database connection!")
 
             if not os.listdir(prev_dir) and FWConfig().REMOVE_USELESS_DIRS:
                 try:
@@ -133,12 +143,23 @@ class Rocket():
             m_action.stored_data = all_stored_data
             m_action.mod_spec = all_mod_spec
             m_action.update_spec = all_update_spec
-            lp.complete_launch(launch_id, m_action, 'COMPLETED')
+            if lp:
+                lp.complete_launch(launch_id, m_action, 'COMPLETED')
+            else:
+                m_action.to_file("FWAction.json")
+                with open("FWState.json") as f:
+                    f.write('{"state":"COMPLETED"}')
 
         except:
             stop_ping_launch(ping_stop)
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
-            lp.complete_launch(launch_id, m_action, 'FIZZLED')
+            if lp:
+                lp.complete_launch(launch_id, m_action, 'FIZZLED')
+            else:
+                m_action.to_file("FWAction.json")
+                with open("FWState.json") as f:
+                    f.write('{"state":"FIZZLED"}')
+
 
