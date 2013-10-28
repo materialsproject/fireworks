@@ -100,9 +100,6 @@ class Rocket():
 
             if lp:
                 lp._change_launch_dir(launch_id, launch_dir)
-            else:
-                # TODO: fix me!!
-                raise ValueError("_launch_dir cannot be used without a database connection!")
 
             if not os.listdir(prev_dir) and FWConfig().REMOVE_USELESS_DIRS:
                 try:

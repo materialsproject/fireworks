@@ -76,6 +76,16 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
                 qadapter['rocket_launch'] += ' --fw_id {}'.format(fw.fw_id)
 
+                if '--offline' in qadapter['rocket_launch']:
+                    # handle _launch_dir parameter early...
+                    if '_launch_dir' in fw.spec:
+                        os.chdir(fw.spec['_launch_dir'])
+                        newlaunch_dir = os.path.abspath(os.getcwd())
+                        launchpad._change_launch_dir(launch_id, newlaunch_dir)
+
+                    # write FW.json
+                    fw.to_file("FW.json")
+
             # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
             with open(FWConfig().SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -92,6 +102,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         except:
             log_exception(l_logger, 'Error writing/submitting queue script!')
             return False
+
+        finally:
+            os.chdir(launcher_dir)  # this only matters in --offline mode with _launch_dir!
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
         return False
