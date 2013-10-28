@@ -26,7 +26,7 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
             launchpad.ping_launch(launch_id)
         else:
             with open("FWPing.json") as f:
-                f.write('{"ping_time":%s}' % datetime.utcnow())
+                f.write('{"ping_time":%s}' % datetime.utcnow())  # TODO: write launch_id here??
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
