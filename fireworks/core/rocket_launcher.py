@@ -32,7 +32,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
         l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     else:
         # offline mode
-        l_logger = get_fw_logger('rocket.launcher_dark', l_dir=os.getcwd(), stream_level=strm_lvl)
+        l_logger = get_fw_logger(None, l_dir=os.getcwd(), stream_level=strm_lvl)
 
     log_multi(l_logger, 'Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)
