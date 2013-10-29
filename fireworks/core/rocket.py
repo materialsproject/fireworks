@@ -26,10 +26,12 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
         if launchpad:
             launchpad.ping_launch(launch_id)
         else:
-            with open('FW_offline.json', 'w') as f:
+            with open('FW_offline.json', 'r+') as f:
                 d = json.loads(f.read())
                 d['ping_time'] = datetime.utcnow()
+                f.seek(0)
                 f.write(json.dumps(d))
+                f.truncate()
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
@@ -153,11 +155,13 @@ class Rocket():
             if lp:
                 lp.complete_launch(launch_id, m_action, 'COMPLETED')
             else:
-                with open('FW_offline.json', 'w') as f:
+                with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())
                     d['fwaction'] = m_action.to_dict
                     d['state'] = 'COMPLETED'
+                    f.seek(0)
                     f.write(json.dumps(d))
+                    f.truncate()
 
         except:
             stop_ping_launch(ping_stop)
@@ -167,10 +171,12 @@ class Rocket():
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')
             else:
-                with open('FW_offline.json', 'w') as f:
+                with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())
                     d['fwaction'] = m_action.to_dict
                     d['state'] = 'FIZZLED'
+                    f.seek(0)
                     f.write(json.dumps(d))
+                    f.truncate()
 
 
