@@ -157,7 +157,7 @@ class Rocket():
             else:
                 with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())
-                    d['fwaction'] = m_action.to_dict
+                    d['fwaction'] = m_action.to_dict()
                     d['state'] = 'COMPLETED'
                     f.seek(0)
                     f.write(json.dumps(d))
@@ -173,7 +173,7 @@ class Rocket():
             else:
                 with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())
-                    d['fwaction'] = m_action.to_dict
+                    d['fwaction'] = m_action.to_dict()
                     d['state'] = 'FIZZLED'
                     f.seek(0)
                     f.write(json.dumps(d))
