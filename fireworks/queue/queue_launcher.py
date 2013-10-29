@@ -86,7 +86,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     # write FW.json
                     fw.to_file("FW.json")
                     # write Launchid
-                    with open('FWLaunch.json', 'w') as f:
+                    with open('FW_offline.json', 'w') as f:
                         f.write('{"launch_id":%s}'.format(launch_id))
 
             # write and submit the queue script using the queue adapter

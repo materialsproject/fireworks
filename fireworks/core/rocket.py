@@ -4,6 +4,7 @@
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
 from datetime import datetime
+import json
 import multiprocessing
 import os
 import traceback
@@ -25,8 +26,10 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
         if launchpad:
             launchpad.ping_launch(launch_id)
         else:
-            with open('FWPing.json', 'w') as f:
-                f.write('{"ping_time":%s}' % datetime.utcnow())
+            with open('FW_offline.json', 'w') as f:
+                d = json.loads(f.read())
+                d['ping_time'] = datetime.utcnow()
+                f.write(json.dumps(d))
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
@@ -150,9 +153,11 @@ class Rocket():
             if lp:
                 lp.complete_launch(launch_id, m_action, 'COMPLETED')
             else:
-                m_action.to_file("FWAction.json")
-                with open('FWState.json', 'w') as f:
-                    f.write('{"state":"COMPLETED"}')
+                with open('FW_offline.json', 'w') as f:
+                    d = json.loads(f.read())
+                    d['fwaction'] = m_action.to_dict
+                    d['state'] = 'COMPLETED'
+                    f.write(json.dumps(d))
 
         except:
             stop_ping_launch(ping_stop)
@@ -162,8 +167,10 @@ class Rocket():
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')
             else:
-                m_action.to_file("FWAction.json")
-                with open('FWState.json', 'w') as f:
-                    f.write('{"state":"FIZZLED"}')
+                with open('FW_offline.json', 'w') as f:
+                    d = json.loads(f.read())
+                    d['fwaction'] = m_action.to_dict
+                    d['state'] = 'FIZZLED'
+                    f.write(json.dumps(d))
 
 
