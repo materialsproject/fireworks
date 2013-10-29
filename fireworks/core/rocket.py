@@ -91,7 +91,7 @@ class Rocket():
             release_db_lock()
         else:
             m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
-            launch_id = None  # TODO: is this OK??
+            launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
