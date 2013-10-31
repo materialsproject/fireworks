@@ -14,7 +14,7 @@ from pymongo import DESCENDING
 
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, Launch, Workflow
+from fireworks.core.firework import FireWork, Launch, Workflow, FWAction
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 
@@ -680,7 +680,18 @@ class LaunchPad(FWSerializable):
             if os.path.exists(ping_loc):
                 with open(ping_loc) as f:
                     ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
-                    self.ping_launch(ping_time)
+                    self.ping_launch(launch_id, ping_time)
+
+            # look for action in FW_offline.json
+            offline_loc = os.path.join(m_launch.launch_dir, "FW_offline.json")
+            with open(offline_loc) as f:
+                offline_data = json.loads(f.read())
+                if 'fwaction' in offline_data:
+                    fwaction = FWAction.from_dict(offline_data['fw_action'])
+                    state = offline_data['state']
+                    self.complete_launch(launch_id, fwaction, state)
+                    self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
+
 
             # update the updated_on
             self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
