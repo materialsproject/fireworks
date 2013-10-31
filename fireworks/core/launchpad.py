@@ -664,7 +664,6 @@ class LaunchPad(FWSerializable):
         d['name'] = name
         d['created_on'] = datetime.datetime.utcnow().isoformat()
         d['updated_on'] = datetime.datetime.utcnow().isoformat()
-        d['pinged_on'] = datetime.datetime.utcnow().isoformat()
         d['deprecated'] = False
         d['completed'] = False
         self.offline_runs.insert(d)
@@ -676,15 +675,17 @@ class LaunchPad(FWSerializable):
             # get the launch directory
             m_launch = self.get_launch_by_id(launch_id)
 
+            # look for ping file - update the FireWork if this is the case
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
                 with open(ping_loc) as f:
                     ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
                     self.ping_launch(ping_time)
 
-            # look for ping file - update pinged_on and updated_on
+
 
             # update the updated_on
+            self.offline_runs.update({"launch_id": launch_id, "updated_on": datetime.datetime.utcnow().isoformat()})
         except:
             if not ignore_errors:
                 traceback.print_exc()
