@@ -4,6 +4,7 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+import json
 import os
 import time
 import traceback
@@ -559,9 +560,9 @@ class LaunchPad(FWSerializable):
             fw_id = fw['fw_id']
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
-    def ping_launch(self, launch_id):
+    def ping_launch(self, launch_id, ptime=None):
         m_launch = self.get_launch_by_id(launch_id)
-        m_launch.touch_history()
+        m_launch.touch_history(ptime)
         self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RUNNING'},
             {'$set':{'state_history':m_launch.to_db_dict()['state_history']}})
 
@@ -673,6 +674,14 @@ class LaunchPad(FWSerializable):
         try:
             pass
             # get the launch directory
+            m_launch = self.get_launch_by_id(launch_id)
+
+            ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
+            if os.path.exists(ping_loc):
+                with open(ping_loc) as f:
+                    ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
+                    self.ping_launch(ping_time)
+
             # look for ping file - update pinged_on and updated_on
 
             # update the updated_on
