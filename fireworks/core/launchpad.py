@@ -656,9 +656,10 @@ class LaunchPad(FWSerializable):
         # AJ: This is needed for job packing due to Proxy objects not being fully featured...
         return self.logdir
 
-    def add_offline_run(self, launch_dir, fw_id, name):
+    def add_offline_run(self, launch_dir, launch_id, fw_id, name):
         d = {"launch_dir": launch_dir}
         d['fw_id'] = fw_id
+        d['launch_id'] = launch_id
         d['name'] = name
         d['created_on'] = datetime.datetime.utcnow().isoformat()
         d['updated_on'] = datetime.datetime.utcnow().isoformat()
