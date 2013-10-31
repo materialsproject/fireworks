@@ -75,6 +75,7 @@ class LaunchPad(FWSerializable):
 
         self.fireworks = self.db.fireworks
         self.launches = self.db.launches
+        self.offline_runs = self.db.offline_runs
         self.fw_id_assigner = self.db.fw_id_assigner
         self.workflows = self.db.workflows
 
@@ -121,6 +122,7 @@ class LaunchPad(FWSerializable):
             self.fireworks.remove()
             self.launches.remove()
             self.workflows.remove()
+            self.offline_runs.remove()
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
@@ -647,10 +649,21 @@ class LaunchPad(FWSerializable):
         return stolen
 
     def _upsert_launch(self, m_launch):
-        # Do a confirmed write of Launch
         # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
     def get_logdir(self):
         # AJ: This is needed for job packing due to Proxy objects not being fully featured...
         return self.logdir
+
+    def add_offline_run(self, launch_dir, fw_id, name):
+        d = {"launch_dir": launch_dir}
+        d['fw_id'] = fw_id
+        d['name'] = name
+        d['created_on'] = datetime.datetime.utcnow().isoformat()
+        d['updated_on'] = datetime.datetime.utcnow().isoformat()
+        d['pinged_on'] = datetime.datetime.utcnow().isoformat()
+        d['deprecated'] = False
+        d['completed'] = False
+        self.offline_runs.insert(d)
+
