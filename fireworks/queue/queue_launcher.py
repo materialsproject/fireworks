@@ -80,8 +80,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     # handle _launch_dir parameter early...
                     if '_launch_dir' in fw.spec:
                         os.chdir(fw.spec['_launch_dir'])
-                        newlaunch_dir = os.path.abspath(os.getcwd())
-                        launchpad._change_launch_dir(launch_id, newlaunch_dir)
+                        oldlaunch_dir = launcher_dir
+                        launch_dir = os.path.abspath(os.getcwd())
+                        launchpad._change_launch_dir(launch_id, launch_dir)
 
                     # write FW.json
                     fw.to_file("FW.json")
@@ -89,7 +90,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     with open('FW_offline.json', 'w') as f:
                         f.write('{"launch_id":%s}' % launch_id)
 
-                    launchpad.add_offline_run(newlaunch_dir, fw.fw_id, fw.name)
+                    launchpad.add_offline_run(launch_dir, fw.fw_id, fw.name)
 
             # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
@@ -109,7 +110,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             return False
 
         finally:
-            os.chdir(launcher_dir)  # this only matters in --offline mode with _launch_dir!
+            os.chdir(oldlaunch_dir)  # this only matters in --offline mode with _launch_dir!
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
         return False
