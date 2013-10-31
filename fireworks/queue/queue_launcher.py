@@ -54,6 +54,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             l_logger.info('moving to launch_dir {}'.format(launcher_dir))
             os.chdir(launcher_dir)
 
+            oldlaunch_dir = None
             if reserve or '--offline' in qadapter['rocket_launch']:
                 l_logger.debug('finding a FW to reserve...')
                 fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
@@ -110,7 +111,8 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             return False
 
         finally:
-            os.chdir(oldlaunch_dir)  # this only matters in --offline mode with _launch_dir!
+            if oldlaunch_dir:
+                os.chdir(oldlaunch_dir)  # this only matters in --offline mode with _launch_dir!
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
         return False
