@@ -82,8 +82,8 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     if '_launch_dir' in fw.spec:
                         os.chdir(fw.spec['_launch_dir'])
                         oldlaunch_dir = launcher_dir
-                        launch_dir = os.path.abspath(os.getcwd())
-                        launchpad._change_launch_dir(launch_id, launch_dir)
+                        launcher_dir = os.path.abspath(os.getcwd())
+                        launchpad._change_launch_dir(launch_id, launcher_dir)
 
                     # write FW.json
                     fw.to_file("FW.json")
@@ -91,7 +91,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     with open('FW_offline.json', 'w') as f:
                         f.write('{"launch_id":%s}' % launch_id)
 
-                    launchpad.add_offline_run(launch_dir, fw.fw_id, fw.name)
+                    launchpad.add_offline_run(launcher_dir, fw.fw_id, fw.name)
 
             # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
