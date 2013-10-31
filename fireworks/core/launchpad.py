@@ -6,6 +6,7 @@ The LaunchPad manages the FireWorks database.
 import datetime
 import os
 import time
+import traceback
 
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING
@@ -656,9 +657,8 @@ class LaunchPad(FWSerializable):
         # AJ: This is needed for job packing due to Proxy objects not being fully featured...
         return self.logdir
 
-    def add_offline_run(self, launch_dir, launch_id, fw_id, name):
-        d = {"launch_dir": launch_dir}
-        d['fw_id'] = fw_id
+    def add_offline_run(self, launch_id, fw_id, name):
+        d = {'fw_id': fw_id}
         d['launch_id'] = launch_id
         d['name'] = name
         d['created_on'] = datetime.datetime.utcnow().isoformat()
@@ -667,4 +667,20 @@ class LaunchPad(FWSerializable):
         d['deprecated'] = False
         d['completed'] = False
         self.offline_runs.insert(d)
+
+    def recover_offline(self, launch_id, ignore_errors):
+        # try-catch
+        try:
+            pass
+            # get the launch directory
+            # look for ping file - update pinged_on and updated_on
+            
+            # update the updated_on
+        except:
+            if not ignore_errors:
+                traceback.print_exc()
+
+
+
+
 
