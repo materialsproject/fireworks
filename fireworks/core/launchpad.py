@@ -682,10 +682,8 @@ class LaunchPad(FWSerializable):
                     ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
                     self.ping_launch(ping_time)
 
-
-
             # update the updated_on
-            self.offline_runs.update({"launch_id": launch_id, "updated_on": datetime.datetime.utcnow().isoformat()})
+            self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
         except:
             if not ignore_errors:
                 traceback.print_exc()
