@@ -687,7 +687,7 @@ class LaunchPad(FWSerializable):
             with open(offline_loc) as f:
                 offline_data = json.loads(f.read())
                 if 'fwaction' in offline_data:
-                    fwaction = FWAction.from_dict(offline_data['fw_action'])
+                    fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
                     self.complete_launch(launch_id, fwaction, state)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
