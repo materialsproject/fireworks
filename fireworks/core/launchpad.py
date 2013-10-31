@@ -668,7 +668,7 @@ class LaunchPad(FWSerializable):
         d['completed'] = False
         self.offline_runs.insert(d)
 
-    def recover_offline(self, launch_id, ignore_errors):
+    def recover_offline(self, launch_id, ignore_errors=False):
         # try-catch
         try:
             pass
