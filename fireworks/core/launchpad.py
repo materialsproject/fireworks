@@ -674,7 +674,7 @@ class LaunchPad(FWSerializable):
             pass
             # get the launch directory
             # look for ping file - update pinged_on and updated_on
-            
+
             # update the updated_on
         except:
             if not ignore_errors:
