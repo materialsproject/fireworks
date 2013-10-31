@@ -193,6 +193,7 @@ def lpad():
     addscript_parser.add_argument('-w', '--wf_name', help='Workflow name', default=None)
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
 
+    recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
     args = parser.parse_args()
 
     if args.command == 'version':
@@ -404,6 +405,11 @@ def lpad():
                     links[idx-1] = idx
 
             lp.add_wf(Workflow(fws, links, wf_name))
+
+        elif args.command == 'recover_offline':
+            for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
+                lp.recover_offline(l['launch_id'])
+
 
 if __name__ == '__main__':
     lpad()
