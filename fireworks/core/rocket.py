@@ -87,8 +87,17 @@ class Rocket():
         if lp:
             m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
             release_db_lock()
-        else:
+        else:  # offline mode
             m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
+
+            # set the run start time
+            with open('FW_offline.json', 'r+') as f:
+                d = json.loads(f.read())
+                d['started_on'] = datetime.utcnow().isoformat()
+                f.seek(0)
+                f.write(json.dumps(d))
+                f.truncate()
+
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:

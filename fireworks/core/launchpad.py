@@ -669,7 +669,6 @@ class LaunchPad(FWSerializable):
         self.offline_runs.insert(d)
 
     def recover_offline(self, launch_id, ignore_errors=False):
-        # TODO: get the correct run start time!!
         # get the launch directory
         m_launch = self.get_launch_by_id(launch_id)
         try:
@@ -679,14 +678,19 @@ class LaunchPad(FWSerializable):
             if os.path.exists(ping_loc):
                 with open(ping_loc) as f:
                     ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
-                    self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RESERVED'},
-            {'$set':{'state':'RUNNING'}})
                     self.ping_launch(launch_id, ping_time)
 
             # look for action in FW_offline.json
             offline_loc = os.path.join(m_launch.launch_dir, "FW_offline.json")
             with open(offline_loc) as f:
                 offline_data = json.loads(f.read())
+                if 'started_on' in offline_data:
+                    m_launch.state = 'RUNNING'
+                    for s in m_launch.state_history:
+                        if s['state'] == 'RUNNING':
+                            s['created_on'] = offline_data['started_on']
+                    self._upsert_launch(m_launch)
+
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
