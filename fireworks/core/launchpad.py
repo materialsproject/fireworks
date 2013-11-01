@@ -688,7 +688,7 @@ class LaunchPad(FWSerializable):
                     m_launch.state = 'RUNNING'
                     for s in m_launch.state_history:
                         if s['state'] == 'RUNNING':
-                            s['created_on'] = offline_data['started_on']
+                            s['created_on'] = datetime.datetime.strptime(offline_data['started_on'], "%Y-%m-%dT%H:%M:%S.%f")
                     self._upsert_launch(m_launch)
 
                 if 'fwaction' in offline_data:
