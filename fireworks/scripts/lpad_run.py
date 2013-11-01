@@ -235,9 +235,6 @@ def lpad():
                 fwf = Workflow.from_file(filename)
                 lp.add_wf(fwf)
 
-        elif args.command == 'maintain':
-            lp.maintain(args.infinite, args.maintain_interval)
-
         elif args.command == 'tuneup':
             lp.tuneup()
 

@@ -86,7 +86,7 @@ Submit a job
 
 #. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, the first thing to do is contact a system administrator for assistance. If you are convinced that there is no way for the compute nodes to access a network, you might try :doc:`running FireWorks in offline mode </offline_tutorial>`.
 
 If everything ran successfully, congratulations! You just executed a FireWork through a queue!
 
