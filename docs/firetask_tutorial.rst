@@ -19,7 +19,7 @@ In the :doc:`Introductory tutorial <introduction>`, we ran a simple script that 
       - _fw_name: Script Task
         script: echo "howdy, your job launched successfully!" >> howdy.txt
 
-The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up custom job templates that are more explicit and reusable. In this section, we'll demonstrate how to accomplish this with *FireTasks*, but first we'll demonstrate the simplest version to linearly run multiple tasks.
+The ``Script Task`` is one type of *FireTask*, which is a predefined job template written in Python. The ``Script Task`` in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the ``Script Task`` to run almost any job (without worrying that it's all done within a Python layer). However, you might want to set up jobs that are more powerful than shell scripts using Python programming. Later in this section, we'll demonstrate how to accomplish this with custom *FireTasks*. However, first we'll demonstrate the simplest version to linearly run multiple tasks.
 
 Running multiple FireTasks
 ==========================
@@ -78,7 +78,9 @@ The three-step FireWork thus looks like this:
 
 You should see two files written out to the system, ``inputs.txt`` and ``words.txt``, confirming that you successfully ran the first two steps of your job! You can also navigate to your home directory and look for ``words.txt`` to make sure the third step also got completed correctly.
 
-.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the *FWAction* object, but not between FireTasks within a FireWork (:ref:`wfmodel-label`).
+This combination of writing a file, executing a command, and perhaps moving the results could be used in many situations. For example, you could use ``Template Writer Task`` to write a templated queue script, and then use the ``Script Task`` to submit it (e.g., via the *qsub* command).
+
+.. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the *FWAction* object, but not between FireTasks within the same FireWork (:ref:`wfmodel-label`).
 
 Python Example (optional)
 -------------------------
