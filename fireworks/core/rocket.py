@@ -164,6 +164,7 @@ class Rocket():
                     d = json.loads(f.read())
                     d['fwaction'] = m_action.to_dict()
                     d['state'] = 'COMPLETED'
+                    d['completed_on'] = datetime.utcnow().isoformat()
                     f.seek(0)
                     f.write(json.dumps(d))
                     f.truncate()

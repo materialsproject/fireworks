@@ -694,6 +694,9 @@ class LaunchPad(FWSerializable):
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
+                    for s in m_launch.state_history:
+                        if s['state'] == offline_data['state']:
+                            s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
                     self.complete_launch(launch_id, fwaction, state)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
