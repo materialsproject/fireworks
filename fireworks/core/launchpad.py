@@ -669,12 +669,11 @@ class LaunchPad(FWSerializable):
         self.offline_runs.insert(d)
 
     def recover_offline(self, launch_id, ignore_errors=False):
-        # try-catch
+        # TODO: get the correct run start time!!
+        # get the launch directory
+        m_launch = self.get_launch_by_id(launch_id)
         try:
-            pass
-            # get the launch directory
-            m_launch = self.get_launch_by_id(launch_id)
-
+            self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
             # look for ping file - update the FireWork if this is the case
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
@@ -694,14 +693,13 @@ class LaunchPad(FWSerializable):
                     self.complete_launch(launch_id, fwaction, state)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
-
             # update the updated_on
             self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
+            return None
         except:
             if not ignore_errors:
                 traceback.print_exc()
+            return m_launch.fw_id
 
-
-
-
-
+    def forget_offline(self, fw_id):
+        self.offline_runs.update({"fw_id": fw_id}, {"$set": {"deprecated":True}})

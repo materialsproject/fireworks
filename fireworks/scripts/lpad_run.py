@@ -194,6 +194,13 @@ def lpad():
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
+    recover_parser.add_argument('-i', '--ignore_errors', help='ignore errors', action='store_true')
+
+    forget_parser = subparsers.add_parser('forget_offline', help='forget offline workflows')
+    forget_parser.add_argument('-n', '--name', help='name', default=None)
+    forget_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    forget_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+
     args = parser.parse_args()
 
     if args.command == 'version':
@@ -407,8 +414,21 @@ def lpad():
             lp.add_wf(Workflow(fws, links, wf_name))
 
         elif args.command == 'recover_offline':
+            failed_fws = []
             for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
-                lp.recover_offline(l['launch_id'])
+                fw = lp.recover_offline(l['launch_id'], args.ignore_errors)
+                if fw:
+                    failed_fws.append(fw)
+
+            lp.m_logger.info("FINISHED recovering offline runs.")
+            if failed_fws:
+                lp.m_logger.info("FAILED to recover offline fw_ids: {}".format(failed_fws))
+
+        elif args.command == 'forget_offline':
+            fw_ids = parse_helper(lp, args)
+            for f in fw_ids:
+                lp.forget_offline(f)
+                print f
 
 
 if __name__ == '__main__':

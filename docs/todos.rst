@@ -11,7 +11,7 @@ Major Features
 
 * More and better unit tests, e.g. unit tests of scripts
 
-* Add way to monitor a file during the run
+* ||Add way to monitor a file during the run||
 
 * checkpointing
 
@@ -20,10 +20,10 @@ Built-in FireTasks
 
 * Maybe a GridFS file storage task
 
-
 Misc.
 =====
 
+* instead of passwords, put a (y/n) prompt in the command line. You can bypass this in FWConfig (False by default). The password parameter in lpad reset is an *optional* safeguard. You can set this on/off in FWConfig (different paramter than CL safeguard).
 * Speed up database queries
 
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command? e.g. lpad setup
@@ -77,7 +77,7 @@ FW Docs
 
 * Detailed tutorial on implementing dynamic jobs
 
-* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step.
+* Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step. Set up an example which lets you change queue parameters if the previous job FIZZLED. Examples library can point to docs because some examples are already there.
 
 * Setting up logging (in deployment section of tutorials)
 
