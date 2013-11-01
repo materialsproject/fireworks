@@ -560,6 +560,8 @@ class LaunchPad(FWSerializable):
             fw_id = fw['fw_id']
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
+        return m_launch
+
     def ping_launch(self, launch_id, ptime=None):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.touch_history(ptime)
@@ -694,10 +696,11 @@ class LaunchPad(FWSerializable):
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
+                    m_launch = self.complete_launch(launch_id, fwaction, state)
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
-                    self.complete_launch(launch_id, fwaction, state)
+                    self._upsert_launch(m_launch)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
             # update the updated_on
