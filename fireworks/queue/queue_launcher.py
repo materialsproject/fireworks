@@ -55,7 +55,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             os.chdir(launcher_dir)
 
             oldlaunch_dir = None
-            if reserve or '--offline' in qadapter['rocket_launch']:
+            if '--offline' in qadapter['rocket_launch'] and not reserve:
+                raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline mode (--offline option) of rlaunch!!")
+            elif reserve:
                 l_logger.debug('finding a FW to reserve...')
                 fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
                 if not fw:
