@@ -61,7 +61,7 @@ Generally, you will not need to manually tell FireWorks to forget about certain 
 
 This prints a help file stating how can "forget" certain FireWorks so we no longer try to recover them. The state of these FireWorks in the database will be frozen unless you run a command like ``defuse_fws`` or ``rerun_fws`` to handle them.
 
-An advantage to offline mode
-============================
+An advantage to offline mode: robustness to DB downtime
+=======================================================
 
-While offline mode is typically undesirable compared to normal FireWorks operation, one advantage is that it minimizes the need for database access. Whereas normal operation requires the database to be fully operational while jobs are running, offline operation only requires database access when checking out and submitting jobs (``qlaunch``) and when recovering jobs (``recovering_offline``). The database can be down for maintenance in between, while jobs are running.
+While offline mode is typically undesirable compared to normal FireWorks operation, one advantage is that it minimizes the need for database access. Whereas normal operation requires the database to be fully operational while jobs are running, offline operation only requires database access when checking out and submitting jobs (``qlaunch``) and when recovering jobs (``recover_offline``). The database can be down for maintenance in between, while jobs are running.
