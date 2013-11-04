@@ -103,7 +103,7 @@ Run all Workflows
         "updated_on": "2013-10-03T20:57:24.978670"
     }
 
-   FireWorks automatically created ``launcher_`` directories for each step in the Workflow and ran them. We see that both steps are complete. Note that there exist options to choose where to run jobs, as well as to tear down directories after running jobs.
+   FireWorks automatically created ``launcher_`` directories for each step in the Workflow and ran them. We see that both steps are complete. Note that there exist options to :doc:`choose where to run jobs </controlworker>`, as well as to :doc:`tear down empty directories after running jobs </config_tutorial>`.
 
 Launch the web GUI
 ==================
@@ -135,7 +135,7 @@ The following Python code achieves the same behavior::
     launchpad.add_wf(wf)
     rapidfire(launchpad)
 
-.. note:: The ``{1:2}`` argument is adding a dependency of fw2 to fw1.
+.. note:: The ``{1:2}`` argument is adding a dependency of fw2 to fw1. Meaning, fw2 will only run after fw1 completes.
 
 Next steps
 ==========

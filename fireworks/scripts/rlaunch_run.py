@@ -31,6 +31,7 @@ def rlaunch():
                                          help='launch multiple Rockets (loop until all FireWorks complete)')
 
     single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
+    single_parser.add_argument('--offline', help='run in offline mode (FW.json required)', action='store_true')
 
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
     rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
@@ -53,7 +54,10 @@ def rlaunch():
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
-    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
+    if args.offline:
+        launchpad = None
+    else:
+        launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
 
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)

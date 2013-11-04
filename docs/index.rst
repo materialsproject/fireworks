@@ -194,6 +194,7 @@ Additional features and topics
     controlworker
     multi_job
     duplicates_tutorial
+    offline_tutorial
     python_tutorial
 
 .. _contributing-label:

@@ -4,13 +4,15 @@ Launch Rockets through a queue
 
 If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer resources.
 
-The simplest way to execute jobs through a queue is to submit scripts to your queue manager that run ``rlaunch``. This method is just like typing ``rlaunch`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
+The simplest way to execute jobs through a queue would be to write a templated queue file and then submit it as a two-task FireWork, as in the :doc:`FireTask tutorial </firetask_tutorial>`. However, FireWorks then considers your "job" to only be queue submission, and will consider the job completed after the queue sumission is complete. FireWorks will not know when the actual payload starts running, or is finished, or if the job finishes successfully. Thus, many of the useful management and monitoring features of FireWorks will not be available to you.
+
+A more powerful way to execute jobs through a queue is presented in this tutorial. In this method, the queue file runs ``rlaunch`` instead of running your desired program. This method is just like typing ``rlaunch`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
 
 The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script "wakes" up and runs the Rocket Launcher, which then figures out what FireWork to run.
 
-The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don't have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your job stuck in the queue is not preventing high-priority jobs from running on other machines.
+The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don't have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your submission job stuck in the queue is not preventing high-priority jobs from running on other machines.
 
-There are also some disadvantages to this simple system, which we'll discuss at the end of the tutorial. We'll also direct you on how to overcome these limitations in a subsequent tutorial. For now, we suggest that you get things working simply.
+There are also some disadvantages to this simple system for which you might want to tell FireWorks about the queue. We'll discuss these limitations at the end of the tutorial and direct you on how to overcome them in the next tutorial. For now, we suggest that you get things working simply.
 
 Launch a single job through a queue
 ===================================
@@ -84,7 +86,7 @@ Submit a job
 
 #. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, you might contact a system administrator for assistance.
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, the first thing to do is contact a system administrator for assistance. If you are convinced that there is no way for the compute nodes to access a network, you might try :doc:`running FireWorks in offline mode </offline_tutorial>`.
 
 If everything ran successfully, congratulations! You just executed a FireWork through a queue!
 
@@ -177,7 +179,7 @@ More information
 Limitations and Next Steps
 ==========================
 
-The information in this tutorial might be all you need to automate your application. However, as we noted previously, there are some limitations to running under a model in which FireWorks is completely unaware of the existence of queues. Some limitations include:
+The information in this tutorial might be all you need to automate your application. However, as we noted previously, there are some limitations to running under a model in which FireWorks is completely unaware of the existence of queues. In the simple queue execution model, limitations include:
 
 1. **You can't track how many of your jobs are queued**
 
@@ -197,9 +199,11 @@ If you have just two or three sets of queue parameters for your different job ty
 
 While this solution works for a few different job types, it is not practical if you have many job types. In addition, it requires some coordination between FireWork categories, FireWorkers, and Queue Launchers. Therefore, if setting multiple sets of queue parameters is needed for your application, we suggest that you read on for a solution.
 
+**To solve these problems, you must *reserve* FireWorks in advance**.
+
 Next step: reserving FireWorks to overcome limitations
 ------------------------------------------------------
 
-If you feel these limitations severely impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity.
+If you feel these limitations impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity.
 
 .. note:: If you are planning to complete the next tutorial, you should save your working directory with the files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.

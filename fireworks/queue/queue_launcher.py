@@ -54,7 +54,10 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             l_logger.info('moving to launch_dir {}'.format(launcher_dir))
             os.chdir(launcher_dir)
 
-            if reserve:
+            oldlaunch_dir = None
+            if '--offline' in qadapter['rocket_launch'] and not reserve:
+                raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline mode (--offline option) of rlaunch!!")
+            elif reserve:
                 l_logger.debug('finding a FW to reserve...')
                 fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
                 if not fw:
@@ -76,6 +79,22 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
                 qadapter['rocket_launch'] += ' --fw_id {}'.format(fw.fw_id)
 
+                if '--offline' in qadapter['rocket_launch']:
+                    # handle _launch_dir parameter early...
+                    if '_launch_dir' in fw.spec:
+                        os.chdir(fw.spec['_launch_dir'])
+                        oldlaunch_dir = launcher_dir
+                        launcher_dir = os.path.abspath(os.getcwd())
+                        launchpad._change_launch_dir(launch_id, launcher_dir)
+
+                    # write FW.json
+                    fw.to_file("FW.json")
+                    # write Launchid
+                    with open('FW_offline.json', 'w') as f:
+                        f.write('{"launch_id":%s}' % launch_id)
+
+                    launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)
+
             # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
             with open(FWConfig().SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -92,6 +111,10 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         except:
             log_exception(l_logger, 'Error writing/submitting queue script!')
             return False
+
+        finally:
+            if oldlaunch_dir:
+                os.chdir(oldlaunch_dir)  # this only matters in --offline mode with _launch_dir!
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
         return False

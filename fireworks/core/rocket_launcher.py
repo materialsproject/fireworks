@@ -28,7 +28,11 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     :param strm_lvl: (str) level at which to output logs to stdout
     """
     fworker = fworker if fworker else FWorker()
-    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
+    if launchpad:
+        l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
+    else:
+        # offline mode
+        l_logger = get_fw_logger('rocket.launcher', l_dir=None, stream_level=strm_lvl)
 
     log_multi(l_logger, 'Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)

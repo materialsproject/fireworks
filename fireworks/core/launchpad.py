@@ -4,15 +4,17 @@
 The LaunchPad manages the FireWorks database.
 """
 import datetime
+import json
 import os
 import time
+import traceback
 
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING
 
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, Launch, Workflow
+from fireworks.core.firework import FireWork, Launch, Workflow, FWAction
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 
@@ -75,6 +77,7 @@ class LaunchPad(FWSerializable):
 
         self.fireworks = self.db.fireworks
         self.launches = self.db.launches
+        self.offline_runs = self.db.offline_runs
         self.fw_id_assigner = self.db.fw_id_assigner
         self.workflows = self.db.workflows
 
@@ -121,6 +124,7 @@ class LaunchPad(FWSerializable):
             self.fireworks.remove()
             self.launches.remove()
             self.workflows.remove()
+            self.offline_runs.remove()
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
@@ -556,9 +560,11 @@ class LaunchPad(FWSerializable):
             fw_id = fw['fw_id']
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
-    def ping_launch(self, launch_id):
+        return m_launch
+
+    def ping_launch(self, launch_id, ptime=None):
         m_launch = self.get_launch_by_id(launch_id)
-        m_launch.touch_history()
+        m_launch.touch_history(ptime)
         self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RUNNING'},
             {'$set':{'state_history':m_launch.to_db_dict()['state_history']}})
 
@@ -647,10 +653,63 @@ class LaunchPad(FWSerializable):
         return stolen
 
     def _upsert_launch(self, m_launch):
-        # Do a confirmed write of Launch
         # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
     def get_logdir(self):
         # AJ: This is needed for job packing due to Proxy objects not being fully featured...
         return self.logdir
+
+    def add_offline_run(self, launch_id, fw_id, name):
+        d = {'fw_id': fw_id}
+        d['launch_id'] = launch_id
+        d['name'] = name
+        d['created_on'] = datetime.datetime.utcnow().isoformat()
+        d['updated_on'] = datetime.datetime.utcnow().isoformat()
+        d['deprecated'] = False
+        d['completed'] = False
+        self.offline_runs.insert(d)
+
+    def recover_offline(self, launch_id, ignore_errors=False):
+        # get the launch directory
+        m_launch = self.get_launch_by_id(launch_id)
+        try:
+            self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
+            # look for ping file - update the FireWork if this is the case
+            ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
+            if os.path.exists(ping_loc):
+                with open(ping_loc) as f:
+                    ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
+                    self.ping_launch(launch_id, ping_time)
+
+            # look for action in FW_offline.json
+            offline_loc = os.path.join(m_launch.launch_dir, "FW_offline.json")
+            with open(offline_loc) as f:
+                offline_data = json.loads(f.read())
+                if 'started_on' in offline_data:
+                    m_launch.state = 'RUNNING'
+                    for s in m_launch.state_history:
+                        if s['state'] == 'RUNNING':
+                            s['created_on'] = datetime.datetime.strptime(offline_data['started_on'], "%Y-%m-%dT%H:%M:%S.%f")
+                    self._upsert_launch(m_launch)
+
+                if 'fwaction' in offline_data:
+                    fwaction = FWAction.from_dict(offline_data['fwaction'])
+                    state = offline_data['state']
+                    m_launch = self.complete_launch(launch_id, fwaction, state)
+                    for s in m_launch.state_history:
+                        if s['state'] == offline_data['state']:
+                            s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
+                    self._upsert_launch(m_launch)
+                    self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
+
+            # update the updated_on
+            self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
+            return None
+        except:
+            if not ignore_errors:
+                traceback.print_exc()
+            return m_launch.fw_id
+
+    def forget_offline(self, fw_id):
+        self.offline_runs.update({"fw_id": fw_id}, {"$set": {"deprecated":True}})

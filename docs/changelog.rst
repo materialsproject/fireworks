@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+v0.4
+----
+
+* add offline mode
+
 **v0.37**
 
 .. caution:: The default behavior in ScriptTask is now ``fizzle_bad_rc``.

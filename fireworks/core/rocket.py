@@ -3,11 +3,13 @@
 """
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
+from datetime import datetime
+import json
 import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction
+from fireworks.core.firework import FWAction, FireWork
 from fireworks.core.fw_config import FWConfig, FWData
 from fireworks.utilities.fw_utilities import release_db_lock
 
@@ -21,13 +23,19 @@ __date__ = 'Feb 7, 2013'
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
-        launchpad.ping_launch(launch_id)
+        if launchpad:
+            launchpad.ping_launch(launch_id)
+        else:
+            with open('FW_ping.json', 'w') as f:
+                f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
 def start_ping_launch(launch_id, lp):
     fd = FWData()
     if fd.MULTIPROCESSING:
+        if not launch_id:
+            raise ValueError("Multiprocessing cannot be run in offline mode!")
         m = fd.DATASERVER
         m.Running_IDs()[os.getpid()] = launch_id
         return None
@@ -55,9 +63,9 @@ class Rocket():
     def __init__(self, launchpad, fworker, fw_id):
         """
         
-        :param launchpad: A LaunchPad object for interacting with the FW database
-        :param fworker: A FWorker object describing the computing resource
-        :param fw_id: id of a specific FireWork to run (quit if it cannot be found)
+        :param launchpad: (LaunchPad) A LaunchPad object for interacting with the FW database. If none, reads FireWorks from FW.json and writes to FWAction.json
+        :param fworker: (FWorker) A FWorker object describing the computing resource
+        :param fw_id: (int) id of a specific FireWork to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -76,8 +84,22 @@ class Rocket():
         launch_dir = os.path.abspath(os.getcwd())
 
         # check a FW job out of the launchpad
-        m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-        release_db_lock()
+        if lp:
+            m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
+            release_db_lock()
+        else:  # offline mode
+            m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
+
+            # set the run start time
+            with open('FW_offline.json', 'r+') as f:
+                d = json.loads(f.read())
+                d['started_on'] = datetime.utcnow().isoformat()
+                f.seek(0)
+                f.write(json.dumps(d))
+                f.truncate()
+
+            launch_id = None  # we don't need this in offline mode...
+
         if not m_fw:
             raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
 
@@ -85,7 +107,9 @@ class Rocket():
             prev_dir = launch_dir
             os.chdir(m_fw.spec['_launch_dir'])
             launch_dir = os.path.abspath(os.getcwd())
-            lp._change_launch_dir(launch_id, launch_dir)
+
+            if lp:
+                lp._change_launch_dir(launch_id, launch_dir)
 
             if not os.listdir(prev_dir) and FWConfig().REMOVE_USELESS_DIRS:
                 try:
@@ -133,12 +157,32 @@ class Rocket():
             m_action.stored_data = all_stored_data
             m_action.mod_spec = all_mod_spec
             m_action.update_spec = all_update_spec
-            lp.complete_launch(launch_id, m_action, 'COMPLETED')
+            if lp:
+                lp.complete_launch(launch_id, m_action, 'COMPLETED')
+            else:
+                with open('FW_offline.json', 'r+') as f:
+                    d = json.loads(f.read())
+                    d['fwaction'] = m_action.to_dict()
+                    d['state'] = 'COMPLETED'
+                    d['completed_on'] = datetime.utcnow().isoformat()
+                    f.seek(0)
+                    f.write(json.dumps(d))
+                    f.truncate()
 
         except:
             stop_ping_launch(ping_stop)
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
-            lp.complete_launch(launch_id, m_action, 'FIZZLED')
+            if lp:
+                lp.complete_launch(launch_id, m_action, 'FIZZLED')
+            else:
+                with open('FW_offline.json', 'r+') as f:
+                    d = json.loads(f.read())
+                    d['fwaction'] = m_action.to_dict()
+                    d['state'] = 'FIZZLED'
+                    f.seek(0)
+                    f.write(json.dumps(d))
+                    f.truncate()
+
 

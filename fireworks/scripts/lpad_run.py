@@ -193,6 +193,14 @@ def lpad():
     addscript_parser.add_argument('-w', '--wf_name', help='Workflow name', default=None)
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
 
+    recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
+    recover_parser.add_argument('-i', '--ignore_errors', help='ignore errors', action='store_true')
+
+    forget_parser = subparsers.add_parser('forget_offline', help='forget offline workflows')
+    forget_parser.add_argument('-n', '--name', help='name', default=None)
+    forget_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    forget_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+
     args = parser.parse_args()
 
     if args.command == 'version':
@@ -226,9 +234,6 @@ def lpad():
             for filename in os.listdir(args.wf_dir):
                 fwf = Workflow.from_file(filename)
                 lp.add_wf(fwf)
-
-        elif args.command == 'maintain':
-            lp.maintain(args.infinite, args.maintain_interval)
 
         elif args.command == 'tuneup':
             lp.tuneup()
@@ -404,6 +409,24 @@ def lpad():
                     links[idx-1] = idx
 
             lp.add_wf(Workflow(fws, links, wf_name))
+
+        elif args.command == 'recover_offline':
+            failed_fws = []
+            for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
+                fw = lp.recover_offline(l['launch_id'], args.ignore_errors)
+                if fw:
+                    failed_fws.append(fw)
+
+            lp.m_logger.info("FINISHED recovering offline runs.")
+            if failed_fws:
+                lp.m_logger.info("FAILED to recover offline fw_ids: {}".format(failed_fws))
+
+        elif args.command == 'forget_offline':
+            fw_ids = parse_helper(lp, args)
+            for f in fw_ids:
+                lp.forget_offline(f)
+                print f
+
 
 if __name__ == '__main__':
     lpad()
