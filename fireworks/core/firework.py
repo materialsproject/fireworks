@@ -426,6 +426,18 @@ class Launch(FWSerializable, object):
                     return data['updated_on']
                 return data['created_on']
 
+class _NestedClassGetter(object):
+    """
+    When called with the containing class as the first argument,
+    and the name of the nested class as the second argument,
+    returns an instance of the nested class.
+    """
+    def __call__(self, containing_class, class_name):
+        nested_class = getattr(containing_class, class_name)
+        # return an instance of a nested_class. Some more intelligence could be
+        # applied for class construction if necessary.
+        # To support for Pickling of Workflow.Links
+        return nested_class()
 
 class Workflow(FWSerializable):
     """
@@ -480,6 +492,12 @@ class Workflow(FWSerializable):
         @classmethod
         def from_dict(cls, m_dict):
             return Workflow.Links(m_dict)
+
+        def __reduce__(self):
+            # return a class which can return this class when called with the
+            # appropriate tuple of arguments
+            # To support Pickling
+            return (_NestedClassGetter(), (Workflow, self.__class__.__name__, ))
 
     def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
                  updated_on=None):
