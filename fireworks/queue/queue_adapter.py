@@ -44,7 +44,7 @@ class QueueAdapterBase(dict, FWSerializable):
             # set substitution dict for replacements into the template
             subs_dict = dict([(k,v) for k,v in dict(self).iteritems() if v is not None])  # clean null values
 
-            for k, v in self.defaults:
+            for k, v in self.defaults.iteritems():
                 subs_dict[k] = subs_dict.get(k, v)
 
             subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
