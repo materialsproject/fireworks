@@ -187,4 +187,18 @@ class DataServer(BaseManager):
         DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
         m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # random port
         m.start()
-        return m
+
+
+class NestedClassGetter(object):
+    """
+    Used to help pickle inner classes, e.g. see Workflow.Links
+    When called with the containing class as the first argument,
+    and the name of the nested class as the second argument,
+    returns an instance of the nested class.
+    """
+    def __call__(self, containing_class, class_name):
+        nested_class = getattr(containing_class, class_name)
+        # return an instance of a nested_class. Some more intelligence could be
+        # applied for class construction if necessary.
+        # To support for Pickling of Workflow.Links
+        return nested_class()

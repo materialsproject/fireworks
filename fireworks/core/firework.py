@@ -21,7 +21,7 @@ from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -427,19 +427,6 @@ class Launch(FWSerializable, object):
                     return data['updated_on']
                 return data['created_on']
 
-class _NestedClassGetter(object):
-    """
-    When called with the containing class as the first argument,
-    and the name of the nested class as the second argument,
-    returns an instance of the nested class.
-    """
-    def __call__(self, containing_class, class_name):
-        nested_class = getattr(containing_class, class_name)
-        # return an instance of a nested_class. Some more intelligence could be
-        # applied for class construction if necessary.
-        # To support for Pickling of Workflow.Links
-        return nested_class()
-
 class Workflow(FWSerializable):
     """
     A Workflow connects a group of FireWorks in an execution order
@@ -495,10 +482,10 @@ class Workflow(FWSerializable):
             return Workflow.Links(m_dict)
 
         def __reduce__(self):
+            # to support Pickling of inner classes (for multi-job launcher's multiprocessing)
             # return a class which can return this class when called with the
             # appropriate tuple of arguments
-            # To support Pickling
-            return (_NestedClassGetter(), (Workflow, self.__class__.__name__, ))
+            return (NestedClassGetter(), (Workflow, self.__class__.__name__, ))
 
     def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
                  updated_on=None):
