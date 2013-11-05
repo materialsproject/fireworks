@@ -19,16 +19,16 @@ This is the *offline* mode of FireWorks operation. Before using this option, how
 * The login node still needs to be able to access the FireWorks database. If you're not sure, try to :doc:`run a database query </query_tutorial>` from the login node.
 * The login node needs to be able to write files that can be read by the compute nodes, and vice-versa.
 * *Offline* mode can only be used with the :doc:`reservation mode </queue_tutorial_pt2>` of the queue launcher, since the login node must checkout and serialize a job in advance of the queue submission starting to run.
-* Using FireWorks in *offline* mode requires more human maintenance than normal mode, and gnerates extra files for communication within each job. Thus, trying to get a network connection up and running between your FireWorker and LaunchPad should always be your first line of attack.
+* Using FireWorks in *offline* mode requires more human maintenance than normal mode, and generates extra files for communication within each job. Thus, trying to get a network connection up and running between your FireWorker and LaunchPad should always be your first line of attack.
 
 Part 1: Checkout and submit jobs in offline mode
 ================================================
 
-In offline mode, the login node will *reserve* a job from the LaunchPad using the network connection. It will serialize that job to a ``FW.json`` file and put that file in the launch directory. When the compute node starts running the job, it will read the ``FW.json`` file to instantiate the FireWork and run it.
+In offline mode, the login node will checkout a job, serialize it to a ``FW.json`` file, and put that file in the launch directory. When the compute node starts running the job, it will read the ``FW.json`` file to instantiate the FireWork and run it using the ``--offline`` option of the *rlaunch* command.
 
 To submit jobs in offline mode:
 
-1. First, configure you queue file ``my_qadapter.yaml`` according to the instructions in the :doc:`simple queue tutorial </queue_tutorial>`. However, in the ``rocket_launch`` section of the file, add the ``--offline`` tag to the end. For example, your ``rocket_launch`` section of the file might look like: ``rlaunch -w path/to/myfworker.yaml -l path/to/my_launchpad.yaml singleshot --offline``. When finished, you can add FireWorks, but do not run the ``qlaunch`` command yet.
+1. First, configure you queue file ``my_qadapter.yaml`` according to the instructions in the :doc:`simple queue tutorial </queue_tutorial>`. However, in the ``rocket_launch`` section of the file, add the ``--offline`` tag to the end. For example, your ``rocket_launch`` section of the file might look like: ``rlaunch -w path/to/myfworker.yaml -l path/to/my_launchpad.yaml singleshot --offline``. When finished, you can add FireWorks to your database.
 
 2. When you are ready to submit the jobs to the queue, make sure you use the reservation mode of queue launcher (``-r`` option). For example, ``qlaunch -r rapidfire``. More details on reservation mode can be found :doc:`here </queue_tutorial_pt2>`.
 
