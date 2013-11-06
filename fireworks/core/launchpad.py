@@ -656,6 +656,9 @@ class LaunchPad(FWSerializable):
         # TODO: this no longer needs to be its own function (much was removed)
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
+    def set_priority(self, fw_id, priority):
+        self.fireworks.find_and_modify({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
+
     def get_logdir(self):
         # AJ: This is needed for job packing due to Proxy objects not being fully featured...
         return self.logdir

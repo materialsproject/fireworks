@@ -168,6 +168,14 @@ def lpad():
     refresh_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     refresh_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
 
+    priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
+    priority_parser.add_argument('priority', help='get FW with this fw_id', default=None, type=int)
+    priority_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    priority_parser.add_argument('-n', '--name', help='name', default=None)
+    priority_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    priority_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    priority_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
+
     subparsers.add_parser('version', help='Print the version and location of FireWorks installation')
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
@@ -383,6 +391,15 @@ def lpad():
                 wf = lp.get_wf_by_fw_id(f)
                 lp._refresh_wf(wf, f)
                 print f
+
+        elif args.command == 'set_priority':
+            fw_ids = parse_helper(lp, args, wf_mode=True)
+            for f in fw_ids:
+                lp.set_priority(f, args.priority)
+                lp.m_logger.debug("Set priority of fw_id {}".format(f))
+
+            lp.m_logger.info("Finished setting priorities of {} FireWorks".format(len(fw_ids)))
+
 
         elif args.command == 'webgui':
             os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
