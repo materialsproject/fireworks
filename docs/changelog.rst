@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.41**
+
+* add ``set_priority`` function to LaunchPad
+* minor bug fixes related to multi-launcher and default queue params
+
 v0.4
 ----
 
