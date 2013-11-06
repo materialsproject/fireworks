@@ -22,7 +22,7 @@ where ``<FW_IDS>`` is the numerical id of the FireWork you want to re-run (or a 
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 
-     lpad rerun_fws [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
+     lpad rerun_fws [-i FW_IDS] [-n NAME] [-s STATE] [-q QUERY]
 
 Refer to the documentation (``lpad rerun_fws -h``) for more information.
 

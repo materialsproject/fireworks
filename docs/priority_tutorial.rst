@@ -2,21 +2,34 @@
 Assigning job priority
 ======================
 
-You might want to control the order in which your FireWorks are run. Setting job priority is simple.
+You might want to control the order in which your FireWorks are run. Setting job priority is simple. A few notes:
 
-How to set job priority
-=======================
+* You can assign any numerical value to the priority, including negative numbers and decimals. Higher priorities are run first.
 
-To set job priority, simply set a key named ``_priority`` in your FireWork spec. FireWorks will automatically prioritize jobs based on their value of this key. A few notes:
+* FireWorks with *any* value of priority will be run before jobs without a priority defined. If two FireWorks have the same priority, one of those jobs will be chosen randomly.
 
-* You can assign any numerical value to the ``_priority``, including negative numbers and decimals. Higher priorities are run first.
+Set job priority using the command line after adding FWs
+========================================================
 
-* FireWorks with any value of ``_priority`` will be run before jobs without a priority defined. If two FireWorks have the same ``_priority``, one of those jobs will be chosen randomly.
+If you would like to set the priority of a FireWork *after* you have already entered it into the LaunchPad, you can do so via the command::
 
-* Make sure that the ``_priority`` key is set at the root level of your FireWork spec.
+    lpad set_priority -i <FW_IDS> <PRIORITY>
 
-Example: Prioritize one workflow over another
-=============================================
+where ``<FW_IDS>`` is the numerical id of the FireWork you want to set the priority of (or a list of comma-separated ids), and ``<PRIORITY`` is the priority to assign.
+
+Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
+
+     lpad rerun_fws [-i FW_IDS] [-n NAME] [-s STATE] [-q QUERY] <PRIORITY>
+
+Refer to the documentation (``lpad set_priority -h``) for more information.
+
+Set job priority when creating FireWorks
+========================================
+
+To set job priority, simply set a key named ``_priority`` in your FireWork spec to your desired priority. FireWorks will automatically prioritize jobs based on their value of this key.
+
+Example 1: Prioritize one workflow over another
+-----------------------------------------------
 
 Imagine we have two workflows, A and B, with two steps each (1 and 2). We want to run workflow A in its entirety before beginning workflow B. Our execution should follow the blue arrow:
 
@@ -47,7 +60,7 @@ Let's examine how we can set up such an execution model.
     Task B-2
 
 Example 2: A breadth-first workflow
-===================================
+-----------------------------------
 
 Let's now try another execution order: A-1, B-1, B-2, A-2.
 
@@ -74,4 +87,3 @@ Let's now try another execution order: A-1, B-1, B-2, A-2.
     Task B-1
     Task B-2
     Task A-2
-
