@@ -3,6 +3,10 @@ FireWorks Changelog
 ===================
 
 
+**v0.43**
+
+* fix bug introduced in v0.4 that caused rlaunch rapidfire to stop working
+
 **v0.42**
 
 * fix bug introduced in v0.4 that caused update_time to be NULL for launches
