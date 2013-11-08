@@ -54,7 +54,7 @@ def rlaunch():
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
-    if args.offline:
+    if args.command == 'singleshot' and args.offline:
         launchpad = None
     else:
         launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
