@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+
+**v0.42**
+
+* fix bug introduced in v0.4 that caused update_time to be NULL for launches
+
 **v0.41**
 
 * add ``set_priority`` function to LaunchPad
