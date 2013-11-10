@@ -353,53 +353,58 @@ def lpad():
             fw_ids = parse_helper(lp, args, wf_mode=True)
             for f in fw_ids:
                 lp.defuse_wf(f)
-                print f
+                lp.m_logger.debug('Processed fw_id: {}'.format(f))
+            lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
 
         elif args.command == 'archive':
             fw_ids = parse_helper(lp, args, wf_mode=True)
             for f in fw_ids:
                 lp.archive_wf(f)
-                print f
+                lp.m_logger.debug('Processed fw_id: {}'.format(f))
+            lp.m_logger.info('Finished archiving {} FWs'.format(len(fw_ids)))
 
         elif args.command == 'reignite':
             fw_ids = parse_helper(lp, args, wf_mode=True)
             for f in fw_ids:
                 lp.reignite_wf(f)
-                print f
+                lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
+            lp.m_logger.info('Finished reigniting {} Workflows'.format(len(fw_ids)))
 
         elif args.command == 'defuse_fws':
             fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 lp.defuse_fw(f)
-                print f
+                lp.m_logger.debug('Processed fw_id: {}'.format(f))
+            lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
 
         elif args.command == 'reignite_fws':
             fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 lp.reignite_fw(f)
-                print f
+                lp.m_logger.debug('Processed fw_id: {}'.format(f))
+            lp.m_logger.info('Finished reigniting {} FWs'.format(len(fw_ids)))
 
         elif args.command == 'rerun_fws':
             fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 lp.rerun_fw(int(f))
-                print f
+                lp.m_logger.debug('Processed fw_id: {}'.format(f))
+            lp.m_logger.info('Finished rerunning {} FWs'.format(len(fw_ids)))
 
         elif args.command == 'refresh':
             fw_ids = parse_helper(lp, args, wf_mode=True)
             for f in fw_ids:
                 wf = lp.get_wf_by_fw_id(f)
                 lp._refresh_wf(wf, f)
-                print f
+                lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
+            lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
 
         elif args.command == 'set_priority':
             fw_ids = parse_helper(lp, args, wf_mode=True)
             for f in fw_ids:
                 lp.set_priority(f, args.priority)
-                lp.m_logger.debug("Set priority of fw_id {}".format(f))
-
-            lp.m_logger.info("Finished setting priorities of {} FireWorks".format(len(fw_ids)))
-
+                lp.m_logger.debug("Processed fw_id {}".format(f))
+            lp.m_logger.info("Finished setting priorities of {} FWs".format(len(fw_ids)))
 
         elif args.command == 'webgui':
             os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
@@ -442,7 +447,9 @@ def lpad():
             fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 lp.forget_offline(f)
-                print f
+                lp.m_logger.debug('Processed fw_id: {}'.format(f))
+
+            lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
 
 
 if __name__ == '__main__':

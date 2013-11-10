@@ -9,11 +9,7 @@ Major Features
 
 * Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
 
-* More and better unit tests, e.g. unit tests of scripts
-
 * ||Add way to monitor a file during the run||
-
-* checkpointing
 
 Built-in FireTasks
 ==================
@@ -52,6 +48,10 @@ Tests
 =====
 
 * test that if two classes have the same _fw_name, that we will get an error
+
+* test offline_mode
+
+* More and better unit tests, e.g. unit tests of scripts
 
 FW Docs
 =======
