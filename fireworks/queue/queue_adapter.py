@@ -24,7 +24,8 @@ class QueueAdapterBase(dict, FWSerializable):
     script format as well as queue submission and management.
 
     A user should extend this class with implementations that work on \
-    specific queue systems.
+    specific queue systems. Examples and implementations are in: \
+    fireworks/user_objects/queue_adapters
     """
 
     _fw_name = 'QueueAdapterBase'
