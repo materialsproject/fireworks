@@ -3,11 +3,16 @@
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """
+import getpass
 
 import os
+import shlex
 import string
+import subprocess
+import threading
+import traceback
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
-from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, log_fancy
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -15,6 +20,50 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 28, 2013'
+
+
+class Command(object):
+    """
+    From https://gist.github.com/kirpit/1306188
+
+    Enables to run subprocess commands in a different thread with TIMEOUT option.
+
+    Based on jcollado's solution:
+    http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
+    """
+    command = None
+    process = None
+    status = None
+    output, error = '', ''
+
+    def __init__(self, command):
+        if isinstance(command, basestring):
+            command = shlex.split(command)
+        self.command = command
+
+    def run(self, timeout=None, **kwargs):
+        """ Run a command then return: (status, output, error). """
+        def target(**kwargs):
+            try:
+                self.process = subprocess.Popen(self.command, **kwargs)
+                self.output, self.error = self.process.communicate()
+                self.status = self.process.returncode
+            except:
+                self.error = traceback.format_exc()
+                self.status = -1
+        # default stdout and stderr
+        if 'stdout' not in kwargs:
+            kwargs['stdout'] = subprocess.PIPE
+        if 'stderr' not in kwargs:
+            kwargs['stderr'] = subprocess.PIPE
+        # thread
+        thread = threading.Thread(target=target, kwargs=kwargs)
+        thread.start()
+        thread.join(timeout)
+        if thread.is_alive():
+            self.process.terminate()
+            thread.join()
+        return self.status, self.output, self.error
 
 
 class QueueAdapterBase(dict, FWSerializable):
@@ -30,7 +79,18 @@ class QueueAdapterBase(dict, FWSerializable):
 
     _fw_name = 'QueueAdapterBase'
     template_file = 'OVERRIDE_ME'
+    submit_cmd = 'OVERRIDE_ME'
+    q_name = 'OVERRIDE_ME'
     defaults = {}
+
+    def parse_jobid(self, output_str):
+        raise NotImplementedError('parse_jobid() not implemented for this queueadapter!')
+
+    def get_status_cmd(self, username):
+        raise NotImplementedError('get_status_cmd() not implemented for this queueadapter!')
+
+    def parse_njobs(self, output_str, username):
+        raise NotImplementedError('parse_njobs() not implemented for this queueadapter!')
 
     def get_script_str(self, launch_dir):
         """
@@ -69,7 +129,37 @@ class QueueAdapterBase(dict, FWSerializable):
 
         :param script_file: (str) name of the script file to use (String)
         """
-        raise NotImplementedError('submit_to_queue() not implemented for this queue adapter!')
+        if not os.path.exists(script_file):
+            raise ValueError('Cannot find script file located at: {}'.format(script_file))
+
+        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+
+        # submit the job
+        try:
+            cmd = [self.submit_cmd, script_file]
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p.wait()
+
+            # grab the returncode. PBS returns 0 if the job was successful
+            if p.returncode == 0:
+                try:
+                    job_id = self.parse_jobid(p.stdout.read())
+                    queue_logger.info('Job submission was successful and job_id is {}'.format(job_id))
+                    return job_id
+                except:
+                    # probably error parsing job code
+                    log_exception(queue_logger, 'Could not parse job id following {}...'.format(self.submit_cmd))
+
+            else:
+                # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
+                msgs = [
+                    'Error in job submission with {n} file {f} and cmd {c}'.format(n=self.q_name, f=script_file, c=cmd),
+                    'The error response reads: {}'.format(p.stderr.read())]
+                log_fancy(queue_logger, msgs, 'error')
+
+        except:
+            # random error, e.g. no qsub on machine!
+            log_exception(queue_logger, 'Running the command: {} caused an error...'.format(self.submit_cmd))
 
     def get_njobs_in_queue(self, username=None):
         """
@@ -78,7 +168,27 @@ class QueueAdapterBase(dict, FWSerializable):
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         """
-        raise NotImplementedError('get_njobs_in_queue() not implemented for this queue adapter!')
+        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+
+        # initialize username
+        if username is None:
+            username = getpass.getuser()
+
+        # run qstat
+        qstat = Command(self.get_status_cmd(username))
+        p = qstat.run(timeout=5)
+
+        # parse the result
+        if p[0] == 0:
+            njobs = self.parse_njobs(p[1], username)
+            queue_logger.info('The number of jobs currently in the queue is: {}'.format(njobs))
+            return njobs
+
+        # there's a problem talking to qstat server?
+        msgs = ['Error trying to get the number of jobs in the queue',
+                'The error response reads: {}'.format(p[2])]
+        log_fancy(queue_logger, msgs, 'error')
+        return None
 
     def __getitem__(self, key):
         """
