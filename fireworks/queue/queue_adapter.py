@@ -24,10 +24,8 @@ __date__ = 'Feb 28, 2013'
 
 class Command(object):
     """
+    Helper class -  run subprocess commands in a different thread with TIMEOUT option.
     From https://gist.github.com/kirpit/1306188
-
-    Enables to run subprocess commands in a different thread with TIMEOUT option.
-
     Based on jcollado's solution:
     http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
     """
@@ -37,12 +35,21 @@ class Command(object):
     output, error = '', ''
 
     def __init__(self, command):
+        """
+        initialize the object
+        :param command: command to run
+        """
         if isinstance(command, basestring):
             command = shlex.split(command)
         self.command = command
 
     def run(self, timeout=None, **kwargs):
-        """ Run a command then return: (status, output, error). """
+        """
+        Run the command
+        :param timeout: (float) timeout
+        :param kwargs:
+        :return: (status, output, error)
+        """
         def target(**kwargs):
             try:
                 self.process = subprocess.Popen(self.command, **kwargs)
@@ -74,22 +81,41 @@ class QueueAdapterBase(dict, FWSerializable):
 
     A user should extend this class with implementations that work on \
     specific queue systems. Examples and implementations are in: \
-    fireworks/user_objects/queue_adapters
+    fireworks/user_objects/queue_adapters.
+
+    Documentation on implementing queue adapters can be found on FireWorks \
+    home page, http://pythonhosted.org/FireWorks
     """
 
     _fw_name = 'QueueAdapterBase'
-    template_file = 'OVERRIDE_ME'
-    submit_cmd = 'OVERRIDE_ME'
-    q_name = 'OVERRIDE_ME'
-    defaults = {}
+    template_file = 'OVERRIDE_ME'  # path to template file for a queue script
+    submit_cmd = 'OVERRIDE_ME'  # command to submit jobs, e.g. "qsub" or "squeue"
+    q_name = 'OVERRIDE_ME'  # (arbitrary) name, e.g. "pbs" or "slurm"
+    defaults = {}  # default parameter values for template
 
     def parse_jobid(self, output_str):
+        """
+        After running submit_cmd, parses the job id from the standard output
+        :param output_str: Standard output after running submit_cmd
+        :return: (int) job id
+        """
         raise NotImplementedError('parse_jobid() not implemented for this queueadapter!')
 
     def get_status_cmd(self, username):
+        """
+        Get the command (e.g. ["qstat"]) for getting the number of jobs from a user
+        :param username: username we want to get the njobs for
+        :return: ([str]) command as String[] for subprocess
+        """
         raise NotImplementedError('get_status_cmd() not implemented for this queueadapter!')
 
     def parse_njobs(self, output_str, username):
+        """
+        Parse the number of jobs in the queue from status_cmd output
+        :param output_str: the output string from running the status command, e.g. "qstat" output
+        :param username: username we want to get njobs for
+        :return: (int) number of jobs in queue
+        """
         raise NotImplementedError('parse_njobs() not implemented for this queueadapter!')
 
     def get_script_str(self, launch_dir):
@@ -98,6 +124,7 @@ class QueueAdapterBase(dict, FWSerializable):
         Uses the template_file along with internal parameters to create the script.
 
         :param launch_dir: (str) The directory the job will be launched in
+        :return: (str) the queue script
         """
         with open(self.template_file) as f:
             a = QScriptTemplate(f.read())
@@ -125,9 +152,10 @@ class QueueAdapterBase(dict, FWSerializable):
 
     def submit_to_queue(self, script_file):
         """
-        submits the job to the queue, probably using subprocess or shutil
+        submits the job to the queue and returns the job id
 
         :param script_file: (str) name of the script file to use (String)
+        :return: (int) job_id
         """
         if not os.path.exists(script_file):
             raise ValueError('Cannot find script file located at: {}'.format(script_file))
@@ -163,10 +191,10 @@ class QueueAdapterBase(dict, FWSerializable):
 
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs in the queue, probably using subprocess or shutil to \
-        call a command like 'qstat'. returns None when the number of jobs cannot be determined.
+        returns the number of jobs currently in the queu efor the user
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
+        :return: (int) number of jobs in the queue
         """
         queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
 

@@ -1,18 +1,7 @@
 #!/usr/bin/env python
 
-"""
-TODO: add docs!
-"""
-
 import os
-import shlex
-import subprocess
-import getpass
-import threading
-import traceback
 from fireworks.queue.queue_adapter import QueueAdapterBase
-from fireworks.utilities.fw_utilities import log_fancy, log_exception
-
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -23,6 +12,9 @@ __date__ = 'Dec 12, 2012'
 
 
 class PBSAdapterNERSC(QueueAdapterBase):
+    """
+    A PBS adapter that works on NERSC (Hopper, Carver)
+    """
     _fw_name = 'PBSAdapter (NERSC)'
     template_file = os.path.join(os.path.dirname(__file__), 'PBS_template.txt')
     submit_cmd = 'qsub'
