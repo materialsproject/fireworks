@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v0.45**
+
+* allow user to confirm database reset and multi-FW changes via an input prompt rather than password parameter
+
 **v0.44**
 
 * make it easier to define new queueadapters, and add documentation
