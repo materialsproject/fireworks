@@ -185,8 +185,8 @@ The built-in FireTasks
     templatewritertask
     transfertask
 
-Additional features and topics
-------------------------------
+Misc
+----
 
 .. toctree::
     :maxdepth: 1
@@ -197,6 +197,14 @@ Additional features and topics
     offline_tutorial
     python_tutorial
     qadapter_programming
+
+Reference
+=========
+
+.. toctree::
+    :maxdepth: 2
+
+    reference
 
 .. _contributing-label:
 

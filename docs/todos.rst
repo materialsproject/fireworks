@@ -57,18 +57,7 @@ Tests
 FW Docs
 =======
 
-* create a reference sheet for things like all the FW and WF states
-
 * describe passing of information as being like 'ports'
-
-* Note: reserved spec keywords:
-    * _tasks - a list of FireTasks to run
-    * _priority - the priority of the FW
-    * _dupefinder - a DupeFinder object, for avoiding duplicates
-    * _queueadapter - values of the QueueAdapter dict to override
-    * _allow_fizzled_parents - continue on FIZZLED parents
-    * _category - For directing jobs
-    * _launch_dir - For directing jobs to a certain directory
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
