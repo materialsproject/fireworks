@@ -30,7 +30,7 @@ The Queue Launcher needs to write and submit a queue script that contains an exe
 
 #. Locate an appropriate QueueAdapter file. The files are usually named ``qadapter_<QUEUE>.yaml`` where ``<QUEUE>`` is the supported queue system.
 
-.. note:: If you cannot find a working QueueAdapter file for your specific queuing system, please contact us for help! (see :ref:`contributing-label`) We would like to support more queueing systems in FireWorks.
+.. note:: If you cannot find a working QueueAdapter file for your specific queuing system, you can :doc:`write your own QueueAdapter </qadapter_programming>`. Or, simply contact us for help (see :ref:`contributing-label`) and we will gladly help you write one for your system.
 
 #. Copy your chosen QueueAdapter file to a new name::
 

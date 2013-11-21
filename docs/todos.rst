@@ -40,8 +40,6 @@ Misc.
 
 * No negative fw_ids needed when returning FWAction
 
-* Document how to create a queue script for a new machine (and perhaps clean up the code)
-
 * Go through logging, make sure it's sane
 
 * Add option to automatically pass run dirs, e.g. send dict of {"fw_name":"run_dir"} from parents to children

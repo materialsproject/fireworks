@@ -196,6 +196,7 @@ Additional features and topics
     duplicates_tutorial
     offline_tutorial
     python_tutorial
+    qadapter_programming
 
 .. _contributing-label:
 
