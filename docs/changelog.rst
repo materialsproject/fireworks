@@ -2,6 +2,9 @@
 FireWorks Changelog
 ===================
 
+**v0.44**
+
+* make it easier to define new queueadapters, and add documentation
 
 **v0.43**
 
