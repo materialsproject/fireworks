@@ -19,7 +19,6 @@ Built-in FireTasks
 Misc.
 =====
 
-* instead of passwords, put a (y/n) prompt in the command line. You can bypass this in FWConfig (False by default). The password parameter in lpad reset is an *optional* safeguard. You can set this on/off in FWConfig (different paramter than CL safeguard).
 * Speed up database queries
 
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command? e.g. lpad setup
@@ -43,6 +42,8 @@ Misc.
 * Go through logging, make sure it's sane
 
 * Add option to automatically pass run dirs, e.g. send dict of {"fw_name":"run_dir"} from parents to children
+
+* allow workflow connections to be defined by FW_name instead of by ids?
 
 Tests
 =====
