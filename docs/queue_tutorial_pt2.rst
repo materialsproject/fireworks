@@ -27,7 +27,7 @@ Reserving FireWorks
 
 #. Let's reset our database and add a FireWork for testing::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
 
 #. Reserving a FireWork is as simple as adding the ``-r`` option to the Queue Launcher. Let's queue up a reserved FireWork and immediately check its state::
@@ -51,7 +51,7 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
 #. Reset the database and add a FireWork for testing::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
 
 #. We have only one FireWork in the database, so we should only be able to submit one job to the queue. Let's try submitting two::
@@ -80,7 +80,7 @@ Another key feature of reserving FireWorks before queue submission is that the F
 
 #. Let's add and run this FireWork::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_walltime.yaml
     qlaunch -r singleshot
 
@@ -97,7 +97,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
 #. Let's add and run this FireWork. Before the job starts running, delete it from the queue (if you're too slow, repeat this entire step)::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
     qlaunch -r singleshot
     qdel <JOB_ID>

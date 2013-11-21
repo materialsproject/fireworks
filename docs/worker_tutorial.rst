@@ -25,7 +25,7 @@ Reset the FireWorks database
 
 1. Back at the **FireServer**, let's reset our database and add a FireWork::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     cd <INSTALL_DIR>/fw_tutorials/worker
     lpad add fw_test.yaml
 

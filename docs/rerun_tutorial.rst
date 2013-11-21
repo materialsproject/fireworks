@@ -31,6 +31,4 @@ Example: Rerunning all FIZZLED FireWorks
 
 A common use case is to rerun all FIZZLED fireworks. You can do this via::
 
-    lpad rerun_fws -s FIZZLED --password <TODAY'S DATE>
-
-where ``<TODAY'S DATE>`` is formatted like ``2013-02-25`` and is only required when modifying more than 10 FireWorks simultaneously.
+    lpad rerun_fws -s FIZZLED

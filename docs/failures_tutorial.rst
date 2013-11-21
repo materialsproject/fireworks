@@ -21,7 +21,7 @@ Let's first introduce normal operation of a FireWork that prints ``starting``, s
 
 #. Let's add and run this FireWork. You'll have to wait 10 seconds for it to complete::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_sleep.yaml
     rlaunch singleshot
 
@@ -34,7 +34,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
 #. Reset your database and add back the sleeping FireWork::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_sleep.yaml
 
 #. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C or Ctrl+\\). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
@@ -61,7 +61,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. Reset your database and add back the sleeping FireWork::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_sleep.yaml
 
 #. We'll run the FireWork again, but this time you should interrupt its operation by **forcibly closing your terminal window** (immediately after running the job, before you see the text ``ending``)::
@@ -88,7 +88,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 #. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lpad detect_fizzled``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
 
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_sleep.yaml
     rlaunch singleshot
     ---(forcibly close your terminal window)

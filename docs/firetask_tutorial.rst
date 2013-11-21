@@ -70,11 +70,9 @@ The three-step FireWork thus looks like this:
 
 #. Run this multi-step FireWork on your FireServer::
 
-	 lpad reset <TODAY'S DATE>
+	 lpad reset
 	 lpad add fw_multi.yaml
 	 rlaunch singleshot
-
-.. tip:: You can run all three of these commands on a single line by separating them with a semicolon. This will reset the database, insert a FW, and run it within a single command.
 
 You should see two files written out to the system, ``inputs.txt`` and ``words.txt``, confirming that you successfully ran the first two steps of your job! You can also navigate to your home directory and look for ``words.txt`` to make sure the third step also got completed correctly.
 
@@ -187,7 +185,7 @@ Let's explore custom FireTasks with by writing custom Python for adding two numb
 
 #. When you are comfortable that you roughly understand how a custom FireTask is set up, try running the FireWork on the central server to confirm that the ``Addition Task`` works::
 
-	lpad reset <TODAY'S DATE>
+	lpad reset
 	lpad add fw_adder.yaml
 	rlaunch --silencer singleshot
 

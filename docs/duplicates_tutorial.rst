@@ -37,7 +37,7 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. Let's add our workflow to the database and run it::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add wf_12.yaml
     rlaunch -s rapidfire
 
@@ -78,7 +78,7 @@ One nice feature of FireWorks' built-in duplicate detection is that it operates 
 
 #. Let's add back our two-step workflow and run it::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add wf_12.yaml
     rlaunch -s rapidfire
 

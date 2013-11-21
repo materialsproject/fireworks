@@ -43,7 +43,7 @@ The text in blue lettering is not known in advance and can only be determined af
 
 #. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next FireWork. Let's see how this operates in practice by inserting the workflow in our database::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add addmod_wf.yaml
 
 #. If we examined our two FireWorks at this stage, nothing would be out of the ordinary. In particular, one of the FireWorks has only a single input, ``10``, and does not yet know what number to add to ``10``. To confirm::
@@ -116,7 +116,7 @@ Let's see how this is achieved:
 
 #. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_fibnum.yaml
     lpad get_fws
 

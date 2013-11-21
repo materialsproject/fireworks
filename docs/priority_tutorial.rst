@@ -48,7 +48,7 @@ Let's examine how we can set up such an execution model.
 
 #. Add and run the FireWorks to confirm::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add_dir .
     rlaunch -s rapidfire
 
@@ -77,7 +77,7 @@ Let's now try another execution order: A-1, B-1, B-2, A-2.
 
 #. Add and run the FireWorks to confirm::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add_dir .
     rlaunch -s rapidfire
 

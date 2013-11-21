@@ -31,11 +31,9 @@ Reset/Initialize the FireServer
  
 #. Reset the FireWorks database (the LaunchPad)::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
 
-   where <TODAY'S DATE> is formatted like '2012-01-31' (this serves as a safeguard to accidentally overwriting an existing database). You should receive confirmation that the LaunchPad was reset.
-
-   .. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h``. The ``-h`` help option is available for all of the scripts in FireWorks.
+   .. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h`` or ``lpad reset -h``. The ``-h`` help option is available for all of the scripts and sub-commands (like ``reset``) in FireWorks. For example, if you ``lpad reset`` using the ``--password`` option set to today's date, e.g. 2012-02-01, you can bypass the prompt asking you to confirm the reset.
 
 Add a FireWork to the FireServer database
 -----------------------------------------

@@ -38,7 +38,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. Let's insert this workflow into our database::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add hamlet_wf.yaml
 
    .. note:: When you insert the Workflow into the database using the LaunchPad, the LaunchPad will echo back an ``id_map`` that tells you how ``fw_ids`` were reassigned. The value of the ``fw_id`` has no meaning or effect on the operation of FireWorks.
@@ -98,7 +98,7 @@ Let's quickly define and execute this workflow.
 
 #. Once everything makes sense, let's add the workflow and run everything at once::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add org_wf.yaml
     rlaunch -s rapidfire
 

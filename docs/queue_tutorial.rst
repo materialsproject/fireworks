@@ -70,7 +70,7 @@ Add some FireWorks
 
 Staying in your testing directory, let's reset our database and add a new FireWork, all from our FireWorker::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
 
 Submit a job
@@ -99,7 +99,7 @@ While launching a single job to a queue is nice, a more powerful use case is to 
 
 #. Let's reset our database and add three new FireWorks, all from our FireWorker::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
     lpad add fw_test.yaml
     lpad add fw_test.yaml
@@ -125,7 +125,7 @@ You might want to set up your worker so that it maintains a certain number of jo
 
 #. Let's reset our database and add four new FireWorks this time::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
     lpad add fw_test.yaml
     lpad add fw_test.yaml
@@ -156,7 +156,7 @@ So far, each queue script we submitted has only one job. We can also submit mult
 
 #. Let's add three FireWorks to the LaunchPad and submit a *single* queue script::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
     lpad add fw_test.yaml
     lpad add fw_test.yaml
     lpad add fw_test.yaml

@@ -54,7 +54,7 @@ We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutoria
 
 #. Let's reset the database, add these FireWorks to the LaunchPad, and then execute them::
 
- 	lpad reset <TODAY'S DATE>
+ 	lpad reset
 	lpad add fw_template.yaml
 	lpad add fw_template2.yaml
 	rlaunch --silencer rapidfire
@@ -101,7 +101,7 @@ Template files are not restricted to simple variable substitutions with curly br
 
 #. Let's run this FireWork and examine what happens::
 
-    lpad reset <TODAY'S DATE>
+    lpad reset
 	lpad add fw_advanced.yaml
 	rlaunch --silencer singleshot
 
