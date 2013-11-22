@@ -1,5 +1,4 @@
 import os
-from requests import Session
 from fireworks.queue.queue_adapter import QueueAdapterBase
 import getpass
 
@@ -20,16 +19,13 @@ class PBSAdapterNEWT(QueueAdapterBase):
     submit_cmd = ''
     q_name = 'pbs_newt'
     defaults = {}
+    _auth_session = None
 
     def submit_to_queue(self, script_file):
-        s = Session()
-        r = s.get("https://newt.nersc.gov/newt")
+        s = self._get_auth_session()
+
+
         print r.content
-        r = s.get("https://newt.nersc.gov/newt/auth")
-        print r.content
-        username = getpass.getuser()
-        password = getpass.getpass()
-        r = s.post("https://newt.nersc.gov/newt/auth", {"username": username, "password": password})
         print r.status_code
         print r.content
         jobfile = os.path.join(os.getcwd(), script_file)
@@ -40,8 +36,29 @@ class PBSAdapterNEWT(QueueAdapterBase):
     def get_njobs_in_queue(self, username=None):
         if username is None:
             username = getpass.getuser()
+        from requests import Session  # hide import in case requests library not installed
         s = Session()
         r = s.get("https://newt.nersc.gov/newt/queue/carver/?user={}".format(username))
         j = r.json()
         print len(j)
         return len(j)
+
+    def _get_auth_session(self):
+        from requests import Session  # hide import in case requests library not installed
+        max_iterations = 3
+        username = getpass.getuser()
+        if not self._auth_session():
+            self._auth_session = Session()  # create new session
+        else:
+            # check if we are already authenticated
+            r = self._auth_session.get("https://newt.nersc.gov/newt/auth")
+            if r.json()['auth'] and r.json()['username'] == username:
+                return
+        pw_iterations = 0
+        while pw_iterations < max_iterations:
+            password = getpass.getpass()
+            r = self._auth_session.post("https://newt.nersc.gov/newt/auth", {"username": username, "password": password})
+            pw_iterations+=1
+            if r.json()['auth'] and r.json()['username'] == username:
+                return
+        raise ValueError('Could not get authorized connection to NEWT!')
