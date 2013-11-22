@@ -231,7 +231,7 @@ def lpad():
 
         if args.command == 'reset':
             if not args.password:
-                if raw_input('Are you sure? This will RESET {} FWs and all data. (Y/N)'.format(lp.fireworks.count()))[0].upper() == 'Y': args.password=datetime.datetime.now().strftime('%Y-%m-%d')
+                if raw_input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(lp.workflows.count()))[0].upper() == 'Y': args.password=datetime.datetime.now().strftime('%Y-%m-%d')
                 else:
                     raise ValueError('Operation aborted by user.')
             lp.reset(args.password)
