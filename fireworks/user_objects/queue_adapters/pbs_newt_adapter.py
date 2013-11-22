@@ -19,12 +19,12 @@ class PBSAdapterNEWT(QueueAdapterBase):
     submit_cmd = ''
     q_name = 'pbs_newt'
     defaults = {}
-    _auth_session = None
+    _session = None
 
     def submit_to_queue(self, script_file):
         self._init_auth_session()
         jobfile = os.path.join(os.getcwd(), script_file)
-        r = self._auth_session.post("https://newt.nersc.gov/newt/queue/carver/", {"jobfile": jobfile})
+        r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/queue/carver/", {"jobfile": jobfile})
         return int(r.json()['jobid'].split('.')[0])
 
 
@@ -40,17 +40,17 @@ class PBSAdapterNEWT(QueueAdapterBase):
         from requests import Session  # hide import in case requests library not installed
         max_iterations = 3
         username = getpass.getuser()
-        if not self._auth_session:
-            self._auth_session = Session()  # create new session
+        if not PBSAdapterNEWT._session:
+            PBSAdapterNEWT._session = Session()  # create new session
         else:
             # check if we are already authenticated
-            r = self._auth_session.get("https://newt.nersc.gov/newt/auth")
+            r = PBSAdapterNEWT._session.get("https://newt.nersc.gov/newt/auth")
             if r.json()['auth'] and r.json()['username'] == username:
                 return
         pw_iterations = 0
         while pw_iterations < max_iterations:
             password = getpass.getpass()
-            r = self._auth_session.post("https://newt.nersc.gov/newt/auth", {"username": username, "password": password})
+            r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/auth", {"username": username, "password": password})
             pw_iterations+=1
             if r.json()['auth'] and r.json()['username'] == username:
                 return
