@@ -9,6 +9,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Nov 21, 2013'
 
+# TODO: add logging
 
 class PBSAdapterNEWT(QueueAdapterBase):
     """
@@ -20,19 +21,20 @@ class PBSAdapterNEWT(QueueAdapterBase):
     submit_cmd = ''
     q_name = 'pbs_newt'
     defaults = {}
+    resource = 'carver'  # 'carver' or 'hopper'
     _session = None
 
     def submit_to_queue(self, script_file):
         self._init_auth_session()
         jobfile = os.path.join(os.getcwd(), script_file)
-        r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/queue/carver/", {"jobfile": jobfile})
+        r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/queue/{}/".format(self.resource), {"jobfile": jobfile})
         return int(r.json()['jobid'].split('.')[0])
 
     def get_njobs_in_queue(self, username=None):
         if username is None:
             username = getpass.getuser()
         from requests import Session  # hide import in case optional library not installed
-        r = Session().get("https://newt.nersc.gov/newt/queue/carver/?user={}".format(username))
+        r = Session().get("https://newt.nersc.gov/newt/queue/{}/?user={}".format(self.resource, username))
         return len(r.json())
 
     def _init_auth_session(self, max_pw_requests=3):
