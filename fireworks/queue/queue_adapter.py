@@ -93,30 +93,30 @@ class QueueAdapterBase(dict, FWSerializable):
     q_name = 'OVERRIDE_ME'  # (arbitrary) name, e.g. "pbs" or "slurm"
     defaults = {}  # default parameter values for template
 
-    def parse_jobid(self, output_str):
+    def _parse_jobid(self, output_str):
         """
         After running submit_cmd, parses the job id from the standard output
         :param output_str: Standard output after running submit_cmd
         :return: (int) job id
         """
-        raise NotImplementedError('parse_jobid() not implemented for this queueadapter!')
+        raise NotImplementedError('_parse_jobid() not implemented for this queueadapter!')
 
-    def get_status_cmd(self, username):
+    def _get_status_cmd(self, username):
         """
         Get the command (e.g. ["qstat"]) for getting the number of jobs from a user
         :param username: username we want to get the njobs for
         :return: ([str]) command as String[] for subprocess
         """
-        raise NotImplementedError('get_status_cmd() not implemented for this queueadapter!')
+        raise NotImplementedError('_get_status_cmd() not implemented for this queueadapter!')
 
-    def parse_njobs(self, output_str, username):
+    def _parse_njobs(self, output_str, username):
         """
         Parse the number of jobs in the queue from status_cmd output
         :param output_str: the output string from running the status command, e.g. "qstat" output
         :param username: username we want to get njobs for
         :return: (int) number of jobs in queue
         """
-        raise NotImplementedError('parse_njobs() not implemented for this queueadapter!')
+        raise NotImplementedError('_parse_njobs() not implemented for this queueadapter!')
 
     def get_script_str(self, launch_dir):
         """
@@ -171,7 +171,7 @@ class QueueAdapterBase(dict, FWSerializable):
             # grab the returncode. PBS returns 0 if the job was successful
             if p.returncode == 0:
                 try:
-                    job_id = self.parse_jobid(p.stdout.read())
+                    job_id = self._parse_jobid(p.stdout.read())
                     queue_logger.info('Job submission was successful and job_id is {}'.format(job_id))
                     return job_id
                 except:
@@ -203,12 +203,12 @@ class QueueAdapterBase(dict, FWSerializable):
             username = getpass.getuser()
 
         # run qstat
-        qstat = Command(self.get_status_cmd(username))
+        qstat = Command(self._get_status_cmd(username))
         p = qstat.run(timeout=5)
 
         # parse the result
         if p[0] == 0:
-            njobs = self.parse_njobs(p[1], username)
+            njobs = self._parse_njobs(p[1], username)
             queue_logger.info('The number of jobs currently in the queue is: {}'.format(njobs))
             return njobs
 

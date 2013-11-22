@@ -35,9 +35,9 @@ Modify the adapter
 
 3. Finally, implement a few methods by modifying the existing ones:
 
-  * ``parse_jobid()`` should be able to take the standard output string returned when submitting a job and parse a job id (preferably an integer).
-  * ``get_status_cmd()`` should be an array of Strings describing the command for printing the list of jobs for a particular user. e.g. for PBS it involves the ``qstat`` command.
-  * ``parse_njobs()`` should take the raw text from the output of executing the status command (e.g. ``qstat``) and figure out then number of jobs currently in the queue for a given user. Often, this involves counting the lines of code returned by the status command.
+  * ``_parse_jobid()`` should be able to take the standard output string returned when submitting a job and parse a job id (preferably an integer).
+  * ``_get_status_cmd()`` should be an array of Strings describing the command for printing the list of jobs for a particular user. e.g. for PBS it involves the ``qstat`` command.
+  * ``_parse_njobs()`` should take the raw text from the output of executing the status command (e.g. ``qstat``) and figure out then number of jobs currently in the queue for a given user. Often, this involves counting the lines of code returned by the status command.
 
 After making these modifications, your new queue adapter should be ready! You can use it by specifying the correct ``_fw_name`` in your ``my_qadapter.yaml`` file.
 

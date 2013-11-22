@@ -21,13 +21,13 @@ class SLURMAdapterUCL(QueueAdapterBase):
     q_name = 'slurm'
     defaults = {'ntasks': 1, 'cpus_per_task': 1}
 
-    def parse_jobid(self, output_str):
+    def _parse_jobid(self, output_str):
         return int(output_str.split()[3])
 
-    def get_status_cmd(self, username):
+    def _get_status_cmd(self, username):
         return ['squeue', '-o "%u"', '-u', username]
 
-    def parse_njobs(self, output_str, username):
+    def _parse_njobs(self, output_str, username):
         # lines should have this form
         # username
         # count lines that include the username in it

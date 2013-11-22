@@ -21,14 +21,14 @@ class PBSAdapterNERSC(QueueAdapterBase):
     q_name = 'pbs'
     defaults = {}
 
-    def parse_jobid(self, output_str):
+    def _parse_jobid(self, output_str):
         # output should of the form '2561553.sdb' or '352353.jessup' - just grab the first part for job id
         return int(output_str.split('.')[0])
 
-    def get_status_cmd(self, username):
+    def _get_status_cmd(self, username):
         return ['qstat', '-a', '-u', username]
 
-    def parse_njobs(self, output_str, username):
+    def _parse_njobs(self, output_str, username):
         # lines should have this form
         # '1339044.sdb          username  queuename    2012-02-29-16-43  20460   --   --    --  00:20 C 00:09'
         # count lines that include the username in it
