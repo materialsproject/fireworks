@@ -32,8 +32,10 @@ class PBSAdapterNEWT(QueueAdapterBase):
         r = s.post("https://newt.nersc.gov/newt/auth", {"username": username, "password": password})
         print r.status_code
         print r.content
-        r = s.post("https://newt.nersc.gov/newt/queue/carver/", {"jobfile": script_file})
-        print r.content
+        jobfile = os.path.join(os.getcwd(), script_file)
+        r = s.post("https://newt.nersc.gov/newt/queue/carver/", {"jobfile": jobfile})
+        return int(r.json()['jobid'].split('.')[0])
+
 
     def get_njobs_in_queue(self, username=None):
         if username is None:
