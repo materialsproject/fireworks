@@ -9,6 +9,8 @@ Major Features
 
 * Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
 
+* Add send e-mail?
+
 * ||Add way to monitor a file during the run||
 
 Built-in FireTasks

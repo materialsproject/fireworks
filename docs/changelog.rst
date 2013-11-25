@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v0.46**
+
+* add NEWT queue adapter
+
 **v0.45**
 
 * allow user to confirm database reset and multi-FW changes via an input prompt rather than password parameter
