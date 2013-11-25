@@ -115,7 +115,7 @@ def lpad():
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
                                     default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
-    reservation_parser.add_argument('--mark', help='cancel bad reservations', action='store_true')
+    reservation_parser.add_argument('--rerun', help='cancel and rerun bad reservations', action='store_true')
 
     fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
     fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
@@ -240,7 +240,7 @@ def lpad():
             print lp.detect_fizzled(args.time, args.mark)
 
         elif args.command == 'detect_unreserved':
-            print lp.detect_unreserved(args.time, args.mark)
+            print lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun)
 
         elif args.command == 'add':
             fwf = Workflow.from_file(args.wf_file)

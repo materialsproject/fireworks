@@ -143,7 +143,7 @@ class LaunchPad(FWSerializable):
                 self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
 
             self.m_logger.debug('Tracking down stuck RESERVED jobs...')
-            ur = self.detect_unreserved(fix=True)
+            ur = self.detect_unreserved(rerun=True)
             if ur:
                 self.m_logger.info('Unreserved {} RESERVED launches: {}'.format(len(ur), ur))
 
@@ -435,7 +435,7 @@ class LaunchPad(FWSerializable):
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
             self.fireworks.find_and_modify({'fw_id': fw['fw_id']}, {'$set': {'state': 'READY'}})
 
-    def detect_unreserved(self, expiration_secs=FWConfig().RESERVATION_EXPIRATION_SECS, fix=False):
+    def detect_unreserved(self, expiration_secs=FWConfig().RESERVATION_EXPIRATION_SECS, rerun=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
@@ -444,7 +444,7 @@ class LaunchPad(FWSerializable):
                                              {'launch_id': 1})
         for ld in bad_launch_data:
             bad_launch_ids.append(ld['launch_id'])
-        if fix:
+        if rerun:
             for lid in bad_launch_ids:
                 self.unreserve(lid)
         return bad_launch_ids

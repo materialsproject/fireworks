@@ -2,6 +2,8 @@
 FireWorks Changelog
 ===================
 
+.. caution:: The name of arguments to ``detect_unreserved()`` has changed.
+
 **v0.46**
 
 * add NEWT queue adapter
