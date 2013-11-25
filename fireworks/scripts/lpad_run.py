@@ -117,7 +117,7 @@ def lpad():
                                     default=FWConfig().RESERVATION_EXPIRATION_SECS, type=int)
     reservation_parser.add_argument('--rerun', help='cancel and rerun bad reservations', action='store_true')
 
-    fizzled_parser = subparsers.add_parser('detect_fizzled', help='Find launches that have FIZZLED')
+    fizzled_parser = subparsers.add_parser('detect_lostruns', help='Find launches that have FIZZLED')
     fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
                                 type=int)
     fizzled_parser.add_argument('--mark', help='mark fizzled', action='store_true')
@@ -236,8 +236,8 @@ def lpad():
                     raise ValueError('Operation aborted by user.')
             lp.reset(args.password)
 
-        elif args.command == 'detect_fizzled':
-            print lp.detect_fizzled(args.time, args.mark)
+        elif args.command == 'detect_lostruns':
+            print lp.detect_lostruns(args.time, args.mark)
 
         elif args.command == 'detect_unreserved':
             print lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun)

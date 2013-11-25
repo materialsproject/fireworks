@@ -75,7 +75,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
 
-    lpad detect_fizzled --time 1 --mark
+    lpad detect_lostruns --time 1 --mark
 
 #. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
@@ -85,7 +85,7 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. Of course, in production you'll never want to mark all jobs running for 1 second as being *FIZZLED*; this will mark jobs that are running properly as *FIZZLED*!
 
-#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lpad detect_fizzled``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
+#. In production, you need not specify the ``--time`` parameter at all. FireWorks will automatically detect a job as *FIZZLED* after 4 hours of idle time when you run ``lpad detect_lostruns``. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as *FIZZLED*. This is because the Rocket will automatically ping the LaunchPad that it's *alive* every hour. FireWorks will only mark jobs as *FIZZLED* when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands::
 
 
     lpad reset
@@ -93,12 +93,12 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
     rlaunch singleshot
     ---(forcibly close your terminal window)
     ---(wait 4 or more hours!! or temporarily set your System Clock ahead by 5 hours)
-    lpad detect_fizzled --mark
+    lpad detect_lostruns --mark
     lpad get_fws -i 1 -d all
 
 .. note:: You can shorten the ping times and detection times by editing the settings in your :doc:`FW configuration </config_tutorial>`, but we suggest you leave them alone unless really needed.
 
-.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_fizzled --mark``.
+.. note:: In production, you can use the :doc:`database maintenance instructions </maintain_tutorial>` instead of calling ``lpad_detect_lostruns --mark``.
 
 Life after *FIZZLED*
 ====================

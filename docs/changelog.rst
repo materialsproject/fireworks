@@ -2,7 +2,8 @@
 FireWorks Changelog
 ===================
 
-.. caution:: The name of arguments to ``detect_unreserved()`` has changed.
+.. caution:: The command/function ``detect_unreserved`` has changed - refactored argument name
+.. caution:: The command/function ``detect_fizzled`` has changed - refactored into ``detect_lostruns``, new and additional arguments
 
 **v0.46**
 

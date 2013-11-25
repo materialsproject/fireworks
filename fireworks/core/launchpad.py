@@ -138,7 +138,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.info('Performing maintenance on Launchpad...')
 
             self.m_logger.debug('Tracking down FIZZLED jobs...')
-            fl = self.detect_fizzled(fix=True)
+            fl = self.detect_lostruns(fix=True)
             if fl:
                 self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
 
@@ -462,7 +462,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_fizzled(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fix=False):
+    def detect_lostruns(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fix=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
