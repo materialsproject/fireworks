@@ -120,7 +120,7 @@ def lpad():
     fizzled_parser = subparsers.add_parser('detect_lostruns', help='Find launches that have FIZZLED')
     fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
                                 type=int)
-    fizzled_parser.add_argument('--mark', help='mark fizzled', action='store_true')
+    fizzled_parser.add_argument('--fizzle', help='mark fizzled', action='store_true')
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
     defuse_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
@@ -237,7 +237,7 @@ def lpad():
             lp.reset(args.password)
 
         elif args.command == 'detect_lostruns':
-            print lp.detect_lostruns(args.time, args.mark)
+            print lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle)
 
         elif args.command == 'detect_unreserved':
             print lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun)
