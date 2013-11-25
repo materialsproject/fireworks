@@ -138,9 +138,10 @@ class LaunchPad(FWSerializable):
             self.m_logger.info('Performing maintenance on Launchpad...')
 
             self.m_logger.debug('Tracking down FIZZLED jobs...')
-            fl = self.detect_lostruns(fizzle=True)
+            fl, ff = self.detect_lostruns(fizzle=True)
             if fl:
                 self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
+                self.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
 
             self.m_logger.debug('Tracking down stuck RESERVED jobs...')
             ur = self.detect_unreserved(rerun=True)
@@ -462,19 +463,32 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_lostruns(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fizzle=False):
+    def detect_lostruns(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fizzle=False, rerun=False):
+        if fizzle and rerun:
+            raise ValueError('You cannot both fizzle and rerun lost runs!')
+
         bad_launch_ids = []
+        bad_fw_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {
             '$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}},
-                                             {'launch_id': 1})
+                                             {'launch_id': 1, 'fw_id': 1})
         for ld in bad_launch_data:
             bad_launch_ids.append(ld['launch_id'])
+            bad_fw_ids.append(ld['fw_id'])
         if fizzle:
             for lid in bad_launch_ids:
                 self.mark_fizzled(lid)
-        return bad_launch_ids
+        elif rerun:
+            for ld in bad_launch_data:
+                fw_id = ld['fw_id']
+                # only rerun if the FireWork has 'RUNNING' state. It is possible that
+                # a different Launch for the same FireWork is 'COMPLETED' or 'FIZZLED'.
+                if self.fireworks.find_one({"fw_id": fw_id, "state": "RUNNING"}):
+                    self.rerun_fw(fw_id)
+
+        return bad_launch_ids, bad_fw_ids
 
     def _set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
