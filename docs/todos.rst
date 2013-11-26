@@ -35,8 +35,6 @@ Misc.
 
 * Add stats, preferably using a MapReduce call for speed
 
-* Only allow a job to be rerun if it and all children are in {FIZZLED, READY, WAITING, COMPLETED}
-
 * Pitfall - putting the same FW in 2 workflows. Also note that RUNNING state updated a little bit after queue running state.
 
 * No negative fw_ids needed when returning FWAction
