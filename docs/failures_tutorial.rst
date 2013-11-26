@@ -52,7 +52,7 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
 #. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
 
-    lpad get_fws -q '{"state":"FIZZLED"}' -d 'ids'
+    lpad get_fws -s FIZZLED -d ids
 
 Catastrophic Failure
 ====================
@@ -75,7 +75,10 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
 #. You should notice that FireWorks still thinks this job is *RUNNING*! We can fix this using the following command::
 
-    lpad detect_lostruns --time 1 -fizzle
+    lpad detect_lostruns --time 1 --fizzle
+
+   .. note:: Instead of using ``--fizzle``, you could instead use ``--rerun``. This would mark the Launch as being FIZZLED and then rerun the FireWork.
+   .. note:: An additional constraint, ``--max_runtime``, can be used if you are looking for jobs that ran only a short time before failing. This can be useful to track down if a job was killed because it did not have walltime to run (if it was started in the middle of the queue job). Note that you should set this parameter to be in slightly larger intervals of the ping_time, since runtime is determined using pings.
 
 #. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
