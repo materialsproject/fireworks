@@ -463,7 +463,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_lostruns(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fizzle=False, rerun=False):
+    def detect_lostruns(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None):
         if fizzle and rerun:
             raise ValueError('You cannot both fizzle and rerun lost runs!')
 
@@ -475,8 +475,17 @@ class LaunchPad(FWSerializable):
             '$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}},
                                              {'launch_id': 1, 'fw_id': 1})
         for ld in bad_launch_data:
-            bad_launch_ids.append(ld['launch_id'])
-            bad_fw_ids.append(ld['fw_id'])
+            bad_launch = False
+            if max_runtime:
+                m_l = self.get_launch_by_id(ld['launch_id'])
+                utime = m_l._get_time('RUNNING', use_update_time=True)
+                ctime = m_l._get_time('RUNNING', use_update_time=False)
+                if (utime-ctime).seconds <= max_runtime:
+                    bad_launch=True
+
+            if not max_runtime or bad_launch:
+                bad_launch_ids.append(ld['launch_id'])
+                bad_fw_ids.append(ld['fw_id'])
         if fizzle:
             for lid in bad_launch_ids:
                 self.mark_fizzled(lid)

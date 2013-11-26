@@ -122,6 +122,8 @@ def lpad():
                                 type=int)
     fizzled_parser.add_argument('--fizzle', help='mark lost runs as fizzled', action='store_true')
     fizzled_parser.add_argument('--rerun', help='rerun lost runs', action='store_true')
+    fizzled_parser.add_argument('--max_runtime', help='max runtime, helpful for tracing down walltime kills (seconds)', default=None,
+                                type=int)
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
     defuse_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
@@ -238,7 +240,7 @@ def lpad():
             lp.reset(args.password)
 
         elif args.command == 'detect_lostruns':
-            fl,ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun)
+            fl,ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime)
             lp.m_logger.debug('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
             lp.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
 
