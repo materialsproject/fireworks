@@ -2,8 +2,15 @@
 FireWorks Changelog
 ===================
 
-.. caution:: The command/function ``detect_unreserved`` has changed - refactored "mark" to "fizzle"
+v0.5
+----
+
 .. caution:: The command/function ``detect_fizzled`` has changed to ``detect_lostruns``, changed old arguments and added additional ones
+.. caution:: The command/function ``detect_unreserved`` has changed - refactored "mark" to "fizzle"
+
+* add option to "rerun" when detecting lost runs
+* add option to only detect short-lived lost jobs (useful for job packing type failures)
+* refactored argument names and method names for clarity
 
 **v0.46**
 
