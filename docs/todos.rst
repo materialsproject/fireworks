@@ -73,4 +73,4 @@ FW Docs
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
-* Document the FWAction (in context of writing dynamic workflows)
+* Document the FWAction (in context of writing dynamic workflows). Make pictures for detour vs addition, etc.

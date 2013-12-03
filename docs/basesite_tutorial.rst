@@ -16,15 +16,15 @@ Launching the web framework
 
 It is easy to launch the web framework using the LaunchPad::
 
-    lpad webgui -b
+    lpad webgui
 
 if your LaunchPad file is automatically set via an environment variable on in the current directory (see the :doc:`config tutorial <config_tutorial>`), or::
 
-    lpad -l my_launchpad.yaml webgui -b
+    lpad -l my_launchpad.yaml webgui
 
 if you need to explicitly specify the LaunchPad file to use.
 
-The ``-b`` option opens up a browser on your machine and points it to the web GUI. You can omit this option if needed, e.g. to run a web server. Other options include ``--host`` and ``--port``, but you probably won't need to modify these.
+The ``-s`` (or ``--server``) option runs in 'server mode', e.g. skips opening up a browser. Other options include ``--host`` and ``--port``, but you probably won't need to modify these.
 
 Using the web framework
 =======================

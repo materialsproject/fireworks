@@ -108,7 +108,7 @@ Launch the web GUI
 
 #. If you have a web browser and installed Django (``pip install django``), you can launch the web browser to see your results::
 
-    lpad webgui -b
+    lpad webgui
 
 Python code
 ===========

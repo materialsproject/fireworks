@@ -200,7 +200,7 @@ def lpad():
 
     webgui_parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
                         help="Host to run the server on (default: 127.0.0.1)")
-    webgui_parser.add_argument('-b', '--browser', help='launch browser', action='store_true')
+    webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')
 
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script (or several scripts) to run in sequence')
     addscript_parser.add_argument('scripts', help="Script to run, or delimiter-separated scripts (default comma-separated)")
@@ -427,7 +427,7 @@ def lpad():
             p1 = Process(target=call_command,
                          args=("runserver",  "{}:{}".format(args.host, args.port)))
             p1.start()
-            if args.browser:
+            if not args.server_mode:
                 time.sleep(2)
                 webbrowser.open("http://{}:{}".format(args.host, args.port))
             p1.join()
