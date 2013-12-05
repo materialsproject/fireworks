@@ -402,7 +402,7 @@ def lpad():
             for f in fw_ids:
                 lp.rerun_fw(int(f))
                 lp.m_logger.debug('Processed fw_id: {}'.format(f))
-            lp.m_logger.info('Finished rerunning {} FWs'.format(len(fw_ids)))
+            lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
         elif args.command == 'refresh':
             fw_ids = parse_helper(lp, args, wf_mode=True)
