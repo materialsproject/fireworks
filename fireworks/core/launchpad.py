@@ -295,6 +295,7 @@ class LaunchPad(FWSerializable):
         self.launches.ensure_index('time_end')
         self.launches.ensure_index('host')
         self.launches.ensure_index('ip')
+        self.launches.ensure_index('fworker.name')
 
         self.workflows.ensure_index('name')
         self.workflows.ensure_index('created_on')
