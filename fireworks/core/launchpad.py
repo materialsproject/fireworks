@@ -299,6 +299,7 @@ class LaunchPad(FWSerializable):
         self.workflows.ensure_index('name')
         self.workflows.ensure_index('created_on')
         self.workflows.ensure_index('updated_on')
+        self.workflows.ensure_index('nodes')
 
         for idx in self.user_indices:
             self.fireworks.ensure_index(idx)
