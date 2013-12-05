@@ -413,7 +413,7 @@ def lpad():
             lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
 
         elif args.command == 'set_priority':
-            fw_ids = parse_helper(lp, args, wf_mode=True)
+            fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 lp.set_priority(f, args.priority)
                 lp.m_logger.debug("Processed fw_id {}".format(f))
