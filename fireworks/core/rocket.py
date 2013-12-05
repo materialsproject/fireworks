@@ -20,14 +20,16 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
+def do_ping(launchpad, launch_id):
+    if launchpad:
+            launchpad.ping_launch(launch_id)
+    else:
+        with open('FW_ping.json', 'w') as f:
+            f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
-        if launchpad:
-            launchpad.ping_launch(launch_id)
-        else:
-            with open('FW_ping.json', 'w') as f:
-                f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
+        do_ping(launchpad, launch_id)
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
@@ -154,6 +156,7 @@ class Rocket():
 
             # perform finishing operation
             stop_ping_launch(ping_stop)
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             m_action.stored_data = all_stored_data
             m_action.mod_spec = all_mod_spec
             m_action.update_spec = all_update_spec
