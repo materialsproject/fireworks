@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.51**
+
+* make set_priority work as intended through command line
+* invert the -b option on webgui (new -s option skips opening browser)
+
 v0.5
 ----
 
