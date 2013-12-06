@@ -216,6 +216,12 @@ def lpad():
     forget_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
     forget_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
 
+    trackfw_parser = subparsers.add_parser('track_fws', help='Track FireWorks')
+    trackfw_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    trackfw_parser.add_argument('-n', '--name', help='name', default=None)
+    trackfw_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
+    trackfw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+
     args = parser.parse_args()
 
     if args.command == 'version':
@@ -463,6 +469,18 @@ def lpad():
                 lp.m_logger.debug('Processed fw_id: {}'.format(f))
 
             lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
+
+        elif args.command == 'track_fws':
+            fw_ids = parse_helper(lp, args)
+            for f in fw_ids:
+                print '# FW id: {}'.format(f)
+                data = lp.get_trackers(f)
+                for d in data:
+                    print '## Launch id: {}'.format(d['launch_id'])
+                    for t in d['trackers']:
+                        print t
+
+
 
 
 if __name__ == '__main__':

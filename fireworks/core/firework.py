@@ -280,6 +280,8 @@ class Tracker(FWSerializable, object):
     def from_dict(cls, m_dict):
         return Tracker(m_dict['filename'], m_dict['nlines'], m_dict['content'])
 
+    def __str__(self):
+        return '### Filename: {}\n{}'.format(self.filename, self.content)
 
 class Launch(FWSerializable, object):
     """
