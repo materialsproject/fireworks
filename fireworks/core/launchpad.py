@@ -14,7 +14,7 @@ from pymongo import DESCENDING
 
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, Launch, Workflow, FWAction
+from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 
@@ -417,7 +417,8 @@ class LaunchPad(FWSerializable):
             # create a launch
         # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
         launch_id = self.get_new_launch_id()
-        m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, launch_id=launch_id,
+        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
+        m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, trackers=trackers, launch_id=launch_id,
                           fw_id=m_fw.fw_id)
         self._upsert_launch(m_launch)
 
@@ -527,7 +528,8 @@ class LaunchPad(FWSerializable):
 
         state_history = reserved_launch.state_history if reserved_launch else None
         l_id = reserved_launch.launch_id if reserved_launch else self.get_new_launch_id()
-        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, state_history=state_history,
+        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
+        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, trackers=trackers, state_history=state_history,
                           launch_id=l_id,
                           fw_id=m_fw.fw_id)
 
@@ -585,9 +587,12 @@ class LaunchPad(FWSerializable):
 
     def ping_launch(self, launch_id, ptime=None):
         m_launch = self.get_launch_by_id(launch_id)
+        for tracker in m_launch.trackers:
+            tracker.track_file(m_launch.launch_dir)
+
         m_launch.touch_history(ptime)
-        self.launches.find_and_modify({'launch_id': launch_id, 'state': 'RUNNING'},
-            {'$set':{'state_history':m_launch.to_db_dict()['state_history']}})
+        self.launches.update({'launch_id': launch_id, 'state': 'RUNNING'},
+            {'$set':{'state_history':m_launch.to_db_dict()['state_history'], 'trackers': [t.to_dict() for t in m_launch.trackers]}})
 
     def get_new_fw_id(self):
         """

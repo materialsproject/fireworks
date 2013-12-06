@@ -17,11 +17,13 @@ to do next after a job completes
 from collections import defaultdict, OrderedDict
 
 import datetime
+import os
+from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter, reverse_readline
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -240,6 +242,45 @@ class FireWork(FWSerializable):
         return 'FireWork object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
 
+class Tracker(FWSerializable, object):
+    """
+    A Tracker monitors a file and returns the last N lines for updating the Launch object
+    """
+
+    def __init__(self, filename, nlines=FWConfig().TRACKER_LINES, content=''):
+        self.filename = filename
+        self.nlines = nlines
+        self.content = content
+
+
+    def track_file(self, launch_dir=None):
+        """
+        Reads the monitored file and returns back the last N lines
+        :param launch_dir: directory where job was launched in case of relative filename
+        :return:
+        """
+        m_file = self.filename
+        if launch_dir and not os.path.isabs(self.filename):
+            m_file = os.path.join(launch_dir, m_file)
+
+        lines = []
+        with open(m_file) as f:
+            for l in reverse_readline(f):
+                lines.append(l)
+                if len(lines) == self.nlines:
+                    break
+
+        self.content='\n'.join(lines)
+        return self.content
+
+    def to_dict(self):
+        return {'filename': self.filename, 'nlines': self.nlines, 'content': self.content}
+
+    @classmethod
+    def from_dict(cls, m_dict):
+        return Tracker(m_dict['filename'], m_dict['nlines'], m_dict['content'])
+
+
 class Launch(FWSerializable, object):
     """
     A Launch encapsulates data about a specific run of a FireWork on a
@@ -247,7 +288,7 @@ class Launch(FWSerializable, object):
     """
 
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None,
-                 action=None, state_history=None,
+                 trackers=None, action=None, state_history=None,
                  launch_id=None, fw_id=None):
         """
         :param state: (str) the state of the Launch (e.g. RUNNING, COMPLETED)
@@ -257,6 +298,7 @@ class Launch(FWSerializable, object):
         automatically if None)
         :param ip: (str) the IP address where the launch took place (set
         automatically if None)
+        :param trackers: ([Tracker]) File Trackers for this Launch
         :param action: (FWAction) the output of the Launch
         :param state_history: ([dict]) a history of all states of the Launch
         and when they occurred
@@ -271,6 +313,7 @@ class Launch(FWSerializable, object):
         self.fworker = fworker if fworker else FWorker()
         self.host = host if host else get_my_host()
         self.ip = ip if ip else get_my_ip()
+        self.trackers = trackers if trackers else []
         self.action = action if action else None
         self.state_history = state_history if state_history else []
         self.state = state
@@ -370,7 +413,8 @@ class Launch(FWSerializable, object):
     def to_dict(self):
         return {'fworker': self.fworker, 'fw_id': self.fw_id,
                 'launch_dir': self.launch_dir, 'host': self.host,
-                'ip': self.ip, 'action': self.action, 'state': self.state,
+                'ip': self.ip, 'trackers': self.trackers,
+                'action': self.action, 'state': self.state,
                 'state_history': self.state_history,
                 'launch_id': self.launch_id}
 
@@ -390,8 +434,10 @@ class Launch(FWSerializable, object):
         fworker = FWorker.from_dict(m_dict['fworker']) if m_dict['fworker'] else None
         action = FWAction.from_dict(m_dict['action']) if m_dict.get(
             'action') else None
+        trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get(
+            'trackers') else None
         return Launch(m_dict['state'], m_dict['launch_dir'], fworker,
-                      m_dict['host'], m_dict['ip'], action,
+                      m_dict['host'], m_dict['ip'], trackers, action,
                       m_dict['state_history'], m_dict['launch_id'],
                       m_dict['fw_id'])
 
