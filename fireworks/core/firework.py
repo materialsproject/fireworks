@@ -270,7 +270,7 @@ class Tracker(FWSerializable, object):
                 if len(lines) == self.nlines:
                     break
 
-        self.content='\n'.join(lines)
+        self.content='\n'.join(reversed(lines))
         return self.content
 
     def to_dict(self):
