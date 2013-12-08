@@ -61,4 +61,5 @@ _queueadapter           Special queue parameters for this job. More information 
 _dupefinder             Used to specify a duplicate finder object for avoiding duplicated runs. More information :doc:`here </duplicates_tutorial>`.
 _allow_fizzled_parents  Run this FireWork if all parents are *either* COMPLETED or FIZZLED.
 _fizzled_parents        Reserved for automatically putting information about FIZZLED parents in a child FireWork with the ``_allow_fizzled_parents`` option.
+_trackers           Reserved for specifying File Trackers.
 ======================  ==============

@@ -161,6 +161,7 @@ Monitoring FireWorks
 
     query_tutorial
     basesite_tutorial
+    tracker_tutorial
 
 Deploying FireWorks in production
 ---------------------------------

@@ -1,0 +1,18 @@
+name: Tracker FW
+spec:
+  _tasks:
+  - _fw_name: Template Writer Task
+    context:
+      opt1: 5.0
+      opt2: fast method
+    output_file: inputs.txt
+    template_file: simple_template.txt
+  - _fw_name: Script Task
+    script: wc -w < inputs.txt > words.txt
+    use_shell: true
+  _trackers:
+  - filename: words.txt
+    nlines: 50
+  - filename: inputs.txt
+    nlines: 50
+
