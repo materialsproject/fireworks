@@ -743,7 +743,7 @@ class LaunchPad(FWSerializable):
     def forget_offline(self, fw_id):
         self.offline_runs.update({"fw_id": fw_id}, {"$set": {"deprecated":True}})
 
-    def get_trackers(self, fw_id):
+    def get_tracker_data(self, fw_id):
         data = []
         for l in self.launches.find({'fw_id': fw_id}, {'trackers': 1, 'launch_id': 1}):
             if 'trackers' in l:  # backwards compatibility

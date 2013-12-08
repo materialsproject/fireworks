@@ -247,7 +247,11 @@ class Tracker(FWSerializable, object):
     A Tracker monitors a file and returns the last N lines for updating the Launch object
     """
 
+    MAX_TRACKER_LINES = 1000
+
     def __init__(self, filename, nlines=FWConfig().TRACKER_LINES, content=''):
+        if nlines > self.MAX_TRACKER_LINES:
+            raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(self.MAX_TRACKER_LINES, nlines))
         self.filename = filename
         self.nlines = nlines
         self.content = content
@@ -274,11 +278,14 @@ class Tracker(FWSerializable, object):
         return self.content
 
     def to_dict(self):
-        return {'filename': self.filename, 'nlines': self.nlines, 'content': self.content}
+        m_dict = {'filename': self.filename, 'nlines': self.nlines}
+        if self.content:
+            m_dict['content'] = self.content
+        return m_dict
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Tracker(m_dict['filename'], m_dict['nlines'], m_dict['content'])
+        return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''))
 
     def __str__(self):
         return '### Filename: {}\n{}'.format(self.filename, self.content)

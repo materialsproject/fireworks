@@ -474,7 +474,7 @@ def lpad():
             fw_ids = parse_helper(lp, args)
             for f in fw_ids:
                 print '# FW id: {}'.format(f)
-                data = lp.get_trackers(f)
+                data = lp.get_tracker_data(f)
                 for d in data:
                     print '## Launch id: {}'.format(d['launch_id'])
                     for t in d['trackers']:
