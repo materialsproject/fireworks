@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v0.52**
+
+* add *trackers*, or the ability to monitor output files
+
 **v0.51**
 
 * make set_priority work as intended through command line
