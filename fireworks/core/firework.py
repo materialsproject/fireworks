@@ -268,13 +268,14 @@ class Tracker(FWSerializable, object):
             m_file = os.path.join(launch_dir, m_file)
 
         lines = []
-        with open(m_file) as f:
-            for l in reverse_readline(f):
-                lines.append(l)
-                if len(lines) == self.nlines:
-                    break
-
-        self.content='\n'.join(reversed(lines))
+        if os.path.exists(m_file):
+            with open(m_file) as f:
+                for l in reverse_readline(f):
+                    lines.append(l)
+                    if len(lines) == self.nlines:
+                        break
+            self.content='\n'.join(reversed(lines))
+        
         return self.content
 
     def to_dict(self):
