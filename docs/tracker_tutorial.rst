@@ -78,4 +78,4 @@ The output file is monitored for changes at every update ping interval, as well 
 A note about nlines
 ===================
 
-The tracker is meant to give basic debug information about a job, not to permanently store output files. In addition, there is a limit of 1000 lines to keep the Mongo document size reasonable. We suggest you leave nlines to be about 50 lines or so.
+The tracker is meant to give basic debug information about a job, not to permanently store output files. There is a limit of 1000 lines to keep the Mongo document size reasonable. We suggest you leave nlines to be about 50 lines or so.
