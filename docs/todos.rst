@@ -11,7 +11,7 @@ Major Features
 
 * Add send e-mail?
 
-* ||Add way to monitor a file during the run||
+* Global pause, and perhaps exercise this option automatically on catastrophe. Think whether it will affect offline submissions or not (probably not)
 
 Built-in FireTasks
 ==================
@@ -57,6 +57,8 @@ Tests
 FW Docs
 =======
 
+* Put a code example up front, along with the video
+
 * describe passing of information as being like 'ports'
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
@@ -73,4 +75,4 @@ FW Docs
 
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
-* Document the FWAction (in context of writing dynamic workflows). Make pictures for detour vs addition, etc.
+* Document the FWAction (in context of writing dynamic workflows). Make pictures for detour vs addition, etc. Show the mod_spec language (DictMod)
