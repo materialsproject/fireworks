@@ -9,7 +9,7 @@ import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction, FireWork, Tracker
+from fireworks.core.firework import FWAction, FireWork
 from fireworks.core.fw_config import FWConfig, FWData
 from fireworks.utilities.fw_utilities import release_db_lock
 
@@ -20,24 +20,20 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
-def do_ping(launchpad, launch_id, spec):
+def do_ping(launchpad, launch_id):
     if launchpad:
             launchpad.ping_launch(launch_id)
     else:
-        if '_trackers' in spec:
-            trackers = [Tracker.from_dict(t) for t in spec['_trackers']]
-            for tracker in trackers:
-                tracker.track_file(os.getcwd())
         with open('FW_ping.json', 'w') as f:
-            f.write('{"ping_time": "%s", "trackers": %s}' % datetime.utcnow().isoformat(), [t.to_dict() for t in trackers])
+            f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
 
-def ping_launch(launchpad, launch_id, stop_event, master_thread, spec):
+def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
-        do_ping(launchpad, launch_id, spec)
+        do_ping(launchpad, launch_id)
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
-def start_ping_launch(launch_id, lp, spec):
+def start_ping_launch(launch_id, lp):
     fd = FWData()
     if fd.MULTIPROCESSING:
         if not launch_id:
@@ -48,7 +44,7 @@ def start_ping_launch(launch_id, lp, spec):
     else:
         ping_stop = threading.Event()
         ping_thread = threading.Thread(target=ping_launch,
-                                       args=(lp, launch_id, ping_stop, threading.currentThread(), spec))
+                                       args=(lp, launch_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
 
@@ -131,7 +127,7 @@ class Rocket():
 
         # set up heartbeat (pinging the server that we're still alive)
         try:
-            ping_stop = start_ping_launch(launch_id, lp, m_fw.spec)
+            ping_stop = start_ping_launch(launch_id, lp)
 
             # execute the FireTasks!
             for my_task in m_fw.tasks:
@@ -160,7 +156,7 @@ class Rocket():
 
             # perform finishing operation
             stop_ping_launch(ping_stop)
-            do_ping(lp, launch_id, m_fw.spec)  # one last ping, esp if there is a monitor
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             m_action.stored_data = all_stored_data
             m_action.mod_spec = all_mod_spec
             m_action.update_spec = all_update_spec
