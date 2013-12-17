@@ -15,6 +15,7 @@ to do next after a job completes
 """
 
 from collections import defaultdict, OrderedDict
+import copy
 
 import datetime
 import os
@@ -537,11 +538,18 @@ class Workflow(FWSerializable):
         def from_dict(cls, m_dict):
             return Workflow.Links(m_dict)
 
+        def __setstate__(self, state):
+            for k, v in state:
+                self[k] = v
+
         def __reduce__(self):
             # to support Pickling of inner classes (for multi-job launcher's multiprocessing)
             # return a class which can return this class when called with the
             # appropriate tuple of arguments
-            return (NestedClassGetter(), (Workflow, self.__class__.__name__, ))
+            state = self.items()
+            return (NestedClassGetter(),
+                    (Workflow, self.__class__.__name__, ),
+                    state)
 
     def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
                  updated_on=None):
