@@ -23,9 +23,9 @@ To add a tracker, set a key called ``_tracker`` in your *fw_spec* to be an array
         use_shell: true
       _trackers:
       - filename: words.txt
-        nlines: 50
+        nlines: 25
       - filename: inputs.txt
-        nlines: 50
+        nlines: 25
 
 You can see this example in <INSTALL_DIR>/fw_tutorials/tracker.
 
@@ -42,8 +42,8 @@ The following code example creates the FireWork above with two trackers::
     firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})
     firetask2 = ScriptTask.from_str('wc -w < inputs.txt > words.txt')
     # define the trackers
-    tracker1 = Tracker('words.txt', nlines=50)
-    tracker2 = Tracker('inputs.txt', nlines=50)
+    tracker1 = Tracker('words.txt', nlines=25)
+    tracker2 = Tracker('inputs.txt', nlines=25)
     fw = FireWork([firetask1, firetask2], spec={"_trackers": [tracker1, tracker2]})
 
     fw.to_file('fw_tracker.yaml')
@@ -78,4 +78,4 @@ The output file is monitored for changes at every update ping interval, as well 
 A note about nlines
 ===================
 
-The tracker is meant to give basic debug information about a job, not to permanently store output files. There is a limit of 1000 lines to keep the Mongo document size reasonable. We suggest you leave nlines to be about 50 lines or so.
+The tracker is meant to give basic debug information about a job, not to permanently store output files. There is a limit of 1000 lines to keep the Mongo document size reasonable. We suggest you leave nlines to be about 25 lines or so.

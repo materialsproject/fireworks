@@ -80,7 +80,7 @@ class FWConfig(object):
 
         self.PW_CHECK_NUM = 10  # number of entries that can be modified in single lpad command w/o password
 
-        self.TRACKER_LINES = 50  # number of lines to return in Tracker
+        self.TRACKER_LINES = 25  # number of lines to return in Tracker
 
         self.override_user_settings()
 
