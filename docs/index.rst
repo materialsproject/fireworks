@@ -28,7 +28,7 @@ FireWorks is intended to be a friendly workflow software that is easy to get sta
 
 Some (but not all) of its features include:
 
-* A clean and flexible Python API plus a powerful command-line interface
+* A clean and flexible Python API, a powerful command-line interface, and a *built-in*, automatic web service for monitoring workflows
 
 * A database backend (MongoDB) lets you add, remove, and rerun workflows or search for the status of certain workflows.
 
@@ -38,11 +38,11 @@ Some (but not all) of its features include:
 
 * Automatic duplicate handling at the sub-workflow level - skip duplicated portions between two workflows while still running unique sections
 
-* A *built-in*, easy-to-use web service for monitoring workflows
-
 * Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines
 
-* Package many small jobs into a single large job (e.g., *automatically* run 100 serial workflows in parallel over 100 cores).
+* Remotely track the status of output files during execution.
+
+* Package many small jobs into a single large job (e.g., *automatically* run 100 serial workflows in parallel over 100 cores)
 
 * Support for several queueing systems such as PBE/Torque, Sun Grid Engine, and SLURM.
 
