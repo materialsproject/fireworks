@@ -582,8 +582,9 @@ class LaunchPad(FWSerializable):
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
             self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
-
-        return m_launch
+        # change return type to dict to make return type seriazlizable to
+        # support job packing
+        return m_launch.to_dict()
 
     def ping_launch(self, launch_id, ptime=None):
         m_launch = self.get_launch_by_id(launch_id)
@@ -725,7 +726,8 @@ class LaunchPad(FWSerializable):
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
-                    m_launch = self.complete_launch(launch_id, fwaction, state)
+                    m_launch = Launch.from_dict(
+                        self.complete_launch(launch_id, fwaction, state))
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
