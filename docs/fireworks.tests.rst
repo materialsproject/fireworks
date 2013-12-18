@@ -17,3 +17,11 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`multiprocessing_tests` Module
+-----------------------------------
+
+.. automodule:: fireworks.tests.multiprocessing_tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

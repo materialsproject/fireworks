@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v0.53**
+
+* Display name in trackers
+* Fix some bugs relating to multiprocessing & offline mode (Xiaohui Qu)
+* Don't require password when tracking many FWs
+* Default 25 lines in trackers
+
 **v0.52**
 
 * add *trackers*, or the ability to monitor output files
