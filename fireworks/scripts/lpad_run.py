@@ -480,7 +480,8 @@ def lpad():
                     print '## Launch id: {}'.format(d['launch_id'])
                     for t in d['trackers']:
                         print t
-
+                if data:
+                    print '\n'
 
 
 
