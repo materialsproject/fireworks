@@ -473,7 +473,8 @@ def lpad():
         elif args.command == 'track_fws':
             fw_ids = parse_helper(lp, args, skip_pw=True)
             for f in fw_ids:
-                print '# FW id: {}'.format(f)
+                name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})['name']
+                print '# FW id: {}, FW name: {}'.format(f, name)
                 data = lp.get_tracker_data(f)
                 for d in data:
                     print '## Launch id: {}'.format(d['launch_id'])
