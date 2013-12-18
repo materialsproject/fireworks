@@ -29,8 +29,8 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def pw_check(ids, args):
-    if len(ids) > FWConfig().PW_CHECK_NUM:
+def pw_check(ids, args, skip_pw=False):
+    if len(ids) > FWConfig().PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
         if not args.password:
             if raw_input('Are you sure? This will modify {} entries. (Y/N)'.format(len(ids)))[0].upper() == 'Y':
@@ -43,7 +43,7 @@ def pw_check(ids, args):
     return ids
 
 
-def parse_helper(lp, args, wf_mode=False):
+def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     """
     Helper method to parse args that can take either id, name, state or query
     :param args:
@@ -55,7 +55,7 @@ def parse_helper(lp, args, wf_mode=False):
 
     query = {}
     if args.fw_id:
-        return pw_check([int(x) for x in args.fw_id.split(',')], args)
+        return pw_check([int(x) for x in args.fw_id.split(',')], args, skip_pw)
     if args.query:
         query = ast.literal_eval(args.query)
     if args.name:
@@ -64,9 +64,9 @@ def parse_helper(lp, args, wf_mode=False):
         query['state'] = args.state
 
     if wf_mode:
-        return pw_check(lp.get_wf_ids(query), args)
+        return pw_check(lp.get_wf_ids(query), args, skip_pw)
 
-    return pw_check(lp.get_fw_ids(query), args)
+    return pw_check(lp.get_fw_ids(query), args, skip_pw)
 
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
@@ -471,7 +471,7 @@ def lpad():
             lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
 
         elif args.command == 'track_fws':
-            fw_ids = parse_helper(lp, args)
+            fw_ids = parse_helper(lp, args, skip_pw=True)
             for f in fw_ids:
                 print '# FW id: {}'.format(f)
                 data = lp.get_tracker_data(f)
