@@ -189,6 +189,7 @@ class DataServer(BaseManager):
         DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
         m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # random port
         m.start()
+        return m
 
 
 class NestedClassGetter(object):
