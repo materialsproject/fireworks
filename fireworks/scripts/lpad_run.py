@@ -221,6 +221,8 @@ def lpad():
     trackfw_parser.add_argument('-n', '--name', help='name', default=None)
     trackfw_parser.add_argument('-s', '--state', help='state ("ARCHIVED", "DEFUSED", "READY", "RESERVED", "FIZZLED", "RUNNING", "COMPLETED")', default=None)
     trackfw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
+    trackfw_parser.add_argument('-c', '--include', help='only include these files in the report (comma-separated string)', default=None)
+    trackfw_parser.add_argument('-x', '--exclude', help='exclude these files from the report (comma-separated string)', default=None)
 
     args = parser.parse_args()
 
@@ -472,17 +474,26 @@ def lpad():
 
         elif args.command == 'track_fws':
             fw_ids = parse_helper(lp, args, skip_pw=True)
+            include = args.include.split(',') if args.include else None
+            exclude = args.exclude.split(',') if args.exclude else None
+            first_print = True  # used to control newline
             for f in fw_ids:
-                name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})['name']
-                print '# FW id: {}, FW name: {}'.format(f, name)
                 data = lp.get_tracker_data(f)
+                output = []
                 for d in data:
-                    print '## Launch id: {}'.format(d['launch_id'])
                     for t in d['trackers']:
-                        print t
-                if data:
-                    print '\n'
+                        if (not include or t.filename in include) and (not exclude or t.filename not in exclude):
+                            output.append('## Launch id: {}'.format(d['launch_id']))
+                            output.append(str(t))
 
+                if output:
+                    name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})['name']
+                    output.insert(0, '# FW id: {}, FW name: {}'.format(f, name))
+                    if first_print:
+                        first_print = False
+                    else:
+                        output.insert(0, '>------<')
+                    print '\n'.join(output)
 
 
 if __name__ == '__main__':
