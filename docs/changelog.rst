@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.54**
+
+* Add ``--exclude`` and ``--include`` options to Trackers + minor formatting changes
+* use config file in current dir if possible
+
 **v0.53**
 
 * Display name in trackers
