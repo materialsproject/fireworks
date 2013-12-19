@@ -52,9 +52,9 @@ The following code example creates the FireWork above with two trackers::
 Viewing the tracked file
 ========================
 
-You can view the tracked files for a FireWork (during or after execution) with the command::
+You can view the tracked files for all FireWorks (during or after execution) with the command::
 
-    lpad track_fws -i <FW_ID>
+    lpad track_fws
 
 which will print out data like::
 
@@ -66,9 +66,24 @@ which will print out data like::
     option1 = 5.0
     option2 = fast method
 
-Besides for the <FW_ID>, there are additional options for specifying the FireWork(s) that you want to get the tracked data for. Type ``lpad track_fws -h`` to see all the options.
+Choosing the FireWork(s) for which to view the tracked files
+------------------------------------------------------------
+Besides for the <FW_ID>, there are additional options for specifying the FireWork(s) that you want to get the tracked data for. For example, you can search for the tracker data of a particular FireWork id or of all *FIZZLED* FireWorks via::
 
-Within the codebase, you can use the function ``get_tracker_data(fw_id)`` of the LaunchPad object to get the tracker data as a dict.
+    lpad track_fws -i <FW_ID>
+    lpad track_fws -s FIZZLED
+
+Type ``lpad track_fws -h`` to see all the options, including advanced queries.
+
+Choosing the tracked files to display
+-------------------------------------
+
+The ``--include`` (or ``-c``) and ``--exclude`` (or ``-x``) options can be used to filter what files are displayed in the Tracker Report. The ``--include`` option means to only display those files, whereas the ``--exclude`` option means to filter out those files from the report::
+
+    lpad track_fws --include words.txt
+    lpad track_fws --exclude words.txt
+
+You can separate multiple filenames by commas (no spaces).
 
 Frequency of monitoring
 =======================
@@ -78,4 +93,4 @@ The output file is monitored for changes at every update ping interval, as well 
 A note about nlines
 ===================
 
-The tracker is meant to give basic debug information about a job, not to permanently store output files. There is a limit of 1000 lines to keep the Mongo document size reasonable. We suggest you leave nlines to be about 25 lines or so.
+The tracker is meant to give basic debug information about a job, not to permanently store output files. There is a limit of 1000 lines to keep the Mongo document size reasonable, and to keep FireWorks performing well. We suggest you leave nlines to be less than 100 lines and only use this feature for basic debugging.
