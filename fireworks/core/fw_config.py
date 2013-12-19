@@ -88,6 +88,9 @@ class FWConfig(object):
         if "FW_CONFIG_FILE" in os.environ:
             config_path = os.environ['FW_CONFIG_FILE']
 
+        elif os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
+            config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
+
         else:
             MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
             root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
