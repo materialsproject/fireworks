@@ -16,9 +16,15 @@ Start FireWorks
 
 #. If not already running, start MongoDB::
 
-    mongod &
+    mongod --logpath <FILENAME_TO_LOG_TO> --fork
 
-.. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. In addition, if you are running it on a shared machine, make sure that the ``--dbpath`` variable is set to a directory that you can access.
+.. note::
+
+    If MongoDB is outputting a lot of text, you might want to start it in a
+    dedicated Terminal window or use the ``--quiet`` option. In addition, if
+    you are running it on a shared machine, make sure that the ``--dbpath``
+    variable is set to a directory that you can access. You may also wish to
+    set up your Mongo config in a file and use the --config option.
 
 #. Reset/Initialize the FireWorks database (the LaunchPad)::
 

@@ -17,9 +17,15 @@ Reset/Initialize the FireServer
 
 #. If not already running, start MongoDB::
 
-    mongod &
+    mongod --logpath <FILENAME_TO_LOG_TO> --fork
 
-   .. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. In addition, if you are running it on a shared machine, make sure that the ``--dbpath`` variable is set to a directory that you can access.
+    .. note::
+
+        If MongoDB is outputting a lot of text, you might want to start it in a
+        dedicated Terminal window or use the ``--quiet`` option. In addition, if
+        you are running it on a shared machine, make sure that the ``--dbpath``
+        variable is set to a directory that you can access. You may also wish to
+        set up your Mongo config in a file and use the --config option.
 
 #. Navigate to the FireWorks introduction directory::
 
@@ -28,7 +34,7 @@ Reset/Initialize the FireServer
    where <INSTALL_DIR> is your FireWorks installation directory.
 
    .. note:: If you do not know your <INSTALL_DIR>, use the command ``lpad version`` to print it to the terminal. If you used the `pip` installation, you'll need to download the tutorial files separately as explained in the :doc:`Basic FireWorks Installation </installation>`.
- 
+
 #. Reset the FireWorks database (the LaunchPad)::
 
     lpad reset
@@ -100,13 +106,13 @@ A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be ru
 1. We can launch Rockets using the Rocket Launcher. Execute the following command (once)::
 
     rlaunch singleshot
-    
+
    The Rocket fetches an available FireWork from the FireServer and runs it.
 
 #. Verify that the desired task ran::
 
     cat howdy.txt
-    
+
    You should see the text: ``howdy, your job launched successfully!``
 
 .. note:: In addition to ``howdy.txt``, you should also see a file called ``FW.json``. This contains a JSON representation of the FireWork that the Rocket ran and can be useful later for tracking down a launch or debugging.
@@ -114,7 +120,7 @@ A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be ru
 #. Check the status of your FireWork::
 
     lpad get_fws -i 1 -d all
-    
+
    You will now see lots of information about your Rocket launch, such as the time and directory of the launch. A lot of it is probably unclear, but you should notice that the state of the FireWork is now ``COMPLETED``.
 
 #. Try launching another rocket (you should get an error)::
