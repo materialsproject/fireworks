@@ -389,6 +389,9 @@ def version(args):
     print 'FireWorks version:', FW_VERSION
     print 'located in:', FW_INSTALL_DIR
 
+def maintain(args):
+    lp = get_lp(args)
+    lp.maintain(args.infinite, args.maintain_interval)
 
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
@@ -502,11 +505,10 @@ def lpad():
     reignite_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
     reignite_fw_parser.set_defaults(func=reignite_fws)
 
-    # maintain_parser = subparsers.add_parser('maintain', help='Run database maintenance')
-    # maintain_parser.add_argument('--infinite', help='loop infinitely', action='store_true')
-    # maintain_parser.add_argument('--maintain_interval', help='sleep time between maintenance loops (infinite mode)',
-    #                              default=FWConfig().MAINTAIN_INTERVAL, type=int)
-    # maintain_parser.set_defaults(func=maintain)
+    maintain_parser = subparsers.add_parser('maintain', help='Run database maintenance')
+    maintain_parser.add_argument('--infinite', help='loop infinitely', action='store_true')
+    maintain_parser.add_argument('--maintain_interval', help='sleep time between maintenance loops (infinite mode)', default=FWConfig().MAINTAIN_INTERVAL, type=int)
+    maintain_parser.set_defaults(func=maintain)
 
     tuneup_parser = subparsers.add_parser('tuneup',
                                           help='Tune-up the database (should be performed during scheduled downtime)')
