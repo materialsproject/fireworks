@@ -30,7 +30,9 @@ Start FireWorks
 
     lpad reset
 
-   .. note:: All FireWorks commands come with built-in help. For example, type ``lpad -h`` or ``lpad reset -h``. There often exist many different options for each command.
+  .. note:: If your FireWorks database is located on a different computer from your FireWorks installation, navigate to the computer containing FireWorks and type ``lpad init``. This will set up a file that points to your remote database. You can now run ``lpad`` commands from within this directory. Alternatively, use the ``lpad -l`` option to point to this file or set up this file as your default db location using the :doc:`FW config </config_tutorial>`.
+
+  .. note:: All FireWorks commands come with built-in help. For example, type ``lpad -h`` or ``lpad reset -h``. There often exist many different options for each command.
 
 Add a Workflow
 ==============

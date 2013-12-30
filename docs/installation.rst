@@ -7,7 +7,7 @@ Installing FireWorks
 Install MongoDB
 ===============
 
-MongoDB powers the database backend of FireWorks. You need to install MongoDB on one machine to host the FireWorks database (the same machine can also be used to run jobs). Additional machines (i.e., that are used to run FireWorks jobs) do not require a MongoDB installation.
+MongoDB powers the database backend of FireWorks. You need to install MongoDB on one machine to host the FireWorks database (the same machine can also be used to run jobs). Additional machines (i.e., that are used to run FireWorks jobs) do not require a MongoDB installation. FireWorks does not need to be installed on the same machine as your MongoDB installation.
 
 To install MongoDB, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
 

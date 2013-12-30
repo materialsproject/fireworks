@@ -19,6 +19,8 @@ Reset/Initialize the FireServer
 
     mongod --logpath <FILENAME_TO_LOG_TO> --fork
 
+    .. note:: If your FireWorks database is located on a different computer from your FireWorks installation, navigate to the computer containing FireWorks and type ``lpad init``. This will set up a file that points to your remote database. You can now run ``lpad`` commands from within this directory. Alternatively, use the ``lpad -l`` option to point to this file or set up this file as your default db location using the :doc:`FW config </config_tutorial>`.
+
     .. note::
 
         If MongoDB is outputting a lot of text, you might want to start it in a
