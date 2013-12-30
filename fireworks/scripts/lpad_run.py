@@ -15,6 +15,7 @@ from fireworks.core.firework import Workflow, FireWork
 import ast
 import json
 import datetime
+import traceback
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -74,14 +75,21 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
 
 def get_lp(args):
-    if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
-        args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
+    try:
+        if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
+            args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
 
-    if args.launchpad_file:
-        return LaunchPad.from_file(args.launchpad_file)
-    else:
-        args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
-        return LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
+        if args.launchpad_file:
+            return LaunchPad.from_file(args.launchpad_file)
+        else:
+            args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
+            return LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
+    except:
+        traceback.print_exc()
+        err_message = 'FireWorks was not able to connect to MongoDB. The database file specified was {}.'.format(args.launchpad_file)
+        if not args.launchpad_file:
+            err_message += ' Type "lpad init" if you would like to set up a file that specifies location and credentials of your Mongo database (otherwise use default localhost configuration).'
+        raise ValueError(err_message)
 
 
 def init_yaml(args):
