@@ -73,6 +73,8 @@ FW Docs
 
 * Setting up logging (in deployment section of tutorials)
 
+* Finish duplicates tutorial, and add a principles of duplicate checking section (same spec is the same job and will give the same Launch action, Launch object contains action, etc.)
+
 * Provide a video showing how things look in production. That way people get a quick feel for what's going to happen.
 
 * Document the FWAction (in context of writing dynamic workflows). Make pictures for detour vs addition, etc. Show the mod_spec language (DictMod)
