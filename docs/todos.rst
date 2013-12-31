@@ -48,11 +48,11 @@ Misc.
 Tests
 =====
 
-* test that if two classes have the same _fw_name, that we will get an error
-
 * test offline_mode
 
-* More and better unit tests, e.g. unit tests of scripts
+* unit tests of scripts
+
+* overriding queue parameters test
 
 FW Docs
 =======
