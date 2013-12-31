@@ -143,16 +143,16 @@ class FWSerializable():
     """
     To create a serializable object within FireWorks, you should subclass this class and implement
     the to_dict() and from_dict() methods.
-    
+
     If you want the load_object() implicit de-serialization to work, you must also:
         - Use the @serialize_fw decorator on to_dict()
         - Override the _fw_name parameter with a unique key.
-    
+
     See documentation of load_object() for more details.
-    
-    The use of @classmethod for from_dict allows you to define a superclass 
+
+    The use of @classmethod for from_dict allows you to define a superclass
     that implements the to_dict() and from_dict() for all its subclasses.
-    
+
     For an example of serialization, see the class QueueAdapterBase.
     """
 
@@ -230,18 +230,18 @@ def load_object(obj_dict):
     """
     Creates an instantiation of a class based on a dictionary representation. We implicitly
     determine the Class through introspection along with information in the dictionary.
-    
+
     We search for a class with the _fw_name property equal to obj_dict['_fw_name']
     If the @module key is set, that module is checked first for a matching class
     to improve speed of lookup.
     Afterwards, the modules in the USER_PACKAGES global parameter are checked.
-    
+
     Refactoring class names, module names, etc. will not break object loading
     as long as:
-    
+
     i) the _fw_name property is maintained the same AND
     ii) the refactored module is kept within USER_PACKAGES
-    
+
     You can get around these limitations if you really want:
     i) If you want to change the fw_name of an object you can set the FW_NAME_UPDATES key
     ii) If you want to put a refactored module in a new place add an entry to USER_PACKAGES
@@ -287,7 +287,7 @@ def load_object(obj_dict):
 def load_object_from_file(filename, f_format=None):
     """
     implicitly load an object from a file. just a friendly wrapper to load_object()
-    
+
     :param filename: the filename to load an object from
     :param f_format: the serialization format (default is auto-detect based on filename extension)
     """
