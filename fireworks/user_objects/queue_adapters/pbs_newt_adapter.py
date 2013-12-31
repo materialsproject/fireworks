@@ -14,7 +14,6 @@ __date__ = 'Nov 21, 2013'
 class PBSAdapterNEWT(QueueAdapterBase):
     """
     A PBS adapter that works via the NEWT interface (https://newt.nersc.gov)
-    Seems to only work on Carver at the moment (hard-coded)
     """
     _fw_name = 'PBSAdapter (NEWT)'
     template_file = os.path.join(os.path.dirname(__file__), 'PBS_template.txt')
