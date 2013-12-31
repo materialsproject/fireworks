@@ -35,3 +35,32 @@ class PBSAdapterNERSC(QueueAdapterBase):
         # TODO: only count running or queued jobs. or rather, *don't* count jobs that are 'C'.
         outs = output_str.split('\n')
         return len([line.split() for line in outs if username in line])
+
+
+class PBSAdapter(QueueAdapterBase):
+    """
+    A PBS adapter that works on NERSC (Hopper, Carver)
+    """
+    _fw_name = 'PBSAdapter'
+    submit_cmd = 'qsub'
+    defaults = {}
+
+    def __init__(self, q_name, template_file=None):
+        self.template_file = template_file if template_file is not None else \
+            os.path.join(os.path.dirname(__file__), 'PBS_template.txt')
+        self.q_name = q_name
+
+    def _parse_jobid(self, output_str):
+        # output should of the form '2561553.sdb' or '352353.jessup' - just grab the first part for job id
+        return int(output_str.split('.')[0])
+
+    def _get_status_cmd(self, username):
+        return ['qstat', '-a', '-u', username]
+
+    def _parse_njobs(self, output_str, username):
+        # lines should have this form
+        # '1339044.sdb          username  queuename    2012-02-29-16-43  20460   --   --    --  00:20 C 00:09'
+        # count lines that include the username in it
+        # TODO: only count running or queued jobs. or rather, *don't* count jobs that are 'C'.
+        outs = output_str.split('\n')
+        return len([line.split() for line in outs if username in line])
