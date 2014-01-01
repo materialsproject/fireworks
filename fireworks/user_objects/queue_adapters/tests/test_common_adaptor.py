@@ -16,7 +16,7 @@ __date__ = "12/31/13"
 import unittest
 
 from fireworks.user_objects.queue_adapters.common_adapter import *
-from fireworks.utilities.fw_serializers import load_object
+from fireworks.utilities.fw_serializers import load_object, load_object_from_file
 
 class CommonAdaptorTest(unittest.TestCase):
 
@@ -44,6 +44,12 @@ class CommonAdaptorTest(unittest.TestCase):
         self.assertNotEqual("# world", p.get_script_str("here").split("\n")[
             -1])
         self.assertIsNone(p.to_dict()["_fw_template_file"])
+
+    def test_yaml_load(self):
+        #Test yaml loading.
+        p = load_object_from_file(os.path.join(os.path.dirname(__file__),
+                              "tscc_pbs.yaml"))
+        print p.get_script_str(".")
 
     def test_parse_njobs(self):
         pbs = """
@@ -75,6 +81,8 @@ job-ID  prior   name       user         state submit/start at     queue         
             queue="all.q",
             hello="world")
         self.assertEqual(p._parse_njobs(sge, "ongsp"), 3)
+
+
 
 if __name__ == '__main__':
     unittest.main()
