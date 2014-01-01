@@ -48,7 +48,7 @@ class CommonAdaptorTest(unittest.TestCase):
     def test_yaml_load(self):
         #Test yaml loading.
         p = load_object_from_file(os.path.join(os.path.dirname(__file__),
-                              "tscc_pbs.yaml"))
+                              "pbs.yaml"))
         print p.get_script_str(".")
 
     def test_parse_njobs(self):
