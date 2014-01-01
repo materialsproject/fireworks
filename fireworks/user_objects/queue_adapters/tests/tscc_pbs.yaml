@@ -8,13 +8,15 @@ _fw_q_name: my_queue
 _fw_q_type: PBS
 
 #Parameters not starting with _fw_ specifies various parameters in the
-#script template. Refer to the default PBS or SGE template for the parameters.
-#You can also supply your own template by uncommenting and changing the
-#following line
-#template_file: full_path_to_template.
+#script template.
 queue: home
 walltime: 240:00:00
 job_name: test_job
 nnodes: 1
 ppnode: 8
 account: username
+
+#Refer to the default PBS or SGE template for the parameters.
+#You can also supply your own template by uncommenting and changing the
+#following line
+#template_file: full_path_to_template
