@@ -72,10 +72,13 @@ class CommonAdapter(QueueAdapterBase):
                 if self.q_type == "PBS":
                     #PBS has a ridiculous two word "Job ID" in header
                     state_index = header.index("S") - 1
+                    queue_index = header.index("Queue") - 1
                 else:
                     state_index = header.index("state")
+                    queue_index = header.index("queue")
             if username in l:
-                if l.split()[state_index] != "C":
+                toks = l.split()
+                if toks[state_index] != "C" and self["queue"] in toks[queue_index]:
                     count += 1
         return count
 

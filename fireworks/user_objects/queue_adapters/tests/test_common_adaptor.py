@@ -57,9 +57,9 @@ Job ID                  Username    Queue    Jobname          SessID  NDS   TSK 
         sge = """
 job-ID  prior   name       user         state submit/start at     queue                          slots ja-task-ID
 -----------------------------------------------------------------------------------------------------------------
-  44275 10.55000 test3         ongsp        qw    12/31/2013 19:35:04                                    8
-  44275 10.55000 test4         ongsp        qw    12/31/2013 19:35:04                                    8
-  44275 10.55000 test5         ongsp        qw    12/31/2013 19:35:04                                    8
+  44275 10.55000 test3         ongsp        qw    12/31/2013 19:35:04     all.q                               8
+  44275 10.55000 test4         ongsp        qw    12/31/2013 19:35:04     all.q                               8
+  44275 10.55000 test5         ongsp        qw    12/31/2013 19:35:04     all.q                               8
 """
         p = CommonAdapter(
             q_type="PBS",
@@ -67,12 +67,12 @@ job-ID  prior   name       user         state submit/start at     queue         
             queue="home-ong",
             hello="world")
         #This is actually wrong. Shouldn't the queue be filtered?
-        self.assertEqual(p._parse_njobs(pbs, "ongsp"), 2)
+        self.assertEqual(p._parse_njobs(pbs, "ongsp"), 1)
 
         p = CommonAdapter(
             q_type="SGE",
             q_name="hello",
-            queue="home-ong",
+            queue="all.q",
             hello="world")
         self.assertEqual(p._parse_njobs(sge, "ongsp"), 3)
 
