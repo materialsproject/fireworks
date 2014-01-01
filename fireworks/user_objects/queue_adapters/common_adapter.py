@@ -31,8 +31,14 @@ class CommonAdapter(QueueAdapterBase):
 
     def __init__(self, q_type, q_name, template_file=None, **kwargs):
         """
-        :param q_name
-        :param template_file
+        :param q_type: The type of queue. Right now it should be either PBS
+                       or SGE.
+        :param q_name: A name for the queue. Can be any string.
+        :param template_file: The path to the template file. Leave it as
+                              None (the default) to use Fireworks' built-in
+                              templates for PBS and SGE, which should work
+                              on most queues.
+        :param **kwargs: Series of keyword args for queue parameters.
         """
         if q_type not in CommonAdapter.supported_q_types:
             raise ValueError(
