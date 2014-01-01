@@ -106,5 +106,5 @@ class CommonAdapter(QueueAdapterBase):
         return cls(
             q_type=m_dict["_fw_q_type"],
             q_name=m_dict["_fw_q_name"],
-            template_file=m_dict["_fw_template_file"],
+            template_file=m_dict.get("_fw_template_file", None),
             **{k: v for k, v in m_dict.items() if not k.startswith("_fw")})
