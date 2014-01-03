@@ -18,7 +18,7 @@ import unittest
 from fireworks.user_objects.queue_adapters.common_adapter import *
 from fireworks.utilities.fw_serializers import load_object, load_object_from_file
 
-class CommonAdaptorTest(unittest.TestCase):
+class CommonAdapterTest(unittest.TestCase):
 
     def test_serialization(self):
         p = CommonAdapter(
