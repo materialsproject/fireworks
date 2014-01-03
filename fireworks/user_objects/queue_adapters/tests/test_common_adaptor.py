@@ -43,7 +43,7 @@ class CommonAdaptorTest(unittest.TestCase):
         #this uses the default template, which does not have $${hello}
         self.assertNotEqual("# world", p.get_script_str("here").split("\n")[
             -1])
-        self.assertIsNone(p.to_dict()["_fw_template_file"])
+        self.assertNotIn("_fw_template_file", p.to_dict())
 
     def test_yaml_load(self):
         #Test yaml loading.
