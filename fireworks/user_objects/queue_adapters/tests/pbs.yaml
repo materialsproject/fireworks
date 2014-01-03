@@ -1,0 +1,21 @@
+#Example PBS yaml spec using default template.
+
+#The following three lines are the minimum you need to specify what kind of
+#queue it is. _fw_q_type should be either PBS or SGE depending on whether
+#you are using PBS or Sun GridEngine.
+_fw_name: CommonAdapter
+_fw_q_name: my_queue
+_fw_q_type: PBS
+
+#Parameters not starting with _fw_ specifies various parameters in the
+#script template. Refer to the default PBS or SGE template for the parameters.
+queue: home
+walltime: 240:00:00
+job_name: test_job
+nnodes: 1
+ppnode: 8
+account: username
+
+#You can also supply your own template by uncommenting and changing the
+#following line
+#template_file: /full/path/to/template

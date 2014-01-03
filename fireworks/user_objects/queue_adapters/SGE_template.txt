@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#$ -q $${queue}
+#$ -A $${account}
+#$ -N $${job_name}
+#$ -o FW_job.out
+#$ -e FW_job.error
+
+$${pre_rocket}
+cd $${launch_dir}
+$${rocket_launch}
+$${post_rocket}
+
+# CommonAdapter (SGE) completed writing Template

@@ -5,7 +5,6 @@
 #PBS -l walltime=$${walltime}
 #PBS -q $${queue}
 #PBS -A $${account}
-#PBS -G $${group_name}
 #PBS -N $${job_name}
 #PBS -o FW_job.out
 #PBS -e FW_job.error
@@ -15,4 +14,5 @@ cd $${launch_dir}
 $${rocket_launch}
 $${post_rocket}
 
-# CommonAdapter (PBS) completed writing Template
+# PBSAdapter completed writing Template
+# $${hello}
