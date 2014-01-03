@@ -177,11 +177,13 @@ class CommonAdapter(QueueAdapterBase):
         #_fw names are used for the specific instance variables.
         d["_fw_q_type"] = self.q_type
         d["_fw_q_name"] = self.q_name
-        # Use None if it is the default template. This keeps the serialized
-        # dict simple and also makes it more portable across multiple
-        # installations if a template file was not actually specified.
-        d["_fw_template_file"] = self.template_file if self\
-            .template_file != CommonAdapter.default_template_file.format(self.q_type) else None
+        # only specify _fw_template_file if it is not the default
+        # template. This keeps the serialized dict simple and also makes it
+        # more portable across multiple installations if a template file was
+        # not actually specified.
+        if self.template_file != CommonAdapter.default_template_file.format(
+                self.q_type):
+            d["_fw_template_file"] = self.template_file
         return d
 
     @classmethod
