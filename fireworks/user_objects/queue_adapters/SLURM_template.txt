@@ -15,4 +15,4 @@ cd $${launch_dir}
 $${rocket_launch}
 $${post_rocket}
 
-# SLURMAdapterUCL completed writing Template
+# CommonAdapter (SLURM) completed writing Template

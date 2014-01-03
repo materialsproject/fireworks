@@ -11,4 +11,4 @@ cd $${launch_dir}
 $${rocket_launch}
 $${post_rocket}
 
-# CommonAdapter completed writing Template
+# CommonAdapter (SGE) completed writing Template
