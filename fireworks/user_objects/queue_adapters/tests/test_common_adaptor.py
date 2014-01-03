@@ -72,7 +72,6 @@ job-ID  prior   name       user         state submit/start at     queue         
             q_name="hello",
             queue="home-ong",
             hello="world")
-        #This is actually wrong. Shouldn't the queue be filtered?
         self.assertEqual(p._parse_njobs(pbs, "ongsp"), 1)
 
         p = CommonAdapter(
@@ -81,8 +80,6 @@ job-ID  prior   name       user         state submit/start at     queue         
             queue="all.q",
             hello="world")
         self.assertEqual(p._parse_njobs(sge, "ongsp"), 3)
-
-
 
 if __name__ == '__main__':
     unittest.main()
