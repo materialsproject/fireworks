@@ -91,7 +91,6 @@ class CommonAdapter(QueueAdapterBase):
                     count += 1
         return count
 
-
     def submit_to_queue(self, script_file):
         """
         submits the job to the queue and returns the job id
