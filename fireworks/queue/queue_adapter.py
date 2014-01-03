@@ -108,7 +108,7 @@ class QueueAdapterBase(dict, FWSerializable):
                          if v is not None}  # clean null values
 
             for k, v in self.defaults.items():
-                subs_dict[k] = subs_dict.get(k, v)
+                subs_dict.setdefault(k, v)
 
             subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
 
