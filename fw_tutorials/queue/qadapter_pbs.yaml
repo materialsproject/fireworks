@@ -1,7 +1,8 @@
 _fw_name: CommonAdapter
 _fw_q_type: PBS
 rocket_launch: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
-ncores: 1
+nnodes: 1
+ppnode: 1
 walltime: '00:02:00'
 queue: debug
 account: null

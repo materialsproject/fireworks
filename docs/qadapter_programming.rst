@@ -4,52 +4,84 @@ Writing Queue Adapters
 
 FireWorks is intended to support multiple queueing systems. To support a new queueing system, a few functions need to be defined for that queue manager (e.g., what command is used to submit jobs?). In most cases, new queue managers can be supported with minimal effort.
 
-Writing a simple queue adapter
-==============================
+Modifying the template of the CommonAdapter
+===========================================
 
-You can write a simple queue adapter with just a few code modifications of an existing queue adapter.
+The FireWorks CommonAdapter supports several queueing engines such as PBS, SGE, and SLURM. If you want to use one of these queueing systems but make minor modifications to how the queue submission file looks, you only need to write a new template file and point your queue adapter to it.
 
-Find a location
----------------
+1. Create a template file for job submission. Variables that you want to specify later should be written using the ``$${var}`` notation.  Save this template file somewhere, e.g. as ``PBS_template_custom.txt``. An example template file is given below::
 
-First, you need to decide on a location for your queue adapter Python code. The built-in queue adapters are located in ``<INSTALL_DIR>/fireworks/user_objects/queue_adapters``. However, you can also place your queue adapter in a different Python package if you set the ``ADD_USER_PACKAGES`` option in the :doc:`FW config </config_tutorial>`.
+    #!/bin/bash
 
-Copy an existing adapter
-------------------------
+    #PBS -l nodes=$${nnodes}:ppn=$${ppnode}
+    #PBS -l walltime=$${walltime}
+    #PBS -q $${queue}
+    #PBS -A $${account}
+    #PBS -G $${group_name}
+    #PBS -N $${job_name}
+    #PBS -o FW_job.out
+    #PBS -e FW_job.error
 
-1. Choose a somewhat similar built-in adapter (e.g., ``pbs_adapter.py``) and copy that Python file to a new file, e.g. ``new_adapter.py``.
-2. Also copy the corresponding template file (e.g., ``PBS_template.txt``) to a new file, e.g. ``new_template.txt``.
+    $${pre_rocket}
+    cd $${launch_dir}
+    $${rocket_launch}
+    $${post_rocket}
 
-Modify the adapter
-------------------
+    # CommonAdapter (PBS) completed writing Template
 
-1. Modify your new template file (the ``.txt`` file) to look like a typical queue script for your queue manager. To define variables, use the ``$${var}`` notation. Anything that is a variable can be overridden by your ``my_qadapter.yaml`` file or by the ``_queueadapter`` key within reservation mode. Lines containing undefined variables will be skipped when writing the queue script.
+   .. note:: Be sure to keep the lines involving ``cd $${launch_dir}`` and ``$${rocket_launch}`` intact. Your template file does not need to have any other variables, although the ``$${queue}`` variable helps FireWorks count how many jobs you have in a given queue. Also, not all variable names will need to specified in order to write a queue script, so feel free to add lines containing optional variables at this stage.
 
-2. Next, go to your new Python file (the ``.py`` file) and make the following simple variable changes:
+2. Find your Queue Adapter file from the :doc:`queue tutorial </queue_tutorial>` - it should be named ``my_qadapter.yaml``. Modify it so that there is an additional parameter called ``_fw_template_file`` that points to your new template file. In addition, add lines to set the values of variables from your template (if you leave a variable in the template undefined, the line containing it will be skipped). For example, your custom ``my_qadapter.yaml`` file might look like this::
 
-  * Change the ``_fw_name`` to something descriptive for your new adapter. A common format is to put both the queue manager system and a specific machine the queue script was defined for.
-  * Change the ``template_file`` parameter to point to your new template file
-  * Change the ``submit_cmd`` to be the command used to submit jobs, e.g. ``qsub`` or ``squeue``.
-  * Change the ``q_name`` to something descriptive of the queue manager, like ``pbs`` or ``slurm``. This name is used for the naming of log files and in error message reports.
-  * (optional) Change the ``defaults`` to contain default parameter values for the variables in your template.
+    _fw_name: CommonAdapter
+    _fw_q_type: PBS
+    _fw_template_file: /path/to/PBS_template_custom.txt
+    rocket_launch: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
+    nnodes: 1
+    ppnode: 1
+    walltime: '00:02:00'
+    queue: debug
+    account: null
+    job_name: null
+    logdir: path/to/logging
+    pre_rocket: null
+    post_rocket: null
 
-3. Finally, implement a few methods by modifying the existing ones:
+3. Use this new ``my_qadapter.yaml`` file (with the ``_fw_template_file`` key specified) when using the queue launcher. The queue launcher will write scripts according to your custom template, with variables substituted according to your ``my_qadapter.yaml`` file.
 
-  * ``_parse_jobid()`` should be able to take the standard output string returned when submitting a job and parse a job id (preferably an integer).
-  * ``_get_status_cmd()`` should be an array of Strings describing the command for printing the list of jobs for a particular user. e.g. for PBS it involves the ``qstat`` command.
-  * ``_parse_njobs()`` should take the raw text from the output of executing the status command (e.g. ``qstat``) and figure out then number of jobs currently in the queue for a given user. Often, this involves counting the lines of code returned by the status command.
 
-After making these modifications, your new queue adapter should be ready! You can use it by specifying the correct ``_fw_name`` in your ``my_qadapter.yaml`` file.
+Writing a new queue adapter
+===========================
 
-Writing a complex queue adapter
-===============================
+If you need to support a new queueing system, you will change the Python code by either (i) modifying the CommonAdapter or (ii) writing a new qadapter from scratch. In either case, we suggest you contact us for help (see :ref:`contributing-label`) so that the process is as smooth and painless as possible.
 
-FireWorks was structured so that when writing most queue adapters, you don't need to spend a lot of time writing boilerplate code (e.g. to execute commands, parse standard out, or log the sequence of commands). Rather, you just switch a couple of variable like ``submit_cmd``. By assuming a few things about your queue manager, FireWorks generally keeps queue adaptor code to something like 10-20 lines.
+Modifying the CommonAdapter
+----------------------------
 
-However, if your queue is a complex entity than typical queue managers (maybe a web-based submission framework), the boilerplate code may no longer apply. If this is the case, you will need to manually define or more of the following methods:
+The CommonAdapter, which supports several queueing systems, is located in ``<INSTALL_DIR>/fireworks/user_objects/queue_adapters/common_adapter.py`` (you can find out ``<INSTALL_DIR`` by typing ``lpad version``). Review the code and make changes as necessary for your queue type to ``commonadapter.py``. In particular, make sure to:
 
-  * the ``the get_script_str()`` method
-  * the ``submit_to_queue()`` method
-  * the ``get_njobs_in_queue()`` method
+* Add your queue type to ``supported_q_types``
+* Ensure the ``submit_cmd`` parameter is set correctly
+* Add a default template file for your queue in the same directory as ``common_adapter.py``, e.g. ``QUEUETYPE_template.txt``. Some examples are present in the FireWorks codebase.
+* Review the remaining methods for consistency with your queue.
 
-In each case, you might look at the *QueueAdapterBase* class for an example.
+If all methods are implemented correctly, your new adapter should be functional and you can use it by modifying ``my_launchapd.yaml``:
+
+* Set the ``_fw_name`` to *CommonAdapter*
+* Set the `_fw_q_type`` to your new queue type
+
+Writing a new adapter from scratch
+----------------------------------
+
+If your queue is a complex entity that is different than typical queue managers (maybe a web-based submission framework), you'll need to write a new class from scratch that extends ``QueueAdapterBase`` and:
+
+* implement the ``submit_to_queue()`` method
+* implement the ``get_njobs_in_queue()`` method
+* set the ``_fw_name`` parameter to some unique String.
+* set the ``template_file`` variable to a template file for your queue scripts
+* implement the ``get_script_str()`` method (only in rare instances where your queue submission doesn't involve writing a templated script, otherwise do not implement this method)
+
+You might look at the *CommonAdapter* class or *PBSAdapterNEWT* for examples. After writing your new code, decide on a location for your queue adapter Python code and template file. The built-in queue adapters are located in ``<INSTALL_DIR>/fireworks/user_objects/queue_adapters``, and FireWorks will discover your code there automatically (you can find out ``<INSTALL_DIR`` by typing ``lpad version``). However, you can also place your queue adapter in a different Python package if you set the ``ADD_USER_PACKAGES`` option as in the :doc:`FW config </config_tutorial>`.
+
+Again, we suggest that you contact us for help (see :ref:`contributing-label`) if you run into any problems during the process.
+
