@@ -1,6 +1,6 @@
-=========================================
-Reserving FireWorks upon queue submission
-=========================================
+============================================
+Advanced queue submission (reservation mode)
+============================================
 
 Before we begin - if you're here and haven't completed the :doc:`first tutorial on queue submission </queue_tutorial>`, you should go back and complete that first. This tutorial assumes that you already have queue submission working and just need to overcome some of the limitations of simple queue submission.
 
@@ -13,7 +13,7 @@ write/submit queue script        write generic script using QueueAdapter  | 1. *
                                  file alone                               | 2. use FW's spec to modify queue script
 queue manager runs queue script  determine a FW to run and run it         run the **reserved** FW
 job is deleted from queue        no action needed by the user             any affected **reserved** jobs must be
-                                                                          unreserved by user manually
+                                                                          unreserved by user using detect_unreserved
 run multiple FWs in one script   supported                                currently unsupported
 offline mode                     unsupported                              supported
 ===============================  =======================================  =============================================

@@ -1,4 +1,5 @@
-_fw_name: SLURMAdapter (UCL)
+_fw_name: CommonAdapter
+_fw_q_type: SLURM
 rocket_launch: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
 ntasks: 1
 cpus_per_task: 1
