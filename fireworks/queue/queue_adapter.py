@@ -104,10 +104,10 @@ class QueueAdapterBase(dict, FWSerializable):
             a = QScriptTemplate(f.read())
 
             # set substitution dict for replacements into the template
-            subs_dict = {k: v for k, v in dict(self).iteritems()
+            subs_dict = {k: v for k, v in self.items()
                          if v is not None}  # clean null values
 
-            for k, v in self.defaults.iteritems():
+            for k, v in self.defaults.items():
                 subs_dict[k] = subs_dict.get(k, v)
 
             subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
