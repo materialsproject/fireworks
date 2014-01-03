@@ -4,10 +4,13 @@
 This module implements a CommonAdaptor that supports standard PBS and SGE
 queues.
 """
+import getpass
 import os
 import re
-from fireworks.queue.queue_adapter import QueueAdapterBase
+import subprocess
+from fireworks.queue.queue_adapter import QueueAdapterBase, Command
 from fireworks.utilities.fw_serializers import serialize_fw
+from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -87,6 +90,87 @@ class CommonAdapter(QueueAdapterBase):
                 if toks[state_index] != "C" and self["queue"] in toks[queue_index]:
                     count += 1
         return count
+
+
+    def submit_to_queue(self, script_file):
+        """
+        submits the job to the queue and returns the job id
+
+        :param script_file: (str) name of the script file to use (String)
+        :return: (int) job_id
+        """
+        if not os.path.exists(script_file):
+            raise ValueError(
+                'Cannot find script file located at: {}'.format(
+                    script_file))
+
+        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+
+        # submit the job
+        try:
+            cmd = [self.submit_cmd, script_file]
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+            p.wait()
+
+            # grab the returncode. PBS returns 0 if the job was successful
+            if p.returncode == 0:
+                try:
+                    job_id = self._parse_jobid(p.stdout.read())
+                    queue_logger.info(
+                        'Job submission was successful and job_id is {}'.format(
+                            job_id))
+                    return job_id
+                except:
+                    # probably error parsing job code
+                    log_exception(queue_logger,
+                                  'Could not parse job id following {}...'.format(
+                                      self.submit_cmd))
+
+            else:
+                # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
+                msgs = [
+                    'Error in job submission with {n} file {f} and cmd {c}'.format(
+                        n=self.q_name, f=script_file, c=cmd),
+                    'The error response reads: {}'.format(p.stderr.read())]
+                log_fancy(queue_logger, msgs, 'error')
+
+        except:
+            # random error, e.g. no qsub on machine!
+            log_exception(queue_logger,
+                          'Running the command: {} caused an error...'.format(
+                              self.submit_cmd))
+
+    def get_njobs_in_queue(self, username=None):
+        """
+        returns the number of jobs currently in the queu efor the user
+
+        :param username: (str) the username of the jobs to count (default is to autodetect)
+        :return: (int) number of jobs in the queue
+        """
+        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+
+        # initialize username
+        if username is None:
+            username = getpass.getuser()
+
+        # run qstat
+        qstat = Command(self._get_status_cmd(username))
+        p = qstat.run(timeout=5)
+
+        # parse the result
+        if p[0] == 0:
+            njobs = self._parse_njobs(p[1], username)
+            queue_logger.info(
+                'The number of jobs currently in the queue is: {}'.format(
+                    njobs))
+            return njobs
+
+        # there's a problem talking to qstat server?
+        msgs = ['Error trying to get the number of jobs in the queue',
+                'The error response reads: {}'.format(p[2])]
+        log_fancy(queue_logger, msgs, 'error')
+        return None
 
     @serialize_fw
     def to_dict(self):

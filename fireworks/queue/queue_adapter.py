@@ -3,16 +3,15 @@
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """
-import getpass
-
 import os
 import shlex
 import string
 import subprocess
 import threading
 import traceback
+import abc
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, log_fancy
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -93,31 +92,6 @@ class QueueAdapterBase(dict, FWSerializable):
     q_name = 'OVERRIDE_ME'  # (arbitrary) name, e.g. "pbs" or "slurm"
     defaults = {}  # default parameter values for template
 
-    def _parse_jobid(self, output_str):
-        """
-        After running submit_cmd, parses the job id from the standard output
-        :param output_str: Standard output after running submit_cmd
-        :return: (int) job id
-        """
-        raise NotImplementedError('_parse_jobid() not implemented for this queueadapter!')
-
-    def _get_status_cmd(self, username):
-        """
-        Get the command (e.g. ["qstat"]) for getting the number of jobs from a user
-        :param username: username we want to get the njobs for
-        :return: ([str]) command as String[] for subprocess
-        """
-        raise NotImplementedError('_get_status_cmd() not implemented for this queueadapter!')
-
-    def _parse_njobs(self, output_str, username):
-        """
-        Parse the number of jobs in the queue from status_cmd output
-        :param output_str: the output string from running the status command, e.g. "qstat" output
-        :param username: username we want to get njobs for
-        :return: (int) number of jobs in queue
-        """
-        raise NotImplementedError('_parse_njobs() not implemented for this queueadapter!')
-
     def get_script_str(self, launch_dir):
         """
         returns a (multi-line) String representing the queue script, e.g. PBS script. \
@@ -130,7 +104,8 @@ class QueueAdapterBase(dict, FWSerializable):
             a = QScriptTemplate(f.read())
 
             # set substitution dict for replacements into the template
-            subs_dict = dict([(k,v) for k,v in dict(self).iteritems() if v is not None])  # clean null values
+            subs_dict = {k: v for k, v in dict(self).iteritems()
+                         if v is not None}  # clean null values
 
             for k, v in self.defaults.iteritems():
                 subs_dict[k] = subs_dict.get(k, v)
@@ -140,16 +115,15 @@ class QueueAdapterBase(dict, FWSerializable):
             launch_dir = os.path.abspath(launch_dir)
             subs_dict['launch_dir'] = launch_dir
 
-            unclean_template = a.safe_substitute(subs_dict)  # might contain unused parameters as leftover $$
+            # might contain unused parameters as leftover $$
+            unclean_template = a.safe_substitute(subs_dict)
 
-            clean_template = []
-
-            for line in unclean_template.split('\n'):
-                if '$$' not in line:
-                    clean_template.append(line)
+            clean_template = filter(lambda l: "$$" not in l,
+                                    unclean_template.split('\n'))
 
             return '\n'.join(clean_template)
 
+    @abc.abstractmethod
     def submit_to_queue(self, script_file):
         """
         submits the job to the queue and returns the job id
@@ -157,38 +131,9 @@ class QueueAdapterBase(dict, FWSerializable):
         :param script_file: (str) name of the script file to use (String)
         :return: (int) job_id
         """
-        if not os.path.exists(script_file):
-            raise ValueError('Cannot find script file located at: {}'.format(script_file))
+        pass
 
-        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
-
-        # submit the job
-        try:
-            cmd = [self.submit_cmd, script_file]
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-
-            # grab the returncode. PBS returns 0 if the job was successful
-            if p.returncode == 0:
-                try:
-                    job_id = self._parse_jobid(p.stdout.read())
-                    queue_logger.info('Job submission was successful and job_id is {}'.format(job_id))
-                    return job_id
-                except:
-                    # probably error parsing job code
-                    log_exception(queue_logger, 'Could not parse job id following {}...'.format(self.submit_cmd))
-
-            else:
-                # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
-                msgs = [
-                    'Error in job submission with {n} file {f} and cmd {c}'.format(n=self.q_name, f=script_file, c=cmd),
-                    'The error response reads: {}'.format(p.stderr.read())]
-                log_fancy(queue_logger, msgs, 'error')
-
-        except:
-            # random error, e.g. no qsub on machine!
-            log_exception(queue_logger, 'Running the command: {} caused an error...'.format(self.submit_cmd))
-
+    @abc.abstractmethod
     def get_njobs_in_queue(self, username=None):
         """
         returns the number of jobs currently in the queu efor the user
@@ -196,27 +141,7 @@ class QueueAdapterBase(dict, FWSerializable):
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue
         """
-        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
-
-        # initialize username
-        if username is None:
-            username = getpass.getuser()
-
-        # run qstat
-        qstat = Command(self._get_status_cmd(username))
-        p = qstat.run(timeout=5)
-
-        # parse the result
-        if p[0] == 0:
-            njobs = self._parse_njobs(p[1], username)
-            queue_logger.info('The number of jobs currently in the queue is: {}'.format(njobs))
-            return njobs
-
-        # there's a problem talking to qstat server?
-        msgs = ['Error trying to get the number of jobs in the queue',
-                'The error response reads: {}'.format(p[2])]
-        log_fancy(queue_logger, msgs, 'error')
-        return None
+        pass
 
     def __getitem__(self, key):
         """

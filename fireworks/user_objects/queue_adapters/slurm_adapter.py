@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from fireworks.queue.queue_adapter import QueueAdapterBase
+from .common_adapter import CommonAdapter
 
 __author__ = 'David Waroquiers, Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -11,9 +11,11 @@ __email__ = 'david.waroquiers@uclouvain.be'
 __date__ = 'Dec 12, 2012'
 
 
-class SLURMAdapterUCL(QueueAdapterBase):
+class SLURMAdapterUCL(CommonAdapter):
     """
     A SLURM adapter that works on UCL machines
+    TODO: This should be refactored not to override private methods. Can we
+    support this in CommonAdaptor instead? Doesn't seem difficult.
     """
     _fw_name = 'SLURMAdapter (UCL)'
     template_file = os.path.join(os.path.dirname(__file__), 'SLURM_template.txt')
