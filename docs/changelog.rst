@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+v0.6
+----
+
+.. caution:: The QueueAdapter code has been refactored in a way that is not fully backward compatible. Chances are, you will have to modify any ``my_qadapter.yaml`` files you have so that the ``_fw_name`` is set to *CommonAdapter* and a new ``_fw_q_type`` parameter is set to *PBS*, *SGE*, or *SLURM*.
+
+* Major refactor of QueueAdapters so it is easy to change template files without adding new code (S.P. Ong)
+* restore lpad.maintain()
+* minor doc updates
+
 **v0.54**
 
 * Add ``--exclude`` and ``--include`` options to Trackers + minor formatting changes

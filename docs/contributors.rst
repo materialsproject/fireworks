@@ -8,7 +8,7 @@ Michael Kocher and Dan Gunter initiated the architecture of a central MongoDB da
 
 Xiaohui Qu wrote the multi job launcher, with help from Anubhav Jain and advice from Dan Gunter.
 
-Shyue Ping Ong was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, continuous integration, etc. Shyue's custodian_ library was adapted (with permission) to create the DictMod language option for updating child FireWorks. Incidentally, the custodian library is a nice complement to FireWorks for use in FireTasks that is employed by the Materials Project.
+Shyue Ping Ong refactored the QueueAdapter code and was extremely helpful in providing guidance and feedback, as well as the nitty gritty of getting set up with Sphinx documentation, PyPI, continuous integration, etc. Shyue's custodian_ library was adapted (with permission) to create the DictMod language option for updating child FireWorks. Incidentally, the custodian library is a nice complement to FireWorks for use in FireTasks that is employed by the Materials Project.
 
 David Waroquiers wrote the SLURM queue adapter, helped write the TransferTask, and provided useful feedback.
 
