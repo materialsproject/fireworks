@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v0.61**
+
+* Include text files needed for queue adapters in distribution (D. Gunter)
+
 v0.6
 ----
 
