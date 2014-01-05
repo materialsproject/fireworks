@@ -93,17 +93,16 @@ def get_lp(args):
 
 
 def init_yaml(args):
-    fields = {
-        "host": "localhost",
-        "port": 27017,
-        "name": "fireworks",
-        "username": None,
-        "password": None
-    }
+    fields = (
+        ("host", "localhost"),
+        ("port", 27017),
+        ("name", "fireworks"),
+        ("username", None),
+        ("password", None))
     doc = {}
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
-    for k, v in fields.items():
+    for k, v in fields:
         val = raw_input("Enter {} (default: {}) : ".format(k, v))
         doc[k] = val if val else v
     doc["port"] = int(doc["port"])  # enforce the port as an int
