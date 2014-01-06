@@ -31,7 +31,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
                   clear_logs=False):
     """
     Convenience method to return a logger.
-    
+
     :param name: name of the logger that sets the groups, e.g. 'group1.set2'
     :param l_dir: the directory to put the log file
     :param file_levels: iterable describing level(s) to log to file(s). default: ('DEBUG', 'ERROR')
@@ -86,7 +86,7 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
     Helps to group log messages by adding a fancy border around it,
     which enhances readability of log lines meant to be read
     as a unit.
-    
+
     :param m_logger: (logger) The logger object
     :param log_lvl: (str) The level to log at
     :param msgs: ([str]) a String or iterable of Strings
@@ -108,7 +108,7 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
 def log_exception(m_logger, msgs):
     """
     A shortcut wrapper around log_fancy for exceptions
-    
+
     :param m_logger: (logger) The logger object
     :param msgs: ([str]) String or iterable of Strings, will be joined by newlines
     """
@@ -151,13 +151,37 @@ def get_slug(m_str):
     return m_str.replace(' ', '_')
 
 
+class DbLock(object):
+
+    def __init__(self, safe=True):
+        self.safe = safe
+
+    def __enter__(self):
+        """
+        Acquire lock on database
+        """
+        if FWData().MULTIPROCESSING:
+            FWData().PROCESS_LOCK.acquire()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Release lock on database
+        :param safe: (bool) ignore errors (e.g., lock never acquired)
+        """
+        if FWData().MULTIPROCESSING:
+            try:
+                FWData().PROCESS_LOCK.release()
+            except ValueError, ve:
+                if self.safe:
+                    raise ValueError(ve)
+
+
 def acquire_db_lock():
     """
     Acquire lock on database
     """
     if FWData().MULTIPROCESSING:
         FWData().PROCESS_LOCK.acquire()
-
 
 def release_db_lock(safe=True):
     """
