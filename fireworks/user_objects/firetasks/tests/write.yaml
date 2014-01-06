@@ -1,6 +1,6 @@
-_fw_name: File Writer Task
+_fw_name: File Write Task
 dest: "."
-input_files:
+files_to_write:
 - contents: |
     hello
     world

@@ -1,0 +1,5 @@
+_fw_name: File Delete Task
+dest: "."
+files_to_delete:
+- myfile1
+- myfile2
