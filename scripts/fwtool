@@ -7,23 +7,23 @@ __maintainer__ = 'Shyue Ping Ong'
 __email__ = 'ongsp@ucsd.edu'
 __date__ = '1/6/14'
 
+import os
 from argparse import ArgumentParser
-from glob import glob
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 import yaml
 
-def directory_to_fw(args):
+
+def create_fw_single(args, fnames, yaml_fname):
     files = []
-    for s in args.input_files:
-        for fname in glob(s):
-            with open(fname) as f:
-                files.append(
-                    {
-                        "filename": fname,
-                        "contents": f.read()
-                    }
-                )
+    for fname in fnames:
+        with open(fname) as f:
+            files.append(
+                {
+                    "filename": os.path.basename(fname),
+                    "contents": f.read()
+                }
+            )
     t = FileWriteTask().to_dict()
     t["files_to_write"] = files
     tasks = [t]
@@ -35,8 +35,21 @@ def directory_to_fw(args):
             {"_tasks": tasks,
              "files_to_write": files}
     }
-    with open(args.output, "w") as f:
+    with open(yaml_fname, "w") as f:
         yaml.dump(d, f, default_flow_style=False)
+
+
+def create_fw(args):
+    if not args.directory_mode:
+        create_fw_single(args, args.files_or_dirs, args.output)
+    else:
+        output_fname = args.output.replace(".yaml", "{}.yaml")
+        for i, d in enumerate(args.files_or_dirs):
+            create_fw_single(
+                args,
+                [os.path.join(d, f) for f in os.listdir(d)],
+                output_fname.format(i)
+            )
 
 
 if __name__ == '__main__':
@@ -56,11 +69,17 @@ if __name__ == '__main__':
         '-o', '--output', default="my_fw.yaml",
         type=str, help="Output file name to write to. Defaults to my_fw.yaml.")
     create_parser.add_argument(
-        'input_files', default=None, nargs="+",
-        help="Files that need to be added as input files. Supports wild cards"
-             ".")
+        '-d', '--directory_mode', action="store_true",
+        help="If specified, files_or_dirs is treated as a series of "
+             "input directories and multiple fireworks will be generated with "
+             "each directory treated as a single job. A _# will be appended "
+             "to the yaml file name."
+        )
+    create_parser.add_argument(
+        'files_or_dirs', default=None, nargs="+",
+        help="Files that need to be added as input files. Supports wild cards.")
 
-    create_parser.set_defaults(func=directory_to_fw)
+    create_parser.set_defaults(func=create_fw)
 
     args = p.parse_args()
     args.func(args)
