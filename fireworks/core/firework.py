@@ -37,8 +37,7 @@ __date__ = "Feb 5, 2013"
 class FireTaskBase(dict, FWSerializable):
     """
     FireTaskBase is used like an abstract class that defines a computing task
-     (FireTask). All FireTasks
-    should inherit from FireTaskBase.
+    (FireTask). All FireTasks should inherit from FireTaskBase.
 
     You can set parameters of a FireTask like you'd use a dict.
     """
@@ -46,9 +45,8 @@ class FireTaskBase(dict, FWSerializable):
     def run_task(self, fw_spec):
         """
         This method gets called when the FireTask is run. It can take in a
-        FireWork spec,
-        perform some task using that data, and then return an output in the
-        form of a FWAction.
+        FireWork spec, perform some task using that data, and then return an
+        output in the form of a FWAction.
 
         :param fw_spec: (dict) a FireWork spec
         :return: (FWAction)
