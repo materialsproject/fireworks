@@ -57,7 +57,8 @@ if __name__ == '__main__':
         type=str, help="Output file name to write to. Defaults to my_fw.yaml.")
     create_parser.add_argument(
         'input_files', default=None, nargs="+",
-        help="Files that need to be added as input files.")
+        help="Files that need to be added as input files. Supports wild cards"
+             ".")
 
     create_parser.set_defaults(func=directory_to_fw)
 
