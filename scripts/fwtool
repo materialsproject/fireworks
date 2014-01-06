@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+__author__ = 'Shyue Ping Ong'
+__copyright__ = 'Copyright 2013, The Materials Project'
+__version__ = '0.1'
+__maintainer__ = 'Shyue Ping Ong'
+__email__ = 'ongsp@ucsd.edu'
+__date__ = '1/6/14'
+
+from argparse import ArgumentParser
+from glob import glob
+from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask
+import yaml
+
+def directory_to_fw(args):
+    files = []
+    for s in args.input_files:
+        for fname in glob(s):
+            with open(fname) as f:
+                files.append(
+                    {
+                        "filename": fname,
+                        "contents": f.read()
+                    }
+                )
+    t = FileWriteTask().to_dict()
+    t["files_to_write"] = files
+    tasks = [t]
+    if args.command is not None:
+        t = ScriptTask({"script": args.command}).to_dict()
+        tasks.append(t)
+    d = {
+        "spec":
+            {"_tasks": tasks,
+             "files_to_write": files}
+    }
+    with open(args.output, "w") as f:
+        yaml.dump(d, f, default_flow_style=False)
+
+
+if __name__ == '__main__':
+    p = ArgumentParser(description="""This script is used to create simple
+    fireworks workflows from input files.
+    """)
+    sp = p.add_subparsers(help='command', dest='command')
+
+    create_parser = sp.add_parser("create",
+        help='Create a new simple workflow. A simple workflow involves '
+             'writing a set of input files and running a command.')
+
+    create_parser.add_argument(
+        '-c', '--command', default=None,
+        type=str, help="Add a Script Task to run a particular command.")
+    create_parser.add_argument(
+        '-o', '--output', default="my_fw.yaml",
+        type=str, help="Output file name to write to. Defaults to my_fw.yaml.")
+    create_parser.add_argument(
+        'input_files', default=None, nargs="+",
+        help="Files that need to be added as input files.")
+
+    create_parser.set_defaults(func=directory_to_fw)
+
+    args = p.parse_args()
+    args.func(args)
+
+
+
