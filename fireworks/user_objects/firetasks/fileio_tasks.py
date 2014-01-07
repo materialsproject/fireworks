@@ -52,6 +52,9 @@ class FileDeleteTask(FireTaskBase, FWSerializable):
 
 
 class FileTransferTask(FireTaskBase, FWSerializable):
+    # TODO: Need seriously better doc and unittests. No one knows
+    # what parameters are supported here!
+
     _fw_name = "File Transfer Task"
 
     def __init__(self, parameters):
