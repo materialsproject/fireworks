@@ -15,9 +15,8 @@ __date__ = 'Aug 29, 2013'
 class TransferTask(FileTransferTask):
     _fw_name = "Transfer Task"
     """
-    .. deprecated:
+    .. deprecated:: 0.6.2
 
-        Use :class:`fireworks.user_objects.firetasks.fileio_tasks
-        .FileTransferTask` instead.
+        Use :class:`fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask` instead.
     """
 
