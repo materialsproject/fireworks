@@ -92,9 +92,13 @@ class FWConfig(object):
             config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
 
         else:
-            MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-            root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
-            config_path = os.path.join(root_dir, 'FW_config.yaml')
+            config_path = os.path.join(os.environ["HOME"], ".fireworks",
+                                       'FW_config.yaml')
+        # else:
+        #     #Is there even an FW_config here????
+        #     MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+        #     root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
+        #     config_path = os.path.join(root_dir, 'FW_config.yaml')
 
         if os.path.exists(config_path):
             with open(config_path) as f:
@@ -110,6 +114,12 @@ class FWConfig(object):
                                 key))
                     else:
                         self.__setattr__(key, v)
+
+    def to_dict(self):
+        d = {}
+        for k, v in self.__dict__.items():
+            d[k] = v
+        return d
 
 
 @singleton
