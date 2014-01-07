@@ -54,6 +54,10 @@ class ScriptTask(FireTaskBase, FWSerializable):
                 (stdout, stderr) = p.communicate()
             returncode.append(p.returncode)
 
+            #Stop execution if any script command fails.
+            if p.returncode != 0:
+                break
+
         # write out the output, error files if specified
 
         if self.stdout_file:
