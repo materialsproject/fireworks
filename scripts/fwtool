@@ -25,7 +25,6 @@ def create_fw_single(args, fnames, yaml_fname):
                 }
             )
     t = FileWriteTask().to_dict()
-    t["files_to_write"] = files
     tasks = [t]
     if args.command is not None:
         t = ScriptTask({"script": args.command}).to_dict()
