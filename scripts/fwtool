@@ -27,7 +27,7 @@ def create_fw_single(args, fnames, yaml_fname):
             )
     tasks = [FileWriteTask({"files_to_write": files})]
     if args.command is not None:
-        tasks.append(ScriptTask({"script": args.command}))
+        tasks.append(ScriptTask({"script": [args.command]}))
     fw = FireWork(tasks)
     with open(yaml_fname, "w") as f:
         yaml.dump(fw.to_dict(), f, default_flow_style=False)

@@ -40,16 +40,19 @@ class ScriptTask(FireTaskBase, FWSerializable):
         # run the program
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else sys.stdout
         stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else sys.stderr
+        returncode = []
+        for s in self.script:
+            p = subprocess.Popen(
+                s, executable=self.shell_exe, stdin=stdin,
+                stdout=stdout, stderr=stderr,
+                shell=self.use_shell)
 
-        p = subprocess.Popen(self.script, executable=self.shell_exe, stdin=stdin, stdout=stdout, stderr=stderr,
-                             shell=self.use_shell)
-
-        # communicate in the standard in and get back the standard out and returncode
-        if self.stdin_key:
-            (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
-        else:
-            (stdout, stderr) = p.communicate()
-        returncode = p.returncode
+            # communicate in the standard in and get back the standard out and returncode
+            if self.stdin_key:
+                (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
+            else:
+                (stdout, stderr) = p.communicate()
+            returncode.append(p.returncode)
 
         # write out the output, error files if specified
 
@@ -72,10 +75,10 @@ class ScriptTask(FireTaskBase, FWSerializable):
 
         output['returncode'] = returncode
 
-        if self.defuse_bad_rc and returncode != 0:
+        if self.defuse_bad_rc and sum(returncode) != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
-        elif self.fizzle_bad_rc and returncode != 0:
+        elif self.fizzle_bad_rc and sum(returncode) != 0:
             raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
 
         return FWAction(stored_data=output)
