@@ -28,7 +28,7 @@ def create_fw_single(args, fnames, yaml_fname):
     tasks = [FileWriteTask({"files_to_write": files})]
     if args.command is not None:
         tasks.append(ScriptTask({"script": [args.command]}))
-    fw = FireWork(tasks)
+    fw = FireWork(tasks, name=args.name)
     with open(yaml_fname, "w") as f:
         yaml.dump(fw.to_dict(), f, default_flow_style=False)
 
@@ -69,6 +69,10 @@ if __name__ == '__main__':
              "each directory treated as a single job. A _# will be appended "
              "to the yaml file name."
         )
+    create_parser.add_argument(
+        '-n', '--name', default="MyFW",
+        type=str, help="Add a name for your firework. Defaults to \"MyFW\"."
+    )
     create_parser.add_argument(
         'files_or_dirs', default=None, nargs="+",
         help="Files that need to be added as input files. Supports wild cards.")
