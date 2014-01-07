@@ -65,8 +65,8 @@ if __name__ == '__main__':
                        "commands.")
     create_parser.add_argument(
         '-o', '--output', default="my_fw.yaml",
-        type=str, help="Output file name to write to. Defaults to \"my_fw"
-                       ".yaml\".")
+        type=str,
+        help="Output file name to write to. Defaults to \"my_fw.yaml\".")
     create_parser.add_argument(
         '-d', '--directory_mode', action="store_true",
         help="If specified, files_or_dirs is treated as a series of "
