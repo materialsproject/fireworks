@@ -112,6 +112,6 @@ class ScriptTask(FireTaskBase, FWSerializable):
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):
         parameters = parameters if parameters else {}
-        parameters['script'] = shell_cmd
+        parameters['script'] = [shell_cmd]
         parameters['use_shell'] = True
         return ScriptTask(parameters)
