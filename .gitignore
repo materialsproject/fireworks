@@ -43,4 +43,4 @@ nosetests.xml
 .idea/*
 
 # FireWorks config files
-FW_config.yaml
+/FW_config.yaml
