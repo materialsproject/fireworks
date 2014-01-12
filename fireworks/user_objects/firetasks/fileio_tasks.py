@@ -15,7 +15,6 @@ __date__ = 'Jan 6, 2014'
 
 
 class FileWriteTask(FireTaskBase, FWSerializable):
-    #_fw_name = "File Write Task"
     required_params = ["files_to_write"]
     optional_params = ["dest"]
 
@@ -84,7 +83,7 @@ class FileTransferTask(FireTaskBase, FWSerializable):
 
                 else:
                     dest = abspath(expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
-                    self.fn_list[mode](src, dest)
+                    FileTransferTask.fn_list[mode](src, dest)
 
             except:
                 traceback.print_exc()
