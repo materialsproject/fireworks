@@ -19,8 +19,8 @@ class FileWriteDeleteTest(unittest.TestCase):
 
     def test_init(self):
         t = FileWriteTask(files_to_write="hello")
-        print FileDeleteTask({"files_to_delete": "hello"})._fw_name
-        print t
+        t = FileWriteTask({"files_to_write": "hello"})
+        self.assertRaises(ValueError, FileWriteTask)
 
     def test_run(self):
         t = load_object_from_file(os.path.join(module_dir, "write.yaml"))
