@@ -17,7 +17,7 @@ __date__ = 'Aug 08, 2013'
 
 
 class TemplateWriterTask(FireTaskBase, FWSerializable):
-    _fw_name = "Template Writer Task"
+
 
     def __init__(self, parameters):
         """
@@ -40,20 +40,20 @@ class TemplateWriterTask(FireTaskBase, FWSerializable):
             with open(self.output_file, write_mode) as of:
                 of.write(output)
 
-    def _load_parameters(self, params):
+    def load_global_params(self):
 
-        self.context = params['context']
-        self.output_file = params['output_file']
-        self.append_file = params.get('append')  # append to output file?
+        self.context = self['context']
+        self.output_file = self['output_file']
+        self.append_file = self.get('append')  # append to output file?
 
-        if params.get('template_dir'):
-            self.template_dir = params['template_dir']
+        if self.get('template_dir'):
+            self.template_dir = self['template_dir']
         elif FWConfig().TEMPLATE_DIR:
             self.template_dir = FWConfig().TEMPLATE_DIR
         else:
             MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
             self.template_dir = os.path.join(MODULE_DIR, 'templates')
 
-        self.template_file = os.path.join(self.template_dir, params['template_file'])
+        self.template_file = os.path.join(self.template_dir, self['template_file'])
         if not os.path.exists(self.template_file):
             raise ValueError("Template Writer Task could not find a template file at: {}".format(self.template_file))

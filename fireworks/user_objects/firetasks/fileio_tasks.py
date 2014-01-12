@@ -15,18 +15,9 @@ __date__ = 'Jan 6, 2014'
 
 
 class FileWriteTask(FireTaskBase, FWSerializable):
-    _fw_name = "File Write Task"
-
-    def __init__(self, parameters):
-        """
-        :param parameters: dict parameters. Required one is "files_to_write",
-        which itself should be a list of dict, with [{"filename": "myfile",
-        "contents": "hello\nworld"}, ...]. Optional is "dest", which should
-        point to the location where the files are to be written. If left
-        blank, the current working directory is used.
-        """
-        if parameters is not None:
-            self.update(parameters)
+    #_fw_name = "File Write Task"
+    required_params = ["files_to_write"]
+    optional_params = ["dest"]
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
@@ -36,17 +27,8 @@ class FileWriteTask(FireTaskBase, FWSerializable):
 
 
 class FileDeleteTask(FireTaskBase, FWSerializable):
-    _fw_name = "File Delete Task"
-
-    def __init__(self, parameters=None):
-        """
-        :param parameters: Optional dict parameters. Required one is
-        "files_to_delete", which itself should be a list of filenames.
-        Optional is "dest", which should point to the location where the
-        files are to be written. If left blank, the current working directory is used.
-        """
-        if parameters is not None:
-            self.update(parameters)
+    required_params = ["files_to_delete"]
+    optional_params = ["dest"]
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
@@ -57,16 +39,10 @@ class FileDeleteTask(FireTaskBase, FWSerializable):
 class FileTransferTask(FireTaskBase, FWSerializable):
     # TODO: Need seriously better doc and unittests. No one knows
     # what parameters are supported here!
+    required_params = ["mode", "files", "dest"]
+    optional_params = ["server", "key_filename"]
 
-    _fw_name = "File Transfer Task"
-
-    def __init__(self, parameters):
-        """
-        :param parameters: (dict) parameters.
-        """
-        self.update(parameters)
-
-        self.fn_list = {
+    fn_list = {
             "move": shutil.move,
             "mv": shutil.move,
             "copy": shutil.copy,
@@ -74,15 +50,9 @@ class FileTransferTask(FireTaskBase, FWSerializable):
             "copy2": shutil.copy2,
             "copytree": shutil.copytree,
             "copyfile": shutil.copyfile,
-        }
-
-        if not parameters.get("use_global_spec"):
-            self._load_parameters(parameters)
+    }
 
     def run_task(self, fw_spec):
-        if self.get("use_global_spec"):
-            self._load_parameters(fw_spec)
-
         shell_interpret = self.get('shell_interpret', True)
         ignore_errors = self.get('ignore_errors')
         mode = self.get('mode', 'move')
@@ -96,7 +66,7 @@ class FileTransferTask(FireTaskBase, FWSerializable):
             ssh.connect(self['server'], key_filename=self.get['key_filename'])
             sftp = ssh.open_sftp()
 
-        for f in self.files:
+        for f in self["files"]:
             try:
                 src = abspath(expanduser(expandvars(f['src']))) if shell_interpret else f['src']
 
@@ -125,9 +95,6 @@ class FileTransferTask(FireTaskBase, FWSerializable):
         if mode == 'rtransfer':
             sftp.close()
             ssh.close()
-
-    def _load_parameters(self, params):
-        self.files = params['files']
 
     def _rexists(self, sftp, path):
         """
