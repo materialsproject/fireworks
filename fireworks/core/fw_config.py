@@ -85,21 +85,25 @@ class FWConfig(object):
         self.override_user_settings()
 
     def override_user_settings(self):
-        if "FW_CONFIG_FILE" in os.environ:
+
+        MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))  # FW root dir
+
+        if os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
+            config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
+
+        elif "FW_CONFIG_FILE" in os.environ:
             config_path = os.environ['FW_CONFIG_FILE']
 
-        elif os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
-            config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
+        elif os.path.exists(os.path.join(root_dir, 'FW_config.yaml')):
+            config_path=os.path.join(root_dir, 'FW_config.yaml')
 
         else:
             config_path = os.path.join(os.environ["HOME"], ".fireworks",
                                        'FW_config.yaml')
         # else:
         #     #Is there even an FW_config here????
-        #     MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-        #     root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
-        #     config_path = os.path.join(root_dir, 'FW_config.yaml')
-
+        #
         if os.path.exists(config_path):
             with open(config_path) as f:
                 overrides = yaml.load(f.read())
