@@ -90,8 +90,11 @@ class ScriptTask(FireTaskBase, FWSerializable):
         self.use_shlex = self.get('use_shlex', True)
         self.use_shell = self.get('use_shell', True)
 
+        if isinstance(self['script'], (str, unicode)):
+            self['script'] = [self['script']]
+
         if self.use_shlex and not self.use_shell:
-            self.script = shlex.split(str(self['script']))
+            self.script = [shlex.split(str(s) for s in self['script'])]
         else:
             self.script = self['script']
 
