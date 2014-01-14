@@ -28,7 +28,7 @@ FireWorks is intended to be a friendly workflow software that is easy to get sta
 
 Some (but not all) of its features include:
 
-* A clean and flexible Python API, a powerful command-line interface, and a *built-in*, automatic web service for monitoring workflows
+* A clean and flexible Python API, a powerful command-line interface, and a *built-in* web service for monitoring workflows.
 
 * A database backend (MongoDB) lets you add, remove, and rerun workflows or search for the status of certain workflows.
 
