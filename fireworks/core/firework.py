@@ -15,7 +15,8 @@ to do next after a job completes
 """
 
 from collections import defaultdict, OrderedDict
-import copy
+import re
+import abc
 
 import datetime
 import os
@@ -34,6 +35,26 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
+class FireTaskMeta(type):
+
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(cls, name, bases, dct):
+        # Set default _fw_name to be a space separated version of the class
+        # name.
+        if name != "FireTaskBase" and not hasattr(cls, "_fw_name"):
+            cls._fw_name = re.sub(r"([^A-Z]+)([A-Z]+)", r"\1 \2", name)
+        type.__init__(cls, name, bases, dct)
+
+    def __call__(cls, *args, **kwargs):
+        o = type.__call__(cls, *args, **kwargs)
+        for k in cls.required_params:
+            if k not in o:
+                raise ValueError("Required parameter {} not specified!"
+                                 .format(k))
+        return o
+
+
 class FireTaskBase(dict, FWSerializable):
     """
     FireTaskBase is used like an abstract class that defines a computing task
@@ -41,7 +62,31 @@ class FireTaskBase(dict, FWSerializable):
 
     You can set parameters of a FireTask like you'd use a dict.
     """
+    __metaclass__ = FireTaskMeta
 
+    # Specify required parameters with class variable. Consistency will be
+    # checked upon init.
+    required_params = []
+
+    # Specify optional parameters with class variable. Optional are not
+    # checked yet. TODO: Check for args which are not in required or optional?
+    optional_params = []
+
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+
+        if self.get("use_global_spec"):
+            self.load_global_params()
+
+    def load_global_params(self):
+        """
+        An optional function to implement if you wish to support loading of
+        parameters from global spec.
+        """
+        raise NotImplementedError("use_global_spec requires "
+                                  "load_global_params to be implemented!")
+
+    @abc.abstractmethod
     def run_task(self, fw_spec):
         """
         This method gets called when the FireTask is run. It can take in a
@@ -51,7 +96,7 @@ class FireTaskBase(dict, FWSerializable):
         :param fw_spec: (dict) a FireWork spec
         :return: (FWAction)
         """
-        raise NotImplementedError('The FireTask needs to implement run_task()!')
+        pass
 
     @serialize_fw
     @recursive_serialize

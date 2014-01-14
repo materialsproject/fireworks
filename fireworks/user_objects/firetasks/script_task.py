@@ -17,13 +17,8 @@ __date__ = 'Feb 18, 2013'
 
 
 class ScriptTask(FireTaskBase, FWSerializable):
-    _fw_name = "Script Task"
 
-    def __init__(self, parameters):
-        self.update(parameters)
-
-        if not parameters.get("use_global_spec"):
-            self._load_parameters(parameters)
+    required_params = ["script"]
 
     def run_task(self, fw_spec):
         if self.get("use_global_spec"):
@@ -87,27 +82,27 @@ class ScriptTask(FireTaskBase, FWSerializable):
 
         return FWAction(stored_data=output)
 
-    def _load_parameters(self, params):
-        if params.get('stdin_file') and params.get('stdin_key'):
+    def load_global_params(self):
+        if self.get('stdin_file') and self.get('stdin_key'):
             raise ValueError("Script Task cannot process both a key and file as the standard in!")
 
-        self.use_shlex = params.get('use_shlex', True)
-        self.use_shell = params.get('use_shell', True)
+        self.use_shlex = self.get('use_shlex', True)
+        self.use_shell = self.get('use_shell', True)
 
         if self.use_shlex and not self.use_shell:
-            self.script = shlex.split(str(params['script']))
+            self.script = shlex.split(str(self['script']))
         else:
-            self.script = params['script']
+            self.script = self['script']
 
-        self.stdin_file = params.get('stdin_file')
-        self.stdin_key = params.get('stdin_key')
-        self.stdout_file = params.get('stdout_file')
-        self.stderr_file = params.get('stderr_file')
-        self.store_stdout = params.get('store_stdout')
-        self.store_stderr = params.get('store_stderr')
-        self.defuse_bad_rc = params.get('defuse_bad_rc')
-        self.fizzle_bad_rc = params.get('fizzle_bad_rc', True)
-        self.shell_exe = params.get('shell_exe')
+        self.stdin_file = self.get('stdin_file')
+        self.stdin_key = self.get('stdin_key')
+        self.stdout_file = self.get('stdout_file')
+        self.stderr_file = self.get('stderr_file')
+        self.store_stdout = self.get('store_stdout')
+        self.store_stderr = self.get('store_stderr')
+        self.defuse_bad_rc = self.get('defuse_bad_rc')
+        self.fizzle_bad_rc = self.get('fizzle_bad_rc', True)
+        self.shell_exe = self.get('shell_exe')
 
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):
