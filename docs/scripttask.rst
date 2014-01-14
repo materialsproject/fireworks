@@ -6,6 +6,13 @@ The ScriptTask is a FireTask built-in to FireWorks to help run non-Python progra
 
 The advantage of the built-in ScriptTask is that a lot of features and options have already been implemented. Let's examine these now.
 
+Required parameter
+==================
+
+The ScriptTask parameter requires setting the *script* parameter:
+
+* ``script`` - *(str)* or *[(str)]* - a String script to run, or an array of scripts to run in sequence
+
 ScriptTask options
 ==================
 
