@@ -35,7 +35,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
         # run the program
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else sys.stdout
         stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else sys.stderr
-        returncode = []
+        returncodes = []
         for s in self.script:
             p = subprocess.Popen(
                 s, executable=self.shell_exe, stdin=stdin,
@@ -47,7 +47,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
                 (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
             else:
                 (stdout, stderr) = p.communicate()
-            returncode.append(p.returncode)
+            returncodes.append(p.returncode)
 
             #Stop execution if any script command fails.
             if p.returncode != 0:
@@ -72,13 +72,14 @@ class ScriptTask(FireTaskBase, FWSerializable):
         if self.store_stderr:
             output['stderr'] = stderr
 
-        output['returncode'] = returncode
+        output['returncode'] = returncodes[-1]
+        output['all_returncodes'] = returncodes
 
-        if self.defuse_bad_rc and sum(returncode) != 0:
+        if self.defuse_bad_rc and sum(returncodes) != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
-        elif self.fizzle_bad_rc and sum(returncode) != 0:
-            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
+        elif self.fizzle_bad_rc and sum(returncodes) != 0:
+            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncodes))
 
         return FWAction(stored_data=output)
 
