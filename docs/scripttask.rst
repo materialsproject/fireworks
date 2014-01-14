@@ -15,7 +15,6 @@ The ScriptTask can take in many parameters. We already examined the ``script`` p
 * ``fizzle_bad_rc`` - *(default:False)* - if set True, a non-zero returncode from the Script (indicating error) will cause the FireWork to raise an error and FIZZLE.
 * ``use_shell`` - *(default:True)* - whether to execute the command through the current shell (e.g., BASH or CSH). If true, you will be able to use environment variables and shell operators; but, this method can be less secure.
 * ``shell_exe`` - *(default:None)* - path to shell executable, e.g. */bin/bash*. Generally you do not need to set this unless you want to run through a non-default shell.
-* ``use_shlex`` - *(default:True)* - if set True, the ``script`` parameter can be specified as a single String. If set False, the ``script`` parameter must be specified as an array in the format expected by Python's *subprocess.Popen()* method.
 * ``stdin_file`` - *(default:None)* - feed this filepath as standard input to the script
 * ``stdin_key`` - *(default:None)* - feed this String as standard input to the script
 * ``store_stdout`` *(default:False)* - store the entire standard output in the FireWork Launch object's *stored_data*

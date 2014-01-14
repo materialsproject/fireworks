@@ -87,13 +87,12 @@ class ScriptTask(FireTaskBase, FWSerializable):
         if self.get('stdin_file') and self.get('stdin_key'):
             raise ValueError("Script Task cannot process both a key and file as the standard in!")
 
-        self.use_shlex = self.get('use_shlex', True)
         self.use_shell = self.get('use_shell', True)
 
         if isinstance(self['script'], (str, unicode)):
             self['script'] = [self['script']]
 
-        if self.use_shlex and not self.use_shell:
+        if not self.use_shell:
             self.script = [shlex.split(str(s) for s in self['script'])]
         else:
             self.script = self['script']
