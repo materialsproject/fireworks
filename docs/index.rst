@@ -14,7 +14,7 @@
 .. pull-quote:: | "Give me six hours to chop down a tree and I will spend the first four sharpening the axe."
                 |    - Abraham Lincoln
 
-FireWorks is a code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
+FireWorks is a free, open-source code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
 
 Some features that distinguish FireWorks are the capability to program dynamic workflows and built-in tools for running high-throughput computations at large computing centers.
 
@@ -44,7 +44,7 @@ Some (but not all) of its features include:
 
 * Package many small jobs into a single large job (e.g., *automatically* run 100 serial workflows in parallel over 100 cores)
 
-* Support for several queueing systems such as PBE/Torque, Sun Grid Engine, and SLURM.
+* Support for several queueing systems such as PBS/Torque, Sun Grid Engine, and SLURM.
 
 ==============================
 A bird's eye view of FireWorks
