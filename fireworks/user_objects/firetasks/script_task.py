@@ -104,9 +104,14 @@ class ScriptTask(FireTaskBase, FWSerializable):
         self.stderr_file = self.get('stderr_file')
         self.store_stdout = self.get('store_stdout')
         self.store_stderr = self.get('store_stderr')
-        self.defuse_bad_rc = self.get('defuse_bad_rc')
-        self.fizzle_bad_rc = self.get('fizzle_bad_rc', True)
         self.shell_exe = self.get('shell_exe')
+        self.defuse_bad_rc = self.get('defuse_bad_rc')
+        self.fizzle_bad_rc = self.get('fizzle_bad_rc', not self.defuse_bad_rc)
+
+        if self.defuse_bad_rc and self.fizzle_bad_rc:
+            raise ValueError("Script Task cannot both FIZZLE and DEFUSE a bad returncode!")
+
+
 
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):

@@ -68,10 +68,6 @@ class FireTaskBase(dict, FWSerializable):
     # checked upon init.
     required_params = []
 
-    # Specify optional parameters with class variable. Optional are not
-    # checked yet. TODO: Check for args which are not in required or optional?
-    optional_params = []
-
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
 

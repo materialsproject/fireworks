@@ -15,8 +15,14 @@ __date__ = 'Jan 6, 2014'
 
 
 class FileWriteTask(FireTaskBase, FWSerializable):
+    """
+    A FireTask to write files:
+    Required params:
+        - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames and contents
+    Optional params:
+        - dest: (str) Shared path for files
+    """
     required_params = ["files_to_write"]
-    optional_params = ["dest"]
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
@@ -26,8 +32,15 @@ class FileWriteTask(FireTaskBase, FWSerializable):
 
 
 class FileDeleteTask(FireTaskBase, FWSerializable):
+    """
+    A FireTask to delete files:
+    Required params:
+        - files_to_delete: ([str]) Filenames to delete
+    Optional params:
+        - dest: (str) Shared path for files
+    """
     required_params = ["files_to_delete"]
-    optional_params = ["dest"]
+
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
@@ -36,10 +49,17 @@ class FileDeleteTask(FireTaskBase, FWSerializable):
 
 
 class FileTransferTask(FireTaskBase, FWSerializable):
-    # TODO: Need seriously better doc and unittests. No one knows
-    # what parameters are supported here!
+    """
+    A FireTask to Transfer files:
+    Required params:
+        - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
+        - files: ([str]) - source files
+        - dest: (str) destination directory
+    Optional params:
+        - server: (str) server host for remote transfer
+        - key_filename: (str) optional SSH key location for remote transfer
+    """
     required_params = ["mode", "files", "dest"]
-    optional_params = ["server", "key_filename"]
 
     fn_list = {
             "move": shutil.move,
