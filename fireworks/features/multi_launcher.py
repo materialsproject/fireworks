@@ -44,7 +44,7 @@ def ping_multilaunch(port, stop_event):
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, lock):
+def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc):
     """
     Initializes shared data with multiprocessing parameters and starts a rapidfire
 
@@ -56,7 +56,6 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     :param password: (str) security password to access the server
     :param node_list: ([str]) computer node list
     :param sub_nproc: (int) number of processors of the sub job
-    :param lock: (multiprocessing.Lock) Mutex
     """
     ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
     ds.connect()
@@ -65,7 +64,6 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     FWData().MULTIPROCESSING = True
     FWData().NODE_LIST = node_list
     FWData().SUB_NPROCS = sub_nproc
-    FWData().PROCESS_LOCK = lock
     rapidfire(launchpad, fworker, None, nlaunches, -1, sleep, loglvl)
 
 
@@ -83,8 +81,7 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
     :return: ([multiprocessing.Process]) all the created processes
     """
 
-    lock = multiprocessing.Lock()
-    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, lock))
+    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
