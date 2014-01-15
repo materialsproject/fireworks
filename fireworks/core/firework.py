@@ -43,6 +43,7 @@ class FireTaskMeta(type):
         # Set default _fw_name to be a space separated version of the class
         # name.
         if name != "FireTaskBase" and not hasattr(cls, "_fw_name"):
+            # add a space between non-uppercase to uppercase transitions
             cls._fw_name = re.sub(r"([^A-Z]+)([A-Z]+)", r"\1 \2", name)
         type.__init__(cls, name, bases, dct)
 
