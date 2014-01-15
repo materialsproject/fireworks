@@ -28,7 +28,7 @@ You can run multiple tasks within the same FireWork (it might be helpful to revi
 
 Let's create a FireWork that:
 
-#. Writes an input file based on a *template* with some substitutions applied. We'll do this using a built-in ``Template Writer Task`` that can help create such files.
+#. Writes an input file based on a *template* with some substitutions applied. We'll do this using a built-in ``TemplateWriterTask`` that can help create such files.
 #. Executes a script using ``ScriptTask`` that reads the input file and produces some output. In our test case, it will just count the number of words in that file. However, this code could be any program, for example a chemistry code.
 #. Copies all your outputs to your home directory using ``FileTransferTask``.
 
@@ -47,7 +47,7 @@ The three-step FireWork thus looks like this:
 
     spec:
       _tasks:
-      - _fw_name: Template Writer Task
+      - _fw_name: TemplateWriterTask
         context:
           opt1: 5.0
           opt2: fast method
@@ -62,9 +62,9 @@ The three-step FireWork thus looks like this:
           src: words.txt
         mode: copy
 
-   There are now three tasks inside our **spec**: the ``Template Writer Task``, ``ScriptTask``, and ``FileTransferTask``. The ``Template Writer Task`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the result to ``input.txt``. Next, the ``ScriptTask`` runs a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``. Finally, ``FileTransferTask`` will copy the resulting output file to your home directory.
+   There are now three tasks inside our **spec**: the ``TemplateWriterTask``, ``ScriptTask``, and ``FileTransferTask``. The ``TemplateWriterTask`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the result to ``input.txt``. Next, the ``ScriptTask`` runs a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``. Finally, ``FileTransferTask`` will copy the resulting output file to your home directory.
 
-   .. note:: If you would like to know more about how templated input writing works and define your own templated files, you should consult the :doc:`Template Writer Task tutorial <templatewritertask>`. A copy of ``simple_template.txt`` is given in the directory as ``simple_template_copy.txt`` (however, modifying the copy won't modify the actual template).
+   .. note:: If you would like to know more about how templated input writing works and define your own templated files, you should consult the :doc:`TemplateWriterTask tutorial <templatewritertask>`. A copy of ``simple_template.txt`` is given in the directory as ``simple_template_copy.txt`` (however, modifying the copy won't modify the actual template).
 
    .. note:: The ``FileTransferTask`` can do much more than copy a single file. For example, it can transfer your entire output directory to a remote server using SSH. For details, see the :doc:`FileTransferTask docs <transfertask>`.
 
@@ -76,7 +76,7 @@ The three-step FireWork thus looks like this:
 
 You should see two files written out to the system, ``inputs.txt`` and ``words.txt``, confirming that you successfully ran the first two steps of your job! You can also navigate to your home directory and look for ``words.txt`` to make sure the third step also got completed correctly.
 
-This combination of writing a file, executing a command, and perhaps moving the results could be used in many situations. For example, you could use ``Template Writer Task`` to write a templated queue script, and then use the ``ScriptTask`` to submit it (e.g., via the *qsub* command). (note, however, that FireWorks provides more powerful methods to :doc:`submit jobs through queues </queue_tutorial>`).
+This combination of writing a file, executing a command, and perhaps moving the results could be used in many situations. For example, you could use ``TemplateWriterTask`` to write a templated queue script, and then use the ``ScriptTask`` to submit it (e.g., via the *qsub* command). (note, however, that FireWorks provides more powerful methods to :doc:`submit jobs through queues </queue_tutorial>`).
 
 .. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the *FWAction* object, but not between FireTasks within the same FireWork (:ref:`wfmodel-label`).
 
@@ -113,7 +113,7 @@ Here is a complete Python example that runs multiple FireTasks within a single F
 Creating a custom FireTask
 ==========================
 
-The ``Template Writer Task``, ``ScriptTask``, ``FileTransferTask`` are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the ``ScriptTask`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. ScriptTask also has many additional features that are covered in the :doc:`ScriptTask tutorial <scripttask>`.
+The ``TemplateWriterTask``, ``ScriptTask``, ``FileTransferTask`` are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the ``ScriptTask`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. ScriptTask also has many additional features that are covered in the :doc:`ScriptTask tutorial <scripttask>`.
 
 However, if you are comfortable with some basic Python, you can define your own custom FireTasks for the codes you run. A custom FireTask gives you more control over your jbos, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
 

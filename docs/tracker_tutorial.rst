@@ -12,7 +12,7 @@ To add a tracker, set a key called ``_tracker`` in your *fw_spec* to be an array
     name: Tracker FW
     spec:
       _tasks:
-      - _fw_name: Template Writer Task
+      - _fw_name: TemplateWriterTask
         context:
           opt1: 5.0
           opt2: fast method
