@@ -182,7 +182,7 @@ class FWAction(FWSerializable):
         return self.exit or self.detours or self.additions or self.defuse_children
 
     def __str__(self):
-        return pprint.pformat(self.to_dict())
+        return "FWAction\n" + pprint.pformat(self.to_dict())
 
 
 class FireWork(FWSerializable):
