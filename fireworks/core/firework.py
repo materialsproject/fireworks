@@ -20,6 +20,7 @@ import abc
 
 import datetime
 import os
+import pprint
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
@@ -183,6 +184,9 @@ class FWAction(FWSerializable):
         :return: (bool)
         """
         return self.exit or self.detours or self.additions or self.defuse_children
+
+    def __str__(self):
+        return pprint.pformat(self.to_dict())
 
 
 class FireWork(FWSerializable):

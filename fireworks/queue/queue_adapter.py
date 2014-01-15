@@ -52,6 +52,7 @@ class Command(object):
         """
         def target(**kwargs):
             try:
+                print self.command
                 self.process = subprocess.Popen(self.command, **kwargs)
                 self.output, self.error = self.process.communicate()
                 self.status = self.process.returncode
