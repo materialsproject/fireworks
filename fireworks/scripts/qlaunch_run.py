@@ -6,7 +6,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 import os
-import glob
+import sys
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
@@ -64,13 +64,13 @@ def qlaunch():
     single_parser = subparsers.add_parser('singleshot', help='launch a single rocket to the queue')
     rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets to the queue')
 
-    parser.add_argument("-rh", "--host",
+    parser.add_argument("-rh", "--remote_host", nargs="*",
                         help="Remote host to exec qlaunch. Right now, "
                              "only supports running from a config dir.")
-    parser.add_argument("-u", "--user",
+    parser.add_argument("-ru", "--remote_user",
                         help="Username to login to remote host.")
-    parser.add_argument("--password", help="Password for remote host (if "
-                                           "necessary).")
+    parser.add_argument("-rp", "--remote_password",
+                        help="Password for remote host (if necessary).")
     parser.add_argument("-rc", "--remote_config_dir",
                         help="Remote config dir location. Defaults to $HOME/"
                              ".fireworks",
@@ -108,26 +108,33 @@ def qlaunch():
 
     args = parser.parse_args()
 
+    if args.remote_host:
+        try:
+            from fabric.api import settings, run, cd
+            from fabric.network import disconnect_all
+            from fabric.operations import put
+        except ImportError:
+            print "Remote setup require Fabric to be installed!"
+            sys.exit(-1)
+
     if args.remote_setup:
-        from fabric.api import settings, run
-        from fabric.operations import put
-        if args.host:
-            with settings(host_string=args.host, user=args.user,
-                              password=args.password):
-                run("mkdir -p {}".format(args.remote_config_dir))
-                for f in os.listdir(args.config_dir):
-                    if os.path.isfile(f):
-                        put(f, os.path.join(args.remote_config_dir, f))
+        if args.remote_host:
+            for h in args.remote_host:
+                with settings(host_string=h, user=args.remote_user,
+                              password=args.remote_password):
+                    run("mkdir -p {}".format(args.remote_config_dir))
+                    for f in os.listdir(args.config_dir):
+                        if os.path.isfile(f):
+                            put(f, os.path.join(args.remote_config_dir, f))
 
     interval = args.daemon
     while True:
-        if args.host:
-            from fabric.api import settings, cd, run
-            from fabric.network import disconnect_all
-            with settings(host_string=args.host, user=args.user,
-                          password=args.password):
-                with cd(args.remote_config_dir):
-                    run("qlaunch {}".format(args.command))
+        if args.remote_host:
+            for h in args.remote_host:
+                with settings(host_string=h, user=args.remote_user,
+                              password=args.remote_password):
+                    with cd(args.remote_config_dir):
+                        run("qlaunch {}".format(args.command))
             disconnect_all()
         else:
             do_launch(args)
