@@ -17,7 +17,6 @@ __date__ = 'Feb 18, 2013'
 
 
 class ScriptTask(FireTaskBase, FWSerializable):
-    _fw_name = 'Script Task'
     required_params = ["script"]
 
     def run_task(self, fw_spec):
@@ -85,7 +84,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
 
     def load_global_params(self):
         if self.get('stdin_file') and self.get('stdin_key'):
-            raise ValueError("Script Task cannot process both a key and file as the standard in!")
+            raise ValueError("ScriptTask cannot process both a key and file as the standard in!")
 
         self.use_shell = self.get('use_shell', True)
 
@@ -108,7 +107,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
         self.fizzle_bad_rc = self.get('fizzle_bad_rc', not self.defuse_bad_rc)
 
         if self.defuse_bad_rc and self.fizzle_bad_rc:
-            raise ValueError("Script Task cannot both FIZZLE and DEFUSE a bad returncode!")
+            raise ValueError("ScriptTask cannot both FIZZLE and DEFUSE a bad returncode!")
 
 
 

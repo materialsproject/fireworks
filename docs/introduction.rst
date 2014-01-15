@@ -60,7 +60,7 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
 
     spec:
       _tasks:
-      - _fw_name: Script Task
+      - _fw_name: ScriptTask
         script: echo "howdy, your job launched successfully!" >> howdy.txt
 
    If you've ever used other XML-based workflow systems, you might be surprised at how succintly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we'll provide more details and demonstrate how to add a workflow within Python code (rather than files).
@@ -79,7 +79,7 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
         "spec": {
             "_tasks": [
                 {
-                    "_fw_name": "Script Task",
+                    "_fw_name": "ScriptTask",
                     "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
                 }
             ]
@@ -89,7 +89,7 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
 #. Some of the FireWork is straightforward, but a few sections deserve further explanation:
 
 * The **spec** of the FireWork contains *all* the information about what job to run and the parameters needed to run it.
-* Within the **spec**, the **_tasks** section tells you what jobs will run. The ``Script Task`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**. Later on, we'll describe how to run multiple **_tasks** or customized **_tasks**.
+* Within the **spec**, the **_tasks** section tells you what jobs will run. The ``ScriptTask`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**. Later on, we'll describe how to run multiple **_tasks** or customized **_tasks**.
 * This FireWork runs the script ``echo "howdy, your job launched successfully!" >> howdy.txt"``, which prints text to a file named ``howdy.txt``.
 * The **state** of *READY* means the FireWork is ready to be run.
 * The **name** is an optional field that we can set to help query for FireWorks later on. In this case, we did not specify one so a default name was used.

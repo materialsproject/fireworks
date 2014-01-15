@@ -6,7 +6,7 @@ spec:
       opt2: fast method
     output_file: inputs.txt
     template_file: simple_template.txt
-  - _fw_name: Script Task
+  - _fw_name: ScriptTask
     script: wc -w < inputs.txt > words.txt
     use_shell: true
   - _fw_name: File Transfer Task
