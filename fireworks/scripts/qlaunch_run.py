@@ -6,7 +6,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 import os
-import sys
+import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -73,6 +73,12 @@ def qlaunch():
                                                     "location. Defaults to "
                                                     "$HOME/.fireworks",
                         default="$HOME/.fireworks")
+    parser.add_argument("-d", "--daemon",
+                        help="Daemon mode. Command is repeated every x "
+                             "seconds. Defaults to 0, which means non-daemon "
+                             "mode.",
+                        type=int,
+                        default=0)
     parser.add_argument('--launch_dir', help='directory to launch the job / rapid-fire', default='.')
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
@@ -93,14 +99,22 @@ def qlaunch():
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 
     args = parser.parse_args()
-    if args.host:
-        from fabric.api import settings, cd, run
-        with settings(host_string=args.host, user=args.user,
-                      password=args.password):
-            with cd(args.remote_config_dir):
-                run("qlaunch {}".format(args.command))
-    else:
-        do_launch(args)
+
+    interval = args.daemon
+    while True:
+        if args.host:
+            from fabric.api import settings, cd, run
+            with settings(host_string=args.host, user=args.user,
+                          password=args.password):
+                with cd(args.remote_config_dir):
+                    run("qlaunch {}".format(args.command))
+        else:
+            do_launch(args)
+        if interval > 0:
+            print "Next run in {} seconds".format(interval)
+            time.sleep(args.daemon)
+        else:
+            break
 
 if __name__ == '__main__':
     qlaunch()
