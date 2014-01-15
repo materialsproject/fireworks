@@ -4,13 +4,17 @@ FireWorks Changelog
 
 **v0.62**
 
+.. caution:: The TransferTask is renamed to FileTransferTask (however, existing FireWorks databases should be backwards-compatibile). The names of the default FireTasks have changed to no longer have spaces, but the changes should be backward compatible.
+
 * Add FIFO and FILO sort options for equal priority FireWorks
 * Remove database locks in multiprocessing mode
 * Allow multiple scripts in ScriptTask (S.P. Ong)
 * Add additional File I/O FireTasks (S.P. Ong)
 * Changes to FireTask base implementation (S.P. Ong)
 * Allow config file in $HOME/.fireworks (S.P. Ong)
-* Remove ValueError upon not finding a FireWork to run
+* Add remote options to qlaunch via fabric library (S.P. Ong)
+* _fw_name automatically set to class name if unspecified (S.P. Ong)
+* Remove ValueError upon not finding a FireWork to run and handle this situation better
 
 **v0.61**
 

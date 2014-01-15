@@ -18,7 +18,14 @@ __date__ = 'Aug 08, 2013'
 
 class TemplateWriterTask(FireTaskBase, FWSerializable):
     """
-    :param parameters: (dict) parameters. Required are "template_file" (str), "context" (dict), and "output_file" (str). Optional are "append" (T/F) and "template_dir" (str).
+    Task to write templated files via Jinja2 library
+    Required parameters:
+        - template_file: (str) - path to template file
+        - context: (dict) - variable replacements for the template file
+        - output_file: (str) - output file
+    Optional parameters:
+        - append: (bool) - append to output file (instead of overwrite)
+        - template_dir: (str) - directory in which to find the template file
     """
 
     def run_task(self, fw_spec):
