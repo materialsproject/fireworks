@@ -3,7 +3,6 @@
 """
 TODO: add docs
 """
-from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FWAction, FireWork, FireTaskBase
 
 __author__ = 'Anubhav Jain'
