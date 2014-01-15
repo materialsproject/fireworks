@@ -82,6 +82,8 @@ class FWConfig(object):
 
         self.TRACKER_LINES = 25  # number of lines to return in Tracker
 
+        self.SORT_FWS = ''  # sort equal priority FWs? "FILO" or "FIFO".
+
         self.override_user_settings()
 
     def override_user_settings(self):

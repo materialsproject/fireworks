@@ -62,6 +62,7 @@ Parameters you might want to change
 
 A few basic parameters that can be tweaked are:
 
+* ``SORT_FWS: ''`` - set to ``FIFO`` if you want older FireWorks to be run first, ``FILO`` if you want recent FireWorks run first. Note that higher priority FireWorks are always run first.
 * ``PRINT_FW_JSON: True`` - whether to print the ``FW.json`` file in your run directory
 * ``PRINT_FW_YAML: False`` - whether to print the ``FW.yaml`` file in your run directory
 * ``SUBMIT_SCRIPT_NAME: FW_submit.script`` - the name to give the script for submitting PBS/SLURM/queue jobs
