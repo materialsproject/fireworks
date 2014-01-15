@@ -1,4 +1,4 @@
-_fw_name: File Delete Task
+_fw_name: FileDeleteTask
 dest: "."
 files_to_delete:
 - myfile1

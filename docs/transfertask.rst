@@ -14,7 +14,7 @@ An example of a FireWork that copies two files, ``file1.txt`` and ``file2.txt``,
 
     spec:
       _tasks:
-      - _fw_name: File Transfer Task
+      - _fw_name: FileTransferTask
         files:
         - src: file1.txt
           dest: ~/file1.txt

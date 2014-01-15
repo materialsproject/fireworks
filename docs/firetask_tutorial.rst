@@ -56,7 +56,7 @@ The three-step FireWork thus looks like this:
       - _fw_name: ScriptTask
         script: wc -w < inputs.txt > words.txt
         use_shell: true
-      - _fw_name: File Transfer Task
+      - _fw_name: FileTransferTask
         files:
         - dest: ~/words.txt
           src: words.txt

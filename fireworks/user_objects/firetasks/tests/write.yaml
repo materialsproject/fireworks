@@ -1,4 +1,4 @@
-_fw_name: File Write Task
+_fw_name: FileWriteTask
 dest: "."
 files_to_write:
 - contents: |
