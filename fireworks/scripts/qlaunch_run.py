@@ -114,7 +114,7 @@ def qlaunch():
             from fabric.network import disconnect_all
             from fabric.operations import put
         except ImportError:
-            print "Remote setup require Fabric to be installed!"
+            print "Remote options require the Fabric package to be installed!"
             sys.exit(-1)
 
     if args.remote_setup:
