@@ -6,6 +6,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 import os
+import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -18,6 +19,36 @@ __version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
+
+def do_launch(args):
+    if not args.launchpad_file and os.path.exists(
+            os.path.join(args.config_dir, 'my_launchpad.yaml')):
+        args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
+
+    if not args.fworker_file and os.path.exists(
+            os.path.join(args.config_dir, 'my_fworker.yaml')):
+        args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
+
+    if not args.queueadapter_file and os.path.exists(
+            os.path.join(args.config_dir, 'my_qadapter.yaml')):
+        args.queueadapter_file = os.path.join(args.config_dir,
+                                              'my_qadapter.yaml')
+
+    launchpad = LaunchPad.from_file(
+        args.launchpad_file) if args.launchpad_file else LaunchPad(
+        strm_lvl=args.loglvl)
+    fworker = FWorker.from_file(
+        args.fworker_file) if args.fworker_file else FWorker()
+    queueadapter = load_object_from_file(args.queueadapter_file)
+    args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
+
+    if args.command == 'rapidfire':
+        rapidfire(launchpad, fworker, queueadapter, args.launch_dir,
+                  args.nlaunches, args.maxjobs_queue,
+                  args.maxjobs_block, args.sleep, args.reserve, args.loglvl)
+    else:
+        launch_rocket_to_queue(launchpad, fworker, queueadapter,
+                               args.launch_dir, args.reserve, args.loglvl)
 
 
 def qlaunch():
@@ -32,6 +63,22 @@ def qlaunch():
     single_parser = subparsers.add_parser('singleshot', help='launch a single rocket to the queue')
     rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets to the queue')
 
+    parser.add_argument("--host", help="Remote host to exec qlaunch. Right "
+                                       "now, only supports running from a "
+                                       "config dir.")
+    parser.add_argument("--user", help="Username to login to remote host.")
+    parser.add_argument("--password", help="Password for remote host (if "
+                                           "necessary).")
+    parser.add_argument("--remote_config_dir", help="Remote config dir "
+                                                    "location. Defaults to "
+                                                    "$HOME/.fireworks",
+                        default="$HOME/.fireworks")
+    parser.add_argument("-d", "--daemon",
+                        help="Daemon mode. Command is repeated every x "
+                             "seconds. Defaults to 0, which means non-daemon "
+                             "mode.",
+                        type=int,
+                        default=0)
     parser.add_argument('--launch_dir', help='directory to launch the job / rapid-fire', default='.')
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
@@ -53,26 +100,21 @@ def qlaunch():
 
     args = parser.parse_args()
 
-    if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
-        args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
-
-    if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
-        args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
-
-    if not args.queueadapter_file and os.path.exists(os.path.join(args.config_dir, 'my_qadapter.yaml')):
-        args.queueadapter_file = os.path.join(args.config_dir, 'my_qadapter.yaml')
-
-    launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
-    fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
-    queueadapter = load_object_from_file(args.queueadapter_file)
-    args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
-
-    if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, queueadapter, args.launch_dir, args.nlaunches, args.maxjobs_queue,
-                  args.maxjobs_block, args.sleep, args.reserve, args.loglvl)
-    else:
-        launch_rocket_to_queue(launchpad, fworker, queueadapter, args.launch_dir, args.reserve, args.loglvl)
-
+    interval = args.daemon
+    while True:
+        if args.host:
+            from fabric.api import settings, cd, run
+            with settings(host_string=args.host, user=args.user,
+                          password=args.password):
+                with cd(args.remote_config_dir):
+                    run("qlaunch {}".format(args.command))
+        else:
+            do_launch(args)
+        if interval > 0:
+            print "Next run in {} seconds".format(interval)
+            time.sleep(args.daemon)
+        else:
+            break
 
 if __name__ == '__main__':
     qlaunch()
