@@ -9,6 +9,14 @@ firetasks Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`fileio_tasks` Module
+--------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.fileio_tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`script_task` Module
 -------------------------
 
@@ -25,11 +33,10 @@ firetasks Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`transfer_task` Module
----------------------------
+Subpackages
+-----------
 
-.. automodule:: fireworks.user_objects.firetasks.transfer_task
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+
+    fireworks.user_objects.firetasks.tests
 

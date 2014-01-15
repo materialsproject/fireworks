@@ -9,6 +9,14 @@ scripts Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`fwtool_run` Module
+------------------------
+
+.. automodule:: fireworks.scripts.fwtool_run
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`lpad_run` Module
 ----------------------
 
