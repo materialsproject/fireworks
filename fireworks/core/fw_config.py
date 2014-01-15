@@ -82,24 +82,30 @@ class FWConfig(object):
 
         self.TRACKER_LINES = 25  # number of lines to return in Tracker
 
+        self.SORT_FWS = ''  # sort equal priority FWs? "FILO" or "FIFO".
+
         self.override_user_settings()
 
     def override_user_settings(self):
-        if "FW_CONFIG_FILE" in os.environ:
+
+        MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))  # FW root dir
+
+        if os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
+            config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
+
+        elif "FW_CONFIG_FILE" in os.environ:
             config_path = os.environ['FW_CONFIG_FILE']
 
-        elif os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
-            config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
+        elif os.path.exists(os.path.join(root_dir, 'FW_config.yaml')):
+            config_path=os.path.join(root_dir, 'FW_config.yaml')
 
         else:
             config_path = os.path.join(os.environ["HOME"], ".fireworks",
                                        'FW_config.yaml')
         # else:
         #     #Is there even an FW_config here????
-        #     MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-        #     root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))
-        #     config_path = os.path.join(root_dir, 'FW_config.yaml')
-
+        #
         if os.path.exists(config_path):
             with open(config_path) as f:
                 overrides = yaml.load(f.read())
@@ -130,7 +136,6 @@ class FWData(object):
 
     def __init__(self):
         self.MULTIPROCESSING = None # default single process framework
-        self.PROCESS_LOCK = None  # the shared Lock between processes
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job
         self.DATASERVER = None  # the shared object manager

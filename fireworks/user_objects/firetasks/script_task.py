@@ -17,7 +17,7 @@ __date__ = 'Feb 18, 2013'
 
 
 class ScriptTask(FireTaskBase, FWSerializable):
-
+    _fw_name = 'Script Task'
     required_params = ["script"]
 
     def run_task(self, fw_spec):
@@ -35,7 +35,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
         # run the program
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else sys.stdout
         stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else sys.stderr
-        returncode = []
+        returncodes = []
         for s in self.script:
             p = subprocess.Popen(
                 s, executable=self.shell_exe, stdin=stdin,
@@ -47,7 +47,7 @@ class ScriptTask(FireTaskBase, FWSerializable):
                 (stdout, stderr) = p.communicate(fw_spec[self.stdin_key])
             else:
                 (stdout, stderr) = p.communicate()
-            returncode.append(p.returncode)
+            returncodes.append(p.returncode)
 
             #Stop execution if any script command fails.
             if p.returncode != 0:
@@ -72,13 +72,14 @@ class ScriptTask(FireTaskBase, FWSerializable):
         if self.store_stderr:
             output['stderr'] = stderr
 
-        output['returncode'] = returncode
+        output['returncode'] = returncodes[-1]
+        output['all_returncodes'] = returncodes
 
-        if self.defuse_bad_rc and sum(returncode) != 0:
+        if self.defuse_bad_rc and sum(returncodes) != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
-        elif self.fizzle_bad_rc and sum(returncode) != 0:
-            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncode))
+        elif self.fizzle_bad_rc and sum(returncodes) != 0:
+            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncodes))
 
         return FWAction(stored_data=output)
 
@@ -86,11 +87,13 @@ class ScriptTask(FireTaskBase, FWSerializable):
         if self.get('stdin_file') and self.get('stdin_key'):
             raise ValueError("Script Task cannot process both a key and file as the standard in!")
 
-        self.use_shlex = self.get('use_shlex', True)
         self.use_shell = self.get('use_shell', True)
 
-        if self.use_shlex and not self.use_shell:
-            self.script = shlex.split(str(self['script']))
+        if isinstance(self['script'], (str, unicode)):
+            self['script'] = [self['script']]
+
+        if not self.use_shell:
+            self.script = [shlex.split(str(s) for s in self['script'])]
         else:
             self.script = self['script']
 
@@ -100,9 +103,14 @@ class ScriptTask(FireTaskBase, FWSerializable):
         self.stderr_file = self.get('stderr_file')
         self.store_stdout = self.get('store_stdout')
         self.store_stderr = self.get('store_stderr')
-        self.defuse_bad_rc = self.get('defuse_bad_rc')
-        self.fizzle_bad_rc = self.get('fizzle_bad_rc', True)
         self.shell_exe = self.get('shell_exe')
+        self.defuse_bad_rc = self.get('defuse_bad_rc')
+        self.fizzle_bad_rc = self.get('fizzle_bad_rc', not self.defuse_bad_rc)
+
+        if self.defuse_bad_rc and self.fizzle_bad_rc:
+            raise ValueError("Script Task cannot both FIZZLE and DEFUSE a bad returncode!")
+
+
 
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):

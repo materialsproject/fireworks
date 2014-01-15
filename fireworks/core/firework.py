@@ -44,7 +44,7 @@ class FireTaskMeta(type):
         # Set default _fw_name to be a space separated version of the class
         # name.
         if name != "FireTaskBase" and not hasattr(cls, "_fw_name"):
-            cls._fw_name = re.sub(r"([^A-Z]+)([A-Z]+)", r"\1 \2", name)
+            cls._fw_name = name
         type.__init__(cls, name, bases, dct)
 
     def __call__(cls, *args, **kwargs):
@@ -68,10 +68,6 @@ class FireTaskBase(dict, FWSerializable):
     # Specify required parameters with class variable. Consistency will be
     # checked upon init.
     required_params = []
-
-    # Specify optional parameters with class variable. Optional are not
-    # checked yet. TODO: Check for args which are not in required or optional?
-    optional_params = []
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)

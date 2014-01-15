@@ -9,7 +9,7 @@ import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, acquire_db_lock, release_db_lock, log_multi
+from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -36,8 +36,9 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
 
     log_multi(l_logger, 'Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)
-    rocket.run()
+    rocket_ran = rocket.run()
     log_multi(l_logger, 'Rocket finished')
+    return rocket_ran
 
 
 def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
@@ -64,18 +65,20 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
     num_loops = 0
 
     while num_loops != max_loops:
-        acquire_db_lock()
         while launchpad.run_exists(fworker):
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
-            launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)  # releases lock inside
-            num_launched += 1
+            rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+            if rocket_ran:
+                num_launched += 1
+            elif not os.path.listdir(launcher_dir):
+                # remove the empty shell of a directory
+                os.chdir(curdir)
+                os.rmdir(launcher_dir)
             if num_launched == nlaunches:
                 break
             time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh, etc.
-            acquire_db_lock()
-        release_db_lock(safe=False)  # possible no lock was acquired at this point
         if num_launched == nlaunches or nlaunches == 0:
             break
         log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))

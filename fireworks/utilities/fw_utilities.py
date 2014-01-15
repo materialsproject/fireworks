@@ -151,51 +151,6 @@ def get_slug(m_str):
     return m_str.replace(' ', '_')
 
 
-class DbLock(object):
-
-    def __init__(self, safe=True):
-        self.safe = safe
-
-    def __enter__(self):
-        """
-        Acquire lock on database
-        """
-        if FWData().MULTIPROCESSING:
-            FWData().PROCESS_LOCK.acquire()
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """
-        Release lock on database
-        :param safe: (bool) ignore errors (e.g., lock never acquired)
-        """
-        if FWData().MULTIPROCESSING:
-            try:
-                FWData().PROCESS_LOCK.release()
-            except ValueError, ve:
-                if self.safe:
-                    raise ValueError(ve)
-
-
-def acquire_db_lock():
-    """
-    Acquire lock on database
-    """
-    if FWData().MULTIPROCESSING:
-        FWData().PROCESS_LOCK.acquire()
-
-def release_db_lock(safe=True):
-    """
-    Release lock on database
-    :param safe: (bool) ignore errors (e.g., lock never acquired)
-    """
-    if FWData().MULTIPROCESSING:
-        try:
-            FWData().PROCESS_LOCK.release()
-        except ValueError, ve:
-            if safe:
-                raise ValueError(ve)
-
-
 class DataServer(BaseManager):
     """
     Provide a server that can host shared objects between multiprocessing

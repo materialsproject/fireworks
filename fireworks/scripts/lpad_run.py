@@ -73,7 +73,6 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     return pw_check(lp.get_fw_ids(query), args, skip_pw)
 
 
-
 def get_lp(args):
     try:
         if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):

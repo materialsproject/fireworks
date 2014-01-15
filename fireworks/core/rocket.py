@@ -11,7 +11,6 @@ import traceback
 import threading
 from fireworks.core.firework import FWAction, FireWork
 from fireworks.core.fw_config import FWConfig, FWData
-from fireworks.utilities.fw_utilities import release_db_lock
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -88,7 +87,6 @@ class Rocket():
         # check a FW job out of the launchpad
         if lp:
             m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
-            release_db_lock()
         else:  # offline mode
             m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
 
@@ -103,7 +101,8 @@ class Rocket():
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
-            raise ValueError("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
+            print "No FireWorks are ready to run and match query! {}".format(self.fworker.query)
+            return False
 
         if '_launch_dir' in m_fw.spec:
             prev_dir = launch_dir
@@ -172,6 +171,8 @@ class Rocket():
                     f.write(json.dumps(d))
                     f.truncate()
 
+            return True
+
         except:
             stop_ping_launch(ping_stop)
             traceback.print_exc()
@@ -187,5 +188,7 @@ class Rocket():
                     f.seek(0)
                     f.write(json.dumps(d))
                     f.truncate()
+
+            return True
 
 

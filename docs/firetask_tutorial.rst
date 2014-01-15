@@ -30,7 +30,7 @@ Let's create a FireWork that:
 
 #. Writes an input file based on a *template* with some substitutions applied. We'll do this using a built-in ``Template Writer Task`` that can help create such files.
 #. Executes a script using ``Script Task`` that reads the input file and produces some output. In our test case, it will just count the number of words in that file. However, this code could be any program, for example a chemistry code.
-#. Copies all your outputs to your home directory using ``Transfer Task``.
+#. Copies all your outputs to your home directory using ``FileTransferTask``.
 
 The three-step FireWork thus looks like this:
 
@@ -56,17 +56,17 @@ The three-step FireWork thus looks like this:
       - _fw_name: Script Task
         script: wc -w < inputs.txt > words.txt
         use_shell: true
-      - _fw_name: Transfer Task
+      - _fw_name: File Transfer Task
         files:
         - dest: ~/words.txt
           src: words.txt
         mode: copy
 
-   There are now three tasks inside our **spec**: the ``Template Writer Task``, ``Script Task``, and ``Transfer Task``. The ``Template Writer Task`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the result to ``input.txt``. Next, the ``Script Task`` runs a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``. Finally, ``Transfer Task`` will copy the resulting output file to your home directory.
+   There are now three tasks inside our **spec**: the ``Template Writer Task``, ``Script Task``, and ``FileTransferTask``. The ``Template Writer Task`` will load an example template called ``simple_template.txt`` from inside the FireWorks code, replace certain portions of the template using the ``context``, and write the result to ``input.txt``. Next, the ``Script Task`` runs a word count on ``input.txt`` using the ``wc`` command and print the result to ``words.txt``. Finally, ``FileTransferTask`` will copy the resulting output file to your home directory.
 
    .. note:: If you would like to know more about how templated input writing works and define your own templated files, you should consult the :doc:`Template Writer Task tutorial <templatewritertask>`. A copy of ``simple_template.txt`` is given in the directory as ``simple_template_copy.txt`` (however, modifying the copy won't modify the actual template).
 
-   .. note:: The ``Transfer Task`` can do much more than copy a single file. For example, it can transfer your entire output directory to a remote server using SSH. For details, see the :doc:`Transfer Task docs <transfertask>`.
+   .. note:: The ``FileTransferTask`` can do much more than copy a single file. For example, it can transfer your entire output directory to a remote server using SSH. For details, see the :doc:`FileTransferTask docs <transfertask>`.
 
 #. Run this multi-step FireWork on your FireServer::
 
@@ -93,7 +93,7 @@ Here is a complete Python example that runs multiple FireTasks within a single F
     from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 
     # set up the LaunchPad and reset it
-    from fireworks.user_objects.firetasks.transfer_task import TransferTask
+    from fireworks.user_objects.firetasks.transfer_task import FileTransferTask
 
     launchpad = LaunchPad()
     launchpad.reset('', require_password=False)
@@ -101,7 +101,7 @@ Here is a complete Python example that runs multiple FireTasks within a single F
     # create the FireWork consisting of multiple tasks
     firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})
     firetask2 = ScriptTask.from_str('wc -w < inputs.txt > words.txt')
-    firetask3 = TransferTask({'files': [{'src': 'words.txt', 'dest': '~/words.txt'}], 'mode': 'copy'})
+    firetask3 = FileTransferTask({'files': [{'src': 'words.txt', 'dest': '~/words.txt'}], 'mode': 'copy'})
     fw = FireWork([firetask1, firetask2, firetask3])
 
     # store workflow and launch it locally, single shot
@@ -113,7 +113,7 @@ Here is a complete Python example that runs multiple FireTasks within a single F
 Creating a custom FireTask
 ==========================
 
-The ``Template Writer Task``, ``Script Task``, ``Transfer Task`` are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. Script Task also has many additional features that are covered in the :doc:`Script Task tutorial <scripttask>`.
+The ``Template Writer Task``, ``Script Task``, ``FileTransferTask`` are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the ``Script Task`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' FireTask. Script Task also has many additional features that are covered in the :doc:`Script Task tutorial <scripttask>`.
 
 However, if you are comfortable with some basic Python, you can define your own custom FireTasks for the codes you run. A custom FireTask gives you more control over your jbos, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
 

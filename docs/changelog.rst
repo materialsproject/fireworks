@@ -2,6 +2,16 @@
 FireWorks Changelog
 ===================
 
+**v0.62**
+
+* Add FIFO and FILO sort options for equal priority FireWorks
+* Remove database locks in multiprocessing mode
+* Allow multiple scripts in ScriptTask (S.P. Ong)
+* Add additional File I/O FireTasks (S.P. Ong)
+* Changes to FireTask base implementation (S.P. Ong)
+* Allow config file in $HOME/.fireworks (S.P. Ong)
+* Remove ValueError upon not finding a FireWork to run
+
 **v0.61**
 
 * Include text files needed for queue adapters in distribution (D. Gunter)

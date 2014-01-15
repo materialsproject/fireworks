@@ -10,7 +10,7 @@ import time
 import traceback
 
 from pymongo.mongo_client import MongoClient
-from pymongo import DESCENDING
+from pymongo import DESCENDING, ASCENDING
 
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
@@ -388,6 +388,14 @@ class LaunchPad(FWSerializable):
         m_query = dict(query) if query else {}  # make a defensive copy
         m_query['state'] = 'READY'
 
+        sortby = [("spec._priority", DESCENDING)]
+
+        if FWConfig().SORT_FWS.upper() == "FIFO":
+            sortby.append(("created_on", ASCENDING))
+
+        elif FWConfig().SORT_FWS.upper() == "FILO":
+            sortby.append(("created_on", DESCENDING))
+
         # Override query if fw_id defined
         # Note for the fw_id option: We want to return None if this specific FW doesn't exist anymore
         # This is because our queue params might have been tailored to this FW
@@ -398,10 +406,10 @@ class LaunchPad(FWSerializable):
             # check out the matching firework, depending on the query set by the FWorker
             if checkout:
                 m_fw = self.fireworks.find_and_modify(m_query, {'$set': {'state': 'RESERVED'}},
-                                                      sort=[("spec._priority", DESCENDING)])
+                                                      sort=sortby)
             else:
                 m_fw = self.fireworks.find_one(m_query, {'fw_id': 1, 'spec': 1},
-                                               sort=[("spec._priority", DESCENDING)])
+                                               sort=sortby)
                 
             if not m_fw:
                 return None
