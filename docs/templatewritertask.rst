@@ -1,12 +1,12 @@
 =============================================
-Using the Template Writer Task to write files
+Using the TemplateWriterTask to write files
 =============================================
 
-A common task in scientific workflows is to write an input file in a format that can be read by a program, and then execute that program. When automating the same program for different inputs (like different molecules or sections of a galaxy), slight modifications to the input file are needed. This tutorial introduces the built-in *Template Writer Task* as a method for writing input files (or any other type of templated file).
+A common task in scientific workflows is to write an input file in a format that can be read by a program, and then execute that program. When automating the same program for different inputs (like different molecules or sections of a galaxy), slight modifications to the input file are needed. This tutorial introduces the built-in *TemplateWriterTask* as a method for writing input files (or any other type of templated file).
 
-We presented an example of using the *Template Writer Task* and subsequently running a program in the :doc:`FireTask tutorial <firetask_tutorial>`. If you didn't already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the *Template Writer Task* works.
+We presented an example of using the *TemplateWriterTask* and subsequently running a program in the :doc:`FireTask tutorial <firetask_tutorial>`. If you didn't already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the *TemplateWriterTask* works.
 
-.. note:: The *Template Writer Task* is uses the Jinja2 templating engine, which provides a simple, extensible templating language.
+.. note:: The *TemplateWriterTask* is uses the Jinja2 templating engine, which provides a simple, extensible templating language.
 
 A simple template - variable substitutions
 ==========================================
@@ -30,20 +30,20 @@ We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutoria
 
     spec:
       _tasks:
-      - _fw_name: Template Writer Task
+      - _fw_name: TemplateWriterTask
         template_file: simple_template.txt
         context:
           opt1: 5.0
           opt2: fast method
         output_file: inputs.txt
 
-   Note that we have specified a ``template_file``, a ``context``, and an ``output_file``. All three of these parameters are needed to use the *Template Writer Task*.
+   Note that we have specified a ``template_file``, a ``context``, and an ``output_file``. All three of these parameters are needed to use the *TemplateWriterTask*.
 
 #. In the FireWork above, we are setting **opt1** to 5.0 and **opt2** to "fast method". If we wanted to change these parameters, we can create a file like ``fw_template2.yaml``::
 
     spec:
       _tasks:
-      - _fw_name: Template Writer Task
+      - _fw_name: TemplateWriterTask
         template_file: simple_template.txt
         context:
           opt1: 10.0
@@ -86,7 +86,7 @@ Template files are not restricted to simple variable substitutions with curly br
 
     spec:
       _tasks:
-      - _fw_name: Template Writer Task
+      - _fw_name: TemplateWriterTask
         context:
           opt1: 5.0
           opt2: fast method
@@ -131,7 +131,7 @@ If you do not want to store your templates within the FireWorks code, you can se
 Additional options
 ==================
 
-In addition to ``template_file``, ``context``, and ``output_file``, the following options can be passed into ``Template Writer Task``:
+In addition to ``template_file``, ``context``, and ``output_file``, the following options can be passed into ``TemplateWriterTask``:
 
    * ``append`` - append to the output file, rather than overwriting it
    * ``template_dir`` - this is actually a third option for setting your template dir
@@ -139,7 +139,7 @@ In addition to ``template_file``, ``context``, and ``output_file``, the followin
 The _use_global_spec option
 ===========================
 
-By default, the parameters for the Template Writer Task should be defined within the ``_task`` section of the **spec** corresponding to the Template Writer Task, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple Template Writer Tasks within the same FireWork.
+By default, the parameters for the TemplateWriterTask should be defined within the ``_task`` section of the **spec** corresponding to the TemplateWriterTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple TemplateWriterTasks within the same FireWork.
 
 Python example
 ==============

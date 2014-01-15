@@ -29,6 +29,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, \
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter, reverse_readline
 
 __author__ = "Anubhav Jain"
+__credits__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
 __version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
@@ -71,16 +72,6 @@ class FireTaskBase(dict, FWSerializable):
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
-
-        if not self.get("use_global_spec"):
-            self.load_global_params()
-
-    def load_global_params(self):
-        """
-        An optional function to implement if you wish to support loading of
-        parameters from global spec.
-        """
-        pass 
 
     @abc.abstractmethod
     def run_task(self, fw_spec):

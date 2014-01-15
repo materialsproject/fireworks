@@ -33,7 +33,7 @@ class FWConfig(object):
         self.USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
                               'fw_tutorials']  # this is where load_object() looks for serialized objects
 
-        self.FW_NAME_UPDATES = {'Transfer Task': 'File Transfer Task'}  # if you update a _fw_name, you can use this to record the change and maintain
+        self.FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask', 'Script Task': 'ScriptTask', 'Template Writer Task':'TemplateWriterTask'}  # if you update a _fw_name, you can use this to record the change and maintain
         # deserialization
 
         self.YAML_STYLE = False  # controls whether YAML documents will be nested as braces or blocks (False = blocks)

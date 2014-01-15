@@ -1,11 +1,11 @@
 spec:
   _tasks:
-  - _fw_name: Script Task
+  - _fw_name: ScriptTask
     script: cat -t
     stdin_key: echo_text
     stdout_file: howdy.txt
     use_shell: false
-  - _fw_name: Script Task
+  - _fw_name: ScriptTask
     script: wc -w
     stdin_file: howdy.txt
     stdout_file: words.txt

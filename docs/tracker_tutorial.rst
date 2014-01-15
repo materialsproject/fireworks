@@ -12,13 +12,13 @@ To add a tracker, set a key called ``_tracker`` in your *fw_spec* to be an array
     name: Tracker FW
     spec:
       _tasks:
-      - _fw_name: Template Writer Task
+      - _fw_name: TemplateWriterTask
         context:
           opt1: 5.0
           opt2: fast method
         output_file: inputs.txt
         template_file: simple_template.txt
-      - _fw_name: Script Task
+      - _fw_name: ScriptTask
         script: wc -w < inputs.txt > words.txt
         use_shell: true
       _trackers:

@@ -27,7 +27,7 @@ if __name__ == "__main__":
           package_data={'fireworks':['user_objects/queue_adapters/*.txt']},
           zip_safe=False,
           install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'Jinja2>=2.7.1'],
-          extras_require={'rtransfer': ['paramiko>=1.11'], 'newt': ['requests>=2.01'], 'webgui':['django>=1.6']},
+          extras_require={'rtransfer': ['paramiko>=1.11'], 'newt': ['requests>=2.01'], 'webgui':['django>=1.6'], 'daemon_mode':['fabric>=1.8.1']},
           classifiers=['Programming Language :: Python :: 2.7', 'Development Status :: 4 - Beta',
                        'Intended Audience :: Science/Research', 'Intended Audience :: System Administrators',
                        'Intended Audience :: Information Technology',

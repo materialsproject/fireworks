@@ -14,7 +14,7 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.queue.queue_launcher import rapidfire, launch_rocket_to_queue
 from fireworks.utilities.fw_serializers import load_object_from_file
 
-__author__ = "Anubhav Jain"
+__authors__ = "Anubhav Jain, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
 __version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
