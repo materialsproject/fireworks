@@ -184,7 +184,7 @@ The built-in FireTasks
 
     scripttask
     templatewritertask
-    transfertask
+    fileiotasks
 
 Misc
 ----
