@@ -4,7 +4,7 @@ FireWorks Changelog
 
 **v0.62**
 
-.. caution:: The TransferTask is renamed to FileTransferTask (however, existing FireWorks databases should be backwards-compatibile). The names of the default FireTasks have changed to no longer have spaces, but the changes should be backward compatible.
+.. caution:: The TransferTask is renamed to FileTransferTask (however, existing FireWorks databases should be backwards-compatibile). The names of the default FireTasks no longer have spaces; however, existing FireWorks databases and code should be backwards-compatible.
 
 * Add FIFO and FILO sort options for equal priority FireWorks
 * Remove database locks in multiprocessing mode
