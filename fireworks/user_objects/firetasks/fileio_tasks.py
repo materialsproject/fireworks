@@ -4,7 +4,6 @@ import traceback
 
 from os.path import expandvars, expanduser, abspath
 from fireworks.core.firework import FireTaskBase
-from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -14,7 +13,7 @@ __email__ = 'ongsp@ucsd.edu'
 __date__ = 'Jan 6, 2014'
 
 
-class FileWriteTask(FireTaskBase, FWSerializable):
+class FileWriteTask(FireTaskBase):
     """
     A FireTask to write files:
     Required params:
@@ -31,7 +30,7 @@ class FileWriteTask(FireTaskBase, FWSerializable):
                 f.write(d["contents"])
 
 
-class FileDeleteTask(FireTaskBase, FWSerializable):
+class FileDeleteTask(FireTaskBase):
     """
     A FireTask to delete files:
     Required params:
@@ -48,7 +47,7 @@ class FileDeleteTask(FireTaskBase, FWSerializable):
             os.remove(os.path.join(pth, f))
 
 
-class FileTransferTask(FireTaskBase, FWSerializable):
+class FileTransferTask(FireTaskBase):
     """
     A FireTask to Transfer files:
     Required params:

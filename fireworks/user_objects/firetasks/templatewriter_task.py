@@ -16,7 +16,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
 
 
-class TemplateWriterTask(FireTaskBase, FWSerializable):
+class TemplateWriterTask(FireTaskBase):
     """
     Task to write templated files via Jinja2 library
     Required parameters:

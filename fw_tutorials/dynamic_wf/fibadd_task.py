@@ -3,7 +3,6 @@
 """
 TODO: add docs
 """
-from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FWAction, FireWork, FireTaskBase
 
 __author__ = 'Anubhav Jain'
@@ -14,7 +13,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 25, 2013'
 
 
-class FibonacciAdderTask(FireTaskBase, FWSerializable):
+class FibonacciAdderTask(FireTaskBase):
 
     _fw_name = "Fibonacci Adder Task"
 

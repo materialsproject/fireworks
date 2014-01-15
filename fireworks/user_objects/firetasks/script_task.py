@@ -16,7 +16,7 @@ __date__ = 'Feb 18, 2013'
 # TODO: add maximum length of 10,000 chars for stored fields
 
 
-class ScriptTask(FireTaskBase, FWSerializable):
+class ScriptTask(FireTaskBase):
     required_params = ["script"]
 
     def run_task(self, fw_spec):

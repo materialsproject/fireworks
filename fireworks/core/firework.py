@@ -15,7 +15,6 @@ to do next after a job completes
 """
 
 from collections import defaultdict, OrderedDict
-import re
 import abc
 
 import datetime

@@ -3,7 +3,6 @@
 """
 TODO: add docs
 """
-from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FWAction, FireTaskBase
 
 __author__ = 'Anubhav Jain'
@@ -14,7 +13,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 17, 2013'
 
 
-class AdditionTask(FireTaskBase, FWSerializable):
+class AdditionTask(FireTaskBase):
     
     _fw_name = "Addition Task"
     

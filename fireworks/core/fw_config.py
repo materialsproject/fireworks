@@ -127,6 +127,12 @@ class FWConfig(object):
             d[k] = v
         return d
 
+    def write_config(self, path=None):
+        path = os.path.join(os.environ["HOME"], ".fireworks",
+                            'FW_config.yaml') if path is None else path
+        with open(path, "w") as f:
+            yaml.dump(self.to_dict(), f)
+
 
 @singleton
 class FWData(object):

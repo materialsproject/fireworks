@@ -6,6 +6,7 @@ A runnable script for launching rockets (a command-line interface to queue_launc
 
 from argparse import ArgumentParser
 import os
+import sys
 import time
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
@@ -63,16 +64,21 @@ def qlaunch():
     single_parser = subparsers.add_parser('singleshot', help='launch a single rocket to the queue')
     rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets to the queue')
 
-    parser.add_argument("--host", help="Remote host to exec qlaunch. Right "
-                                       "now, only supports running from a "
-                                       "config dir.")
-    parser.add_argument("--user", help="Username to login to remote host.")
-    parser.add_argument("--password", help="Password for remote host (if "
-                                           "necessary).")
-    parser.add_argument("--remote_config_dir", help="Remote config dir "
-                                                    "location. Defaults to "
-                                                    "$HOME/.fireworks",
-                        default="$HOME/.fireworks")
+    parser.add_argument("-rh", "--remote_host", nargs="*",
+                        help="Remote host to exec qlaunch. Right now, "
+                             "only supports running from a config dir.")
+    parser.add_argument("-ru", "--remote_user",
+                        help="Username to login to remote host.")
+    parser.add_argument("-rp", "--remote_password",
+                        help="Password for remote host (if necessary).")
+    parser.add_argument("-rc", "--remote_config_dir",
+                        help="Remote config dir location. Defaults to $HOME/"
+                             ".fireworks",
+                        default="~/.fireworks")
+    parser.add_argument("-rs", "--remote_setup",
+                        help="Setup the remote config dir using files in "
+                             "the directory specified by -c.",
+                        action="store_true")
     parser.add_argument("-d", "--daemon",
                         help="Daemon mode. Command is repeated every x "
                              "seconds. Defaults to 0, which means non-daemon "
@@ -92,26 +98,49 @@ def qlaunch():
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
 
-    rapid_parser.add_argument('-m', '--maxjobs_queue', help='maximum jobs to keep in queue for this user', default=10,
+    rapid_parser.add_argument('-m', '--maxjobs_queue',
+                              help='maximum jobs to keep in queue for this user', default=10,
                               type=int)
-    rapid_parser.add_argument('-b', '--maxjobs_block', help='maximum jobs to put in a block', default=500, type=int)
+    rapid_parser.add_argument('-b', '--maxjobs_block',
+                              help='maximum jobs to put in a block', default=500, type=int)
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 
     args = parser.parse_args()
 
+    if args.remote_host:
+        try:
+            from fabric.api import settings, run, cd
+            from fabric.network import disconnect_all
+            from fabric.operations import put
+        except ImportError:
+            print "Remote options require the Fabric package to be installed!"
+            sys.exit(-1)
+
+    if args.remote_setup:
+        if args.remote_host:
+            for h in args.remote_host:
+                with settings(host_string=h, user=args.remote_user,
+                              password=args.remote_password):
+                    run("mkdir -p {}".format(args.remote_config_dir))
+                    for f in os.listdir(args.config_dir):
+                        if os.path.isfile(f):
+                            put(f, os.path.join(args.remote_config_dir, f))
+
     interval = args.daemon
     while True:
-        if args.host:
-            from fabric.api import settings, cd, run
-            with settings(host_string=args.host, user=args.user,
-                          password=args.password):
-                with cd(args.remote_config_dir):
-                    run("qlaunch {}".format(args.command))
+        if args.remote_host:
+            for h in args.remote_host:
+                with settings(host_string=h, user=args.remote_user,
+                              password=args.remote_password):
+                    with cd(args.remote_config_dir):
+                        run("qlaunch {}".format(args.command))
+            disconnect_all()
         else:
             do_launch(args)
         if interval > 0:
-            print "Next run in {} seconds".format(interval)
+            print "Next run in {} seconds... Press Ctrl-C to exit at any time." \
+                .format(interval)
             time.sleep(args.daemon)
         else:
             break
