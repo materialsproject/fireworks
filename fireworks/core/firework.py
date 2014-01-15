@@ -73,16 +73,6 @@ class FireTaskBase(dict, FWSerializable):
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
 
-        if not self.get("use_global_spec"):
-            self.load_global_params()
-
-    def load_global_params(self):
-        """
-        An optional function to implement if you wish to support loading of
-        parameters from global spec.
-        """
-        pass 
-
     @abc.abstractmethod
     def run_task(self, fw_spec):
         """

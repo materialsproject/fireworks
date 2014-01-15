@@ -21,6 +21,8 @@ Built-in FireTasks
 Misc.
 =====
 
+* remove use_global_spec option, and just have the parameters be taken from the root spec and overridden by the task parameters.
+
 * Speed up database queries
 
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command? e.g. lpad setup

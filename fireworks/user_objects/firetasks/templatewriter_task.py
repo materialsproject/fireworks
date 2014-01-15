@@ -17,21 +17,15 @@ __date__ = 'Aug 08, 2013'
 
 
 class TemplateWriterTask(FireTaskBase, FWSerializable):
-
-    _fw_name = 'TemplateWriterTask'
-
-    def __init__(self, parameters):
-        """
-        :param parameters: (dict) parameters. Required are "template_file" (str), "context" (dict), and "output_file" (str). Optional are "append" (T/F) and "template_dir" (str).
-        """
-        self.update(parameters)
-
-        if not parameters.get("use_global_spec"):
-            self._load_parameters(parameters)
+    """
+    :param parameters: (dict) parameters. Required are "template_file" (str), "context" (dict), and "output_file" (str). Optional are "append" (T/F) and "template_dir" (str).
+    """
 
     def run_task(self, fw_spec):
         if self.get("use_global_spec"):
-            self._load_parameters(fw_spec)
+            self._load_params(fw_spec)
+        else:
+            self._load_params(self)
 
         with open(self.template_file) as f:
             t = Template(f.read())
@@ -41,20 +35,20 @@ class TemplateWriterTask(FireTaskBase, FWSerializable):
             with open(self.output_file, write_mode) as of:
                 of.write(output)
 
-    def load_global_params(self):
+    def _load_params(self, d):
 
-        self.context = self['context']
-        self.output_file = self['output_file']
-        self.append_file = self.get('append')  # append to output file?
+        self.context = d['context']
+        self.output_file = d['output_file']
+        self.append_file = d.get('append')  # append to output file?
 
-        if self.get('template_dir'):
-            self.template_dir = self['template_dir']
+        if d.get('template_dir'):
+            self.template_dir = d['template_dir']
         elif FWConfig().TEMPLATE_DIR:
             self.template_dir = FWConfig().TEMPLATE_DIR
         else:
             MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
             self.template_dir = os.path.join(MODULE_DIR, 'templates')
 
-        self.template_file = os.path.join(self.template_dir, self['template_file'])
+        self.template_file = os.path.join(self.template_dir, d['template_file'])
         if not os.path.exists(self.template_file):
             raise ValueError("TemplateWriterTask could not find a template file at: {}".format(self.template_file))
