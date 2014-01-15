@@ -18,6 +18,7 @@ __date__ = 'Aug 08, 2013'
 
 class TemplateWriterTask(FireTaskBase, FWSerializable):
 
+    _fw_name = 'Template Writer Task'
 
     def __init__(self, parameters):
         """

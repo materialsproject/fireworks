@@ -17,7 +17,7 @@ __date__ = 'Feb 18, 2013'
 
 
 class ScriptTask(FireTaskBase, FWSerializable):
-
+    _fw_name = 'Script Task'
     required_params = ["script"]
 
     def run_task(self, fw_spec):
