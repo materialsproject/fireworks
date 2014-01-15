@@ -1,11 +1,11 @@
 =========================================
-Using the Transfer Task to transfer files
+Using the FileTransferTask to transfer files
 =========================================
 
 Introduction
 ============
 
-The Transfer Task is a built-in FireTask for moving and copying files, perhaps to a remote server. Its usage is straightforward:
+The FileTransferTask is a built-in FireTask for moving and copying files, perhaps to a remote server. Its usage is straightforward:
 
 * a ``files`` key that contains a list of files to move or copy
 * additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors
@@ -14,7 +14,7 @@ An example of a FireWork that copies two files, ``file1.txt`` and ``file2.txt``,
 
     spec:
       _tasks:
-      - _fw_name: Transfer Task
+      - _fw_name: File Transfer Task
         files:
         - src: file1.txt
           dest: ~/file1.txt
@@ -24,18 +24,18 @@ An example of a FireWork that copies two files, ``file1.txt`` and ``file2.txt``,
 
 In Python code, the same task would be defined as::
 
-    firetask1 = TransferTask({'files': [{'src': 'file1.txt', 'dest': '~/file1.txt'}, {'src': 'file2.txt', 'dest': '~/file2.txt'}], 'mode': 'copy'})
+    firetask1 = FileTransferTask({'files': [{'src': 'file1.txt', 'dest': '~/file1.txt'}, {'src': 'file2.txt', 'dest': '~/file2.txt'}], 'mode': 'copy'})
 
-The ``files`` parameter *must* be specified, and is an array of dictionaries with ``src`` and ``dest`` keys. The default mode of operation is to move files from the source to destination; by changing the ``mode`` to copy, we will copy the files instead. Note that you can put as many files (or directories) in the ``files`` list as you want; the same ``mode`` will be applied to all of them. If you want to move some files and copy others, you'd need to include two different ``Transfer Tasks`` in your FireWork.
+The ``files`` parameter *must* be specified, and is an array of dictionaries with ``src`` and ``dest`` keys. The default mode of operation is to move files from the source to destination; by changing the ``mode`` to copy, we will copy the files instead. Note that you can put as many files (or directories) in the ``files`` list as you want; the same ``mode`` will be applied to all of them. If you want to move some files and copy others, you'd need to include two different ``FileTransferTask``s in your FireWork.
 
 
 
-An example of the Transfer Task in action is given in the :doc:`FireTask tutorial <firetask_tutorial>`.
+An example of the FileTransferTask in action is given in the :doc:`FireTask tutorial <firetask_tutorial>`.
 
-Transfer Task Options
+FileTransferTask Options
 =====================
 
-Below are the various options that can be set for the Transfer Task.
+Below are the various options that can be set for the FileTransferTask.
 
 mode
 ----
@@ -49,12 +49,12 @@ The potential values are:
 * *copyfile* - copy the contents of a file into another file (no metadata)
 * *rtransfer* - do a remote transfer (this is covered later in this doc)
 
-.. note:: With the exception of **rtransfer**, ``Transfer Task`` is using Python's *shutil* module to do the move/copy. You can read more about these modes in `Python's *shutil* docs <http://docs.python.org/2/library/shutil.html`_.
+.. note:: With the exception of **rtransfer**, ``FileTransferTask`` is using Python's *shutil* module to do the move/copy. You can read more about these modes in `Python's *shutil* docs <http://docs.python.org/2/library/shutil.html`_.
 
 ignore_errors
 -------------
 
-Either *True* or *False* (default=*False*). If True, a failed move/copy will just cause ``Transfer Task`` to move to the next file in the ``files`` list. If False, a failed move/copy will raise an error.
+Either *True* or *False* (default=*False*). If True, a failed move/copy will just cause ``FileTransferTask`` to move to the next file in the ``files`` list. If False, a failed move/copy will raise an error.
 
 shell_interpret
 ---------------
@@ -74,7 +74,7 @@ Remote transfers are handled via SFTP using the *paramiko* Python library (make 
 * Make sure the *dest* doesn't contain symbols that can't properly be interpreted on the local machine, like ``~`` or ``.``
 * If you are using a non-standard keyfile location (e.g., not something like ``~/.ssh/id_dsa.pub``), you need to set the **key_filename** option to the location of your key filename.
 
-If all this is configured properly, you should be able to transfer files to a remote machine via ``Transfer Task``. Some potential hiccups:
+If all this is configured properly, you should be able to transfer files to a remote machine via ``FileTransferTask``. Some potential hiccups:
 
 * You require a password to SSH between machines and haven't configured passwordless SSH.
 * You are using a non-standard SSH port
@@ -83,4 +83,4 @@ If all this is configured properly, you should be able to transfer files to a re
 The _use_global_spec option
 ===========================
 
-By default, the parameters for the Transfer Task should be defined within the ``_task`` section of the **spec** corresponding to the Transfer Task, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple Transfer Tasks within the same FireWork.
+By default, the parameters for the FileTransferTask should be defined within the ``_task`` section of the **spec** corresponding to the FileTransferTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same FireWork.
