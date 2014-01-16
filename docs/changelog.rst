@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.63**
+
+* fix bug in rtransfer mode of FileTransferTask (S.P. Ong)
+* improvements to remote qlaunch (S.P. Ong)
+
 **v0.62**
 
 .. caution:: The TransferTask is renamed to FileTransferTask (however, existing FireWorks databases should be backwards-compatibile). The names of the default FireTasks no longer have spaces; however, existing FireWorks databases and code should be backwards-compatible.
