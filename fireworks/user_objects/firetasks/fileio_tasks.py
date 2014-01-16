@@ -86,10 +86,10 @@ class FileTransferTask(FireTaskBase):
 
         for f in self["files"]:
             try:
-                src = abspath(expanduser(expandvars(f['src']))) if shell_interpret else f['src']
+                src = abspath(expanduser(expandvars(f))) if shell_interpret else f
 
                 if mode == 'rtransfer':
-                    dest = f['dest']
+                    dest = self['dest']
                     if os.path.isdir(src):
                         if not self._rexists(sftp, dest):
                             sftp.mkdir(dest)
@@ -101,7 +101,8 @@ class FileTransferTask(FireTaskBase):
                         sftp.put(src, dest)
 
                 else:
-                    dest = abspath(expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
+                    dest = abspath(expanduser(expandvars(self['dest']))) if \
+                        shell_interpret else self['dest']
                     FileTransferTask.fn_list[mode](src, dest)
 
             except:
@@ -109,7 +110,7 @@ class FileTransferTask(FireTaskBase):
                 if not ignore_errors:
                     raise ValueError(
                         "There was an error performing operation {} from {} "
-                        "to {}".format(mode, src, dest))
+                        "to {}".format(mode, self["files"], self["dest"]))
         if mode == 'rtransfer':
             sftp.close()
             ssh.close()
