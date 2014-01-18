@@ -437,10 +437,10 @@ def lpad():
     adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
     adddir_parser.set_defaults(func=add_wf_dir)
 
-    #This makes argument options easier to maintain. E.g., what if there is
-    # a new state or disp option?
+    #This makes common argument options easier to maintain. E.g., what if
+    # there is a new state or disp option?
     state_args = ['-s', '--state']
-    state_kwargs = {"type": str, "help": "Select by state.",
+    state_kwargs = {"type": str.upper, "help": "Select by state.",
                     "choices": ["ARCHIVED", "DEFUSED", "WAITING", "READY",
                                 "RESERVED", "FIZZLED", "RUNNING",
                                 "COMPLETED"]}
