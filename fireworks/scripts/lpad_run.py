@@ -429,18 +429,23 @@ def lpad():
     adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
     adddir_parser.set_defaults(func=add_wf_dir)
 
+    #This makes argument options easier to maintain. E.g., what if there is
+    # a new state or disp option?
     state_opt = {"args": ['-s', '--state'],
                  "kwargs": {"type": str, "help": "Select by state.",
                             "choices": ["ARCHIVED", "DEFUSED", "WAITING",
                                         "READY", "RESERVED", "FIZZLED",
                                         "RUNNING", "COMPLETED"]}}
+    disp_opt = {"args": ['-d', '--display_format'],
+                "kwargs": {"type": str, "help": "Display format.",
+                           "choices": ["all", "more", "less", "ids", "count"]}}
 
     get_fw_parser = subparsers.add_parser('get_fws', help='get information about FireWorks')
-    get_fw_parser.add_argument('-i', '--fw_id', help='get FW with this fw_id', default=None, type=int)
-    get_fw_parser.add_argument('-n', '--name', help='get FWs with this name', default=None)
+    get_fw_parser.add_argument('-i', '--fw_id', help='get FW with this fw_id', type=int)
+    get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_opt["args"], **state_opt["kwargs"])
     get_fw_parser.add_argument('-q', '--query', help='get FWs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
-    get_fw_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids", "count")', default=None)
+    get_fw_parser.add_argument(*disp_opt["args"], **disp_opt["kwargs"])
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
     get_fw_parser.add_argument('--sort', help='sort results ("created_on")', default=None)
     get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")', default=None)
@@ -451,7 +456,7 @@ def lpad():
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name')
     get_wf_parser.add_argument(*state_opt["args"], **state_opt["kwargs"])
     get_wf_parser.add_argument('-q', '--query', help='get WFs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
-    get_wf_parser.add_argument('-d', '--display_format', help='display_format ("all","more", "less","ids", "count")', default=None)
+    get_wf_parser.add_argument(*disp_opt["args"], **disp_opt["kwargs"])
     get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
     get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
     get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
