@@ -121,8 +121,10 @@ def reset(args):
 
 
 def add_wf(args):
-    fwf = Workflow.from_file(args.wf_file)
-    get_lp(args).add_wf(fwf)
+    lp = get_lp(args)
+    for f in args.wf_file:
+        fwf = Workflow.from_file(f)
+        lp.add_wf(fwf)
 
 
 def add_wf_dir(args):
@@ -419,7 +421,8 @@ def lpad():
     reset_parser.set_defaults(func=reset)
 
     addwf_parser = subparsers.add_parser('add', help='insert a Workflow from file')
-    addwf_parser.add_argument('wf_file', help="path to a FireWork or Workflow file")
+    addwf_parser.add_argument('wf_file', nargs="+",
+                              help="path to a FireWork or Workflow file")
     addwf_parser.set_defaults(func=add_wf)
 
     adddir_parser = subparsers.add_parser('add_dir', help='insert all FWs/Workflows in a directory')
