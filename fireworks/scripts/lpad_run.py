@@ -59,7 +59,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
     query = {}
     if args.fw_id:
-        return pw_check([int(x) for x in args.fw_id.split(',')], args, skip_pw)
+        return pw_check(args.fw_id, args, skip_pw)
     if args.query:
         query = ast.literal_eval(args.query)
     if args.name:
@@ -144,7 +144,7 @@ def get_fws(args):
         args.display_format = args.display_format if args.display_format else 'more'
 
     if args.fw_id:
-        query = {'fw_id': args.fw_id}
+        query = {'fw_id': {"$in": args.fw_id}}
     elif args.name:
         query = {'name': args.name}
     elif args.state:
@@ -194,7 +194,7 @@ def get_wfs(args):
         args.display_format = args.display_format if args.display_format else 'more'
 
     if args.fw_id:
-        query = {'nodes': args.fw_id}
+        query = {'nodes': {"$in": args.fw_id}}
     elif args.name:
         query = {'name': args.name}
     elif args.state:
@@ -430,15 +430,18 @@ def lpad():
 
     addwf_parser = subparsers.add_parser('add', help='insert a Workflow from file')
     addwf_parser.add_argument('wf_file', nargs="+",
-                              help="path to a FireWork or Workflow file")
+                              help="Path to a FireWork or Workflow file")
     addwf_parser.set_defaults(func=add_wf)
 
     adddir_parser = subparsers.add_parser('add_dir', help='insert all FWs/Workflows in a directory')
     adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
     adddir_parser.set_defaults(func=add_wf_dir)
 
-    #This makes common argument options easier to maintain. E.g., what if
+    # This makes common argument options easier to maintain. E.g., what if
     # there is a new state or disp option?
+    fw_id_args = ["-i", "--fw_id"]
+    fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
+
     state_args = ['-s', '--state']
     state_kwargs = {"type": str.upper, "help": "Select by state.",
                     "choices": ["ARCHIVED", "DEFUSED", "WAITING", "READY",
@@ -449,7 +452,7 @@ def lpad():
                    "choices": ["all", "more", "less", "ids", "count"]}
 
     get_fw_parser = subparsers.add_parser('get_fws', help='get information about FireWorks')
-    get_fw_parser.add_argument('-i', '--fw_id', help='get FW with this fw_id', type=int)
+    get_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument('-q', '--query', help='get FWs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -460,7 +463,7 @@ def lpad():
     get_fw_parser.set_defaults(func=get_fws)
 
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
-    get_wf_parser.add_argument('-i', '--fw_id', help='get WF with this fw_id', type=int)
+    get_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name')
     get_wf_parser.add_argument(*state_args, **state_kwargs)
     get_wf_parser.add_argument('-q', '--query', help='get WFs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -476,8 +479,8 @@ def lpad():
     get_wf_parser.set_defaults(func=get_wfs)
 
     rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
-    rerun_fws_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
-    rerun_fws_parser.add_argument('-n', '--name', help='name', default=None)
+    rerun_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    rerun_fws_parser.add_argument('-n', '--name', help='name')
     rerun_fws_parser.add_argument(*state_args, **state_kwargs)
     rerun_fws_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -499,7 +502,7 @@ def lpad():
     fizzled_parser.set_defaults(func=detect_lostruns)
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
-    defuse_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    defuse_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     defuse_parser.add_argument('-n', '--name', help='name', default=None)
     defuse_parser.add_argument(*state_args, **state_kwargs)
     defuse_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -507,7 +510,7 @@ def lpad():
     defuse_parser.set_defaults(func=defuse)
 
     archive_parser = subparsers.add_parser('archive', help='archive an entire Workflow (irreversible)')
-    archive_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    archive_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     archive_parser.add_argument('-n', '--name', help='name', default=None)
     archive_parser.add_argument(*state_args, **state_kwargs)
     archive_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -515,7 +518,7 @@ def lpad():
     archive_parser.set_defaults(func=archive)
 
     reignite_parser = subparsers.add_parser('reignite', help='reignite (un-cancel) an entire Workflow')
-    reignite_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    reignite_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     reignite_parser.add_argument('-n', '--name', help='name')
     reignite_parser.add_argument(*state_args, **state_kwargs)
     reignite_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -523,7 +526,7 @@ def lpad():
     reignite_parser.set_defaults(func=reignite)
 
     defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single FireWork')
-    defuse_fw_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    defuse_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     defuse_fw_parser.add_argument('-n', '--name', help='name', default=None)
     defuse_fw_parser.add_argument(*state_args, **state_kwargs)
     defuse_fw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -531,7 +534,7 @@ def lpad():
     defuse_fw_parser.set_defaults(func=defuse_fws)
 
     reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single FireWork')
-    reignite_fw_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    reignite_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     reignite_fw_parser.add_argument('-n', '--name', help='name', default=None)
     reignite_fw_parser.add_argument(*state_args, **state_kwargs)
     reignite_fw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -548,7 +551,7 @@ def lpad():
     tuneup_parser.set_defaults(func=tuneup)
 
     refresh_parser = subparsers.add_parser('refresh', help='manually force a workflow refresh (not usually needed)')
-    refresh_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    refresh_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     refresh_parser.add_argument('-n', '--name', help='name', default=None)
     refresh_parser.add_argument(*state_args, **state_kwargs)
     refresh_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -557,7 +560,7 @@ def lpad():
 
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
     priority_parser.add_argument('priority', help='get FW with this fw_id', default=None, type=int)
-    priority_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids', default=None)
+    priority_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     priority_parser.add_argument('-n', '--name', help='name', default=None)
     priority_parser.add_argument(*state_args, **state_kwargs)
     priority_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
@@ -604,7 +607,7 @@ def lpad():
     forget_parser.set_defaults(func=forget_offline)
 
     trackfw_parser = subparsers.add_parser('track_fws', help='Track FireWorks')
-    trackfw_parser.add_argument('-i', '--fw_id', help='fw id or comma separated list of fw ids')
+    trackfw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     trackfw_parser.add_argument('-n', '--name', help='name')
     trackfw_parser.add_argument(*state_args, **state_kwargs)
     trackfw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
