@@ -235,7 +235,15 @@ def get_wfs(args):
     if len(wfs) == 1:
         wfs = wfs[0]
 
-    print json.dumps(wfs, default=DATETIME_HANDLER, indent=4)
+    if args.table:
+        headers = list(wfs[0].keys())
+        from prettytable import PrettyTable
+        t = PrettyTable(headers)
+        for d in wfs:
+            t.add_row([d.get(k) for k in headers])
+        print t
+    else:
+        print json.dumps(wfs, default=DATETIME_HANDLER, indent=4)
 
 
 def detect_lostruns(args):
@@ -460,6 +468,11 @@ def lpad():
     get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
     get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
     get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
+    get_wf_parser.add_argument('-t', '--table',
+                               help='Print results in table form instead of '
+                                    'json. Needs prettytable. Works best '
+                                    'with "-d less"',
+                               action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
 
     rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
