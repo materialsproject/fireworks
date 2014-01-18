@@ -503,7 +503,7 @@ def lpad():
 
     defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
     defuse_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    defuse_parser.add_argument('-n', '--name', help='name', default=None)
+    defuse_parser.add_argument('-n', '--name', help='name')
     defuse_parser.add_argument(*state_args, **state_kwargs)
     defuse_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     defuse_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -511,7 +511,7 @@ def lpad():
 
     archive_parser = subparsers.add_parser('archive', help='archive an entire Workflow (irreversible)')
     archive_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    archive_parser.add_argument('-n', '--name', help='name', default=None)
+    archive_parser.add_argument('-n', '--name', help='name')
     archive_parser.add_argument(*state_args, **state_kwargs)
     archive_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     archive_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -527,7 +527,7 @@ def lpad():
 
     defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single FireWork')
     defuse_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    defuse_fw_parser.add_argument('-n', '--name', help='name', default=None)
+    defuse_fw_parser.add_argument('-n', '--name', help='name')
     defuse_fw_parser.add_argument(*state_args, **state_kwargs)
     defuse_fw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     defuse_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -535,7 +535,7 @@ def lpad():
 
     reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single FireWork')
     reignite_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    reignite_fw_parser.add_argument('-n', '--name', help='name', default=None)
+    reignite_fw_parser.add_argument('-n', '--name', help='name')
     reignite_fw_parser.add_argument(*state_args, **state_kwargs)
     reignite_fw_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     reignite_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -552,7 +552,7 @@ def lpad():
 
     refresh_parser = subparsers.add_parser('refresh', help='manually force a workflow refresh (not usually needed)')
     refresh_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    refresh_parser.add_argument('-n', '--name', help='name', default=None)
+    refresh_parser.add_argument('-n', '--name', help='name')
     refresh_parser.add_argument(*state_args, **state_kwargs)
     refresh_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     refresh_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -561,7 +561,7 @@ def lpad():
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
     priority_parser.add_argument('priority', help='get FW with this fw_id', default=None, type=int)
     priority_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    priority_parser.add_argument('-n', '--name', help='name', default=None)
+    priority_parser.add_argument('-n', '--name', help='name')
     priority_parser.add_argument(*state_args, **state_kwargs)
     priority_parser.add_argument('-q', '--query', help='query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     priority_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
@@ -576,7 +576,7 @@ def lpad():
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the LaunchPad file (used if -l unspecified)',
                         default=FWConfig().CONFIG_FILE_DIR)
-    parser.add_argument('--logdir', help='path to a directory for logging', default=None)
+    parser.add_argument('--logdir', help='path to a directory for logging')
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
