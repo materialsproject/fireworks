@@ -422,15 +422,16 @@ def lpad():
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
 
-    init_parser = subparsers.add_parser('init', help='Initialize a Fireworks launchpad YAML file.')
+    init_parser = subparsers.add_parser(
+        'init', help='Initialize a Fireworks launchpad YAML file.')
     init_parser.add_argument('--config-file', default=DEFAULT_LPAD_YAML,
                              type=str,
                              help="Filename to write to.")
-
     init_parser.set_defaults(func=init_yaml)
 
     reset_parser = subparsers.add_parser('reset', help='reset and re-initialize the FireWorks database')
-    reset_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required to protect against accidental reset.")
+    #reset_parser.add_argument('--password', help="Today's date,
+    # e.g. 2012-02-25. Password or positive response to input prompt required to protect against accidental reset.")
     reset_parser.set_defaults(func=reset)
 
     addwf_parser = subparsers.add_parser('add', help='insert a Workflow from file')
@@ -466,8 +467,10 @@ def lpad():
     get_fw_parser.add_argument(*query_args, **query_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
-    get_fw_parser.add_argument('--sort', help='sort results ("created_on")')
-    get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")')
+    get_fw_parser.add_argument('--sort', help='Sort results',
+                               choices=["created_on", "updated_on"])
+    get_fw_parser.add_argument('--rsort', help='Reverse sort results',
+                               choices=["created_on", "updated_on"])
     get_fw_parser.set_defaults(func=get_fws)
 
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
