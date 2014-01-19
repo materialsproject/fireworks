@@ -122,10 +122,15 @@ def reset(args):
 
 def add_wf(args):
     lp = get_lp(args)
-    for f in args.wf_file:
+    if args.dir:
+        files = []
+        for f in args.wf_file:
+            files.extend([os.path.join(f, i) for i in os.listdir(f)])
+    else:
+        files = args.wf_file
+    for f in files:
         fwf = Workflow.from_file(f)
         lp.add_wf(fwf)
-
 
 def add_wf_dir(args):
     lp = get_lp(args)
@@ -429,13 +434,13 @@ def lpad():
     reset_parser.set_defaults(func=reset)
 
     addwf_parser = subparsers.add_parser('add', help='insert a Workflow from file')
+    addwf_parser.add_argument('-d', '--dir',
+                              action="store_true",
+                              help="Directory mode. Finds all files in the "
+                                   "paths given by wf_file.")
     addwf_parser.add_argument('wf_file', nargs="+",
                               help="Path to a FireWork or Workflow file")
     addwf_parser.set_defaults(func=add_wf)
-
-    adddir_parser = subparsers.add_parser('add_dir', help='insert all FWs/Workflows in a directory')
-    adddir_parser.add_argument('wf_dir', help="path to a directory containing only FireWorks or Workflow files")
-    adddir_parser.set_defaults(func=add_wf_dir)
 
     # This makes common argument options easier to maintain. E.g., what if
     # there is a new state or disp option?
