@@ -380,8 +380,8 @@ def forget_offline(args):
 def track_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, skip_pw=True)
-    include = args.include.split(',') if args.include else None
-    exclude = args.exclude.split(',') if args.exclude else None
+    include = args.include
+    exclude = args.exclude
     first_print = True  # used to control newline
     for f in fw_ids:
         data = lp.get_tracker_data(f)
@@ -619,8 +619,10 @@ def lpad():
     trackfw_parser.add_argument('-n', '--name', help='name')
     trackfw_parser.add_argument(*state_args, **state_kwargs)
     trackfw_parser.add_argument(*query_args, **query_kwargs)
-    trackfw_parser.add_argument('-c', '--include', help='only include these files in the report (comma-separated string)', default=None)
-    trackfw_parser.add_argument('-x', '--exclude', help='exclude these files from the report (comma-separated string)', default=None)
+    trackfw_parser.add_argument('-c', '--include', nargs="+",
+                                help='only include these files in the report')
+    trackfw_parser.add_argument('-x', '--exclude', nargs="+",
+                                help='exclude these files from the report')
     trackfw_parser.set_defaults(func=track_fws)
 
     args = parser.parse_args()
