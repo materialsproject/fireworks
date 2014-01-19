@@ -194,6 +194,8 @@ A few recommendations:
 Sample usage
 ------------
 
+All remote options start with "-r" or "--remote".
+
 #. Running qlaunch rapidfire on one server::
 
     qlaunch -rh compute.host.gov -ru user rapidfire -m 50
