@@ -458,8 +458,8 @@ def lpad():
     get_fw_parser.add_argument('-q', '--query', help='get FWs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
-    get_fw_parser.add_argument('--sort', help='sort results ("created_on")', default=None)
-    get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")', default=None)
+    get_fw_parser.add_argument('--sort', help='sort results ("created_on")')
+    get_fw_parser.add_argument('--rsort', help='reverse sort results ("created_on")')
     get_fw_parser.set_defaults(func=get_fws)
 
     get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
@@ -469,8 +469,10 @@ def lpad():
     get_wf_parser.add_argument('-q', '--query', help='get WFs matching this query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')', default=None)
     get_wf_parser.add_argument(*disp_args, **disp_kwargs)
     get_wf_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
-    get_wf_parser.add_argument('--sort', help='sort results ("created_on", "updated_on")', default=None)
-    get_wf_parser.add_argument('--rsort', help='reverse sort results ("created_on", "updated_on")', default=None)
+    get_wf_parser.add_argument('--sort', help='Sort results',
+                               choices=["created_on", "updated_on"])
+    get_wf_parser.add_argument('--rsort', help='Reverse sort results',
+                               choices=["created_on", "updated_on"])
     get_wf_parser.add_argument('-t', '--table',
                                help='Print results in table form instead of '
                                     'json. Needs prettytable. Works best '
@@ -492,8 +494,10 @@ def lpad():
     reservation_parser.add_argument('--rerun', help='cancel and rerun expired reservations', action='store_true')
     reservation_parser.set_defaults(func=detect_unreserved)
 
-    fizzled_parser = subparsers.add_parser('detect_lostruns', help='Find launches that have FIZZLED')
-    fizzled_parser.add_argument('--time', help='expiration time (seconds)', default=FWConfig().RUN_EXPIRATION_SECS,
+    fizzled_parser = subparsers.add_parser('detect_lostruns',
+                                           help='Find launches that have FIZZLED')
+    fizzled_parser.add_argument('--time', help='expiration time (seconds)',
+                                default=FWConfig().RUN_EXPIRATION_SECS,
                                 type=int)
     fizzled_parser.add_argument('--fizzle', help='mark lost runs as fizzled', action='store_true')
     fizzled_parser.add_argument('--rerun', help='rerun lost runs', action='store_true')
@@ -567,8 +571,9 @@ def lpad():
     priority_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(FWConfig().PW_CHECK_NUM))
     priority_parser.set_defaults(func=set_priority)
 
-    version_parser = subparsers.add_parser('version', help='Print the '
-                                                           'version and location of FireWorks installation')
+    version_parser = subparsers.add_parser(
+        'version',
+        help='Print the version and location of FireWorks installation')
     version_parser.set_defaults(func=version)
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing central DB connection info',
