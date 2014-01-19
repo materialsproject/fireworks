@@ -112,7 +112,8 @@ def qlaunch():
                               help='maximum jobs to keep in queue for this user', default=10,
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
-                              help='maximum jobs to put in a block', default=500, type=int)
+                              help='maximum jobs to put in a block',
+                              default=500, type=int)
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 
@@ -132,10 +133,17 @@ def qlaunch():
             for h in args.remote_host:
                 with settings(host_string=h, user=args.remote_user,
                               password=args.remote_password):
-                    run("mkdir -p {}".format(args.remote_config_dir))
-                    for f in os.listdir(args.config_dir):
-                        if os.path.isfile(f):
-                            put(f, os.path.join(args.remote_config_dir, f))
+                    for r in args.remote_config_dir:
+                        run("mkdir -p {}".format(r))
+                        for f in os.listdir(args.config_dir):
+                            if os.path.isfile(f):
+                                put(f, os.path.join(r, f))
+    non_default = []
+    for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
+        v = getattr(args, k)
+        if v != rapid_parser.get_default(k):
+            non_default.append("--{} {}".format(k, v))
+    non_default = " ".join(non_default)
 
     interval = args.daemon
     while True:
@@ -145,7 +153,7 @@ def qlaunch():
                               password=args.remote_password):
                     for r in args.remote_config_dir:
                         with cd(r):
-                            run("qlaunch {}".format(args.command))
+                            run("qlaunch {} {}".format(args.command, non_default))
             disconnect_all()
         else:
             do_launch(args)
