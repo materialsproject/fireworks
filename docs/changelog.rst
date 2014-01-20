@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v0.64**
+
+.. caution:: The ``add_dir`` command is incorporated into the ``add`` command. e.g. ``lpad add my_dir/*.yaml``.
+
+* clean up argument parsing (S.P. Ong)
+
+
 **v0.63**
 
 * fix bug in rtransfer mode of FileTransferTask (S.P. Ong)
