@@ -7,6 +7,7 @@ FireWorks Changelog
 .. caution:: The ``add_dir`` command is incorporated into the ``add`` command. e.g. ``lpad add my_dir/*.yaml``. Many command line options that allowed comma-separated lists are now space-separated lists to better use argparse (see updated docs).
 
 * clean up argument parsing (S.P. Ong)
+* remote qlaunch handles multiple configs (S.P. Ong)
 
 
 **v0.63**

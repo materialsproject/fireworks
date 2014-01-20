@@ -349,17 +349,16 @@ def webgui(args):
 
 def add_scripts(args):
     lp = get_lp(args)
-    scripts = args.scripts.split(args.delimiter)
-    names = args.names.split(args.delimiter) if args.names else [None] * len(scripts)
-    wf_name = args.wf_name if args.wf_name else names[0]
+    args.names = args.names if args.names else [None] * len(args.scripts)
+    args.wf_name = args.wf_name if args.wf_name else args.names[0]
     fws = []
     links = {}
-    for idx, s in enumerate(scripts):
-        fws.append(FireWork(ScriptTask({'script': s, 'use_shell': True}), name=names[idx], fw_id=idx))
+    for idx, s in enumerate(args.scripts):
+        fws.append(FireWork(ScriptTask({'script': s, 'use_shell': True}), name=args.names[idx], fw_id=idx))
         if idx != 0:
             links[idx-1] = idx
 
-    lp.add_wf(Workflow(fws, links, wf_name))
+    lp.add_wf(Workflow(fws, links, args.wf_name))
 
 def recover_offline(args):
     lp = get_lp(args)
@@ -606,8 +605,8 @@ def lpad():
     webgui_parser.set_defaults(func=webgui)
 
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script (or several scripts) to run in sequence')
-    addscript_parser.add_argument('scripts', help="Script to run, or delimiter-separated scripts (default comma-separated)")
-    addscript_parser.add_argument('-n', '--names', help='FireWork name, or delimiter-separated names (default comma-separated)', default=None)
+    addscript_parser.add_argument('scripts', help="Script to run, or space-separated names", nargs='*')
+    addscript_parser.add_argument('-n', '--names', help='FireWork name, or space-separated names', nargs='*')
     addscript_parser.add_argument('-w', '--wf_name', help='Workflow name')
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
     addscript_parser.set_defaults(func=add_scripts)

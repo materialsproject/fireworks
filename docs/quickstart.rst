@@ -39,7 +39,7 @@ Add a Workflow
 
 #. There are many ways to add Workflows to the database. You can do it directly from the command line as::
 
-    lpad add_scripts 'echo "hello"','echo "goodbye"' -n hello,goodbye -w test_workflow
+    lpad add_scripts 'echo "hello"' 'echo "goodbye"' -n hello goodbye -w test_workflow
 
    *Output*::
 
