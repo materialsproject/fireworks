@@ -166,6 +166,77 @@ So far, each queue script we submitted has only one job. We can also submit mult
 
 .. warning:: Currently, we do not recommend running in this mode unless you are confident that all jobs can finish before the walltime expires. Otherwise, you might run into a situation where the walltime kills one of your jobs mid-run. In future tutorials and FireWorks versions, we'll demonstrate how to handle this case cleanly. For now, we suggest you stick to one FireWork per queue script unless you know what you are doing!
 
+Remote qlaunch
+==============
+
+.. note::
+
+    Remote qlaunch requires the `Fabric <http://docs.fabfile.org/>`_ package
+    to be installed.
+
+The qlaunch command also comes with options to do simple remote queue
+administration. This remote capability is extremely useful if you need to
+maintain jobs in queues across a number of computing resources from a single
+location (as opposed to ssh into each resource and doing qlaunch).
+
+A few recommendations:
+
+#. It is helpful if you configure all your fireworks in all the resources
+   you want to use similarly. For example, you can use the default
+   $HOME/.fireworks location, or setup every single resource in a similar
+   location.
+
+#. Passwordless ssh should ideally be configured for all clusters from the
+   machine you want to run qlaunch from. While qlaunch provides a "-rp"
+   option to specify the password, it is less secure and less powerful (e.g.,
+   you can't manage lots of resources with a single command).
+
+Sample usage
+------------
+
+All remote options start with "-r" or "--remote".
+
+#. Running qlaunch rapidfire on one server::
+
+    qlaunch -rh compute.host.gov -ru user rapidfire -m 50
+
+   Note that rapidfire options such as "-m 50" are automatically transmitted
+   to the resource.
+
+#. Running qlaunch rapidfire on a host with multiple queue configurations.
+   This is useful when you have multiple queue configurations for a single
+   resource with different specifications. A single command runs qlaunch
+   rapidfire on all configurations::
+
+    qlaunch -rh compute.host.gov -rc /path/to/config1 /path/to/config2 -ru user rapidfire
+
+#. Running qlaunch rapidfire on multiple hosts with the same username.
+   Without the rc option, it is assumed that $HOME/.fireworks is where the
+   fireworks configuration is located on all hosts::
+
+    qlaunch -rh compute.host1.gov compute.host2.gov -ru user rapidfire
+
+Limitations
+-----------
+
+To keep the code simple, qlaunch default remote options are limited to
+similar configurations across multiple resources. If you have more
+complicated setups, e.g., different users, different queue configurations
+across different computing resoruces, remote qlaunch will not be able to
+handle these. However, you can always write your own fabfile.py and use
+Fabric's far more sophisticated execution model.
+
+A simple fabfile.py for different users on different hosts is given below. If
+you require Fabric's sophistication, I encourage you to read `Fabric's
+official documentation <http://docs.fabfile.org/>`_::
+
+    from fabric.api import run, env
+
+    env.hosts = ["user1@compute.host1.gov", "user2@compute.host2.gov"]
+
+    def qlaunch():
+        run('qlaunch -c $HOME/.fireworks rapidfire')
+
 
 More information
 ================

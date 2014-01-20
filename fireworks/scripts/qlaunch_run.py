@@ -67,14 +67,24 @@ def qlaunch():
     parser.add_argument("-rh", "--remote_host", nargs="*",
                         help="Remote host to exec qlaunch. Right now, "
                              "only supports running from a config dir.")
+    parser.add_argument("-rc", "--remote_config_dir",
+                        nargs="+",
+                        help="Remote config dir location(s). Defaults to "
+                             "$HOME/.fireworks. You can specify multiple "
+                             "locations if you have multiple configurations "
+                             "on the same cluster e.g., multiple queues. "
+                             "Note that this may have to come before the -ru"
+                             "argument (or other single arg) options as "
+                             "argsparse may not be able to find "
+                             "the find command while it consumes args.",
+                        default=["$HOME/.fireworks"])
     parser.add_argument("-ru", "--remote_user",
                         help="Username to login to remote host.")
     parser.add_argument("-rp", "--remote_password",
-                        help="Password for remote host (if necessary).")
-    parser.add_argument("-rc", "--remote_config_dir",
-                        help="Remote config dir location. Defaults to $HOME/"
-                             ".fireworks",
-                        default="~/.fireworks")
+                        help="Password for remote host (if necessary). For "
+                             "best operation, it is recommended that you do "
+                             "passwordless ssh.")
+
     parser.add_argument("-rs", "--remote_setup",
                         help="Setup the remote config dir using files in "
                              "the directory specified by -c.",
@@ -102,7 +112,8 @@ def qlaunch():
                               help='maximum jobs to keep in queue for this user', default=10,
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
-                              help='maximum jobs to put in a block', default=500, type=int)
+                              help='maximum jobs to put in a block',
+                              default=500, type=int)
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 
@@ -122,10 +133,17 @@ def qlaunch():
             for h in args.remote_host:
                 with settings(host_string=h, user=args.remote_user,
                               password=args.remote_password):
-                    run("mkdir -p {}".format(args.remote_config_dir))
-                    for f in os.listdir(args.config_dir):
-                        if os.path.isfile(f):
-                            put(f, os.path.join(args.remote_config_dir, f))
+                    for r in args.remote_config_dir:
+                        run("mkdir -p {}".format(r))
+                        for f in os.listdir(args.config_dir):
+                            if os.path.isfile(f):
+                                put(f, os.path.join(r, f))
+    non_default = []
+    for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
+        v = getattr(args, k)
+        if v != rapid_parser.get_default(k):
+            non_default.append("--{} {}".format(k, v))
+    non_default = " ".join(non_default)
 
     interval = args.daemon
     while True:
@@ -133,8 +151,9 @@ def qlaunch():
             for h in args.remote_host:
                 with settings(host_string=h, user=args.remote_user,
                               password=args.remote_password):
-                    with cd(args.remote_config_dir):
-                        run("qlaunch {}".format(args.command))
+                    for r in args.remote_config_dir:
+                        with cd(r):
+                            run("qlaunch {} {}".format(args.command, non_default))
             disconnect_all()
         else:
             do_launch(args)

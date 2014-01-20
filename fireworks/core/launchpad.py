@@ -14,7 +14,8 @@ from pymongo import DESCENDING, ASCENDING
 
 from fireworks.core.fw_config import FWConfig
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, Tracker
+from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, \
+    Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 
@@ -44,7 +45,7 @@ class LaunchPad(FWSerializable):
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
                  logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None):
         """
-        
+
         :param host:
         :param port:
         :param name:
@@ -106,7 +107,6 @@ class LaunchPad(FWSerializable):
         elif FWConfig().CONFIG_FILE_DIR:
             return LaunchPad.from_file(os.path.join(FWConfig().CONFIG_FILE_DIR, 'my_launchpad.yaml'))
         return LaunchPad()
-
 
     def reset(self, password, require_password=True):
         """
@@ -410,7 +410,7 @@ class LaunchPad(FWSerializable):
             else:
                 m_fw = self.fireworks.find_one(m_query, {'fw_id': 1, 'spec': 1},
                                                sort=sortby)
-                
+
             if not m_fw:
                 return None
 
@@ -428,7 +428,7 @@ class LaunchPad(FWSerializable):
         trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, trackers=trackers, launch_id=launch_id,
                           fw_id=m_fw.fw_id)
-        self._upsert_launch(m_launch)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         # add launch to FW
         m_fw.launches.append(m_launch)
@@ -442,7 +442,7 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'READY'
-        self._upsert_launch(m_launch)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
             self.fireworks.find_and_modify({'fw_id': fw['fw_id']}, {'$set': {'state': 'READY'}})
@@ -467,7 +467,7 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'FIZZLED'
-        self._upsert_launch(m_launch)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw_data['fw_id']
@@ -515,7 +515,7 @@ class LaunchPad(FWSerializable):
         """
         (internal method) Finds a FireWork that's ready to be run, marks it as running,
         and returns it to the caller. The caller is responsible for running the FireWork.
-        
+
         :param fworker: A FWorker instance
         :param host: the host making the request (for creating a Launch object)
         :param ip: the ip making the request (for creating a Launch object)
@@ -541,7 +541,7 @@ class LaunchPad(FWSerializable):
                           launch_id=l_id,
                           fw_id=m_fw.fw_id)
 
-        self._upsert_launch(m_launch)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
@@ -572,7 +572,7 @@ class LaunchPad(FWSerializable):
     def _change_launch_dir(self, launch_id, launch_dir):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.launch_dir = launch_dir
-        self._upsert_launch(m_launch)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
     def complete_launch(self, launch_id, action, state='COMPLETED'):
         """
@@ -584,7 +584,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = state
         m_launch.action = action
-        self._upsert_launch(m_launch)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -687,10 +687,6 @@ class LaunchPad(FWSerializable):
                                                                       potential_match['fw_id']))
         return stolen
 
-    def _upsert_launch(self, m_launch):
-        # TODO: this no longer needs to be its own function (much was removed)
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
-
     def set_priority(self, fw_id, priority):
         self.fireworks.find_and_modify({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
 
@@ -729,7 +725,7 @@ class LaunchPad(FWSerializable):
                     for s in m_launch.state_history:
                         if s['state'] == 'RUNNING':
                             s['created_on'] = datetime.datetime.strptime(offline_data['started_on'], "%Y-%m-%dT%H:%M:%S.%f")
-                    self._upsert_launch(m_launch)
+                    self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
@@ -739,7 +735,7 @@ class LaunchPad(FWSerializable):
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
-                    self._upsert_launch(m_launch)
+                    self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
             # update the updated_on
