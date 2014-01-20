@@ -83,7 +83,7 @@ The ``--include`` (or ``-c``) and ``--exclude`` (or ``-x``) options can be used 
     lpad track_fws --include words.txt
     lpad track_fws --exclude words.txt
 
-You can separate multiple filenames by commas (no spaces).
+You can separate multiple filenames by spaces.
 
 Frequency of monitoring
 =======================
