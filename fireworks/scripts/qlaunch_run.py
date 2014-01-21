@@ -61,10 +61,11 @@ def do_cleanup(args):
         if fw.state == "COMPLETED":
             for l in fw.launches:
                 if os.path.isdir(l.launch_dir):
-                    to_delete.append((l.launch_dir, os.listdir(l.launch_dir)))
+                    to_delete.append((fw.fw_name, fw.fw_id,
+                                      l.launch_dir, os.listdir(l.launch_dir)))
     print "The following will be deleted:"
-    for d, files in to_delete:
-        print "{} - {}".format(d, ", ".join(files))
+    for name, fwid, d, files in to_delete:
+        print "{}-{} - {} - {}".format(name, fwid, d, ", ".join(files))
     ans = raw_input("Confirm? (Y/N)")
     if ans.startswith("Y"):
         pass
