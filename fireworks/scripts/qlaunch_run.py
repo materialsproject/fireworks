@@ -52,6 +52,7 @@ def do_launch(args):
                                args.launch_dir, args.reserve, args.loglvl)
 
 def do_cleanup(args):
+    import shutil
     lp = LaunchPad.from_file(
         args.launchpad_file) if args.launchpad_file else LaunchPad(
         strm_lvl=args.loglvl)
@@ -68,7 +69,15 @@ def do_cleanup(args):
         print "{}-{} - {} - {}".format(name, fwid, d, ", ".join(files))
     ans = raw_input("Confirm? (Y/N)")
     if ans.startswith("Y"):
-        pass
+        for name, fwid, d, files in to_delete:
+            try:
+                shutil.rmtree(d)
+                print "Deleted {}".format(d)
+            except Exception as ex:
+                print "Unable to delete {} because of {}".format(d, ex)
+    else:
+        print "Canceled!"
+
 
 def qlaunch():
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
