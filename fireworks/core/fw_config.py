@@ -62,7 +62,7 @@ class FWConfig(object):
 
         self.LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
         self.FWORKER_LOC = None  # where to find the my_fworker.yaml file
-        self.QUEUEADAPTER_LOC = None  # where to find the my_fworker.yaml file
+        self.QUEUEADAPTER_LOC = None  # where to find the my_queueadapter.yaml file
 
         self.CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
 
@@ -103,9 +103,7 @@ class FWConfig(object):
         else:
             config_path = os.path.join(os.environ["HOME"], ".fireworks",
                                        'FW_config.yaml')
-        # else:
-        #     #Is there even an FW_config here????
-        #
+
         if os.path.exists(config_path):
             with open(config_path) as f:
                 overrides = yaml.load(f.read())
@@ -120,6 +118,13 @@ class FWConfig(object):
                                 key))
                     else:
                         self.__setattr__(key, v)
+
+        for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
+            fname = "my_{}.yaml".format(k.split("_")[0].lower())
+            default_path = os.path.join(
+                    os.environ["HOME"], ".fireworks", fname)
+            if getattr(self, k, None) is None and os.path.exists(default_path):
+                self.__setattr__(k, default_path)
 
     def to_dict(self):
         d = {}

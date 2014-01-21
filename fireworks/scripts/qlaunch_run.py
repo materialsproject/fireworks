@@ -53,6 +53,7 @@ def do_launch(args):
                                args.launch_dir, args.reserve, args.loglvl)
 
 def do_cleanup(args):
+
     lp = LaunchPad.from_file(
         args.launchpad_file) if args.launchpad_file else LaunchPad(
         strm_lvl=args.loglvl)
