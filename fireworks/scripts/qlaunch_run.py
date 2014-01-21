@@ -51,6 +51,22 @@ def do_launch(args):
         launch_rocket_to_queue(launchpad, fworker, queueadapter,
                                args.launch_dir, args.reserve, args.loglvl)
 
+def do_cleanup(args):
+    lp = LaunchPad.from_file(
+        args.launchpad_file) if args.launchpad_file else LaunchPad(
+        strm_lvl=args.loglvl)
+    to_delete = []
+    for i in lp.get_fw_ids({}):
+        fw = lp.get_fw_by_id(i)
+        if fw.state == "COMPLETED":
+            for l in fw.launches:
+                to_delete.append((l.launch_dir, os.listdir(l.launch_dir)))
+    print "The following will be deleted:"
+    for d, files in to_delete:
+        print "{} - {}".format(d, ", ".join(files))
+    ans = raw_input("Confirm? (Y/N)")
+    if ans.startswith("Y"):
+        pass
 
 def qlaunch():
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
@@ -63,6 +79,9 @@ def qlaunch():
     subparsers = parser.add_subparsers(help='command', dest='command')
     single_parser = subparsers.add_parser('singleshot', help='launch a single rocket to the queue')
     rapid_parser = subparsers.add_parser('rapidfire', help='launch multiple rockets to the queue')
+
+    cleanup_parser = subparsers.add_parser('cleanup',
+                                           help='Cleanup the queue.')
 
     parser.add_argument("-rh", "--remote_host", nargs="*",
                         help="Remote host to exec qlaunch. Right now, "
@@ -140,7 +159,7 @@ def qlaunch():
                                 put(f, os.path.join(r, f))
     non_default = []
     for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
-        v = getattr(args, k)
+        v = getattr(args, k, None)
         if v != rapid_parser.get_default(k):
             non_default.append("--{} {}".format(k, v))
     non_default = " ".join(non_default)
@@ -156,7 +175,10 @@ def qlaunch():
                             run("qlaunch {} {}".format(args.command, non_default))
             disconnect_all()
         else:
-            do_launch(args)
+            if args.command != "cleanup":
+                do_launch(args)
+            else:
+                do_cleanup(args)
         if interval > 0:
             print "Next run in {} seconds... Press Ctrl-C to exit at any time." \
                 .format(interval)
