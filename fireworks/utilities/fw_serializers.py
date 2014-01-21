@@ -350,4 +350,4 @@ def _reconstitute_dates(obj_dict):
 
 
 def get_default_serialization(cls):
-    return cls.__module__.split('.')[0] + '.' + cls.__name__  # e.g. fireworks.ABC
+    return cls.__module__.split('.')[0] + ':' + cls.__name__  # e.g. fireworks.ABC
