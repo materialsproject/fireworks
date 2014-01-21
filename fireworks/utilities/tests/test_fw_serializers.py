@@ -20,7 +20,7 @@ import os
 
 
 class ExplicitTestSerializer(FWSerializable):
-    _fw_name = '{{fireworks.utilities.tests.test_serializer.ExplicitTestSerializer}}'
+    _fw_name = '{{fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer}}'
 
     def __init__(self, a):
         self.a = a
