@@ -3,9 +3,8 @@
 """
 TODO: add docs
 """
-from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.tests.test_serializer import TestSerializer, \
-    ExportTestSerializer
+from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
+from fireworks.utilities.fw_serializers import load_object, FWSerializable
 
 
 __author__ = "Anubhav Jain"
@@ -18,6 +17,23 @@ __date__ = "Jan 26, 2013"
 import unittest
 import datetime
 import os
+
+
+class ExplicitTestSerializer(FWSerializable):
+    _fw_name = '{{fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer}}'
+
+    def __init__(self, a):
+        self.a = a
+
+    def __eq__(self, other):
+        return self.a == other.a
+
+    def to_dict(self):
+        return {"_fw_name": self._fw_name, "a": self.a}
+
+    @classmethod
+    def from_dict(cls, m_dict):
+        return ExplicitTestSerializer(m_dict["a"])
 
 
 class SerializationTest(unittest.TestCase):
@@ -103,6 +119,14 @@ class SerializationTest(unittest.TestCase):
         self.assertEqual(load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}), self.obj_4,
                          'Implicit import fails!')
 
+
+class ExplicitSerializationTest(unittest.TestCase):
+    def setUp(self):
+        self.s_obj = ExplicitTestSerializer(1)
+        self.s_dict = self.s_obj.to_dict()
+
+    def test_explicit_serialization(self):
+        self.assertEqual(load_object(self.s_dict), self.s_obj)
 
 if __name__ == "__main__":
     unittest.main()

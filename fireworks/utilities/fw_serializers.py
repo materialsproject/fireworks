@@ -253,6 +253,16 @@ def load_object(obj_dict):
     fw_name = FWConfig().FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
     obj_dict['_fw_name'] = fw_name
 
+    # check for explicit serialization, e.g. {{fireworks.tasks.MyTask}} - based on pymatgen method
+    if fw_name.startswith('{{') and fw_name.endswith('}}'):
+        modclass = fw_name[2:-2].strip()
+        modname = modclass[0:modclass.rfind('.')]
+        classname = modclass[modclass.rfind('.')+1:]
+        mod = __import__(modname, globals(), locals(), [classname], -1)
+        if hasattr(mod, classname):
+            cls_ = getattr(mod, classname)
+            return cls_.from_dict(obj_dict)
+
     # first try to load from known location
     if fw_name in SAVED_FW_MODULES:
         m_module = importlib.import_module(SAVED_FW_MODULES[fw_name])
