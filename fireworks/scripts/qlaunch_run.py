@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 import os
 import sys
 import time
+import shutil
 from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -52,7 +53,6 @@ def do_launch(args):
                                args.launch_dir, args.reserve, args.loglvl)
 
 def do_cleanup(args):
-    import shutil
     lp = LaunchPad.from_file(
         args.launchpad_file) if args.launchpad_file else LaunchPad(
         strm_lvl=args.loglvl)
@@ -64,6 +64,9 @@ def do_cleanup(args):
                 if os.path.isdir(l.launch_dir):
                     to_delete.append((fw.fw_name, fw.fw_id,
                                       l.launch_dir, os.listdir(l.launch_dir)))
+    if len(to_delete) == 0:
+        print "Your directories are clean!"
+        sys.exit(0)
     print "The following will be deleted:"
     for name, fwid, d, files in to_delete:
         print "{}-{} - {} - {}".format(name, fwid, d, ", ".join(files))
