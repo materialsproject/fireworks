@@ -8,10 +8,13 @@ __email__ = 'ongsp@ucsd.edu'
 __date__ = '1/6/14'
 
 import os
+import shutil
+import sys
 from argparse import ArgumentParser
 from fireworks.core.firework import FireWork
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.core.launchpad import LaunchPad
 import yaml
 
 
@@ -46,6 +49,35 @@ def create_fw(args):
                 [os.path.join(d, f) for f in os.listdir(d)],
                 output_fname.format(i)
             )
+
+def do_cleanup(args):
+    lp = LaunchPad.from_file(
+        args.launchpad_file) if args.launchpad_file else LaunchPad(
+        strm_lvl=args.loglvl)
+    to_delete = []
+    for i in lp.get_fw_ids({}):
+        fw = lp.get_fw_by_id(i)
+        if fw.state == "COMPLETED":
+            for l in fw.launches:
+                if os.path.isdir(l.launch_dir):
+                    to_delete.append((fw.fw_name, fw.fw_id,
+                                      l.launch_dir, os.listdir(l.launch_dir)))
+    if len(to_delete) == 0:
+        print "Your directories are clean!"
+        sys.exit(0)
+    print "The following will be deleted:"
+    for name, fwid, d, files in to_delete:
+        print "{}-{} - {} - {}".format(name, fwid, d, ", ".join(files))
+    ans = raw_input("Confirm? (Y/N)")
+    if ans.startswith("Y"):
+        for name, fwid, d, files in to_delete:
+            try:
+                shutil.rmtree(d)
+                print "Deleted {}".format(d)
+            except Exception as ex:
+                print "Unable to delete {} because of {}".format(d, ex)
+    else:
+        print "Canceled!"
 
 
 if __name__ == '__main__':
@@ -82,6 +114,9 @@ if __name__ == '__main__':
                        "wild cards.")
 
     create_parser.set_defaults(func=create_fw)
+
+    cleanup_parser = sp.add_parser('cleanup', help='Cleanup the queue.')
+    cleanup_parser.set_defaults(func=do_cleanup)
 
     args = p.parse_args()
     args.func(args)
