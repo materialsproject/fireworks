@@ -60,7 +60,8 @@ def do_cleanup(args):
         fw = lp.get_fw_by_id(i)
         if fw.state == "COMPLETED":
             for l in fw.launches:
-                to_delete.append((l.launch_dir, os.listdir(l.launch_dir)))
+                if os.path.isdir(l.launch_dir):
+                    to_delete.append((l.launch_dir, os.listdir(l.launch_dir)))
     print "The following will be deleted:"
     for d, files in to_delete:
         print "{} - {}".format(d, ", ".join(files))
