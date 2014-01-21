@@ -3,9 +3,9 @@
 """
 TODO: add docs
 """
+from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.tests.test_serializer import TestSerializer, \
-    ExportTestSerializer
+from fireworks.utilities.tests.test_serializer import ExplicitTestSerializer
 
 
 __author__ = "Anubhav Jain"
@@ -102,6 +102,17 @@ class SerializationTest(unittest.TestCase):
     def test_implicit_serialization(self):
         self.assertEqual(load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}), self.obj_4,
                          'Implicit import fails!')
+
+
+
+class ExplicitSerializationTest(unittest.TestCase):
+    def setUp(self):
+        self.s_dict = ExplicitTestSerializer(1).to_dict()
+
+    def test_explicit_serialization(self):
+        self.assertEqual(load_object(self.s_dict).a, 1)
+
+
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@
 TODO: add docs
 """
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
-import datetime
 
 
 __author__ = "Anubhav Jain"
@@ -15,30 +14,8 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 26, 2013"
 
 
-class TestSerializer(FWSerializable):
-    _fw_name = 'TestSerializer Name'
-
-    def __init__(self, a, m_date):
-        if not isinstance(m_date, datetime.datetime):
-            raise ValueError("m_date must be a datetime instance!")
-
-        self.a = a
-        self.m_date = m_date
-
-    def __eq__(self, other):
-        return self.a == other.a and self.m_date == other.m_date
-
-    @serialize_fw
-    def to_dict(self):
-        return {"a": self.a, "m_date": self.m_date}
-
-    @classmethod
-    def from_dict(cls, m_dict):
-        return TestSerializer(m_dict["a"], m_dict["m_date"])
-
-
-class ExportTestSerializer(FWSerializable):
-    _fw_name = 'TestSerializer Export Name'
+class ExplicitTestSerializer(FWSerializable):
+    _fw_name = '{{fireworks.utilities.tests.test_serializer.ExplicitTestSerializer}}'
 
     def __init__(self, a):
         self.a = a
@@ -47,8 +24,8 @@ class ExportTestSerializer(FWSerializable):
         return self.a == other.a
 
     def to_dict(self):
-        return {"a": self.a, "_fw_name": self._fw_name}
+        return {"_fw_name": self._fw_name, "a": self.a}
 
     @classmethod
     def from_dict(cls, m_dict):
-        return ExportTestSerializer(m_dict["a"])
+        return ExplicitTestSerializer(m_dict["a"])
