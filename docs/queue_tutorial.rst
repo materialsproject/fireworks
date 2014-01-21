@@ -183,7 +183,7 @@ A few recommendations:
 
 #. It is helpful if you configure all your fireworks in all the resources
    you want to use similarly. For example, you can use the default
-   $HOME/.fireworks location, or setup every single resource in a similar
+   $HOME/.fireworks location, or setup every resource in a similar
    location.
 
 #. Passwordless ssh should ideally be configured for all clusters from the
@@ -204,9 +204,9 @@ All remote options start with "-r" or "--remote".
    to the resource.
 
 #. Running qlaunch rapidfire on a host with multiple queue configurations.
-   This is useful when you have multiple queue configurations for a single
-   resource with different specifications. A single command runs qlaunch
-   rapidfire on all configurations::
+   This is useful when you have multiple FireWorks configurations (e.g.
+   different queue or FireWorker configurations) for a single resource. A single
+   command runs qlaunch rapidfire on all configurations::
 
     qlaunch -rh compute.host.gov -rc /path/to/config1 /path/to/config2 -ru user rapidfire
 

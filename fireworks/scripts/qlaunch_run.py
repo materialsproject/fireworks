@@ -72,10 +72,10 @@ def qlaunch():
                         help="Remote config dir location(s). Defaults to "
                              "$HOME/.fireworks. You can specify multiple "
                              "locations if you have multiple configurations "
-                             "on the same cluster e.g., multiple queues. "
+                             "on the same cluster e.g., multiple queues or FireWorkers. "
                              "Note that this may have to come before the -ru"
                              "argument (or other single arg) options as "
-                             "argsparse may not be able to find "
+                             "argparse may not be able to find "
                              "the find command while it consumes args.",
                         default=["$HOME/.fireworks"])
     parser.add_argument("-ru", "--remote_user",
