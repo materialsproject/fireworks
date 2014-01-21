@@ -10,7 +10,7 @@ import subprocess
 import threading
 import traceback
 import abc
-from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
+from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw, get_default_serialization
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
@@ -73,6 +73,17 @@ class Command(object):
         return self.status, self.output, self.error
 
 
+class QueueAdapterMeta(type):
+
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(cls, name, bases, dct):
+        # Set default _fw_name to be a space separated version of the class
+        # name.
+        if name != "QueueAdapterBase" and not hasattr(cls, "_fw_name"):
+            cls._fw_name = get_default_serialization(cls)
+        type.__init__(cls, name, bases, dct)
+
 class QueueAdapterBase(dict, FWSerializable):
     """
     The QueueAdapter is responsible for all interactions with a specific \
@@ -86,6 +97,8 @@ class QueueAdapterBase(dict, FWSerializable):
     Documentation on implementing queue adapters can be found on FireWorks \
     home page, http://pythonhosted.org/FireWorks
     """
+
+    __metaclass__ = QueueAdapterMeta
 
     _fw_name = 'QueueAdapterBase'
     template_file = 'OVERRIDE_ME'  # path to template file for a queue script

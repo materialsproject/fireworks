@@ -24,7 +24,7 @@ from fireworks.core.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
-    recursive_serialize, recursive_deserialize, serialize_fw
+    recursive_serialize, recursive_deserialize, serialize_fw, get_default_serialization
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter, reverse_readline
 
 __author__ = "Anubhav Jain"
@@ -44,7 +44,7 @@ class FireTaskMeta(type):
         # Set default _fw_name to be a space separated version of the class
         # name.
         if name != "FireTaskBase" and not hasattr(cls, "_fw_name"):
-            cls._fw_name = name
+            cls._fw_name = get_default_serialization(cls)
         type.__init__(cls, name, bases, dct)
 
     def __call__(cls, *args, **kwargs):

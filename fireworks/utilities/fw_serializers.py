@@ -161,7 +161,7 @@ class FWSerializable():
         try:
             return self._fw_name
         except AttributeError:
-            return self.__class__.__name__
+            return get_default_serialization(self.__class__)
 
     def to_dict(self):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
@@ -347,3 +347,7 @@ def _reconstitute_dates(obj_dict):
             pass
 
     return obj_dict
+
+
+def get_default_serialization(cls):
+    return cls.__module__.split('.')[0] + '.' + cls.__name__  # e.g. fireworks.ABC

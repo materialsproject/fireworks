@@ -18,6 +18,7 @@ __date__ = 'Feb 18, 2013'
 
 class ScriptTask(FireTaskBase):
     required_params = ["script"]
+    _fw_name = 'ScriptTask'
 
     def run_task(self, fw_spec):
         if self.get("use_global_spec"):

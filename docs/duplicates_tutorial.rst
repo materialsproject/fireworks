@@ -31,9 +31,9 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 #. After having completed the :doc:`dynamic workflow tutorial </dynamic_wf_tutorial>`, the contents of the file ``wf_12.yaml`` should be familiar to you; it is almost identical to the ``addmod_wf.yaml`` file that we examined in great detail for that tutorial. However, one section of this workflow is new, and looks like this::
 
     _dupefinder:
-      _fw_name: Dupe Finder Exact
+      _fw_name: DupeFinderExact
 
-   * The ``_dupefinder`` key is a special key inside the FireWork **spec** that tells us how to identify duplicates. The ``Dupe Finder Exact`` text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same **spec**.
+   * The ``_dupefinder`` key is a special key inside the FireWork **spec** that tells us how to identify duplicates. The ``DupeFinderExact`` text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same **spec**.
 
 #. Let's add our workflow to the database and run it::
 
