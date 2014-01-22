@@ -5,7 +5,7 @@ This module contains the base class for implementing Duplicate Finders
 """
 import abc
 
-from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable, get_default_serialization
+from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -15,22 +15,10 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Mar 01, 2013'
 
 
-class DupeFinderMeta(type):
-
-    __metaclass__ = abc.ABCMeta
-
-    def __init__(cls, name, bases, dct):
-        # Set default _fw_name to be a space separated version of the class
-        # name.
-        if name != "DupeFinderBase" and not hasattr(cls, "_fw_name"):
-            cls._fw_name = get_default_serialization(cls)
-        type.__init__(cls, name, bases, dct)
-
 class DupeFinderBase(dict, FWSerializable):  # extending dict only to use metaclass - UGLY!
     """
     This serves an Abstract class for implementing Duplicate Finders
     """
-    __metaclass__ = DupeFinderMeta
 
     def __init__(self):
         pass

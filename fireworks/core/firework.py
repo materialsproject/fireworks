@@ -40,13 +40,6 @@ class FireTaskMeta(type):
 
     __metaclass__ = abc.ABCMeta
 
-    def __init__(cls, name, bases, dct):
-        # Set default _fw_name to be a space separated version of the class
-        # name.
-        if name != "FireTaskBase" and not hasattr(cls, "_fw_name"):
-            cls._fw_name = get_default_serialization(cls)
-        type.__init__(cls, name, bases, dct)
-
     def __call__(cls, *args, **kwargs):
         o = type.__call__(cls, *args, **kwargs)
         for k in cls.required_params:
