@@ -353,4 +353,4 @@ def get_default_serialization(cls):
     root_mod = cls.__module__.split('.')[0]
     if root_mod == '__main__':
         raise ValueError("Cannot get default serialization; try instantiating your object from a different module from which it is defined rather than defining your object in the __main__ (running) module.")
-    return root_mod + ':' + cls.__name__  # e.g. fireworks.ABC
+    return root_mod + '::' + cls.__name__  # e.g. fireworks.ABC
