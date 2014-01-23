@@ -113,11 +113,12 @@ def init_yaml(args):
 
 def reset(args):
     lp = get_lp(args)
-    if not args.password:
-        if raw_input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(lp.workflows.count()))[0].upper() == 'Y': args.password=datetime.datetime.now().strftime('%Y-%m-%d')
-        else:
-            raise ValueError('Operation aborted by user.')
-    lp.reset(args.password)
+    if raw_input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(
+            lp.workflows.count()))[0].upper() == 'Y':
+        lp.reset(datetime.datetime.now().strftime('%Y-%m-%d'))
+    else:
+        raise ValueError('Operation aborted by user.')
+
 
 
 def add_wf(args):
