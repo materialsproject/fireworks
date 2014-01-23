@@ -113,13 +113,11 @@ def init_yaml(args):
 
 def reset(args):
     lp = get_lp(args)
-    if raw_input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(
-            lp.workflows.count()))[0].upper() == 'Y':
-        lp.reset(datetime.datetime.now().strftime('%Y-%m-%d'))
-    else:
-        raise ValueError('Operation aborted by user.')
-
-
+    if not args.password:
+        if raw_input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(lp.workflows.count()))[0].upper() == 'Y': args.password=datetime.datetime.now().strftime('%Y-%m-%d')
+        else:
+            raise ValueError('Operation aborted by user.')
+    lp.reset(args.password)
 
 def add_wf(args):
     lp = get_lp(args)
@@ -430,8 +428,7 @@ def lpad():
     init_parser.set_defaults(func=init_yaml)
 
     reset_parser = subparsers.add_parser('reset', help='reset and re-initialize the FireWorks database')
-    #reset_parser.add_argument('--password', help="Today's date,
-    # e.g. 2012-02-25. Password or positive response to input prompt required to protect against accidental reset.")
+    reset_parser.add_argument('--password', help="Today's date,  e.g. 2012-02-25. Password or positive response to input prompt required to protect against accidental reset.")
     reset_parser.set_defaults(func=reset)
 
     addwf_parser = subparsers.add_parser('add', help='insert a Workflow from file')
