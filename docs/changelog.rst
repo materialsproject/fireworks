@@ -2,7 +2,17 @@
 FireWorks Changelog
 ===================
 
+**v0.66**
+
+.. warning:: This version changes the default serialization for custom FireWorks without _fw_name to <project>::<Class> instead of <Class>. If you have custom FireTasks from v0.62-v0.65 that did not specify _fw_name explicitly, this introduces a backward incompatibility. Contact the support list if this affects you - an easy fix is available.
+
+* Fix major bug in dynamic workflows with multiple additions/detours
+* Fixed lpad reset that became broken in recent release
+* Change default _fw_name for FireTasks to <project>::<Class>, e.g. fireworks::MyTask
+
 **v0.65**
+
+.. warning:: This version introduced a bug in ``lpad reset`` (fixed in v0.66)
 
 * Fix bug in qlaunch singleshot introduced in previous release (S.P. Ong)
 * Add qlaunch cleanup (S.P. Ong)
