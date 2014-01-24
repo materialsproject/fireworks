@@ -15,6 +15,8 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
+NEGATIVE_FWID_CTR = 0
+
 def singleton(class_):
     instances = {}
 
