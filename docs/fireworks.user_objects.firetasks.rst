@@ -33,6 +33,14 @@ firetasks Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`unittest_tasks` Module
+----------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.unittest_tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 

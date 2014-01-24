@@ -9,11 +9,3 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_serializer` Module
------------------------------
-
-.. automodule:: fireworks.utilities.tests.test_serializer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
