@@ -20,11 +20,10 @@ import abc
 import datetime
 import os
 import pprint
-from fireworks.core.fw_config import FWConfig
+from fireworks.core.fw_config import FWConfig, NEGATIVE_FWID_CTR
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import FWSerializable, \
-    recursive_serialize, recursive_deserialize, serialize_fw
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter, reverse_readline
 
 __author__ = "Anubhav Jain"
@@ -39,13 +38,6 @@ __date__ = "Feb 5, 2013"
 class FireTaskMeta(type):
 
     __metaclass__ = abc.ABCMeta
-
-    def __init__(cls, name, bases, dct):
-        # Set default _fw_name to be a space separated version of the class
-        # name.
-        if name != "FireTaskBase" and not hasattr(cls, "_fw_name"):
-            cls._fw_name = name
-        type.__init__(cls, name, bases, dct)
 
     def __call__(cls, *args, **kwargs):
         o = type.__call__(cls, *args, **kwargs)
@@ -184,7 +176,7 @@ class FireWork(FWSerializable):
                    'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'COMPLETED': 7}
 
     def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
-                 state='WAITING', created_on=None, fw_id=-1):
+                 state='WAITING', created_on=None, fw_id=None):
         """
         :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the
@@ -205,7 +197,13 @@ class FireWork(FWSerializable):
                                tasks]  # put tasks in a special location of the spec
 
         self.name = name if name else 'Unnamed FW'  # do it this way to prevent None names
-        self.fw_id = fw_id
+        if fw_id:
+            self.fw_id = fw_id
+        else:
+            global NEGATIVE_FWID_CTR
+            NEGATIVE_FWID_CTR -= 1
+            self.fw_id = NEGATIVE_FWID_CTR
+
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
         self.created_on = created_on if created_on else datetime.datetime.utcnow()
@@ -679,12 +677,18 @@ class Workflow(FWSerializable):
         # this should be done *before* additions
         if action.detours:
             for wf in action.detours:
-                updated_ids.extend(self._add_wf_to_fw(wf, fw_id, True))
+                new_updates = self._add_wf_to_fw(wf, fw_id, True)
+                if len(set(updated_ids).intersection(new_updates)) > 0:
+                    raise ValueError("Cannot use duplicated fw_ids when dynamically detouring workflows!")
+                updated_ids.extend(new_updates)
 
         # add additional FireWorks
         if action.additions:
             for wf in action.additions:
-                updated_ids.extend(self._add_wf_to_fw(wf, fw_id, False))
+                new_updates = self._add_wf_to_fw(wf, fw_id, False)
+                if len(set(updated_ids).intersection(new_updates)) > 0:
+                    raise ValueError("Cannot use duplicated fw_ids when dynamically adding workflows!")
+                updated_ids.extend(new_updates)
 
         return list(set(updated_ids))
 

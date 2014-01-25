@@ -57,6 +57,8 @@ If you've placed Python code for some of your own custom FireTasks in an externa
 
 .. note:: Make sure your package is in your PYTHONPATH! For example, typing ``from my_package import firetasks`` in an interactive Python terminal should succeed.
 
+An alternative is to give your FireTasks a _fw_name such as ``{{package.subpackage.module.Class}}``. When enclosed in double braces, FireWorks will not search USER_PACKAGES and instead directly load the class. The disadvantage of this method is that you *must* update the *FW_NAME_UPDATES* key of the FWConfig if you refactor or move the class.
+
 Parameters you might want to change
 -----------------------------------
 

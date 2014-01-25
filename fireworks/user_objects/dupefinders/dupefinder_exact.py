@@ -13,7 +13,7 @@ class DupeFinderExact(DupeFinderBase):
     TODO: add docs
     """
 
-    _fw_name = 'Dupe Finder Exact'
+    _fw_name = 'DupeFinderExact'
 
     # TODO: move the logic into query() instead of verify() for better performance
     # TODO: just make the 'prematch' thing be always a list of keys...no custom queries allowed (in theory)

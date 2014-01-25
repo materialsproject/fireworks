@@ -27,6 +27,7 @@ class TemplateWriterTask(FireTaskBase):
         - append: (bool) - append to output file (instead of overwrite)
         - template_dir: (str) - directory in which to find the template file
     """
+    _fw_name = 'TemplateWriterTask'
 
     def run_task(self, fw_spec):
         if self.get("use_global_spec"):

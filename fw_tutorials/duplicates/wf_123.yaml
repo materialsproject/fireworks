@@ -2,7 +2,7 @@ fws:
 - fw_id: 2
   spec:
     _dupefinder:
-      _fw_name: Dupe Finder Exact
+      _fw_name: DupeFinderExact
     _tasks:
     - _fw_name: Add and Modify Task
     input_array:
@@ -10,7 +10,7 @@ fws:
 - fw_id: 1
   spec:
     _dupefinder:
-      _fw_name: Dupe Finder Exact
+      _fw_name: DupeFinderExact
     _tasks:
     - _fw_name: Add and Modify Task
     input_array:
@@ -19,7 +19,7 @@ fws:
 - fw_id: 3
   spec:
     _dupefinder:
-      _fw_name: Dupe Finder Exact
+      _fw_name: DupeFinderExact
     _tasks:
     - _fw_name: Add and Modify Task
     input_array:

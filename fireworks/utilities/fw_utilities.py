@@ -258,3 +258,8 @@ def reverse_readline(m_file, blk_size=4096, max_mem=4000000):
             else:
                 # Start-of-file
                 return
+
+
+def explicit_serialize(o):
+    o._fw_name = '{{'+o.__module__+'.'+o.__name__+'}}'
+    return o

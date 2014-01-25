@@ -161,7 +161,7 @@ class FWSerializable():
         try:
             return self._fw_name
         except AttributeError:
-            return self.__class__.__name__
+            return get_default_serialization(self.__class__)
 
     def to_dict(self):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
@@ -267,7 +267,7 @@ def load_object(obj_dict):
     if fw_name in SAVED_FW_MODULES:
         m_module = importlib.import_module(SAVED_FW_MODULES[fw_name])
         m_object = _search_module_for_obj(m_module, obj_dict)
-        if m_object:
+        if m_object is not None:
             return m_object
 
     # failing that, look for the object within all of USER_PACKAGES
@@ -280,7 +280,7 @@ def load_object(obj_dict):
                                                                  package + '.'):
             m_module = loader.find_module(module_name).load_module(module_name)
             m_object = _search_module_for_obj(m_module, obj_dict)
-            if m_object:
+            if m_object is not None:
                 found_objects.append((m_object, module_name))
 
     if len(found_objects) == 1:
@@ -326,7 +326,7 @@ def _search_module_for_obj(m_module, obj_dict):
     for name, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
-                        getattr(obj, '_fw_name', None) == obj_name:
+                        getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:
             return obj.from_dict(obj_dict)
 
 
@@ -347,3 +347,10 @@ def _reconstitute_dates(obj_dict):
             pass
 
     return obj_dict
+
+
+def get_default_serialization(cls):
+    root_mod = cls.__module__.split('.')[0]
+    if root_mod == '__main__':
+        raise ValueError("Cannot get default serialization; try instantiating your object from a different module from which it is defined rather than defining your object in the __main__ (running) module.")
+    return root_mod + '::' + cls.__name__  # e.g. fireworks.ABC

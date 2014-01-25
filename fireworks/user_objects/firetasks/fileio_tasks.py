@@ -21,6 +21,7 @@ class FileWriteTask(FireTaskBase):
     Optional params:
         - dest: (str) Shared path for files
     """
+    _fw_name = 'FileWriteTask'
     required_params = ["files_to_write"]
 
     def run_task(self, fw_spec):
@@ -38,6 +39,7 @@ class FileDeleteTask(FireTaskBase):
     Optional params:
         - dest: (str) Shared path for files
     """
+    _fw_name = 'FileDeleteTask'
     required_params = ["files_to_delete"]
 
 
@@ -58,6 +60,7 @@ class FileTransferTask(FireTaskBase):
         - server: (str) server host for remote transfer
         - key_filename: (str) optional SSH key location for remote transfer
     """
+    _fw_name = 'FileTransferTask'
     required_params = ["mode", "files", "dest"]
 
     fn_list = {

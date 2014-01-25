@@ -3,6 +3,7 @@
 """
 This module contains the base class for implementing Duplicate Finders
 """
+import abc
 
 from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 
@@ -14,7 +15,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Mar 01, 2013'
 
 
-class DupeFinderBase(FWSerializable):
+class DupeFinderBase(dict, FWSerializable):  # extending dict only to use metaclass - UGLY!
     """
     This serves an Abstract class for implementing Duplicate Finders
     """

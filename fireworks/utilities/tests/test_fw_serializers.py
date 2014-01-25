@@ -5,6 +5,7 @@ TODO: add docs
 """
 from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
 from fireworks.utilities.fw_serializers import load_object, FWSerializable
+from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 __author__ = "Anubhav Jain"
@@ -19,9 +20,8 @@ import datetime
 import os
 
 
+@explicit_serialize
 class ExplicitTestSerializer(FWSerializable):
-    _fw_name = '{{fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer}}'
-
     def __init__(self, a):
         self.a = a
 
