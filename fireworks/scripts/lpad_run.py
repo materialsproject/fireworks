@@ -438,8 +438,8 @@ def lpad():
 
     parser = ArgumentParser(description=m_description)
 
-    parser.add_argument("-o", "--output",
-                        default="json", type=get_output_func,
+    parser.add_argument("-o", "--output", choices=["json", "yaml"],
+                        default="json", type=str.lower,
                         help="Set output dispaly format to either json or "
                              "YAML. YAML is easier to read for long "
                              "documents. JSON is the default.")
@@ -657,6 +657,9 @@ def lpad():
     trackfw_parser.set_defaults(func=track_fws)
 
     args = parser.parse_args()
+
+    args.output = get_output_func(args.output)
+
     args.func(args)
 
 
