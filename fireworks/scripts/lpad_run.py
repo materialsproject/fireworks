@@ -184,7 +184,7 @@ def get_fws(args):
     if len(fws) == 1:
         fws = fws[0]
 
-    print json.dumps(fws, default=DATETIME_HANDLER, indent=4)
+    print args.output(fws)
 
 
 def get_wfs(args):
@@ -247,7 +247,7 @@ def get_wfs(args):
             t.add_row([d.get(k) for k in headers])
         print t
     else:
-        print json.dumps(wfs, default=DATETIME_HANDLER, indent=4)
+        print args.output(wfs)
 
 
 def detect_lostruns(args):
@@ -335,7 +335,7 @@ def set_priority(args):
 def webgui(args):
     lp = get_lp(args)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
-    os.environ["FWDB_CONFIG"] = json.dumps(lp.to_dict())
+    os.environ["FWDB_CONFIG"] = args.output(lp.to_dict())
     from django.core.management import call_command
     from multiprocessing import Process
     p1 = Process(target=call_command,
@@ -412,12 +412,38 @@ def maintain(args):
     lp = get_lp(args)
     lp.maintain(args.infinite, args.maintain_interval)
 
+
+def get_output_func(format):
+    if format == "json":
+        return lambda x: json.dumps(x, default=DATETIME_HANDLER,
+                                    indent=4)
+    else:
+        import yaml
+        def clean_yaml(x):
+            if isinstance(x, (list, tuple)):
+                return [clean_yaml(i) for i in x]
+            elif isinstance(x, dict):
+                return {clean_yaml(k): clean_yaml(v) for k, v in x.items()}
+            elif isinstance(x, basestring):
+                return str(x)
+            else:
+                return x
+        return lambda x: yaml.dump(clean_yaml(x), default_flow_style=False)
+
+
 def lpad():
     m_description = 'This script is used for creating and managing a FireWorks database (LaunchPad). For a list of ' \
                     'available commands, type "lpad -h". For more help on a specific command, ' \
                     'type "lpad <command> -h".'
 
     parser = ArgumentParser(description=m_description)
+
+    parser.add_argument("-o", "--output",
+                        default="json", type=get_output_func,
+                        help="Set output dispaly format to either json or "
+                             "YAML. YAML is easier to read for long "
+                             "documents. JSON is the default.")
+
     subparsers = parser.add_subparsers(help='command', dest='command')
 
     init_parser = subparsers.add_parser(
