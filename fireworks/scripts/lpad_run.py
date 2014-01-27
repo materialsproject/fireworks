@@ -336,7 +336,7 @@ def set_priority(args):
 def webgui(args):
     lp = get_lp(args)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
-    os.environ["FWDB_CONFIG"] = args.output(lp.to_dict())
+    os.environ["FWDB_CONFIG"] = json.dumps(lp.to_dict())
     from django.core.management import call_command
     from multiprocessing import Process
     p1 = Process(target=call_command,
