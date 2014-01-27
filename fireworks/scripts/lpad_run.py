@@ -14,12 +14,13 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import Workflow, FireWork
 import ast
 import json
+import yaml
 import datetime
 import traceback
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
-from fireworks.utilities.fw_serializers import DATETIME_HANDLER
+from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Shyue Ping Ong'
@@ -418,17 +419,7 @@ def get_output_func(format):
         return lambda x: json.dumps(x, default=DATETIME_HANDLER,
                                     indent=4)
     else:
-        import yaml
-        def clean_yaml(x):
-            if isinstance(x, (list, tuple)):
-                return [clean_yaml(i) for i in x]
-            elif isinstance(x, dict):
-                return {clean_yaml(k): clean_yaml(v) for k, v in x.items()}
-            elif isinstance(x, basestring):
-                return str(x)
-            else:
-                return x
-        return lambda x: yaml.dump(clean_yaml(x), default_flow_style=False)
+        return lambda x: yaml.dump(recursive_dict(x), default_flow_style=False)
 
 
 def lpad():

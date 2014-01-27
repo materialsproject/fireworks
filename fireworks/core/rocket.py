@@ -11,6 +11,7 @@ import traceback
 import threading
 from fireworks.core.firework import FWAction, FireWork
 from fireworks.core.fw_config import FWConfig, FWData
+from fireworks.utilities.dict_mods import apply_mod
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -127,10 +128,10 @@ class Rocket():
         # set up heartbeat (pinging the server that we're still alive)
         try:
             ping_stop = start_ping_launch(launch_id, lp)
-
+            my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
             # execute the FireTasks!
-            for my_task in m_fw.tasks:
-                m_action = my_task.run_task(m_fw.spec)
+            for idx, my_task in enumerate(m_fw.tasks):
+                m_action = my_task.run_task(my_spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -143,8 +144,12 @@ class Rocket():
 
                 # update the global stored data with the data to store from this particular Task
                 all_stored_data.update(m_action.stored_data)
-                all_update_spec.update(m_action.update_spec)
-                all_mod_spec.extend(m_action.mod_spec)
+
+                # update the spec for the next task
+                if idx != len(m_fw.tasks) - 1:
+                    my_spec.update(m_action.update_spec)
+                    for mod in m_action.mod_spec:
+                        apply_mod(mod, my_spec)
 
                 if m_action.skip_remaining_tasks:
                     break
@@ -157,8 +162,6 @@ class Rocket():
             stop_ping_launch(ping_stop)
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             m_action.stored_data = all_stored_data
-            m_action.mod_spec = all_mod_spec
-            m_action.update_spec = all_update_spec
             if lp:
                 lp.complete_launch(launch_id, m_action, 'COMPLETED')
             else:

@@ -46,18 +46,18 @@ SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 
-def _recursive_dict(obj):
+def recursive_dict(obj):
     if obj is None:
         return None
 
     if hasattr(obj, 'to_dict'):
-        return _recursive_dict(obj.to_dict())
+        return recursive_dict(obj.to_dict())
 
     if isinstance(obj, dict):
-        return {k: _recursive_dict(v) for k, v in obj.items()}
+        return {k: recursive_dict(v) for k, v in obj.items()}
 
     if isinstance(obj, list):
-        return [_recursive_dict(v) for v in obj]
+        return [recursive_dict(v) for v in obj]
 
     if isinstance(obj, int) or isinstance(obj, float):
         return obj
@@ -104,7 +104,7 @@ def recursive_serialize(func):
 
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
-        m_dict = _recursive_dict(m_dict)
+        m_dict = recursive_dict(m_dict)
         return m_dict
 
     return _decorator
