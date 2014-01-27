@@ -322,6 +322,7 @@ class Tracker(FWSerializable, object):
     def __str__(self):
         return '### Filename: {}\n{}'.format(self.filename, self.content)
 
+
 class Launch(FWSerializable, object):
     """
     A Launch encapsulates data about a specific run of a FireWork on a
