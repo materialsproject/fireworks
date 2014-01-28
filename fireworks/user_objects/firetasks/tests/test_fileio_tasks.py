@@ -31,7 +31,7 @@ class FileWriteDeleteTest(unittest.TestCase):
         #Use delete task to remove the files created.
         t = load_object_from_file(os.path.join(module_dir, "delete.yaml"))
         t.run_task({})
-        for i in xrange(2):
+        for i in range(2):
             self.assertFalse(os.path.exists("myfile{}".format(i + 1)))
 
 
