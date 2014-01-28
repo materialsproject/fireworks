@@ -59,15 +59,13 @@ class MongoTests(unittest.TestCase):
         fw = FireWork([test1, test2])
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(str(self.lp.get_launch_by_id(1).action.stored_data[
-                             'stdout'], encoding='UTF-8'), 'test2\n')
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test2\n')
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})
         self.lp.add_wf(fw)
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(str(self.lp.get_launch_by_id(1).action.stored_data[
-                             'sum'], encoding='UTF-8'), 12)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['sum'], 12)
 
     def test_org_wf(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
