@@ -351,11 +351,18 @@ def _reconstitute_dates(obj_dict):
     if isinstance(obj_dict, list):
         return [_reconstitute_dates(v) for v in obj_dict]
 
-    if isinstance(obj_dict, basestring):
-        try:
-            return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
-        except:
-            pass
+    if sys.version_info < (3, 0):
+        if isinstance(obj_dict, basestring):
+            try:
+                return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                pass
+    else:
+        if isinstance(obj_dict, str):
+            try:
+                return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                pass
 
     return obj_dict
 
