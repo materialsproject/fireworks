@@ -35,6 +35,7 @@ import importlib
 import datetime
 from fireworks.core.fw_config import FWConfig
 import sys
+import six
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -66,12 +67,8 @@ def recursive_dict(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if sys.version_info < (3, 0):
-        if isinstance(obj, unicode) and obj != obj.encode('ascii', 'ignore'):
-            return obj
-    else:
-        if isinstance(obj, str) and obj != obj.encode('ascii', 'ignore'):
-            return obj
+    if isinstance(obj, six.string_types) and obj != obj.encode('ascii', 'ignore'):
+        return obj
 
     return str(obj)
 
@@ -89,24 +86,14 @@ def _recursive_load(obj):
     if isinstance(obj, list):
         return [_recursive_load(v) for v in obj]
 
-    if sys.version_info < (3, 0):
-        if isinstance(obj, basestring):
-            try:
-                # convert String to datetime if really datetime
-                return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
-            except:
-                # convert unicode to ASCII if not really unicode
-                if obj == obj.encode('ascii', 'ignore'):
-                    return str(obj)
-    else:
-        if isinstance(obj, str):
-            try:
-                # convert String to datetime if really datetime
-                return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
-            except:
-                # convert unicode to ASCII if not really unicode
-                if obj == obj.encode('ascii', 'ignore'):
-                    return str(obj)
+    if isinstance(obj, six.string_types):
+        try:
+            # convert String to datetime if really datetime
+            return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+        except:
+            # convert unicode to ASCII if not really unicode
+            if obj == obj.encode('ascii', 'ignore'):
+                return str(obj)
 
     return obj
 
