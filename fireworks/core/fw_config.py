@@ -109,7 +109,7 @@ class FWConfig(object):
         if os.path.exists(config_path):
             with open(config_path) as f:
                 overrides = yaml.load(f.read())
-                for key, v in overrides.iteritems():
+                for key, v in overrides.items():
                     if key == 'ADD_USER_PACKAGES':
                         self.USER_PACKAGES.extend(v)
                     elif key == 'ECHO_TEST':
