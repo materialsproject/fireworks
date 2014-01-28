@@ -25,6 +25,8 @@ from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter, reverse_readline
+from six import add_metaclass
+
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -35,9 +37,8 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
+@add_metaclass(abc.ABCMeta)
 class FireTaskMeta(type):
-
-    __metaclass__ = abc.ABCMeta
 
     def __call__(cls, *args, **kwargs):
         o = type.__call__(cls, *args, **kwargs)
@@ -48,6 +49,7 @@ class FireTaskMeta(type):
         return o
 
 
+@add_metaclass(FireTaskMeta)
 class FireTaskBase(dict, FWSerializable):
     """
     FireTaskBase is used like an abstract class that defines a computing task
