@@ -130,7 +130,7 @@ class Rocket():
             ping_stop = start_ping_launch(launch_id, lp)
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
             # execute the FireTasks!
-            for idx, my_task in enumerate(m_fw.tasks):
+            for my_task in m_fw.tasks:
                 m_action = my_task.run_task(my_spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
@@ -142,14 +142,15 @@ class Rocket():
                 if not m_action:
                     m_action = FWAction()
 
-                # update the global stored data with the data to store from this particular Task
+                # update the global stored data with the data to store and update from this particular Task
                 all_stored_data.update(m_action.stored_data)
+                all_update_spec.update(m_action.update_spec)
+                all_mod_spec.extend(m_action.mod_spec)
 
-                # update the spec for the next task
-                if idx != len(m_fw.tasks) - 1:
-                    my_spec.update(m_action.update_spec)
-                    for mod in m_action.mod_spec:
-                        apply_mod(mod, my_spec)
+                # update spec for next task as well
+                my_spec.update(m_action.update_spec)
+                for mod in m_action.mod_spec:
+                    apply_mod(mod, my_spec)
 
                 if m_action.skip_remaining_tasks:
                     break
@@ -161,7 +162,11 @@ class Rocket():
             # perform finishing operation
             stop_ping_launch(ping_stop)
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+
             m_action.stored_data = all_stored_data
+            m_action.mod_spec = all_mod_spec
+            m_action.update_spec = all_update_spec
+
             if lp:
                 lp.complete_launch(launch_id, m_action, 'COMPLETED')
             else:
