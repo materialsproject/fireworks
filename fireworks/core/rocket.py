@@ -102,7 +102,7 @@ class Rocket():
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
-            print "No FireWorks are ready to run and match query! {}".format(self.fworker.query)
+            print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
             return False
 
         if '_launch_dir' in m_fw.spec:
