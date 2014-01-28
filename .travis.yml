@@ -1,6 +1,8 @@
 language: python
+services: mongodb
 python:
   - "2.7"
+  - "3.3"
 install: "pip install -r requirements.txt --use-mirrors"
 script: nosetests
 notifications:
