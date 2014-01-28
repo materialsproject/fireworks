@@ -49,7 +49,7 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(str(self.lp.get_launch_by_id(1).action.stored_data[
-            'stdout']), 'test1\n')
+            'stdout']), str('test1\n'))
 
     def test_multi_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
@@ -60,7 +60,7 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(str(self.lp.get_launch_by_id(1).action.stored_data[
-                             'stdout']), 'test2\n')
+                             'stdout']), str('test2\n'))
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})
@@ -79,10 +79,10 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(wf)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(str(self.lp.get_launch_by_id(1).action.stored_data[
-                             'stdout']), 'test1\n')
+                             'stdout']), str('test1\n'))
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(str(self.lp.get_launch_by_id(2).action.stored_data[
-                             'stdout']), 'test2\n')
+                             'stdout']), str('test2\n'))
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()
