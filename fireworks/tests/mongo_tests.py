@@ -76,9 +76,10 @@ class MongoTests(unittest.TestCase):
         wf = Workflow([fw1, fw2], {-1: -2})
         self.lp.add_wf(wf)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], b'test1\\n')
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'], 'test2\n')
+        self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data[
+                             'stdout'], b'test2\\n')
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()
