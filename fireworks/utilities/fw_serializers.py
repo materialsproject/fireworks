@@ -34,6 +34,7 @@ import json  # note that ujson is faster, but at this time does not support "def
 import importlib
 import datetime
 from fireworks.core.fw_config import FWConfig
+import sys
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -84,19 +85,24 @@ def _recursive_load(obj):
     if isinstance(obj, list):
         return [_recursive_load(v) for v in obj]
 
-    try:
-        basestring
-    except NameError:
-        basestring = str
-
-    if isinstance(obj, basestring):
-        try:
-            # convert String to datetime if really datetime
-            return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
-        except:
-            # convert unicode to ASCII if not really unicode
-            if obj == obj.encode('ascii', 'ignore'):
-                return str(obj)
+    if sys.version_info < (3, 0):
+        if isinstance(obj, basestring):
+            try:
+                # convert String to datetime if really datetime
+                return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                # convert unicode to ASCII if not really unicode
+                if obj == obj.encode('ascii', 'ignore'):
+                    return str(obj)
+    else:
+        if isinstance(obj, str):
+            try:
+                # convert String to datetime if really datetime
+                return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                # convert unicode to ASCII if not really unicode
+                if obj == obj.encode('ascii', 'ignore'):
+                    return str(obj)
 
     return obj
 
