@@ -124,7 +124,7 @@ class FileTransferTask(FireTaskBase):
         """
         try:
             sftp.stat(path)
-        except IOError, e:
+        except IOError as e:
             if e[0] == 2:
                 return False
             raise

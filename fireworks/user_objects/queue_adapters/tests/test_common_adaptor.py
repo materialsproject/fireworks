@@ -49,15 +49,14 @@ class CommonAdapterTest(unittest.TestCase):
         #Test yaml loading.
         p = load_object_from_file(os.path.join(os.path.dirname(__file__),
                               "pbs.yaml"))
-        #print p.get_script_str(".")
         p = CommonAdapter(
             q_type="PBS",
             q_name="hello",
             ppnode="8:ib", nnodes=1,
             hello="world", queue="random")
-        print p.get_script_str(".")
+        print(p.get_script_str("."))
         import yaml
-        print yaml.dump(p.to_dict(), default_flow_style=False)
+        print(yaml.dump(p.to_dict(), default_flow_style=False))
 
     def test_parse_njobs(self):
         pbs = """

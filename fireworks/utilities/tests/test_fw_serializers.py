@@ -47,7 +47,7 @@ class SerializationTest(unittest.TestCase):
         self.obj_2 = TestSerializer({"p1": 1234, "p2": 5.0, "p3": "Hi!", 'p4': datetime.datetime.utcnow()}, test_date)
 
         # A unicode test serialized object
-        unicode_str = unicode('\xc3\xa4\xc3\xb6\xc3\xbc', 'utf-8')
+        unicode_str = u'\xe4\xf6\xfc'
         self.obj_3 = ExportTestSerializer({"p1": unicode_str, "p2": "abc"})
         self.obj_3.to_file("test.json")
         self.obj_3.to_file("test.yaml")
