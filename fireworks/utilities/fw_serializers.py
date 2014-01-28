@@ -67,7 +67,7 @@ def recursive_dict(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if isinstance(obj, six.string_types) and obj != obj.encode('ascii', 'ignore'):
+    if isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
         return obj
 
     return str(obj)
@@ -342,18 +342,11 @@ def _reconstitute_dates(obj_dict):
     if isinstance(obj_dict, list):
         return [_reconstitute_dates(v) for v in obj_dict]
 
-    if sys.version_info < (3, 0):
-        if isinstance(obj_dict, basestring):
-            try:
-                return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
-            except:
-                pass
-    else:
-        if isinstance(obj_dict, str):
-            try:
-                return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
-            except:
-                pass
+    if isinstance(obj_dict, six.string_types):
+        try:
+            return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
+        except:
+            pass
 
     return obj_dict
 
