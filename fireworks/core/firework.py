@@ -275,6 +275,24 @@ class FireWork(FWSerializable):
         return 'FireWork object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
 
+class BackgroundTask(FWSerializable, object):
+
+    def __init__ (self, firetasks, num_launches=0, sleep_time=0):
+        self.firetasks = firetasks
+        self.num_launches = num_launches
+        self.sleep_time = sleep_time
+
+    @recursive_serialize
+    @serialize_fw
+    def to_dict(self):
+        return {'firetasks': self.firetasks, 'num_launches': self.num_launches, 'sleep_time': self.sleep_time}
+
+    @classmethod
+    @recursive_deserialize
+    def from_dict(cls, m_dict):
+        return BackgroundTask(m_dict['firetasks'], m_dict['num_launches'], m_dict['sleep_time'])
+
+
 class Tracker(FWSerializable, object):
     """
     A Tracker monitors a file and returns the last N lines for updating the Launch object

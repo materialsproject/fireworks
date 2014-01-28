@@ -32,8 +32,7 @@ def ping_launch(launchpad, launch_id, stop_event, master_thread):
         do_ping(launchpad, launch_id)
         stop_event.wait(FWConfig().PING_TIME_SECS)
 
-
-def start_ping_launch(launch_id, lp):
+def start_ping_launch(launchpad, launch_id):
     fd = FWData()
     if fd.MULTIPROCESSING:
         if not launch_id:
@@ -44,17 +43,40 @@ def start_ping_launch(launch_id, lp):
     else:
         ping_stop = threading.Event()
         ping_thread = threading.Thread(target=ping_launch,
-                                       args=(lp, launch_id, ping_stop, threading.currentThread()))
+                                       args=(launchpad, launch_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
 
-def stop_ping_launch(ping_stop):
+def stop_backgrounds(ping_stop, btask_stops):
     fd = FWData()
     if fd.MULTIPROCESSING:
         m = fd.DATASERVER
         m.Running_IDs()[os.getpid()] = None
     else:
         ping_stop.set()
+
+    for b in btask_stops:
+        b.set()
+
+
+def background_task(btask, spec, stop_event, master_thread):
+    num_launched = 0
+    while not stop_event.is_set() and master_thread.isAlive():
+        for task in btask.firetasks:
+            task.run_task(spec)
+        if btask.sleep_time >= 0:
+            stop_event.wait(btask.sleep_time)
+
+        num_launched += 1
+        if num_launched == btask.num_launches:
+            break
+
+
+def start_background_task(btask, spec):
+    ping_stop = threading.Event()
+    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop, threading.currentThread()))
+    ping_thread.start()
+    return ping_stop
 
 
 class Rocket():
@@ -125,10 +147,18 @@ class Rocket():
         if FWConfig().PRINT_FW_YAML:
             m_fw.to_file('FW.yaml')
 
-        # set up heartbeat (pinging the server that we're still alive)
         try:
-            ping_stop = start_ping_launch(launch_id, lp)
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
+
+            # set up heartbeat (pinging the server that we're still alive)
+            ping_stop = start_ping_launch(lp, launch_id)
+
+            # start background tasks
+            btask_stops = []
+            if '_background_tasks' in my_spec:
+                for d in my_spec['_background_tasks']:
+                    btask_stops.append(start_background_task(BackgroundTask.from_dict(d), my_spec))
+
             # execute the FireTasks!
             for my_task in m_fw.tasks:
                 m_action = my_task.run_task(my_spec)
@@ -160,7 +190,9 @@ class Rocket():
                 all_stored_data['multiprocess_name'] = multiprocessing.current_process().name
 
             # perform finishing operation
-            stop_ping_launch(ping_stop)
+            stop_backgrounds(ping_stop, btask_stops)
+            for b in btask_stops:
+                b.set()
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
 
             m_action.stored_data = all_stored_data
@@ -182,7 +214,7 @@ class Rocket():
             return True
 
         except:
-            stop_ping_launch(ping_stop)
+            stop_backgrounds(ping_stop, btask_stops)
             traceback.print_exc()
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
