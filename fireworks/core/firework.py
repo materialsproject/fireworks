@@ -540,7 +540,7 @@ class Workflow(FWSerializable):
 
         @property
         def nodes(self):
-            return self.keys()
+            return list(self.keys())
 
         @property
         def parent_links(self):
@@ -577,7 +577,7 @@ class Workflow(FWSerializable):
             # to support Pickling of inner classes (for multi-job launcher's multiprocessing)
             # return a class which can return this class when called with the
             # appropriate tuple of arguments
-            state = self.items()
+            state = list(self.items())
             return (NestedClassGetter(),
                     (Workflow, self.__class__.__name__, ),
                     state)
@@ -620,7 +620,7 @@ class Workflow(FWSerializable):
 
     @property
     def fws(self):
-        return self.id_fw.values()
+        return list(self.id_fw.values())
 
     @property
     def state(self):
@@ -874,7 +874,7 @@ class Workflow(FWSerializable):
         self.links = Workflow.Links(new_l)
 
     def to_dict(self):
-        return {'fws': [f.to_dict() for f in self.id_fw.itervalues()],
+        return {'fws': [f.to_dict() for f in self.id_fw.values()],
                 'links': self.links.to_dict(),
                 'name': self.name,
                 'metadata': self.metadata, 'updated_on': self.updated_on}
