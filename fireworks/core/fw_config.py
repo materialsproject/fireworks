@@ -113,7 +113,7 @@ class FWConfig(object):
                     if key == 'ADD_USER_PACKAGES':
                         self.USER_PACKAGES.extend(v)
                     elif key == 'ECHO_TEST':
-                        print v
+                        print(v)
                     elif not hasattr(self, key):
                         raise ValueError(
                             'Invalid FW_config file has unknown parameter: {}'.format(

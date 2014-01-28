@@ -185,7 +185,7 @@ def get_fws(args):
     if len(fws) == 1:
         fws = fws[0]
 
-    print args.output(fws)
+    print(args.output(fws))
 
 
 def get_wfs(args):
@@ -246,9 +246,9 @@ def get_wfs(args):
         t = PrettyTable(headers)
         for d in wfs:
             t.add_row([d.get(k) for k in headers])
-        print t
+        print(t)
     else:
-        print args.output(wfs)
+        print(args.output(wfs))
 
 
 def detect_lostruns(args):
@@ -260,7 +260,7 @@ def detect_lostruns(args):
 
 def detect_unreserved(args):
     lp = get_lp(args)
-    print lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun)
+    print(lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun))
 
 
 def tuneup(args):
@@ -403,11 +403,11 @@ def track_fws(args):
                 first_print = False
             else:
                 output.insert(0, '>------<')
-            print '\n'.join(output)
+            print('\n'.join(output))
 
 def version(args):
-    print 'FireWorks version:', FW_VERSION
-    print 'located in:', FW_INSTALL_DIR
+    print('FireWorks version:', FW_VERSION)
+    print('located in:', FW_INSTALL_DIR)
 
 def maintain(args):
     lp = get_lp(args)
