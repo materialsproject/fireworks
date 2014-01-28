@@ -60,7 +60,6 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], "test2\n")
-        print(type(self.lp.get_launch_by_id(1).action.stored_data['stdout']))
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})
