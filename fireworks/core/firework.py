@@ -528,7 +528,7 @@ class Workflow(FWSerializable):
         def __init__(self, *args, **kwargs):
             super(Workflow.Links, self).__init__(*args, **kwargs)
 
-            for k, v in self.items():
+            for k, v in list(self.items()):
                 if not isinstance(v, list):
                     self[k] = [v]  # v must be list
                 if not isinstance(k, int):
