@@ -3,7 +3,6 @@ import subprocess
 import sys
 
 from fireworks.core.firework import FireTaskBase, FWAction
-from fireworks.utilities.fw_serializers import FWSerializable
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -92,7 +91,8 @@ class ScriptTask(FireTaskBase):
         self.use_shell = d.get('use_shell', True)
 
         m_script = d['script']
-        if isinstance(m_script, (str, unicode)):
+        if (sys.version_info < (3, 0) and isinstance(m_script, unicode)) or\
+                isinstance(m_script, str):
             m_script = [m_script]
 
         if not self.use_shell:
