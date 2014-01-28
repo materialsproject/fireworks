@@ -21,6 +21,8 @@ from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
+from six.moves import input
+
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Shyue Ping Ong'
@@ -38,7 +40,7 @@ def pw_check(ids, args, skip_pw=False):
     if len(ids) > FWConfig().PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
         if not args.password:
-            if raw_input('Are you sure? This will modify {} entries. (Y/N)'.format(len(ids)))[0].upper() == 'Y':
+            if input('Are you sure? This will modify {} entries. (Y/N)'.format(len(ids)))[0].upper() == 'Y':
                 args.password=datetime.datetime.now().strftime('%Y-%m-%d')
             else:
                 raise ValueError('Operation aborted by user.')
@@ -103,7 +105,7 @@ def init_yaml(args):
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, v in fields:
-        val = raw_input("Enter {} (default: {}) : ".format(k, v))
+        val = input("Enter {} (default: {}) : ".format(k, v))
         doc[k] = val if val else v
     doc["port"] = int(doc["port"])  # enforce the port as an int
     with open(args.config_file, "w") as f:
@@ -115,7 +117,7 @@ def init_yaml(args):
 def reset(args):
     lp = get_lp(args)
     if not args.password:
-        if raw_input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(lp.workflows.count()))[0].upper() == 'Y': args.password=datetime.datetime.now().strftime('%Y-%m-%d')
+        if input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(lp.workflows.count()))[0].upper() == 'Y': args.password=datetime.datetime.now().strftime('%Y-%m-%d')
         else:
             raise ValueError('Operation aborted by user.')
     lp.reset(args.password)
