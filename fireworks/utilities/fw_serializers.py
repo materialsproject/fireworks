@@ -84,6 +84,11 @@ def _recursive_load(obj):
     if isinstance(obj, list):
         return [_recursive_load(v) for v in obj]
 
+    try:
+        basestring
+    except NameError:
+        basestring = str
+
     if isinstance(obj, basestring):
         try:
             # convert String to datetime if really datetime
