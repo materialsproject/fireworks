@@ -18,6 +18,7 @@ __date__ = "Jan 26, 2013"
 import unittest
 import datetime
 import os
+import json
 
 
 @explicit_serialize
@@ -102,9 +103,11 @@ class SerializationTest(unittest.TestCase):
                          'Unicode YAML format export / import fails!')
 
     def test_unicode_json_file(self):
-        with open(os.path.join(self.module_dir, "test_reference.json")) as f:
-            with open("test.json") as f2:
-                self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
+        with open(os.path.join(self.module_dir, "test_reference.json")) as f,\
+                open("test.json") as f2:
+            obj1 = json.load(f)
+            obj2 = json.load(f2)
+            self.assertEqual(obj1, obj2, 'Unicode JSON file export fails')
 
         self.assertEqual(self.obj_3.from_file("test.json"), self.obj_3, 'Unicode JSON file import fails!')
 
