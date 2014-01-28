@@ -12,15 +12,14 @@ FireWorks Changelog
 
 **v0.65**
 
-.. warning:: This version introduced a bug in ``lpad reset`` (fixed in v0.66)
-
 * Fix bug in qlaunch singleshot introduced in previous release (S.P. Ong)
 * Add qlaunch cleanup (S.P. Ong)
 * Setup different default config dirs (S.P. Ong)
 
 **v0.64**
 
-.. warning:: This version introduced a major bug in ``qlaunch singleshot`` (fixed in v0.65)
+.. warning:: This version introduced a major bug in ``qlaunch singleshot`` via the command line (fixed in v0.65)
+.. warning:: This version introduced a bug in ``lpad reset`` via the command line (fixed in v0.66)
 
 .. caution:: The ``add_dir`` command is incorporated into the ``add`` command. e.g. ``lpad add my_dir/*.yaml``. Many command line options that allowed comma-separated lists are now space-separated lists to better employ argparse (see updated docs).
 
