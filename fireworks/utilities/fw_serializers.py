@@ -66,8 +66,12 @@ def recursive_dict(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if isinstance(obj, unicode) and obj != obj.encode('ascii', 'ignore'):
-        return obj
+    if sys.version_info < (3, 0):
+        if isinstance(obj, unicode) and obj != obj.encode('ascii', 'ignore'):
+            return obj
+    else:
+        if isinstance(obj, str) and obj != obj.encode('ascii', 'ignore'):
+            return obj
 
     return str(obj)
 
