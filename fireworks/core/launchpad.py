@@ -655,7 +655,7 @@ class LaunchPad(FWSerializable):
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
         # redo the links - note that if you don't search across all keys, you can get errors
-        self.workflows.find_and_modify({'nodes': {'$in': wf.id_fw.keys()}}, wf.to_db_dict())
+        self.workflows.find_and_modify({'nodes': {'$in': list(wf.id_fw.keys())}}, wf.to_db_dict())
 
 
     def _steal_launches(self, thief_fw):
