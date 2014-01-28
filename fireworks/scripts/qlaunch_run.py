@@ -124,7 +124,8 @@ def qlaunch():
             from fabric.network import disconnect_all
             from fabric.operations import put
         except ImportError:
-            print "Remote options require the Fabric package to be installed!"
+            print("Remote options require the Fabric package to be "
+                  "installed!")
             sys.exit(-1)
 
     if args.remote_setup:
@@ -155,13 +156,10 @@ def qlaunch():
                             run("qlaunch {} {}".format(args.command, non_default))
             disconnect_all()
         else:
-            if args.command != "cleanup":
-                do_launch(args)
-            else:
-                do_cleanup(args)
+            do_launch(args)
         if interval > 0:
-            print "Next run in {} seconds... Press Ctrl-C to exit at any time." \
-                .format(interval)
+            print("Next run in {} seconds... Press Ctrl-C to exit at any "
+                  "time.".format(interval))
             time.sleep(args.daemon)
         else:
             break

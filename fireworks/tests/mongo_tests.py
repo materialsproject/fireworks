@@ -43,15 +43,19 @@ class MongoTests(unittest.TestCase):
         self.old_wd = os.getcwd()
 
     def test_basic_fw(self):
-        test1 = ScriptTask.from_str("python -c 'print \"test1\"'", {'store_stdout': True})
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
+                                    {'store_stdout': True})
         fw = FireWork(test1)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
+            'stdout'], 'test1\n')
 
     def test_multi_fw(self):
-        test1 = ScriptTask.from_str("python -c 'print \"test1\"'", {'store_stdout': True})
-        test2 = ScriptTask.from_str("python -c 'print \"test2\"'", {'store_stdout': True})
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
+                                    {'store_stdout': True})
+        test2 = ScriptTask.from_str("python -c 'print(\"test2\")'",
+                                    {'store_stdout': True})
         fw = FireWork([test1, test2])
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
@@ -64,8 +68,10 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['sum'], 12)
 
     def test_org_wf(self):
-        test1 = ScriptTask.from_str("python -c 'print \"test1\"'", {'store_stdout': True})
-        test2 = ScriptTask.from_str("python -c 'print \"test2\"'", {'store_stdout': True})
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
+                                    {'store_stdout': True})
+        test2 = ScriptTask.from_str("python -c 'print(\"test2\")'",
+                                    {'store_stdout': True})
         fw1 = FireWork(test1, fw_id=-1)
         fw2 = FireWork(test2, fw_id=-2)
         wf = Workflow([fw1, fw2], {-1: -2})
@@ -73,7 +79,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'], 'test2\n')
+        self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'].decode("utf-8"), str('test2\n'))
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()

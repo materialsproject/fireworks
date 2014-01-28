@@ -273,7 +273,7 @@ def load_object(obj_dict):
         modclass = fw_name[2:-2].strip()
         modname = modclass[0:modclass.rfind('.')]
         classname = modclass[modclass.rfind('.')+1:]
-        mod = __import__(modname, globals(), locals(), [classname], -1)
+        mod = __import__(modname, globals(), locals(), [classname], 0)
         if hasattr(mod, classname):
             cls_ = getattr(mod, classname)
             return cls_.from_dict(obj_dict)
