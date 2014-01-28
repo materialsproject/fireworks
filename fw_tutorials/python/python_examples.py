@@ -22,7 +22,7 @@ def setup():
 
 
 def basic_fw_ex():
-    print '--- BASIC FIREWORK EXAMPLE ---'
+    print('--- BASIC FIREWORK EXAMPLE ---')
 
     # setup
     launchpad = setup()
@@ -37,7 +37,7 @@ def basic_fw_ex():
 
 
 def rapid_fire_ex():
-    print '--- RAPIDFIRE EXAMPLE ---'
+    print('--- RAPIDFIRE EXAMPLE ---')
 
     # setup
     launchpad = setup()
@@ -58,7 +58,7 @@ def rapid_fire_ex():
 
 
 def multiple_tasks_ex():
-    print '--- MULTIPLE FIRETASKS EXAMPLE ---'
+    print('--- MULTIPLE FIRETASKS EXAMPLE ---')
 
     # setup
     launchpad = setup()
@@ -75,7 +75,7 @@ def multiple_tasks_ex():
 
 
 def basic_wf_ex():
-    print '--- BASIC WORKFLOW EXAMPLE ---'
+    print('--- BASIC WORKFLOW EXAMPLE ---')
 
     # setup
     launchpad = setup()

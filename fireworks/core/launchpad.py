@@ -166,7 +166,7 @@ class LaunchPad(FWSerializable):
             wf = Workflow.from_FireWork(wf)
 
         # insert the FireWorks and get back mapping of old to new ids
-        old_new = self._upsert_fws(wf.id_fw.values(), reassign_all=reassign_all)
+        old_new = self._upsert_fws(list(wf.id_fw.values()), reassign_all=reassign_all)
 
         # update the Workflow with the new ids
         wf._reassign_ids(old_new)
