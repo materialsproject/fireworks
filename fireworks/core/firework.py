@@ -547,21 +547,21 @@ class Workflow(FWSerializable):
             # note: if performance of parent_links becomes an issue,
             # override delitem/setitem to update parent_links
             child_parents = defaultdict(list)
-            for (parent, children) in self.iteritems():
+            for (parent, children) in self.items():
                 for child in children:
                     child_parents[child].append(parent)
             return dict(child_parents)
 
         def to_dict(self):
             # convert to str form for Mongo, which cannot have int keys
-            return dict([(str(k), v) for (k, v) in self.iteritems()])
+            return dict([(str(k), v) for (k, v) in self.items()])
 
         def to_db_dict(self):
             # convert to str form for Mongo, which cannot have int keys
             m_dict = {
-                'links': dict([(str(k), v) for (k, v) in self.iteritems()]),
+                'links': dict([(str(k), v) for (k, v) in self.items()]),
                 'parent_links': dict(
-                    [(str(k), v) for (k, v) in self.parent_links.iteritems()]),
+                    [(str(k), v) for (k, v) in self.parent_links.items()]),
                 'nodes': self.nodes}
             return m_dict
 
@@ -848,7 +848,7 @@ class Workflow(FWSerializable):
         """
 
         leaf_ids = []
-        for id, children in self.links.iteritems():
+        for id, children in self.links.items():
             if len(children) == 0:
                 leaf_ids.append(id)
         return leaf_ids
@@ -862,13 +862,13 @@ class Workflow(FWSerializable):
 
         # update id_fw
         new_id_fw = {}
-        for (fwid, fws) in self.id_fw.iteritems():
+        for (fwid, fws) in self.id_fw.items():
             new_id_fw[old_new.get(fwid, fwid)] = fws
         self.id_fw = new_id_fw
 
         # update the Links
         new_l = {}
-        for (parent, children) in self.links.iteritems():
+        for (parent, children) in self.links.items():
             new_l[old_new.get(parent, parent)] = [old_new.get(child, child) for
                                                   child in children]
         self.links = Workflow.Links(new_l)
@@ -900,10 +900,10 @@ class Workflow(FWSerializable):
         m_dict['nodes'] = [self._str_fw(x) for x in nodes]
         m_dict['links'] = OrderedDict(
             [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in
-             m_dict['links'].iteritems()])
+             m_dict['links'].items()])
         m_dict['parent_links'] = OrderedDict(
             [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in
-             m_dict['parent_links'].iteritems()])
+             m_dict['parent_links'].items()])
         m_dict['states_list'] = '-'.join([a[0:4] for a in m_dict['states'].values()])
         return m_dict
 
