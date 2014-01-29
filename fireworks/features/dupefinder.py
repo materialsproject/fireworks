@@ -15,7 +15,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Mar 01, 2013'
 
 
-class DupeFinderBase(dict, FWSerializable):  # extending dict only to use metaclass - UGLY!
+class DupeFinderBase(FWSerializable):
     """
     This serves an Abstract class for implementing Duplicate Finders
     """
