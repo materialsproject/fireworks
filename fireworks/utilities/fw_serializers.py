@@ -34,8 +34,8 @@ import json  # note that ujson is faster, but at this time does not support "def
 import importlib
 import datetime
 from fireworks.core.fw_config import FWConfig
-import sys
 import six
+import abc
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -141,12 +141,14 @@ def serialize_fw(func):
     return _decorator
 
 
-class FWSerializable():
+six.add_metaclass(abc.ABCMeta)
+class FWSerializable(object):
     """
-    To create a serializable object within FireWorks, you should subclass this class and implement
-    the to_dict() and from_dict() methods.
+    To create a serializable object within FireWorks, you should subclass this
+    class and implement the to_dict() and from_dict() methods.
 
-    If you want the load_object() implicit de-serialization to work, you must also:
+    If you want the load_object() implicit de-serialization to work, you must
+    also:
         - Use the @serialize_fw decorator on to_dict()
         - Override the _fw_name parameter with a unique key.
 
@@ -165,6 +167,7 @@ class FWSerializable():
         except AttributeError:
             return get_default_serialization(self.__class__)
 
+    @abc.abstractmethod
     def to_dict(self):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
 
