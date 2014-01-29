@@ -261,7 +261,7 @@ def load_object(obj_dict):
 
     # check for explicit serialization, e.g. {{fireworks.tasks.MyTask}} - based on pymatgen method
     if fw_name.startswith('{{') and fw_name.endswith('}}'):
-        modname, classname = fw_name.strip('{} ').rsplit(".", maxsplit=1)
+        modname, classname = fw_name.strip('{} ').rsplit(".", 1)
         mod = __import__(modname, globals(), locals(), [classname], 0)
         if hasattr(mod, classname):
             cls_ = getattr(mod, classname)
