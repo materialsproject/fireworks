@@ -8,15 +8,15 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
 from setuptools import setup, find_packages
-from fireworks import __version__
 import os
 import multiprocessing, logging  # AJ: for some reason this is needed to not have "python setup.py test" freak out
 
 module_dir = os.path.dirname(os.path.abspath(__file__))
+FW_VERSION = '0.66'
 
 if __name__ == "__main__":
     setup(name='FireWorks',
-          version=__version__,
+          version=FW_VERSION,
           description='FireWorks workflow software',
           long_description=open(os.path.join(module_dir, 'README.rst')).read(),
           url='https://github.com/materialsproject/fireworks',
