@@ -175,6 +175,7 @@ class FWSerializable(object):
         return self.to_dict()
 
     @classmethod
+    @abc.abstractmethod
     def from_dict(cls, m_dict):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
 
