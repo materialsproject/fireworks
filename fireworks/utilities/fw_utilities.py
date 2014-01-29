@@ -27,7 +27,8 @@ PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have alread
 DEFAULT_FORMATTER = logging.Formatter(FWConfig().FW_LOGGING_FORMAT)
 
 
-def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG', formatter=DEFAULT_FORMATTER,
+def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'),
+                  stream_level='DEBUG', formatter=DEFAULT_FORMATTER,
                   clear_logs=False):
     """
     Convenience method to return a logger.
