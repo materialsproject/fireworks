@@ -280,10 +280,16 @@ def load_object(obj_dict):
         root_module = importlib.import_module(package)
         for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__,
                                                                  package + '.'):
-            m_module = loader.find_module(module_name).load_module(module_name)
-            m_object = _search_module_for_obj(m_module, obj_dict)
-            if m_object is not None:
-                found_objects.append((m_object, module_name))
+            try:
+                m_module = loader.find_module(module_name).load_module(module_name)
+                m_object = _search_module_for_obj(m_module, obj_dict)
+                if m_object is not None:
+                    found_objects.append((m_object, module_name))
+            except ImportError as ex:
+                import warnings
+                warnings.warn("%s in %s cannot be loaded because of %s. "
+                              "Skipping.."
+                              % (m_object, module_name, str(ex)))
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
