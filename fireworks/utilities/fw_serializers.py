@@ -34,8 +34,8 @@ import json  # note that ujson is faster, but at this time does not support "def
 import importlib
 import datetime
 from fireworks.core.fw_config import FWConfig
-import sys
 import six
+import abc
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -141,12 +141,14 @@ def serialize_fw(func):
     return _decorator
 
 
-class FWSerializable():
+six.add_metaclass(abc.ABCMeta)
+class FWSerializable(object):
     """
-    To create a serializable object within FireWorks, you should subclass this class and implement
-    the to_dict() and from_dict() methods.
+    To create a serializable object within FireWorks, you should subclass this
+    class and implement the to_dict() and from_dict() methods.
 
-    If you want the load_object() implicit de-serialization to work, you must also:
+    If you want the load_object() implicit de-serialization to work, you must
+    also:
         - Use the @serialize_fw decorator on to_dict()
         - Override the _fw_name parameter with a unique key.
 
@@ -165,6 +167,7 @@ class FWSerializable():
         except AttributeError:
             return get_default_serialization(self.__class__)
 
+    @abc.abstractmethod
     def to_dict(self):
         raise NotImplementedError('FWSerializable object did not implement to_dict()!')
 
@@ -172,6 +175,7 @@ class FWSerializable():
         return self.to_dict()
 
     @classmethod
+    @abc.abstractmethod
     def from_dict(cls, m_dict):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
 
@@ -278,30 +282,40 @@ def load_object(obj_dict):
     found_objects = [] # used to make sure we don't find multiple hits
     for package in FWConfig().USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__,
-                                                                 package + '.'):
-            m_module = loader.find_module(module_name).load_module(module_name)
-            m_object = _search_module_for_obj(m_module, obj_dict)
-            if m_object is not None:
-                found_objects.append((m_object, module_name))
+        for loader, mod_name, is_pkg in pkgutil.walk_packages(
+                root_module.__path__, package + '.'):
+            try:
+                m_module = loader.find_module(mod_name).load_module(mod_name)
+                m_object = _search_module_for_obj(m_module, obj_dict)
+                if m_object is not None:
+                    found_objects.append((m_object, mod_name))
+            except ImportError as ex:
+                import warnings
+                warnings.warn(
+                    "%s in %s cannot be loaded because of %s. Skipping.."
+                    % (m_object, mod_name, str(ex)))
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
         return found_objects[0][0]
     elif len(found_objects) > 0:
         raise ValueError(
-            'load_object() found multiple objects with cls._fw_name {} -- {}'.format(fw_name,
-                                                                                     found_objects))
+            'load_object() found multiple objects with cls._fw_name {} -- {}'
+            .format(fw_name, found_objects))
 
-    raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
+    raise ValueError(
+        'load_object() could not find a class with cls._fw_name {}'
+        .format(fw_name))
 
 
 def load_object_from_file(filename, f_format=None):
     """
-    implicitly load an object from a file. just a friendly wrapper to load_object()
+    Implicitly load an object from a file. just a friendly wrapper to
+    load_object()
 
     :param filename: the filename to load an object from
-    :param f_format: the serialization format (default is auto-detect based on filename extension)
+    :param f_format: the serialization format (default is auto-detect based on
+        filename extension)
     """
 
     m_dict = {}
@@ -328,7 +342,7 @@ def _search_module_for_obj(m_module, obj_dict):
     for name, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
-                        getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:
+                getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:
             return obj.from_dict(obj_dict)
 
 
@@ -354,5 +368,8 @@ def _reconstitute_dates(obj_dict):
 def get_default_serialization(cls):
     root_mod = cls.__module__.split('.')[0]
     if root_mod == '__main__':
-        raise ValueError("Cannot get default serialization; try instantiating your object from a different module from which it is defined rather than defining your object in the __main__ (running) module.")
+        raise ValueError("Cannot get default serialization; try "
+                         "instantiating your object from a different module "
+                         "from which it is defined rather than defining your "
+                         "object in the __main__ (running) module.")
     return root_mod + '::' + cls.__name__  # e.g. fireworks.ABC
