@@ -310,10 +310,12 @@ def load_object(obj_dict):
 
 def load_object_from_file(filename, f_format=None):
     """
-    implicitly load an object from a file. just a friendly wrapper to load_object()
+    Implicitly load an object from a file. just a friendly wrapper to
+    load_object()
 
     :param filename: the filename to load an object from
-    :param f_format: the serialization format (default is auto-detect based on filename extension)
+    :param f_format: the serialization format (default is auto-detect based on
+        filename extension)
     """
 
     m_dict = {}
@@ -340,7 +342,7 @@ def _search_module_for_obj(m_module, obj_dict):
     for name, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
-                        getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:
+                getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:
             return obj.from_dict(obj_dict)
 
 
@@ -366,5 +368,8 @@ def _reconstitute_dates(obj_dict):
 def get_default_serialization(cls):
     root_mod = cls.__module__.split('.')[0]
     if root_mod == '__main__':
-        raise ValueError("Cannot get default serialization; try instantiating your object from a different module from which it is defined rather than defining your object in the __main__ (running) module.")
+        raise ValueError("Cannot get default serialization; try "
+                         "instantiating your object from a different module "
+                         "from which it is defined rather than defining your "
+                         "object in the __main__ (running) module.")
     return root_mod + '::' + cls.__name__  # e.g. fireworks.ABC
