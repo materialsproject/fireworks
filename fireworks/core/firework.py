@@ -57,7 +57,6 @@ class FireTaskBase(dict, FWSerializable):
 
     You can set parameters of a FireTask like you'd use a dict.
     """
-    __metaclass__ = FireTaskMeta
 
     # Specify required parameters with class variable. Consistency will be
     # checked upon init.

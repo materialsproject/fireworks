@@ -35,8 +35,12 @@ class FWConfig(object):
         self.USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
                               'fw_tutorials']  # this is where load_object() looks for serialized objects
 
-        self.FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask', 'Script Task': 'ScriptTask', 'Template Writer Task':'TemplateWriterTask', 'Dupe Finder Exact': 'DupeFinderExact'}  # if you update a _fw_name, you can use this to record the change and maintain
-        # deserialization
+        self.FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
+                                'Script Task': 'ScriptTask',
+                                'Template Writer Task':'TemplateWriterTask',
+                                'Dupe Finder Exact': 'DupeFinderExact'}
+        # if you update a _fw_name, you can use this to record the change and
+        # maintain deserialization
 
         self.YAML_STYLE = False  # controls whether YAML documents will be nested as braces or blocks (False = blocks)
 
@@ -94,7 +98,7 @@ class FWConfig(object):
         root_dir = os.path.dirname(os.path.dirname(MODULE_DIR))  # FW root dir
 
         if os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
-            config_path=os.path.join(os.getcwd(), 'FW_config.yaml')
+            config_path = os.path.join(os.getcwd(), 'FW_config.yaml')
 
         elif "FW_CONFIG_FILE" in os.environ:
             config_path = os.environ['FW_CONFIG_FILE']
@@ -124,7 +128,7 @@ class FWConfig(object):
         for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
             fname = "my_{}.yaml".format(k.split("_")[0].lower())
             default_path = os.path.join(
-                    os.environ["HOME"], ".fireworks", fname)
+                os.environ["HOME"], ".fireworks", fname)
             if getattr(self, k, None) is None and os.path.exists(default_path):
                 self.__setattr__(k, default_path)
 
