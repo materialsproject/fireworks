@@ -278,28 +278,30 @@ def load_object(obj_dict):
     found_objects = [] # used to make sure we don't find multiple hits
     for package in FWConfig().USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for loader, module_name, is_pkg in pkgutil.walk_packages(root_module.__path__,
-                                                                 package + '.'):
+        for loader, mod_name, is_pkg in pkgutil.walk_packages(
+                root_module.__path__, package + '.'):
             try:
-                m_module = loader.find_module(module_name).load_module(module_name)
+                m_module = loader.find_module(mod_name).load_module(mod_name)
                 m_object = _search_module_for_obj(m_module, obj_dict)
                 if m_object is not None:
-                    found_objects.append((m_object, module_name))
+                    found_objects.append((m_object, mod_name))
             except ImportError as ex:
                 import warnings
-                warnings.warn("%s in %s cannot be loaded because of %s. "
-                              "Skipping.."
-                              % (m_object, module_name, str(ex)))
+                warnings.warn(
+                    "%s in %s cannot be loaded because of %s. Skipping.."
+                    % (m_object, mod_name, str(ex)))
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
         return found_objects[0][0]
     elif len(found_objects) > 0:
         raise ValueError(
-            'load_object() found multiple objects with cls._fw_name {} -- {}'.format(fw_name,
-                                                                                     found_objects))
+            'load_object() found multiple objects with cls._fw_name {} -- {}'
+            .format(fw_name, found_objects))
 
-    raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
+    raise ValueError(
+        'load_object() could not find a class with cls._fw_name {}'
+        .format(fw_name))
 
 
 def load_object_from_file(filename, f_format=None):
