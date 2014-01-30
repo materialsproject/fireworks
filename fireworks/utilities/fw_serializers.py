@@ -26,6 +26,7 @@ Some advantages:
 A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder,
 when the serialize_fw() decorator is used.
 """
+import traceback
 
 import yaml
 import pkgutil
@@ -292,6 +293,7 @@ def load_object(obj_dict):
                 warnings.warn(
                     "%s in %s cannot be loaded because of %s. Skipping.."
                     % (m_object, mod_name, str(ex)))
+                traceback.print_exc(ex)
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
