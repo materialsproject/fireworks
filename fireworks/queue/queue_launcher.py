@@ -105,7 +105,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             if not reservation_id:
                 raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
             elif reserve:
-                launchpad._set_reservation_id(launch_id, reservation_id)
+                launchpad.set_reservation_id(launch_id, reservation_id)
             return reservation_id
 
         except:
