@@ -508,7 +508,7 @@ class LaunchPad(FWSerializable):
 
         return bad_launch_ids, bad_fw_ids
 
-    def _set_reservation_id(self, launch_id, reservation_id):
+    def set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.set_reservation_id(reservation_id)
         self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
