@@ -198,7 +198,7 @@ class FireWork(FWSerializable):
                                tasks]  # put tasks in a special location of the spec
 
         self.name = name if name else 'Unnamed FW'  # do it this way to prevent None names
-        if fw_id:
+        if fw_id is not None:
             self.fw_id = fw_id
         else:
             global NEGATIVE_FWID_CTR
