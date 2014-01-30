@@ -10,7 +10,7 @@ before_script:
 script:
   - nosetests
   - lpad get_wfs -d more
-  - qlaunch singleshot
+  - rlaunch singleshot
 notifications:
   email:
     recipients:
