@@ -3,8 +3,14 @@ services: mongodb
 python:
   - "2.7"
   - "3.3"
-install: "pip install -r requirements.txt --use-mirrors"
-script: nosetests
+install:
+  - "pip install -r requirements.txt --use-mirrors"
+before_script:
+  - python setup.py develop
+script:
+  - nosetests
+  - lpad get_wfs -d more
+  - qlaunch singleshot
 notifications:
   email:
     recipients:
