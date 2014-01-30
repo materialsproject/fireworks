@@ -86,10 +86,12 @@ class LaunchPad(FWSerializable):
         """
         Note: usernames/passwords are exported as unencrypted Strings!
         """
-        d = {'host': self.host, 'port': self.port, 'name': self.name, 'username': self.username,
-             'password': self.password, 'logdir': self.logdir, 'strm_lvl': self.strm_lvl,
-             'user_indices': self.user_indices, 'wf_user_indices': self.wf_user_indices}
-        return d
+        return {
+            'host': self.host, 'port': self.port, 'name': self.name,
+            'username': self.username, 'password': self.password,
+            'logdir': self.logdir, 'strm_lvl': self.strm_lvl,
+            'user_indices': self.user_indices,
+            'wf_user_indices': self.wf_user_indices}
 
     @classmethod
     def from_dict(cls, d):
