@@ -10,6 +10,7 @@ import subprocess
 import threading
 import traceback
 import abc
+import collections
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 from fireworks.utilities.fw_utilities import get_fw_logger
 
@@ -73,7 +74,7 @@ class Command(object):
         return self.status, self.output, self.error
 
 
-class QueueAdapterBase(dict, FWSerializable):
+class QueueAdapterBase(collections.defaultdict, FWSerializable):
     """
     The QueueAdapter is responsible for all interactions with a specific \
     queue management system. This includes handling all details of queue \
@@ -143,15 +144,6 @@ class QueueAdapterBase(dict, FWSerializable):
         :return: (int) number of jobs in the queue
         """
         pass
-
-    def __getitem__(self, key):
-        """
-        Reproduce a simple defaultdict-like behavior - any unset parameters return None
-        """
-        try:
-            return dict.__getitem__(self, key)
-        except KeyError:
-            return None
 
     @serialize_fw
     def to_dict(self):
