@@ -145,6 +145,13 @@ def qlaunch():
             non_default.append("--{} {}".format(k, v))
     non_default = " ".join(non_default)
 
+    pre_non_default = []
+    for k in ["silencer", "reserve"]:
+        v = getattr(args, k, None)
+        if v:
+            pre_non_default.append("--%s" % k)
+    pre_non_default = " ".join(pre_non_default)
+
     interval = args.daemon
     while True:
         if args.remote_host:
@@ -153,7 +160,8 @@ def qlaunch():
                               password=args.remote_password):
                     for r in args.remote_config_dir:
                         with cd(r):
-                            run("qlaunch {} {}".format(args.command, non_default))
+                            run("qlaunch {} {} {}".format(
+                                pre_non_default, args.command, non_default))
             disconnect_all()
         else:
             do_launch(args)
