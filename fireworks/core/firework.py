@@ -50,7 +50,7 @@ class FireTaskMeta(type):
 
 
 @add_metaclass(FireTaskMeta)
-class FireTaskBase(dict, FWSerializable):
+class FireTaskBase(defaultdict, FWSerializable):
     """
     FireTaskBase is used like an abstract class that defines a computing task
     (FireTask). All FireTasks should inherit from FireTaskBase.
@@ -86,16 +86,6 @@ class FireTaskBase(dict, FWSerializable):
     @recursive_deserialize
     def from_dict(cls, m_dict):
         return cls(m_dict)
-
-    def __getitem__(self, key):
-        """
-        Reproduce a simple defaultdict-like behavior - any unset parameters
-        return None
-        """
-        try:
-            return dict.__getitem__(self, key)
-        except KeyError:
-            return None
 
 
 class FWAction(FWSerializable):
