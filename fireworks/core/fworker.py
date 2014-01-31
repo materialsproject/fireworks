@@ -6,8 +6,8 @@ computing resource
 """
 
 import json
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, \
-    DATETIME_HANDLER
+from fireworks.utilities.fw_serializers import FWSerializable, \
+    recursive_serialize, recursive_deserialize, DATETIME_HANDLER
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Michael Kocher'
