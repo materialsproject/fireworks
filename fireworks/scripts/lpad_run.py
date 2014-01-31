@@ -278,6 +278,7 @@ def defuse(args):
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
 
+
 def archive(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
@@ -285,6 +286,7 @@ def archive(args):
         lp.archive_wf(f)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished archiving {} FWs'.format(len(fw_ids)))
+
 
 def reignite(args):
     lp = get_lp(args)
@@ -294,6 +296,7 @@ def reignite(args):
         lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished reigniting {} Workflows'.format(len(fw_ids)))
 
+
 def defuse_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
@@ -301,6 +304,7 @@ def defuse_fws(args):
         lp.defuse_fw(f)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
+
 
 def reignite_fws(args):
     lp = get_lp(args)
@@ -310,6 +314,7 @@ def reignite_fws(args):
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished reigniting {} FWs'.format(len(fw_ids)))
 
+
 def rerun_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
@@ -317,6 +322,7 @@ def rerun_fws(args):
         lp.rerun_fw(int(f))
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
+
 
 def refresh(args):
     lp = get_lp(args)
@@ -327,6 +333,7 @@ def refresh(args):
         lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
 
+
 def set_priority(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
@@ -334,6 +341,7 @@ def set_priority(args):
         lp.set_priority(f, args.priority)
         lp.m_logger.debug("Processed fw_id {}".format(f))
     lp.m_logger.info("Finished setting priorities of {} FWs".format(len(fw_ids)))
+
 
 def webgui(args):
     lp = get_lp(args)
@@ -349,6 +357,7 @@ def webgui(args):
         webbrowser.open("http://{}:{}".format(args.host, args.port))
     p1.join()
 
+
 def add_scripts(args):
     lp = get_lp(args)
     args.names = args.names if args.names else [None] * len(args.scripts)
@@ -362,6 +371,7 @@ def add_scripts(args):
 
     lp.add_wf(Workflow(fws, links, args.wf_name))
 
+
 def recover_offline(args):
     lp = get_lp(args)
     failed_fws = []
@@ -374,6 +384,7 @@ def recover_offline(args):
     if failed_fws:
         lp.m_logger.info("FAILED to recover offline fw_ids: {}".format(failed_fws))
 
+
 def forget_offline(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
@@ -382,6 +393,7 @@ def forget_offline(args):
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
 
     lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
+
 
 def track_fws(args):
     lp = get_lp(args)
@@ -407,9 +419,11 @@ def track_fws(args):
                 output.insert(0, '>------<')
             print('\n'.join(output))
 
+
 def version(args):
     print('FireWorks version:', FW_VERSION)
     print('located in:', FW_INSTALL_DIR)
+
 
 def maintain(args):
     lp = get_lp(args)
@@ -472,22 +486,26 @@ def lpad():
                    "choices": ["all", "more", "less", "ids", "count"]}
 
     query_args = ["-q", "--query"]
-    query_kwargs = {"help": 'Query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
+    query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
+                            'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
-    get_fw_parser = subparsers.add_parser('get_fws', help='get information about FireWorks')
+    get_fw_parser = subparsers.add_parser(
+        'get_fws', help='get information about FireWorks')
     get_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument(*query_args, **query_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
-    get_fw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
+    get_fw_parser.add_argument('-m', '--max', help='limit results', default=0,
+                               type=int)
     get_fw_parser.add_argument('--sort', help='Sort results',
                                choices=["created_on", "updated_on"])
     get_fw_parser.add_argument('--rsort', help='Reverse sort results',
                                choices=["created_on", "updated_on"])
     get_fw_parser.set_defaults(func=get_fws)
 
-    get_wf_parser = subparsers.add_parser('get_wfs', help='get information about Workflows')
+    get_wf_parser = subparsers.add_parser(
+        'get_wfs', help='get information about Workflows')
     get_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name')
     get_wf_parser.add_argument(*state_args, **state_kwargs)

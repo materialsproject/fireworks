@@ -134,7 +134,6 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     return full_path
 
 
-
 def get_my_ip():
     try:
         return socket.gethostbyname(socket.gethostname())
@@ -262,5 +261,5 @@ def reverse_readline(m_file, blk_size=4096, max_mem=4000000):
 
 
 def explicit_serialize(o):
-    o._fw_name = '{{'+o.__module__+'.'+o.__name__+'}}'
+    o._fw_name = '{{%s.%s}}' % (o.__module__, o.__name__)
     return o
