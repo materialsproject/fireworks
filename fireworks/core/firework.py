@@ -166,8 +166,9 @@ class FireWork(FWSerializable):
     STATE_RANKS = {'ARCHIVED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
                    'RESERVED': 3, 'FIZZLED': 4, 'RUNNING': 5, 'COMPLETED': 7}
 
-    def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
-                 state='WAITING', created_on=None, fw_id=None):
+    def __init__(self, tasks, spec=None, name=None, launches=None,
+                 archived_launches=None, state='WAITING', created_on=None,
+                 fw_id=None):
         """
         :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the
@@ -295,7 +296,6 @@ class Tracker(FWSerializable, object):
         self.filename = filename
         self.nlines = nlines
         self.content = content
-
 
     def track_file(self, launch_dir=None):
         """
@@ -523,6 +523,7 @@ class Launch(FWSerializable, object):
                 if use_update_time:
                     return data['updated_on']
                 return data['created_on']
+
 
 class Workflow(FWSerializable):
     """
