@@ -466,9 +466,7 @@ def lpad():
 
     state_args = ['-s', '--state']
     state_kwargs = {"type": str.upper, "help": "Select by state.",
-                    "choices": ["ARCHIVED", "DEFUSED", "WAITING", "READY",
-                                "RESERVED", "FIZZLED", "RUNNING",
-                                "COMPLETED"]}
+                    "choices": FireWork.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
     disp_kwargs = {"type": str, "help": "Display format.",
                    "choices": ["all", "more", "less", "ids", "count"]}
