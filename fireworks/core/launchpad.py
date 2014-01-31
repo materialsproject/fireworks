@@ -32,10 +32,6 @@ __date__ = 'Jan 30, 2013'
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
 # least set the state to FIZZLED or ERROR and add traceback...
 
-# Note: Always use find_and_modify() for *all* database updates. Otherwise you will run into synchronization /
-# delayed write errors from Mongo. Even find_and_modify() does not guarantee zero errors, but it reduces incidents
-# considerably.
-
 
 class LaunchPad(FWSerializable):
     """
@@ -609,14 +605,19 @@ class LaunchPad(FWSerializable):
         """
         Checkout the next FireWork id
         """
-        return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_fw_id': 1}})['next_fw_id']
+        try:
+            return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_fw_id': 1}})['next_fw_id']
+        except:
+            raise ValueError("Could not get next FW id! If you have not yet initialized the database, please do so by performing a database reset (e.g., lpad reset)")
 
     def get_new_launch_id(self):
         """
         Checkout the next Launch id
         """
-        return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_launch_id': 1}})[
-            'next_launch_id']
+        try:
+            return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_launch_id': 1}})['next_launch_id']
+        except:
+            raise ValueError("Could not get next launch id! If you have not yet initialized the database, please do so by performing a database reset (e.g., lpad reset)")
 
     def _upsert_fws(self, fws, reassign_all=False):
         old_new = {} # mapping between old and new FireWork ids
