@@ -6,7 +6,7 @@ from multiprocessing import Process
 import os
 import threading
 import time
-from fireworks.fw_config import FWConfig, FWData
+from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.utilities.fw_utilities import DataServer
 
@@ -27,7 +27,7 @@ def ping_multilaunch(port, stop_event):
     :param stop_event: (Thread.Event) stop event
     """
 
-    ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
+    ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
     ds.connect()
 
     lp = ds.LaunchPad()
@@ -40,7 +40,7 @@ def ping_multilaunch(port, stop_event):
                 except OSError:
                     pass  # means this process is dead!
 
-        stop_event.wait(FWConfig().PING_TIME_SECS)
+        stop_event.wait(PING_TIME_SECS)
 
 
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc):
@@ -56,7 +56,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     :param node_list: ([str]) computer node list
     :param sub_nproc: (int) number of processors of the sub job
     """
-    ds = DataServer(address=('127.0.0.1', port), authkey=FWConfig().DS_PASSWORD)
+    ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
     FWData().DATASERVER = ds
