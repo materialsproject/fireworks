@@ -23,8 +23,11 @@ import pprint
 from fireworks.core.fw_config import FWConfig, NEGATIVE_FWID_CTR
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, serialize_fw
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter, reverse_readline
+from fireworks.utilities.fw_serializers import FWSerializable, \
+    recursive_serialize, recursive_deserialize, serialize_fw
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, \
+    NestedClassGetter
+from monty.io import reverse_readline
 from six import add_metaclass
 
 
