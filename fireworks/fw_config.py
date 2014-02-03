@@ -138,6 +138,7 @@ def write_config(path=None):
         yaml.dump(config_to_dict(), f)
 
 
+@singleton
 class FWData(object):
     """
     This class stores data that a FireTask might want to access, e.g. to see the runtime params
