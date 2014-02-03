@@ -19,6 +19,7 @@ __date__ = 'Dec 12, 2012'
 NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
+
 USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
                  'fw_tutorials']
 
@@ -122,18 +123,19 @@ def override_user_settings():
 override_user_settings()
 
 
-def config_to_dict(self):
+def config_to_dict():
     d = {}
-    for k, v in self.__dict__.items():
-        d[k] = v
+    for k, v in globals().items():
+        if k.upper() == k and k != "NEGATIVE_FWID_CTR":
+            d[k] = v
     return d
 
 
-def write_config(self, path=None):
+def write_config(path=None):
     path = os.path.join(os.environ["HOME"], ".fireworks",
                         'FW_config.yaml') if path is None else path
     with open(path, "w") as f:
-        yaml.dump(self.to_dict(), f)
+        yaml.dump(config_to_dict(), f)
 
 
 class FWData(object):
