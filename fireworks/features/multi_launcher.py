@@ -3,11 +3,10 @@ This module contains methods for launching several Rockets in a parallel environ
 """
 
 from multiprocessing import Process
-import multiprocessing
 import os
 import threading
 import time
-from fireworks.core.fw_config import FWConfig, FWData
+from fireworks.fw_config import FWConfig, FWData
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.utilities.fw_utilities import DataServer
 

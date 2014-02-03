@@ -16,19 +16,20 @@ to do next after a job completes
 
 from collections import defaultdict, OrderedDict
 import abc
-
 import datetime
 import os
 import pprint
-from fireworks.core.fw_config import FWConfig, NEGATIVE_FWID_CTR
+
+from monty.io import reverse_readline
+from six import add_metaclass
+
+from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, \
     NestedClassGetter
-from monty.io import reverse_readline
-from six import add_metaclass
 
 
 __author__ = "Anubhav Jain"
@@ -293,7 +294,7 @@ class Tracker(FWSerializable, object):
 
     MAX_TRACKER_LINES = 1000
 
-    def __init__(self, filename, nlines=FWConfig().TRACKER_LINES, content=''):
+    def __init__(self, filename, nlines=TRACKER_LINES, content=''):
         if nlines > self.MAX_TRACKER_LINES:
             raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(self.MAX_TRACKER_LINES, nlines))
         self.filename = filename

@@ -12,7 +12,8 @@ import traceback
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
 
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
+    RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL
 from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, \
     Tracker
@@ -100,10 +101,10 @@ class LaunchPad(FWSerializable):
 
     @classmethod
     def auto_load(cls):
-        if FWConfig().LAUNCHPAD_LOC:
-            return LaunchPad.from_file(FWConfig().LAUNCHPAD_LOC)
-        elif FWConfig().CONFIG_FILE_DIR:
-            return LaunchPad.from_file(os.path.join(FWConfig().CONFIG_FILE_DIR, 'my_launchpad.yaml'))
+        if LAUNCHPAD_LOC:
+            return LaunchPad.from_file(LAUNCHPAD_LOC)
+        elif CONFIG_FILE_DIR:
+            return LaunchPad.from_file(os.path.join(CONFIG_FILE_DIR, 'my_launchpad.yaml'))
         return LaunchPad()
 
     def reset(self, password, require_password=True):
@@ -130,7 +131,7 @@ class LaunchPad(FWSerializable):
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
     def maintain(self, infinite=True, maintain_interval=None):
-        maintain_interval = maintain_interval if maintain_interval else FWConfig().MAINTAIN_INTERVAL
+        maintain_interval = maintain_interval if maintain_interval else MAINTAIN_INTERVAL
 
         while True:
             self.m_logger.info('Performing maintenance on Launchpad...')
@@ -388,10 +389,10 @@ class LaunchPad(FWSerializable):
 
         sortby = [("spec._priority", DESCENDING)]
 
-        if FWConfig().SORT_FWS.upper() == "FIFO":
+        if SORT_FWS.upper() == "FIFO":
             sortby.append(("created_on", ASCENDING))
 
-        elif FWConfig().SORT_FWS.upper() == "FILO":
+        elif SORT_FWS.upper() == "FILO":
             sortby.append(("created_on", DESCENDING))
 
         # Override query if fw_id defined
@@ -445,7 +446,7 @@ class LaunchPad(FWSerializable):
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
             self.fireworks.find_and_modify({'fw_id': fw['fw_id']}, {'$set': {'state': 'READY'}})
 
-    def detect_unreserved(self, expiration_secs=FWConfig().RESERVATION_EXPIRATION_SECS, rerun=False):
+    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, rerun=False):
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
@@ -472,7 +473,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_lostruns(self, expiration_secs=FWConfig().RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None):
+    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None):
         bad_launch_ids = []
         bad_fw_ids = []
         now_time = datetime.datetime.utcnow()

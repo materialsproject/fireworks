@@ -8,7 +8,7 @@ but simplifies it considerably for the limited use cases required by FireWorks.
 """
 
 # TODO: add unit tests
-from fireworks.core.fw_config import singleton
+from fireworks.fw_config import singleton
 
 
 __author__ = "Shyue Ping Ong"

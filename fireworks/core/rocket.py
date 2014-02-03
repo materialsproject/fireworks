@@ -9,8 +9,8 @@ import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction, FireWork
-from fireworks.core.fw_config import FWConfig, FWData
+from fireworks.core.firework import FWAction, FireWork, BackgroundTask
+from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
 
 __author__ = 'Anubhav Jain'
@@ -30,7 +30,7 @@ def do_ping(launchpad, launch_id):
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
         do_ping(launchpad, launch_id)
-        stop_event.wait(FWConfig().PING_TIME_SECS)
+        stop_event.wait(PING_TIME_SECS)
 
 def start_ping_launch(launchpad, launch_id):
     fd = FWData()
@@ -135,16 +135,16 @@ class Rocket():
             if lp:
                 lp._change_launch_dir(launch_id, launch_dir)
 
-            if not os.listdir(prev_dir) and FWConfig().REMOVE_USELESS_DIRS:
+            if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
                 try:
                     os.rmdir(prev_dir)
                 except:
                     pass
 
         # write FW.json and/or FW.yaml to the directory
-        if FWConfig().PRINT_FW_JSON:
+        if PRINT_FW_JSON:
             m_fw.to_file('FW.json', indent=4)
-        if FWConfig().PRINT_FW_YAML:
+        if PRINT_FW_YAML:
             m_fw.to_file('FW.yaml')
 
         try:
@@ -186,7 +186,7 @@ class Rocket():
                     break
 
             # add job packing info if this is needed
-            if FWData().MULTIPROCESSING and FWConfig().STORE_PACKING_INFO:
+            if FWData().MULTIPROCESSING and STORE_PACKING_INFO:
                 all_stored_data['multiprocess_name'] = multiprocessing.current_process().name
 
             # perform finishing operation

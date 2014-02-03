@@ -6,7 +6,7 @@ This module contains methods for launching Rockets, both singly and in rapid-fir
 
 import os
 import time
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi
@@ -55,7 +55,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
     :param strm_lvl: (str) level at which to output logs to stdout
     """
 
-    sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
+    sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)

@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 import os
 import sys
 import time
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.queue.queue_launcher import rapidfire, launch_rocket_to_queue

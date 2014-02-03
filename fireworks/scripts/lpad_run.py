@@ -7,16 +7,18 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser
 import os
 import webbrowser
-from pymongo import DESCENDING, ASCENDING
 import time
-from fireworks.core.fw_config import FWConfig
-from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import Workflow, FireWork
 import ast
 import json
-import yaml
 import datetime
 import traceback
+
+from pymongo import DESCENDING, ASCENDING
+import yaml
+
+from fireworks.fw_config import FWConfig
+from fireworks.core.launchpad import LaunchPad
+from fireworks.core.firework import Workflow, FireWork
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask

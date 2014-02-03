@@ -5,7 +5,7 @@ A runnable script to launch a single Rocket (a command-line interface to rocket_
 """
 from argparse import ArgumentParser
 import os
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import FWConfig
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket

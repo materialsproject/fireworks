@@ -9,12 +9,11 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 
 import os
 import glob
-import string
 import time
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir, get_slug
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import FWConfig
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'

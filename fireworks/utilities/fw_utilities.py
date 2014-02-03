@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from bz2 import BZ2File
-from gzip import GzipFile
 
 import logging
 import datetime
@@ -12,7 +10,8 @@ import traceback
 import socket
 import multiprocessing
 
-from fireworks.core.fw_config import FWConfig, FWData
+from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, \
+    FW_LOGGING_FORMAT
 
 
 __author__ = 'Anubhav Jain, Xiaohui Qu'
@@ -24,7 +23,7 @@ __date__ = 'Dec 12, 2012'
 
 PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already been initialized
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
-DEFAULT_FORMATTER = logging.Formatter(FWConfig().FW_LOGGING_FORMAT)
+DEFAULT_FORMATTER = logging.Formatter(FW_LOGGING_FORMAT)
 
 
 def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'),
@@ -126,7 +125,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     :param prefix: the prefix for the new dir, default="block_"
     """
 
-    time_now = datetime.datetime.utcnow().strftime(FWConfig().FW_BLOCK_FORMAT)
+    time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
     block_path = prefix + time_now
     full_path = os.path.join(root_dir, block_path)
     os.mkdir(full_path)
@@ -166,7 +165,7 @@ class DataServer(BaseManager):
         """
         DataServer.register('LaunchPad', callable=lambda: launchpad)
         DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
-        m = DataServer(address=('127.0.0.1', 0), authkey=FWConfig().DS_PASSWORD)  # random port
+        m = DataServer(address=('127.0.0.1', 0), authkey=DS_PASSWORD)  # random port
         m.start()
         return m
 

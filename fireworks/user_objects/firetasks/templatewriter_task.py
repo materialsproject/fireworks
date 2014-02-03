@@ -5,8 +5,7 @@ This module contains the TemplateWriterTask, which writes files based on a templ
 import os
 from jinja2 import Template
 from fireworks.core.firework import FireTaskBase
-from fireworks.core.fw_config import FWConfig
-from fireworks.utilities.fw_serializers import FWSerializable
+from fireworks.fw_config import TEMPLATE_DIR
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -51,8 +50,8 @@ class TemplateWriterTask(FireTaskBase):
 
         if d.get('template_dir'):
             self.template_dir = d['template_dir']
-        elif FWConfig().TEMPLATE_DIR:
-            self.template_dir = FWConfig().TEMPLATE_DIR
+        elif TEMPLATE_DIR:
+            self.template_dir = TEMPLATE_DIR
         else:
             MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
             self.template_dir = os.path.join(MODULE_DIR, 'templates')

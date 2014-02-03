@@ -7,7 +7,7 @@ A runnable script to launch Job Packing (Multiple) Rockets
 from argparse import ArgumentParser
 import os
 
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import FWConfig
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
