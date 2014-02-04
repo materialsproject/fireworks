@@ -34,7 +34,7 @@ Adding a tracker (via code)
 
 The following code example creates the FireWork above with two trackers::
 
-    from fireworks.core.firework import FireWork, Tracker
+    from fireworks import FireWork, Tracker
     from fireworks.user_objects.firetasks.script_task import ScriptTask
     from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 

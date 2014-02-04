@@ -85,9 +85,7 @@ Python Example (optional)
 
 Here is a complete Python example that runs multiple FireTasks within a single FireWork::
 
-    from fireworks.core.firework import FireWork
-    from fireworks.core.fworker import FWorker
-    from fireworks.core.launchpad import LaunchPad
+    from fireworks import FireWork, FWorker, LaunchPad
     from fireworks.core.rocket_launcher import launch_rocket
     from fireworks.user_objects.firetasks.script_task import ScriptTask
     from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
@@ -200,9 +198,7 @@ Python example (optional)
 
 Here is a complete Python example that runs a custom FireTask::
 
-    from fireworks.core.firework import FireWork
-    from fireworks.core.fworker import FWorker
-    from fireworks.core.launchpad import LaunchPad
+    from fireworks import FireWork, FWorker, LaunchPad
     from fireworks.core.rocket_launcher import launch_rocket
     from fw_tutorials.firetask.addition_task import AdditionTask
 

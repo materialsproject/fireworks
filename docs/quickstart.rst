@@ -123,8 +123,7 @@ Python code
 
 The following Python code achieves the same behavior::
 
-    from fireworks.core.firework import FireWork, Workflow
-    from fireworks.core.launchpad import LaunchPad
+    from fireworks import FireWork, Workflow, LaunchPad
     from fireworks.core.rocket_launcher import rapidfire
     from fireworks.user_objects.firetasks.script_task import ScriptTask
 
