@@ -40,8 +40,9 @@ class LaunchPad(FWSerializable):
     The LaunchPad manages the FireWorks database.
     """
 
-    def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None):
+    def __init__(self, host='localhost', port=27017, name='fireworks',
+                 username=None, password=None, logdir=None, strm_lvl=None,
+                 user_indices=None, wf_user_indices=None):
         """
 
         :param host:
@@ -63,7 +64,8 @@ class LaunchPad(FWSerializable):
         # set up logger
         self.logdir = logdir
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
-        self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
+        self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir,
+                                      stream_level=self.strm_lvl)
 
         self.user_indices = user_indices if user_indices else []
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
@@ -97,15 +99,17 @@ class LaunchPad(FWSerializable):
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
         wf_user_indices = d.get('wf_user_indices', [])
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir,
-                         strm_lvl, user_indices, wf_user_indices)
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'],
+                         d['password'], logdir, strm_lvl, user_indices,
+                         wf_user_indices)
 
     @classmethod
     def auto_load(cls):
         if LAUNCHPAD_LOC:
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         elif CONFIG_FILE_DIR:
-            return LaunchPad.from_file(os.path.join(CONFIG_FILE_DIR, 'my_launchpad.yaml'))
+            return LaunchPad.from_file(os.path.join(CONFIG_FILE_DIR,
+                                                    'my_launchpad.yaml'))
         return LaunchPad()
 
     def reset(self, password, require_password=True):
@@ -357,11 +361,11 @@ class LaunchPad(FWSerializable):
         except:
             self.m_logger.debug('Database compaction failed (not critical)')
 
-
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
-        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}},
-                                              {'$set': {'state': 'DEFUSED'}})
+        f = self.fireworks.find_and_modify(
+            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+            {'$set': {'state': 'DEFUSED'}})
 
         self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
         return f
@@ -380,7 +384,6 @@ class LaunchPad(FWSerializable):
 
         self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
-
     def reignite_wf(self, fw_id):
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
@@ -396,7 +399,8 @@ class LaunchPad(FWSerializable):
         # second set the state of all FWs to ARCHIVED
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
-            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, {'$set': {'state': 'ARCHIVED'}})
+            self.fireworks.find_and_modify({'fw_id': fw.fw_id},
+                                           {'$set': {'state': 'ARCHIVED'}})
 
         self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
