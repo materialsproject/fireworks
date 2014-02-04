@@ -258,13 +258,10 @@ class LaunchPad(FWSerializable):
         for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
                                       fields=fw_fields):
             if launch_fields:
-                launch_data = []
-                for l in self.launches.find({'launch_id': {"$in": fw['launches']}},
-                                            fields=launch_fields):
-                    launch_data.append({k: v for k, v in l.items()
-                                       if k != "_id"})
-                fw["launches"] = launch_data
-            fw_data.append({k: v for k, v in fw.items() if k != "_id"})
+                fw["launches"] = list(
+                    self.launches.find({'launch_id': {"$in": fw['launches']}},
+                                       fields=launch_fields))
+            fw_data.append(fw)
         wf["fw"] = fw_data
 
         # Post process the summary dict so that it "looks" better.
