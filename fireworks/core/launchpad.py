@@ -333,23 +333,16 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug('Updating indices...')
         self.fireworks.ensure_index('fw_id', unique=True)
-        self.fireworks.ensure_index('state')
-        self.fireworks.ensure_index('spec._category')
-        self.fireworks.ensure_index('created_on')
-        self.fireworks.ensure_index('name')
+        for f in ("state", 'spec._category', 'created_on', "name"):
+            self.fireworks.ensure_index(f)
 
         self.launches.ensure_index('launch_id', unique=True)
-        self.launches.ensure_index('state')
-        self.launches.ensure_index('time_start')
-        self.launches.ensure_index('time_end')
-        self.launches.ensure_index('host')
-        self.launches.ensure_index('ip')
-        self.launches.ensure_index('fworker.name')
+        for f in ('state', 'time_start', 'time_end', 'host', 'ip',
+                  'fworker.name'):
+            self.launches.ensure_index(f)
 
-        self.workflows.ensure_index('name')
-        self.workflows.ensure_index('created_on')
-        self.workflows.ensure_index('updated_on')
-        self.workflows.ensure_index('nodes')
+        for f in ('name', 'created_on', 'updated_on', 'nodes'):
+            self.workflows.ensure_index(f)
 
         for idx in self.user_indices:
             self.fireworks.ensure_index(idx)
