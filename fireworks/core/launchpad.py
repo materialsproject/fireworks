@@ -256,7 +256,7 @@ class LaunchPad(FWSerializable):
             if launch_fields:
                 for l in self.launches.find({'launch_id': {"$in": fw['launches']}},
                                             fields=launch_fields):
-                   launch_data.append({k: v for k, v in l.items()
+                    launch_data.append({k: v for k, v in l.items()
                                        if k != "_id"})
             fw["launches"] = launch_data
             fw_data.append({k: v for k, v in fw.items() if k != "_id"})
