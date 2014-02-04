@@ -176,9 +176,7 @@ Python example (optional)
 
 Here is complete Python code for running a dynamic workflow. Note that this code is no different than running any other custom FireWork - it is almost identical to the code we used to run the AdditionTask() two tutorials ago::
 
-    from fireworks.core.firework import FireWork
-    from fireworks.core.fworker import FWorker
-    from fireworks.core.launchpad import LaunchPad
+    from fireworks import FireWork, FWorker, LaunchPad
     from fireworks.core.rocket_launcher import rapidfire
     from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 

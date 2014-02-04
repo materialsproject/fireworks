@@ -7,8 +7,7 @@ This code is based heavily on the Ansible class of custodian <https://pypi.pytho
 but simplifies it considerably for the limited use cases required by FireWorks.
 """
 
-# TODO: add unit tests
-from fireworks.fw_config import singleton
+from monty.design_patterns import singleton
 
 
 __author__ = "Shyue Ping Ong"
