@@ -8,6 +8,7 @@ import json
 import os
 import time
 import traceback
+from collections import OrderedDict
 
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
@@ -252,13 +253,13 @@ class LaunchPad(FWSerializable):
         fw_data = []
         for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
                                       fields=fw_fields):
-            launch_data = []
             if launch_fields:
+                launch_data = []
                 for l in self.launches.find({'launch_id': {"$in": fw['launches']}},
                                             fields=launch_fields):
                     launch_data.append({k: v for k, v in l.items()
                                        if k != "_id"})
-            fw["launches"] = launch_data
+                fw["launches"] = launch_data
             fw_data.append({k: v for k, v in fw.items() if k != "_id"})
         wf["fw"] = fw_data
 
@@ -271,7 +272,7 @@ class LaunchPad(FWSerializable):
                  else fw["state"][0] for fw in wf["fw"]])
             del wf["fw"]
         elif mode == "more":
-            from collections import OrderedDict
+
             wf["states"] = OrderedDict()
             wf["launch_dirs"] = OrderedDict()
             for fw in wf["fw"]:
