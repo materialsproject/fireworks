@@ -5,7 +5,7 @@ A runnable script to launch a single Rocket (a command-line interface to rocket_
 """
 from argparse import ArgumentParser
 import os
-from fireworks.core.fw_config import FWConfig
+from fireworks.fw_config import LAUNCHPAD_LOC, FWORKER_LOC, CONFIG_FILE_DIR
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
@@ -36,10 +36,10 @@ def rlaunch():
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
     rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
 
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=FWConfig().LAUNCHPAD_LOC)
-    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWConfig().FWORKER_LOC)
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWORKER_LOC)
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file (used if -l, -w unspecified)',
-                        default=FWConfig().CONFIG_FILE_DIR)
+                        default=CONFIG_FILE_DIR)
 
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')

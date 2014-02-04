@@ -27,16 +27,17 @@ A dict created using FWSerializer's to_dict() method should be readable by Pymat
 when the serialize_fw() decorator is used.
 """
 import traceback
-
-import yaml
 import pkgutil
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import importlib
 import datetime
-from fireworks.core.fw_config import FWConfig
-import six
 import abc
+
+import yaml
+import six
+
+from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -189,7 +190,7 @@ class FWSerializable(object):
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_dict(), default_flow_style=FWConfig().YAML_STYLE,
+            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
                              allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
@@ -257,7 +258,7 @@ def load_object(obj_dict):
     """
 
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
-    fw_name = FWConfig().FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
+    fw_name = FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
     obj_dict['_fw_name'] = fw_name
 
     # check for explicit serialization, e.g. {{fireworks.tasks.MyTask}} - based on pymatgen method
@@ -279,7 +280,7 @@ def load_object(obj_dict):
     # this will be slow, but only needed the first time
 
     found_objects = [] # used to make sure we don't find multiple hits
-    for package in FWConfig().USER_PACKAGES:
+    for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
         for loader, mod_name, is_pkg in pkgutil.walk_packages(
                 root_module.__path__, package + '.'):

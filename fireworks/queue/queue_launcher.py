@@ -9,12 +9,14 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 
 import os
 import glob
-import string
 import time
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir, get_slug
-from fireworks.core.fw_config import FWConfig
+from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, \
+    create_datestamp_dir, get_slug
+from fireworks.fw_config import SUBMIT_SCRIPT_NAME, ALWAYS_CREATE_NEW_BLOCK, \
+    QUEUE_RETRY_ATTEMPTS, QUEUE_UPDATE_INTERVAL, QSTAT_FREQUENCY, \
+    RAPIDFIRE_SLEEP_SECS
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -97,11 +99,11 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
             # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
-            with open(FWConfig().SUBMIT_SCRIPT_NAME, 'w') as f:
+            with open(SUBMIT_SCRIPT_NAME, 'w') as f:
                 queue_script = qadapter.get_script_str(launcher_dir)
                 f.write(queue_script)
             l_logger.info('submitting queue script')
-            reservation_id = qadapter.submit_to_queue(FWConfig().SUBMIT_SCRIPT_NAME)
+            reservation_id = qadapter.submit_to_queue(SUBMIT_SCRIPT_NAME)
             if not reservation_id:
                 raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
             elif reserve:
@@ -137,7 +139,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     :param strm_lvl: (str) level at which to stream log messages
     """
 
-    sleep_time = sleep_time if sleep_time else FWConfig().RAPIDFIRE_SLEEP_SECS
+    sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
     launch_dir = os.path.abspath(launch_dir)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
@@ -151,7 +153,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         l_logger.info('getting queue adapter')
 
         prev_blocks = sorted(glob.glob(os.path.join(launch_dir, 'block_*')), reverse=True)
-        if prev_blocks and not FWConfig().ALWAYS_CREATE_NEW_BLOCK:
+        if prev_blocks and not ALWAYS_CREATE_NEW_BLOCK:
             block_dir = os.path.abspath(os.path.join(launch_dir, prev_blocks[0]))
             l_logger.info('Found previous block, using {}'.format(block_dir))
         else:
@@ -178,11 +180,11 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 if num_launched == nlaunches:
                     break
                 # wait for the queue system to update
-                l_logger.info('Sleeping for {} seconds...zzz...'.format(FWConfig().QUEUE_UPDATE_INTERVAL))
-                time.sleep(FWConfig().QUEUE_UPDATE_INTERVAL)
+                l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
+                time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue += 1
                 job_counter += 1
-                if job_counter % FWConfig().QSTAT_FREQUENCY == 0:
+                if job_counter % QSTAT_FREQUENCY == 0:
                     job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
@@ -217,7 +219,7 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
 
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
-    for i in range(FWConfig().QUEUE_RETRY_ATTEMPTS):
+    for i in range(QUEUE_RETRY_ATTEMPTS):
         try:
             jobs_in_queue = qadapter.get_njobs_in_queue()
             if jobs_in_queue is not None:
