@@ -261,6 +261,8 @@ class LaunchPad(FWSerializable):
             fw["launches"] = launch_data
             fw_data.append({k: v for k, v in fw.items() if k != "_id"})
         wf["fw"] = fw_data
+
+        # Post process the summary dict so that it "looks" better.
         del wf["nodes"]
         del wf["_id"]
         if mode == "less":
