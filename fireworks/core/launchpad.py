@@ -205,17 +205,12 @@ class LaunchPad(FWSerializable):
         if not fw_dict:
             raise ValueError('No FireWork exists with id: {}'.format(fw_id))
             # recreate launches from the launch collection
-        launches = []
-        for launch_id in fw_dict['launches']:
-            launches.append(self.get_launch_by_id(launch_id).to_dict())
 
-        fw_dict['launches'] = launches
+        fw_dict['launches'] = list(self.launches.find(
+                    {'launch_id': {"$in": fw_dict['launches']}}))
 
-        archived_launches = []
-        for launch_id in fw_dict['archived_launches']:
-            archived_launches.append(self.get_launch_by_id(launch_id).to_dict())
-
-        fw_dict['archived_launches'] = archived_launches
+        fw_dict['archived_launches'] = list(self.launches.find(
+                    {'launch_id': {"$in": fw_dict['archived_launches']}}))
 
         return FireWork.from_dict(fw_dict)
 
@@ -228,11 +223,9 @@ class LaunchPad(FWSerializable):
         """
 
         links_dict = self.workflows.find_one({'nodes': fw_id})
-        fws = []
-        for fw_id in links_dict['nodes']:
-            fws.append(self.get_fw_by_id(fw_id))
-
-        return Workflow(fws, links_dict['links'], links_dict['name'], links_dict['metadata'])
+        fws = map(self.get_fw_by_id, links_dict["nodes"])
+        return Workflow(fws, links_dict['links'], links_dict['name'],
+                        links_dict['metadata'])
 
     def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
