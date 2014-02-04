@@ -215,7 +215,6 @@ class LaunchPad(FWSerializable):
         return FireWork.from_dict(fw_dict)
 
     def get_wf_by_fw_id(self, fw_id):
-
         """
         Given a FireWork id, give back the Workflow containing that FireWork
         :param fw_id:
@@ -226,6 +225,61 @@ class LaunchPad(FWSerializable):
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
+
+    def get_wf_summary_dict(self, fw_id, mode="more"):
+        """
+        A much faster way to get summary information about a Workflow by
+        querying only for needed information.
+
+        Args:
+            fw_id (int): A Firework id.
+            mode (str): Choose between "more" and "less" in terms of quantity
+                of information.
+
+        Returns:
+            (dict) of information about Workflow.
+        """
+        wf_fields = ["state", "created_on", "name", "nodes"]
+        fw_fields = ["state", "fw_id"]
+        launch_fields = []
+
+        if mode == "more":
+            wf_fields.append("updated_on")
+            fw_fields.extend(["name", "launches"])
+            launch_fields.append("launch_dir")
+
+        wf = self.workflows.find_one({"nodes": fw_id}, fields=wf_fields)
+        fw_data = []
+        for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
+                                      fields=fw_fields):
+            launch_data = []
+            if launch_fields:
+                for l in self.launches.find({'launch_id': {"$in": fw['launches']}},
+                                            fields=launch_fields):
+                   launch_data.append({k: v for k, v in l.items()
+                                       if k != "_id"})
+            fw["launches"] = launch_data
+            fw_data.append({k: v for k, v in fw.items() if k != "_id"})
+        wf["fw"] = fw_data
+        del wf["nodes"]
+        del wf["_id"]
+        if mode == "less":
+            wf["states_list"] = "-".join(
+                [fw["state"][:3] if fw["state"].startswith("R")
+                 else fw["state"][0] for fw in wf["fw"]])
+            del wf["fw"]
+        elif mode == "more":
+            from collections import OrderedDict
+            wf["states"] = OrderedDict()
+            wf["launch_dirs"] = OrderedDict()
+            for fw in wf["fw"]:
+                k = "%s--%d" % (fw["name"], fw["fw_id"])
+                wf["states"][k] = fw["state"]
+                wf["launch_dirs"][k] = [l["launch_dir"] for l in fw[
+                    "launches"]]
+            del wf["fw"]
+
+        return wf
 
     def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
