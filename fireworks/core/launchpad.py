@@ -8,6 +8,7 @@ import json
 import os
 import time
 import traceback
+from collections import OrderedDict
 
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
@@ -39,8 +40,9 @@ class LaunchPad(FWSerializable):
     The LaunchPad manages the FireWorks database.
     """
 
-    def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None):
+    def __init__(self, host='localhost', port=27017, name='fireworks',
+                 username=None, password=None, logdir=None, strm_lvl=None,
+                 user_indices=None, wf_user_indices=None):
         """
 
         :param host:
@@ -62,7 +64,8 @@ class LaunchPad(FWSerializable):
         # set up logger
         self.logdir = logdir
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
-        self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
+        self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir,
+                                      stream_level=self.strm_lvl)
 
         self.user_indices = user_indices if user_indices else []
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
@@ -96,15 +99,17 @@ class LaunchPad(FWSerializable):
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
         wf_user_indices = d.get('wf_user_indices', [])
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'], logdir,
-                         strm_lvl, user_indices, wf_user_indices)
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'],
+                         d['password'], logdir, strm_lvl, user_indices,
+                         wf_user_indices)
 
     @classmethod
     def auto_load(cls):
         if LAUNCHPAD_LOC:
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         elif CONFIG_FILE_DIR:
-            return LaunchPad.from_file(os.path.join(CONFIG_FILE_DIR, 'my_launchpad.yaml'))
+            return LaunchPad.from_file(os.path.join(CONFIG_FILE_DIR,
+                                                    'my_launchpad.yaml'))
         return LaunchPad()
 
     def reset(self, password, require_password=True):
@@ -215,7 +220,6 @@ class LaunchPad(FWSerializable):
         return FireWork.from_dict(fw_dict)
 
     def get_wf_by_fw_id(self, fw_id):
-
         """
         Given a FireWork id, give back the Workflow containing that FireWork
         :param fw_id:
@@ -226,6 +230,60 @@ class LaunchPad(FWSerializable):
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
+
+    def get_wf_summary_dict(self, fw_id, mode="more"):
+        """
+        A much faster way to get summary information about a Workflow by
+        querying only for needed information.
+
+        Args:
+            fw_id (int): A Firework id.
+            mode (str): Choose between "more" and "less" in terms of quantity
+                of information.
+
+        Returns:
+            (dict) of information about Workflow.
+        """
+        wf_fields = ["state", "created_on", "name", "nodes"]
+        fw_fields = ["state", "fw_id"]
+        launch_fields = []
+
+        if mode == "more":
+            wf_fields.append("updated_on")
+            fw_fields.extend(["name", "launches"])
+            launch_fields.append("launch_dir")
+
+        wf = self.workflows.find_one({"nodes": fw_id}, fields=wf_fields)
+        fw_data = []
+        for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
+                                      fields=fw_fields):
+            if launch_fields:
+                fw["launches"] = list(
+                    self.launches.find({'launch_id': {"$in": fw['launches']}},
+                                       fields=launch_fields))
+            fw_data.append(fw)
+        wf["fw"] = fw_data
+
+        # Post process the summary dict so that it "looks" better.
+        del wf["nodes"]
+        del wf["_id"]
+        if mode == "less":
+            wf["states_list"] = "-".join(
+                [fw["state"][:3] if fw["state"].startswith("R")
+                 else fw["state"][0] for fw in wf["fw"]])
+            del wf["fw"]
+        elif mode == "more":
+
+            wf["states"] = OrderedDict()
+            wf["launch_dirs"] = OrderedDict()
+            for fw in wf["fw"]:
+                k = "%s--%d" % (fw["name"], fw["fw_id"])
+                wf["states"][k] = fw["state"]
+                wf["launch_dirs"][k] = [l["launch_dir"] for l in fw[
+                    "launches"]]
+            del wf["fw"]
+
+        return wf
 
     def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
@@ -276,23 +334,16 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug('Updating indices...')
         self.fireworks.ensure_index('fw_id', unique=True)
-        self.fireworks.ensure_index('state')
-        self.fireworks.ensure_index('spec._category')
-        self.fireworks.ensure_index('created_on')
-        self.fireworks.ensure_index('name')
+        for f in ("state", 'spec._category', 'created_on', "name"):
+            self.fireworks.ensure_index(f)
 
         self.launches.ensure_index('launch_id', unique=True)
-        self.launches.ensure_index('state')
-        self.launches.ensure_index('time_start')
-        self.launches.ensure_index('time_end')
-        self.launches.ensure_index('host')
-        self.launches.ensure_index('ip')
-        self.launches.ensure_index('fworker.name')
+        for f in ('state', 'time_start', 'time_end', 'host', 'ip',
+                  'fworker.name'):
+            self.launches.ensure_index(f)
 
-        self.workflows.ensure_index('name')
-        self.workflows.ensure_index('created_on')
-        self.workflows.ensure_index('updated_on')
-        self.workflows.ensure_index('nodes')
+        for f in ('name', 'created_on', 'updated_on', 'nodes'):
+            self.workflows.ensure_index(f)
 
         for idx in self.user_indices:
             self.fireworks.ensure_index(idx)
@@ -307,11 +358,11 @@ class LaunchPad(FWSerializable):
         except:
             self.m_logger.debug('Database compaction failed (not critical)')
 
-
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
-        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': {'$in': allowed_states}},
-                                              {'$set': {'state': 'DEFUSED'}})
+        f = self.fireworks.find_and_modify(
+            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+            {'$set': {'state': 'DEFUSED'}})
 
         self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
         return f
@@ -330,7 +381,6 @@ class LaunchPad(FWSerializable):
 
         self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
-
     def reignite_wf(self, fw_id):
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
@@ -346,7 +396,8 @@ class LaunchPad(FWSerializable):
         # second set the state of all FWs to ARCHIVED
         wf = self.get_wf_by_fw_id(fw_id)
         for fw in wf.fws:
-            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, {'$set': {'state': 'ARCHIVED'}})
+            self.fireworks.find_and_modify({'fw_id': fw.fw_id},
+                                           {'$set': {'state': 'ARCHIVED'}})
 
         self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
 
