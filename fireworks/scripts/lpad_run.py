@@ -226,20 +226,30 @@ def get_wfs(args):
         wfs = ids
     elif args.display_format == 'count':
         wfs = [ids]
+    elif args.display_format == "less":
+        wfs = []
+        for wf in lp.workflows.find(
+                {"nodes": {"$in": ids}},
+                fields=["nodes", "state", "created_on", "name"]):
+            d = {"name": wf["name"], "created_on": wf["created_on"],
+                 "state": wf["state"]}
+            states = []
+            for fw in lp.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
+                                        fields=["state"]):
+                states.append(fw["state"][:3] if fw["state"].startswith("R")
+                              else fw["state"][0])
+            d["states_list"] = "-".join(states)
+            wfs.append(d)
     else:
         for id in ids:
             wf = lp.get_wf_by_fw_id(id)
             d = wf.to_display_dict()
-            if args.display_format == 'more' or args.display_format == 'less':
+            if args.display_format == 'more':
                 del d['name']
                 del d['parent_links']
                 del d['nodes']
                 del d['links']
                 del d['metadata']
-            if args.display_format == 'less':
-                del d['states']
-                del d['launch_dirs']
-                del d['updated_on']
             if args.display_format == 'more' or args.display_format == 'all':
                 del d['states_list']
             wfs.append(d)
