@@ -265,15 +265,11 @@ class LaunchPad(FWSerializable):
         wf["fw"] = fw_data
 
         # Post process the summary dict so that it "looks" better.
-        del wf["nodes"]
-        del wf["_id"]
         if mode == "less":
             wf["states_list"] = "-".join(
                 [fw["state"][:3] if fw["state"].startswith("R")
                  else fw["state"][0] for fw in wf["fw"]])
-            del wf["fw"]
         elif mode == "more":
-
             wf["states"] = OrderedDict()
             wf["launch_dirs"] = OrderedDict()
             for fw in wf["fw"]:
@@ -281,7 +277,9 @@ class LaunchPad(FWSerializable):
                 wf["states"][k] = fw["state"]
                 wf["launch_dirs"][k] = [l["launch_dir"] for l in fw[
                     "launches"]]
-            del wf["fw"]
+        del wf["nodes"]
+        del wf["_id"]
+        del wf["fw"]
 
         return wf
 
