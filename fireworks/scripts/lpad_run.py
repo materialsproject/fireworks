@@ -226,25 +226,13 @@ def get_wfs(args):
         wfs = ids
     elif args.display_format == 'count':
         wfs = [ids]
-    elif args.display_format in ["less", "more"]:
+    else:
         wfs = []
         for i in ids:
             d = lp.get_wf_summary_dict(i, args.display_format)
             d["name"] += "--%d" % i
             wfs.append(d)
-    else:
-        for id in ids:
-            wf = lp.get_wf_by_fw_id(id)
-            d = wf.to_display_dict()
-            if args.display_format == 'more':
-                del d['name']
-                del d['parent_links']
-                del d['nodes']
-                del d['links']
-                del d['metadata']
-            if args.display_format == 'more' or args.display_format == 'all':
-                del d['states_list']
-            wfs.append(d)
+            
     if len(wfs) == 1:
         wfs = wfs[0]
 
