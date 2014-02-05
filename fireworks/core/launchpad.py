@@ -238,8 +238,8 @@ class LaunchPad(FWSerializable):
 
         Args:
             fw_id (int): A Firework id.
-            mode (str): Choose between "more" and "less" in terms of quantity
-                of information.
+            mode (str): Choose between "more", "less" and "all" in terms of
+                quantity of information.
 
         Returns:
             (dict) of information about Workflow.
@@ -248,13 +248,17 @@ class LaunchPad(FWSerializable):
         fw_fields = ["state", "fw_id"]
         launch_fields = []
 
-        if mode == "more":
+        if mode != "less":
             wf_fields.append("updated_on")
             fw_fields.extend(["name", "launches"])
             launch_fields.append("launch_dir")
 
+        if mode == "all":
+            wf_fields = None
+
         wf = self.workflows.find_one({"nodes": fw_id}, fields=wf_fields)
         fw_data = []
+        id_name_map = {}
         for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
                                       fields=fw_fields):
             if launch_fields:
@@ -262,18 +266,16 @@ class LaunchPad(FWSerializable):
                     self.launches.find({'launch_id': {"$in": fw['launches']}},
                                        fields=launch_fields))
             fw_data.append(fw)
+            id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
         wf["fw"] = fw_data
 
         # Post process the summary dict so that it "looks" better.
-        del wf["nodes"]
-        del wf["_id"]
         if mode == "less":
             wf["states_list"] = "-".join(
                 [fw["state"][:3] if fw["state"].startswith("R")
                  else fw["state"][0] for fw in wf["fw"]])
-            del wf["fw"]
+            del wf["nodes"]
         elif mode == "more":
-
             wf["states"] = OrderedDict()
             wf["launch_dirs"] = OrderedDict()
             for fw in wf["fw"]:
@@ -281,7 +283,17 @@ class LaunchPad(FWSerializable):
                 wf["states"][k] = fw["state"]
                 wf["launch_dirs"][k] = [l["launch_dir"] for l in fw[
                     "launches"]]
-            del wf["fw"]
+            del wf["nodes"]
+        elif mode == "all":
+            wf["links"] = {id_name_map[int(k)]: [id_name_map[i] for i in v]
+                           for k, v in wf["links"].items()}
+            wf["nodes"] = map(id_name_map.get, wf["nodes"])
+            wf["parent_links"] = {
+                id_name_map[int(k)]: [id_name_map[i] for i in v]
+                for k, v in wf["parent_links"].items()}
+
+        del wf["_id"]
+        del wf["fw"]
 
         return wf
 
