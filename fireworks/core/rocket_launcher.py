@@ -72,7 +72,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
             rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
             if rocket_ran:
                 num_launched += 1
-            elif not os.path.listdir(launcher_dir):
+            elif not os.listdir(launcher_dir):
                 # remove the empty shell of a directory
                 os.chdir(curdir)
                 os.rmdir(launcher_dir)
