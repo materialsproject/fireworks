@@ -266,7 +266,8 @@ class LaunchPad(FWSerializable):
                     self.launches.find({'launch_id': {"$in": fw['launches']}},
                                        fields=launch_fields))
             fw_data.append(fw)
-            id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
+            if mode != "less":
+                id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
         wf["fw"] = fw_data
 
         # Post process the summary dict so that it "looks" better.
