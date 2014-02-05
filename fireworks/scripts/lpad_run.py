@@ -221,7 +221,6 @@ def get_wfs(args):
         sort = None
 
     ids = lp.get_wf_ids(query, sort, args.max, count_only=args.display_format == 'count')
-    wfs = []
     if args.display_format == 'ids':
         wfs = ids
     elif args.display_format == 'count':
@@ -232,7 +231,7 @@ def get_wfs(args):
             d = lp.get_wf_summary_dict(i, args.display_format)
             d["name"] += "--%d" % i
             wfs.append(d)
-            
+
     if len(wfs) == 1:
         wfs = wfs[0]
 
