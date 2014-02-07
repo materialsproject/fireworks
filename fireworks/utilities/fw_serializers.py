@@ -304,9 +304,7 @@ def load_object(obj_dict):
             'load_object() found multiple objects with cls._fw_name {} -- {}'
             .format(fw_name, found_objects))
 
-    raise ValueError(
-        'load_object() could not find a class with cls._fw_name {}'
-        .format(fw_name))
+    raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
 
 
 def load_object_from_file(filename, f_format=None):

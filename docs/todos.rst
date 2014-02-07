@@ -47,8 +47,12 @@ Misc.
 
 * allow workflow connections to be defined by FW_name instead of by ids?
 
+* does updating the workflows need to lock the workflow? e.g. several concurrent FWs updating the workflow simultaneously...
+
 * get isinstance() working - create a PBSAdaptor p, use x=load_object(p.to_dict()), and try "isinstance(x, PBSAdaptor)
 	* Note the failure seems to have something to do with extending dict, and the fact that dict is an old-style class
+
+* change docstring format to Google-style like pymatgen
 
 Tests
 =====
