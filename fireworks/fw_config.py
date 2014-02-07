@@ -84,7 +84,6 @@ def override_user_settings():
     MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(MODULE_DIR)  # FW root dir
 
-    print 'ROOT DIR IS', root_dir
     if os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
         config_path = os.path.join(os.getcwd(), 'FW_config.yaml')
 
