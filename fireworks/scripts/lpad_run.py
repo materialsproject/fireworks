@@ -92,7 +92,7 @@ def get_lp(args):
             return LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
     except:
         traceback.print_exc()
-        err_message = 'FireWorks was not able to connect to MongoDB. The database file specified was {}.'.format(args.launchpad_file)
+        err_message = 'FireWorks was not able to connect to MongoDB. Is the server running? The database file specified was {}.'.format(args.launchpad_file)
         if not args.launchpad_file:
             err_message += ' Type "lpad init" if you would like to set up a file that specifies location and credentials of your Mongo database (otherwise use default localhost configuration).'
         raise ValueError(err_message)

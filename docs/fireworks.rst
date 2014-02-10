@@ -9,6 +9,14 @@ fireworks Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`fw_config` Module
+-----------------------
+
+.. automodule:: fireworks.fw_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`manage` Module
 --------------------
 

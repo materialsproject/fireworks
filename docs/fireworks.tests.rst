@@ -25,3 +25,11 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`test_fw_config` Module
+----------------------------
+
+.. automodule:: fireworks.tests.test_fw_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

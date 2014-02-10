@@ -9,14 +9,6 @@ core Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`fw_config` Module
------------------------
-
-.. automodule:: fireworks.core.fw_config
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`fworker` Module
 ---------------------
 
