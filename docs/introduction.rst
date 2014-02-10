@@ -124,11 +124,11 @@ A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be ru
 
    You will now see lots of information about your Rocket launch, such as the time and directory of the launch. A lot of it is probably unclear, but you should notice that the state of the FireWork is now ``COMPLETED``.
 
-#. Try launching another rocket (you should get an error)::
+#. Try launching another rocket::
 
     rlaunch singleshot
 
-   The error ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database.
+   The message ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database.
 
 Launch many Rockets (rapidfire mode)
 ====================================
@@ -149,7 +149,7 @@ If you just want to run many jobs on the central server itself, the simplest way
 
     lpad get_fws -d less
 
-#. We could also just get the ``fw_id`` of jobs that are ready to run (our 3 new FireWorks)::
+#. We could also just get information for jobs that are ready to run (our 3 new FireWorks)::
 
     lpad get_fws -s READY -d less
 
@@ -205,9 +205,7 @@ Python Examples (optional)
 
 While it's possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it::
 
-
-    from fireworks.core.firework import FireWork
-    from fireworks.core.launchpad import LaunchPad
+    from fireworks import FireWork, LaunchPad
     from fireworks.core.rocket_launcher import launch_rocket
     from fireworks.user_objects.firetasks.script_task import ScriptTask
 
