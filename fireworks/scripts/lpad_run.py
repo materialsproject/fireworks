@@ -229,7 +229,6 @@ def get_wfs(args):
         wfs = []
         for i in ids:
             d = lp.get_wf_summary_dict(i, args.display_format)
-            d["name"] += "--%d" % i
             wfs.append(d)
 
     if len(wfs) == 1:
