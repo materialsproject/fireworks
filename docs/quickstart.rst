@@ -54,18 +54,18 @@ Add a Workflow
    *Output*::
 
     {
-        "created_on": "2013-10-03T20:54:28.296672",
+        "name": "test_workflow",
+        "state": "READY",
         "states": {
             "hello--1": "READY",
             "goodbye--2": "WAITING"
         },
-        "state": "READY",
+        "created_on": "2014-02-10T22:10:27.024000",
         "launch_dirs": {
             "hello--1": [],
             "goodbye--2": []
         },
-        "name--id": "test_workflow--1",
-        "updated_on": "2013-10-03T20:54:28.296676"
+        "updated_on": "2014-02-10T22:10:27.029000"
     }
 
    We get back basic information on our workflows. The second step "goodbye" is *waiting* for the first one to complete; it is not ready to run because it depends on the first job.
@@ -91,22 +91,22 @@ Run all Workflows
    *Output*::
 
     {
-        "created_on": "2013-10-03T20:57:24.978665",
+        "name": "test_workflow",
+        "state": "COMPLETED",
         "states": {
             "hello--1": "COMPLETED",
             "goodbye--2": "COMPLETED"
         },
-        "state": "COMPLETED",
+        "created_on": "2014-02-10T22:18:50.923000",
         "launch_dirs": {
             "hello--1": [
-                "/some/path/launcher_2013-10-03-20-56-29-345603"
+                "/Users/ajain/Documents/code_matgen/fireworks/launcher_2014-02-10-22-18-50-679233"
             ],
             "goodbye--2": [
-                "/some/path/launcher_2013-10-03-20-56-29-861385"
+                "/Users/ajain/Documents/code_matgen/fireworks/launcher_2014-02-10-22-18-50-868852"
             ]
         },
-        "name--id": "test_workflow--1",
-        "updated_on": "2013-10-03T20:57:24.978670"
+        "updated_on": "2014-02-10T22:18:50.923000"
     }
 
    FireWorks automatically created ``launcher_`` directories for each step in the Workflow and ran them. We see that both steps are complete. Note that there exist options to :doc:`choose where to run jobs </controlworker>`, as well as to :doc:`tear down empty directories after running jobs </config_tutorial>`.
