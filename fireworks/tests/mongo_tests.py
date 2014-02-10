@@ -68,35 +68,31 @@ class MongoTests(unittest.TestCase):
 
     def test_multi_fw_complex(self):
 
-        dest = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_file.txt')
-        def tear_down(dest):
-            files = ['inputs.txt', 'words.txt', dest]
-            for f in files:
+        dest1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'inputs.txt')
+        dest2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_file.txt')
+        def tear_down(dests):
+            for f in dests:
                 if os.path.exists(f):
                     os.remove(f)
 
-        tear_down(dest)
+        tear_down([dest1, dest2])
         try:
             # create the FireWork consisting of multiple tasks
-            firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})
-            firetask2 = ScriptTask.from_str('wc -w < inputs.txt > words.txt')
-            firetask3 = FileTransferTask({'files': [{'src': 'words.txt', 'dest': dest}], 'mode': 'copy'})
-            fw = FireWork([firetask1, firetask2, firetask3])
+            firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': dest1})
+            firetask2 = FileTransferTask({'files': [{'src': dest1, 'dest': dest2}], 'mode': 'copy'})
+            fw = FireWork([firetask1, firetask2])
 
             # store workflow and launch it locally, single shot
             self.lp.add_wf(fw)
             launch_rocket(self.lp, FWorker())
 
             # read inputs.txt, words.txt, dest
-            with open('inputs.txt') as f:
-                self.assertEqual(f.read(), 'option1 = 5.0\noption2 = fast method')
-            with open('words.txt') as f:
-                self.assertEqual(f.read().strip(), '7')
-            with open(dest) as f:
-                self.assertEqual(f.read().strip(), '7')
+            for d in [dest1, dest2]:
+                with open(d) as f:
+                    self.assertEqual(f.read(), 'option1 = 5.0\noption2 = fast method')
 
         finally:
-            tear_down(dest)
+            tear_down([dest1, dest2])
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})
