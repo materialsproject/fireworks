@@ -6,7 +6,9 @@ from fireworks.core.firework import FireWork, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
+from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
 import six
@@ -63,6 +65,38 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(
             self.lp.get_launch_by_id(1).action.stored_data['stdout'],
             str(six.b("test2\n")))
+
+    def test_multi_fw_complex(self):
+
+        dest = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_file.txt')
+        def tear_down(dest):
+            files = ['inputs.txt', 'words.txt', dest]
+            for f in files:
+                if os.path.exists(f):
+                    os.remove(f)
+
+        tear_down(dest)
+        try:
+            # create the FireWork consisting of multiple tasks
+            firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})
+            firetask2 = ScriptTask.from_str('wc -w < inputs.txt > words.txt')
+            firetask3 = FileTransferTask({'files': [{'src': 'words.txt', 'dest': dest}], 'mode': 'copy'})
+            fw = FireWork([firetask1, firetask2, firetask3])
+
+            # store workflow and launch it locally, single shot
+            self.lp.add_wf(fw)
+            launch_rocket(self.lp, FWorker())
+
+            # read inputs.txt, words.txt, dest
+            with open('inputs.txt') as f:
+                self.assertEqual(f.read(), 'option1 = 5.0\noption2 = fast method')
+            with open('words.txt') as f:
+                self.assertEqual(f.read().strip(), '7')
+            with open(dest) as f:
+                self.assertEqual(f.read().strip(), '7')
+
+        finally:
+            tear_down(dest)
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})

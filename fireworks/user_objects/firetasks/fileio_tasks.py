@@ -51,11 +51,11 @@ class FileDeleteTask(FireTaskBase):
 
 class FileTransferTask(FireTaskBase):
     """
-    A FireTask to Transfer files:
+    A FireTask to Transfer files. Note that
     Required params:
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
-        - files: ([str]) - source files
-        - dest: (str) destination directory
+        - files: ([str]) or ([(str, str)]) - list of source files, or dictionary containing 'src' and 'dest' keys
+        - dest: (str) destination directory, if not specified within files parameter
     Optional params:
         - server: (str) server host for remote transfer
         - key_filename: (str) optional SSH key location for remote transfer
@@ -89,7 +89,11 @@ class FileTransferTask(FireTaskBase):
 
         for f in self["files"]:
             try:
-                src = abspath(expanduser(expandvars(f))) if shell_interpret else f
+                if 'src' in f:
+                    src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret \
+                        else f['src']
+                else:
+                    src = abspath(expanduser(expandvars(f))) if shell_interpret else f
 
                 if mode == 'rtransfer':
                     dest = self['dest']
