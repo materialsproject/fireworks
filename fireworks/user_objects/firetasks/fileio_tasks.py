@@ -61,7 +61,7 @@ class FileTransferTask(FireTaskBase):
         - key_filename: (str) optional SSH key location for remote transfer
     """
     _fw_name = 'FileTransferTask'
-    required_params = ["mode", "files", "dest"]
+    required_params = ["mode", "files"]
 
     fn_list = {
             "move": shutil.move,
@@ -104,8 +104,12 @@ class FileTransferTask(FireTaskBase):
                         sftp.put(src, dest)
 
                 else:
-                    dest = abspath(expanduser(expandvars(self['dest']))) if \
-                        shell_interpret else self['dest']
+                    if 'dest' in f:
+                        dest = abspath(expanduser(expandvars(f['dest']))) if shell_interpret \
+                            else f['dest']
+                    else:
+                        dest = abspath(expanduser(expandvars(self['dest']))) if shell_interpret \
+                            else self['dest']
                     FileTransferTask.fn_list[mode](src, dest)
 
             except:
