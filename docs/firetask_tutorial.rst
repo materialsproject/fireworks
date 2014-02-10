@@ -76,7 +76,7 @@ The three-step FireWork thus looks like this:
 
 You should see two files written out to the system, ``inputs.txt`` and ``words.txt``, confirming that you successfully ran the first two steps of your job! You can also navigate to your home directory and look for ``words.txt`` to make sure the third step also got completed correctly.
 
-This combination of writing a file, executing a command, and perhaps moving the results could be used in many situations. For example, you could use ``TemplateWriterTask`` to write a templated queue script, and then use the ``ScriptTask`` to submit it (e.g., via the *qsub* command). (note, however, that FireWorks provides more powerful methods to :doc:`submit jobs through queues </queue_tutorial>`).
+This combination of writing a file, executing a command, and perhaps moving the results could be used in many situations. For example, you could use ``TemplateWriterTask`` to write a templated queue script, and then use the ``ScriptTask`` to submit it (e.g., via the *qsub* command). (note, however, that FireWorks provides more powerful methods to :doc:`submit jobs through queues </queue_tutorial>`). Or, you could use the ``TemplateWriterTask`` to write an input file, the ``ScriptTask`` to execute a code that can read that input file, and finally the ``FileTransferTask`` to move the results somewhere.
 
 .. note:: The only way to communicate information between FireTasks within the same FireWork is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider :doc:`defining a workflow <workflow_tutorial>` that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the *FWAction* object, but not between FireTasks within the same FireWork (:ref:`wfmodel-label`).
 
@@ -89,10 +89,9 @@ Here is a complete Python example that runs multiple FireTasks within a single F
     from fireworks.core.rocket_launcher import launch_rocket
     from fireworks.user_objects.firetasks.script_task import ScriptTask
     from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
+    from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask
 
     # set up the LaunchPad and reset it
-    from fireworks.user_objects.firetasks.transfer_task import FileTransferTask
-
     launchpad = LaunchPad()
     launchpad.reset('', require_password=False)
 
