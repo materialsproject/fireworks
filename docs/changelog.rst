@@ -10,7 +10,7 @@ v0.7
 
 * Python 3 support! via 'six' library (S.P. Ong)
 * BackgroundTasks introduced
-* Performance improvements to get_fws and get_wfs commands (S.P. Ong)
+* Performance improvements to get_wf command (S.P. Ong)
 * Deserialization warnings and added stability (S.P. Ong)
 * Reservation mode and silencer works in remote launch (S.P. Ong)
 * Restore old FileTransferTask behavior
