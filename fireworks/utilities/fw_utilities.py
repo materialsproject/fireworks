@@ -138,7 +138,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
             raise
         import time
         import random
-        time.sleep(random.randrange(1, 5)*0.1)
+        time.sleep(random.random()/3+0.1)
         full_path = get_path()
         os.mkdir(full_path)
 
