@@ -131,16 +131,13 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
         return os.path.join(root_dir, block_path)
 
     full_path = get_path()
-    try:
-        os.mkdir(full_path)
-    except OSError, e:
-        if e.errno != 17:  # File exists error
-            raise
+    while os.path.exists(full_path):
         import time
         import random
         time.sleep(random.random()/3+0.1)
         full_path = get_path()
-        os.mkdir(full_path)
+
+    os.mkdir(full_path)
 
     l_logger.info('Created new dir {}'.format(full_path))
     return full_path
