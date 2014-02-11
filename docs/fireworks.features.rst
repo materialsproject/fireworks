@@ -9,6 +9,14 @@ features Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`background_task` Module
+-----------------------------
+
+.. automodule:: fireworks.features.background_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`dupefinder` Module
 ------------------------
 
