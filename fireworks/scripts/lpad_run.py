@@ -474,7 +474,7 @@ def lpad():
     state_kwargs = {"type": str.upper, "help": "Select by state.",
                     "choices": FireWork.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
-    disp_kwargs = {"type": str, "help": "Display format.",
+    disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
                    "choices": ["all", "more", "less", "ids", "count"]}
 
     query_args = ["-q", "--query"]
