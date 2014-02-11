@@ -2,6 +2,22 @@
 FireWorks Changelog
 ===================
 
+v0.7
+----
+
+.. caution:: The default behavior is now that mod_spec and update_spec push updates to next FireWork AND the next FireTask
+.. caution:: The FWConfig parameters are no longer called via a FWConfig() class instantiation; you can import these parameters directly now.
+
+* Python 3 support! via 'six' library (S.P. Ong)
+* BackgroundTasks introduced
+* Performance improvements to get_fws and get_wfs commands (S.P. Ong)
+* Deserialization warnings and added stability (S.P. Ong)
+* Reservation mode and silencer works in remote launch (S.P. Ong)
+* Restore old FileTransferTask behavior
+* Tutorial updates
+* Various internal improvements, e.g. to FWConfig (S.P. Ong)
+* Bug fixes (A. Jain, S.P. Ong)
+
 **v0.66**
 
 .. warning:: This version changes the default serialization for custom FireWorks without _fw_name to <project>::<Class> instead of <Class>. If you have custom FireTasks from v0.62-v0.65 that did not specify _fw_name explicitly, this introduces a backward incompatibility. Contact the support list if this affects you - an easy fix is available.
