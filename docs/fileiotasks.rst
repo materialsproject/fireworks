@@ -60,6 +60,21 @@ In Python code, the same task would be defined as::
 
 The ``files`` parameter *must* be specified, and is an array of dictionaries with ``src`` and ``dest`` keys. The default mode of operation is to move files from the source to destination; by changing the ``mode`` to copy, we will copy the files instead. Note that you can put as many files (or directories) in the ``files`` list as you want; the same ``mode`` will be applied to all of them. If you want to move some files and copy others, you'd need to include two different ``FileTransferTask``s in your FireWork.
 
+A more compact representation for File Transfers can be given if several files are being moved/copied to the same directory::
+
+    spec:
+      _tasks:
+      - _fw_name: FileTransferTask
+        dest: dest_dir
+        files:
+        - file1.txt
+        - file2.txt
+        mode: copy
+
+In Python code, this representation would be defined as::
+
+    firetask1 = FileTransferTask({'files': ['file1.txt', 'file2.txt'], 'dest':'dest_dir', 'mode': 'copy'})
+
 An example of the FileTransferTask in action is given in the :doc:`FireTask tutorial <firetask_tutorial>`.
 
 FileTransferTask Options
