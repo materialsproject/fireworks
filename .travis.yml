@@ -9,9 +9,7 @@ before_script:
   - python setup.py develop
 script:
   - nosetests
-  - lpad get_wfs -d more
-  - lpad get_fws -d more
-  - rlaunch singleshot
+  - source fireworks/tests/cmd_line_test.sh
 notifications:
   email:
     recipients:
