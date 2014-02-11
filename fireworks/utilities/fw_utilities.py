@@ -125,10 +125,22 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     :param prefix: the prefix for the new dir, default="block_"
     """
 
-    time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
-    block_path = prefix + time_now
-    full_path = os.path.join(root_dir, block_path)
-    os.mkdir(full_path)
+    def get_path():
+        time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
+        block_path = prefix + time_now
+        return os.path.join(root_dir, block_path)
+
+    full_path = get_path()
+    try:
+        os.mkdir(full_path)
+    except OSError, e:
+        if e.errno != 17:
+            raise
+        import time
+        time.sleep(0.2)
+        full_path = get_path()
+        os.mkdir(full_path)
+
     l_logger.info('Created new dir {}'.format(full_path))
     return full_path
 
