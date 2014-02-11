@@ -6,7 +6,8 @@ from fireworks.core.firework import FireWork, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
-from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask
+from fireworks.features.background_task import BackgroundTask
+from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
@@ -42,6 +43,11 @@ class MongoTests(unittest.TestCase):
         except:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
+    def _teardown(self, dests):
+        for f in dests:
+            if os.path.exists(f):
+                os.remove(f)
+
     def setUp(self):
         self.old_wd = os.getcwd()
 
@@ -70,12 +76,7 @@ class MongoTests(unittest.TestCase):
 
         dest1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'inputs.txt')
         dest2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_file.txt')
-        def tear_down(dests):
-            for f in dests:
-                if os.path.exists(f):
-                    os.remove(f)
-
-        tear_down([dest1, dest2])
+        self._teardown([dest1, dest2])
         try:
             # create the FireWork consisting of multiple tasks
             firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': dest1})
@@ -92,7 +93,27 @@ class MongoTests(unittest.TestCase):
                     self.assertEqual(f.read(), 'option1 = 5.0\noption2 = fast method')
 
         finally:
-            tear_down([dest1, dest2])
+            self._teardown([dest1, dest2])
+
+
+    def test_backgroundtask(self):
+        dest1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'hello.txt')
+        self._teardown([dest1])
+
+        try:
+            test1 = ScriptTask.from_str("python -c 'print(\"testing background...\")'",
+                                        {'store_stdout': True})
+
+            bg_task1 = BackgroundTask(FileWriteTask({'files_to_write': [{'filename': dest1, 'contents': 'hello'}]}), num_launches=1, run_on_finish=True)
+            fw = FireWork(test1, spec={'_background_tasks': [bg_task1]})
+            self.lp.add_wf(fw)
+            launch_rocket(self.lp, self.fworker)
+
+            with open(dest1) as f:
+                    self.assertEqual(f.read(), 'hello')
+
+        finally:
+            self._teardown([dest1])
 
     def test_add_fw(self):
         fw = FireWork(AdditionTask(), {'input_array': [5, 7]})

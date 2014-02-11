@@ -9,7 +9,7 @@ import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction, FireWork, BackgroundTask
+from fireworks.core.firework import FWAction, FireWork
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
 
@@ -62,9 +62,9 @@ def stop_backgrounds(ping_stop, btask_stops):
 def background_task(btask, spec, stop_event, master_thread):
     num_launched = 0
     while not stop_event.is_set() and master_thread.isAlive():
-        for task in btask.firetasks:
+        for task in btask.tasks:
             task.run_task(spec)
-        if btask.sleep_time >= 0:
+        if btask.sleep_time > 0:
             stop_event.wait(btask.sleep_time)
 
         num_launched += 1
@@ -156,8 +156,8 @@ class Rocket():
             # start background tasks
             btask_stops = []
             if '_background_tasks' in my_spec:
-                for d in my_spec['_background_tasks']:
-                    btask_stops.append(start_background_task(BackgroundTask.from_dict(d), my_spec))
+                for bt in my_spec['_background_tasks']:
+                    btask_stops.append(start_background_task(bt, m_fw.spec))
 
             # execute the FireTasks!
             for my_task in m_fw.tasks:
@@ -194,6 +194,12 @@ class Rocket():
             for b in btask_stops:
                 b.set()
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+            # last background monitors
+            if '_background_tasks' in my_spec:
+                for bt in my_spec['_background_tasks']:
+                    if bt.run_on_finish:
+                        for task in bt.tasks:
+                            task.run_task(m_fw.spec)
 
             m_action.stored_data = all_stored_data
             m_action.mod_spec = all_mod_spec
@@ -216,7 +222,11 @@ class Rocket():
         except:
             stop_backgrounds(ping_stop, btask_stops)
             traceback.print_exc()
-            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
+            try:
+                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
+                                             '_exception': traceback.format_exc()}, exit=True)
+            except:
+                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
                                              '_exception': traceback.format_exc()}, exit=True)
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')

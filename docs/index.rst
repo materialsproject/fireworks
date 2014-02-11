@@ -195,6 +195,7 @@ Misc
     controlworker
     multi_job
     duplicates_tutorial
+    backgroundtask
     offline_tutorial
     python_tutorial
     qadapter_programming

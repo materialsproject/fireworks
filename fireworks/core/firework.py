@@ -43,7 +43,6 @@ __date__ = "Feb 5, 2013"
 
 @add_metaclass(abc.ABCMeta)
 class FireTaskMeta(type):
-
     def __call__(cls, *args, **kwargs):
         o = type.__call__(cls, *args, **kwargs)
         for k in cls.required_params:
@@ -269,24 +268,6 @@ class FireWork(FWSerializable):
         return 'FireWork object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
 
-class BackgroundTask(FWSerializable, object):
-
-    def __init__ (self, firetasks, num_launches=0, sleep_time=0):
-        self.firetasks = firetasks
-        self.num_launches = num_launches
-        self.sleep_time = sleep_time
-
-    @recursive_serialize
-    @serialize_fw
-    def to_dict(self):
-        return {'firetasks': self.firetasks, 'num_launches': self.num_launches, 'sleep_time': self.sleep_time}
-
-    @classmethod
-    @recursive_deserialize
-    def from_dict(cls, m_dict):
-        return BackgroundTask(m_dict['firetasks'], m_dict['num_launches'], m_dict['sleep_time'])
-
-
 class Tracker(FWSerializable, object):
     """
     A Tracker monitors a file and returns the last N lines for updating the Launch object
@@ -296,7 +277,8 @@ class Tracker(FWSerializable, object):
 
     def __init__(self, filename, nlines=TRACKER_LINES, content=''):
         if nlines > self.MAX_TRACKER_LINES:
-            raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(self.MAX_TRACKER_LINES, nlines))
+            raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(
+                self.MAX_TRACKER_LINES, nlines))
         self.filename = filename
         self.nlines = nlines
         self.content = content
@@ -318,7 +300,7 @@ class Tracker(FWSerializable, object):
                     lines.append(l)
                     if len(lines) == self.nlines:
                         break
-            self.content='\n'.join(reversed(lines))
+            self.content = '\n'.join(reversed(lines))
 
         return self.content
 
@@ -693,7 +675,8 @@ class Workflow(FWSerializable):
             for wf in action.detours:
                 new_updates = self._add_wf_to_fw(wf, fw_id, True)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
-                    raise ValueError("Cannot use duplicated fw_ids when dynamically detouring workflows!")
+                    raise ValueError(
+                        "Cannot use duplicated fw_ids when dynamically detouring workflows!")
                 updated_ids.extend(new_updates)
 
         # add additional FireWorks
@@ -701,7 +684,8 @@ class Workflow(FWSerializable):
             for wf in action.additions:
                 new_updates = self._add_wf_to_fw(wf, fw_id, False)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
-                    raise ValueError("Cannot use duplicated fw_ids when dynamically adding workflows!")
+                    raise ValueError(
+                        "Cannot use duplicated fw_ids when dynamically adding workflows!")
                 updated_ids.extend(new_updates)
 
         return list(set(updated_ids))
@@ -815,9 +799,7 @@ class Workflow(FWSerializable):
             # This part is confusing and rare - report any FIZZLED parents if allow_fizzed
             # allows us to handle FIZZLED jobs
             if fw.spec.get('_allow_fizzled_parents'):
-                parent_fws = [self.id_fw[p].to_dict() for p in
-                                   self.links.parent_links.get(fw_id, []) if
-                                   self.id_fw[p].state == 'FIZZLED']
+                parent_fws = [self.id_fw[p].to_dict() for p in self.links.parent_links.get(fw_id, []) if self.id_fw[p].state == 'FIZZLED']
                 if len(parent_fws) > 0:
                     fw.spec['_fizzled_parents'] = parent_fws
                     updated_ids.add(fw_id)

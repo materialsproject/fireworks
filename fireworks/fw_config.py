@@ -21,7 +21,7 @@ NEGATIVE_FWID_CTR = 0
 # this is where load_object() looks for serialized objects
 
 USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
-                 'fw_tutorials']
+                 'fw_tutorials', 'fireworks.features']
 
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
                    'Script Task': 'ScriptTask',
