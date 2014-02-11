@@ -192,6 +192,17 @@ Let's explore custom FireTasks with by writing custom Python for adding two numb
 
     lpad get_fws -i 1 -d all
 
+should contain in its output a section that looks like this::
+
+    ...
+    "action": {
+        "update_spec": {},
+        "mod_spec": [],
+        "stored_data": {
+            "sum": 3
+        },
+    ...
+
 Python example (optional)
 -------------------------
 
