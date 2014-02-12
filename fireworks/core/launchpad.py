@@ -695,7 +695,7 @@ class LaunchPad(FWSerializable):
     def rerun_fw(self, fw_id):
         wf = self.get_wf_by_fw_id(fw_id)
         updated_ids = wf.rerun_fw(fw_id)
-        self._upsert_wf(wf, updated_ids)
+        self._update_wf(wf, updated_ids)
 
     def _refresh_wf(self, wf, fw_id):
 
@@ -708,10 +708,10 @@ class LaunchPad(FWSerializable):
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
 
         updated_ids = wf.refresh(fw_id)
-        self._upsert_wf(wf, updated_ids)
+        self._update_wf(wf, updated_ids)
 
 
-    def _upsert_wf(self, wf, updated_ids):
+    def _update_wf(self, wf, updated_ids):
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
