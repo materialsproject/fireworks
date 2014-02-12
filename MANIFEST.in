@@ -1,5 +1,6 @@
 include LICENSE *.txt
 include user_objects/queue_adapters/*.txt
+include user_objects/firetasks/templates/*.txt
 recursive-include fireworks *
 recursive-include docs *
 recursive-include fw_tutorials *
