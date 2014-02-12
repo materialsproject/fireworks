@@ -16,7 +16,7 @@
 
 FireWorks is a free, open-source code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
 
-Some features that distinguish FireWorks are the capability to program dynamic workflows and built-in tools for running high-throughput computations at large computing centers.
+Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers.
 
 .. raw::</div>
 
@@ -30,7 +30,9 @@ Some (but not all) of its features include:
 
 * A clean and flexible Python API, a powerful command-line interface, and a *built-in* web service for monitoring workflows.
 
-* A database backend (MongoDB) lets you add, remove, and rerun workflows or search for the status of certain workflows.
+* A database backend (MongoDB) lets you add, remove, and search the status of workflows.
+
+* Detect failed jobs (both soft and hard failures), and rerun them as needed.
 
 * Multiple execution modes - directly on a multicore machines or through a queue, on a single machine or multiple machines. Assign priorities and where jobs run.
 

@@ -63,6 +63,10 @@ Tests
 
 * overriding queue parameters test
 
+* unit tests of passing spec amongst firetasks
+
+* unit tests of duplicate check
+
 FW Docs
 =======
 
