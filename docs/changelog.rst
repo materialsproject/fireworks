@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.71**
+
+* Include default templates in pip install
+* Change default formatting in get_wfs (S.P. Ong)
+
 v0.7
 ----
 
