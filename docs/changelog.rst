@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v0.72**
+
+* Include default base site files in pip install
+* Optimizations for when WFs contains 1000s of root node FWs
+* zopen tracker files
+
 **v0.71**
 
 * Include default templates in pip install
