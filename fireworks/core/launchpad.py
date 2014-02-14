@@ -176,8 +176,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
-        # make the first part query something that always returns False so we can use f&modify
-        self.workflows.find_and_modify({'_id': -1}, wf.to_db_dict(), upsert=True)
+        self.workflows.insert(wf.to_db_dict())
 
         # refresh WF states, starting from all roots
         for fw_id in wf.root_fw_ids:
