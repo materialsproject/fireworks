@@ -169,6 +169,10 @@ class LaunchPad(FWSerializable):
         if isinstance(wf, FireWork):
             wf = Workflow.from_FireWork(wf)
 
+        # sets the root FWs as READY in a clean way
+        for fw_id in wf.root_fw_ids:
+            wf.refresh(fw_id)
+
         # insert the FireWorks and get back mapping of old to new ids
         old_new = self._upsert_fws(list(wf.id_fw.values()), reassign_all=reassign_all)
 
@@ -177,10 +181,6 @@ class LaunchPad(FWSerializable):
 
         # insert the WFLinks
         self.workflows.insert(wf.to_db_dict())
-
-        # refresh WF states, starting from all roots
-        for fw_id in wf.root_fw_ids:
-            self._refresh_wf(wf, fw_id)
 
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
