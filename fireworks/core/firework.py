@@ -21,6 +21,7 @@ import os
 import pprint
 
 from monty.io import reverse_readline, zopen
+from monty.os.path import zpath
 from six import add_metaclass
 
 from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR
@@ -295,7 +296,7 @@ class Tracker(FWSerializable, object):
 
         lines = []
         if os.path.exists(m_file):
-            with zopen(m_file) as f:
+            with zopen(zpath(m_file)) as f:
                 for l in reverse_readline(f):
                     lines.append(l)
                     if len(lines) == self.nlines:
