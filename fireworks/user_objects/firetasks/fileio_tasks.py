@@ -165,8 +165,8 @@ class ArchiveDirTask(FireTaskBase):
             format-specific extension.
     """
 
-    required_params = ["format", "basename"]
+    required_params = ["format", "base_name"]
 
     def run_task(self, fw_spec):
-        shutil.make_archive(self["basename"], format=self["format"],
+        shutil.make_archive(self["base_name"], format=self["format"],
                             root_dir=".")

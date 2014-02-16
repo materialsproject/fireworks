@@ -51,7 +51,7 @@ class CompressArchiveDirTest(unittest.TestCase):
         decompress_dir(".")
 
     def test_archive_dir(self):
-        a = ArchiveDirTask(basename="archive", format="gztar")
+        a = ArchiveDirTask(base_name="archive", format="gztar")
         a.run_task({})
         self.assertTrue(os.path.exists("archive.tar.gz"))
         os.remove("archive.tar.gz")
