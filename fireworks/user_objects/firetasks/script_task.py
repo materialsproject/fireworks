@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 from fireworks.core.firework import FireTaskBase, FWAction
+from six.moves import builtins
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -153,8 +154,7 @@ class PyTask(FireTaskBase):
             func = getattr(mod, funcname)
         else:
             #Handle built in functions.
-            import __builtin__
-            func = getattr(__builtin__, toks[0])
+            func = getattr(builtins, toks[0])
         args = self.get("args", [])
         kwargs = {k: v for k, v in self.items()
                   if not (k.startswith("_") or k in ["func",
