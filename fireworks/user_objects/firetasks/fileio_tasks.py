@@ -146,10 +146,10 @@ class CompressDirTask(FireTaskBase):
     Compress all files in a directory.
 
     Args:
-        compression: Can only be gz or bz2.
+        compression: Optional. Can only be gz or bz2. Defaults to gz.
     """
 
-    required_params = ["compression"]
+    optional_params = ["compression"]
 
     def run_task(self, fw_spec):
         compress_dir(".", compression=self["compression"])
@@ -160,13 +160,17 @@ class ArchiveDirTask(FireTaskBase):
     Wrapper around shutil.make_archive to make tar archices.
 
     Args:
-        format:  one of "zip", "tar", "bztar" or "gztar".
-        base_name: Name of the file to create, including the path, minus any
+        base_name (str): Name of the file to create, including the path,
+        minus any
             format-specific extension.
+        format (str): Optional. one of "zip", "tar", "bztar" or "gztar".
+            Defaults to gztar.
     """
 
-    required_params = ["format", "base_name"]
+    required_params = ["base_name"]
+    optional_params = ["format"]
 
     def run_task(self, fw_spec):
-        shutil.make_archive(self["base_name"], format=self["format"],
+        shutil.make_archive(self["base_name"],
+                            format=self.get("format", "gztar"),
                             root_dir=".")
