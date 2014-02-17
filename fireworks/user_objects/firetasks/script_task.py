@@ -137,10 +137,13 @@ class PyTask(FireTaskBase):
             the function will be stored as
             FWAction(stored_data={stored_data_varname: output}). The name is
             deliberately long to avoid potential name conflicts.
-        All other params are supplied as keyword args to the Python method.
+
+        All other params not starting with "_" are supplied as keyword args
+        to the Python method.
     """
 
     required_params = ["func"]
+    optional_params = ["args", "stored_data_varname"]
 
     def run_task(self, fw_spec):
         toks = self["func"].rsplit(".", 1)
@@ -149,6 +152,7 @@ class PyTask(FireTaskBase):
             mod = __import__(modname, globals(), locals(), [funcname], 0)
             func = getattr(mod, funcname)
         else:
+            #Handle built in functions.
             import __builtin__
             func = getattr(__builtin__, toks[0])
         args = self.get("args", [])
