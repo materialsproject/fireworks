@@ -7,10 +7,12 @@ __date__ = '1/6/14'
 
 import unittest
 import os
+import shutil
 
-from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask, FileDeleteTask
+from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask, \
+    FileDeleteTask, CompressDirTask, ArchiveDirTask
 from fireworks.utilities.fw_serializers import load_object_from_file
-
+from monty.shutil import decompress_dir
 
 module_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -34,6 +36,28 @@ class FileWriteDeleteTest(unittest.TestCase):
         for i in range(2):
             self.assertFalse(os.path.exists("myfile{}".format(i + 1)))
 
+
+class CompressArchiveDirTest(unittest.TestCase):
+
+    def setUp(self):
+        self.cwd = os.getcwd()
+        os.chdir(module_dir)
+
+    def test_compress_dir(self):
+        c = CompressDirTask(compression="gz")
+        c.run_task({})
+        self.assertTrue(os.path.exists("delete.yaml.gz"))
+        self.assertFalse(os.path.exists("delete.yaml"))
+        decompress_dir(".")
+
+    def test_archive_dir(self):
+        a = ArchiveDirTask(base_name="archive", format="gztar")
+        a.run_task({})
+        self.assertTrue(os.path.exists("archive.tar.gz"))
+        os.remove("archive.tar.gz")
+
+    def tearDown(self):
+        os.chdir(self.cwd)
 
 if __name__ == '__main__':
     unittest.main()

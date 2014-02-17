@@ -4,6 +4,7 @@ import traceback
 
 from os.path import expandvars, expanduser, abspath
 from fireworks.core.firework import FireTaskBase
+from monty.shutil import compress_dir
 
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -138,3 +139,38 @@ class FileTransferTask(FireTaskBase):
             raise
         else:
             return True
+
+
+class CompressDirTask(FireTaskBase):
+    """
+    Compress all files in a directory.
+
+    Args:
+        compression: Optional. Can only be gz or bz2. Defaults to gz.
+    """
+
+    optional_params = ["compression"]
+
+    def run_task(self, fw_spec):
+        compress_dir(".", compression=self["compression"])
+
+
+class ArchiveDirTask(FireTaskBase):
+    """
+    Wrapper around shutil.make_archive to make tar archices.
+
+    Args:
+        base_name (str): Name of the file to create, including the path,
+        minus any
+            format-specific extension.
+        format (str): Optional. one of "zip", "tar", "bztar" or "gztar".
+            Defaults to gztar.
+    """
+
+    required_params = ["base_name"]
+    optional_params = ["format"]
+
+    def run_task(self, fw_spec):
+        shutil.make_archive(self["base_name"],
+                            format=self.get("format", "gztar"),
+                            root_dir=".")

@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 from fireworks.core.firework import FireTaskBase, FWAction
+from six.moves import builtins
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -119,3 +120,46 @@ class ScriptTask(FireTaskBase):
         parameters['script'] = [shell_cmd]
         parameters['use_shell'] = True
         return ScriptTask(parameters)
+
+
+class PyTask(FireTaskBase):
+    """
+    Runs any python function! Extremely powerful, which allows you to
+    essentially run any accessible method on the system.
+
+    Args:
+        func (str): Fully qualified python method. E.g., json.dump, or shutil
+            .copy, or some other function that is not part of the standard
+            library!
+        args (list): List of args. Default is empty.
+        stored_data_varname (str): Whether to store the output in
+            FWAction. If
+            this is a string that does not evaluate to False, the output of
+            the function will be stored as
+            FWAction(stored_data={stored_data_varname: output}). The name is
+            deliberately long to avoid potential name conflicts.
+
+        All other params not starting with "_" are supplied as keyword args
+        to the Python method.
+    """
+
+    required_params = ["func"]
+    optional_params = ["args", "stored_data_varname"]
+
+    def run_task(self, fw_spec):
+        toks = self["func"].rsplit(".", 1)
+        if len(toks) == 2:
+            modname, funcname = toks
+            mod = __import__(modname, globals(), locals(), [funcname], 0)
+            func = getattr(mod, funcname)
+        else:
+            #Handle built in functions.
+            func = getattr(builtins, toks[0])
+        args = self.get("args", [])
+        kwargs = {k: v for k, v in self.items()
+                  if not (k.startswith("_") or k in ["func",
+                                                     "args",
+                                                     "stored_data_varname"])}
+        output = func(*args, **kwargs)
+        if self.get("stored_data_varname"):
+            return FWAction(stored_data={self["stored_data_varname"]: output})
