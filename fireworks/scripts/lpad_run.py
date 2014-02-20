@@ -246,6 +246,25 @@ def get_wfs(args):
         print(args.output(wfs))
 
 
+def plot_wfs(args):
+    lp = get_lp(args)
+
+    query = {'nodes': {"$in": args.fw_id}}
+
+    ids = lp.get_wf_ids(query, None, 0, count_only=False)
+    for i in ids:
+        d = lp.get_wf_summary_dict(i, "all")
+        import networkx as nx
+        g = nx.Graph()
+        for l, children in d["links"].items():
+            p = int(l.split("--")[-1])
+            for c in children:
+                c = int(c.split("--")[-1])
+                g.add_edge(p, c)
+        import matplotlib.pyplot as plt
+        nx.draw_spectral(g)
+        plt.show()
+
 def detect_lostruns(args):
     lp = get_lp(args)
     fl,ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime)
@@ -515,6 +534,11 @@ def lpad():
                                     'with "-d less"',
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
+
+    plot_wf_parser = subparsers.add_parser(
+            'plot_wfs', help='Graphical display of Workflows')
+    plot_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    plot_wf_parser.set_defaults(func=plot_wfs)
 
     rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
     rerun_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
