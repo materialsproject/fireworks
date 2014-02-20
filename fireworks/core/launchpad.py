@@ -719,7 +719,7 @@ class LaunchPad(FWSerializable):
         # find a node for which the id did not change, so we can query on it to get WF
         query_node = None
         for f in wf.id_fw:
-            if f not in old_new or old_new[f] == f:
+            if f not in old_new.values() or old_new[f] == f:
                 query_node = f
                 break
 
