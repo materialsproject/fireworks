@@ -7,10 +7,9 @@ __date__ = '1/6/14'
 
 import unittest
 import os
-import shutil
 
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask, \
-    FileDeleteTask, CompressDirTask, ArchiveDirTask
+    CompressDirTask, ArchiveDirTask
 from fireworks.utilities.fw_serializers import load_object_from_file
 from monty.shutil import decompress_dir
 
@@ -18,7 +17,6 @@ module_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FileWriteDeleteTest(unittest.TestCase):
-
     def test_init(self):
         t = FileWriteTask(files_to_write="hello")
         t = FileWriteTask({"files_to_write": "hello"})
@@ -38,7 +36,6 @@ class FileWriteDeleteTest(unittest.TestCase):
 
 
 class CompressArchiveDirTest(unittest.TestCase):
-
     def setUp(self):
         self.cwd = os.getcwd()
         os.chdir(module_dir)
@@ -58,6 +55,7 @@ class CompressArchiveDirTest(unittest.TestCase):
 
     def tearDown(self):
         os.chdir(self.cwd)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -149,6 +149,7 @@ class CompressDirTask(FireTaskBase):
         compression: Optional. Can only be gz or bz2. Defaults to gz.
     """
 
+    _fw_name = 'CompressDirTask'
     optional_params = ["compression"]
 
     def run_task(self, fw_spec):
@@ -167,6 +168,7 @@ class ArchiveDirTask(FireTaskBase):
             Defaults to gztar.
     """
 
+    _fw_name = 'ArchiveDirTask'
     required_params = ["base_name"]
     optional_params = ["format"]
 
