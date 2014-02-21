@@ -126,3 +126,35 @@ The _use_global_spec option
 ---------------------------
 
 By default, the parameters for the FileTransferTask should be defined within the ``_task`` section of the **spec** corresponding to the FileTransferTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same FireWork.
+
+
+CompressDirTask
+===============
+
+The *CompressDir* task allows you to compress each file in the current directory (e.g., via gzip).
+
+Required parameters
+-------------------
+
+(none)
+
+Optional parameters
+-------------------
+
+* compress: (str) - choose between "gz" (default) and "bz2" compression modes
+
+ArchiveDirTask
+===============
+
+The *ArchiveDir* task allows you to archive the current working directory into a single file.
+
+Required parameters
+-------------------
+
+* base_name: (str) the full file path of the output archive file
+
+Optional parameters
+-------------------
+
+* format: (str) - choose between "zip", "tar", "bztar" or "gztar" (default).
+

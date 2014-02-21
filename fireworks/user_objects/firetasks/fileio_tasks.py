@@ -158,7 +158,7 @@ class CompressDirTask(FireTaskBase):
 
 class ArchiveDirTask(FireTaskBase):
     """
-    Wrapper around shutil.make_archive to make tar archices.
+    Wrapper around shutil.make_archive to make tar archives.
 
     Args:
         base_name (str): Name of the file to create, including the path,

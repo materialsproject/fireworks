@@ -17,3 +17,11 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`test_script_task` Module
+------------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.tests.test_script_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

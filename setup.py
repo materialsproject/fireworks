@@ -16,7 +16,7 @@ module_dir = os.path.dirname(os.path.abspath(__file__))
 if __name__ == "__main__":
     setup(
         name='FireWorks',
-        version='0.72',
+        version='0.75',
         description='FireWorks workflow software',
         long_description=open(os.path.join(module_dir, 'README.rst')).read(),
         url='https://github.com/materialsproject/fireworks',
@@ -31,7 +31,8 @@ if __name__ == "__main__":
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
                         'webgui':['django>=1.6'],
-                        'daemon_mode':['fabric>=1.8.1']},
+                        'daemon_mode':['fabric>=1.8.1'],
+                        'plotting':['matplotlib>=1.1.1', 'networkx>=1.8.1']},
         classifiers=['Programming Language :: Python :: 2.7',
                      'Development Status :: 4 - Beta',
                      'Intended Audience :: Science/Research',

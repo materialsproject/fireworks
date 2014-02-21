@@ -2,7 +2,16 @@
 FireWorks Changelog
 ===================
 
+**v0.75**
+
+* Fix bug that randomly affected some dynamic workflows
+* Add CompressDir and ArchiveDir tasks (S.P. Ong)
+* Initial commit of PyTask (S.P. Ong)
+* Initial networkx graphing of workflows via lpad (S.P. Ong)
+
 **v0.72**
+
+.. warning:: This version has a bug that can affect some dynamic workflows, patched in v0.75
 
 * Include default base site files in pip install
 * Optimizations for when WFs contains 1000s of root node FWs
