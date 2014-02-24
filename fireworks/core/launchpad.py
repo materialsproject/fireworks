@@ -19,6 +19,7 @@ from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, \
     Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.timing import get_fw_timer
 
 
 __author__ = 'Anubhav Jain'
@@ -33,6 +34,8 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
 # least set the state to FIZZLED or ERROR and add traceback...
+
+m_timer = get_fw_timer("LaunchPad")
 
 
 class LaunchPad(FWSerializable):
@@ -165,7 +168,7 @@ class LaunchPad(FWSerializable):
 
         :param wf: a Workflow object.
         """
-
+        m_timer.start("add_wf")
         if isinstance(wf, FireWork):
             wf = Workflow.from_FireWork(wf)
 
@@ -183,6 +186,7 @@ class LaunchPad(FWSerializable):
         # insert the WFLinks
         self.workflows.insert(wf.to_db_dict())
 
+        m_timer.stop("add_wf")
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 

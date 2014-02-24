@@ -25,6 +25,7 @@ from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
+from fireworks.utilities.timing import any_fw_timers, print_fw_timers
 from six.moves import input
 
 
@@ -688,6 +689,8 @@ def lpad():
 
     args.func(args)
 
+    if any_fw_timers():
+        print_fw_timers()
 
 if __name__ == '__main__':
     lpad()
