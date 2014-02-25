@@ -14,5 +14,6 @@ notifications:
   email:
     recipients:
       - ajain@lbl.gov
+      - dkgunter@lbl.gov
     on_success: change
     on_failure: always
