@@ -192,7 +192,8 @@ class FireWork(FWSerializable):
         self.spec['_tasks'] = [t.to_dict() for t in
                                tasks]  # put tasks in a special location of the spec
 
-        self.name = name if name else 'Unnamed FW'  # do it this way to prevent None names
+        self.name = name or 'Unnamed FW'  # do it this way to prevent None
+        # names
         if fw_id is not None:
             self.fw_id = fw_id
         else:
@@ -202,7 +203,7 @@ class FireWork(FWSerializable):
 
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
-        self.created_on = created_on if created_on else datetime.utcnow()
+        self.created_on = created_on or datetime.utcnow()
 
         self.state = state
 
@@ -352,7 +353,7 @@ class Launch(FWSerializable, object):
         self.host = host or get_my_host()
         self.ip = ip or get_my_ip()
         self.trackers = trackers if trackers else []
-        self.action = action
+        self.action = action if action else None
         self.state_history = state_history if state_history else []
         self.state = state
         self.launch_id = launch_id
