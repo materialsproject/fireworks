@@ -539,7 +539,8 @@ class Workflow(FWSerializable):
         @property
         def nodes(self):
             allnodes = list(self.keys())
-            map(allnodes.extend, self.values())
+            for v in self.values():
+                allnodes.extend(v)
             return list(set(allnodes))
 
         @property
