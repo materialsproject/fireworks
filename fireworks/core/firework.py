@@ -590,7 +590,7 @@ class Workflow(FWSerializable):
         :param metadata: (dict) metadata for this Workflow
         """
 
-        name = 'unnamed WF' if not name else name  # do it this way to prevent None names
+        name = name or 'unnamed WF'# do it this way to prevent None names
 
         links_dict = links_dict if links_dict else {}
 
