@@ -15,5 +15,6 @@ notifications:
     recipients:
       - ajain@lbl.gov
       - dkgunter@lbl.gov
+      - ongsp@ucsd.edu
     on_success: change
     on_failure: always
