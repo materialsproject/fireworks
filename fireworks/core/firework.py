@@ -614,8 +614,8 @@ class Workflow(FWSerializable):
             raise ValueError("Specified links don't match given FW")
 
         self.metadata = metadata if metadata else {}
-        self.created_on = created_on if created_on else datetime.datetime.utcnow()
-        self.updated_on = updated_on if updated_on else datetime.datetime.utcnow()
+        self.created_on = created_on or datetime.datetime.utcnow()
+        self.updated_on = updated_on or datetime.datetime.utcnow()
 
     @property
     def fws(self):
