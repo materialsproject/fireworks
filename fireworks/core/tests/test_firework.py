@@ -19,6 +19,23 @@ from fireworks.core.firework import FireWork, Workflow, FireTaskBase
 from fireworks.user_objects.firetasks.script_task import PyTask
 
 
+class FireTaskBaseTest(unittest.TestCase):
+
+    def test_init(self):
+        class DummyTask(FireTaskBase):
+
+            required_params = ["hello"]
+
+            def run_task(self, fw_spec):
+                return self["hello"]
+
+        self.assertRaises(ValueError, DummyTask)
+        d = DummyTask(hello="world")
+        self.assertEqual(d.run_task({}), "world")
+        d = DummyTask({"hello": "world2"})
+        self.assertEqual(d.run_task({}), "world2")
+
+
 class WorkflowTest(unittest.TestCase):
 
     def test_init(self):
