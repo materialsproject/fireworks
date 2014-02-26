@@ -610,7 +610,7 @@ class Workflow(FWSerializable):
 
         # sanity: make sure the set of nodes from the links_dict is equal to
         # the set of nodes from id_fw
-        if set(self.links.nodes) != set(map(int, self.id_fw.keys())):
+        if set(self.links.nodes) != set([int(k) for k in self.id_fw.keys()]):
             raise ValueError("Specified links don't match given FW")
 
         self.metadata = metadata if metadata else {}
