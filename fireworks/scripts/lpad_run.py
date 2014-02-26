@@ -271,7 +271,7 @@ def get_links(args):
         c = get_children(links, i, 3)
 
         import yaml
-        print yaml.dump(c)
+        print(yaml.dump(c))
 
 def detect_lostruns(args):
     lp = get_lp(args)
