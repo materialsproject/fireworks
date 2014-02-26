@@ -247,7 +247,17 @@ def get_wfs(args):
         print(args.output(wfs))
 
 
-def plot_wfs(args):
+def get_children(links, start, max_depth, data=[]):
+    data = {}
+    for l, c in links.items():
+        if l == start:
+            if len(c) > 0:
+                data[l] = [get_children(links, i, max_depth) for i in c]
+            else:
+                data[l] = c
+    return data
+
+def get_links(args):
     lp = get_lp(args)
 
     query = {'nodes': {"$in": args.fw_id}}
@@ -255,16 +265,13 @@ def plot_wfs(args):
     ids = lp.get_wf_ids(query, None, 0, count_only=False)
     for i in ids:
         d = lp.get_wf_summary_dict(i, "all")
-        import networkx as nx
-        g = nx.Graph()
-        for l, children in d["links"].items():
-            p = int(l.split("--")[-1])
-            for c in children:
-                c = int(c.split("--")[-1])
-                g.add_edge(p, c)
-        import matplotlib.pyplot as plt
-        nx.draw_spectral(g)
-        plt.show()
+        get_fwid = lambda l: int(l.split("--")[-1])
+        links = {get_fwid(k): [get_fwid(i) for i in v]
+                 for k, v in d["links"].items()}
+        c = get_children(links, i, 3)
+
+        import yaml
+        print yaml.dump(c)
 
 def detect_lostruns(args):
     lp = get_lp(args)
@@ -536,10 +543,15 @@ def lpad():
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
 
-    plot_wf_parser = subparsers.add_parser(
-            'plot_wfs', help='Graphical display of Workflows')
-    plot_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    plot_wf_parser.set_defaults(func=plot_wfs)
+    get_links_parser = subparsers.add_parser(
+            'get_links', help='Graphical display of Workflows')
+    get_links_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    get_links_parser.add_argument(
+        '-d', '--depth', help="Depth of links to search for.",
+        default=1, type=int
+    )
+
+    get_links_parser.set_defaults(func=get_links)
 
     rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
     rerun_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
