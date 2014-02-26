@@ -16,7 +16,7 @@ to do next after a job completes
 
 from collections import defaultdict, OrderedDict
 import abc
-import datetime
+from datetime import datetime
 import os
 import pprint
 
@@ -202,7 +202,7 @@ class FireWork(FWSerializable):
 
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
-        self.created_on = created_on if created_on else datetime.datetime.utcnow()
+        self.created_on = created_on if created_on else datetime.utcnow()
 
         self.state = state
 
@@ -348,11 +348,11 @@ class Launch(FWSerializable, object):
             raise ValueError("Invalid launch state: {}".format(state))
 
         self.launch_dir = launch_dir
-        self.fworker = fworker if fworker else FWorker()
-        self.host = host if host else get_my_host()
-        self.ip = ip if ip else get_my_ip()
+        self.fworker = fworker or FWorker()
+        self.host = host or get_my_host()
+        self.ip = ip or get_my_ip()
         self.trackers = trackers if trackers else []
-        self.action = action if action else None
+        self.action = action
         self.state_history = state_history if state_history else []
         self.state = state
         self.launch_id = launch_id
@@ -363,7 +363,7 @@ class Launch(FWSerializable, object):
         Updates the update_at field of the state history of a Launch. Used to
          ping that a Launch is still alive.
         """
-        update_time = update_time if update_time else datetime.datetime.utcnow()
+        update_time = update_time or datetime.utcnow()
         self.state_history[-1]['updated_on'] = update_time
 
     def set_reservation_id(self, reservation_id):
@@ -443,7 +443,7 @@ class Launch(FWSerializable, object):
         """
         start = self.time_reserved
         if start:
-            end = self.time_start if self.time_start else datetime.datetime \
+            end = self.time_start if self.time_start else datetime \
                 .utcnow()
             return (end - start).total_seconds()
 
@@ -489,7 +489,7 @@ class Launch(FWSerializable, object):
         last_state = self.state_history[-1]['state'] if len(
             self.state_history) > 0 else None
         if state != last_state:
-            now_time = datetime.datetime.utcnow()
+            now_time = datetime.utcnow()
             self.state_history.append({'state': state, 'created_on': now_time})
             if state in ['RUNNING', 'RESERVED']:
                 self.touch_history()  # add updated_on key
@@ -614,8 +614,8 @@ class Workflow(FWSerializable):
             raise ValueError("Specified links don't match given FW")
 
         self.metadata = metadata if metadata else {}
-        self.created_on = created_on or datetime.datetime.utcnow()
-        self.updated_on = updated_on or datetime.datetime.utcnow()
+        self.created_on = created_on or datetime.utcnow()
+        self.updated_on = updated_on or datetime.utcnow()
 
     @property
     def fws(self):
@@ -821,7 +821,7 @@ class Workflow(FWSerializable):
                 updated_ids = updated_ids.union(
                     self.refresh(child_id, updated_ids))
 
-        self.updated_on = datetime.datetime.utcnow()
+        self.updated_on = datetime.utcnow()
 
         return updated_ids
 
