@@ -537,7 +537,9 @@ class Workflow(FWSerializable):
 
         @property
         def nodes(self):
-            return list(self.keys())
+            allnodes = list(self.keys())
+            map(allnodes.extend, self.values())
+            return list(set(allnodes))
 
         @property
         def parent_links(self):
