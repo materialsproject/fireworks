@@ -67,6 +67,8 @@ Tests
 
 * unit tests of duplicate check
 
+* change tests to use mongomock
+
 FW Docs
 =======
 
