@@ -25,6 +25,14 @@ utilities Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`timing` Module
+--------------------
+
+.. automodule:: fireworks.utilities.timing
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 

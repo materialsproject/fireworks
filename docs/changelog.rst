@@ -6,6 +6,7 @@ FireWorks Changelog
 
 * Better test for invalid WFs (S.P. Ong)
 * Minor internal code cleanup (S.P. Ong)
+* add internal profiling tools (D. Gunter)
 
 **v0.75**
 
