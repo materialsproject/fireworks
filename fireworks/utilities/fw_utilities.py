@@ -143,15 +143,23 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     return full_path
 
 
+_g_ip, _g_host = None, None
+
 def get_my_ip():
-    try:
-        return socket.gethostbyname(socket.gethostname())
-    except:
-        return '127.0.0.1'
+    global _g_ip
+    if _g_ip is None:
+        try:
+            _g_ip = socket.gethostbyname(socket.gethostname())
+        except:
+            _g_ip = '127.0.0.1'
+    return _g_ip
 
 
 def get_my_host():
-    return socket.gethostname()
+    global _g_host
+    if _g_host is None:
+        _g_host = socket.gethostname()
+    return _g_host
 
 
 def get_slug(m_str):
