@@ -41,3 +41,10 @@ core Package
     :undoc-members:
     :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+
+    fireworks.core.tests
+

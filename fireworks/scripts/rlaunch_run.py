@@ -5,11 +5,14 @@ A runnable script to launch a single Rocket (a command-line interface to rocket_
 """
 from argparse import ArgumentParser
 import os
+import signal
+import sys
 from fireworks.fw_config import LAUNCHPAD_LOC, FWORKER_LOC, CONFIG_FILE_DIR
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
-
+from fireworks.utilities.timing import any_fw_timers, print_fw_timers
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, get_fw_logger
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -19,7 +22,15 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
+def handle_interrupt(signum, frame):
+    sys.stderr.write("Interruped by signal {:d}\n".format(signum))
+    if any_fw_timers():
+        print_fw_timers()
+    sys.exit(1)
+
+
 def rlaunch():
+
     m_description = 'This program launches one or more Rockets. A Rocket grabs a job from the central database and ' \
                     'runs it. The "single-shot" option launches a single Rocket, ' \
                     'whereas the "rapidfire" option loops until all FireWorks are completed.'
@@ -46,6 +57,8 @@ def rlaunch():
 
     args = parser.parse_args()
 
+    signal.signal(signal.SIGINT, handle_interrupt)  # graceful exist on ^C
+
     if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
 
@@ -63,6 +76,12 @@ def rlaunch():
         fworker = FWorker.from_file(args.fworker_file)
     else:
         fworker = FWorker()
+
+    # prime addr lookups
+    _log = get_fw_logger("rlaunch", stream_level="INFO")
+    _log.info("Hostname/IP lookup (this will take a few seconds)")
+    get_my_host()
+    get_my_ip()
 
     if args.command == 'rapidfire':
         rapidfire(launchpad, fworker, None, args.nlaunches, -1, args.sleep, args.loglvl)

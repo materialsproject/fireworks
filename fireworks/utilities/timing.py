@@ -2,6 +2,7 @@
 Support for simple timers, with CSV output.
 
 The model is that timers have names, and within timers
+are multiple named "stages".
 """
 
 import fnmatch
@@ -139,6 +140,7 @@ class Timer(object):
         self._cur_stage = None
         self._stage_times = {}
         self._stage_counts = {}
+        self._stage_active = set()
 
     def __len__(self):
         """Number of stages timed.
@@ -166,18 +168,27 @@ class Timer(object):
         self.stop(self._cur_stage)
         return type_ is None  # not an exception
 
-    def start(self, stage):
+    def start(self, stage="null"):
         """Begin timing.
         """
         tm = self._stage_times.get(stage, 0)
         self._stage_times[stage] = tm - time.time()
+        self._stage_active.add(stage)
 
-    def stop(self, stage):
+    def stop(self, stage="null"):
         """Stop timing.
         """
         self._stage_times[stage] += time.time()
         count = self._stage_counts.get(stage, 0)
         self._stage_counts[stage] = count + 1
+        self._stage_active.remove(stage)
+
+    def stop_all(self):
+        """Stop all timers.
+        Idempotent.
+        """
+        map(self.stop, list(self._stage_active))
+        self._stage_active = set()
 
     def __str__(self):
         """Return results as CSV.
@@ -192,6 +203,7 @@ class Timer(object):
 
     def _csv(self):
         global _wrote_header
+        self.stop_all()
         rows = []
         if not _wrote_header:
             rows.append("name,stage,count,time")
@@ -200,8 +212,8 @@ class Timer(object):
         for stage in self._stage_times.iterkeys():
             rows.append("{ns}{n},{s},{c:d},{t:.3f}"
                         .format(ns=ns, n=self.name, s=stage,
-                                c=self._stage_counts[stage],
-                                t=self._stage_times[stage]))
+                                c=self._stage_counts.get(stage, 0),
+                                t=self._stage_times.get(stage, 0.0)))
         return '\n'.join(rows)
 
 
