@@ -140,6 +140,9 @@ class Rocket():
                 except:
                     pass
 
+        if lp:
+            lp.m_logger.info('RUNNING fw_id: {} in directory: {}'.format(m_fw.fw_id, os.getcwd()))
+
         # write FW.json and/or FW.yaml to the directory
         if PRINT_FW_JSON:
             m_fw.to_file('FW.json', indent=4)
