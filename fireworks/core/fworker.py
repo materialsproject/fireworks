@@ -29,6 +29,12 @@ class FWorker(FWSerializable):
                 need to be unique
             query: a dict query that restricts the type of FireWork this
                 resource will run
+            env: a dict of special environment variables for the resource.
+                This env is passed to running FireTasks as a _fw_env in the
+                fw_spec, which provides for abstraction of resource-specific
+                commands or settings.  See
+                :class:`fireworks.core.firework.FireTaskBase` for information
+                on how to use this env variable in FireTasks.
         """
         self.name = name
         self.category = category
