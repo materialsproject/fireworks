@@ -86,7 +86,7 @@ class Rocket():
 
     def __init__(self, launchpad, fworker, fw_id):
         """
-        
+
         :param launchpad: (LaunchPad) A LaunchPad object for interacting with the FW database. If none, reads FireWorks from FW.json and writes to FWAction.json
         :param fworker: (FWorker) A FWorker object describing the computing resource
         :param fw_id: (int) id of a specific FireWork to run (quit if it cannot be found)
@@ -94,7 +94,6 @@ class Rocket():
         self.launchpad = launchpad
         self.fworker = fworker
         self.fw_id = fw_id
-
 
     def run(self):
         """
@@ -149,6 +148,7 @@ class Rocket():
 
         try:
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
+            my_spec["_fw_env"] = self.fworker.env
 
             # set up heartbeat (pinging the server that we're still alive)
             ping_stop = start_ping_launch(lp, launch_id)

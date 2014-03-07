@@ -12,6 +12,7 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
+from fireworks.tests.tasks import DummyTask
 import six
 
 __author__ = 'Anubhav Jain'
@@ -147,6 +148,20 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
         self.assertFalse(self.lp.run_exists())
+
+    def test_fworkerenv(self):
+        t = DummyTask()
+        fw = FireWork(t)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
+                             'data'],
+                         "hello")
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, FWorker(env={"hello": "world"}))
+        self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data[
+                             'data'],
+                         "world")
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)

@@ -19,29 +19,34 @@ __date__ = 'Dec 12, 2012'
 
 
 class FWorker(FWSerializable):
+
     def __init__(self, name="Automatically generated Worker", category='',
-                 query=None):
+                 query=None, env=None):
         """
-        :param name: the name of the resource, should be unique
-        :param category: a String describing the computing resource, does not
-            need to be unique
-        :param query: a dict query that restricts the type of FireWork this
-            resource will run
+        Args:
+            name: the name of the resource, should be unique
+            category: a String describing the computing resource, does not
+                need to be unique
+            query: a dict query that restricts the type of FireWork this
+                resource will run
         """
         self.name = name
         self.category = category
         self._query = query if query else {}
+        self.env = env if env else {}
 
     @recursive_serialize
     def to_dict(self):
         return {'name': self.name, 'category': self.category,
-                'query': json.dumps(self.query, default=DATETIME_HANDLER)}
+                'query': json.dumps(self.query, default=DATETIME_HANDLER),
+                'env': self.env}
 
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
         return FWorker(m_dict['name'], m_dict['category'],
-                       json.loads(m_dict['query']))
+                       json.loads(m_dict['query']),
+                       m_dict.get("env"))
 
     @property
     def query(self):
