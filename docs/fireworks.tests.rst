@@ -25,6 +25,14 @@ tests Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`tasks` Module
+-------------------
+
+.. automodule:: fireworks.tests.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`test_fw_config` Module
 ----------------------------
 

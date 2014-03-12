@@ -85,7 +85,7 @@ def _recursive_load(obj):
             return load_object(obj)
         return {k: _recursive_load(v) for k, v in obj.items()}
 
-    if isinstance(obj, list):
+    if isinstance(obj, (list, tuple)):
         return [_recursive_load(v) for v in obj]
 
     if isinstance(obj, six.string_types):
@@ -352,7 +352,7 @@ def _reconstitute_dates(obj_dict):
     if isinstance(obj_dict, dict):
         return {k: _reconstitute_dates(v) for k, v in obj_dict.items()}
 
-    if isinstance(obj_dict, list):
+    if isinstance(obj_dict, (list, tuple)):
         return [_reconstitute_dates(v) for v in obj_dict]
 
     if isinstance(obj_dict, six.string_types):

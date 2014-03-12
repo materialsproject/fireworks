@@ -20,7 +20,7 @@ class BackgroundTask(FWSerializable, object):
         :param sleep_time: (int) sleep time in seconds between background runs
         :param run_on_finish (bool): always run this task upon completion of FireWork
         """
-        self.tasks = tasks if isinstance(tasks, list) else [tasks]
+        self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
         self.num_launches = num_launches
         self.sleep_time = sleep_time
         self.run_on_finish = run_on_finish

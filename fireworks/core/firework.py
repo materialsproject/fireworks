@@ -137,10 +137,10 @@ class FWAction(FWSerializable):
         self.stored_data = stored_data if stored_data else {}
         self.exit = exit
         self.update_spec = update_spec if update_spec else {}
-        self.mod_spec = mod_spec if isinstance(mod_spec, list) else [mod_spec]
-        self.additions = additions if isinstance(additions, list) else [
+        self.mod_spec = mod_spec if isinstance(mod_spec, (list, tuple)) else [mod_spec]
+        self.additions = additions if isinstance(additions, (list, tuple)) else [
             additions]
-        self.detours = detours if isinstance(detours, list) else [detours]
+        self.detours = detours if isinstance(detours, (list, tuple)) else [detours]
         self.defuse_children = defuse_children
 
     @recursive_serialize
@@ -198,7 +198,7 @@ class FireWork(FWSerializable):
         :param fw_id: (int) an identification number for this FireWork
         """
 
-        tasks = tasks if isinstance(tasks, list) else [tasks]
+        tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
         self.tasks = tasks
         self.spec = spec if spec else {}
@@ -521,7 +521,7 @@ class Launch(FWSerializable, object):
         "created_on"
         :return: (datetime)
         """
-        states = states if isinstance(states, list) else [states]
+        states = states if isinstance(states, (list, tuple)) else [states]
         for data in self.state_history:
             if data['state'] in states:
                 if use_update_time:
@@ -543,7 +543,7 @@ class Workflow(FWSerializable):
             super(Workflow.Links, self).__init__(*args, **kwargs)
 
             for k, v in list(self.items()):
-                if not isinstance(v, list):
+                if not isinstance(v, (list, tuple)):
                     self[k] = [v]  # v must be list
                 if not isinstance(k, int):
                     try:
