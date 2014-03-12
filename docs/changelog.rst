@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.77**
+
+* Support/fix serialization of tuples as list instead of String (S.P. Ong)
+* Introduce fw_env variables (S.P. Ong)
+
 **v0.76**
 
 * Better test for invalid WFs (S.P. Ong)
