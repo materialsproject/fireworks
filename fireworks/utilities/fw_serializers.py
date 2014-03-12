@@ -60,7 +60,7 @@ def recursive_dict(obj):
     if isinstance(obj, dict):
         return {k: recursive_dict(v) for k, v in obj.items()}
 
-    if isinstance(obj, list):
+    if isinstance(obj, (list, tuple)):
         return [recursive_dict(v) for v in obj]
 
     if isinstance(obj, int) or isinstance(obj, float):
