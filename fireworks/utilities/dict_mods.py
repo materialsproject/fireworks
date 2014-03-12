@@ -112,7 +112,7 @@ class DictMods(object):
     def add_to_set(input_dict, settings):
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
-            if key in d and (not isinstance(d[key], list)):
+            if key in d and (not isinstance(d[key], (list, tuple))):
                 raise ValueError("Keyword {} does not refer to an array."
                 .format(k))
             if key in d and v not in d[key]:
@@ -124,7 +124,7 @@ class DictMods(object):
     def pull(input_dict, settings):
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
-            if key in d and (not isinstance(d[key], list)):
+            if key in d and (not isinstance(d[key], (list, tuple))):
                 raise ValueError("Keyword {} does not refer to an array."
                 .format(k))
             if key in d:
@@ -133,7 +133,7 @@ class DictMods(object):
     @staticmethod
     def pull_all(input_dict, settings):
         for k, v in settings.items():
-            if k in input_dict and (not isinstance(input_dict[k], list)):
+            if k in input_dict and (not isinstance(input_dict[k], (list, tuple))):
                 raise ValueError("Keyword {} does not refer to an array."
                 .format(k))
             for i in v:
@@ -143,7 +143,7 @@ class DictMods(object):
     def pop(input_dict, settings):
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
-            if key in d and (not isinstance(d[key], list)):
+            if key in d and (not isinstance(d[key], (list, tuple))):
                 raise ValueError("Keyword {} does not refer to an array."
                 .format(k))
             if v == 1:
