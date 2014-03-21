@@ -92,7 +92,7 @@ class CommonAdapter(QueueAdapterBase):
                 return 0
             else:
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
-                return int(output_str.split('\n')[-1].split()[0])
+                return int(output_str.split('\n')[-2].split()[0])
 
         count = 0
         for l in output_str.split('\n'):
