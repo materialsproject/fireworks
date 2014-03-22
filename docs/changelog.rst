@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.78**
+
+* Fix spec copy bug as reported by Github user flxb
+* Misc fixes (archiving FWs, tuple support)
+
 **v0.77**
 
 * Support/fix serialization of tuples as list instead of String (S.P. Ong)
