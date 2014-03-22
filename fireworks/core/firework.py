@@ -104,6 +104,9 @@ class FireTaskBase(defaultdict, FWSerializable):
     def from_dict(cls, m_dict):
         return cls(m_dict)
 
+    def __repr__(self):
+        return '<{}>:{}'.format(self._fw_name, dict(self))
+
 
 class FWAction(FWSerializable):
     """
