@@ -163,6 +163,20 @@ class MongoTests(unittest.TestCase):
                              'data'],
                          "world")
 
+    def test_spec_copy(self):
+        task1 = ScriptTask.from_str('echo "Task 1"')
+        task2 = ScriptTask.from_str('echo "Task 2"')
+
+        spec = {'_category': 'dummy_category'}
+
+        fw1 = FireWork(task1, fw_id=1, name='Task 1', spec=spec)
+        fw2 = FireWork(task2, fw_id=2, name='Task 2', spec=spec)
+
+        self.lp.add_wf(Workflow([fw1, fw2]))
+
+        self.assertEqual(self.lp.get_fw_by_id(1).tasks[0]['script'][0], 'echo "Task 1"')
+        self.assertEqual(self.lp.get_fw_by_id(2).tasks[0]['script'][0], 'echo "Task 2"')
+
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
         os.chdir(self.old_wd)

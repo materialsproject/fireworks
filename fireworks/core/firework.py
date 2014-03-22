@@ -204,7 +204,7 @@ class FireWork(FWSerializable):
         tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
         self.tasks = tasks
-        self.spec = spec if spec else {}
+        self.spec = spec.copy() if spec else {}
         self.spec['_tasks'] = [t.to_dict() for t in
                                tasks]  # put tasks in a special location of the spec
 
