@@ -1,0 +1,23 @@
+# @ shell=/bin/bash
+
+# @ class = $${queue}
+# @ account_no = $${account}
+# @ job_name = $${job_name}
+# @ output = FW_job.out
+# @ error = FW_job.error
+# @ job_type = $${job_type} 
+# @ node_usage = $${node_usage} 
+# @ node = $${nnodes}
+# @ tasks_per_node = $${ppnode}
+# @ resources = $${resources} 
+# @ network.MPI = sn_all,not_shared,us
+# @ wall_clock_limit = $${walltime} 
+# @ notification = $${notification} 
+# @ queue
+
+$${pre_rocket}
+cd $${launch_dir}
+$${rocket_launch}
+$${post_rocket}
+
+# CommonAdapter (LoadLeveler) completed writing Template
