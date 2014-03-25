@@ -52,7 +52,7 @@ class CommonAdapter(QueueAdapterBase):
         elif q_type == "LoadLeveler":
             self.submit_cmd = "llsubmit"
         else:
-            self.submit_cmd = "qstat"
+            self.submit_cmd = "qsub"
         self.q_name = q_name if q_name else q_type
         self.update(dict(kwargs))
 
