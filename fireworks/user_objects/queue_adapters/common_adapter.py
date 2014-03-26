@@ -26,12 +26,12 @@ class CommonAdapter(QueueAdapterBase):
     TORQUE), SGE, and SLURM queues.
     """
     _fw_name = 'CommonAdapter'
-    supported_q_types = ["PBS", "SGE", "SLURM"]
+    supported_q_types = ["PBS", "SGE", "SLURM", "LoadLeveler"]
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
         """
-        :param q_type: The type of queue. Right now it should be either PBS
-                       or SGE.
+        :param q_type: The type of queue. Right now it should be either PBS,
+                       SGE, SLURM or LoadLeveler.
         :param q_name: A name for the queue. Can be any string.
         :param template_file: The path to the template file. Leave it as
                               None (the default) to use Fireworks' built-in
@@ -47,16 +47,26 @@ class CommonAdapter(QueueAdapterBase):
         self.q_type = q_type
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
-        self.submit_cmd = 'sbatch' if q_type == 'SLURM' else 'qsub'
+        if q_type == "SLURM":
+            self.submit_cmd = "sbatch"
+        elif q_type == "LoadLeveler":
+            self.submit_cmd = "llsubmit"
+        else:
+            self.submit_cmd = "qsub"
         self.q_name = q_name if q_name else q_type
         self.update(dict(kwargs))
 
     def _parse_jobid(self, output_str):
-        if self.q_type == 'SLURM': # this special case might not be needed
+        if self.q_type == "SLURM": # this special case might not be needed
             return int(output_str.split()[3])
             #This should work regardless of PBS or SGE.
-        #PBS: "1234.whatever", SGE: "Your job 44275 ("jobname") has been submitted"
-        m = re.search("(\d+)", output_str)
+        if self.q_type == "LoadLeveler":
+            # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
+            re_string = r"The job \"(.*?)\" has been submitted"
+        else:
+            #PBS: "1234.whatever", SGE: "Your job 44275 ("jobname") has been submitted"
+            re_string = r"(\d+)"
+        m = re.search(re_string, output_str)
         if m:
             return m.group(1)
         raise RuntimeError("Unable to parse jobid")
@@ -64,7 +74,10 @@ class CommonAdapter(QueueAdapterBase):
     def _get_status_cmd(self, username):
         if self.q_type == 'SLURM':
             return ['squeue', '-o "%u"', '-u', username]
-        return ['qstat', '-u', username]
+        elif self.q_type == "LoadLeveler":
+            return ['llq', '-u', username]
+        else:
+            return ['qstat', '-u', username]
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
@@ -73,6 +86,14 @@ class CommonAdapter(QueueAdapterBase):
             # TODO: currently does not filter on queue name or job state
             outs = output_str.split('\n')
             return len([line.split() for line in outs if username in line])
+
+        if self.q_type == "LoadLeveler":
+            if 'There is currently no job status to report' in output_str:
+                return 0
+            else:
+                # last line is: "1 job step(s) in query, 0 waiting, ..."
+                return int(output_str.split('\n')[-2].split()[0])
+
         count = 0
         for l in output_str.split('\n'):
             if l.lower().startswith("job"):

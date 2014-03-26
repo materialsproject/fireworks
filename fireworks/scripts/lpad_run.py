@@ -305,7 +305,7 @@ def archive(args):
     for f in fw_ids:
         lp.archive_wf(f)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished archiving {} FWs'.format(len(fw_ids)))
+    lp.m_logger.info('Finished archiving {} WFs'.format(len(fw_ids)))
 
 
 def reignite(args):

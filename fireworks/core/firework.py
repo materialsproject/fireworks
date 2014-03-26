@@ -104,6 +104,9 @@ class FireTaskBase(defaultdict, FWSerializable):
     def from_dict(cls, m_dict):
         return cls(m_dict)
 
+    def __repr__(self):
+        return '<{}>:{}'.format(self._fw_name, dict(self))
+
 
 class FWAction(FWSerializable):
     """
@@ -201,7 +204,7 @@ class FireWork(FWSerializable):
         tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
         self.tasks = tasks
-        self.spec = spec if spec else {}
+        self.spec = spec.copy() if spec else {}
         self.spec['_tasks'] = [t.to_dict() for t in
                                tasks]  # put tasks in a special location of the spec
 

@@ -18,6 +18,8 @@ William Davidson Richards Waroquiers wrote the SGE queue adapter and provided us
 
 Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others. In addition, he made many suggestions to improve the usability of the code.
 
+Felix Brockherde added support for the IBM LoadLeveler queueing system and helped stomp bugs.
+
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django, and Stephen Bailey for helpful discussions.
 
 .. _pymatgen: http://packages.python.org/pymatgen/

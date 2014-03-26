@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v0.79**
+
+* Add support for IBM LoadLeveler Queue (F. Brockherde)
+
+**v0.78**
+
+* Fix spec copy bug as reported by Github user (F. Brockherde)
+* Misc fixes (archiving FWs, tuple support)
+
 **v0.77**
 
 * Support/fix serialization of tuples as list instead of String (S.P. Ong)
