@@ -67,7 +67,7 @@ A few basic parameters that can be tweaked are:
 * ``SORT_FWS: ''`` - set to ``FIFO`` if you want older FireWorks to be run first, ``FILO`` if you want recent FireWorks run first. Note that higher priority FireWorks are always run first.
 * ``PRINT_FW_JSON: True`` - whether to print the ``FW.json`` file in your run directory
 * ``PRINT_FW_YAML: False`` - whether to print the ``FW.yaml`` file in your run directory
-* ``SUBMIT_SCRIPT_NAME: FW_submit.script`` - the name to give the script for submitting PBS/SLURM/queue jobs
+* ``SUBMIT_SCRIPT_NAME: FW_submit.script`` - the name to give the script for submitting PBS/SLURM/etc. queue jobs
 * ``FW_LOGGING_FORMAT: %(asctime)s %(levelname)s %(message)s`` - format for loggers (this String will be passed to ``logging.Formatter()``)
 * ``ALWAYS_CREATE_NEW_BLOCK: False`` - set True if you want the Queue Launcher to always create a new block directory every time it is called, False if you want to re-use previous blocks
 * ``TEMPLATE_DIR`` - where to store templates if you are using the :doc:`TemplateWriterTask <templatewritertask>`.

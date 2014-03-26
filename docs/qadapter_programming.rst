@@ -7,7 +7,7 @@ FireWorks is intended to support multiple queueing systems. To support a new que
 Modifying the template of the CommonAdapter
 ===========================================
 
-The FireWorks CommonAdapter supports several queueing engines such as PBS, SGE, and SLURM. If you want to use one of these queueing systems but make minor modifications to how the queue submission file looks, you only need to write a new template file and point your queue adapter to it.
+The FireWorks CommonAdapter supports several queueing engines such as PBS, SGE, SLURM, and IBM LoadLeveler. If you want to use one of these queueing systems but make minor modifications to how the queue submission file looks, you only need to write a new template file and point your queue adapter to it.
 
 1. Create a template file for job submission. Variables that you want to specify later should be written using the ``$${var}`` notation.  Save this template file somewhere, e.g. as ``PBS_template_custom.txt``. An example template file is given below::
 
