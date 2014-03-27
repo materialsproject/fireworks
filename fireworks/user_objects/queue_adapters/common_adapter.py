@@ -13,6 +13,7 @@ from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
 __author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong'
+__credits__ = 'David Waroquiers'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
@@ -57,11 +58,10 @@ class CommonAdapter(QueueAdapterBase):
         self.update(dict(kwargs))
 
     def _parse_jobid(self, output_str):
-        if self.q_type == "SLURM": # this special case might not be needed
+        if self.q_type == "SLURM":
             for l in output_str.split("\n"):
                 if l.startswith("Submitted batch job"):
                     return int(l.split()[-1])
-            #This should work regardless of PBS or SGE.
         if self.q_type == "LoadLeveler":
             # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
             re_string = r"The job \"(.*?)\" has been submitted"
