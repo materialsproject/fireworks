@@ -112,6 +112,8 @@ Submitted batch job 1234"""
                     hello="world")
         qsub_output = "Your job 44275 (\"jobname\") has been submitted"
         self.assertEqual(p._parse_jobid(qsub_output), '44275')
-        
+
+        p.submit_to_queue("mypbs.txt")
+
 if __name__ == '__main__':
     unittest.main()

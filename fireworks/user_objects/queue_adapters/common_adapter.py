@@ -26,7 +26,12 @@ class CommonAdapter(QueueAdapterBase):
     TORQUE), SGE, and SLURM queues.
     """
     _fw_name = 'CommonAdapter'
-    supported_q_types = ["PBS", "SGE", "SLURM", "LoadLeveler"]
+    supported_q_types = {
+        "PBS": "qsub",
+        "SGE": "qsub",
+        "SLURM": "sbatch",
+        "LoadLeveler": "llsubmit"
+    }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
         """
@@ -42,18 +47,12 @@ class CommonAdapter(QueueAdapterBase):
         if q_type not in CommonAdapter.supported_q_types:
             raise ValueError(
                 "{} is not a supported queue type. "
-                "CommonAdaptor supports {}".format(q_type,
-                                                   CommonAdapter.supported_q_types))
+                "CommonAdaptor supports {}".format(
+                    q_type, CommonAdapter.supported_q_types))
         self.q_type = q_type
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
-        if q_type == "SLURM":
-            self.submit_cmd = "sbatch"
-        elif q_type == "LoadLeveler":
-            self.submit_cmd = "llsubmit"
-        else:
-            self.submit_cmd = "qsub"
-        self.q_name = q_name if q_name else q_type
+        self.q_name = q_name or q_type
         self.update(dict(kwargs))
 
     def _parse_jobid(self, output_str):
@@ -65,7 +64,8 @@ class CommonAdapter(QueueAdapterBase):
             # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
             re_string = r"The job \"(.*?)\" has been submitted"
         else:
-            #PBS: "1234.whatever", SGE: "Your job 44275 ("jobname") has been submitted"
+            # PBS: "1234.whatever",
+            # SGE: "Your job 44275 ("jobname") has been submitted"
             re_string = r"(\d+)"
         m = re.search(re_string, output_str)
         if m:
@@ -129,10 +129,10 @@ class CommonAdapter(QueueAdapterBase):
                     script_file))
 
         queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
-
+        submit_cmd = CommonAdapter.supported_q_types[self.q_type]
         # submit the job
         try:
-            cmd = [self.submit_cmd, script_file]
+            cmd = [submit_cmd, script_file]
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
             p.wait()
@@ -148,9 +148,8 @@ class CommonAdapter(QueueAdapterBase):
                 except:
                     # probably error parsing job code
                     log_exception(queue_logger,
-                                  'Could not parse job id following {}...'.format(
-                                      self.submit_cmd))
-
+                                  'Could not parse job id following {}...'
+                                  .format(submit_cmd))
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
@@ -159,11 +158,11 @@ class CommonAdapter(QueueAdapterBase):
                     'The error response reads: {}'.format(p.stderr.read())]
                 log_fancy(queue_logger, msgs, 'error')
 
-        except:
+        except Exception as ex:
             # random error, e.g. no qsub on machine!
             log_exception(queue_logger,
-                          'Running the command: {} caused an error...'.format(
-                              self.submit_cmd))
+                          'Running the command: {} caused an error...'
+                          .format(submit_cmd))
 
     def get_njobs_in_queue(self, username=None):
         """
