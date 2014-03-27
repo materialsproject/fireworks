@@ -12,8 +12,7 @@ from fireworks.queue.queue_adapter import QueueAdapterBase, Command
 from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
-__author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong'
-__credits__ = 'David Waroquiers'
+__author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong, David Waroquiers, Felix Brockherde'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
