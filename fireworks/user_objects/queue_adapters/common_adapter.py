@@ -48,7 +48,7 @@ class CommonAdapter(QueueAdapterBase):
             raise ValueError(
                 "{} is not a supported queue type. "
                 "CommonAdaptor supports {}".format(
-                    q_type, CommonAdapter.supported_q_types))
+                    q_type, CommonAdapter.supported_q_types.keys()))
         self.q_type = q_type
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
