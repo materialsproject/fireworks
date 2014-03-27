@@ -58,7 +58,9 @@ class CommonAdapter(QueueAdapterBase):
 
     def _parse_jobid(self, output_str):
         if self.q_type == "SLURM": # this special case might not be needed
-            return int(output_str.split()[3])
+            for l in output_str.split("\n"):
+                if l.startswith("Submitted batch job"):
+                    return int(l.split()[-1])
             #This should work regardless of PBS or SGE.
         if self.q_type == "LoadLeveler":
             # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
