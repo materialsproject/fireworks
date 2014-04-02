@@ -37,7 +37,7 @@ FW_BLOCK_FORMAT = '%Y-%m-%d-%H-%M-%S-%f'  # date format for writing block direct
 FW_LOGGING_FORMAT = '%(asctime)s %(levelname)s %(message)s'  # format for loggers
 
 QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in failures
-QUEUE_UPDATE_INTERVAL = 15  # max interval (seconds) needed for queue to update after submitting a job
+QUEUE_UPDATE_INTERVAL = 5  # max interval (seconds) needed for queue to update after submitting a job
 
 SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
 

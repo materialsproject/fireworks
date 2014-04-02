@@ -79,7 +79,7 @@ Parameters that you probably shouldn't change
 Some parameters that you can change, but probably shouldn't, are:
 
 * ``QUEUE_RETRY_ATTEMPTS: 10`` - number of attempts to re-try communicating with queue server when communication fails
-* ``QUEUE_UPDATE_INTERVAL: 15`` - max interval (seconds) needed for queue to update after submitting a job
+* ``QUEUE_UPDATE_INTERVAL: 5`` - max interval (seconds) needed for queue to update after submitting a job
 * ``PING_TIME_SECS: 3600`` - means that the Rocket will ping the LaunchPad that it's alive every 3600 seconds. See the :doc:`failures tutorial <failures_tutorial>`.
 * ``RUN_EXPIRATION_SECS: 14400`` - means that the LaunchPad will mark a Rocket FIZZLED if it hasn't received a ping in 14400 seconds. See the :doc:`failures tutorial <failures_tutorial>`.
 * ``RESERVATION_EXPIRATION_SECS: 1209600`` - means that the LaunchPad will unreserve a FireWork that's been in the queue for 1209600 seconds (14 days). See the :doc:`queue reservation tutorial <queue_tutorial_pt2>`.
