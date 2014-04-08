@@ -346,34 +346,35 @@ class LaunchPad(FWSerializable):
         q = fworker.query if fworker else {}
         return bool(self._get_a_fw_to_run(query=q, checkout=False))
 
-    def tuneup(self):
+    def tuneup(self, bkground=True):
         self.m_logger.info('Performing db tune-up')
 
         self.m_logger.debug('Updating indices...')
-        self.fireworks.ensure_index('fw_id', unique=True)
+        self.fireworks.ensure_index('fw_id', unique=True, background=bkground)
         for f in ("state", 'spec._category', 'created_on', 'name', 'launches'):
-            self.fireworks.ensure_index(f)
+            self.fireworks.ensure_index(f, background=bkground)
 
-        self.launches.ensure_index('launch_id', unique=True)
+        self.launches.ensure_index('launch_id', unique=True, background=bkground)
         for f in ('state', 'time_start', 'time_end', 'host', 'ip',
                   'fworker.name'):
-            self.launches.ensure_index(f)
+            self.launches.ensure_index(f, background=bkground)
 
         for f in ('name', 'created_on', 'updated_on', 'nodes'):
-            self.workflows.ensure_index(f)
+            self.workflows.ensure_index(f, background=bkground)
 
         for idx in self.user_indices:
-            self.fireworks.ensure_index(idx)
+            self.fireworks.ensure_index(idx, background=bkground)
 
         for idx in self.wf_user_indices:
-            self.workflows.ensure_index(idx)
+            self.workflows.ensure_index(idx, background=bkground)
 
-        self.m_logger.debug('Compacting database...')
-        try:
-            self.db.command({'compact': 'fireworks'})
-            self.db.command({'compact': 'launches'})
-        except:
-            self.m_logger.debug('Database compaction failed (not critical)')
+        if not bkground:
+            self.m_logger.debug('Compacting database...')
+            try:
+                self.db.command({'compact': 'fireworks'})
+                self.db.command({'compact': 'launches'})
+            except:
+                self.m_logger.debug('Database compaction failed (not critical)')
 
     def defuse_fw(self, fw_id):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']

@@ -287,7 +287,7 @@ def detect_unreserved(args):
 
 def tuneup(args):
     lp = get_lp(args)
-    lp.tuneup()
+    lp.tuneup(bkground=not args.full)
 
 
 def defuse(args):
@@ -625,6 +625,7 @@ def lpad():
 
     tuneup_parser = subparsers.add_parser('tuneup',
                                           help='Tune-up the database (should be performed during scheduled downtime)')
+    tuneup_parser.add_argument('--full', help='Run full tuneup and compaction (should be run during DB downtime only)', action='store_true')
     tuneup_parser.set_defaults(func=tuneup)
 
     refresh_parser = subparsers.add_parser('refresh', help='manually force a workflow refresh (not usually needed)')
