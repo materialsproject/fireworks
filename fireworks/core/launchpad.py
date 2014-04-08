@@ -717,6 +717,8 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug("Also rerunning duplicate fw_id: {}".format(f))
             self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
 
+        return duplicates + [fw_id]  # return the ids that were rerun
+
     def _refresh_wf(self, wf, fw_id):
 
         """
