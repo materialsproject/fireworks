@@ -351,7 +351,7 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug('Updating indices...')
         self.fireworks.ensure_index('fw_id', unique=True)
-        for f in ("state", 'spec._category', 'created_on', "name"):
+        for f in ("state", 'spec._category', 'created_on', 'name', 'launches'):
             self.fireworks.ensure_index(f)
 
         self.launches.ensure_index('launch_id', unique=True)
@@ -697,10 +697,25 @@ class LaunchPad(FWSerializable):
 
         return old_new
 
-    def rerun_fw(self, fw_id):
+    def rerun_fw(self, fw_id, rerun_duplicates=True):
+        # detect FWs that share the same launch. Must do this before rerun
+        duplicates = []
+        if rerun_duplicates:
+            f = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}}, {'launches':1})
+            if f:
+                for d in self.fireworks.find({"launches": {"$in": f['launches']}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
+                    duplicates.append(d['fw_id'])
+
+        # rerun this FW
         wf = self.get_wf_by_fw_id(fw_id)
         updated_ids = wf.rerun_fw(fw_id)
         self._update_wf(wf, updated_ids)
+
+        # rerun duplicated FWs
+        for f in duplicates:
+            self.m_logger.debug("Also rerunning duplicate fw_id: {}".format(f))
+            print "Also rerunning duplicate fw_id: {}".format(f)
+            self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
 
     def _refresh_wf(self, wf, fw_id):
 
