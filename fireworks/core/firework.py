@@ -253,6 +253,7 @@ class FireWork(FWSerializable):
         """
 
         self.archived_launches.extend(self.launches)
+        self.archived_launches = list(set(self.archived_launches))  # filter duplicates
         self.launches = []
         self.state = 'WAITING'
 
