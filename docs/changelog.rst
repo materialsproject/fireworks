@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v0.81**
+
+.. note:: A major bugfix to dynamic and branching workflows was added in this release
+
+* fix race condition bug in which two FW belonging to same WF simultaneously try to update the WF, and only one succeeds
+
 **v0.80**
 
 * rerun duplicated FWs on a rerun command (enabled by default), and return back all fw_ids that were rerun
