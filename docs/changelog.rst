@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v0.80**
+
+* rerun duplicated FWs on a rerun command (enabled by default), and return back all fw_ids that were rerun
+* change default QUEUE_UPDATE_INTERVAL from 15 secs down to 5 secs
+* add background tuneup option, and make it the default
+* misc. cleanup (S.P. Ong)
+
 **v0.79**
 
 * Add support for IBM LoadLeveler Queue (F. Brockherde)
