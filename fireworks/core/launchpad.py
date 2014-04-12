@@ -38,6 +38,29 @@ __date__ = 'Jan 30, 2013'
 m_timer = get_fw_timer("LaunchPad")
 
 
+class WFLock(object):
+    """
+    Lock a Workflow, i.e. for performing update operations
+    """
+
+    def __init__(self, lp, fw_id):
+        self.lp = lp
+        self.fw_id = fw_id
+
+    def __enter__(self):
+        ctr=0
+        links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}}, {'$set': {'locked': True}})
+        while not links_dict:
+            time.sleep(5)
+            ctr += 1
+            if ctr == 200:
+                raise ValueError("Could not get workflow {}: LOCKED".format(self.fw_id))
+            links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}}, {'$set': {'locked': True}})
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.lp.workflows.find_and_modify({"nodes": self.fw_id}, {"$unset": {"locked": True}})
+
+
 class LaunchPad(FWSerializable):
     """
     The LaunchPad manages the FireWorks database.
@@ -651,7 +674,8 @@ class LaunchPad(FWSerializable):
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
-            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+            with WFLock(self, fw_id):
+                self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
         # change return type to dict to make return type seriazlizable to
         # support job packing
         return m_launch.to_dict()
@@ -708,9 +732,10 @@ class LaunchPad(FWSerializable):
                     duplicates.append(d['fw_id'])
 
         # rerun this FW
-        wf = self.get_wf_by_fw_id(fw_id)
-        updated_ids = wf.rerun_fw(fw_id)
-        self._update_wf(wf, updated_ids)
+        with WFLock(self, fw_id):
+            wf = self.get_wf_by_fw_id(fw_id)
+            updated_ids = wf.rerun_fw(fw_id)
+            self._update_wf(wf, updated_ids)
 
         # rerun duplicated FWs
         for f in duplicates:
@@ -728,7 +753,6 @@ class LaunchPad(FWSerializable):
         """
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
-
         updated_ids = wf.refresh(fw_id)
         self._update_wf(wf, updated_ids)
 
