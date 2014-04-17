@@ -876,3 +876,7 @@ class LaunchPad(FWSerializable):
 
         return data
 
+    # support for job packing
+    def log_message(self, level, message):
+        self.m_logger.log(level, message)
+
