@@ -524,13 +524,12 @@ class LaunchPad(FWSerializable):
         return m_fw, launch_id
 
     def unreserve(self, launch_id):
-        # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'READY'
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
-            self.fireworks.find_and_modify({'fw_id': fw['fw_id']}, {'$set': {'state': 'READY'}})
+            self.rerun_fw(fw['fw_id'], rerun_duplicates=False)
 
     def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, rerun=False):
         bad_launch_ids = []
