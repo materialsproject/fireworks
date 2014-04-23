@@ -24,7 +24,7 @@ class TestLinks(TestCase):
         lp.add_wf(FireWork(ScriptTask.from_str('echo "hello 1"')))
         lp.add_wf(FireWork(ScriptTask.from_str('echo "hello 2"')))
 
-        launch_multiprocess(lp, FWorker(), 'DEBUG', 0, 1, 10)
+        launch_multiprocess(lp, FWorker(), 'DEBUG', 0, 2, 10)
 
 
 if __name__ == '__main__':

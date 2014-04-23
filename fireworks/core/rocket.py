@@ -109,7 +109,9 @@ class Rocket():
 
         # check a FW job out of the launchpad
         if lp:
-            m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
+            m_fw_d, launch_id = lp.checkout_fw(
+                self.fworker, launch_dir, self.fw_id)
+            m_fw = FireWork.from_dict(m_fw_d)
         else:  # offline mode
             m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
 

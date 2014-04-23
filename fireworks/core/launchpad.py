@@ -652,7 +652,8 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
 
-        return m_fw, l_id
+        # use dict as return type, just to be compatible with multiprocessing
+        return m_fw.to_dict(), l_id
 
     def _change_launch_dir(self, launch_id, launch_dir):
         m_launch = self.get_launch_by_id(launch_id)
