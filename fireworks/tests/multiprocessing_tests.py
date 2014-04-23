@@ -3,6 +3,7 @@ import pickle
 import shutil
 from unittest import TestCase
 import unittest
+import datetime
 from fireworks import LaunchPad, FireWork, FWorker
 from fireworks.core.firework import Workflow
 from fireworks.features.multi_launcher import launch_multiprocess
@@ -27,7 +28,7 @@ class TestCheckoutFW(TestCase):
             os.makedirs(scr_dir)
         os.chdir(scr_dir)
         lp = LaunchPad()
-        lp.reset('2014-04-23')
+        lp.reset(password=None, require_password=False)
         lp.add_wf(FireWork(ScriptTask.from_str(
             shell_cmd='echo "hello 1"',
             parameters={"stdout_file": "task.out"}), fw_id=1))
@@ -48,6 +49,7 @@ class TestCheckoutFW(TestCase):
             task2out = f.readlines()
         self.assertEqual(task2out, ['hello 2\n'])
         os.chdir(cur_dir)
+        lp.reset(password=None, require_password=False)
         shutil.rmtree(scr_dir)
 
 
