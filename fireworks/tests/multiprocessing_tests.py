@@ -1,7 +1,10 @@
 import pickle
 from unittest import TestCase
 import unittest
+from fireworks import LaunchPad, FireWork, FWorker
 from fireworks.core.firework import Workflow
+from fireworks.features.multi_launcher import launch_multiprocess
+from fireworks.user_objects.firetasks.script_task import ScriptTask
 
 __author__ = 'xiaohuiqu'
 
@@ -12,6 +15,16 @@ class TestLinks(TestCase):
         s = pickle.dumps(links1)
         links2 = pickle.loads(s)
         self.assertEqual(str(links1), str(links2))
+
+
+    def test_checkout_fw(self):
+        lp = LaunchPad()
+        lp.reset('2014-04-23')
+
+        lp.add_wf(FireWork(ScriptTask.from_str('echo "hello 1"')))
+        lp.add_wf(FireWork(ScriptTask.from_str('echo "hello 2"')))
+
+        launch_multiprocess(lp, FWorker(), 'DEBUG', 0, 1, 10)
 
 
 if __name__ == '__main__':
