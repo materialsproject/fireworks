@@ -503,7 +503,7 @@ class LaunchPad(FWSerializable):
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
-    def _reserve_fw(self, fworker, launch_dir, host=None, ip=None):
+    def reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         m_fw = self._get_a_fw_to_run(fworker.query)
         if not m_fw:
             return None, None
@@ -654,7 +654,7 @@ class LaunchPad(FWSerializable):
 
         return m_fw, l_id
 
-    def _change_launch_dir(self, launch_id, launch_dir):
+    def change_launch_dir(self, launch_id, launch_dir):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.launch_dir = launch_dir
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)

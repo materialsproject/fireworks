@@ -42,13 +42,21 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     fworker = fworker if fworker else FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
-    # get the queue adapter
+
     l_logger.debug('getting queue adapter')
     qadapter = load_object(qadapter.to_dict())  # make a defensive copy, mainly for reservation mode
 
-    # make sure launch_dir exists:
+    fw, launch_id = None, None  # only needed in reservation mode
+    oldlaunch_dir = None  # only needed in --offline mode with _launch_dir option
+
     if not os.path.exists(launcher_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
+
+    if '--offline' in qadapter['rocket_launch'] and not reserve:
+                raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline option of rlaunch!!")
+
+    if reserve and 'singleshot' not in qadapter.get('rocket_launch', ''):
+        raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
 
     if launchpad.run_exists(fworker):
         try:
@@ -56,56 +64,52 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             l_logger.info('moving to launch_dir {}'.format(launcher_dir))
             os.chdir(launcher_dir)
 
-            oldlaunch_dir = None
-            if '--offline' in qadapter['rocket_launch'] and not reserve:
-                raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline mode (--offline option) of rlaunch!!")
-            elif reserve:
+            if reserve:
                 l_logger.debug('finding a FW to reserve...')
-                fw, launch_id = launchpad._reserve_fw(fworker, launcher_dir)
+                fw, launch_id = launchpad.reserve_fw(fworker, launcher_dir)
                 if not fw:
                     l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
                     return False
                 l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
 
-                # set job name to the FW name
-                job_name = get_slug(fw.name)
-                job_name = job_name[0:20] if len(job_name)>20 else job_name
-                qadapter.update({'job_name': job_name})  # set the job name to FW name
+                # update qadapter job_name based on FW name
+                job_name = get_slug(fw.name)[0:20]
+                qadapter.update({'job_name': job_name})
 
                 if '_queueadapter' in fw.spec:
                     l_logger.debug('updating queue params using FireWork spec..')
                     qadapter.update(fw.spec['_queueadapter'])
 
-                # update the exe to include the FW_id
-                if 'singleshot' not in qadapter.get('rocket_launch', ''):
-                    raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
+                # reservation mode includes --fw_id in rocket launch
                 qadapter['rocket_launch'] += ' --fw_id {}'.format(fw.fw_id)
 
                 if '--offline' in qadapter['rocket_launch']:
-                    # handle _launch_dir parameter early...
+                    # handle _launch_dir parameter now b/c we can't call
+                    # launchpad.change_launch_dir() later on in offline mode
                     if '_launch_dir' in fw.spec:
                         os.chdir(fw.spec['_launch_dir'])
                         oldlaunch_dir = launcher_dir
                         launcher_dir = os.path.abspath(os.getcwd())
-                        launchpad._change_launch_dir(launch_id, launcher_dir)
+                        launchpad.change_launch_dir(launch_id, launcher_dir)
 
-                    # write FW.json
                     fw.to_file("FW.json")
-                    # write Launchid
                     with open('FW_offline.json', 'w') as f:
                         f.write('{"launch_id":%s}' % launch_id)
 
                     launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)
 
-            # write and submit the queue script using the queue adapter
             l_logger.debug('writing queue script')
             with open(SUBMIT_SCRIPT_NAME, 'w') as f:
                 queue_script = qadapter.get_script_str(launcher_dir)
                 f.write(queue_script)
+
             l_logger.info('submitting queue script')
             reservation_id = qadapter.submit_to_queue(SUBMIT_SCRIPT_NAME)
             if not reservation_id:
-                raise RuntimeError('queue script could not be submitted, check queue adapter and queue server status!')
+                if reserve:
+                    l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(fw.fw_id, launch_id))
+                    launchpad.unreserve(launch_id)
+                raise RuntimeError('queue script could not be submitted, check queue script/queue adapter/queue server status!')
             elif reserve:
                 launchpad.set_reservation_id(launch_id, reservation_id)
             return reservation_id
