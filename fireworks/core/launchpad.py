@@ -725,24 +725,34 @@ class LaunchPad(FWSerializable):
     def rerun_fw(self, fw_id, rerun_duplicates=True):
         # detect FWs that share the same launch. Must do this before rerun
         duplicates = []
+        reruns = []
         if rerun_duplicates:
             f = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}}, {'launches':1})
             if f:
                 for d in self.fireworks.find({"launches": {"$in": f['launches']}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
                     duplicates.append(d['fw_id'])
+            duplicates = list(set(duplicates))
 
         # rerun this FW
-        with WFLock(self, fw_id):
-            wf = self.get_wf_by_fw_id(fw_id)
-            updated_ids = wf.rerun_fw(fw_id)
-            self._update_wf(wf, updated_ids)
+        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
+        if m_fw['state'] == 'ARCHIVED':
+            self.m_logger.info("Cannot rerun fw_id: {}: it is ARCHIVED.".format(fw_id))
+        elif m_fw['state'] == 'WAITING':
+            self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
+        else:
+            with WFLock(self, fw_id):
+                wf = self.get_wf_by_fw_id(fw_id)
+                updated_ids = wf.rerun_fw(fw_id)
+                self._update_wf(wf, updated_ids)
+                reruns.append(fw_id)
 
         # rerun duplicated FWs
         for f in duplicates:
-            self.m_logger.debug("Also rerunning duplicate fw_id: {}".format(f))
-            self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
+            self.m_logger.info("Also rerunning duplicate fw_id: {}".format(f))
+            r = self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
+            reruns.extend(r)
 
-        return duplicates + [fw_id]  # return the ids that were rerun
+        return reruns  # return the ids that were rerun
 
     def _refresh_wf(self, wf, fw_id):
 
