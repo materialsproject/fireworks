@@ -28,9 +28,25 @@ class TestCheckoutFW(TestCase):
         os.chdir(scr_dir)
         lp = LaunchPad()
         lp.reset('2014-04-23')
-        lp.add_wf(FireWork(ScriptTask.from_str('echo "hello 1"')))
-        lp.add_wf(FireWork(ScriptTask.from_str('echo "hello 2"')))
+        lp.add_wf(FireWork(ScriptTask.from_str(
+            shell_cmd='echo "hello 1"',
+            parameters={"stdout_file": "task.out"}), fw_id=1))
+        lp.add_wf(FireWork(ScriptTask.from_str(
+            shell_cmd='echo "hello 2"',
+            parameters={"stdout_file": "task.out"}), fw_id=2))
         launch_multiprocess(lp, FWorker(), 'DEBUG', 0, 2, 10)
+        fw1 = lp.get_fw_by_id(1)
+        fw2 = lp.get_fw_by_id(2)
+        self.assertEqual(fw1.launches[0].state_history[-1]["state"],
+                         "COMPLETED")
+        self.assertEqual(fw2.launches[0].state_history[-1]["state"],
+                         "COMPLETED")
+        with open(os.path.join(fw1.launches[0].launch_dir, "task.out")) as f:
+            task1out = f.readlines()
+        self.assertEqual(task1out, ['hello 1\n'])
+        with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
+            task2out = f.readlines()
+        self.assertEqual(task2out, ['hello 2\n'])
         os.chdir(cur_dir)
         shutil.rmtree(scr_dir)
 
