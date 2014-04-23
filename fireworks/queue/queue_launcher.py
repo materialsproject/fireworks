@@ -179,7 +179,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 # create launcher_dir
                 launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir, reserve, strm_lvl)
+                if not launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir, reserve, strm_lvl):
+                    raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if num_launched == nlaunches:
                     break
