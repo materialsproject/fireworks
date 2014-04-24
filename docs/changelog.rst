@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v0.82**
+
+* add ability to define links via {fw1:fw2} objects rather than explicit IDs (based on conversation with H. Rusche)
+* un-reserve a FW if queue submission goes badly and clean up queue launcher code
+* internal cleanups (don't rerun ARCHIVED jobs, skip reruns of WAITING jobs)
+* stop rapidfire upon error in queue launch
+* rerun fw on unreserve
+* add methods to work with queue ids (``cancel_qid``, ``--qid`` option in ``get_fws``, and ``get_qid``)
+
 **v0.81**
 
 .. note:: A major bugfix to dynamic and branching workflows was added in this release

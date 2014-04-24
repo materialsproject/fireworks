@@ -38,6 +38,12 @@ Reserving FireWorks
 
 #. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
 
+#. There are few different commands you can use to leverage the reservation id (often shortened as *qid*) of your job::
+
+    lpad get_qid -i 1  # gets the queue id of FW 1
+    lpad get_fws --qid 1234  # gets the FireWork with queue id 1234
+    lpad cancel_qid --qid 1234  # cancels reservation 1234. WARNING: the user must remove the job from the queue manually before executing this command.
+
 #. When your queue runs and completes your job, you should see that the state is updated to *COMPLETED*::
 
     lpad get_fws -i 1 -d more
