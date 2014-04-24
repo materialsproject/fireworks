@@ -369,6 +369,11 @@ def get_qid(args):
     for f in args.fw_id:
         print(lp.get_reservation_id_from_fw_id(f))
 
+def cancel_qid(args):
+    lp = get_lp(args)
+    lp.m_logger.warn("WARNING: cancel_qid does not actually remove jobs from the queue (e.g., execute qdel), this must be done manually!")
+    lp.cancel_reservation_by_reservation_id(args.qid)
+
 def set_priority(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
@@ -524,8 +529,8 @@ def lpad():
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
                             'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
-    reservation_args = ["--qid"]
-    reservation_kwargs = {"help": "Query by reservation id of job in queue"}
+    qid_args = ["--qid"]
+    qid_kwargs = {"help": "Query by reservation id of job in queue"}
 
     get_fw_parser = subparsers.add_parser(
         'get_fws', help='get information about FireWorks')
@@ -533,7 +538,7 @@ def lpad():
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument(*query_args, **query_kwargs)
-    get_fw_parser.add_argument(*reservation_args, **reservation_kwargs)
+    get_fw_parser.add_argument(*qid_args, **qid_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0,
                                type=int)
@@ -562,9 +567,13 @@ def lpad():
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
 
-    get_qid_parser = subparsers.add_parser('get_qid', help='get the queue id of a FireWork')
+    get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a FireWork')
     get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_qid_parser.set_defaults(func=get_qid)
+
+    cancel_qid_parser = subparsers.add_parser('cancel_qid', help='cancel a reservation')
+    cancel_qid_parser.add_argument(*qid_args, **qid_kwargs)
+    cancel_qid_parser.set_defaults(func=cancel_qid)
 
     get_links_parser = subparsers.add_parser(
             'get_links', help='Graphical display of Workflows')
