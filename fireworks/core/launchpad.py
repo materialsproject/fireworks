@@ -531,7 +531,7 @@ class LaunchPad(FWSerializable):
         return fw_ids
 
     def cancel_reservation_by_reservation_id(self, reservation_id):
-        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id}, {'launch_id': 1})['launch_id']
+        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id, "state": "RESERVED"}, {'launch_id': 1})['launch_id']
         self.cancel_reservation(l_id)
 
     def get_reservation_id_from_fw_id(self, fw_id):
@@ -544,7 +544,7 @@ class LaunchPad(FWSerializable):
     def cancel_reservation(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'READY'
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_and_modify({'launch_id': m_launch.launch_id, "state": "RESERVED"}, m_launch.to_db_dict(), upsert=True)
 
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
             self.rerun_fw(fw['fw_id'], rerun_duplicates=False)
