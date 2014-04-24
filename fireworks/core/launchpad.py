@@ -525,7 +525,7 @@ class LaunchPad(FWSerializable):
     def get_fw_ids_from_reservation_id(self, reservation_id):
         fw_ids = []
         l_id = self.launches.find_one({"state_history.reservation_id": reservation_id}, {'launch_id': 1})['launch_id']
-        for fw in self.fireworks.find({'launches': l_id, 'state': 'RESERVED'}, {'fw_id': 1}):
+        for fw in self.fireworks.find({'launches': l_id}, {'fw_id': 1}):
             fw_ids.append(fw['fw_id'])
 
         return fw_ids
