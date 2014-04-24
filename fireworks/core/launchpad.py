@@ -32,9 +32,6 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: lots of duplication reduction and cleanup possible
 
-# TODO: can actions like complete_launch() be done as a transaction? e.g. refresh_wf() might have error...I guess at
-# least set the state to FIZZLED or ERROR and add traceback...
-
 m_timer = get_fw_timer("LaunchPad")
 
 
@@ -378,6 +375,8 @@ class LaunchPad(FWSerializable):
             self.fireworks.ensure_index(f, background=bkground)
 
         self.launches.ensure_index('launch_id', unique=True, background=bkground)
+        self.launches.ensure_index('state_history.reservation_id', background=bkground)
+
         for f in ('state', 'time_start', 'time_end', 'host', 'ip',
                   'fworker.name'):
             self.launches.ensure_index(f, background=bkground)
@@ -523,7 +522,26 @@ class LaunchPad(FWSerializable):
 
         return m_fw, launch_id
 
-    def unreserve(self, launch_id):
+    def get_fw_ids_from_reservation_id(self, reservation_id):
+        fw_ids = []
+        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id}, {'launch_id': 1})['launch_id']
+        for fw in self.fireworks.find({'launches': l_id, 'state': 'RESERVED'}, {'fw_id': 1}):
+            fw_ids.append(fw['fw_id'])
+
+        return fw_ids
+
+    def cancel_reservation_by_reservation_id(self, reservation_id):
+        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id}, {'launch_id': 1})['launch_id']
+        self.cancel_reservation(l_id)
+
+    def get_reservation_id_from_fw_id(self, fw_id):
+        l_ids = self.fireworks.find({'fw_id': fw_id, 'state': 'RESERVED'}, {'launches': 1})['launches']
+        for l in self.launches.find({'launch_id': {'$in': l_ids}})['state_history']:
+            for d in l['state_history']:
+                if 'reservation_id' in d:
+                    return d['reservation_id']
+
+    def cancel_reservation(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'READY'
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
@@ -542,7 +560,7 @@ class LaunchPad(FWSerializable):
             bad_launch_ids.append(ld['launch_id'])
         if rerun:
             for lid in bad_launch_ids:
-                self.unreserve(lid)
+                self.cancel_reservation(lid)
         return bad_launch_ids
 
     def mark_fizzled(self, launch_id):

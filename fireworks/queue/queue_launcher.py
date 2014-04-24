@@ -108,7 +108,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             if not reservation_id:
                 if reserve:
                     l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(fw.fw_id, launch_id))
-                    launchpad.unreserve(launch_id)
+                    launchpad.cancel_reservation(launch_id)
                 raise RuntimeError('queue script could not be submitted, check queue script/queue adapter/queue server status!')
             elif reserve:
                 launchpad.set_reservation_id(launch_id, reservation_id)

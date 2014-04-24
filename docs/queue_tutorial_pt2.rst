@@ -114,7 +114,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
-#. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then unreserve ("fix") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
+#. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then cancel the reservation ("qdel") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
 
     lpad detect_unreserved --time 1 --rerun
 
@@ -133,6 +133,6 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 Conclusion
 ==========
 
-As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
+As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run a command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
 
 If you are using the QueueLauncher in reservation mode, we suggest that you look at the tutorial on maintaining your FireWorks database (future). This will show you how to automatically clear out bad reservations periodically without needing human intervention.

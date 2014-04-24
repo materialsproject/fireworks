@@ -147,9 +147,9 @@ def add_wf_dir(args):
 
 def get_fws(args):
     lp = get_lp(args)
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
-        raise ValueError('Pleases specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
+    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query, args.reservation_id]]) > 1:
+        raise ValueError('Pleases specify exactly one of (fw_id, name, state, query, reservation_id)')
+    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query, args.reservation_id]]) == 0:
         args.query = '{}'
         args.display_format = args.display_format if args.display_format else 'ids'
     else:
@@ -161,8 +161,10 @@ def get_fws(args):
         query = {'name': args.name}
     elif args.state:
         query = {'state': args.state}
-    else:
+    elif args.query:
         query = ast.literal_eval(args.query)
+    else:
+        query = None
 
     if args.sort:
         sort = [(args.sort, ASCENDING)]
@@ -171,7 +173,10 @@ def get_fws(args):
     else:
         sort = None
 
-    ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count')
+    if args.reservation_id:
+        ids = lp.get_fw_ids_from_reservation_id(args.reservation_id)
+    else:
+        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count')
     fws = []
     if args.display_format == 'ids':
         fws = ids
@@ -509,12 +514,16 @@ def lpad():
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
                             'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
+    reservation_args = ["--reservation_id"]
+    reservation_kwargs = {"help": "Reservation id of job in queue"}
+
     get_fw_parser = subparsers.add_parser(
         'get_fws', help='get information about FireWorks')
     get_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument(*query_args, **query_kwargs)
+    get_fw_parser.add_argument(*reservation_args, *reservation_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0,
                                type=int)
