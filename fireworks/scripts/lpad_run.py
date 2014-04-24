@@ -366,7 +366,8 @@ def refresh(args):
 
 def get_qid(args):
     lp = get_lp(args)
-    print(lp.get_reservation_id_from_fw_id(args.fw_id))
+    for f in args.fw_id:
+        print(lp.get_reservation_id_from_fw_id(f))
 
 def set_priority(args):
     lp = get_lp(args)
