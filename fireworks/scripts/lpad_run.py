@@ -523,7 +523,7 @@ def lpad():
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument(*query_args, **query_kwargs)
-    get_fw_parser.add_argument(*reservation_args, *reservation_kwargs)
+    get_fw_parser.add_argument(*reservation_args, **reservation_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0,
                                type=int)
