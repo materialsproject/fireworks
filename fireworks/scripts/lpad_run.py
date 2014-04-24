@@ -152,8 +152,8 @@ def get_fws(args):
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
         args.query = '{}'
         args.display_format = args.display_format if args.display_format else 'ids'
-    if sum([bool(x) for x in [args.fw_id, args.name, args.r_id]]) > 1:
-        raise ValueError('Please specify exactly one of (fw_id, name, r_id)')
+    if sum([bool(x) for x in [args.fw_id, args.name, args.qid]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, qid)')
     else:
         args.display_format = args.display_format if args.display_format else 'more'
 
@@ -175,8 +175,8 @@ def get_fws(args):
     else:
         sort = None
 
-    if args.r_id:
-        ids = lp.get_fw_ids_from_reservation_id(args.r_id)
+    if args.qid:
+        ids = lp.get_fw_ids_from_reservation_id(args.qid)
         if query:
             query['fw_id'] = {"$in": ids}
             ids = lp.get_fw_ids(query, sort, args.max)
@@ -364,6 +364,9 @@ def refresh(args):
         lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
 
+def get_qid(args):
+    lp = get_lp(args)
+    print(lp.get_reservation_id_from_fw_id(args.fw_id))
 
 def set_priority(args):
     lp = get_lp(args)
@@ -520,7 +523,7 @@ def lpad():
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
                             'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
-    reservation_args = ["--r_id"]
+    reservation_args = ["--qid"]
     reservation_kwargs = {"help": "Query by reservation id of job in queue"}
 
     get_fw_parser = subparsers.add_parser(
@@ -557,6 +560,10 @@ def lpad():
                                     'with "-d less"',
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
+
+    get_qid_parser = subparsers.add_parser('get_qid', help='get the queue id of a FireWork')
+    get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    get_qid_parser.set_defaults(func=get_qid)
 
     get_links_parser = subparsers.add_parser(
             'get_links', help='Graphical display of Workflows')
