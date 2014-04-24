@@ -531,8 +531,11 @@ class LaunchPad(FWSerializable):
         return fw_ids
 
     def cancel_reservation_by_reservation_id(self, reservation_id):
-        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id, "state": "RESERVED"}, {'launch_id': 1})['launch_id']
-        self.cancel_reservation(l_id)
+        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id, "state": "RESERVED"}, {'launch_id': 1})
+        if l_id:
+            self.cancel_reservation(l_id['launch_id'])
+        else:
+            self.m_logger.info("Can't find any reserved jobs with reservation id: {}".format(reservation_id))
 
     def get_reservation_id_from_fw_id(self, fw_id):
         fw = self.fireworks.find_one({'fw_id': fw_id}, {'launches': 1})
