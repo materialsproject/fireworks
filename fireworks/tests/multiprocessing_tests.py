@@ -1,16 +1,20 @@
-"""
+import glob
 import os
 import pickle
 import shutil
 from unittest import TestCase
 import unittest
-import datetime
+
 from fireworks import LaunchPad, FireWork, FWorker
 from fireworks.core.firework import Workflow
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
+
 __author__ = 'xiaohuiqu'
+
+TESTDB_NAME = 'job_packing_unittest'
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestLinks(TestCase):
@@ -22,23 +26,45 @@ class TestLinks(TestCase):
 
 
 class TestCheckoutFW(TestCase):
+    lp = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:'
+                                    '27017! Skipping tests.')
+
+    def setUp(self):
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None, require_password=False)
+        os.chdir(self.old_wd)
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        # noinspection PyUnresolvedReferences
+        for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
+            shutil.rmtree(i)
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
     def test_checkout_fw(self):
-        cur_dir = os.getcwd()
-        scr_dir = "launch_scratch"
-        if not os.path.isdir(scr_dir):
-            os.makedirs(scr_dir)
-        os.chdir(scr_dir)
-        lp = LaunchPad()
-        lp.reset(password=None, require_password=False)
-        lp.add_wf(FireWork(ScriptTask.from_str(
+        self.lp.add_wf(FireWork(ScriptTask.from_str(
             shell_cmd='echo "hello 1"',
             parameters={"stdout_file": "task.out"}), fw_id=1))
-        lp.add_wf(FireWork(ScriptTask.from_str(
+        self.lp.add_wf(FireWork(ScriptTask.from_str(
             shell_cmd='echo "hello 2"',
             parameters={"stdout_file": "task.out"}), fw_id=2))
-        launch_multiprocess(lp, FWorker(), 'DEBUG', 0, 2, 10)
-        fw1 = lp.get_fw_by_id(1)
-        fw2 = lp.get_fw_by_id(2)
+        launch_multiprocess(self.lp, FWorker(), 'DEBUG', 0, 2, 10)
+        fw1 = self.lp.get_fw_by_id(1)
+        fw2 = self.lp.get_fw_by_id(2)
         self.assertEqual(fw1.launches[0].state_history[-1]["state"],
                          "COMPLETED")
         self.assertEqual(fw2.launches[0].state_history[-1]["state"],
@@ -49,11 +75,7 @@ class TestCheckoutFW(TestCase):
         with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
             task2out = f.readlines()
         self.assertEqual(task2out, ['hello 2\n'])
-        os.chdir(cur_dir)
-        lp.reset(password=None, require_password=False)
-        shutil.rmtree(scr_dir)
 
 
 if __name__ == '__main__':
     unittest.main()
-"""
