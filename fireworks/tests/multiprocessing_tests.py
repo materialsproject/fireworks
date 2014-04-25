@@ -56,6 +56,7 @@ class TestCheckoutFW(TestCase):
             cls.lp.connection.drop_database(TESTDB_NAME)
 
     def test_checkout_fw(self):
+        os.chdir(MODULE_DIR)
         self.lp.add_wf(FireWork(ScriptTask.from_str(
             shell_cmd='echo "hello 1"',
             parameters={"stdout_file": "task.out"}), fw_id=1))
