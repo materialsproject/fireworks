@@ -232,6 +232,14 @@ class FWSerializable(object):
         with open(filename, 'r') as f:
             return cls.from_format(f.read(), f_format=f_format)
 
+    def __getstate__(self):
+        return self.to_dict()
+
+    def __setstate__(self, state):
+        fw_obj = self.from_dict(state)
+        for k, v in fw_obj.__dict__.items():
+            self.__dict__[k] = v
+
 
 # TODO: make this quicker the first time around
 def load_object(obj_dict):
