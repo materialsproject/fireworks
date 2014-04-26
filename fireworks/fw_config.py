@@ -68,7 +68,7 @@ TEMPLATE_DIR = None  # default template dir for TemplateWriterTask
 
 REMOVE_USELESS_DIRS = True  # deletes empty launch dir if _launch_dir set
 
-DS_PASSWORD = '1234'  # dummy password to access DataServer
+DS_PASSWORD = b'1234'  # dummy password to access DataServer
 
 STORE_PACKING_INFO = True  # automatically add job packing info to stored_data
 
