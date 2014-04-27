@@ -69,7 +69,7 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
-            'stdout'], str(six.b('test1\n')))
+            'stdout'], 'test1\n')
 
     def test_multi_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
@@ -81,7 +81,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(
             self.lp.get_launch_by_id(1).action.stored_data['stdout'],
-            str(six.b("test2\n")))
+            "test2\n")
 
     def test_multi_fw_complex(self):
 
@@ -143,10 +143,10 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(wf)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'],
-                         str(six.b('test1\n')))
+                         'test1\n')
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'],
-                         str(six.b('test2\n')))
+                         'test2\n')
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()

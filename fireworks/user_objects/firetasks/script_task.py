@@ -57,6 +57,9 @@ class ScriptTask(FireTaskBase):
 
         # write out the output, error files if specified
 
+        stdout = stdout.decode('utf-8') if isinstance(stdout, bytes) else stdout
+        stderr = stderr.decode('utf-8') if isinstance(stderr, bytes) else stderr
+
         if self.stdout_file:
             with open(self.stdout_file, 'a+') as f:
                 f.write(stdout)
