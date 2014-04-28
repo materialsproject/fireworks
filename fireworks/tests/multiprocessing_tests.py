@@ -4,6 +4,7 @@ import pickle
 import shutil
 from unittest import TestCase
 import unittest
+import sys
 
 from fireworks import LaunchPad, FireWork, FWorker
 from fireworks.core.firework import Workflow
@@ -56,6 +57,8 @@ class TestCheckoutFW(TestCase):
             cls.lp.connection.drop_database(TESTDB_NAME)
 
     def test_checkout_fw(self):
+        old__stdout__t = sys.__stdout__
+        sys.__stdout__ = sys.stdout
         os.chdir(MODULE_DIR)
         self.lp.add_wf(FireWork(ScriptTask.from_str(
             shell_cmd='echo "hello 1"',
@@ -76,6 +79,7 @@ class TestCheckoutFW(TestCase):
         with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
             task2out = f.readlines()
         self.assertEqual(task2out, ['hello 2\n'])
+        sys.__stdout__ = old__stdout__t
 
 
 if __name__ == '__main__':
