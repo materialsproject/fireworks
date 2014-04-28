@@ -143,7 +143,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
             try:
                 os.mkdir(full_path)
                 break
-            except IOError:
+            except OSError:
                 full_path = None
                 continue
 
