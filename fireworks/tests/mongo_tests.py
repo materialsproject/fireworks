@@ -54,6 +54,11 @@ class MongoTests(unittest.TestCase):
         except:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
     def _teardown(self, dests):
         for f in dests:
             if os.path.exists(f):
@@ -203,9 +208,9 @@ class MongoTests(unittest.TestCase):
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
-        os.chdir(self.old_wd)
         if os.path.exists(os.path.join('FW.json')):
             os.remove('FW.json')
+        os.chdir(self.old_wd)
         for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
             shutil.rmtree(i)
 
