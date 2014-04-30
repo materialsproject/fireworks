@@ -5,36 +5,23 @@ __maintainer__ = 'Wei Chen'
 __email__ = 'weichen@lbl.gov'
 __date__ = 'March 15, 2014'
 
-from fireworks.core.launchpad import LaunchPad
 from datetime import datetime, timedelta
 
 class FWStats:
-    def __init__(self, lpad, maintain_lpad=False, tuneup=False):
+    def __init__(self, lpad):
         """
         Object to get Fireworks running stats from a LaunchPad
 
         Args:
             lpad:
                 A LaunchPad object that manages the Fireworks database
-            maintain_lpad (bool):
-                Whether to perform maintenance of the LaunchPad
-                (e.g. detect lost runs). Default is False.
-            tuneup (bool):
-                Whether to perform a database tuneup. Default is False.
         """
-        if isinstance(lpad, LaunchPad):
-            self._lpad = lpad
-        else:
-            raise TypeError("Cannot load LaunchPad!")
-        self._fireworks = lpad.db.fireworks
-        self._launches = lpad.db.launches
-        self._workflows = lpad.db.workflows
-        if maintain_lpad:
-            self._lpad.maintain(infinite=False)
-        if tuneup:
-            self._lpad.tuneup()
+        self._lpad = lpad
+        self._fireworks = lpad.fireworks
+        self._launches = lpad.launches
+        self._workflows = lpad.workflows
 
-    def get_launch_summary(self, start_time=None, end_time=None, match=None,
+    def get_launch_summary(self, start_time=None, end_time=None, query=None,
                               time_field="time_end", runtime_stats=False):
         """
         Get launch summary for specified time range.
@@ -44,7 +31,7 @@ class FWStats:
                 Default is 30 days before current time.
             end_time:
                 Query end time in isoformat. Default is current time.
-            match:
+            query:
                 Query to filter fireworks before getting launch summary
             time_field (string):
                 The field in the launches collection to query time range.
@@ -54,11 +41,10 @@ class FWStats:
         Return:
             A dict of the launch summary
         """
-        if not match:
-            match={}
+        query = query or {}
         aggregate_launch_id = self._aggregate(coll=self._fireworks,
-                                              match=match,
-                                              project={"launches":1, "_id":0},
+                                              query=query,
+                                              project={"launches": 1, "_id": 0},
                                               unwind="launches",
                                               group_op={"launch_id": {"$push": "$launches"}})
         if aggregate_launch_id:
@@ -72,12 +58,12 @@ class FWStats:
                 group_query.update({'max_runtime':{"$max":"$runtime_secs"},
                                     "min_runtime":{"$min":"$runtime_secs"},
                                     "average_runtime":{"$avg":"$runtime_secs"}})
-            return self._aggregate(coll=self._launches, match=match_query, project=project_query,
+            return self._aggregate(coll=self._launches, query=match_query, project=project_query,
                                           group_op=group_query)
         else:
             return "No Firework was launched within the time range"
 
-    def get_recent_launch_summary(self, match=None, time_field="time_end", runtime_stats=False, **args):
+    def get_recent_launch_summary(self, query=None, time_field="time_end", runtime_stats=False, **args):
         """
         Get recent launch summary, e.g. get launch summary for the past 7 days
         Args:
@@ -95,23 +81,21 @@ class FWStats:
         Return:
             A dict of the launch summary.
         """
-        if not args:
-            args = {"days":7}
-        if not match:
-            match= {}
+        args = args or {"days": 7}
+        query = query or {}
         time_range = timedelta(**args)
         s_time = (datetime.now()-time_range).isoformat()
-        return self.get_launch_summary(start_time=s_time, match=match, time_field=time_field, runtime_stats=runtime_stats)
+        return self.get_launch_summary(start_time=s_time, query=query, time_field=time_field, runtime_stats=runtime_stats)
 
     @staticmethod
-    def _aggregate(coll, match=None, project=None, unwind=None, group_by="state",
+    def _aggregate(coll, query=None, project=None, unwind=None, group_by="state",
                       group_op=None):
         """
         Private method to run aggregation in the Mongodb aggregation framework
         Args:
             coll:
                 PyMongo Collection instance
-            match:
+            query:
                 Query for the match step in Mongodb aggregation framework
             project:
                 Query for the project step in Mongodb aggregation framework
@@ -126,11 +110,11 @@ class FWStats:
         Return:
             Aggregation results if the operation is successful.
         """
-        for arg in [match, project, unwind, group_op]:
-            if not arg:
-                arg = {}
+        # TODO: AJ asks does this actually do anything? looks like it is just setting local vars
+        for arg in [query, project, unwind, group_op]:
+            arg = arg or {}
         group_op.update({"_id":"$"+group_by})
-        query = [{"$match":match}, {"$project":project},{"$group":group_op}]
+        query = [{"$match":query}, {"$project": project},{"$group": group_op}]
         if unwind:
             query.insert(2, {"$unwind":"$"+unwind})
         result = coll.aggregate(query)
@@ -152,8 +136,6 @@ class FWStats:
         Return:
             A Mongodb query expression for the datetime range
         """
-        if not end_time:
-            end_time = datetime.now().isoformat()
-        if not start_time:
-            start_time = (end_time - timedelta(days=30)).isoformat()
+        end_time = end_time or datetime.now().isoformat()
+        start_time = start_time or (end_time - timedelta(days=30)).isoformat()
         return {"$gte":start_time, "$lte":end_time}
