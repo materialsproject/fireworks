@@ -1,0 +1,9 @@
+_fw_name: CommonAdapter
+_fw_q_type: LoadLeveler
+rocket_launch: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
+queue: debug
+account: null
+job_name: null
+logdir: path/to/logging
+pre_rocket: null
+post_rocket: null

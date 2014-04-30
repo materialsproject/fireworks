@@ -21,6 +21,8 @@ Built-in FireTasks
 Misc.
 =====
 
+* Tools for unreserving a FW
+
 * remove use_global_spec option, and just have the parameters be taken from the root spec and overridden by the task parameters.
 
 * Speed up database queries
@@ -46,8 +48,6 @@ Misc.
 * Add option to automatically pass run dirs, e.g. send dict of {"fw_name":"run_dir"} from parents to children
 
 * allow workflow connections to be defined by FW_name instead of by ids?
-
-* does updating the workflows need to lock the workflow? e.g. several concurrent FWs updating the workflow simultaneously...
 
 * get isinstance() working - create a PBSAdaptor p, use x=load_object(p.to_dict()), and try "isinstance(x, PBSAdaptor)
 	* Note the failure seems to have something to do with extending dict, and the fact that dict is an old-style class

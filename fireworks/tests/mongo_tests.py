@@ -1,7 +1,10 @@
+from multiprocessing import Pool
 import os
+import random
 import shutil
 import glob
 import unittest
+import time
 from fireworks.core.firework import FireWork, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -24,6 +27,7 @@ __date__ = 'Mar 06, 2013'
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+NCORES_PARALLEL_TEST = 4
 
 #TODO: make these tests much better. Right now they are just a crude first line of defense.
 
@@ -31,6 +35,12 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 # TODO: test serialization of YAML on at least one WF
 
 # TODO: cleanup!!
+
+def random_launch(lp_creds):
+        lp = LaunchPad.from_dict(lp_creds)
+        while lp.run_exists(None):
+            launch_rocket(lp)
+            time.sleep(random.random()/3+0.1)
 
 class MongoTests(unittest.TestCase):
 
@@ -59,7 +69,7 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
-            'stdout'], str(six.b('test1\n')))
+            'stdout'], 'test1\n')
 
     def test_multi_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
@@ -71,7 +81,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(
             self.lp.get_launch_by_id(1).action.stored_data['stdout'],
-            str(six.b("test2\n")))
+            "test2\n")
 
     def test_multi_fw_complex(self):
 
@@ -133,10 +143,10 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(wf)
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'],
-                         str(six.b('test1\n')))
+                         'test1\n')
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['stdout'],
-                         str(six.b('test2\n')))
+                         'test2\n')
 
     def test_fibadder(self):
         fib = FibonacciAdderTask()
@@ -148,6 +158,20 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_launch_by_id(3).action.stored_data, {})
         self.assertFalse(self.lp.run_exists())
+
+    def test_parallel_fibadder(self):
+        # this is really testing to see if a Workflow can handle multiple FWs updating it at once
+        parent = FireWork(ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True}), fw_id=1)
+        fib1 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, fw_id=2)
+        fib2 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, fw_id=3)
+        wf = Workflow([parent, fib1, fib2], {1: [2, 3]})
+        self.lp.add_wf(wf)
+
+        p = Pool(NCORES_PARALLEL_TEST)
+
+        creds_array = [self.lp.to_dict()] * NCORES_PARALLEL_TEST
+        p.map(random_launch, creds_array)
+
 
     def test_fworkerenv(self):
         t = DummyTask()
@@ -162,6 +186,20 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data[
                              'data'],
                          "world")
+
+    def test_spec_copy(self):
+        task1 = ScriptTask.from_str('echo "Task 1"')
+        task2 = ScriptTask.from_str('echo "Task 2"')
+
+        spec = {'_category': 'dummy_category'}
+
+        fw1 = FireWork(task1, fw_id=1, name='Task 1', spec=spec)
+        fw2 = FireWork(task2, fw_id=2, name='Task 2', spec=spec)
+
+        self.lp.add_wf(Workflow([fw1, fw2]))
+
+        self.assertEqual(self.lp.get_fw_by_id(1).tasks[0]['script'][0], 'echo "Task 1"')
+        self.assertEqual(self.lp.get_fw_by_id(2).tasks[0]['script'][0], 'echo "Task 2"')
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)

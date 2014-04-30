@@ -3,6 +3,7 @@
 """
 TODO: add docs
 """
+import sys
 from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
 from fireworks.utilities.fw_serializers import load_object, FWSerializable
 from fireworks.utilities.fw_utilities import explicit_serialize
@@ -19,6 +20,12 @@ import unittest
 import datetime
 import os
 import json
+
+
+if sys.version_info > (3, 0, 0):
+    ENCODING_PARAMS = {"encoding": "utf-8"}
+else:
+    ENCODING_PARAMS = {}
 
 
 @explicit_serialize
@@ -104,7 +111,7 @@ class SerializationTest(unittest.TestCase):
 
     def test_unicode_json_file(self):
         with open(os.path.join(self.module_dir, "test_reference.json")) as f,\
-                open("test.json") as f2:
+                open("test.json", **ENCODING_PARAMS) as f2:
             obj1 = json.load(f)
             obj2 = json.load(f2)
             self.assertEqual(obj1, obj2, 'Unicode JSON file export fails')
@@ -112,8 +119,9 @@ class SerializationTest(unittest.TestCase):
         self.assertEqual(self.obj_3.from_file("test.json"), self.obj_3, 'Unicode JSON file import fails!')
 
     def test_unicode_yaml_file(self):
-        with open(os.path.join(self.module_dir, "test_reference.yaml")) as f:
-            with open("test.yaml") as f2:
+        with open(os.path.join(self.module_dir, "test_reference.yaml"),
+                  **ENCODING_PARAMS) as f:
+            with open("test.yaml", **ENCODING_PARAMS) as f2:
                 self.assertEqual(f.read(), f2.read(), 'Unicode JSON file export fails')
 
         self.assertEqual(self.obj_3.from_file("test.yaml"), self.obj_3, 'Unicode YAML file import fails!')

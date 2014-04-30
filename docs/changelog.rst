@@ -2,6 +2,37 @@
 FireWorks Changelog
 ===================
 
+**v0.82**
+
+* add ability to define links via {fw1:fw2} objects rather than explicit IDs (based on conversation with H. Rusche)
+* un-reserve a FW if queue submission goes badly and clean up queue launcher code
+* internal cleanups (don't rerun ARCHIVED jobs, skip reruns of WAITING jobs)
+* stop rapidfire upon error in queue launch
+* rerun fw on unreserve
+* add methods to work with queue ids (``cancel_qid``, ``--qid`` option in ``get_fws``, and ``get_qid``)
+
+**v0.81**
+
+.. note:: A major bugfix to dynamic and branching workflows was added in this release
+
+* fix race condition bug in which two FW belonging to same WF simultaneously try to update the WF, and only one succeeds
+
+**v0.80**
+
+* rerun duplicated FWs on a rerun command (enabled by default), and return back all fw_ids that were rerun
+* change default QUEUE_UPDATE_INTERVAL from 15 secs down to 5 secs
+* add background tuneup option, and make it the default
+* misc. cleanup (S.P. Ong)
+
+**v0.79**
+
+* Add support for IBM LoadLeveler Queue (F. Brockherde)
+
+**v0.78**
+
+* Fix spec copy bug as reported by Github user (F. Brockherde)
+* Misc fixes (archiving FWs, tuple support)
+
 **v0.77**
 
 * Support/fix serialization of tuples as list instead of String (S.P. Ong)

@@ -38,6 +38,12 @@ Reserving FireWorks
 
 #. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
 
+#. There are few different commands you can use to leverage the reservation id (often shortened as *qid*) of your job::
+
+    lpad get_qid -i 1  # gets the queue id of FW 1
+    lpad get_fws --qid 1234  # gets the FireWork with queue id 1234
+    lpad cancel_qid --qid 1234  # cancels reservation 1234. WARNING: the user must remove the job from the queue manually before executing this command.
+
 #. When your queue runs and completes your job, you should see that the state is updated to *COMPLETED*::
 
     lpad get_fws -i 1 -d more
@@ -114,7 +120,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
    tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
 
-#. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then unreserve ("fix") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
+#. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then cancel the reservation ("qdel") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
 
     lpad detect_unreserved --time 1 --rerun
 
@@ -133,6 +139,6 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 Conclusion
 ==========
 
-As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run the ``unreserve`` command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
+As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run a command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
 
 If you are using the QueueLauncher in reservation mode, we suggest that you look at the tutorial on maintaining your FireWorks database (future). This will show you how to automatically clear out bad reservations periodically without needing human intervention.

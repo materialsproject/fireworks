@@ -12,7 +12,7 @@ from fireworks.queue.queue_adapter import QueueAdapterBase, Command
 from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
-__author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong'
+__author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong, David Waroquiers, Felix Brockherde'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
@@ -26,12 +26,17 @@ class CommonAdapter(QueueAdapterBase):
     TORQUE), SGE, and SLURM queues.
     """
     _fw_name = 'CommonAdapter'
-    supported_q_types = ["PBS", "SGE", "SLURM"]
+    supported_q_types = {
+        "PBS": "qsub",
+        "SGE": "qsub",
+        "SLURM": "sbatch",
+        "LoadLeveler": "llsubmit"
+    }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
         """
-        :param q_type: The type of queue. Right now it should be either PBS
-                       or SGE.
+        :param q_type: The type of queue. Right now it should be either PBS,
+                       SGE, SLURM or LoadLeveler.
         :param q_name: A name for the queue. Can be any string.
         :param template_file: The path to the template file. Leave it as
                               None (the default) to use Fireworks' built-in
@@ -42,21 +47,27 @@ class CommonAdapter(QueueAdapterBase):
         if q_type not in CommonAdapter.supported_q_types:
             raise ValueError(
                 "{} is not a supported queue type. "
-                "CommonAdaptor supports {}".format(q_type,
-                                                   CommonAdapter.supported_q_types))
+                "CommonAdaptor supports {}".format(
+                    q_type, list(CommonAdapter.supported_q_types.keys())))
         self.q_type = q_type
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
-        self.submit_cmd = 'sbatch' if q_type == 'SLURM' else 'qsub'
-        self.q_name = q_name if q_name else q_type
+        self.q_name = q_name or q_type
         self.update(dict(kwargs))
 
     def _parse_jobid(self, output_str):
-        if self.q_type == 'SLURM': # this special case might not be needed
-            return int(output_str.split()[3])
-            #This should work regardless of PBS or SGE.
-        #PBS: "1234.whatever", SGE: "Your job 44275 ("jobname") has been submitted"
-        m = re.search("(\d+)", output_str)
+        if self.q_type == "SLURM":
+            for l in output_str.split("\n"):
+                if l.startswith("Submitted batch job"):
+                    return int(l.split()[-1])
+        if self.q_type == "LoadLeveler":
+            # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
+            re_string = r"The job \"(.*?)\" has been submitted"
+        else:
+            # PBS: "1234.whatever",
+            # SGE: "Your job 44275 ("jobname") has been submitted"
+            re_string = r"(\d+)"
+        m = re.search(re_string, output_str)
         if m:
             return m.group(1)
         raise RuntimeError("Unable to parse jobid")
@@ -64,7 +75,10 @@ class CommonAdapter(QueueAdapterBase):
     def _get_status_cmd(self, username):
         if self.q_type == 'SLURM':
             return ['squeue', '-o "%u"', '-u', username]
-        return ['qstat', '-u', username]
+        elif self.q_type == "LoadLeveler":
+            return ['llq', '-u', username]
+        else:
+            return ['qstat', '-u', username]
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
@@ -73,6 +87,14 @@ class CommonAdapter(QueueAdapterBase):
             # TODO: currently does not filter on queue name or job state
             outs = output_str.split('\n')
             return len([line.split() for line in outs if username in line])
+
+        if self.q_type == "LoadLeveler":
+            if 'There is currently no job status to report' in output_str:
+                return 0
+            else:
+                # last line is: "1 job step(s) in query, 0 waiting, ..."
+                return int(output_str.split('\n')[-2].split()[0])
+
         count = 0
         for l in output_str.split('\n'):
             if l.lower().startswith("job"):
@@ -107,10 +129,10 @@ class CommonAdapter(QueueAdapterBase):
                     script_file))
 
         queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
-
+        submit_cmd = CommonAdapter.supported_q_types[self.q_type]
         # submit the job
         try:
-            cmd = [self.submit_cmd, script_file]
+            cmd = [submit_cmd, script_file]
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
             p.wait()
@@ -126,9 +148,8 @@ class CommonAdapter(QueueAdapterBase):
                 except:
                     # probably error parsing job code
                     log_exception(queue_logger,
-                                  'Could not parse job id following {}...'.format(
-                                      self.submit_cmd))
-
+                                  'Could not parse job id following {}...'
+                                  .format(submit_cmd))
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
@@ -137,11 +158,11 @@ class CommonAdapter(QueueAdapterBase):
                     'The error response reads: {}'.format(p.stderr.read())]
                 log_fancy(queue_logger, msgs, 'error')
 
-        except:
+        except Exception as ex:
             # random error, e.g. no qsub on machine!
             log_exception(queue_logger,
-                          'Running the command: {} caused an error...'.format(
-                              self.submit_cmd))
+                          'Running the command: {} caused an error...'
+                          .format(submit_cmd))
 
     def get_njobs_in_queue(self, username=None):
         """

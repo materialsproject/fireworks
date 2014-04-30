@@ -104,6 +104,9 @@ class FireTaskBase(defaultdict, FWSerializable):
     def from_dict(cls, m_dict):
         return cls(m_dict)
 
+    def __repr__(self):
+        return '<{}>:{}'.format(self._fw_name, dict(self))
+
 
 class FWAction(FWSerializable):
     """
@@ -201,7 +204,7 @@ class FireWork(FWSerializable):
         tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
         self.tasks = tasks
-        self.spec = spec if spec else {}
+        self.spec = spec.copy() if spec else {}
         self.spec['_tasks'] = [t.to_dict() for t in
                                tasks]  # put tasks in a special location of the spec
 
@@ -250,6 +253,7 @@ class FireWork(FWSerializable):
         """
 
         self.archived_launches.extend(self.launches)
+        self.archived_launches = list(set(self.archived_launches))  # filter duplicates
         self.launches = []
         self.state = 'WAITING'
 
@@ -545,12 +549,20 @@ class Workflow(FWSerializable):
             for k, v in list(self.items()):
                 if not isinstance(v, (list, tuple)):
                     self[k] = [v]  # v must be list
+
+                self[k] = [x.fw_id if hasattr(x, "fw_id") else x for x in self[k]]
+
                 if not isinstance(k, int):
-                    try:
-                        self[int(k)] = self[k]  # k must be int
-                    except:
-                        pass  # garbage input
+                    if hasattr(k, "fw_id"):  # maybe it's a String?
+                        self[k.fw_id] = self[k]
+                    else:  # maybe it's a String?
+                        try:
+                            self[int(k)] = self[k]  # k must be int
+                        except:
+                            pass  # garbage input
                     del self[k]
+
+
 
         @property
         def nodes(self):
@@ -619,7 +631,7 @@ class Workflow(FWSerializable):
                 raise ValueError('FW ids must be unique!')
             self.id_fw[fw.fw_id] = fw
 
-            if fw.fw_id not in links_dict:
+            if fw.fw_id not in links_dict and fw not in links_dict:
                 links_dict[fw.fw_id] = []
 
         self.links = Workflow.Links(links_dict)

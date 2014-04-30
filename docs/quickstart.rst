@@ -132,15 +132,15 @@ The following Python code achieves the same behavior::
     launchpad.reset('', require_password=False)
 
     # create the individual FireWorks and Workflow
-    fw1 = FireWork(ScriptTask.from_str('echo "hello"'), name="hello", fw_id=1)
-    fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye", fw_id=2)
-    wf = Workflow([fw1, fw2], {1:2}, name="test workflow")
+    fw1 = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
+    fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
+    wf = Workflow([fw1, fw2], {fw1:fw2}, name="test workflow")
 
     # store workflow and launch it locally
     launchpad.add_wf(wf)
     rapidfire(launchpad)
 
-.. note:: The ``{1:2}`` argument is adding a dependency of fw2 to fw1. Meaning, fw2 will only run after fw1 completes.
+.. note:: The ``{fw1:fw2}`` argument is adding a dependency of fw2 to fw1.
 
 Next steps
 ==========

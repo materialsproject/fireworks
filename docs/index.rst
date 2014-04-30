@@ -46,7 +46,7 @@ Some (but not all) of its features include:
 
 * Package many small jobs into a single large job (e.g., *automatically* run 100 serial workflows in parallel over 100 cores)
 
-* Support for several queueing systems such as PBS/Torque, Sun Grid Engine, and SLURM.
+* Support for several queueing systems such as PBS/Torque, Sun Grid Engine, SLURM, and IBM LoadLeveler.
 
 ==============================
 A bird's eye view of FireWorks

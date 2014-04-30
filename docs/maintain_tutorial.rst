@@ -23,8 +23,13 @@ This formulation will run a maintenance job every 6000 seconds (100 minutes).
 Tuneup to improve performance
 =============================
 
-You only need to run a database tuneup if you are not satisfied with the performance of FireWorks. The tuneup will update all the indices and compact the database. You should only run the tuneup command during periods of downtime. You can run tuneup using::
+You only need to run a database tuneup if you are not satisfied with the performance of FireWorks.
+
+
+The tuneup will update all the indices::
 
     lpad tuneup
 
+You can do a full tuneup which will block while updating indices and also compact the database. You should only run the full tuneup command during periods of downtime::
 
+    lpad tuneup --full
