@@ -1,3 +1,5 @@
+from fireworks import LaunchPad
+
 __author__ = 'Wei Chen'
 __copyright__ = 'Copyright 2014, The Material Project'
 __version__ = '0.1'
@@ -27,10 +29,10 @@ class FWStats:
         Get launch summary for specified time range.
         Args:
             start_time:
-                Query start time in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+                Query start time
                 Default is 30 days before current time.
             end_time:
-                Query end time in isoformat. Default is current time.
+                Query end time
             query:
                 Query to filter fireworks before getting launch summary
             time_field (string):
@@ -84,7 +86,7 @@ class FWStats:
         args = args or {"days": 7}
         query = query or {}
         time_range = timedelta(**args)
-        s_time = (datetime.now()-time_range).isoformat()
+        s_time = datetime.now()-time_range
         return self.get_launch_summary(start_time=s_time, query=query, time_field=time_field, runtime_stats=runtime_stats)
 
     @staticmethod
@@ -129,13 +131,19 @@ class FWStats:
         Private method to get query for datetime range in Mongodb
         Args:
             start_time:
-                Query start time in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+                Query start time
                 Default is 30 days before current time.
             end_time:
-                Query end time in isoformat. Default is current time.
+                Query end time
         Return:
             A Mongodb query expression for the datetime range
         """
-        end_time = end_time or datetime.now().isoformat()
-        start_time = start_time or (end_time - timedelta(days=30)).isoformat()
-        return {"$gte":start_time, "$lte":end_time}
+        end_time = end_time or datetime.now()
+        start_time = start_time or (end_time - timedelta(days=30))
+        return {"$gte": start_time.isoformat(), "$lte":end_time.isoformat()}
+
+if __name__ == "__main__":
+    lp = LaunchPad()
+    fws = FWStats(lp)
+    print fws.get_launch_summary()
+    print fws.get_recent_launch_summary()
