@@ -140,10 +140,4 @@ class FWStats:
         """
         end_time = end_time or datetime.now()
         start_time = start_time or (end_time - timedelta(days=30))
-        return {"$gte": start_time.isoformat(), "$lte":end_time.isoformat()}
-
-if __name__ == "__main__":
-    lp = LaunchPad()
-    fws = FWStats(lp)
-    print fws.get_launch_summary()
-    print fws.get_recent_launch_summary()
+        return {"$gte": start_time.isoformat(), "$lte": end_time.isoformat()}
