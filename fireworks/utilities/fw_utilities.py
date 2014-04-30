@@ -9,6 +9,7 @@ import os
 import traceback
 import socket
 import multiprocessing
+import errno
 
 from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, \
     FW_LOGGING_FORMAT
@@ -129,7 +130,8 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
         time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
         block_path = prefix + time_now
         return os.path.join(root_dir, block_path)
-
+    ctn = 0
+    max_try = 10
     full_path = None
     while full_path is None:
         full_path = get_path()
@@ -143,7 +145,10 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
             try:
                 os.mkdir(full_path)
                 break
-            except OSError:
+            except OSError, e:
+                if ctn > max_try or e.errno != errno.EEXIST:
+                    raise e
+                ctn += 1
                 full_path = None
                 continue
 
