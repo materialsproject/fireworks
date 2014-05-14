@@ -84,21 +84,19 @@ def override_user_settings():
 
     config_paths = []
 
-    if "FW_CONFIG_FILE" in os.environ:
-            config_paths.append(os.environ["FW_CONFIG_FILE"])
-
-    test_paths = [os.path.join(root_dir, 'FW_config.yaml'),
-                  os.path.join(os.environ["HOME"], ".fireworks", 'FW_config.yaml'),
-                  os.path.join(os.getcwd(), 'FW_config.yaml')]
+    test_paths = [os.getcwd(), os.path.join(os.environ["HOME"], ".fireworks"), root_dir]
 
     for p in test_paths:
-        if os.path.exists(p):
-            config_paths.append(p)
+        if os.path.exists(os.path.join(p, 'FW_config.yaml')):
+            config_paths.append(os.path.join(p, 'FW_config.yaml'))
+
+    if "FW_CONFIG_FILE" in os.environ:
+            config_paths.append(os.environ["FW_CONFIG_FILE"])
 
     config_paths = config_paths if config_paths else [os.path.join(os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
 
     if len(config_paths) > 1:
-        print "WARNING: found many potential configuration paths: {} Choosing: {}".format(config_paths, config_paths[0])
+        print "Found many potential paths for {}: {}\nChoosing: {}".format("FW_CONFIG_FILE", config_paths, config_paths[0])
 
     if os.path.exists(config_paths[0]):
         with open(config_paths[0]) as f:
@@ -116,11 +114,21 @@ def override_user_settings():
                     globals()[key] = v
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
-        fname = "my_{}.yaml".format(k.split("_")[0].lower())
-        default_path = os.path.join(
-            os.environ["HOME"], ".fireworks", fname)
-        if globals().get(k, None) is None and os.path.exists(default_path):
-            globals()[k] = default_path
+        if globals().get(k, None) is None:
+            fname = "my_{}.yaml".format(k.split("_")[0].lower())
+            m_paths = []
+            for p in test_paths:
+                if os.path.exists(os.path.join(p, fname)):
+                    m_paths.append(os.path.join(p, fname))
+
+            if len(m_paths) > 1:
+                print "Found many potential paths for {}: {}\nChoosing: {}".format(k, m_paths, m_paths[0])
+
+            if len(m_paths) > 0:
+                globals()[k] = m_paths[0]
+
+
+
 
 
 override_user_settings()
