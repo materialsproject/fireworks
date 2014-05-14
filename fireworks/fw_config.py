@@ -15,7 +15,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
-
 NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
@@ -25,7 +24,7 @@ USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
 
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
                    'Script Task': 'ScriptTask',
-                   'Template Writer Task':'TemplateWriterTask',
+                   'Template Writer Task': 'TemplateWriterTask',
                    'Dupe Finder Exact': 'DupeFinderExact'}
 # if you update a _fw_name, you can use this to record the change and
 # maintain deserialization
@@ -80,25 +79,29 @@ SORT_FWS = ''  # sort equal priority FWs? "FILO" or "FIFO".
 
 
 def override_user_settings():
+    module_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(module_dir)  # FW root dir
 
-    MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.dirname(MODULE_DIR)  # FW root dir
+    config_paths = []
 
-    if os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
-        config_path = os.path.join(os.getcwd(), 'FW_config.yaml')
+    if "FW_CONFIG_FILE" in os.environ:
+            config_paths.append(os.environ["FW_CONFIG_FILE"])
 
-    elif "FW_CONFIG_FILE" in os.environ:
-        config_path = os.environ['FW_CONFIG_FILE']
+    test_paths = [os.path.join(root_dir, 'FW_config.yaml'),
+                  os.path.join(os.environ["HOME"], ".fireworks", 'FW_config.yaml'),
+                  os.path.join(os.getcwd(), 'FW_config.yaml')]
 
-    elif os.path.exists(os.path.join(root_dir, 'FW_config.yaml')):
-        config_path=os.path.join(root_dir, 'FW_config.yaml')
+    for p in test_paths:
+        if os.path.exists(p):
+            config_paths.append(p)
 
-    else:
-        config_path = os.path.join(os.environ["HOME"], ".fireworks",
-                                   'FW_config.yaml')
+    config_paths = config_paths if config_paths else [os.path.join(os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
 
-    if os.path.exists(config_path):
-        with open(config_path) as f:
+    if len(config_paths) > 1:
+        print "WARNING: found many potential configuration paths: {} Choosing: {}".format(config_paths, config_paths[0])
+
+    if os.path.exists(config_paths[0]):
+        with open(config_paths[0]) as f:
             overrides = yaml.load(f.read())
             for key, v in overrides.items():
                 if key == 'ADD_USER_PACKAGES':
@@ -145,7 +148,7 @@ class FWData(object):
     """
 
     def __init__(self):
-        self.MULTIPROCESSING = None # default single process framework
+        self.MULTIPROCESSING = None  # default single process framework
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job
         self.DATASERVER = None  # the shared object manager
