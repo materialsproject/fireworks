@@ -80,7 +80,7 @@ FW Docs
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
-* Update all tutorials so config file is handled smoothly, not terribly...
+* Update all tutorials so config file is handled smoothly, not terribly...and clean up options like CONFIG_FILE_LOC, make .fireworks dir integration more clear, etc...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
 
