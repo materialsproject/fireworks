@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.83**
+
+* misc multiprocessing improvements (X. Qu)
+* better handling of dir creation conflicts (X. Qu)
+
 **v0.82**
 
 * add ability to define links via {fw1:fw2} objects rather than explicit IDs (based on conversation with H. Rusche)
