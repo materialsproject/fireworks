@@ -41,13 +41,22 @@ class BasicTests(unittest.TestCase):
         fw2 = FireWork(ScriptTask.from_str('echo "1"'))
 
         wf1 = Workflow([fw1, fw2], {fw1.fw_id: fw2.fw_id})
-        self.assertEqual(wf1.links, {-1: [-2], -2: []})
+        self.assertEqual(wf1.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
 
         wf2 = Workflow([fw1, fw2], {fw1: fw2})
-        self.assertEqual(wf2.links, {-1: [-2], -2: []})
+        self.assertEqual(wf2.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
 
         wf3 = Workflow([fw1, fw2])
-        self.assertEqual(wf3.links, {-1: [], -2: []})
+        self.assertEqual(wf3.links, {fw1.fw_id: [], fw2.fw_id: []})
+
+    def test_parentconnector(self):
+        fw1 = FireWork(ScriptTask.from_str('echo "1"'))
+        fw2 = FireWork(ScriptTask.from_str('echo "1"'), parents=fw1)
+        fw3 = FireWork(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
+
+        self.assertEqual(Workflow([fw1, fw2, fw3]).links, {fw1.fw_id: [fw2.fw_id, fw3.fw_id], fw2.fw_id: [fw3.fw_id], fw3.fw_id: []})
+        self.assertRaises(ValueError, Workflow, [fw1, fw3])  # can't make this
+
 
 
 if __name__ == "__main__":

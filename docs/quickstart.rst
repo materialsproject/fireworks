@@ -140,7 +140,11 @@ The following Python code achieves the same behavior::
     launchpad.add_wf(wf)
     rapidfire(launchpad)
 
-.. note:: The ``{fw1:fw2}`` argument is adding a dependency of fw2 to fw1.
+In the code above, the ``{fw1:fw2}`` argument to ``Workflow`` is adding a dependency of fw2 to fw1. You could instead define this dependency when defining your FireWorks::
+
+    fw1 = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
+    fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye", parents=[fw1])
+    wf = Workflow([fw1, fw2], name="test workflow")
 
 Next steps
 ==========

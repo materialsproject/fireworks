@@ -188,7 +188,7 @@ class FireWork(FWSerializable):
 
     def __init__(self, tasks, spec=None, name=None, launches=None,
                  archived_launches=None, state='WAITING', created_on=None,
-                 fw_id=None):
+                 fw_id=None, parents=None):
         """
         :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the
@@ -199,6 +199,7 @@ class FireWork(FWSerializable):
         :param state: (str) the state of the FW (e.g. WAITING, RUNNING,
         COMPLETED, ARCHIVED)
         :param fw_id: (int) an identification number for this FireWork
+        :param parents: (FireWork or [FireWork]) list of parent FWs this FW depends on
         """
 
         tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
@@ -220,6 +221,9 @@ class FireWork(FWSerializable):
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
         self.created_on = created_on or datetime.utcnow()
+
+        parents = [parents] if isinstance(parents, FireWork) else parents
+        self.parents = parents if parents else []
 
         self.state = state
 
@@ -620,7 +624,7 @@ class Workflow(FWSerializable):
         :param metadata: (dict) metadata for this Workflow
         """
 
-        name = name or 'unnamed WF'# do it this way to prevent None names
+        name = name or 'unnamed WF'  # prevent None names
 
         links_dict = links_dict if links_dict else {}
 
@@ -635,6 +639,14 @@ class Workflow(FWSerializable):
                 links_dict[fw.fw_id] = []
 
         self.links = Workflow.Links(links_dict)
+
+        # add depends on
+        for fw in fireworks:
+            for pfw in fw.parents:
+                if pfw.fw_id not in self.links:
+                    raise ValueError("FW_id: {} defines a dependent link to FW_id: {}, but the latter was not added to the workflow!".format(fw.fw_id, pfw.fw_id))
+                if fw.fw_id not in self.links[pfw.fw_id]:
+                    self.links[pfw.fw_id].append(fw.fw_id)
 
         self.name = name
 
