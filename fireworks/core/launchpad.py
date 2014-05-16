@@ -130,9 +130,6 @@ class LaunchPad(FWSerializable):
     def auto_load(cls):
         if LAUNCHPAD_LOC:
             return LaunchPad.from_file(LAUNCHPAD_LOC)
-        elif CONFIG_FILE_DIR:
-            return LaunchPad.from_file(os.path.join(CONFIG_FILE_DIR,
-                                                    'my_launchpad.yaml'))
         return LaunchPad()
 
     def reset(self, password, require_password=True):
