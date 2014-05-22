@@ -117,7 +117,8 @@ def override_user_settings():
         if globals().get(k, None) is None:
             fname = "my_{}.yaml".format(k.split("_")[0].lower())
             m_paths = []
-            test_paths.insert(0, CONFIG_FILE_DIR)
+            if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
+                test_paths.insert(0, CONFIG_FILE_DIR)
             for p in test_paths:
                 if os.path.exists(os.path.join(p, fname)):
                     m_paths.append(os.path.join(p, fname))
