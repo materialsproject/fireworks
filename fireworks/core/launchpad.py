@@ -51,7 +51,11 @@ class WFLock(object):
             time.sleep(5)
             ctr += 1
             if ctr == 200:
-                raise ValueError("Could not get workflow {}: LOCKED".format(self.fw_id))
+                wf = self.lp.workflows.find_one({'nodes': self.fw_id})
+                if wf:
+                    raise ValueError("Could not get workflow - LOCKED: {}".format(self.fw_id))
+                else:
+                    raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
             links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}}, {'$set': {'locked': True}})
 
     def __exit__(self, exc_type, exc_val, exc_tb):
