@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.84**
+
+* ability to define links when defining FireWorks rather than all at the Workflow level (based on conversation with H. Rusche)
+* better handling of config files and better reporting on config file conflicts
+
 **v0.83**
 
 * misc multiprocessing improvements (X. Qu)
