@@ -62,6 +62,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         try:
             # move to the launch directory
             l_logger.info('moving to launch_dir {}'.format(launcher_dir))
+            cwd = os.getcwd()
             os.chdir(launcher_dir)
 
             if reserve:
@@ -112,6 +113,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 raise RuntimeError('queue script could not be submitted, check queue script/queue adapter/queue server status!')
             elif reserve:
                 launchpad.set_reservation_id(launch_id, reservation_id)
+            os.chdir(cwd)
             return reservation_id
 
         except:
