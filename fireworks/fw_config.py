@@ -87,13 +87,15 @@ def override_user_settings():
     test_paths = [os.getcwd(), os.path.join(os.environ["HOME"], ".fireworks"), root_dir]
 
     for p in test_paths:
-        if os.path.exists(os.path.join(p, 'FW_config.yaml')):
-            config_paths.append(os.path.join(p, 'FW_config.yaml'))
+        fp = os.path.join(p, 'FW_config.yaml')
+        if fp not in config_paths and os.path.exists(fp):
+            config_paths.append(fp)
 
-    if "FW_CONFIG_FILE" in os.environ:
+    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in\
+            config_paths:
         config_paths.append(os.environ["FW_CONFIG_FILE"])
 
-    config_paths = list(set(config_paths)) if config_paths else [os.path.join(
+    config_paths = config_paths or [os.path.join(
         os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
 
     if len(config_paths) > 1:
@@ -118,14 +120,13 @@ def override_user_settings():
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
         if globals().get(k, None) is None:
             fname = "my_{}.yaml".format(k.split("_")[0].lower())
-            m_paths = set()
+            m_paths = []
             if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
                 test_paths.insert(0, CONFIG_FILE_DIR)
             for p in test_paths:
-                if os.path.exists(os.path.join(p, fname)):
-                    m_paths.add(os.path.join(p, fname))
-
-            m_paths = list(m_paths)
+                fp = os.path.join(p, fname)
+                if os.path.exists(fp) and fp not in m_paths:
+                    m_paths.append(fp)
 
             if len(m_paths) > 1:
                 print("Found many potential paths for {}: {}\nChoosing: {}"
