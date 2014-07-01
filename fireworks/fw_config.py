@@ -87,16 +87,20 @@ def override_user_settings():
     test_paths = [os.getcwd(), os.path.join(os.environ["HOME"], ".fireworks"), root_dir]
 
     for p in test_paths:
-        if os.path.exists(os.path.join(p, 'FW_config.yaml')):
-            config_paths.append(os.path.join(p, 'FW_config.yaml'))
+        fp = os.path.join(p, 'FW_config.yaml')
+        if fp not in config_paths and os.path.exists(fp):
+            config_paths.append(fp)
 
-    if "FW_CONFIG_FILE" in os.environ:
-            config_paths.append(os.environ["FW_CONFIG_FILE"])
+    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in\
+            config_paths:
+        config_paths.append(os.environ["FW_CONFIG_FILE"])
 
-    config_paths = config_paths if config_paths else [os.path.join(os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
+    config_paths = config_paths or [os.path.join(
+        os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
 
     if len(config_paths) > 1:
-        print("Found many potential paths for {}: {}\nChoosing: {}".format("FW_CONFIG_FILE", config_paths, config_paths[0]))
+        print("Found many potential paths for {}: {}\nChoosing: {}"
+              .format("FW_CONFIG_FILE", config_paths, config_paths[0]))
 
     if os.path.exists(config_paths[0]):
         with open(config_paths[0]) as f:
@@ -120,17 +124,16 @@ def override_user_settings():
             if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
                 test_paths.insert(0, CONFIG_FILE_DIR)
             for p in test_paths:
-                if os.path.exists(os.path.join(p, fname)):
-                    m_paths.append(os.path.join(p, fname))
+                fp = os.path.join(p, fname)
+                if os.path.exists(fp) and fp not in m_paths:
+                    m_paths.append(fp)
 
             if len(m_paths) > 1:
-                print("Found many potential paths for {}: {}\nChoosing: {}".format(k, m_paths, m_paths[0]))
+                print("Found many potential paths for {}: {}\nChoosing: {}"
+                      .format(k, m_paths, m_paths[0]))
 
             if len(m_paths) > 0:
                 globals()[k] = m_paths[0]
-
-
-
 
 
 override_user_settings()
