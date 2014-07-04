@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v0.85**
+
+* fix bug in running daemon mode locally with qlaunch rapidfire (B. Foster)
+* better handling of duplicate path detection (S.P. Ong)
+* add support for nodes keyword in SLURM adapter (S.P. Ong)
+
 **v0.84**
 
 * ability to define links when defining FireWorks rather than all at the Workflow level (based on conversation with H. Rusche)
