@@ -166,8 +166,9 @@ class Rocket():
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
             # execute the FireTasks!
-            for my_task in m_fw.tasks:
-                m_action = my_task.run_task(my_spec)
+            for t in m_fw.tasks:
+                lp.log_message(logging.INFO, "Running task %s." % str(t))
+                m_action = t.run_task(my_spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -187,7 +188,7 @@ class Rocket():
                 my_spec.update(m_action.update_spec)
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
-
+                lp.log_message(logging.INFO, "Task %s completed." % str(t))
                 if m_action.skip_remaining_tasks:
                     break
 
@@ -229,7 +230,7 @@ class Rocket():
             stop_backgrounds(ping_stop, btask_stops)
             traceback.print_exc()
             try:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
+                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': t.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
             except:
                 m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
