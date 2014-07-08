@@ -1,0 +1,15 @@
+#!/bin/bash
+#COBALT -n $${nnodes}
+#COBALT -t $${walltime}
+#COBALT -q $${queue}
+#COBALT -A $${account}
+#COBALT --jobname $${job_name}
+#COBALT -o FW_job.out
+#COBALT -e FW_job.error
+
+$${pre_rocket}
+cd $${launch_dir}
+$${rocket_launch}
+$${post_rocket}
+
+# CommonAdapter (COBALT) completed writing Template
