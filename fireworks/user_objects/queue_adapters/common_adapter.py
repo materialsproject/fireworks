@@ -32,13 +32,14 @@ class CommonAdapter(QueueAdapterBase):
         "PBS": "qsub",
         "SGE": "qsub",
         "SLURM": "sbatch",
+        "Cobalt": "qsub",
         "LoadLeveler": "llsubmit"
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
         """
         :param q_type: The type of queue. Right now it should be either PBS,
-                       SGE, SLURM or LoadLeveler.
+                       SGE, SLURM, Cobalt or LoadLeveler.
         :param q_name: A name for the queue. Can be any string.
         :param template_file: The path to the template file. Leave it as
                               None (the default) to use Fireworks' built-in
@@ -68,6 +69,7 @@ class CommonAdapter(QueueAdapterBase):
         else:
             # PBS: "1234.whatever",
             # SGE: "Your job 44275 ("jobname") has been submitted"
+            # Cobalt: "199768"
             re_string = r"(\d+)"
         m = re.search(re_string, output_str)
         if m:
@@ -84,6 +86,10 @@ class CommonAdapter(QueueAdapterBase):
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
+
+	# WRS: I may come back to this after confirming that Cobalt
+        #      strictly follows the PBS standard and replace the spliting
+        #      with a regex that would solve length issues
 
         if self.q_type == 'SLURM': # this special case might not be needed
             # TODO: currently does not filter on queue name or job state
@@ -134,6 +140,9 @@ class CommonAdapter(QueueAdapterBase):
         submit_cmd = CommonAdapter.supported_q_types[self.q_type]
         # submit the job
         try:
+            if self.q_type == "Cobalt":
+                # Cobalt requires scripts to be executable
+                os.chmod(script_file,0750)
             cmd = [submit_cmd, script_file]
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
