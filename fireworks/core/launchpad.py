@@ -256,6 +256,21 @@ class LaunchPad(FWSerializable):
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
 
+    def purge_workflow(self, fw_id):
+        links_dict = self.workflows.find_one({'nodes': fw_id})
+        fw_ids = links_dict["nodes"]
+        launch_ids = []
+        for i in fw_ids:
+            fw_dict = self.fireworks.find_one({'fw_id': i})
+            launch_ids += fw_dict["launches"] + fw_dict['archived_launches']
+
+        print "Remove fws %s" % fw_ids
+        print "Remove launches %s" % launch_ids
+        print "Removing workflow."
+        self.launches.remove({'launch_id': {"$in": launch_ids}})
+        self.fireworks.remove({"fw_id": {"$in": fw_ids}})
+        self.workflows.remove({'nodes': fw_id})
+
     def get_wf_summary_dict(self, fw_id, mode="more"):
         """
         A much faster way to get summary information about a Workflow by
