@@ -146,14 +146,16 @@ class CompressDirTask(FireTaskBase):
     Compress all files in a directory.
 
     Args:
-        compression: Optional. Can only be gz or bz2. Defaults to gz.
+        dest (str): Optional. Path to compress.
+        compression (str): Optional. Can only be gz or bz2. Defaults to gz.
     """
 
     _fw_name = 'CompressDirTask'
-    optional_params = ["compression"]
+    optional_params = ["compression", "dest"]
 
     def run_task(self, fw_spec):
-        compress_dir(".", compression=self["compression"])
+        pth = self.get("dest", os.getcwd())
+        compress_dir(pth, compression=self["compression"])
 
 
 class ArchiveDirTask(FireTaskBase):
