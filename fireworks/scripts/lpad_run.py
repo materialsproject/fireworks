@@ -258,6 +258,25 @@ def get_wfs(args):
         print(args.output(wfs))
 
 
+def purge_wfs(args):
+    lp = get_lp(args)
+    if sum([bool(x) for x in [args.fw_id, args.name, args.state]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, state)')
+
+    if args.fw_id:
+        query = {'nodes': {"$in": args.fw_id}}
+    elif args.name:
+        query = {'name': args.name}
+    elif args.state:
+        query = {'state': args.state}
+    else:
+        raise ValueError('Please specify exactly one of (fw_id, name, state)')
+
+    ids = lp.get_wf_ids(query)
+    for i in ids:
+        lp.purge_workflow(i)
+
+
 def get_children(links, start, max_depth, data=[]):
     data = {}
     for l, c in links.items():
@@ -727,6 +746,14 @@ def lpad():
     trackfw_parser.add_argument('-x', '--exclude', nargs="+",
                                 help='exclude these files from the report')
     trackfw_parser.set_defaults(func=track_fws)
+
+
+    purge_wfs_parser = subparsers.add_parser(
+        'purge_wfs', help='Purge workflows.')
+    purge_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    purge_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
+    purge_wfs_parser.add_argument(*state_args, **state_kwargs)
+    purge_wfs_parser.set_defaults(func=purge_wfs)
 
     args = parser.parse_args()
 
