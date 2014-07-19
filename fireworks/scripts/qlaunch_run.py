@@ -69,14 +69,14 @@ def qlaunch():
     parser.add_argument("-rc", "--remote_config_dir",
                         nargs="+",
                         help="Remote config dir location(s). Defaults to "
-                             "$HOME/.fireworks. You can specify multiple "
+                             "~/.fireworks. You can specify multiple "
                              "locations if you have multiple configurations "
                              "on the same cluster e.g., multiple queues or FireWorkers. "
                              "Note that this may have to come before the -ru"
                              "argument (or other single arg) options as "
                              "argparse may not be able to find "
                              "the find command while it consumes args.",
-                        default=["$HOME/.fireworks"])
+                        default=["~/.fireworks"])
     parser.add_argument("-ru", "--remote_user",
                         help="Username to login to remote host.")
     parser.add_argument("-rp", "--remote_password",
@@ -134,6 +134,7 @@ def qlaunch():
                 with settings(host_string=h, user=args.remote_user,
                               password=args.remote_password):
                     for r in args.remote_config_dir:
+                        r = os.path.expanduser(r)
                         run("mkdir -p {}".format(r))
                         for f in os.listdir(args.config_dir):
                             if os.path.isfile(f):
@@ -159,6 +160,7 @@ def qlaunch():
                 with settings(host_string=h, user=args.remote_user,
                               password=args.remote_password):
                     for r in args.remote_config_dir:
+                        r = os.path.expanduser(r)
                         with cd(r):
                             run("qlaunch {} {} {}".format(
                                 pre_non_default, args.command, non_default))
