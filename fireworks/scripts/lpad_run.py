@@ -753,7 +753,6 @@ def lpad():
     purge_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     purge_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
     purge_wfs_parser.add_argument(*state_args, **state_kwargs)
-    purge_wfs_parser.add_argument(*query_args, **query_kwargs)
     purge_wfs_parser.set_defaults(func=purge_wfs)
 
     args = parser.parse_args()
