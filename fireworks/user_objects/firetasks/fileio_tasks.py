@@ -46,8 +46,13 @@ class FileDeleteTask(FireTaskBase):
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
+        ignore_errors = self.get('ignore_errors')
         for f in self["files_to_delete"]:
-            os.remove(os.path.join(pth, f))
+            try:
+                os.remove(os.path.join(pth, f))
+            except Exception as ex:
+                if not ignore_errors:
+                    raise OSError(str(ex))
 
 
 class FileTransferTask(FireTaskBase):
