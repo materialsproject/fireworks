@@ -39,6 +39,7 @@ class FileDeleteTask(FireTaskBase):
         - files_to_delete: ([str]) Filenames to delete
     Optional params:
         - dest: (str) Shared path for files
+        - ignore_errors (bool): Whether to ignore errors. Defaults to True.
     """
     _fw_name = 'FileDeleteTask'
     required_params = ["files_to_delete"]
@@ -46,7 +47,7 @@ class FileDeleteTask(FireTaskBase):
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
-        ignore_errors = self.get('ignore_errors')
+        ignore_errors = self.get('ignore_errors', True)
         for f in self["files_to_delete"]:
             try:
                 os.remove(os.path.join(pth, f))
