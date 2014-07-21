@@ -84,7 +84,7 @@ def override_user_settings():
 
     config_paths = []
 
-    test_paths = [os.getcwd(), os.path.join(os.environ["HOME"], ".fireworks"), root_dir]
+    test_paths = [os.getcwd(), os.path.join(os.path.expanduser('~'), ".fireworks"), root_dir]
 
     for p in test_paths:
         fp = os.path.join(p, 'FW_config.yaml')
@@ -96,7 +96,7 @@ def override_user_settings():
         config_paths.append(os.environ["FW_CONFIG_FILE"])
 
     config_paths = config_paths or [os.path.join(
-        os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
+        os.path.expanduser('~'), ".fireworks", 'FW_config.yaml')]
 
     if len(config_paths) > 1:
         print("Found many potential paths for {}: {}\nChoosing: {}"
@@ -148,7 +148,7 @@ def config_to_dict():
 
 
 def write_config(path=None):
-    path = os.path.join(os.environ["HOME"], ".fireworks",
+    path = os.path.join(os.path.expanduser('~'), ".fireworks",
                         'FW_config.yaml') if path is None else path
     with open(path, "w") as f:
         yaml.dump(config_to_dict(), f)

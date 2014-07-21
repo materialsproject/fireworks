@@ -682,12 +682,11 @@ def lpad():
     reignite_parser.set_defaults(func=reignite)
 
     purge_wfs_parser = subparsers.add_parser(
-        'purge_wfs', help='Purge workflows.')
+        'purge_wfs', help='Purge workflows. WARNING: This does not handle duplicate-checked FireWorks well!')
     purge_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     purge_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
     purge_wfs_parser.add_argument(*state_args, **state_kwargs)
     purge_wfs_parser.set_defaults(func=purge_wfs)
-
 
     get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a FireWork')
     get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
