@@ -120,6 +120,23 @@ class LaunchPad(FWSerializable):
             'user_indices': self.user_indices,
             'wf_user_indices': self.wf_user_indices}
 
+    def update_spec(self, fw_ids, spec_document):
+        """
+        Update fireworks with a spec. Sometimes you need to modify a firework
+        in progress.
+
+        Args:
+            fw_ids: All fw_ids to modify.
+            spec_document: The spec document. Note that only modifications to
+                the spec key are allowed. So if you supply {
+                "_tasks.1.parameter": "hello"}, you are effectively modifying
+                spec._tasks.1.parameter in the actual fireworks collection.
+        """
+        mod_spec = {("spec." + k): v for k, v in spec_document.items()}
+        self.fireworks.update(
+            {'fw_id': {"$in": fw_ids}},
+            {"$set": mod_spec})
+
     @classmethod
     def from_dict(cls, d):
         logdir = d.get('logdir', None)
