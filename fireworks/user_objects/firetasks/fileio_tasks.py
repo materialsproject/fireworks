@@ -157,11 +157,19 @@ class CompressDirTask(FireTaskBase):
     """
 
     _fw_name = 'CompressDirTask'
-    optional_params = ["compression", "dest"]
+    optional_params = ["compression", "dest", "ignore_errors"]
 
     def run_task(self, fw_spec):
-        pth = self.get("dest", os.getcwd())
-        compress_dir(pth, compression=self["compression"])
+        ignore_errors = self.get('ignore_errors', False)
+        dest = self.get("dest", os.getcwd())
+        compression = self.get("compression", "gz")
+        try:
+            compress_dir(dest, compression=compression)
+        except:
+            if not ignore_errors:
+                raise ValueError(
+                    "There was an error performing compression {} in {}."
+                    .format(compression, dest))
 
 
 class ArchiveDirTask(FireTaskBase):
