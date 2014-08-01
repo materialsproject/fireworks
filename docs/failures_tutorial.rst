@@ -37,10 +37,10 @@ If your job throws an exception (error), FireWorks will automatically mark your 
     lpad reset
     lpad add fw_sleep.yaml
 
-#. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C or Ctrl+\\). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
+#. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
 
     rlaunch singleshot
-    (Ctrl+C or Ctrl+\)
+    (Ctrl+C)
 
 #. If you did this correctly, you'll have seen the text ``starting`` but not the text ``ending``. You might also see some error text printed to your terminal.
 
