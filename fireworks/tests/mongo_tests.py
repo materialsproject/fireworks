@@ -10,6 +10,7 @@ from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
+from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
@@ -205,6 +206,41 @@ class MongoTests(unittest.TestCase):
 
         self.assertEqual(self.lp.get_fw_by_id(1).tasks[0]['script'][0], 'echo "Task 1"')
         self.assertEqual(self.lp.get_fw_by_id(2).tasks[0]['script'][0], 'echo "Task 2"')
+
+    def test_purge_fw(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
+            'stdout'], 'test1\n')
+        self.lp.purge_workflow(fw.fw_id)
+        self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
+        self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
+
+
+    def test_duplicate_purge_fw(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1, {"_dupefinder": DupeFinderExact()})
+        self.lp.add_wf(fw)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+
+        self.lp.purge_workflow(2)
+        self.assertRaises(ValueError, self.lp.get_fw_by_id, 2)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
+            'stdout'], 'test1\n')
+
+    def test_dupefinder(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1, {"_dupefinder": DupeFinderExact()})
+        self.lp.add_wf(fw)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+
+        self.assertEqual(self.lp.launches.count(), 1)
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)

@@ -259,10 +259,16 @@ class LaunchPad(FWSerializable):
     def purge_workflow(self, fw_id):
         links_dict = self.workflows.find_one({'nodes': fw_id})
         fw_ids = links_dict["nodes"]
+        potential_launch_ids = []
         launch_ids = []
         for i in fw_ids:
             fw_dict = self.fireworks.find_one({'fw_id': i})
-            launch_ids += fw_dict["launches"] + fw_dict['archived_launches']
+            potential_launch_ids += fw_dict["launches"] + fw_dict['archived_launches']
+
+        for i in potential_launch_ids:  # only remove launches if no ohter fws refer to them
+            if not self.fireworks.find_one({'$or': [{"launches": i}, {'archived_launches': i}],
+                                            'fw_id': {"$nin": fw_ids}}, {'launch_id': 1}):
+                launch_ids.append(i)
 
         print("Remove fws %s" % fw_ids)
         print("Remove launches %s" % launch_ids)
