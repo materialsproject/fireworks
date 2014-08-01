@@ -749,7 +749,7 @@ def lpad():
 
 
     delete_wfs_parser = subparsers.add_parser(
-        'delete_wfs', help='Delete workflows. WARNING: This does not handle duplicate-checked FireWorks well!')
+        'delete_wfs', help='Delete workflows (permanently). Use "archive" instead if you want to "soft-remove"')
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     delete_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
     delete_wfs_parser.add_argument(*state_args, **state_kwargs)
