@@ -599,7 +599,6 @@ class LaunchPad(FWSerializable):
     def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None):
         bad_launch_ids = []
         bad_fw_ids = []
-        potential_bad_fw_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {
@@ -616,18 +615,16 @@ class LaunchPad(FWSerializable):
 
             if not max_runtime or bad_launch:
                 bad_launch_ids.append(ld['launch_id'])
-                potential_bad_fw_ids.append(ld['fw_id'])
-
-        if fizzle or rerun:  # mark all bad launches as fizzled
+                bad_fw_ids.append(ld['fw_id'])
+        if fizzle or rerun:
             for lid in bad_launch_ids:
                 self.mark_fizzled(lid)
-
-        for fw_id in potential_bad_fw_ids:  # true bad FWs only if all launches FIZZLED
-            if self.fireworks.find_one({"fw_id": fw_id, "state": "FIZZLED"}):
-                bad_fw_ids.append(fw_id)
         if rerun:
             for fw_id in bad_fw_ids:
-                self.rerun_fw(fw_id)
+                # only rerun if the FireWork has 'FIZZLED' state. It is possible that
+                # a different Launch for the same FireWork is 'COMPLETED'
+                if self.fireworks.find_one({"fw_id": fw_id, "state": "FIZZLED"}):
+                    self.rerun_fw(fw_id)
 
         return bad_launch_ids, bad_fw_ids
 
