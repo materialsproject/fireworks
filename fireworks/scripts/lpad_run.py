@@ -258,7 +258,7 @@ def get_wfs(args):
         print(args.output(wfs))
 
 
-def purge_wfs(args):
+def delete_wfs(args):
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state]]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state)')
@@ -274,7 +274,7 @@ def purge_wfs(args):
 
     ids = lp.get_wf_ids(query)
     for i in ids:
-        lp.purge_workflow(i)
+        lp.delete_workflow(i)
 
 
 def get_children(links, start, max_depth, data=[]):
@@ -748,12 +748,12 @@ def lpad():
     trackfw_parser.set_defaults(func=track_fws)
 
 
-    purge_wfs_parser = subparsers.add_parser(
-        'purge_wfs', help='Purge workflows. WARNING: This does not handle duplicate-checked FireWorks well!')
-    purge_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    purge_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
-    purge_wfs_parser.add_argument(*state_args, **state_kwargs)
-    purge_wfs_parser.set_defaults(func=purge_wfs)
+    delete_wfs_parser = subparsers.add_parser(
+        'delete_wfs', help='Delete workflows. WARNING: This does not handle duplicate-checked FireWorks well!')
+    delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    delete_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
+    delete_wfs_parser.add_argument(*state_args, **state_kwargs)
+    delete_wfs_parser.set_defaults(func=delete_wfs)
 
     args = parser.parse_args()
 

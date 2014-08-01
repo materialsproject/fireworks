@@ -256,7 +256,7 @@ class LaunchPad(FWSerializable):
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
 
-    def purge_workflow(self, fw_id):
+    def delete_workflow(self, fw_id):
         links_dict = self.workflows.find_one({'nodes': fw_id})
         fw_ids = links_dict["nodes"]
         potential_launch_ids = []
