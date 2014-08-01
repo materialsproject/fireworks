@@ -61,10 +61,10 @@ The **delete** command is a hard delete that *removes all data* about a Workflow
 
 To delete Workflows, use the command::
 
-    lpad delete -i <FW_IDS>
+    lpad delete_wfs -i <FW_IDS>
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 
-     lpad delete [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
+     lpad delete_wfs [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
 
-Refer to the documentation (``lpad delete -h``) for more information.
+Refer to the documentation (``lpad delete_wfs -h``) for more information.

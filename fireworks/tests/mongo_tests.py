@@ -214,7 +214,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
             'stdout'], 'test1\n')
-        self.lp.delete_workflow(fw.fw_id)
+        self.lp.delete_wf(fw.fw_id)
         self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
         self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
 
@@ -227,7 +227,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         launch_rocket(self.lp, self.fworker)
 
-        self.lp.delete_workflow(2)
+        self.lp.delete_wf(2)
         self.assertRaises(ValueError, self.lp.get_fw_by_id, 2)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
             'stdout'], 'test1\n')
