@@ -260,21 +260,11 @@ def get_wfs(args):
 
 def delete_wfs(args):
     lp = get_lp(args)
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state]]) > 1:
-        raise ValueError('Please specify exactly one of (fw_id, name, state)')
-
-    if args.fw_id:
-        query = {'nodes': {"$in": args.fw_id}}
-    elif args.name:
-        query = {'name': args.name}
-    elif args.state:
-        query = {'state': args.state}
-    else:
-        raise ValueError('Please specify exactly one of (fw_id, name, state)')
-
-    ids = lp.get_wf_ids(query)
-    for i in ids:
-        lp.delete_workflow(i)
+    fw_ids = parse_helper(lp, args, wf_mode=True)
+    for f in fw_ids:
+        lp.delete_wf(f)
+        lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    lp.m_logger.info('Finished deleting {} WFs'.format(len(fw_ids)))
 
 
 def get_children(links, start, max_depth, data=[]):
@@ -751,8 +741,10 @@ def lpad():
     delete_wfs_parser = subparsers.add_parser(
         'delete_wfs', help='Delete workflows (permanently). Use "archive" instead if you want to "soft-remove"')
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    delete_wfs_parser.add_argument('-n', '--name', help='get FWs with this name')
+    delete_wfs_parser.add_argument('-n', '--name', help='name')
     delete_wfs_parser.add_argument(*state_args, **state_kwargs)
+    delete_wfs_parser.add_argument(*query_args, **query_kwargs)
+    delete_wfs_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     delete_wfs_parser.set_defaults(func=delete_wfs)
 
     args = parser.parse_args()
