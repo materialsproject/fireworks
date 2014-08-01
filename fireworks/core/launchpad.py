@@ -629,7 +629,7 @@ class LaunchPad(FWSerializable):
                     if FireWork.STATE_RANKS[l_state] > FireWork.STATE_RANKS['FIZZLED']:
                         break
                 else:
-                    lost_fw_ids.append(fw_id)  # all Launches not lost are FIZZLED / ARCHIVED
+                    lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
 
         if fizzle or rerun:
             for lid in lost_launch_ids:
