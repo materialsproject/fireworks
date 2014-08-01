@@ -154,6 +154,8 @@ class CompressDirTask(FireTaskBase):
     Args:
         dest (str): Optional. Path to compress.
         compression (str): Optional. Can only be gz or bz2. Defaults to gz.
+        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to
+            False.
     """
 
     _fw_name = 'CompressDirTask'
