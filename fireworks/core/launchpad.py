@@ -133,9 +133,7 @@ class LaunchPad(FWSerializable):
                 spec._tasks.1.parameter in the actual fireworks collection.
         """
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
-        self.fireworks.update(
-            {'fw_id': {"$in": fw_ids}},
-            {"$set": mod_spec})
+        self.fireworks.update({'fw_id': {"$in": fw_ids}}, {"$set": mod_spec})
 
     @classmethod
     def from_dict(cls, d):

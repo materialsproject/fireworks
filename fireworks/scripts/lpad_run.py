@@ -208,25 +208,8 @@ def get_fws(args):
 
 def update_fws(args):
     lp = get_lp(args)
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
-        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
-        args.query = '{}'
-        args.display_format = args.display_format if args.display_format else 'ids'
-
-    if args.fw_id:
-        query = {'fw_id': {"$in": args.fw_id}}
-    elif args.name:
-        query = {'name': args.name}
-    elif args.state:
-        query = {'state': args.state}
-    elif args.query:
-        query = ast.literal_eval(args.query)
-    else:
-        query = None
-
-    ids = lp.get_fw_ids(query)
-    lp.update_spec(ids, json.loads(args.update))
+    fw_ids = parse_helper(lp, args)
+    lp.update_spec(fw_ids, json.loads(args.update))
 
 
 def get_wfs(args):
