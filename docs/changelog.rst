@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v0.86**
+
+* add delete_wfs command (w/S.P. Ong)
+* add update_fws command (S.P. Ong)
+* add ignore_errors option in some default FireTasks (S.P. Ong)
+* fix bug in Windows $HOME var (thanks to A. Berg)
+* fig bug in reporting of lost FWs; rerun option should be OK in prev. versions
+* change FIZZLED to have lower STATE_RANK than READY/RESERVED/RUNNING/etc
+
 **v0.85**
 
 * fix bug in running daemon mode locally with qlaunch rapidfire (B. Foster)
