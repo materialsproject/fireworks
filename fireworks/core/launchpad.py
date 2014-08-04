@@ -133,7 +133,13 @@ class LaunchPad(FWSerializable):
                 spec._tasks.1.parameter in the actual fireworks collection.
         """
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
-        self.fireworks.update({'fw_id': {"$in": fw_ids}}, {"$set": mod_spec})
+        allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
+        self.fireworks.update({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
+                              {"$set": mod_spec})
+        for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
+                                      {"fw_id": 1, "state": 1}):
+            self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "
+                               "Try rerunning first".format(fw['fw_id'], fw['state']))
 
     @classmethod
     def from_dict(cls, d):
