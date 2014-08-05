@@ -9,6 +9,7 @@
 #PBS -N $${job_name}
 #PBS -o FW_job.out
 #PBS -e FW_job.error
+#PBS -V $${env}
 
 $${pre_rocket}
 cd $${launch_dir}
