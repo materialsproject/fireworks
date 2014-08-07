@@ -747,8 +747,10 @@ class LaunchPad(FWSerializable):
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
-            with WFLock(self, fw_id):
-                self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+            # # Comment out WFLock because it is causing hangs in large
+            # workflows.
+            #with WFLock(self, fw_id):
+            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
         # change return type to dict to make return type seriazlizable to
         # support job packing
         return m_launch.to_dict()
