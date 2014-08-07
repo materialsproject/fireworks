@@ -46,17 +46,19 @@ class WFLock(object):
 
     def __enter__(self):
         ctr=0
-        links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}}, {'$set': {'locked': True}})
-        while not links_dict:
-            time.sleep(5)
+        links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}},
+                                                       {'$set': {'locked': True}})  # acquire lock
+        while not links_dict:  # could not acquire lock b/c WF is already locked for writing
+            time.sleep(5)  # wait a bit for lock to free up
             ctr += 1
-            if ctr == 200:
+            if ctr == 200:  # too many times waiting, something is wrong - exit
                 wf = self.lp.workflows.find_one({'nodes': self.fw_id})
                 if wf:
                     raise ValueError("Could not get workflow - LOCKED: {}".format(self.fw_id))
                 else:
                     raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
-            links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}}, {'$set': {'locked': True}})
+            links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}},
+                                                           {'$set': {'locked': True}})  # retry lock
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.lp.workflows.find_and_modify({"nodes": self.fw_id}, {"$unset": {"locked": True}})
