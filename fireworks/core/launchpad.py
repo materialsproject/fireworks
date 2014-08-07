@@ -13,7 +13,7 @@ from collections import OrderedDict
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
 
-from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
+from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, \
     RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL
 from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, \
@@ -45,7 +45,7 @@ class WFLock(object):
         self.fw_id = fw_id
 
     def __enter__(self):
-        ctr=0
+        ctr = 0
         links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}}, {'$set': {'locked': True}})
         while not links_dict:
             time.sleep(5)
@@ -265,9 +265,11 @@ class LaunchPad(FWSerializable):
         :param fw_id:
         :return: A Workflow object
         """
-
+        print "1b"
         links_dict = self.workflows.find_one({'nodes': fw_id})
+        print "1c"
         fws = map(self.get_fw_by_id, links_dict["nodes"])
+        print "1d"
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
 
@@ -803,7 +805,6 @@ class LaunchPad(FWSerializable):
                 for d in self.fireworks.find({"launches": {"$in": f['launches']}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
-
         # rerun this FW
         m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         if m_fw['state'] == 'ARCHIVED':
@@ -811,11 +812,13 @@ class LaunchPad(FWSerializable):
         elif m_fw['state'] == 'WAITING':
             self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
         else:
-            with WFLock(self, fw_id):
-                wf = self.get_wf_by_fw_id(fw_id)
-                updated_ids = wf.rerun_fw(fw_id)
-                self._update_wf(wf, updated_ids)
-                reruns.append(fw_id)
+            ## Comment out WFLock because it is causing hangs in large
+            # workflows.
+            #with WFLock(self, fw_id):
+            wf = self.get_wf_by_fw_id(fw_id)
+            updated_ids = wf.rerun_fw(fw_id)
+            self._update_wf(wf, updated_ids)
+            reruns.append(fw_id)
 
         # rerun duplicated FWs
         for f in duplicates:
