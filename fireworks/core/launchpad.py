@@ -6,6 +6,7 @@ The LaunchPad manages the FireWorks database.
 import datetime
 import json
 import os
+import random
 import time
 import traceback
 from collections import OrderedDict
@@ -49,9 +50,9 @@ class WFLock(object):
         links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}},
                                                        {'$set': {'locked': True}})  # acquire lock
         while not links_dict:  # could not acquire lock b/c WF is already locked for writing
-            time.sleep(5)  # wait a bit for lock to free up
             ctr += 1
-            if ctr == 200:  # too many times waiting, something is wrong - exit
+            time.sleep(ctr/10.0+random.random()/100.0)  # wait a bit for lock to free up
+            if ctr == 100:  # too many times waiting, something is wrong - exit
                 wf = self.lp.workflows.find_one({'nodes': self.fw_id})
                 if wf:
                     raise ValueError("Could not get workflow - LOCKED: {}".format(self.fw_id))
