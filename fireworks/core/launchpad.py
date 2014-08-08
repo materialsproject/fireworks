@@ -265,11 +265,8 @@ class LaunchPad(FWSerializable):
         :param fw_id:
         :return: A Workflow object
         """
-        print "1b"
         links_dict = self.workflows.find_one({'nodes': fw_id})
-        print "1c"
         fws = map(self.get_fw_by_id, links_dict["nodes"])
-        print "1d"
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
 
@@ -816,11 +813,11 @@ class LaunchPad(FWSerializable):
         else:
             ## Comment out WFLock because it is causing hangs in large
             # workflows.
-            #with WFLock(self, fw_id):
-            wf = self.get_wf_by_fw_id(fw_id)
-            updated_ids = wf.rerun_fw(fw_id)
-            self._update_wf(wf, updated_ids)
-            reruns.append(fw_id)
+            with WFLock(self, fw_id):
+                wf = self.get_wf_by_fw_id(fw_id)
+                updated_ids = wf.rerun_fw(fw_id)
+                self._update_wf(wf, updated_ids)
+                reruns.append(fw_id)
 
         # rerun duplicated FWs
         for f in duplicates:
