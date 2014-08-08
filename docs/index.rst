@@ -219,7 +219,10 @@ Citing FireWorks
 
 A paper for FireWorks is in preparation. In the meantime, you can cite FireWorks as follows:
 
-FireWorks workflow software, http://pythonhosted.org/FireWorks. DOI: 10.5281/zenodo.11131
+FireWorks workflow software, http://pythonhosted.org/FireWorks.
+
+.. image:: https://zenodo.org/badge/3975/materialsproject/fireworks.png
+   :target: http://dx.doi.org/10.5281/zenodo.11239
 
 ====================================
 Contributing / Contact / Bug Reports
