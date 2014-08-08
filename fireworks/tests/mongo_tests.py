@@ -244,18 +244,14 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.launches.count(), 1)
 
     def test_force_lock_removal(self):
-        pass
-        """
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = FireWork(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
         self.lp.add_wf(fw)
         self.assertEqual(WFLOCK_EXPIRATION_KILL, True)
         # add a manual lock
         with WFLock(self.lp, 1):
-            launch_rocket(self.lp, self.fworker)
-
-        self.assertEqual(self.lp.launches.count(), 1)
-        """
+            with WFLock(self.lp, 1, expire_secs=1):
+                self.assertTrue(True)  # dummy to make sure we got here
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
