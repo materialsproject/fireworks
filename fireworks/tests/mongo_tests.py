@@ -257,7 +257,7 @@ class MongoTests(unittest.TestCase):
                 self.assertTrue(True)  # dummy to make sure we got here
 
     def test_fizzle(self):
-        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args="Testing; this error is normal.")
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["Testing; this error is normal."])
         fw = FireWork(p)
         self.lp.add_wf(fw)
         self.assertTrue(launch_rocket(self.lp, self.fworker))
@@ -265,14 +265,14 @@ class MongoTests(unittest.TestCase):
         self.assertFalse(launch_rocket(self.lp, self.fworker))
 
     def test_defuse(self):
-        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args="This should not happen")
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
         fw = FireWork(p)
         self.lp.add_wf(fw)
         self.lp.defuse_fw(fw.fw_id)
         self.assertFalse(launch_rocket(self.lp, self.fworker))
 
     def test_archive(self):
-        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args="This should not happen")
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
         fw = FireWork(p)
         self.lp.add_wf(fw)
         self.lp.archive_wf(fw.fw_id)
