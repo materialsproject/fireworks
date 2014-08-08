@@ -6,6 +6,7 @@ The LaunchPad manages the FireWorks database.
 import datetime
 import json
 import os
+import random
 import time
 import traceback
 from collections import OrderedDict
@@ -14,7 +15,8 @@ from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
 
 from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
-    RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL
+    RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, \
+    WFLOCK_EXPIRATION_KILL
 from fireworks.utilities.fw_serializers import FWSerializable
 from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, \
     Tracker
@@ -40,23 +42,36 @@ class WFLock(object):
     Lock a Workflow, i.e. for performing update operations
     """
 
-    def __init__(self, lp, fw_id):
+    def __init__(self, lp, fw_id, expire_secs = WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
         self.lp = lp
         self.fw_id = fw_id
+        self.expire_secs = expire_secs
+        self.kill = kill
 
     def __enter__(self):
-        ctr=0
-        links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}}, {'$set': {'locked': True}})
-        while not links_dict:
-            time.sleep(5)
+        ctr = 0
+        waiting_time = 0
+        links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}},
+                                                       {'$set': {'locked': True}})  # acquire lock
+        while not links_dict:  # could not acquire lock b/c WF is already locked for writing
             ctr += 1
-            if ctr == 200:
+            time_incr = ctr/10.0+random.random()/100.0
+            time.sleep(time_incr)  # wait a bit for lock to free up
+            waiting_time += time_incr
+            if waiting_time > self.expire_secs:  # too much time waiting, expire lock
                 wf = self.lp.workflows.find_one({'nodes': self.fw_id})
-                if wf:
-                    raise ValueError("Could not get workflow - LOCKED: {}".format(self.fw_id))
-                else:
+                if not wf:
                     raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
-            links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}}, {'$set': {'locked': True}})
+                if self.kill:  # force lock aquisition
+                    self.lp.m_logger.warn('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
+                    links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id},
+                                     {'$set': {'locked': True}})
+                else:  # throw error if we don't want to force lock acquisition
+                    raise ValueError("Could not get workflow - LOCKED: {}".format(self.fw_id))
+
+            else:
+                links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}},
+                                                           {'$set': {'locked': True}})  # retry lock
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.lp.workflows.find_and_modify({"nodes": self.fw_id}, {"$unset": {"locked": True}})
