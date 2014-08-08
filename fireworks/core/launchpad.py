@@ -286,7 +286,6 @@ class LaunchPad(FWSerializable):
         :param fw_id:
         :return: A Workflow object
         """
-
         links_dict = self.workflows.find_one({'nodes': fw_id})
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
@@ -766,8 +765,10 @@ class LaunchPad(FWSerializable):
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
-            with WFLock(self, fw_id):
-                self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+            # # Comment out WFLock because it is causing hangs in large
+            # workflows.
+            #with WFLock(self, fw_id):
+            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
         # change return type to dict to make return type seriazlizable to
         # support job packing
         return m_launch.to_dict()
@@ -824,7 +825,6 @@ class LaunchPad(FWSerializable):
                 for d in self.fireworks.find({"launches": {"$in": f['launches']}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
-
         # rerun this FW
         m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         if m_fw['state'] == 'ARCHIVED':
@@ -832,6 +832,8 @@ class LaunchPad(FWSerializable):
         elif m_fw['state'] == 'WAITING':
             self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
         else:
+            ## Comment out WFLock because it is causing hangs in large
+            # workflows.
             with WFLock(self, fw_id):
                 wf = self.get_wf_by_fw_id(fw_id)
                 updated_ids = wf.rerun_fw(fw_id)
