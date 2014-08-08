@@ -44,8 +44,8 @@ def random_launch(lp_creds):
             launch_rocket(lp)
             time.sleep(random.random()/3+0.1)
 
-def throw_error():
-    raise ValueError("This error is part of the testing procedure.")
+def throw_error(msg):
+    raise ValueError(msg)
 
 class MongoTests(unittest.TestCase):
 
@@ -257,19 +257,19 @@ class MongoTests(unittest.TestCase):
                 self.assertTrue(True)  # dummy to make sure we got here
 
     def test_fizzle(self):
-        p = PyTask(func="fireworks.tests.mongo_tests.throw_error")
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args="Testing; this error is normal.")
         fw = FireWork(p)
         self.lp.add_wf(fw)
         self.assertTrue(launch_rocket(self.lp, self.fworker))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'FIZZLED')
         self.assertFalse(launch_rocket(self.lp, self.fworker))
 
-        #self.assertEqual(a.stored_data["json"], '{"hello": "world"}')
-        #p = PyTask(func="pow", args=[3, 2], stored_data_varname="data")
-        #a = p.run_task({})
-        #self.assertEqual(a.stored_data["data"], 9)
-        #p = PyTask(func="print", args=[3])
-        #a = p.run_task({})
+    def test_defuse(self):
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args="This should not happen")
+        fw = FireWork(p)
+        self.lp.add_wf(fw)
+        self.lp.defuse_fw(fw.fw_id)
+        self.assertFalse(launch_rocket(self.lp, self.fworker))
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
