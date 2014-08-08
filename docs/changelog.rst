@@ -2,7 +2,16 @@
 FireWorks Changelog
 ===================
 
+**v0.87**
+
+* Fix major bug causing FIZZLED FWs to rerun spontaneously
+* Make WFLock more nimble
+* Forcibly remove WFLock after some time in case of catastrophe (tunable in FW_config)
+* improve unit tests
+
 **v0.86**
+
+.. warning:: This version has a major bug that causes FIZZLED FWs to rerun, patched in v0.87
 
 * add delete_wfs command (w/S.P. Ong)
 * add update_fws command (S.P. Ong)

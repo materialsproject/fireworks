@@ -184,7 +184,7 @@ class FireWork(FWSerializable):
     """
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
-                   'RESERVED': 3,  'RUNNING': 4, 'COMPLETED': 5}
+                   'RESERVED': 3, 'RUNNING': 4, 'COMPLETED': 5}
 
     def __init__(self, tasks, spec=None, name=None, launches=None,
                  archived_launches=None, state='WAITING', created_on=None,
@@ -828,8 +828,8 @@ class Workflow(FWSerializable):
         else:
             # my state depends on launch whose state has the highest 'score'
             # in STATE_RANKS
-            max_score = 0
-            m_state = 'READY'
+            m_state = 'READY' if len(fw.launches) == 0 else 'FIZZLED'
+            max_score = FireWork.STATE_RANKS[m_state]
             m_action = None
 
             # TODO: pick the first launch in terms of end date that matches
