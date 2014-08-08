@@ -13,7 +13,7 @@ from fireworks.features.background_task import BackgroundTask
 from fireworks.fw_config import WFLOCK_EXPIRATION_KILL
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
-from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
@@ -43,6 +43,9 @@ def random_launch(lp_creds):
         while lp.run_exists(None):
             launch_rocket(lp)
             time.sleep(random.random()/3+0.1)
+
+def throw_error():
+    raise ValueError("This error is part of the testing procedure.")
 
 class MongoTests(unittest.TestCase):
 
@@ -252,6 +255,21 @@ class MongoTests(unittest.TestCase):
         with WFLock(self.lp, 1):
             with WFLock(self.lp, 1, expire_secs=1):
                 self.assertTrue(True)  # dummy to make sure we got here
+
+    def test_fizzle(self):
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error")
+        fw = FireWork(p)
+        self.lp.add_wf(fw)
+        self.assertTrue(launch_rocket(self.lp, self.fworker))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, 'FIZZLED')
+        self.assertFalse(launch_rocket(self.lp, self.fworker))
+
+        #self.assertEqual(a.stored_data["json"], '{"hello": "world"}')
+        #p = PyTask(func="pow", args=[3, 2], stored_data_varname="data")
+        #a = p.run_task({})
+        #self.assertEqual(a.stored_data["data"], 9)
+        #p = PyTask(func="print", args=[3])
+        #a = p.run_task({})
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
