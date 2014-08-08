@@ -7,9 +7,10 @@ import unittest
 import time
 from fireworks.core.firework import FireWork, Workflow
 from fireworks.core.fworker import FWorker
-from fireworks.core.launchpad import LaunchPad
+from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
+from fireworks.fw_config import WFLOCK_EXPIRATION_KILL
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -241,6 +242,20 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
 
         self.assertEqual(self.lp.launches.count(), 1)
+
+    def test_force_lock_removal(self):
+        pass
+        """
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
+        self.lp.add_wf(fw)
+        self.assertEqual(WFLOCK_EXPIRATION_KILL, True)
+        # add a manual lock
+        with WFLock(self.lp, 1):
+            launch_rocket(self.lp, self.fworker)
+
+        self.assertEqual(self.lp.launches.count(), 1)
+        """
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)

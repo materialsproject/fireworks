@@ -51,6 +51,9 @@ MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals when running in
 RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue this long before we
 # cancel its reservation
 
+WFLOCK_EXPIRATION_SECS = 60 * 5  # wait this long for a WFLock before expiring
+WFLOCK_EXPIRATION_KILL = True  # kill WFLock on expiration (or give a warning)
+
 RAPIDFIRE_SLEEP_SECS = 60  # seconds to sleep between rapidfire loops
 
 LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
