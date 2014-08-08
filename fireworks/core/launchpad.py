@@ -42,7 +42,7 @@ class WFLock(object):
     Lock a Workflow, i.e. for performing update operations
     """
 
-    def __init__(self, lp, fw_id, expire_secs = WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
+    def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
         self.lp = lp
         self.fw_id = fw_id
         self.expire_secs = expire_secs
