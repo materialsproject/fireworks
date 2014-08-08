@@ -271,6 +271,13 @@ class MongoTests(unittest.TestCase):
         self.lp.defuse_fw(fw.fw_id)
         self.assertFalse(launch_rocket(self.lp, self.fworker))
 
+    def test_archive(self):
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args="This should not happen")
+        fw = FireWork(p)
+        self.lp.add_wf(fw)
+        self.lp.archive_wf(fw.fw_id)
+        self.assertFalse(launch_rocket(self.lp, self.fworker))
+
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
         if os.path.exists(os.path.join('FW.json')):
