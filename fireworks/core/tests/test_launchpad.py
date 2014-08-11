@@ -78,12 +78,6 @@ class LaunchPadTest(unittest.TestCase):
         pass
     def test_get_fw_ids(self):
         pass
-    def test_reignite_fw(self):
-        pass
-    def test_defuse_wf(self):
-        pass
-    def test_reignite_wf(self):
-        pass
     def test_archive_wf(self):
         pass
     def test_reserve_fw(self):
@@ -131,27 +125,37 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
 
         # Get fwids for the zeus and his children's fireworks
         self.zeus_fw_id = self.lp.get_fw_ids({'name':'sib1'},limit=1)[0]
-        self.c1_fw_id = self.lp.get_fw_ids({'name':'c1'},limit=1)[0]
-        self.c2_fw_id = self.lp.get_fw_ids({'name':'c2'},limit=1)[0]
-        self.c3_fw_id = self.lp.get_fw_ids({'name':'c3'},limit=1)[0]
-        self.c5_fw_id = self.lp.get_fw_ids({'name':'c5'},limit=1)[0]
-        self.c8_fw_id = self.lp.get_fw_ids({'name':'c8'},limit=1)[0]
+        c1_fw_id = self.lp.get_fw_ids({'name':'c1'},limit=1)[0]
+        c2_fw_id = self.lp.get_fw_ids({'name':'c2'},limit=1)[0]
+        c3_fw_id = self.lp.get_fw_ids({'name':'c3'},limit=1)[0]
+        c5_fw_id = self.lp.get_fw_ids({'name':'c5'},limit=1)[0]
+        c8_fw_id = self.lp.get_fw_ids({'name':'c8'},limit=1)[0]
+        self.zeus_child_fw_ids = set([c1_fw_id,c2_fw_id,c3_fw_id,c5_fw_id,c8_fw_id])
         # Get fwids of Lapetus and his descendants
-        self.s5_fw_id = self.lp.get_fw_ids({'name':'cousin1'},limit=1)[0]
-        self.c7_fw_id = self.lp.get_fw_ids({'name':'c7'},limit=1)[0]
-        self.c6_fw_id = self.lp.get_fw_ids({'name':'c6'},limit=1)[0]
-        self.c4_fw_id = self.lp.get_fw_ids({'name':'c4'},limit=1)[0]
+        s5_fw_id = self.lp.get_fw_ids({'name':'cousin1'},limit=1)[0]
+        c7_fw_id = self.lp.get_fw_ids({'name':'c7'},limit=1)[0]
+        c6_fw_id = self.lp.get_fw_ids({'name':'c6'},limit=1)[0]
+        c4_fw_id = self.lp.get_fw_ids({'name':'c4'},limit=1)[0]
+        self.lapetus_desc_fw_ids = set([s5_fw_id,c7_fw_id,c6_fw_id,c4_fw_id])
         # Get fwids of Zeus siblings
-        self.s2_fw_id = self.lp.get_fw_ids({'name':'sib2'},limit=1)[0]
-        self.s3_fw_id = self.lp.get_fw_ids({'name':'sib3'},limit=1)[0]
-        self.s4_fw_id = self.lp.get_fw_ids({'name':'sib4'},limit=1)[0]
+        s2_fw_id = self.lp.get_fw_ids({'name':'sib2'},limit=1)[0]
+        s3_fw_id = self.lp.get_fw_ids({'name':'sib3'},limit=1)[0]
+        s4_fw_id = self.lp.get_fw_ids({'name':'sib4'},limit=1)[0]
+        self.zeus_sib_fw_ids = set([s2_fw_id,s3_fw_id,s4_fw_id])
         # Get fwid of Zeus parent
         self.par_fw_id = self.lp.get_fw_ids({'name':'parent'},limit=1)[0]
 
         self.root_path = os.path.abspath('.')
-        print self.root_path
+
     def tearDown(self):
-        pass
+        # Delete launch locations
+        launchdirs = glob.glob(os.path.join(self.root_path,"launcher_*"))
+        for ldir in launchdirs:
+            shutil.rmtree(ldir)
+        os.chdir(self.root_path)
+        # Reset launchpad
+        self.lp.reset('',require_password=False)
+
     def test_defuse_fw(self):
         # defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
@@ -159,34 +163,20 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
         self.assertIn(self.zeus_fw_id,defused_ids)
         try:
-            # Run remaining fireworks
-            #root_path = os.path.abspath('.')
+            # Launch remaining fireworks
             rapidfire(self.lp, FWorker())
-            launchdirs = glob.glob(os.path.join(self.root_path,"launcher_*"))
-            for ldir in launchdirs:
-                shutil.rmtree(ldir)
-            os.chdir(self.root_path)
 
-            # Ensure except for Zeus and his children, all other fw are run
-            completed_ids = self.lp.get_fw_ids({'state':'COMPLETED'})
+            # Ensure except for Zeus and his children, all other fw are launched
+            completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
             # Check for the state of Lapetus and his descendants in completed fwids
-            self.assertIn(self.s5_fw_id,completed_ids)
-            self.assertIn(self.c7_fw_id,completed_ids)
-            self.assertIn(self.c6_fw_id,completed_ids)
-            self.assertIn(self.c4_fw_id,completed_ids)
+            self.assertTrue(self.lapetus_desc_fw_ids < completed_ids)
             # Check for the state of Zeus siblings and parent in completed fwids
-            self.assertIn(self.s2_fw_id,completed_ids)
-            self.assertIn(self.s3_fw_id,completed_ids)
-            self.assertIn(self.s4_fw_id,completed_ids)
-            self.assertIn(self.par_fw_id,completed_ids)
+            self.assertTrue(self.zeus_sib_fw_ids < completed_ids)
+
             # Check for the status of Zeus and children in incompleted fwids
-            fws_no_run = self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}})
+            fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
             self.assertIn(self.zeus_fw_id,fws_no_run)
-            self.assertIn(self.c1_fw_id,fws_no_run)
-            self.assertIn(self.c2_fw_id,fws_no_run)
-            self.assertIn(self.c3_fw_id,fws_no_run)
-            self.assertIn(self.c5_fw_id,fws_no_run)
-            self.assertIn(self.c8_fw_id,fws_no_run)
+            self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
         except:
             raise
 
@@ -203,20 +193,49 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.lp.reignite_fw(self.zeus_fw_id)
         rapidfire(self.lp, FWorker())
 
-        # Delete launch locations
-        launchdirs = glob.glob(os.path.join(self.root_path,"launcher_*"))
-        for ldir in launchdirs:
-            shutil.rmtree(ldir)
-        os.chdir(self.root_path)
-
         # Check for the status of Zeus and children in completed fwids
-        fws_no_run = self.lp.get_fw_ids({'state':'COMPLETED'})
+        completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertIn(self.zeus_fw_id,completed_ids)
+        self.assertTrue(self.zeus_child_fw_ids < completed_ids)
+
+    def test_defuse_wf(self):
+        # defuse Workflow containing Zeus
+        self.lp.defuse_wf(self.zeus_fw_id)
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
+
+        # Launch remaining fireworks
+        rapidfire(self.lp, FWorker())
+
+        # Check for the state of all fws in Zeus workflow in incomplete fwids
+        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
+        self.assertIn(self.par_fw_id,fws_no_run)
         self.assertIn(self.zeus_fw_id,fws_no_run)
-        self.assertIn(self.c1_fw_id,fws_no_run)
-        self.assertIn(self.c2_fw_id,fws_no_run)
-        self.assertIn(self.c3_fw_id,fws_no_run)
-        self.assertIn(self.c5_fw_id,fws_no_run)
-        self.assertIn(self.c8_fw_id,fws_no_run)
+        self.assertTrue(self.lapetus_desc_fw_ids < fws_no_run)
+        self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
+        self.assertTrue(self.zeus_sib_fw_ids < fws_no_run)
+
+    def test_reignite_wf(self):
+        # Defuse workflow containing Zeus
+        self.lp.defuse_wf(self.zeus_fw_id)
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
+
+        # Launch remaining fireworks
+        rapidfire(self.lp, FWorker())
+
+        # Reignite Zeus and his children's fireworks and launch them
+        self.lp.reignite_wf(self.zeus_fw_id)
+        rapidfire(self.lp, FWorker())
+
+        # Check for the status of all fireworks Zeus workflow in completed fwids
+        fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        print fws_completed
+        self.assertIn(self.par_fw_id,fws_completed)
+        self.assertIn(self.zeus_fw_id,fws_completed)
+        self.assertTrue(self.zeus_child_fw_ids < fws_completed)
+        self.assertTrue(self.zeus_sib_fw_ids < fws_completed)
+        self.assertTrue(self.lapetus_desc_fw_ids < fws_completed)
 
 if __name__ == '__main__':
     unittest.main()
