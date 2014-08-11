@@ -12,7 +12,8 @@ __date__ = "7/01/14"
 import unittest
 import os
 
-from fireworks import FireWork, Workflow, LaunchPad
+from fireworks import FireWork, Workflow, LaunchPad, FWorker
+from fireworks.core.rocket_launcher import rapidfire
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
 
@@ -76,6 +77,106 @@ class LaunchPadTest(unittest.TestCase):
     def test_get_fw_ids(self):
         pass
     def test_defuse_fw(self):
+        lp = LaunchPad.auto_load()
+        lp.reset('',require_password=False)
+
+        # define the individual FireWorks used in the Workflow
+        # Parent Firework
+        fw_p = FireWork(ScriptTask.from_str('echo "Cronus is the ruler of titans"'), name="parent")
+        # Sibling fireworks
+        fw_s1 = FireWork(ScriptTask.from_str('echo "Zeus is son of Cronus"'), name="sib1")
+        fw_s2 = FireWork(ScriptTask.from_str('echo "Poisedon is brother of Zeus"'), name="sib2")
+        fw_s3 = FireWork(ScriptTask.from_str('echo "Hades is brother of Zeus"'), name="sib3")
+        fw_s4 = FireWork(ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"'), name="sib4")
+        fw_s5 = FireWork(ScriptTask.from_str('echo "Lapetus is son of Oceanus"'), name="cousin1")
+        # Children fireworks
+        fw_c1 = FireWork(ScriptTask.from_str('echo "Ares is son of Zeus"'), name="c1")
+        fw_c2 = FireWork(ScriptTask.from_str('echo "Persephone is daughter of Zeus & Demeter and wife of Hades"'), name="c2")
+        fw_c3 = FireWork(ScriptTask.from_str('echo "Makaria is daughter of Hades & Persephone"'), name="c3")
+        fw_c4 = FireWork(ScriptTask.from_str('echo "Dione is descendant of Lapetus"'), name="c4")
+        fw_c5 = FireWork(ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"'), name="c5")
+        fw_c6 = FireWork(ScriptTask.from_str('echo "Atlas is son of of Lapetus"'), name="c6")
+        fw_c7 = FireWork(ScriptTask.from_str('echo "Maia is daughter of Atlas"'), name="c7")
+        fw_c8 = FireWork(ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"'), name="c8")
+
+
+        # assemble Workflow from FireWorks and their connections by id
+        workflow = Workflow([fw_p,fw_s1,fw_s2,fw_s3,fw_s4,fw_s5,fw_c1,fw_c2,fw_c3,fw_c4,fw_c5,fw_c6,fw_c7,fw_c8],
+                            {fw_p: [fw_s1,fw_s2,fw_s3,fw_s4],
+                             fw_s1: [fw_c1,fw_c2,fw_c5,fw_c8],
+                             fw_s3: [fw_c3],
+                             fw_s4: [fw_c2],
+                             fw_s5: [fw_c4, fw_c6],
+                             fw_c2: [fw_c3],
+                             fw_c4: [fw_c5],
+                             fw_c6: [fw_c7],
+                             fw_c7: [fw_c8]})
+
+        # store workflow
+        lp.add_wf(workflow)
+
+        # defuse Zeus
+        zeus_fw_id = lp.get_fw_ids({'name':'sib1'},limit=1)[0]
+        c1_fw_id = lp.get_fw_ids({'name':'c1'},limit=1)[0]
+        c2_fw_id = lp.get_fw_ids({'name':'c2'},limit=1)[0]
+        c3_fw_id = lp.get_fw_ids({'name':'c3'},limit=1)[0]
+        c5_fw_id = lp.get_fw_ids({'name':'c5'},limit=1)[0]
+        c8_fw_id = lp.get_fw_ids({'name':'c8'},limit=1)[0]
+        print zeus_fw_id
+        print c1_fw_id
+        print c2_fw_id
+        print c3_fw_id
+        print c5_fw_id
+        print c8_fw_id
+        lp.defuse_fw(zeus_fw_id)
+
+        defused_ids = lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(zeus_fw_id,defused_ids)
+        #self.assertIn(c1_fw_id,defused_ids)
+        #self.assertIn(c2_fw_id,defused_ids)
+        #self.assertIn(c3_fw_id,defused_ids)
+        #self.assertIn(c5_fw_id,defused_ids)
+        #self.assertIn(c8_fw_id,defused_ids)
+
+        # Run remaining fireworks
+        rapidfire(lp, FWorker())
+
+        # Ensure except for Zeus and his children, all other fw are run
+        completed_ids = lp.get_fw_ids({'state':'COMPLETED'})
+        # Check for the state of Lapetus and his descendants
+        s5_fw_id = lp.get_fw_ids({'name':'cousin1'},limit=1)[0]
+        c7_fw_id = lp.get_fw_ids({'name':'c7'},limit=1)[0]
+        c6_fw_id = lp.get_fw_ids({'name':'c6'},limit=1)[0]
+        c4_fw_id = lp.get_fw_ids({'name':'c4'},limit=1)[0]
+        fw = lp.get_fw_by_id(s5_fw_id)
+        print fw.to_dict
+        self.assertIn(s5_fw_id,completed_ids)
+        self.assertIn(c7_fw_id,completed_ids)
+        self.assertIn(c6_fw_id,completed_ids)
+        self.assertIn(c4_fw_id,completed_ids)
+        # Check for the state of Zeus siblings
+        s2_fw_id = lp.get_fw_ids({'name':'sib2'},limit=1)[0]
+        s3_fw_id = lp.get_fw_ids({'name':'sib3'},limit=1)[0]
+        s4_fw_id = lp.get_fw_ids({'name':'sib4'},limit=1)[0]
+        self.assertIn(s2_fw_id,completed_ids)
+        self.assertIn(s3_fw_id,completed_ids)
+        self.assertIn(s4_fw_id,completed_ids)
+        # Check for the state of Zeus parent
+        par_fw_id = lp.get_fw_ids({'name':'parent'},limit=1)[0]
+        self.assertIn(par_fw_id,completed_ids)
+        # Check for the status of Zeus children
+        defused_ids = lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(c1_fw_id,defused_ids)
+        self.assertIn(c2_fw_id,defused_ids)
+        self.assertIn(c3_fw_id,defused_ids)
+        self.assertIn(c5_fw_id,defused_ids)
+        self.assertIn(c8_fw_id,defused_ids)
+        #fw = lp.get_fw_by_id(c1_fw_id)
+        #print fw.state, fw.name
+        #wf = lp.get_wf_by_fw_id(s5_fw_id)
+        #print wf
+
+        #lp.reset('',require_password=False)
         pass
     def test_reignite_fw(self):
         pass
