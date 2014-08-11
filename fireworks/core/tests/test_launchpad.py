@@ -78,9 +78,21 @@ class LaunchPadTest(unittest.TestCase):
         pass
     def test_get_fw_ids(self):
         pass
-    def test_defuse_fw(self):
-        lp = LaunchPad.auto_load()
-        lp.reset('',require_password=False)
+    def test_reignite_fw(self):
+        pass
+    def test_defuse_wf(self):
+        pass
+    def test_reignite_wf(self):
+        pass
+    def test_archive_wf(self):
+        pass
+    def test_reserve_fw(self):
+        pass
+
+class LaunchPadDiffuseReigniteTest(unittest.TestCase):
+    def setUp(self):
+        self.lp = LaunchPad.auto_load()
+        self.lp.reset('',require_password=False)
 
         # define the individual FireWorks used in the Workflow
         # Parent Firework
@@ -115,86 +127,96 @@ class LaunchPadTest(unittest.TestCase):
                              fw_c7: [fw_c8]})
 
         # store workflow
-        lp.add_wf(workflow)
+        self.lp.add_wf(workflow)
 
+        # Get fwids for the zeus and his children's fireworks
+        self.zeus_fw_id = self.lp.get_fw_ids({'name':'sib1'},limit=1)[0]
+        self.c1_fw_id = self.lp.get_fw_ids({'name':'c1'},limit=1)[0]
+        self.c2_fw_id = self.lp.get_fw_ids({'name':'c2'},limit=1)[0]
+        self.c3_fw_id = self.lp.get_fw_ids({'name':'c3'},limit=1)[0]
+        self.c5_fw_id = self.lp.get_fw_ids({'name':'c5'},limit=1)[0]
+        self.c8_fw_id = self.lp.get_fw_ids({'name':'c8'},limit=1)[0]
+        # Get fwids of Lapetus and his descendants
+        self.s5_fw_id = self.lp.get_fw_ids({'name':'cousin1'},limit=1)[0]
+        self.c7_fw_id = self.lp.get_fw_ids({'name':'c7'},limit=1)[0]
+        self.c6_fw_id = self.lp.get_fw_ids({'name':'c6'},limit=1)[0]
+        self.c4_fw_id = self.lp.get_fw_ids({'name':'c4'},limit=1)[0]
+        # Get fwids of Zeus siblings
+        self.s2_fw_id = self.lp.get_fw_ids({'name':'sib2'},limit=1)[0]
+        self.s3_fw_id = self.lp.get_fw_ids({'name':'sib3'},limit=1)[0]
+        self.s4_fw_id = self.lp.get_fw_ids({'name':'sib4'},limit=1)[0]
+        # Get fwid of Zeus parent
+        self.par_fw_id = self.lp.get_fw_ids({'name':'parent'},limit=1)[0]
+
+        self.root_path = os.path.abspath('.')
+        print self.root_path
+    def tearDown(self):
+        pass
+    def test_defuse_fw(self):
         # defuse Zeus
-        zeus_fw_id = lp.get_fw_ids({'name':'sib1'},limit=1)[0]
-        c1_fw_id = lp.get_fw_ids({'name':'c1'},limit=1)[0]
-        c2_fw_id = lp.get_fw_ids({'name':'c2'},limit=1)[0]
-        c3_fw_id = lp.get_fw_ids({'name':'c3'},limit=1)[0]
-        c5_fw_id = lp.get_fw_ids({'name':'c5'},limit=1)[0]
-        c8_fw_id = lp.get_fw_ids({'name':'c8'},limit=1)[0]
-        print zeus_fw_id
-        print c1_fw_id
-        print c2_fw_id
-        print c3_fw_id
-        print c5_fw_id
-        print c8_fw_id
-        lp.defuse_fw(zeus_fw_id)
+        self.lp.defuse_fw(self.zeus_fw_id)
 
-        defused_ids = lp.get_fw_ids({'state':'DEFUSED'})
-        self.assertIn(zeus_fw_id,defused_ids)
-        #self.assertIn(c1_fw_id,defused_ids)
-        #self.assertIn(c2_fw_id,defused_ids)
-        #self.assertIn(c3_fw_id,defused_ids)
-        #self.assertIn(c5_fw_id,defused_ids)
-        #self.assertIn(c8_fw_id,defused_ids)
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
+        try:
+            # Run remaining fireworks
+            #root_path = os.path.abspath('.')
+            rapidfire(self.lp, FWorker())
+            launchdirs = glob.glob(os.path.join(self.root_path,"launcher_*"))
+            for ldir in launchdirs:
+                shutil.rmtree(ldir)
+            os.chdir(self.root_path)
 
-        # Run remaining fireworks
-        rapidfire(lp, FWorker())
+            # Ensure except for Zeus and his children, all other fw are run
+            completed_ids = self.lp.get_fw_ids({'state':'COMPLETED'})
+            # Check for the state of Lapetus and his descendants in completed fwids
+            self.assertIn(self.s5_fw_id,completed_ids)
+            self.assertIn(self.c7_fw_id,completed_ids)
+            self.assertIn(self.c6_fw_id,completed_ids)
+            self.assertIn(self.c4_fw_id,completed_ids)
+            # Check for the state of Zeus siblings and parent in completed fwids
+            self.assertIn(self.s2_fw_id,completed_ids)
+            self.assertIn(self.s3_fw_id,completed_ids)
+            self.assertIn(self.s4_fw_id,completed_ids)
+            self.assertIn(self.par_fw_id,completed_ids)
+            # Check for the status of Zeus and children in incompleted fwids
+            fws_no_run = self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}})
+            self.assertIn(self.zeus_fw_id,fws_no_run)
+            self.assertIn(self.c1_fw_id,fws_no_run)
+            self.assertIn(self.c2_fw_id,fws_no_run)
+            self.assertIn(self.c3_fw_id,fws_no_run)
+            self.assertIn(self.c5_fw_id,fws_no_run)
+            self.assertIn(self.c8_fw_id,fws_no_run)
+        except:
+            raise
 
-        # Ensure except for Zeus and his children, all other fw are run
-        completed_ids = lp.get_fw_ids({'state':'COMPLETED'})
-        # Check for the state of Lapetus and his descendants
-        s5_fw_id = lp.get_fw_ids({'name':'cousin1'},limit=1)[0]
-        c7_fw_id = lp.get_fw_ids({'name':'c7'},limit=1)[0]
-        c6_fw_id = lp.get_fw_ids({'name':'c6'},limit=1)[0]
-        c4_fw_id = lp.get_fw_ids({'name':'c4'},limit=1)[0]
-        fw = lp.get_fw_by_id(s5_fw_id)
-        print fw.state,fw.name
-        self.assertIn(s5_fw_id,completed_ids)
-        self.assertIn(c7_fw_id,completed_ids)
-        self.assertIn(c6_fw_id,completed_ids)
-        self.assertIn(c4_fw_id,completed_ids)
-        # Check for the state of Zeus siblings
-        s2_fw_id = lp.get_fw_ids({'name':'sib2'},limit=1)[0]
-        s3_fw_id = lp.get_fw_ids({'name':'sib3'},limit=1)[0]
-        s4_fw_id = lp.get_fw_ids({'name':'sib4'},limit=1)[0]
-        self.assertIn(s2_fw_id,completed_ids)
-        self.assertIn(s3_fw_id,completed_ids)
-        self.assertIn(s4_fw_id,completed_ids)
-        # Check for the state of Zeus parent
-        par_fw_id = lp.get_fw_ids({'name':'parent'},limit=1)[0]
-        self.assertIn(par_fw_id,completed_ids)
-        # Check for the status of Zeus children
-        defused_ids = lp.get_fw_ids({'state':'DEFUSED'})
-        self.assertIn(c1_fw_id,defused_ids)
-        self.assertIn(c2_fw_id,defused_ids)
-        self.assertIn(c3_fw_id,defused_ids)
-        self.assertIn(c5_fw_id,defused_ids)
-        self.assertIn(c8_fw_id,defused_ids)
+    def test_reignite_fw(self):
+        # Defuse Zeus
+        self.lp.defuse_fw(self.zeus_fw_id)
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
 
-        launchdirs = glob.glob("launcher*")
+        # Launch remaining fireworks
+        rapidfire(self.lp, FWorker())
+
+        # Reignite Zeus and his children's fireworks and launch them
+        self.lp.reignite_fw(self.zeus_fw_id)
+        rapidfire(self.lp, FWorker())
+
+        # Delete launch locations
+        launchdirs = glob.glob(os.path.join(self.root_path,"launcher_*"))
         for ldir in launchdirs:
             shutil.rmtree(ldir)
-        #fw = lp.get_fw_by_id(c1_fw_id)
-        #print fw.state, fw.name
-        #wf = lp.get_wf_by_fw_id(s5_fw_id)
-        #print wf
+        os.chdir(self.root_path)
 
-        #lp.reset('',require_password=False)
-        pass
-    def test_reignite_fw(self):
-        pass
-    def test_defuse_wf(self):
-        pass
-    def test_reignite_wf(self):
-        pass
-    def test_archive_wf(self):
-        pass
-    def test_reserve_fw(self):
-        pass
-
+        # Check for the status of Zeus and children in completed fwids
+        fws_no_run = self.lp.get_fw_ids({'state':'COMPLETED'})
+        self.assertIn(self.zeus_fw_id,fws_no_run)
+        self.assertIn(self.c1_fw_id,fws_no_run)
+        self.assertIn(self.c2_fw_id,fws_no_run)
+        self.assertIn(self.c3_fw_id,fws_no_run)
+        self.assertIn(self.c5_fw_id,fws_no_run)
+        self.assertIn(self.c8_fw_id,fws_no_run)
 
 if __name__ == '__main__':
     unittest.main()
