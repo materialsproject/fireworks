@@ -18,7 +18,8 @@ from fireworks import FireWork, Workflow, LaunchPad, FWorker
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
-
+TESTDB_NAME = 'fireworks_unittest'
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class LaunchPadTest(unittest.TestCase):
 
@@ -84,28 +85,49 @@ class LaunchPadTest(unittest.TestCase):
         pass
 
 class LaunchPadDiffuseReigniteTest(unittest.TestCase):
+
+
     def setUp(self):
-        self.lp = LaunchPad.auto_load()
-        self.lp.reset('',require_password=False)
+        self.lp = None
+        self.fworker = FWorker()
+        try:
+            self.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            self.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
 
         # define the individual FireWorks used in the Workflow
         # Parent Firework
-        fw_p = FireWork(ScriptTask.from_str('echo "Cronus is the ruler of titans"'), name="parent")
+        fw_p = FireWork(ScriptTask.from_str('echo "Cronus is the ruler of titans"',
+                                            {'store_stdout':True}), name="parent")
         # Sibling fireworks
-        fw_s1 = FireWork(ScriptTask.from_str('echo "Zeus is son of Cronus"'), name="sib1")
-        fw_s2 = FireWork(ScriptTask.from_str('echo "Poisedon is brother of Zeus"'), name="sib2")
-        fw_s3 = FireWork(ScriptTask.from_str('echo "Hades is brother of Zeus"'), name="sib3")
-        fw_s4 = FireWork(ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"'), name="sib4")
-        fw_s5 = FireWork(ScriptTask.from_str('echo "Lapetus is son of Oceanus"'), name="cousin1")
+        fw_s1 = FireWork(ScriptTask.from_str('echo "Zeus is son of Cronus"',{'store_stdout':True}), name="sib1")
+        fw_s2 = FireWork(ScriptTask.from_str('echo "Poisedon is brother of Zeus"',
+                                             {'store_stdout':True}), name="sib2")
+        fw_s3 = FireWork(ScriptTask.from_str('echo "Hades is brother of Zeus"',
+                                             {'store_stdout':True}), name="sib3")
+        fw_s4 = FireWork(ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"',
+                                             {'store_stdout':True}), name="sib4")
+        fw_s5 = FireWork(ScriptTask.from_str('echo "Lapetus is son of Oceanus"',
+                                             {'store_stdout':True}), name="cousin1")
         # Children fireworks
-        fw_c1 = FireWork(ScriptTask.from_str('echo "Ares is son of Zeus"'), name="c1")
-        fw_c2 = FireWork(ScriptTask.from_str('echo "Persephone is daughter of Zeus & Demeter and wife of Hades"'), name="c2")
-        fw_c3 = FireWork(ScriptTask.from_str('echo "Makaria is daughter of Hades & Persephone"'), name="c3")
-        fw_c4 = FireWork(ScriptTask.from_str('echo "Dione is descendant of Lapetus"'), name="c4")
-        fw_c5 = FireWork(ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"'), name="c5")
-        fw_c6 = FireWork(ScriptTask.from_str('echo "Atlas is son of of Lapetus"'), name="c6")
-        fw_c7 = FireWork(ScriptTask.from_str('echo "Maia is daughter of Atlas"'), name="c7")
-        fw_c8 = FireWork(ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"'), name="c8")
+        fw_c1 = FireWork(ScriptTask.from_str('echo "Ares is son of Zeus"',
+                                             {'store_stdout':True}), name="c1")
+        fw_c2 = FireWork(ScriptTask.from_str('echo "Persephone is daughter of Zeus & Demeter and wife of Hades"',
+                                             {'store_stdout':True}), name="c2")
+        fw_c3 = FireWork(ScriptTask.from_str('echo "Makaria is daughter of Hades & Persephone"',
+                                             {'store_stdout':True}), name="c3")
+        fw_c4 = FireWork(ScriptTask.from_str('echo "Dione is descendant of Lapetus"',
+                                             {'store_stdout':True}), name="c4")
+        fw_c5 = FireWork(ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"',
+                                             {'store_stdout':True}), name="c5")
+        fw_c6 = FireWork(ScriptTask.from_str('echo "Atlas is son of of Lapetus"',
+                                             {'store_stdout':True}), name="c6")
+        fw_c7 = FireWork(ScriptTask.from_str('echo "Maia is daughter of Atlas"',
+                                             {'store_stdout':True}), name="c7")
+        fw_c8 = FireWork(ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"',
+                                             {'store_stdout':True}), name="c8")
 
 
         # assemble Workflow from FireWorks and their connections by id
@@ -145,29 +167,50 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         # Get fwid of Zeus parent
         self.par_fw_id = self.lp.get_fw_ids({'name':'parent'},limit=1)[0]
 
-        self.root_path = os.path.abspath('.')
+        self.old_wd = os.getcwd()
+        print self.old_wd
 
     def tearDown(self):
+        if self.lp:
+            self.lp.connection.drop_database(TESTDB_NAME)
         # Delete launch locations
-        launchdirs = glob.glob(os.path.join(self.root_path,"launcher_*"))
+        launchdirs = glob.glob(os.path.join(MODULE_DIR,"launcher_*"))
         for ldir in launchdirs:
             shutil.rmtree(ldir)
-        os.chdir(self.root_path)
-        # Reset launchpad
-        self.lp.reset('',require_password=False)
+        os.chdir(self.old_wd)
 
+    def _teardown(self, dests):
+        for f in dests:
+            if os.path.exists(f):
+                os.remove(f)
+
+
+    #@with_setup(setUp, tearDown)
     def test_defuse_fw(self):
         # defuse Zeus
+        #print self.root_path
+        ids = set(self.lp.get_fw_ids({}))
+        for id in ids:
+            fw = self.lp.get_fw_by_id(id)
+            print fw.state, fw.name
         self.lp.defuse_fw(self.zeus_fw_id)
 
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
         self.assertIn(self.zeus_fw_id,defused_ids)
         try:
             # Launch remaining fireworks
-            rapidfire(self.lp, FWorker())
+            rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+            ids = set(self.lp.get_fw_ids({}))
+            for id in ids:
+                fw = self.lp.get_fw_by_id(id)
+                print fw.state, fw.name
 
             # Ensure except for Zeus and his children, all other fw are launched
             completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+            print completed_ids
+            print self.lapetus_desc_fw_ids
+            all_ids = set(self.lp.get_fw_ids({}))
+            print all_ids
             # Check for the state of Lapetus and his descendants in completed fwids
             self.assertTrue(self.lapetus_desc_fw_ids < completed_ids)
             # Check for the state of Zeus siblings and parent in completed fwids
@@ -180,6 +223,7 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         except:
             raise
 
+    #@with_setup(setUp, tearDown)
     def test_reignite_fw(self):
         # Defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
@@ -187,17 +231,18 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertIn(self.zeus_fw_id,defused_ids)
 
         # Launch remaining fireworks
-        rapidfire(self.lp, FWorker())
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         # Reignite Zeus and his children's fireworks and launch them
         self.lp.reignite_fw(self.zeus_fw_id)
-        rapidfire(self.lp, FWorker())
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         # Check for the status of Zeus and children in completed fwids
         completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
         self.assertIn(self.zeus_fw_id,completed_ids)
         self.assertTrue(self.zeus_child_fw_ids < completed_ids)
 
+    #@with_setup(setUp, tearDown)
     def test_defuse_wf(self):
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
@@ -205,7 +250,7 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertIn(self.zeus_fw_id,defused_ids)
 
         # Launch remaining fireworks
-        rapidfire(self.lp, FWorker())
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         # Check for the state of all fws in Zeus workflow in incomplete fwids
         fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
@@ -215,6 +260,7 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
         self.assertTrue(self.zeus_sib_fw_ids < fws_no_run)
 
+    #@with_setup(setUp, tearDown)
     def test_reignite_wf(self):
         # Defuse workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
@@ -222,7 +268,7 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertIn(self.zeus_fw_id,defused_ids)
 
         # Launch remaining fireworks
-        rapidfire(self.lp, FWorker())
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         # Reignite Zeus and his children's fireworks and launch them
         self.lp.reignite_wf(self.zeus_fw_id)
