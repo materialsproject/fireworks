@@ -230,7 +230,6 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
 
         # Check for the status of all fireworks Zeus workflow in completed fwids
         fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
-        print fws_completed
         self.assertIn(self.par_fw_id,fws_completed)
         self.assertIn(self.zeus_fw_id,fws_completed)
         self.assertTrue(self.zeus_child_fw_ids < fws_completed)
