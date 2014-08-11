@@ -11,6 +11,8 @@ __date__ = "7/01/14"
 
 import unittest
 import os
+import glob
+import shutil
 
 from fireworks import FireWork, Workflow, LaunchPad, FWorker
 from fireworks.core.rocket_launcher import rapidfire
@@ -149,7 +151,7 @@ class LaunchPadTest(unittest.TestCase):
         c6_fw_id = lp.get_fw_ids({'name':'c6'},limit=1)[0]
         c4_fw_id = lp.get_fw_ids({'name':'c4'},limit=1)[0]
         fw = lp.get_fw_by_id(s5_fw_id)
-        print fw.to_dict
+        print fw.state,fw.name
         self.assertIn(s5_fw_id,completed_ids)
         self.assertIn(c7_fw_id,completed_ids)
         self.assertIn(c6_fw_id,completed_ids)
@@ -171,6 +173,10 @@ class LaunchPadTest(unittest.TestCase):
         self.assertIn(c3_fw_id,defused_ids)
         self.assertIn(c5_fw_id,defused_ids)
         self.assertIn(c8_fw_id,defused_ids)
+
+        launchdirs = glob.glob("launcher*")
+        for ldir in launchdirs:
+            shutil.rmtree(ldir)
         #fw = lp.get_fw_by_id(c1_fw_id)
         #print fw.state, fw.name
         #wf = lp.get_wf_by_fw_id(s5_fw_id)
