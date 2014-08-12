@@ -288,6 +288,8 @@ class LaunchPad(FWSerializable):
         """
 
         links_dict = self.workflows.find_one({'nodes': fw_id})
+        if not links_dict:
+            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
