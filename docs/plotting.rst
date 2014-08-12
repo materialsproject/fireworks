@@ -6,6 +6,6 @@ Plotting workflows
 
 The plotting feature is in **alpha** stage of development. You can plot workflows via the command::
 
-    lpad get_links -i <FW_ID>
+    lpad display_wflows -i <FW_ID>
 
 where *<FW_ID>* corresponds to one of the FireWork ids in your workflow.
