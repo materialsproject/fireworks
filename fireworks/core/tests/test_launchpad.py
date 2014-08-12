@@ -86,15 +86,23 @@ class LaunchPadTest(unittest.TestCase):
 
 class LaunchPadDiffuseReigniteTest(unittest.TestCase):
 
-
-    def setUp(self):
-        self.lp = None
-        self.fworker = FWorker()
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
         try:
-            self.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
-            self.lp.reset(password=None, require_password=False)
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
         except:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
 
 
         # define the individual FireWorks used in the Workflow
@@ -171,13 +179,13 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         print self.old_wd
 
     def tearDown(self):
-        if self.lp:
-            self.lp.connection.drop_database(TESTDB_NAME)
+        self.lp.reset(password=None,require_password=False)
         # Delete launch locations
-        launchdirs = glob.glob(os.path.join(MODULE_DIR,"launcher_*"))
-        for ldir in launchdirs:
-            shutil.rmtree(ldir)
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
         os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
+            shutil.rmtree(ldir)
 
     def _teardown(self, dests):
         for f in dests:

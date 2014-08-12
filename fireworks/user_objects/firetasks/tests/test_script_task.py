@@ -23,7 +23,7 @@ class ScriptTaskTest(unittest.TestCase):
     def test_scripttask(self):
         if os.path.exists('hello.txt'):
             os.remove('hello.txt')
-        s = ScriptTask({'script':"echo 'hello world'",'stdout_file': "hello.txt"})
+        s = ScriptTask({'script':"echo 'hello world'",'stdout_file':'hello.txt'})
         s.run_task({})
         print os.getcwd()
         self.assertTrue(os.path.exists('hello.txt'))
