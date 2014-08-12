@@ -5,31 +5,31 @@ Canceling (pausing), restarting, and deleting Workflows
 Canceling/pausing/restarting entire workflows
 =============================================
 
-You can cancel (pause) Workflows using the *defuse_wf* command of the LaunchPad::
+You can cancel (pause) Workflows using the *defuse_wflows* command of the LaunchPad::
 
-    lpad defuse_wfs -i <FW_IDS>
+    lpad defuse_wflows -i <FW_IDS>
 
 where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). This will defuse the **entire** Workflow.
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``) for the workflow. The full command is thus::
 
-     lpad defuse_wfs [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
+     lpad defuse_wflows [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
 
-Refer to the documentation (``lpad defuse_wfs -h``) for more information.
+Refer to the documentation (``lpad defuse_wflows -h``) for more information.
 
 Restarting workflows
 --------------------
 
 If you later decide you want to run a defused workflow (resume), you can use the command::
 
-    lpad reignite_wfs -i <FW_IDS>
+    lpad reignite_wflows -i <FW_IDS>
 
 where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to reignite (or a list of space-separated ids). This will **reignite** the entire Workflow. Note that the *reignite* command will not re-run FireWorks in a workflow that have already been run. Only FireWorks that were never run before will be run upon reignition. To re-run a FireWork, please see the :doc:`rerun tutorial </rerun_tutorial>`.
 
 Canceling and restarting individual FireWorks
 =============================================
 
-You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws`` and ``lpad rerun_fws`` commands. These commands, (with ``fws`` instead of ``wfs``) will only pause/restart the current FireWork (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
+You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws`` and ``lpad rerun_fws`` commands. These commands will only pause/restart the current FireWork (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
 
 Archiving workflows
 ===================
@@ -38,15 +38,15 @@ There are both "hard" and "soft" deletes of jobs from the FireWorks database. Th
 
 To archive Workflows, use the command::
 
-    lpad archive -i <FW_IDS>
+    lpad archive_wflows -i <FW_IDS>
 
 where ``<FW_IDS>`` is the numerical id of the FireWork you want to defuse (or a list of space-separated ids). Note that all FireWorks in the Workflow will be archived, regardless of which **fw_id** you chose.
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 
-     lpad archive [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
+     lpad archive_wflows [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
 
-Refer to the documentation (``lpad archive -h``) for more information.
+Refer to the documentation (``lpad archive_wflows -h``) for more information.
 
 Deleting workflows
 ==================
@@ -55,10 +55,10 @@ The **delete** command is a hard delete that *removes all data* about a Workflow
 
 To delete Workflows, use the command::
 
-    lpad delete_wfs -i <FW_IDS>
+    lpad delete_wflows -i <FW_IDS>
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 
-     lpad delete_wfs [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
+     lpad delete_wflows [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
 
-Refer to the documentation (``lpad delete_wfs -h``) for more information.
+Refer to the documentation (``lpad delete_wflows -h``) for more information.
