@@ -15,7 +15,7 @@ import glob
 import shutil
 
 from fireworks import FireWork, Workflow, LaunchPad, FWorker
-from fireworks.core.rocket_launcher import rapidfire
+from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
 TESTDB_NAME = 'fireworks_unittest'
@@ -79,8 +79,6 @@ class LaunchPadTest(unittest.TestCase):
         pass
     def test_get_fw_ids(self):
         pass
-    def test_archive_wf(self):
-        pass
     def test_reserve_fw(self):
         pass
 
@@ -95,7 +93,6 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
             cls.lp.reset(password=None, require_password=False)
         except:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
-
 
     @classmethod
     def tearDownClass(cls):
@@ -192,8 +189,6 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
             if os.path.exists(f):
                 os.remove(f)
 
-
-    #@with_setup(setUp, tearDown)
     def test_defuse_fw(self):
         # defuse Zeus
         #print self.root_path
@@ -231,7 +226,6 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         except:
             raise
 
-    #@with_setup(setUp, tearDown)
     def test_reignite_fw(self):
         # Defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
@@ -250,7 +244,6 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertIn(self.zeus_fw_id,completed_ids)
         self.assertTrue(self.zeus_child_fw_ids < completed_ids)
 
-    #@with_setup(setUp, tearDown)
     def test_defuse_wf(self):
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
@@ -268,7 +261,29 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
         self.assertTrue(self.zeus_sib_fw_ids < fws_no_run)
 
-    #@with_setup(setUp, tearDown)
+    def test_defuse_wf_after_partial_run(self):
+        # Run a firework before defusing Zeus
+        launch_rocket(self.lp, self.fworker)
+
+        # defuse Workflow containing Zeus
+        self.lp.defuse_wf(self.zeus_fw_id)
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
+
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        # Check for the state of all fws in Zeus workflow in incomplete fwids
+        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
+        for fw_id in fws_no_run:
+            fw = self.lp.get_fw_by_id(fw_id)
+            print fw.name, fw.state
+        self.assertIn(self.par_fw_id,fws_no_run)
+        self.assertIn(self.zeus_fw_id,fws_no_run)
+        self.assertTrue(self.lapetus_desc_fw_ids < fws_no_run)
+        self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
+        self.assertTrue(self.zeus_sib_fw_ids < fws_no_run)
+
     def test_reignite_wf(self):
         # Defuse workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
@@ -289,6 +304,58 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.assertTrue(self.zeus_child_fw_ids < fws_completed)
         self.assertTrue(self.zeus_sib_fw_ids < fws_completed)
         self.assertTrue(self.lapetus_desc_fw_ids < fws_completed)
+
+    def test_archive_wf(self):
+        # Run a firework before archiving Zeus
+        launch_rocket(self.lp, self.fworker)
+
+        # archive Workflow containing Zeus. Ensure all are archived
+        self.lp.archive_wf(self.zeus_fw_id)
+        archived_ids = set(self.lp.get_fw_ids({'state':'ARCHIVED'}))
+        self.assertIn(self.par_fw_id,archived_ids)
+        self.assertIn(self.zeus_fw_id,archived_ids)
+        self.assertTrue(self.lapetus_desc_fw_ids < archived_ids)
+        self.assertTrue(self.zeus_child_fw_ids < archived_ids)
+        self.assertTrue(self.zeus_sib_fw_ids < archived_ids)
+
+        # Try to launch the fireworks and check if any are launched
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertFalse(fws_completed)
+
+        # Query for provenance
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        self.assertTrue(fw)
+
+    def test_delete_wf(self):
+        # Run a firework before deleting Zeus
+        launch_rocket(self.lp, self.fworker)
+
+        # Delete workflow containing Zeus.
+        self.lp.delete_wf(self.zeus_fw_id)
+        # Check if any fireworks and the workflow are available
+        wf = self.lp.get_wf_by_fw_id(self.zeus_fw_id)
+        self.assertFalse(wf)
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        self.assertFalse(fw)
+        fw = self.lp.get_fw_by_id(self.par_fw_id)
+        self.assertFalse(fw)
+        for fw_id in self.lapetus_desc_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            self.assertFalse(fw)
+        for fw_id in self.zeus_child_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            self.assertFalse(fw)
+        for fw_id in self.zeus_sib_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            self.assertFalse(fw)
+
+        # Try to launch the fireworks and check if any are launched
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertFalse(fws_completed)
+
+
 
 if __name__ == '__main__':
     unittest.main()
