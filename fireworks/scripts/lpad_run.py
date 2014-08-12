@@ -316,7 +316,7 @@ def tuneup(args):
     lp.tuneup(bkground=not args.full)
 
 
-def defuse(args):
+def defuse_wfs(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -334,7 +334,7 @@ def archive(args):
     lp.m_logger.info('Finished archiving {} WFs'.format(len(fw_ids)))
 
 
-def reignite(args):
+def reignite_wfs(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -502,7 +502,7 @@ def lpad():
 
     parser.add_argument("-o", "--output", choices=["json", "yaml"],
                         default="json", type=str.lower,
-                        help="Set output dispaly format to either json or "
+                        help="Set output display format to either json or "
                              "YAML. YAML is easier to read for long "
                              "documents. JSON is the default.")
 
@@ -612,7 +612,7 @@ def lpad():
     update_fws_parser.set_defaults(func=update_fws)
 
     get_wf_parser = subparsers.add_parser(
-        'get_wfs', help='get information about Workflows')
+        'get_wflows', help='get information about Workflows')
     get_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_wf_parser.add_argument('-n', '--name', help='get WFs with this name')
     get_wf_parser.add_argument(*state_args, **state_kwargs)
@@ -630,15 +630,15 @@ def lpad():
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
 
-    defuse_parser = subparsers.add_parser('defuse', help='cancel (de-fuse) an entire Workflow')
-    defuse_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    defuse_parser.add_argument('-n', '--name', help='name')
-    defuse_parser.add_argument(*state_args, **state_kwargs)
-    defuse_parser.add_argument(*query_args, **query_kwargs)
-    defuse_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
-    defuse_parser.set_defaults(func=defuse)
+    defuse_wf_parser = subparsers.add_parser('defuse_wflows', help='cancel (de-fuse) an entire Workflow')
+    defuse_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    defuse_wf_parser.add_argument('-n', '--name', help='name')
+    defuse_wf_parser.add_argument(*state_args, **state_kwargs)
+    defuse_wf_parser.add_argument(*query_args, **query_kwargs)
+    defuse_wf_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
+    defuse_wf_parser.set_defaults(func=defuse_wfs)
 
-    archive_parser = subparsers.add_parser('archive', help='archive an entire Workflow (irreversible)')
+    archive_parser = subparsers.add_parser('archive_wflows', help='archive an entire Workflow (irreversible)')
     archive_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     archive_parser.add_argument('-n', '--name', help='name')
     archive_parser.add_argument(*state_args, **state_kwargs)
@@ -646,13 +646,22 @@ def lpad():
     archive_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     archive_parser.set_defaults(func=archive)
 
-    reignite_parser = subparsers.add_parser('reignite', help='reignite (un-cancel) an entire Workflow')
-    reignite_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    reignite_parser.add_argument('-n', '--name', help='name')
-    reignite_parser.add_argument(*state_args, **state_kwargs)
-    reignite_parser.add_argument(*query_args, **query_kwargs)
-    reignite_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
-    reignite_parser.set_defaults(func=reignite)
+    reignite_wfs_parser = subparsers.add_parser('reignite_wflows', help='reignite (un-cancel) an entire Workflow')
+    reignite_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    reignite_wfs_parser.add_argument('-n', '--name', help='name')
+    reignite_wfs_parser.add_argument(*state_args, **state_kwargs)
+    reignite_wfs_parser.add_argument(*query_args, **query_kwargs)
+    reignite_wfs_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
+    reignite_wfs_parser.set_defaults(func=reignite_wfs)
+
+    delete_wfs_parser = subparsers.add_parser(
+        'delete_wflows', help='Delete workflows (permanently). Use "archive" instead if you want to "soft-remove"')
+    delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    delete_wfs_parser.add_argument('-n', '--name', help='name')
+    delete_wfs_parser.add_argument(*state_args, **state_kwargs)
+    delete_wfs_parser.add_argument(*query_args, **query_kwargs)
+    delete_wfs_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
+    delete_wfs_parser.set_defaults(func=delete_wfs)
 
     get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a FireWork')
     get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
@@ -755,15 +764,6 @@ def lpad():
     forget_parser.add_argument(*state_args, **state_kwargs)
     forget_parser.add_argument(*query_args, **query_kwargs)
     forget_parser.set_defaults(func=forget_offline)
-
-    delete_wfs_parser = subparsers.add_parser(
-        'delete_wfs', help='Delete workflows (permanently). Use "archive" instead if you want to "soft-remove"')
-    delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    delete_wfs_parser.add_argument('-n', '--name', help='name')
-    delete_wfs_parser.add_argument(*state_args, **state_kwargs)
-    delete_wfs_parser.add_argument(*query_args, **query_kwargs)
-    delete_wfs_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
-    delete_wfs_parser.set_defaults(func=delete_wfs)
 
     args = parser.parse_args()
 
