@@ -270,19 +270,10 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
         self.assertIn(self.zeus_fw_id,defused_ids)
 
-        # Launch remaining fireworks
+        # Try launching fireworks and check if any are launched
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
-
-        # Check for the state of all fws in Zeus workflow in incomplete fwids
-        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
-        for fw_id in fws_no_run:
-            fw = self.lp.get_fw_by_id(fw_id)
-            print fw.name, fw.state
-        self.assertIn(self.par_fw_id,fws_no_run)
-        self.assertIn(self.zeus_fw_id,fws_no_run)
-        self.assertTrue(self.lapetus_desc_fw_ids < fws_no_run)
-        self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
-        self.assertTrue(self.zeus_sib_fw_ids < fws_no_run)
+        fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertEqual(len(fws_no_run),1)
 
     def test_reignite_wf(self):
         # Defuse workflow containing Zeus
@@ -334,21 +325,21 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id)
         # Check if any fireworks and the workflow are available
-        wf = self.lp.get_wf_by_fw_id(self.zeus_fw_id)
-        self.assertFalse(wf)
-        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        self.assertFalse(fw)
-        fw = self.lp.get_fw_by_id(self.par_fw_id)
-        self.assertFalse(fw)
+        with self.assertRaises(ValueError):
+            self.lp.get_wf_by_fw_id(self.zeus_fw_id)
+        with self.assertRaises(ValueError):
+            self.lp.get_fw_by_id(self.zeus_fw_id)
+        with self.assertRaises(ValueError):
+            self.lp.get_fw_by_id(self.par_fw_id)
         for fw_id in self.lapetus_desc_fw_ids:
-            fw = self.lp.get_fw_by_id(fw_id)
-            self.assertFalse(fw)
+            with self.assertRaises(ValueError):
+                self.lp.get_fw_by_id(fw_id)
         for fw_id in self.zeus_child_fw_ids:
-            fw = self.lp.get_fw_by_id(fw_id)
-            self.assertFalse(fw)
+            with self.assertRaises(ValueError):
+                self.lp.get_fw_by_id(fw_id)
         for fw_id in self.zeus_sib_fw_ids:
-            fw = self.lp.get_fw_by_id(fw_id)
-            self.assertFalse(fw)
+            with self.assertRaises(ValueError):
+                self.lp.get_fw_by_id(fw_id)
 
         # Try to launch the fireworks and check if any are launched
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
