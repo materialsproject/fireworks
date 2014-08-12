@@ -295,11 +295,8 @@ def display_wfs(args):
         get_fwid = lambda l: int(l.split("--")[-1])
         links = {get_fwid(k): [get_fwid(i) for i in v]
                  for k, v in d["links"].items()}
-        print links
         c = get_children(links, i, 3)
-
-        import yaml
-        print(yaml.dump(c))
+        print(args.output(c))
 
 def detect_lostruns(args):
     lp = get_lp(args)
@@ -649,9 +646,7 @@ def lpad():
     display.add_argument(*fw_id_args, **fw_id_kwargs)
     display.add_argument(
         '-d', '--depth', help="Depth of links to search for.",
-        default=1, type=int
-    )
-
+        default=1, type=int)
     display.set_defaults(func=display_wfs)
 
     defuse_wf_parser = subparsers.add_parser('defuse_wflows', help='cancel (de-fuse) an entire Workflow')
