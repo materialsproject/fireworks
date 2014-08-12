@@ -49,7 +49,7 @@ Add a Workflow
 
 #. Let's look at our test workflow::
 
-    lpad get_wfs -n test_workflow -d more
+    lpad get_wflows -n test_workflow -d more
 
    *Output*::
 
@@ -86,7 +86,7 @@ Run all Workflows
 
 #. Let's again look at our workflows::
 
-    lpad get_wfs -n test_workflow -d more
+    lpad get_wflows -n test_workflow -d more
 
    *Output*::
 
