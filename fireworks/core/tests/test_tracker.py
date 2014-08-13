@@ -86,9 +86,9 @@ class TrackerTest(unittest.TestCase):
             self.lp.add_wf(fw)
             self.lp.to_file(dest3)
             fw_ids = self.lp.get_fw_ids(query={'name':'test_fw'})
-            print 'length', len(fw_ids)
+            #print 'length', len(fw_ids)
             fw_id = fw_ids[0]
-            print fw_id
+            #print fw_id
             launch_rocket(self.lp, self.fworker)
 
             fw_id_args = ["-i", "--fw_id"]
@@ -128,10 +128,10 @@ class TrackerTest(unittest.TestCase):
                          "98\n99\n## Launch id: 1\n"+\
                          "### Filename: "+dest1+"\noption1 = 99\n"+\
                          "option2 = fast method\n"
-            print expected_output_string
+            #print expected_output_string
             with open(dest4) as fp:
                 output = fp.read()
-                print output
+                #print output
                 self.assertEqual(output,expected_output_string)
 
         finally:
@@ -143,8 +143,8 @@ class TrackerTest(unittest.TestCase):
         dest2 = os.path.join(MODULE_DIR, 'words.txt')
         dest3 = os.path.join(MODULE_DIR,'tmp_log.txt')
         dest4 = os.path.join(MODULE_DIR,'test_launchpad.yaml')
-        print 'MODULE_DIR', MODULE_DIR
-        print dest1, dest2, dest3, dest4
+        #print 'MODULE_DIR', MODULE_DIR
+        #print dest1, dest2, dest3, dest4
         self._teardown([dest1,dest2])
         fts =  []
         try:
@@ -169,11 +169,11 @@ class TrackerTest(unittest.TestCase):
             self.lp.add_wf(fw)
             self.lp.to_file(dest4)
             fw_id = self.lp.get_fw_ids(query={'name':'test_fw'})[0]
-            print fw_id
+            #print fw_id
             try:
                 launch_rocket(self.lp, self.fworker)
             except:
-                print 'error in running fw'
+                #print 'error in running fw'
                 pass
 
             fw_id_args = ["-i", "--fw_id"]
@@ -208,7 +208,8 @@ class TrackerTest(unittest.TestCase):
                 try:
                     track_fws(args)
                 except:
-                    print 'error here'
+                    pass
+                    #print 'error here'
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
             expected_output_string = "# FW id: 1, FW name: test_fw\n"+\
@@ -216,10 +217,10 @@ class TrackerTest(unittest.TestCase):
                          "48\n49\n## Launch id: 1\n"+\
                          "### Filename: "+dest1+"\noption1 = 49\n"+\
                          "option2 = fast method\n"
-            print expected_output_string
+            #print expected_output_string
             with open(dest3) as fp:
                 output = fp.read()
-                print output
+                #print output
                 self.assertEqual(output,expected_output_string)
 
         finally:

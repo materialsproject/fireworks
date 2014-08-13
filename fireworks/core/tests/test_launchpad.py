@@ -173,7 +173,6 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         self.par_fw_id = self.lp.get_fw_ids({'name':'parent'},limit=1)[0]
 
         self.old_wd = os.getcwd()
-        print self.old_wd
 
     def tearDown(self):
         self.lp.reset(password=None,require_password=False)
@@ -192,10 +191,10 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
     def test_defuse_fw(self):
         # defuse Zeus
         #print self.root_path
-        ids = set(self.lp.get_fw_ids({}))
-        for id in ids:
-            fw = self.lp.get_fw_by_id(id)
-            print fw.state, fw.name
+        #ids = set(self.lp.get_fw_ids({}))
+        #for id in ids:
+        #    fw = self.lp.get_fw_by_id(id)
+        #    print fw.state, fw.name
         self.lp.defuse_fw(self.zeus_fw_id)
 
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
@@ -203,17 +202,17 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         try:
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
-            ids = set(self.lp.get_fw_ids({}))
-            for id in ids:
-                fw = self.lp.get_fw_by_id(id)
-                print fw.state, fw.name
+            #ids = set(self.lp.get_fw_ids({}))
+            #for id in ids:
+            #    fw = self.lp.get_fw_by_id(id)
+            #    print fw.state, fw.name
 
             # Ensure except for Zeus and his children, all other fw are launched
             completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
-            print completed_ids
-            print self.lapetus_desc_fw_ids
+            #print completed_ids
+            #print self.lapetus_desc_fw_ids
             all_ids = set(self.lp.get_fw_ids({}))
-            print all_ids
+            #print all_ids
             # Check for the state of Lapetus and his descendants in completed fwids
             self.assertTrue(self.lapetus_desc_fw_ids < completed_ids)
             # Check for the state of Zeus siblings and parent in completed fwids
