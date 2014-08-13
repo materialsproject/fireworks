@@ -23,14 +23,32 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class LaunchPadTest(unittest.TestCase):
 
-    def test_autoload(self):
-        lp = LaunchPad.auto_load()
-        self.assertIsInstance(lp,LaunchPad)
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
-        LP_LOC = os.path.join(os.path.dirname(__file__),'launchpad.yaml')
-        #print LP_LOC
-        lp = LaunchPad.from_file(LP_LOC)
-        self.assertIsInstance(lp,LaunchPad)
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None,require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
+            shutil.rmtree(ldir)
 
     def test_dict(self):
         LP_LOC = os.path.join(os.path.dirname(__file__),'launchpad.yaml')
@@ -42,34 +60,31 @@ class LaunchPadTest(unittest.TestCase):
     def test_reset(self):
         # Store some test fireworks
         # Atempt couple of ways to reset the lp and check
-        lp = LaunchPad.auto_load()
         fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name='test_workflow')
-        lp.add_wf(wf)
-        lp.reset('',require_password=False)
-        fw = lp.get_fw_ids()
-        wf = lp.get_wf_ids()
+        self.lp.add_wf(wf)
+        self.lp.reset('',require_password=False)
+        fw = self.lp.get_fw_ids()
+        wf = self.lp.get_wf_ids()
         self.assertFalse(fw)
         self.assertFalse(wf)
 
         fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
-        lp.add_wf(fw)
+        self.lp.add_wf(fw)
         args = ('',)
-        self.assertRaises(ValueError,lp.reset,*args)
+        self.assertRaises(ValueError,self.lp.reset,*args)
 
     def test_add_wf(self):
-        lp = LaunchPad.auto_load()
-        lp.reset('',require_password=False)
         fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
-        lp.add_wf(fw)
-        wf = lp.get_wf_ids()
+        self.lp.add_wf(fw)
+        wf = self.lp.get_wf_ids()
         self.assertTrue(wf)
         fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name='test_workflow')
-        lp.add_wf(wf)
-        fw = lp.get_fw_ids()
+        self.lp.add_wf(wf)
+        fw = self.lp.get_fw_ids()
         self.assertTrue(fw)
-        lp.reset('',require_password=False)
+        self.lp.reset('',require_password=False)
 
     def test_get_launch_by_id(self):
         pass

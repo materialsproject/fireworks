@@ -1,6 +1,6 @@
 host: localhost
 port: 27017
-name: fireworks
+name: fireworks_unittest
 username: 
 password: 
 logdir: 
