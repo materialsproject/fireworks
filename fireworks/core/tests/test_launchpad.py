@@ -286,7 +286,7 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
 
         # Reignite Zeus and his children's fireworks and launch them
         self.lp.reignite_wf(self.zeus_fw_id)
-        rapidfire(self.lp, FWorker())
+        rapidfire(self.lp, FWorker(),m_dir=MODULE_DIR)
 
         # Check for the status of all fireworks Zeus workflow in completed fwids
         fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
