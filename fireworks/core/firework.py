@@ -31,7 +31,6 @@ from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, \
     NestedClassGetter
-from fireworks.utilities.timing import get_fw_timer
 
 
 __author__ = "Anubhav Jain"
@@ -346,7 +345,6 @@ class Launch(FWSerializable, object):
     A Launch encapsulates data about a specific run of a FireWork on a
     computing resource
     """
-    _tm = get_fw_timer("Launch")
 
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None,
                  trackers=None, action=None, state_history=None,
@@ -372,10 +370,8 @@ class Launch(FWSerializable, object):
 
         self.launch_dir = launch_dir
         self.fworker = fworker or FWorker()
-        self._tm.start("get_addr")
         self.host = host or get_my_host()
         self.ip = ip or get_my_ip()
-        self._tm.stop("get_addr")
         self.trackers = trackers if trackers else []
         self.action = action if action else None
         self.state_history = state_history if state_history else []

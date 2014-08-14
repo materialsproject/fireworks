@@ -25,7 +25,6 @@ from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
-from fireworks.utilities.timing import any_fw_timers, print_fw_timers
 from six.moves import input
 
 
@@ -273,7 +272,7 @@ def delete_wfs(args):
     lp.m_logger.info('Finished deleting {} WFs'.format(len(fw_ids)))
 
 
-def get_children(links, start, max_depth, data=[]):
+def get_children(links, start, max_depth):
     data = {}
     for l, c in links.items():
         if l == start:
@@ -283,7 +282,7 @@ def get_children(links, start, max_depth, data=[]):
                 data[l] = c
     return data
 
-def get_links(args):
+def display_wfs(args):
     lp = get_lp(args)
 
     query = {'nodes': {"$in": args.fw_id}}
@@ -291,13 +290,12 @@ def get_links(args):
     ids = lp.get_wf_ids(query, None, 0, count_only=False)
     for i in ids:
         d = lp.get_wf_summary_dict(i, "all")
+
         get_fwid = lambda l: int(l.split("--")[-1])
         links = {get_fwid(k): [get_fwid(i) for i in v]
                  for k, v in d["links"].items()}
         c = get_children(links, i, 3)
-
-        import yaml
-        print(yaml.dump(c))
+        print(args.output(c))
 
 def detect_lostruns(args):
     lp = get_lp(args)
@@ -642,6 +640,14 @@ def lpad():
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
 
+    display = subparsers.add_parser(
+            'display_wflows', help='Graphical display of Workflows')
+    display.add_argument(*fw_id_args, **fw_id_kwargs)
+    display.add_argument(
+        '-d', '--depth', help="Depth of links to search for.",
+        default=1, type=int)
+    display.set_defaults(func=display_wfs)
+
     defuse_wf_parser = subparsers.add_parser('defuse_wflows', help='cancel (de-fuse) an entire Workflow')
     defuse_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     defuse_wf_parser.add_argument('-n', '--name', help='name')
@@ -682,16 +688,6 @@ def lpad():
     cancel_qid_parser = subparsers.add_parser('cancel_qid', help='cancel a reservation')
     cancel_qid_parser.add_argument(*qid_args, **qid_kwargs)
     cancel_qid_parser.set_defaults(func=cancel_qid)
-
-    get_links_parser = subparsers.add_parser(
-            'get_links', help='Graphical display of Workflows')
-    get_links_parser.add_argument(*fw_id_args, **fw_id_kwargs)
-    get_links_parser.add_argument(
-        '-d', '--depth', help="Depth of links to search for.",
-        default=1, type=int
-    )
-
-    get_links_parser.set_defaults(func=get_links)
 
     reservation_parser = subparsers.add_parser('detect_unreserved', help='Find launches with stale reservations')
     reservation_parser.add_argument('--time', help='expiration time (seconds)',
@@ -776,9 +772,6 @@ def lpad():
     args.output = get_output_func(args.output)
 
     args.func(args)
-
-    if any_fw_timers():
-        print_fw_timers()
 
 if __name__ == '__main__':
     lpad()
