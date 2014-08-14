@@ -4,7 +4,6 @@
 Tracker unitest
 """
 
-from __future__ import division
 
 __author__ = "Bharat medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -20,9 +19,10 @@ import shutil
 import sys
 import argparse
 
-from fireworks.core.firework import FireWork, Tracker, FWorker
+from fireworks.core.firework import FireWork, Tracker, FWorker, Workflow
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket
+from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.scripts.lpad_run import track_fws
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
@@ -195,6 +195,72 @@ class TrackerTest(unittest.TestCase):
             #print expected_output_string
             with open(dest4) as fp:
                 output = fp.read()
+                self.assertEqual(output,expected_output_string)
+
+        finally:
+            self._teardown([dest1,dest2,dest4])
+            pass
+
+    def test_tracker_mlaunch(self):
+        """
+        Test the tracker for mlaunch
+        """
+        dest1 = os.path.join(MODULE_DIR, 'inputs.txt')
+        dest2 = os.path.join(MODULE_DIR, 'words.txt')
+        dest4 = os.path.join(MODULE_DIR,'tmp_log.txt')
+        self._teardown([dest1,dest2])
+        try:
+            tracker1 = Tracker(dest2,nlines=2)
+            tracker2 = Tracker(dest1,nlines=2)
+            fts =  []
+            for i in range(5,50):
+                ft1 = TemplateWriterTask({'context':{'opt1':i,'opt2':'fast method'},
+                                          'template_file':'simple_template.txt',
+                                          'output_file':dest1})
+                ft2 = ScriptTask.from_str('echo "' + str(i) + '" >> '+ dest2,
+                                          {'store_stdout':True})
+                fts += [ft1, ft2]
+            fw1 = FireWork(fts, spec={'_trackers':[tracker1,tracker2]}, fw_id=1, name='test_fw')
+            #fts.append(ScriptTask.from_str('cat 4 >> ' + dest2))
+            fts = []
+            for i in range(51,100):
+                ft1 = TemplateWriterTask({'context':{'opt1':i,'opt2':'fast method'},
+                                          'template_file':'simple_template.txt',
+                                          'output_file':dest1})
+                ft2 = ScriptTask.from_str('echo "' + str(i) + '" >> ' + dest2)
+                fts += [ft1, ft2]
+
+            fw2 = FireWork(fts, spec={'_trackers':[tracker1,tracker2]}, fw_id=2, name='test_fw')
+            wf = Workflow([fw1, fw2], links_dict={fw1:[fw2]})
+            #wf.to_file('wf.yaml')
+            self.lp.add_wf(wf)
+            #self.lp.to_file('lpad.yaml')
+
+            try:
+                launch_multiprocess(self.lp, self.fworker, 'ERROR', 0, 2, 0, ppn=2)
+            except:
+                pass
+
+            args = self.parser.parse_args('-i 2'.split())
+            with open(dest4,'w') as fp:
+                sys.stdout = fp
+                sys.stderr = fp
+                try:
+                    track_fws(args)
+                except:
+                    pass
+                    #print 'error here'
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            expected_output_string = "# FW id: 2, FW name: test_fw\n"+ \
+                                     "## Launch id: 2\n### Filename: "+dest2+"\n"+ \
+                                     "98\n99\n## Launch id: 2\n"+ \
+                                     "### Filename: "+dest1+"\noption1 = 99\n"+ \
+                                     "option2 = fast method\n"
+            print (expected_output_string)
+            with open(dest4) as fp:
+                output = fp.read()
+                print (output)
                 self.assertEqual(output,expected_output_string)
 
         finally:
