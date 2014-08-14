@@ -452,9 +452,15 @@ class LaunchPad(FWSerializable):
             except:
                 self.m_logger.debug('Database compaction failed (not critical)')
 
-    def defuse_fw(self, fw_id):
+    def defuse_fw(self, fw_id, rerun_duplicates=True):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
         f = self.fireworks.find_and_modify(
+            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+            {'$set': {'state': 'DEFUSED'}})
+
+        if not f:
+            self.rerun_fw(fw_id, rerun_duplicates)
+            f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED'}})
 
