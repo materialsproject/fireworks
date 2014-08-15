@@ -10,13 +10,17 @@ __email__ = "mbkumar@gmail.com"
 __date__ = "7/01/14"
 
 import unittest
+import time
 import os
 import glob
 import shutil
+import datetime
+from multiprocessing import Process
 
 from fireworks import FireWork, Workflow, LaunchPad, FWorker
+from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
-from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -40,6 +44,9 @@ class LaunchPadTest(unittest.TestCase):
 
     def setUp(self):
         self.old_wd = os.getcwd()
+        self.LP_LOC = os.path.join(MODULE_DIR,'launchpad.yaml')
+        self.lp.to_file(self.LP_LOC)
+
 
     def tearDown(self):
         self.lp.reset(password=None,require_password=False)
@@ -50,9 +57,8 @@ class LaunchPadTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
             shutil.rmtree(ldir)
 
-    def test_dict(self):
-        LP_LOC = os.path.join(os.path.dirname(__file__),'launchpad.yaml')
-        lp = LaunchPad.from_file(LP_LOC)
+    def test_dict_from_file(self):
+        lp = LaunchPad.from_file(self.LP_LOC)
         lp_dict = lp.to_dict()
         new_lp = LaunchPad.from_dict(lp_dict)
         self.assertIsInstance(new_lp, LaunchPad)
@@ -86,18 +92,8 @@ class LaunchPadTest(unittest.TestCase):
         self.assertTrue(fw)
         self.lp.reset('',require_password=False)
 
-    def test_get_launch_by_id(self):
-        pass
-    def test_get_fw_by_id(self):
-        pass
-    def test_get_wf_by_fw_id(self):
-        pass
-    def test_get_fw_ids(self):
-        pass
-    def test_reserve_fw(self):
-        pass
 
-class LaunchPadDiffuseReigniteTest(unittest.TestCase):
+class LaunchPadDefuseReigniteTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -240,6 +236,17 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         except:
             raise
 
+    def test_defuse_fw_after_completion(self):
+        # Launch rockets in rapidfire
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        # defuse Zeus
+        self.lp.defuse_fw(self.zeus_fw_id)
+
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
+        completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertNotIn(self.zeus_child_fw_ids,completed_ids)
+
     def test_reignite_fw(self):
         # Defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
@@ -284,10 +291,14 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
         self.assertIn(self.zeus_fw_id,defused_ids)
 
+        fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertEqual(len(fws_no_run),0)
+
+
         # Try launching fireworks and check if any are launched
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
         fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
-        self.assertEqual(len(fws_no_run),1)
+        self.assertEqual(len(fws_no_run),0)
 
     def test_reignite_wf(self):
         # Defuse workflow containing Zeus
@@ -295,7 +306,7 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
         self.assertIn(self.zeus_fw_id,defused_ids)
 
-        # Launch remaining fireworks
+        # Launch any remaining fireworks
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         # Reignite Zeus and his children's fireworks and launch them
@@ -360,6 +371,197 @@ class LaunchPadDiffuseReigniteTest(unittest.TestCase):
         fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
         self.assertFalse(fws_completed)
 
+    def test_rerun_fws(self):
+        # Launch all fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        print (fw.spec)
+
+        # Rerun Zeus
+        self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        print (fw.spec)
+
+        # Check for the status of Zeus and children in completed fwids
+        #completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        #self.assertIn(self.zeus_fw_id,completed_ids)
+        #self.assertTrue(self.zeus_child_fw_ids < completed_ids)
+        pass
+
+class LaunchPadRerunTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+
+        # define the individual FireWorks used in the Workflow
+        # The workflow used has same relations to that in the
+        # defusereignite test. So using the same naming convention
+        # Parent Firework
+        fw_p = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="parent")
+        # Sibling fireworks
+        fw_s1 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="sib1")
+        fw_s2 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="sib2")
+        fw_s3 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="sib3")
+        fw_s4 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="sib4")
+        fw_s5 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="cousin1")
+        # Children fireworks
+        fw_c1 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c1")
+        fw_c2 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c2")
+        fw_c3 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c3")
+        fw_c4 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c4")
+        fw_c5 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c5")
+        fw_c6 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c6")
+        fw_c7 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c7")
+        fw_c8 = FireWork([AddModifyTask()],spec={'input_array':[1]}, name="c8")
+
+        # assemble Workflow from FireWorks and their connections by id
+        workflow = Workflow([fw_p,fw_s1,fw_s2,fw_s3,fw_s4,fw_s5,fw_c1,fw_c2,fw_c3,fw_c4,fw_c5,fw_c6,fw_c7,fw_c8],
+                            {fw_p: [fw_s1,fw_s2,fw_s3,fw_s4],
+                             fw_s1: [fw_c1,fw_c2,fw_c5,fw_c8],
+                             fw_s3: [fw_c3],
+                             fw_s4: [fw_c2],
+                             fw_s5: [fw_c4, fw_c6],
+                             fw_c2: [fw_c3],
+                             fw_c4: [fw_c5],
+                             fw_c6: [fw_c7],
+                             fw_c7: [fw_c8]})
+
+        # store workflow
+        self.lp.add_wf(workflow)
+
+        # Get fwids for the zeus and his children's fireworks
+        self.zeus_fw_id = self.lp.get_fw_ids({'name':'sib1'},limit=1)[0]
+        c1_fw_id = self.lp.get_fw_ids({'name':'c1'},limit=1)[0]
+        c2_fw_id = self.lp.get_fw_ids({'name':'c2'},limit=1)[0]
+        c3_fw_id = self.lp.get_fw_ids({'name':'c3'},limit=1)[0]
+        c5_fw_id = self.lp.get_fw_ids({'name':'c5'},limit=1)[0]
+        c8_fw_id = self.lp.get_fw_ids({'name':'c8'},limit=1)[0]
+        self.zeus_child_fw_ids = set([c1_fw_id,c2_fw_id,c3_fw_id,c5_fw_id,c8_fw_id])
+        # Get fwids of Lapetus and his descendants
+        s5_fw_id = self.lp.get_fw_ids({'name':'cousin1'},limit=1)[0]
+        c7_fw_id = self.lp.get_fw_ids({'name':'c7'},limit=1)[0]
+        c6_fw_id = self.lp.get_fw_ids({'name':'c6'},limit=1)[0]
+        c4_fw_id = self.lp.get_fw_ids({'name':'c4'},limit=1)[0]
+        self.lapetus_desc_fw_ids = set([s5_fw_id,c7_fw_id,c6_fw_id,c4_fw_id])
+        # Get fwids of Zeus siblings
+        s2_fw_id = self.lp.get_fw_ids({'name':'sib2'},limit=1)[0]
+        s3_fw_id = self.lp.get_fw_ids({'name':'sib3'},limit=1)[0]
+        s4_fw_id = self.lp.get_fw_ids({'name':'sib4'},limit=1)[0]
+        self.zeus_sib_fw_ids = set([s2_fw_id,s3_fw_id,s4_fw_id])
+        # Get fwid of Zeus parent
+        self.par_fw_id = self.lp.get_fw_ids({'name':'parent'},limit=1)[0]
+
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None,require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
+            shutil.rmtree(ldir)
+
+    def _teardown(self, dests):
+        for f in dests:
+            if os.path.exists(f):
+                os.remove(f)
+
+    def test_rerun_fws(self):
+        # Launch all fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        ts = datetime.datetime.utcnow()
+
+        # Rerun Zeus
+        self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        fw_start_t =  fw.launches[0].time_start
+        self.assertTrue(fw_start_t > ts)
+        for fw_id in self.zeus_child_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            fw_start_t =  fw.launches[0].time_start
+            self.assertTrue(fw_start_t > ts)
+        for fw_id in self.zeus_sib_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            fw_start_t =  fw.launches[0].time_start
+            print fw_start_t, ts
+            self.assertFalse(fw_start_t > ts)
+
+class LaunchPadLostRunsDetectTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        # Define a timed fireWork
+        fw_timer = FireWork(PyTask(func='time.sleep',args=[5]), name="timer")
+        self.lp.add_wf(fw_timer)
+
+        # Get assigned fwid for timer firework
+        self.fw_id = self.lp.get_fw_ids({'name':'timer'},limit=1)[0]
+
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None,require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
+            shutil.rmtree(ldir)
+
+    def test_detect_lostruns(self):
+        # Launch the timed firework in a separate process
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
+
+        rp = RocketProcess(self.lp, self.fworker)
+        rp.start()
+        time.sleep(1)   # Wait 1 sec and kill the rocket
+        rp.terminate()
+        fw_ids = self.lp.detect_lostruns(0.5)
+        self.assertTrue(fw_ids)
+        #print ('lost fw_ids', fw_ids)
+        time.sleep(10)   # Wait double the expected exec time and test
+        fw_ids = self.lp.detect_lostruns(6)
+        self.assertTrue(fw_ids)
+        #print ('lost fw_ids', fw_ids)
 
 
 if __name__ == '__main__':
