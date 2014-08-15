@@ -25,7 +25,6 @@ class ScriptTaskTest(unittest.TestCase):
             os.remove('hello.txt')
         s = ScriptTask({'script':"echo 'hello world'",'stdout_file':'hello.txt'})
         s.run_task({})
-        print os.getcwd()
         self.assertTrue(os.path.exists('hello.txt'))
         with open('hello.txt') as fp:
             line = fp.readlines()[0]
