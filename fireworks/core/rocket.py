@@ -167,7 +167,7 @@ class Rocket():
 
             # execute the FireTasks!
             for t in m_fw.tasks:
-                lp.log_message(logging.INFO, "Running task %s." % str(t))
+                lp.log_message(logging.INFO, "Running task %s." % t.fw_name)
                 m_action = t.run_task(my_spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly

@@ -103,6 +103,10 @@ class FireTaskBase(defaultdict, FWSerializable):
     def from_dict(cls, m_dict):
         return cls(m_dict)
 
+    @property
+    def fw_name(self):
+        return self._fw_name
+
     def __repr__(self):
         return '<{}>:{}'.format(self._fw_name, dict(self))
 
