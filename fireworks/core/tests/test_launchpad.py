@@ -501,7 +501,6 @@ class LaunchPadRerunTest(unittest.TestCase):
         for fw_id in self.zeus_sib_fw_ids:
             fw = self.lp.get_fw_by_id(fw_id)
             fw_start_t =  fw.launches[0].time_start
-            print fw_start_t, ts
             self.assertFalse(fw_start_t > ts)
 
 class LaunchPadLostRunsDetectTest(unittest.TestCase):
