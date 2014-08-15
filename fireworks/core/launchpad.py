@@ -829,8 +829,8 @@ class LaunchPad(FWSerializable):
 
         # rerun this FW
         m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
-        if m_fw['state'] == 'ARCHIVED':
-            self.m_logger.info("Cannot rerun fw_id: {}: it is ARCHIVED.".format(fw_id))
+        if m_fw['state'] in ['ARCHIVED', 'DEFUSED'] :
+            self.m_logger.info("Cannot rerun fw_id: {}: it is {}.".format(fw_id, m_fw['state']))
         elif m_fw['state'] == 'WAITING':
             self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
         else:
