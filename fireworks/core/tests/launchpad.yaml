@@ -1,0 +1,9 @@
+host: localhost
+port: 27017
+name: fireworks_unittest
+username: 
+password: 
+logdir: 
+strm_lvl: 
+user_indices:
+wf_user_indices:

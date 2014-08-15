@@ -228,6 +228,7 @@ class Rocket():
 
         except:
             stop_backgrounds(ping_stop, btask_stops)
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             traceback.print_exc()
             try:
                 m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': t.to_dict(),

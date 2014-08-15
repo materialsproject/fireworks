@@ -6,7 +6,7 @@ TODO: Modify unittest doc.
 
 from __future__ import division
 
-__author__ = "Shyue Ping Ong"
+__author__ = "Shyue Ping Ong, Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
 __version__ = "0.1"
 __maintainer__ = "Shyue Ping Ong"
@@ -14,8 +14,24 @@ __email__ = "shyuep@gmail.com"
 __date__ = "2/16/14"
 
 import unittest
+import os
 
-from fireworks.user_objects.firetasks.script_task import PyTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
+
+class ScriptTaskTest(unittest.TestCase):
+
+    def test_scripttask(self):
+        if os.path.exists('hello.txt'):
+            os.remove('hello.txt')
+        s = ScriptTask({'script':"echo 'hello world'",'stdout_file':'hello.txt'})
+        s.run_task({})
+        print os.getcwd()
+        self.assertTrue(os.path.exists('hello.txt'))
+        with open('hello.txt') as fp:
+            line = fp.readlines()[0]
+            self.assertTrue('hello world' in line)
+        os.remove('hello.txt')
+
 
 class PythonTaskTest(unittest.TestCase):
 
