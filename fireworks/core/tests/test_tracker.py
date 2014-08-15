@@ -44,7 +44,7 @@ class TrackerTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDown(self):
+    def tearDown(cls):
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
