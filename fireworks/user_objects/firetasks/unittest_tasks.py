@@ -41,7 +41,7 @@ class ExportTestSerializer(FWSerializable):
         return self.a == other.a
 
     def to_dict(self):
-        return {"a": self.a, "_fw_name": self._fw_name}
+        return {"a": self.a, "_fw_name": self.fw_name}
 
     @classmethod
     def from_dict(cls, m_dict):
