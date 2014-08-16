@@ -188,7 +188,7 @@ class Rocket():
                 my_spec.update(m_action.update_spec)
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
-                lp.log_message(logging.INFO, "Task %s completed." % str(t))
+                lp.log_message(logging.INFO, "Task %s completed." % t.fw_name)
                 if m_action.skip_remaining_tasks:
                     break
 
