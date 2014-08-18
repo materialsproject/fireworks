@@ -43,7 +43,7 @@ class PythonTaskTest(unittest.TestCase):
         a = p.run_task({})
         self.assertEqual(a.stored_data["data"], 9)
         p = PyTask(func="print", args=[3])
-        a = p.run_task({})
+        p.run_task({})
 
 
 if __name__ == '__main__':
