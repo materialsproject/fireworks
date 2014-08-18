@@ -30,7 +30,7 @@ from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterT
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
+# TODO: it seems this code could be cleaned up a lot. e.g. 1) simulate terminal commands via subprocess.call rather than define an argparser, remove duplicate definition of FWs by putting in setUp() rather than in the tests themselves (like in the Zeus example)
 class TrackerTest(unittest.TestCase):
 
     @classmethod
@@ -172,7 +172,7 @@ class TrackerTest(unittest.TestCase):
             self.lp.add_wf(fw)
 
             try:
-                launch_rocket(self.lp, self.fworker)
+                launch_rocket(self.lp, self.fworker) # TODO: when I run the unit test, the terminal prints "AttributeError: StringIO instance has no attribute 'fileno'". This makes me (and probably most users) think that something went wrong with the test. You should ideally write an error that is more descriptive that it's a test.
             except:
                 pass
 
@@ -199,7 +199,6 @@ class TrackerTest(unittest.TestCase):
 
         finally:
             self._teardown([dest1,dest2,dest4])
-            pass
 
     def test_tracker_mlaunch(self):
         """
