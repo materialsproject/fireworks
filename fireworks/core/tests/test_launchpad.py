@@ -566,8 +566,8 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         fw_ids = self.lp.detect_lostruns(0.5)
         self.assertTrue(fw_ids)
         #print ('lost fw_ids', fw_ids)
-        time.sleep(10)   # Wait double the expected exec time and test
-        fw_ids = self.lp.detect_lostruns(6)
+        time.sleep(4)   # Wait double the expected exec time and test
+        fw_ids = self.lp.detect_lostruns(2)
         self.assertTrue(fw_ids)
         #print ('lost fw_ids', fw_ids)
 
