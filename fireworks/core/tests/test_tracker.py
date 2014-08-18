@@ -30,7 +30,6 @@ from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterT
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# TODO: it seems this code could be cleaned up a lot. e.g. 1) simulate terminal commands via subprocess.call rather than define an argparser, remove duplicate definition of FWs by putting in setUp() rather than in the tests themselves (like in the Zeus example)
 class TrackerTest(unittest.TestCase):
 
     @classmethod
@@ -50,37 +49,11 @@ class TrackerTest(unittest.TestCase):
 
     def setUp(self):
         self.old_wd = os.getcwd()
-        self.dest3 = os.path.join(MODULE_DIR,'test_launchpad.yaml')
-        self.lp.to_file(self.dest3)
+        self.dest1 = os.path.join(MODULE_DIR, 'numbers1.txt')
+        self.dest2 = os.path.join(MODULE_DIR, 'numbers2.txt')
 
-        # Setup the argument parser
-        fw_id_args = ["-i", "--fw_id"]
-        fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
-
-        state_args = ['-s', '--state']
-        state_kwargs = {"type": str.upper, "help": "Select by state.",
-                        "choices": FireWork.STATE_RANKS.keys()}
-        disp_args = ['-d', '--display_format']
-        disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
-                       "choices": ["all", "more", "less", "ids", "count"]}
-
-        query_args = ["-q", "--query"]
-        query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
-                                'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument(*fw_id_args, **fw_id_kwargs)
-        parser.add_argument('-n', '--name')
-        parser.add_argument(*state_args, **state_kwargs)
-        parser.add_argument(*query_args, **query_kwargs)
-        parser.add_argument('-c', '--include', nargs="+",
-                            help='only include these files in the report')
-        parser.add_argument('-x', '--exclude', nargs="+",
-                            help='exclude these files from the report')
-        parser.add_argument('--launchpad_file', default=self.dest3)
-
-        self.parser = parser
-
+        self.tracker1 = Tracker(self.dest1,nlines=2)
+        self.tracker2 = Tracker(self.dest2,nlines=2)
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
@@ -89,8 +62,6 @@ class TrackerTest(unittest.TestCase):
         os.chdir(self.old_wd)
         for i in glob.glob(os.path.join(MODULE_DIR,'launcher_*')):
             shutil.rmtree(i)
-        if os.path.exists(self.dest3):
-            os.remove(self.dest3)
 
     def _teardown(self, dests):
         for f in dests:
@@ -101,116 +72,63 @@ class TrackerTest(unittest.TestCase):
         """
         Launch a workflow and track the files
         """
-
-        dest1 = os.path.join(MODULE_DIR, 'inputs.txt')
-        dest2 = os.path.join(MODULE_DIR, 'words.txt')
-        dest4 = os.path.join(MODULE_DIR,'tmp_log.txt')
-        self._teardown([dest1,dest2])
-        fts =  []
+        self._teardown([self.dest1])
         try:
-            tracker1 = Tracker(dest2,nlines=2)
-            tracker2 = Tracker(dest1,nlines=2)
+            fts =  []
             for i in range(5,100):
-                ft1 = TemplateWriterTask({'context':{'opt1':i,'opt2':'fast method'},
-                                          'template_file':'simple_template.txt',
-                                          'output_file': dest1})
-                ft2 = ScriptTask.from_str('echo "' + str(i) + '" >> ' + dest2, {'store_stdout':True})
-                fts += [ft1, ft2]
+                ft = ScriptTask.from_str('echo "' + str(i) + '" >> ' + self.dest1, {'store_stdout':True})
+                fts.append(ft)
 
-            fw = FireWork(fts, spec={'_trackers':[tracker1,tracker2]}, fw_id=20, name='test_fw')
+            fw = FireWork(fts, spec={'_trackers':[self.tracker1]}, fw_id=20, name='test_fw')
             self.lp.add_wf(fw)
-            fw_ids = self.lp.get_fw_ids(query={'name':'test_fw'})
             launch_rocket(self.lp, self.fworker)
 
-            args = self.parser.parse_args('-i 1'.split())
-            with open(dest4,'w') as fp:
-                sys.stdout = fp
-                sys.stderr = fp
-                track_fws(args)
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
-            expected_output_string = "# FW id: 1, FW name: test_fw\n"+\
-                         "## Launch id: 1\n### Filename: "+dest2+"\n"+\
-                         "98\n99\n## Launch id: 1\n"+\
-                         "### Filename: "+dest1+"\noption1 = 99\n"+\
-                         "option2 = fast method\n"
-            with open(dest4) as fp:
-                output = fp.read()
-                self.assertEqual(output,expected_output_string)
+            #print (self.tracker1.track_file())
+            self.assertEqual('98\n99',self.tracker1.track_file())
 
         finally:
-            self._teardown([dest1,dest2,dest4])
+            self._teardown([self.dest1])
 
     def test_tracker_failed_fw(self):
         """
         Add a bad firetask to workflow and test the tracking
         """
-        dest1 = os.path.join(MODULE_DIR, 'inputs.txt')
-        dest2 = os.path.join(MODULE_DIR, 'words.txt')
-        dest4 = os.path.join(MODULE_DIR,'tmp_log.txt')
-        self._teardown([dest1,dest2])
-        fts =  []
+        self._teardown([self.dest1])
         try:
-            tracker1 = Tracker(dest2,nlines=2)
-            tracker2 = Tracker(dest1,nlines=2)
+            fts =  []
             for i in range(5,50):
-                ft1 = TemplateWriterTask({'context':{'opt1':i,'opt2':'fast method'},
-                                          'template_file':'simple_template.txt',
-                                          'output_file':dest1})
-                ft2 = ScriptTask.from_str('echo "' + str(i) + '" >> '+ dest2,
-                                          {'store_stdout':True})
-                fts += [ft1, ft2]
-            fts.append(ScriptTask.from_str('cat 4 >> ' + dest2))
+                ft = ScriptTask.from_str('echo "' + str(i) + '" >> '+ self.dest1,
+                                        {'store_stdout':True})
+                fts.append(ft)
+            fts.append(ScriptTask.from_str('cat 4 >> ' + self.dest1))
             for i in range(51,100):
-                ft1 = TemplateWriterTask({'context':{'opt1':i,'opt2':'fast method'},
-                                          'template_file':'simple_template.txt',
-                                          'output_file':dest1})
-                ft2 = ScriptTask.from_str('echo "' + str(i) + '" >> ' + dest2)
-                fts += [ft1, ft2]
+                ft = ScriptTask.from_str('echo "' + str(i) + '" >> ' + self.dest1,
+                                        {'store_stdout':True})
+                fts.append(ft)
 
-            fw = FireWork(fts, spec={'_trackers':[tracker1,tracker2]}, fw_id=21, name='test_fw')
+            fw = FireWork(fts, spec={'_trackers':[self.tracker1]}, fw_id=21, name='test_fw')
             self.lp.add_wf(fw)
 
             try:
-                launch_rocket(self.lp, self.fworker) # TODO: when I run the unit test, the terminal prints "AttributeError: StringIO instance has no attribute 'fileno'". This makes me (and probably most users) think that something went wrong with the test. You should ideally write an error that is more descriptive that it's a test.
+                print ("===========================================")
+                print ("Bad rocket launched. The failure below is OK")
+                print ("===========================================")
+                launch_rocket(self.lp, self.fworker)
             except:
                 pass
 
-            args = self.parser.parse_args('-i 1'.split())
-            with open(dest4,'w') as fp:
-                sys.stdout = fp
-                sys.stderr = fp
-                try:
-                    track_fws(args)
-                except:
-                    pass
-                    #print 'error here'
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
-            expected_output_string = "# FW id: 1, FW name: test_fw\n"+\
-                         "## Launch id: 1\n### Filename: "+dest2+"\n"+\
-                         "48\n49\n## Launch id: 1\n"+\
-                         "### Filename: "+dest1+"\noption1 = 49\n"+\
-                         "option2 = fast method\n"
-            #print expected_output_string
-            with open(dest4) as fp:
-                output = fp.read()
-                self.assertEqual(output,expected_output_string)
+            self.assertEqual('48\n49',self.tracker1.track_file())
 
         finally:
-            self._teardown([dest1,dest2,dest4])
+            self._teardown([self.dest1])
 
     def test_tracker_mlaunch(self):
         """
         Test the tracker for mlaunch
         """
-        dest1 = os.path.join(MODULE_DIR, 'inputs.txt')
-        dest2 = os.path.join(MODULE_DIR, 'words.txt')
-        dest4 = os.path.join(MODULE_DIR,'tmp_log.txt')
-        self._teardown([dest1,dest2])
+        self._teardown([self.dest1,self.dest2])
         try:
-            def add_wf(j, dest, name):
-                tracker = Tracker(dest,nlines=2)
+            def add_wf(j, dest, tracker, name):
                 fts =  []
                 for i in range(j,j+25):
                     ft = ScriptTask.from_str('echo "' + str(i) + '" >> '+ dest,
@@ -229,8 +147,8 @@ class TrackerTest(unittest.TestCase):
                 wf = Workflow([fw1, fw2], links_dict={fw1:[fw2]})
                 self.lp.add_wf(wf)
 
-            add_wf(0, dest1, 'a_test')
-            add_wf(50, dest2, 'b_test')
+            add_wf(0, self.dest1, self.tracker1, 'a_test')
+            add_wf(50, self.dest2, self.tracker2, 'b_test')
 
             try:
                 launch_multiprocess(self.lp, self.fworker, 'ERROR',
@@ -238,31 +156,12 @@ class TrackerTest(unittest.TestCase):
             except:
                 pass
 
-            #fw_id = self.lp.get_fw_ids({'name':'b_test2'})[0]
-            #print ('fw_id', fw_id)
-            args = self.parser.parse_args('-q {"name":"b_test2"}'.split())
-            with open(dest4,'w') as fp:
-                sys.stdout = fp
-                sys.stderr = fp
-                try:
-                    track_fws(args)
-                except:
-                    pass
-                    #print 'error here'
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
-            expected_output_string = "# FW id: 4, FW name: test_fw\n"+ \
-                         "## Launch id: 4\n### Filename: "+dest2+"\n"+ \
-                         "98\n99\n"
-            # Launch id can vary. So compare only the file output
-            expected_output_lines = expected_output_string.split('\n')
-            with open(dest4) as fp:
-                output_lines = fp.read().split('\n')
-                self.assertEqual(output_lines[-2],expected_output_lines[-2])
-                self.assertEqual(output_lines[-3],expected_output_lines[-3])
+            self.assertEqual('48\n49',self.tracker1.track_file())
+            self.assertEqual('98\n99',self.tracker2.track_file())
+
 
         finally:
-            self._teardown([dest1,dest2,dest4])
+            self._teardown([self.dest1,self.dest2])
             pwd = os.getcwd()
             for ldir in glob.glob(os.path.join(pwd,'launcher_*')):
                 shutil.rmtree(ldir)
