@@ -25,6 +25,11 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
+# TODO: overall a lot of the tests are slow because they query many times
+
+# TODO: note: it seems running the unit tests *changes* certain parts of the launchpad.yaml file (after loading and rewriting). You probably want a consistent one otherwise git keeps telling me I changed the launchpad.yaml file, but all I did was run the unit test.
+
 class LaunchPadTest(unittest.TestCase):
 
     @classmethod
@@ -70,26 +75,25 @@ class LaunchPadTest(unittest.TestCase):
         wf = Workflow([fw], name='test_workflow')
         self.lp.add_wf(wf)
         self.lp.reset('',require_password=False)
-        fw = self.lp.get_fw_ids()
-        wf = self.lp.get_wf_ids()
-        self.assertFalse(fw)
-        self.assertFalse(wf)
+        self.assertFalse(self.lp.get_fw_ids())
+        self.assertFalse(self.lp.get_wf_ids())
 
+    def test_pw_check(self):
         fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         args = ('',)
-        self.assertRaises(ValueError,self.lp.reset,*args)
+        self.assertRaises(ValueError,self.lp.reset, *args)
 
     def test_add_wf(self):
         fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         wf = self.lp.get_wf_ids()
-        self.assertTrue(wf)
+        self.assertTrue(wf)  # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
         fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name='test_workflow')
         self.lp.add_wf(wf)
         fw = self.lp.get_fw_ids()
-        self.assertTrue(fw)
+        self.assertTrue(fw) # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
         self.lp.reset('',require_password=False)
 
 
@@ -146,6 +150,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
                                              {'store_stdout':True}), name="c8")
 
 
+        # TODO: (optional) - you can define the dependencies when defining the FWs themselves using the "parents" kwarg instead of below
         # assemble Workflow from FireWorks and their connections by id
         workflow = Workflow([fw_p,fw_s1,fw_s2,fw_s3,fw_s4,fw_s5,fw_c1,fw_c2,fw_c3,fw_c4,fw_c5,fw_c6,fw_c7,fw_c8],
                             {fw_p: [fw_s1,fw_s2,fw_s3,fw_s4],
@@ -161,7 +166,8 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         # store workflow
         self.lp.add_wf(workflow)
 
-        # Get fwids for the zeus and his children's fireworks
+        # Get fwids for Zeus and his children's fireworks
+        # TODO: this adds a lot code and a lot of querying, slowing down the unit tests. Why not set the FW ids when defining the FWs themselves? If you want to test the query itself, I would add a unit test and perhaps choose just one of these
         self.zeus_fw_id = self.lp.get_fw_ids({'name':'sib1'},limit=1)[0]
         c1_fw_id = self.lp.get_fw_ids({'name':'c1'},limit=1)[0]
         c2_fw_id = self.lp.get_fw_ids({'name':'c2'},limit=1)[0]
@@ -209,7 +215,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         self.lp.defuse_fw(self.zeus_fw_id)
 
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
-        self.assertIn(self.zeus_fw_id,defused_ids)
+        self.assertIn(self.zeus_fw_id, defused_ids)
         try:
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
@@ -225,14 +231,14 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
             all_ids = set(self.lp.get_fw_ids({}))
             #print all_ids
             # Check for the state of Lapetus and his descendants in completed fwids
-            self.assertTrue(self.lapetus_desc_fw_ids < completed_ids)
+            self.assertTrue(self.lapetus_desc_fw_ids < completed_ids)  #TODO: AJ is confused by this syntax
             # Check for the state of Zeus siblings and parent in completed fwids
-            self.assertTrue(self.zeus_sib_fw_ids < completed_ids)
+            self.assertTrue(self.zeus_sib_fw_ids < completed_ids)  #TODO: AJ is confused by this syntax
 
             # Check for the status of Zeus and children in incompleted fwids
             fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
             self.assertIn(self.zeus_fw_id,fws_no_run)
-            self.assertTrue(self.zeus_child_fw_ids < fws_no_run)
+            self.assertTrue(self.zeus_child_fw_ids < fws_no_run)  #TODO: AJ is confused by this syntax
         except:
             raise
 
@@ -275,7 +281,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         # Check for the state of all fws in Zeus workflow in incomplete fwids
-        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
+        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))  # TODO: instead of the below, cant you just make sure this set is the same length as the number of FWs (i.e. all FWs are not completed). You do something like that in the next test
         self.assertIn(self.par_fw_id,fws_no_run)
         self.assertIn(self.zeus_fw_id,fws_no_run)
         self.assertTrue(self.lapetus_desc_fw_ids < fws_no_run)
@@ -293,7 +299,6 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
 
         fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
         self.assertEqual(len(fws_no_run),0)
-
 
         # Try launching fireworks and check if any are launched
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
@@ -314,7 +319,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         rapidfire(self.lp, FWorker(),m_dir=MODULE_DIR)
 
         # Check for the status of all fireworks Zeus workflow in completed fwids
-        fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        fws_completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))  # TODO: again, seems like the below could be shortened...
         self.assertIn(self.par_fw_id,fws_completed)
         self.assertIn(self.zeus_fw_id,fws_completed)
         self.assertTrue(self.zeus_child_fw_ids < fws_completed)
@@ -327,7 +332,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
 
         # archive Workflow containing Zeus. Ensure all are archived
         self.lp.archive_wf(self.zeus_fw_id)
-        archived_ids = set(self.lp.get_fw_ids({'state':'ARCHIVED'}))
+        archived_ids = set(self.lp.get_fw_ids({'state':'ARCHIVED'})) # TODO: again, seems like the below could be shortened...
         self.assertIn(self.par_fw_id,archived_ids)
         self.assertIn(self.zeus_fw_id,archived_ids)
         self.assertTrue(self.lapetus_desc_fw_ids < archived_ids)
@@ -341,7 +346,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
 
         # Query for provenance
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        self.assertTrue(fw)
+        self.assertTrue(fw)  # can probably do a better query than True
 
     def test_delete_wf(self):
         # Run a firework before deleting Zeus
@@ -350,7 +355,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id)
         # Check if any fireworks and the workflow are available
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError):  # TODO: these tests are quite long...I would probably just test one example of the below explicitly and also test that the get_fw_ids() returns zero FireWorks and get_wf_ids() also returns zero results
             self.lp.get_wf_by_fw_id(self.zeus_fw_id)
         with self.assertRaises(ValueError):
             self.lp.get_fw_by_id(self.zeus_fw_id)
@@ -372,6 +377,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         self.assertFalse(fws_completed)
 
     def test_rerun_fws(self):
+        # TODO: I don't think this test works at all yet. I think what you want to do is run Zeus once and note the launch directory stored in the FW object returned by get_fw_by_id, and then re-run the FW and make sure the old launch is archived and the new FW has a new launch directory
         # Launch all fireworks
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
@@ -389,6 +395,7 @@ class LaunchPadDefuseReigniteTest(unittest.TestCase):
         #self.assertTrue(self.zeus_child_fw_ids < completed_ids)
         pass
 
+# TODO: This class looks duplicated from DefuseReigniteTest. I would just move the rerun test into that other class and delete the duplicated code
 class LaunchPadRerunTest(unittest.TestCase):
 
     @classmethod
@@ -483,6 +490,8 @@ class LaunchPadRerunTest(unittest.TestCase):
                 os.remove(f)
 
     def test_rerun_fws(self):
+        # TODO: interesting approach to verify the rerun. See my previous note for another verification you can do based on launch directory
+
         # Launch all fireworks
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
         ts = datetime.datetime.utcnow()
