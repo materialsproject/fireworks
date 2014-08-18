@@ -62,6 +62,9 @@ class LaunchPadTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
             shutil.rmtree(ldir)
 
+        if os.path.exists(self.LP_LOC):
+            os.remove(self.LP_LOC)
+
     def test_dict_from_file(self):
         lp = LaunchPad.from_file(self.LP_LOC)
         lp_dict = lp.to_dict()
