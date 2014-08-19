@@ -32,7 +32,7 @@ class ScriptTaskTest(unittest.TestCase):
         os.remove('hello.txt')
 
 
-class PythonTaskTest(unittest.TestCase):
+class PyTaskTest(unittest.TestCase):
 
     def test_task(self):
         p = PyTask(func="json.dumps", obj={"hello": "world"},
