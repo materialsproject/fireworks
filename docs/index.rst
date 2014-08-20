@@ -210,6 +210,7 @@ Reference
     :maxdepth: 2
 
     reference
+    guide_to_writing_firetasks
 
 .. _contributing-label:
 
