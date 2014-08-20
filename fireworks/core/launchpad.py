@@ -330,6 +330,9 @@ class LaunchPad(FWSerializable):
             fw_fields.extend(["name", "launches"])
             launch_fields.append("launch_dir")
 
+        if mode == "reservations":
+            launch_fields.append("state_history.reservation_id")
+
         if mode == "all":
             wf_fields = None
 
@@ -369,6 +372,14 @@ class LaunchPad(FWSerializable):
             wf["parent_links"] = {
                 id_name_map[int(k)]: [id_name_map[i] for i in v]
                 for k, v in wf["parent_links"].items()}
+        elif mode == "reservations":
+            wf["states"] = OrderedDict()
+            wf["launches"] = OrderedDict()
+            for fw in wf["fw"]:
+                k = "%s--%d" % (fw["name"], fw["fw_id"])
+                wf["states"][k] = fw["state"]
+                wf["launches"][k] = fw["launches"]
+            del wf["nodes"]
 
         del wf["_id"]
         del wf["fw"]

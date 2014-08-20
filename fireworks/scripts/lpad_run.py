@@ -243,6 +243,7 @@ def get_wfs(args):
     elif args.display_format == 'count':
         wfs = [ids]
     else:
+        print args.display_format
         wfs = []
         for i in ids:
             d = lp.get_wf_summary_dict(i, args.display_format)
@@ -516,7 +517,8 @@ def lpad():
                     "choices": FireWork.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
     disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
-                   "choices": ["all", "more", "less", "ids", "count"]}
+                   "choices": ["all", "more", "less", "ids", "count",
+                               "reservations"]}
 
     query_args = ["-q", "--query"]
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
