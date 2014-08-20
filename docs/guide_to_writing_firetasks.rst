@@ -10,14 +10,14 @@ Writing a Basic FireTask
 Step 1: Choose existing FireTask(s) or write your own?
 ------------------------------------------------------
 
-The first thing you should decide is whether to use an existing FireTask or write your own. FireWorks comes pre-packaged with many "default" FireTasks - in particular, the **PyTask** allows you to call any Python function. There are also existing FireTasks for running scripts, remotely transferring files, etc. The quickest route to getting something running is to use an existing FireTask, i.e. use the PyTask if you want to run a quick script.
+The first thing you should decide is whether to use an existing FireTask or write your own. FireWorks comes pre-packaged with many "default" FireTasks - in particular, the :doc:`PyTask <pytask>` allows you to call any Python function. There are also existing FireTasks for running scripts, remotely transferring files, etc. The quickest route to getting something running is to use an existing FireTask, i.e. use the :doc:`PyTask <pytask>` if you want to run a quick script.
 
 Links to documentation on default FireTasks can be found in the :doc:`main page <index>` under the heading "built-in FireTasks".
 
 A few reasons to *not* use the default FireTasks are:
 
 * You want to give your FireTasks custom names
-* You prefer a class-based method to defining tasks rather than the function-based method of PyTask
+* You prefer a class-based method to defining tasks rather than the function-based method of :doc:`PyTask <pytask>`
 * You want control over how the FireTask is constructed, e.g., define required parameters.
 
 Step 2: Start with a FireTask template and modify it
@@ -104,7 +104,7 @@ Other than those differences, the code is the same format as earlier. The dynami
 The FWAction object
 ===================
 
-A FireTask (or a function called by PyTask) can return a *FWAction* object that can perform many powerful actions. Note that the *FWAction* is stored in the FW database after execution, so you can always go back and see what actions were returned by different FireTasks. A diagram of the different FWActions is below:
+A FireTask (or a function called by :doc:`PyTask <pytask>`) can return a *FWAction* object that can perform many powerful actions. Note that the *FWAction* is stored in the FW database after execution, so you can always go back and see what actions were returned by different FireTasks. A diagram of the different FWActions is below:
 
 .. image:: _static/fwactions.png
    :alt: FW actions

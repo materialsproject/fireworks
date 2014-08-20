@@ -188,6 +188,7 @@ The built-in FireTasks
     scripttask
     templatewritertask
     fileiotasks
+    pytask
 
 Misc
 ----
