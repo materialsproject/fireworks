@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v0.88**
+
+* Add many more unit tests (B. Medasani)
+* Fix tracking when FireTask crashes (B. Medasani)
+* Clean up some logging
+* Don't rerun DEFUSED FWs - they must be reignited
+* Allow defuse of COMPLETED FWs
+* minor internal fixes
+
 **v0.87**
 
 * Fix major bug causing FIZZLED FWs to rerun spontaneously
