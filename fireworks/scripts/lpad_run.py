@@ -243,7 +243,6 @@ def get_wfs(args):
     elif args.display_format == 'count':
         wfs = [ids]
     else:
-        print args.display_format
         wfs = []
         for i in ids:
             d = lp.get_wf_summary_dict(i, args.display_format)
