@@ -187,7 +187,7 @@ class FireWork(FWSerializable):
 
     def __init__(self, tasks, spec=None, name=None, launches=None,
                  archived_launches=None, state='WAITING', created_on=None,
-                 fw_id=None, parents=None):
+                 fw_id=None, parents=None, updated_on=None):
         """
         :param tasks: ([FireTask]) a list of FireTasks to run in sequence
         :param spec: (dict) specification of the job to run. Used by the
@@ -197,8 +197,10 @@ class FireWork(FWSerializable):
         objects of this FireWork
         :param state: (str) the state of the FW (e.g. WAITING, RUNNING,
         COMPLETED, ARCHIVED)
+        :param created_on: (datetime) - time of creation
         :param fw_id: (int) an identification number for this FireWork
         :param parents: (FireWork or [FireWork]) list of parent FWs this FW depends on
+        :param updated_on: (datetime) - last time the STATE was updated
         """
 
         tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
@@ -220,16 +222,34 @@ class FireWork(FWSerializable):
         self.launches = launches if launches else []
         self.archived_launches = archived_launches if archived_launches else []
         self.created_on = created_on or datetime.utcnow()
+        self.updated_on = updated_on or datetime.utcnow()
 
         parents = [parents] if isinstance(parents, FireWork) else parents
         self.parents = parents if parents else []
 
-        self.state = state
+        self._state = state
+
+    @property
+    def state(self):
+        """
+        :return: (str) The current state of the FireWork
+        """
+        return self._state
+
+    @state.setter
+    def state(self, state):
+        """
+        Setter for the the FW state, which triggers updated_on change
+
+        :param state: (str) the state to set for the FW
+        """
+        self._state = state
+        self.updated_on = datetime.utcnow()
 
     @recursive_serialize
     def to_dict(self):
         m_dict = {'spec': self.spec, 'fw_id': self.fw_id,
-                  'created_on': self.created_on}
+                  'created_on': self.created_on, 'updated_on': self.updated_on}
 
         # only serialize these fields if non-empty
         if len(self.launches) > 0:
@@ -280,11 +300,12 @@ class FireWork(FWSerializable):
                              m_dict.get('archived_launches', [])]
         fw_id = m_dict.get('fw_id', -1)
         state = m_dict.get('state', 'WAITING')
-        created_on = m_dict.get('created_on', None)
+        created_on = m_dict.get('created_on')
+        updated_on = m_dict.get('updated_on')
         name = m_dict.get('name', None)
 
         return FireWork(tasks, m_dict['spec'], name, launches, archived_launches,
-                        state, created_on, fw_id)
+                        state, created_on, fw_id, updated_on=updated_on)
 
     def __str__(self):
         return 'FireWork object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
@@ -563,7 +584,6 @@ class Workflow(FWSerializable):
                     del self[k]
 
 
-
         @property
         def nodes(self):
             allnodes = list(self.keys())
@@ -640,7 +660,9 @@ class Workflow(FWSerializable):
         for fw in fireworks:
             for pfw in fw.parents:
                 if pfw.fw_id not in self.links:
-                    raise ValueError("FW_id: {} defines a dependent link to FW_id: {}, but the latter was not added to the workflow!".format(fw.fw_id, pfw.fw_id))
+                    raise ValueError(
+                        "FW_id: {} defines a dependent link to FW_id: {}, but the latter was not added to the workflow!".format(
+                            fw.fw_id, pfw.fw_id))
                 if fw.fw_id not in self.links[pfw.fw_id]:
                     self.links[pfw.fw_id].append(fw.fw_id)
 
@@ -840,7 +862,9 @@ class Workflow(FWSerializable):
             # This part is confusing and rare - report any FIZZLED parents if allow_fizzed
             # allows us to handle FIZZLED jobs
             if fw.spec.get('_allow_fizzled_parents'):
-                parent_fws = [self.id_fw[p].to_dict() for p in self.links.parent_links.get(fw_id, []) if self.id_fw[p].state == 'FIZZLED']
+                parent_fws = [self.id_fw[p].to_dict() for p in
+                              self.links.parent_links.get(fw_id, []) if
+                              self.id_fw[p].state == 'FIZZLED']
                 if len(parent_fws) > 0:
                     fw.spec['_fizzled_parents'] = parent_fws
                     updated_ids.add(fw_id)
