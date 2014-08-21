@@ -14,7 +14,7 @@ David Waroquiers wrote the SLURM queue adapter, helped write the FileTransferTas
 
 Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL.
 
-William Davidson Richards Waroquiers wrote the SGE queue adapter and provided useful feedback.
+William Davidson Richards wrote the SGE queue adapter and provided useful feedback.
 
 Wei Chen was the first test pilot of FireWorks, and contributed greatly to improving the docs and ensuring that FireWorks installation went smoothly for others. In addition, he made many suggestions to improve the usability of the code.
 
