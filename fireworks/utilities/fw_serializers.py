@@ -55,18 +55,18 @@ else:
     ENCODING_PARAMS = {}
 
 
-def recursive_dict(obj):
+def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
 
     if hasattr(obj, 'to_dict'):
-        return recursive_dict(obj.to_dict())
+        return recursive_dict(obj.to_dict(), preserve_unicode)
 
     if isinstance(obj, dict):
-        return {k: recursive_dict(v) for k, v in obj.items()}
+        return {recursive_dict(k, preserve_unicode): recursive_dict(v, preserve_unicode) for k, v in obj.items()}
 
     if isinstance(obj, (list, tuple)):
-        return [recursive_dict(v) for v in obj]
+        return [recursive_dict(v, preserve_unicode) for v in obj]
 
     if isinstance(obj, int) or isinstance(obj, float):
         return obj
@@ -74,7 +74,7 @@ def recursive_dict(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
+    if preserve_unicode and isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
         return obj
 
     return str(obj)

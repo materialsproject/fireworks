@@ -488,12 +488,7 @@ def get_output_func(format):
         return lambda x: json.dumps(x, default=DATETIME_HANDLER,
                                     indent=4)
     else:
-        def yamldump(x):
-            d = recursive_dict(x)
-            from pymatgen.util.io_utils import clean_json
-            return yaml.dump(clean_json(d), default_flow_style=False)
-
-        return yamldump
+        return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
 
 
 def lpad():
