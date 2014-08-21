@@ -488,7 +488,12 @@ def get_output_func(format):
         return lambda x: json.dumps(x, default=DATETIME_HANDLER,
                                     indent=4)
     else:
-        return lambda x: yaml.dump(recursive_dict(x), default_flow_style=False)
+        def yamldump(x):
+            d = recursive_dict(x)
+            from pymatgen.util.io_utils import clean_json
+            return yaml.dump(clean_json(d), default_flow_style=False)
+
+        return yamldump
 
 
 def lpad():
@@ -516,7 +521,8 @@ def lpad():
                     "choices": FireWork.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
     disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
-                   "choices": ["all", "more", "less", "ids", "count"]}
+                   "choices": ["all", "more", "less", "ids", "count",
+                               "reservations"]}
 
     query_args = ["-q", "--query"]
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '

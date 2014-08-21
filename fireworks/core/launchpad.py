@@ -280,7 +280,6 @@ class LaunchPad(FWSerializable):
         :param fw_id:
         :return: A Workflow object
         """
-
         links_dict = self.workflows.find_one({'nodes': fw_id})
         if not links_dict:
             raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
@@ -331,6 +330,9 @@ class LaunchPad(FWSerializable):
             fw_fields.extend(["name", "launches"])
             launch_fields.append("launch_dir")
 
+        if mode == "reservations":
+            launch_fields.append("state_history.reservation_id")
+
         if mode == "all":
             wf_fields = None
 
@@ -370,6 +372,14 @@ class LaunchPad(FWSerializable):
             wf["parent_links"] = {
                 id_name_map[int(k)]: [id_name_map[i] for i in v]
                 for k, v in wf["parent_links"].items()}
+        elif mode == "reservations":
+            wf["states"] = OrderedDict()
+            wf["launches"] = OrderedDict()
+            for fw in wf["fw"]:
+                k = "%s--%d" % (fw["name"], fw["fw_id"])
+                wf["states"][k] = fw["state"]
+                wf["launches"][k] = fw["launches"]
+            del wf["nodes"]
 
         del wf["_id"]
         del wf["fw"]
@@ -830,7 +840,6 @@ class LaunchPad(FWSerializable):
                 for d in self.fireworks.find({"launches": {"$in": f['launches']}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
-
         # rerun this FW
         m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         if m_fw['state'] in ['ARCHIVED', 'DEFUSED'] :
