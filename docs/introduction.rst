@@ -205,9 +205,8 @@ Python Examples (optional)
 
 While it's possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it::
 
-    from fireworks import FireWork, LaunchPad
+    from fireworks import FireWork, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import launch_rocket
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()

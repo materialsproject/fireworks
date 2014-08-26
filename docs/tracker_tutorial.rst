@@ -34,9 +34,7 @@ Adding a tracker (via code)
 
 The following code example creates the FireWork above with two trackers::
 
-    from fireworks import FireWork, Tracker
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
-    from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
+    from fireworks import FireWork, Tracker, ScriptTask, TemplateWriterTask
 
     # create the FireWork consisting of multiple tasks
     firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})

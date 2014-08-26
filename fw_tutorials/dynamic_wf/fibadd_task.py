@@ -13,6 +13,8 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 25, 2013'
 
 
+from fireworks.core.firework import FWAction, FireWork, FireTaskBase
+
 class FibonacciAdderTask(FireTaskBase):
 
     _fw_name = "Fibonacci Adder Task"
