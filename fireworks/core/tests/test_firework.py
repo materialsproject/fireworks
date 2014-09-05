@@ -35,6 +35,13 @@ class FireTaskBaseTest(unittest.TestCase):
         d = DummyTask({"hello": "world2"})
         self.assertEqual(d.run_task({}), "world2")
 
+        class DummyTask2(FireTaskBase):
+
+            pass
+
+        d = DummyTask2()
+        self.assertRaises(NotImplementedError, d.run_task, {})
+
 
 class WorkflowTest(unittest.TestCase):
 
