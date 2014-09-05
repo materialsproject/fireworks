@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v0.89**
+
+* Fix small FireTaskMeta issue (G. Petretto w/S.P. Ong)
+* simplify some imports
+* Add reservation display mode (S.P. Ong)
+* add updated_on to FW which updates whenever FW changes state
+* improve docs
+
 **v0.88**
 
 * Add many more unit tests (B. Medasani)
