@@ -42,10 +42,11 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-@add_metaclass(abc.ABCMeta)
-class FireTaskMeta(type):
+
+class FireTaskMeta(abc.ABCMeta):
+
     def __call__(cls, *args, **kwargs):
-        o = type.__call__(cls, *args, **kwargs)
+        o = abc.ABCMeta.__call__(cls, *args, **kwargs)
         for k in cls.required_params:
             if k not in o:
                 raise ValueError("Required parameter {} not specified!"
@@ -91,7 +92,7 @@ class FireTaskBase(defaultdict, FWSerializable):
         Returns:
             (FWAction)
         """
-        pass
+        raise NotImplementedError("You must have a run_task implemented!")
 
     @serialize_fw
     @recursive_serialize
