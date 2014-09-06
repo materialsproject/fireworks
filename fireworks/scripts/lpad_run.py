@@ -299,7 +299,7 @@ def display_wfs(args):
 
 def detect_lostruns(args):
     lp = get_lp(args)
-    fl,ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime)
+    fl, ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime, min_runtime=args.min_runtime)
     lp.m_logger.debug('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
     lp.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
 
@@ -703,8 +703,8 @@ def lpad():
                                 type=int)
     fizzled_parser.add_argument('--fizzle', help='mark lost runs as fizzled', action='store_true')
     fizzled_parser.add_argument('--rerun', help='rerun lost runs', action='store_true')
-    fizzled_parser.add_argument('--max_runtime', help='max runtime, helpful for tracing down walltime kills (seconds)',
-                                type=int)
+    fizzled_parser.add_argument('--max_runtime', help='max runtime, matching failures ran no longer than this (seconds)', type=int)
+    fizzled_parser.add_argument('--min_runtime', help='min runtime, matching failures must have run at least this long (seconds)', type=int)
     fizzled_parser.set_defaults(func=detect_lostruns)
 
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')

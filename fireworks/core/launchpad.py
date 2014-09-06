@@ -654,7 +654,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id(fw_id)
             self._refresh_wf(wf, fw_id)
 
-    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None):
+    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None, min_runtime=None):
         lost_launch_ids = []
         lost_fw_ids = []
         potential_lost_fw_ids = []
@@ -663,16 +663,19 @@ class LaunchPad(FWSerializable):
         bad_launch_data = self.launches.find({'state': 'RUNNING', 'state_history': {
             '$elemMatch': {'state': 'RUNNING', 'updated_on': {'$lte': cutoff_timestr}}}},
                                              {'launch_id': 1, 'fw_id': 1})
+
         for ld in bad_launch_data:
-            bad_launch = False
-            if max_runtime:
+            bad_launch = True
+            if max_runtime or min_runtime:
+                bad_launch = False
                 m_l = self.get_launch_by_id(ld['launch_id'])
                 utime = m_l._get_time('RUNNING', use_update_time=True)
                 ctime = m_l._get_time('RUNNING', use_update_time=False)
-                if (utime-ctime).seconds <= max_runtime:
-                    bad_launch=True
+                if (not max_runtime or (utime-ctime).seconds <= max_runtime) \
+                        and (not min_runtime or (utime-ctime).seconds >= min_runtime):
+                    bad_launch = True
 
-            if not max_runtime or bad_launch:
+            if bad_launch:
                 lost_launch_ids.append(ld['launch_id'])
                 potential_lost_fw_ids.append(ld['fw_id'])
 

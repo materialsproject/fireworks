@@ -113,9 +113,8 @@ Python example (optional)
 
 Here is a complete Python example that runs a Workflow::
 
-    from fireworks import FireWork, Workflow, FWorker, LaunchPad
+    from fireworks import FireWork, Workflow, FWorker, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import rapidfire
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()

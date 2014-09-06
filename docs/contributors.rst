@@ -20,7 +20,9 @@ Wei Chen was the first test pilot of FireWorks, and contributed greatly to impro
 
 Bharat Medasani added many unit tests.
 
-Felix Brockherde added support for the IBM LoadLeveler queueing system and helped stomp bugs. Brian Foster also stomped a bug.
+Felix Brockherde added support for the IBM LoadLeveler queueing system and helped stomp bugs.
+
+Brian Foster and Guido Petretto stomped bugs.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey for helpful discussions.
 

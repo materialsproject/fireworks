@@ -405,11 +405,17 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         time.sleep(1)   # Wait 1 sec and kill the rocket
         rp.terminate()
 
-        fw_ids = self.lp.detect_lostruns(0.5)
-        self.assertTrue(fw_ids)
+        l, f = self.lp.detect_lostruns(0.5, max_runtime=5, min_runtime=0)
+        self.assertEqual((l, f), ([1], [1]))
         time.sleep(4)   # Wait double the expected exec time and test
-        fw_ids = self.lp.detect_lostruns(2)
-        self.assertTrue(fw_ids)
+        l, f = self.lp.detect_lostruns(2)
+        self.assertEqual((l, f), ([1], [1]))
+
+        l, f = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
+        self.assertEqual((l, f), ([], []))
+
+        l, f = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
+        self.assertEqual((l, f), ([], []))
 
 
 if __name__ == '__main__':

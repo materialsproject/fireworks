@@ -123,9 +123,8 @@ Python code
 
 The following Python code achieves the same behavior::
 
-    from fireworks import FireWork, Workflow, LaunchPad
+    from fireworks import FireWork, Workflow, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import rapidfire
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()

@@ -63,10 +63,9 @@ Python example
 
 The following code runs a script that, in the main thread, prints 'starting', sleeps, then prints 'ending'. In separate threads, two background threads run at different intervals. The second BackgroundTask has ``run_on_finish`` set to True, so it also runs after the main thread finishes::
 
-    from fireworks import FireWork, FWorker, LaunchPad
+    from fireworks import FireWork, FWorker, LaunchPad, ScriptTask
     from fireworks.features.background_task import BackgroundTask
     from fireworks.core.rocket_launcher import rapidfire
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()
