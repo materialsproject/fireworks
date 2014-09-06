@@ -5,7 +5,7 @@ A set of global constants for FireWorks (Python code as a config file)
 """
 
 import os
-import yaml
+from monty.serialization import loadfn, dumpfn
 from monty.design_patterns import singleton
 
 __author__ = 'Anubhav Jain'
@@ -106,19 +106,18 @@ def override_user_settings():
               .format("FW_CONFIG_FILE", config_paths, config_paths[0]))
 
     if os.path.exists(config_paths[0]):
-        with open(config_paths[0]) as f:
-            overrides = yaml.load(f.read())
-            for key, v in overrides.items():
-                if key == 'ADD_USER_PACKAGES':
-                    USER_PACKAGES.extend(v)
-                elif key == 'ECHO_TEST':
-                    print(v)
-                elif key not in globals():
-                    raise ValueError(
-                        'Invalid FW_config file has unknown parameter: {}'.format(
-                            key))
-                else:
-                    globals()[key] = v
+        overrides = loadfn(config_paths[0])
+        for key, v in overrides.items():
+            if key == 'ADD_USER_PACKAGES':
+                USER_PACKAGES.extend(v)
+            elif key == 'ECHO_TEST':
+                print(v)
+            elif key not in globals():
+                raise ValueError(
+                    'Invalid FW_config file has unknown parameter: {}'.format(
+                        key))
+            else:
+                globals()[key] = v
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
         if globals().get(k, None) is None:
@@ -153,8 +152,7 @@ def config_to_dict():
 def write_config(path=None):
     path = os.path.join(os.path.expanduser('~'), ".fireworks",
                         'FW_config.yaml') if path is None else path
-    with open(path, "w") as f:
-        yaml.dump(config_to_dict(), f)
+    dumpfn(config_to_dict(), path)
 
 
 @singleton
