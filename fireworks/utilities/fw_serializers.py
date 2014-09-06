@@ -36,6 +36,11 @@ import abc
 import sys
 
 import yaml
+# Use CLoader for faster performance where possible.
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 import six
 
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES
@@ -196,7 +201,7 @@ class FWSerializable(object):
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
             return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                             allow_unicode=True)
+                             allow_unicode=True, Dumper=Dumper)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -210,7 +215,8 @@ class FWSerializable(object):
         if f_format == 'json':
             return cls.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
-            return cls.from_dict(_reconstitute_dates(yaml.load(f_str)))
+            return cls.from_dict(_reconstitute_dates(
+                yaml.load(f_str, Loader=Loader)))
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -338,7 +344,7 @@ def load_object_from_file(filename, f_format=None):
         if f_format == 'json':
             m_dict = _reconstitute_dates(json.loads(f.read()))
         elif f_format == 'yaml':
-            m_dict = _reconstitute_dates(yaml.load(f.read()))
+            m_dict = _reconstitute_dates(yaml.load(f, Loader=Loader))
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 
