@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module contains the base class for implementing Duplicate Finders
 """

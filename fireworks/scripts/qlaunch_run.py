@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """

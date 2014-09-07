@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module contains FireWorker, which encapsulates information about a
 computing resource

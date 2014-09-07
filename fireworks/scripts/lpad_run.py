@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """

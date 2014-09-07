@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A runnable script to launch Job Packing (Multiple) Rockets
 """

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """

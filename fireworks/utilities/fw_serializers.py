@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module aids in serializing and deserializing objects.
 

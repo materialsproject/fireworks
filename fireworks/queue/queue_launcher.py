@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
 or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure. \

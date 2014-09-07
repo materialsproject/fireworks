@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A set of global constants for FireWorks (Python code as a config file)
 """

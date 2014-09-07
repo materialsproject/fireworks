@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
