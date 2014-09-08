@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module contains methods for launching Rockets, both singly and in rapid-fire mode
 """

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
 queues.

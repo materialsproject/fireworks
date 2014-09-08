@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module contains some of the most central FireWorks classes:
 
