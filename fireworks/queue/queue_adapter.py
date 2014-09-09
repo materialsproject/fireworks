@@ -154,7 +154,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
         return cls(m_dict)
 
     def get_qlogger(self, name):
-        if self['logdir']:
+        if 'logdir' in self:
             return get_fw_logger(name, self['logdir'])
         else:
             return get_fw_logger(name, stream_level='CRITICAL')

@@ -148,10 +148,12 @@ def add_wf_dir(args):
 def get_fws(args):
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
-        raise ValueError('Pleases specify exactly one of (fw_id, name, state, query)')
+        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
         args.query = '{}'
         args.display_format = args.display_format if args.display_format else 'ids'
+    if sum([bool(x) for x in [args.fw_id, args.name, args.qid]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, qid)')
     else:
         args.display_format = args.display_format if args.display_format else 'more'
 
@@ -161,8 +163,10 @@ def get_fws(args):
         query = {'name': args.name}
     elif args.state:
         query = {'state': args.state}
-    else:
+    elif args.query:
         query = ast.literal_eval(args.query)
+    else:
+        query = None
 
     if args.sort:
         sort = [(args.sort, ASCENDING)]
@@ -171,7 +175,14 @@ def get_fws(args):
     else:
         sort = None
 
-    ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count')
+    if args.qid:
+        ids = lp.get_fw_ids_from_reservation_id(args.qid)
+        if query:
+            query['fw_id'] = {"$in": ids}
+            ids = lp.get_fw_ids(query, sort, args.max)
+
+    else:
+        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count')
     fws = []
     if args.display_format == 'ids':
         fws = ids
@@ -287,7 +298,7 @@ def detect_unreserved(args):
 
 def tuneup(args):
     lp = get_lp(args)
-    lp.tuneup()
+    lp.tuneup(bkground=not args.full)
 
 
 def defuse(args):
@@ -305,7 +316,7 @@ def archive(args):
     for f in fw_ids:
         lp.archive_wf(f)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished archiving {} FWs'.format(len(fw_ids)))
+    lp.m_logger.info('Finished archiving {} WFs'.format(len(fw_ids)))
 
 
 def reignite(args):
@@ -353,6 +364,15 @@ def refresh(args):
         lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
 
+def get_qid(args):
+    lp = get_lp(args)
+    for f in args.fw_id:
+        print(lp.get_reservation_id_from_fw_id(f))
+
+def cancel_qid(args):
+    lp = get_lp(args)
+    lp.m_logger.warn("WARNING: cancel_qid does not actually remove jobs from the queue (e.g., execute qdel), this must be done manually!")
+    lp.cancel_reservation_by_reservation_id(args.qid)
 
 def set_priority(args):
     lp = get_lp(args)
@@ -509,12 +529,16 @@ def lpad():
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
                             'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
+    qid_args = ["--qid"]
+    qid_kwargs = {"help": "Query by reservation id of job in queue"}
+
     get_fw_parser = subparsers.add_parser(
         'get_fws', help='get information about FireWorks')
     get_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument(*query_args, **query_kwargs)
+    get_fw_parser.add_argument(*qid_args, **qid_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0,
                                type=int)
@@ -542,6 +566,14 @@ def lpad():
                                     'with "-d less"',
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
+
+    get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a FireWork')
+    get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    get_qid_parser.set_defaults(func=get_qid)
+
+    cancel_qid_parser = subparsers.add_parser('cancel_qid', help='cancel a reservation')
+    cancel_qid_parser.add_argument(*qid_args, **qid_kwargs)
+    cancel_qid_parser.set_defaults(func=cancel_qid)
 
     get_links_parser = subparsers.add_parser(
             'get_links', help='Graphical display of Workflows')
@@ -625,6 +657,7 @@ def lpad():
 
     tuneup_parser = subparsers.add_parser('tuneup',
                                           help='Tune-up the database (should be performed during scheduled downtime)')
+    tuneup_parser.add_argument('--full', help='Run full tuneup and compaction (should be run during DB downtime only)', action='store_true')
     tuneup_parser.set_defaults(func=tuneup)
 
     refresh_parser = subparsers.add_parser('refresh', help='manually force a workflow refresh (not usually needed)')

@@ -1,3 +1,5 @@
+from fireworks import LaunchPad
+
 __author__ = 'Wei Chen'
 __copyright__ = 'Copyright 2014, The Material Project'
 __version__ = '0.5'
@@ -5,7 +7,6 @@ __maintainer__ = 'Wei Chen'
 __email__ = 'weichen@lbl.gov'
 __date__ = 'Sep 8, 2014'
 
-from fireworks.core.launchpad import LaunchPad
 from datetime import datetime, timedelta
 from dateutil import parser
 from bson.son import SON
@@ -256,6 +257,7 @@ class FWStats:
             sort_query=("_id", 1)
         query = [{"$match":match}, {"$project":project}, {"$group":group_op},
                  {"$sort":SON([sort_query])}]
+
         if unwind:
             query.insert(2, {"$unwind":"$"+unwind})
         if return_query_only:
@@ -297,4 +299,3 @@ class FWStats:
             return {"$gte":start_time.isoformat(), "$lt":end_time.isoformat()}
         else:
             return {"$gte":start_time, "$lt":end_time}
-

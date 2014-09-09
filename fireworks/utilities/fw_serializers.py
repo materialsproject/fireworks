@@ -33,6 +33,7 @@ import json  # note that ujson is faster, but at this time does not support "def
 import importlib
 import datetime
 import abc
+import sys
 
 import yaml
 import six
@@ -48,6 +49,10 @@ __date__ = 'Dec 13, 2012'
 
 SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+if sys.version_info > (3, 0, 0):
+    ENCODING_PARAMS = {"encoding": "utf-8"}
+else:
+    ENCODING_PARAMS = {}
 
 
 def recursive_dict(obj):
@@ -217,7 +222,7 @@ class FWSerializable(object):
         """
         if f_format is None:
             f_format = filename.split('.')[-1]
-        with open(filename, 'w') as f:
+        with open(filename, 'w', **ENCODING_PARAMS) as f:
             f.write(self.to_format(f_format=f_format, **kwargs))
 
     @classmethod
@@ -229,8 +234,16 @@ class FWSerializable(object):
         """
         if f_format is None:
             f_format = filename.split('.')[-1]
-        with open(filename, 'r') as f:
+        with open(filename, 'r', **ENCODING_PARAMS) as f:
             return cls.from_format(f.read(), f_format=f_format)
+
+    def __getstate__(self):
+        return self.to_dict()
+
+    def __setstate__(self, state):
+        fw_obj = self.from_dict(state)
+        for k, v in fw_obj.__dict__.items():
+            self.__dict__[k] = v
 
 
 # TODO: make this quicker the first time around
@@ -321,7 +334,7 @@ def load_object_from_file(filename, f_format=None):
     if f_format is None:
         f_format = filename.split('.')[-1]
 
-    with open(filename, 'r') as f:
+    with open(filename, 'r', **ENCODING_PARAMS) as f:
         if f_format == 'json':
             m_dict = _reconstitute_dates(json.loads(f.read()))
         elif f_format == 'yaml':

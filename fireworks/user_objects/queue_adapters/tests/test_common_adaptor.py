@@ -88,5 +88,30 @@ job-ID  prior   name       user         state submit/start at     queue         
             hello="world")
         self.assertEqual(p._parse_njobs(sge, "ongsp"), 3)
 
+    def test_parse_jobid(self):
+        p = CommonAdapter(
+            q_type="SLURM",
+            q_name="hello",
+            queue="home-ong",
+            hello="world")
+        sbatch_output = """
+SOME PREAMBLE
+Submitted batch job 1234"""
+        self.assertEqual(p._parse_jobid(sbatch_output), 1234)
+        p = CommonAdapter(
+                    q_type="PBS",
+                    q_name="hello",
+                    queue="home-ong",
+                    hello="world")
+        qsub_output = "2341.whatever"
+        self.assertEqual(p._parse_jobid(qsub_output), '2341')
+        p = CommonAdapter(
+                    q_type="SGE",
+                    q_name="hello",
+                    queue="home-ong",
+                    hello="world")
+        qsub_output = "Your job 44275 (\"jobname\") has been submitted"
+        self.assertEqual(p._parse_jobid(qsub_output), '44275')
+
 if __name__ == '__main__':
     unittest.main()

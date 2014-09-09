@@ -67,7 +67,7 @@ A few basic parameters that can be tweaked are:
 * ``SORT_FWS: ''`` - set to ``FIFO`` if you want older FireWorks to be run first, ``FILO`` if you want recent FireWorks run first. Note that higher priority FireWorks are always run first.
 * ``PRINT_FW_JSON: True`` - whether to print the ``FW.json`` file in your run directory
 * ``PRINT_FW_YAML: False`` - whether to print the ``FW.yaml`` file in your run directory
-* ``SUBMIT_SCRIPT_NAME: FW_submit.script`` - the name to give the script for submitting PBS/SLURM/queue jobs
+* ``SUBMIT_SCRIPT_NAME: FW_submit.script`` - the name to give the script for submitting PBS/SLURM/etc. queue jobs
 * ``FW_LOGGING_FORMAT: %(asctime)s %(levelname)s %(message)s`` - format for loggers (this String will be passed to ``logging.Formatter()``)
 * ``ALWAYS_CREATE_NEW_BLOCK: False`` - set True if you want the Queue Launcher to always create a new block directory every time it is called, False if you want to re-use previous blocks
 * ``TEMPLATE_DIR`` - where to store templates if you are using the :doc:`TemplateWriterTask <templatewritertask>`.
@@ -79,10 +79,10 @@ Parameters that you probably shouldn't change
 Some parameters that you can change, but probably shouldn't, are:
 
 * ``QUEUE_RETRY_ATTEMPTS: 10`` - number of attempts to re-try communicating with queue server when communication fails
-* ``QUEUE_UPDATE_INTERVAL: 15`` - max interval (seconds) needed for queue to update after submitting a job
+* ``QUEUE_UPDATE_INTERVAL: 5`` - max interval (seconds) needed for queue to update after submitting a job
 * ``PING_TIME_SECS: 3600`` - means that the Rocket will ping the LaunchPad that it's alive every 3600 seconds. See the :doc:`failures tutorial <failures_tutorial>`.
 * ``RUN_EXPIRATION_SECS: 14400`` - means that the LaunchPad will mark a Rocket FIZZLED if it hasn't received a ping in 14400 seconds. See the :doc:`failures tutorial <failures_tutorial>`.
-* ``RESERVATION_EXPIRATION_SECS: 1209600`` - means that the LaunchPad will unreserve a FireWork that's been in the queue for 1209600 seconds (14 days). See the :doc:`queue reservation tutorial <queue_tutorial_pt2>`.
+* ``RESERVATION_EXPIRATION_SECS: 1209600`` - means that the LaunchPad will cancel the reservation of a FireWork that's been in the queue for 1209600 seconds (14 days). See the :doc:`queue reservation tutorial <queue_tutorial_pt2>`.
 * ``FW_BLOCK_FORMAT: %Y-%m-%d-%H-%M-%S-%f`` - the ``launcher_`` and ``block_`` directories written by the Rocket and Queue Launchers add a date stamp to the directory. You can change this if desired.
 * ``QSTAT_FREQUENCY: 50`` - number of jobs submitted to queue before re-executing a qstat. 1 means always do qstat, higher avoids unnecessarily loading the qstat server. Set this low if you have multiple processes submitting jobs to the same queue.
 * ``PW_CHECK_NUM: 10`` - how many FireWorks/Worflows can be changed with a single LaunchPad command (like ``rerun_fws``) before a password is required.

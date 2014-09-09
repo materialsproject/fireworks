@@ -127,13 +127,13 @@ Here is a complete Python example that runs a Workflow::
     task3 = ScriptTask.from_str('echo "Jack is a manager."')
     task4 = ScriptTask.from_str('echo "Kip is an intern."')
 
-    fw1 = FireWork(task1, fw_id=1)
-    fw2 = FireWork(task2, fw_id=2)
-    fw3 = FireWork(task3, fw_id=3)
-    fw4 = FireWork(task4, fw_id=4)
+    fw1 = FireWork(task1)
+    fw2 = FireWork(task2)
+    fw3 = FireWork(task3)
+    fw4 = FireWork(task4)
 
     # assemble Workflow from FireWorks and their connections by id
-    workflow = Workflow([fw1, fw2, fw3, fw4], {1: [2, 3], 2: [4], 3: [4]})
+    workflow = Workflow([fw1, fw2, fw3, fw4], {fw1: [fw2, fw3], fw2: [fw4], fw3: [fw4]})
 
     # store workflow and launch it locally
     launchpad.add_wf(workflow)

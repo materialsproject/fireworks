@@ -5,6 +5,7 @@ A Rocket fetches a FireWork from the database, runs the sequence of FireTasks in
 """
 from datetime import datetime
 import json
+import logging
 import multiprocessing
 import os
 import traceback
@@ -132,7 +133,7 @@ class Rocket():
             launch_dir = os.path.abspath(os.getcwd())
 
             if lp:
-                lp._change_launch_dir(launch_id, launch_dir)
+                lp.change_launch_dir(launch_id, launch_dir)
 
             if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
                 try:
@@ -141,7 +142,9 @@ class Rocket():
                     pass
 
         if lp:
-            lp.m_logger.info('RUNNING fw_id: {} in directory: {}'.format(m_fw.fw_id, os.getcwd()))
+            message = 'RUNNING fw_id: {} in directory: {}'.\
+                format(m_fw.fw_id, os.getcwd())
+            lp.log_message(logging.INFO, message)
 
         # write FW.json and/or FW.yaml to the directory
         if PRINT_FW_JSON:
