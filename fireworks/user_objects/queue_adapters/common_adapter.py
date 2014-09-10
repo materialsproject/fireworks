@@ -82,7 +82,7 @@ class CommonAdapter(QueueAdapterBase):
         elif self.q_type == "LoadLeveler":
             return ['llq', '-u', username]
         else:
-            return ['qstat', '-u', username]
+            return ['qstat', '-fu', username]
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
@@ -106,7 +106,11 @@ class CommonAdapter(QueueAdapterBase):
         count = 0
         for l in output_str.split('\n'):
             if l.lower().startswith("job"):
+                if self.q_type == "Cobalt":
+                    # Cobalt capitalzes headers
+                    l=l.lower()
                 header = l.split()
+                print header
                 if self.q_type == "PBS":
                     #PBS has a ridiculous two word "Job ID" in header
                     state_index = header.index("S") - 1
