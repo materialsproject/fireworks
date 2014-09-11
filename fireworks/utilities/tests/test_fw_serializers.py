@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 TODO: add docs
 """
@@ -37,7 +35,7 @@ class ExplicitTestSerializer(FWSerializable):
         return self.a == other.a
 
     def to_dict(self):
-        return {"_fw_name": self._fw_name, "a": self.a}
+        return {"_fw_name": self.fw_name, "a": self.a}
 
     @classmethod
     def from_dict(cls, m_dict):

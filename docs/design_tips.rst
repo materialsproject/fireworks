@@ -2,6 +2,8 @@
 Tips for designing FireTasks, FireWorks, and Workflows
 ======================================================
 
+.. note:: For a practical introduction to writing FireTasks, see the :doc:`Guide to Writing FireTasks </guide_to_writing_firetasks>`.
+
 Designing FireWork specs
 ========================
 

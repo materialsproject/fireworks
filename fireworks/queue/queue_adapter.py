@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """

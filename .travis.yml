@@ -17,5 +17,6 @@ notifications:
       - dkgunter@lbl.gov
       - ongsp@ucsd.edu
       - xqu@lbl.gov
+      - mbkumar@gmail.com
     on_success: change
     on_failure: always

@@ -2,6 +2,57 @@
 FireWorks Changelog
 ===================
 
+**v0.89**
+
+* Fix small FireTaskMeta issue (G. Petretto w/S.P. Ong)
+* simplify some imports
+* Add reservation display mode (S.P. Ong)
+* add updated_on to FW which updates whenever FW changes state
+* improve docs
+
+**v0.88**
+
+* Add many more unit tests (B. Medasani)
+* Fix tracking when FireTask crashes (B. Medasani)
+* Clean up some logging
+* Don't rerun DEFUSED FWs - they must be reignited
+* Allow defuse of COMPLETED FWs
+* minor internal fixes
+
+**v0.87**
+
+* Fix major bug causing FIZZLED FWs to rerun spontaneously
+* Make WFLock more nimble
+* Forcibly remove WFLock after some time in case of catastrophe (tunable in FW_config)
+* improve unit tests
+
+**v0.86**
+
+.. warning:: This version has a major bug that causes FIZZLED FWs to rerun, patched in v0.87
+
+* add delete_wfs command (w/S.P. Ong)
+* add update_fws command (S.P. Ong)
+* add ignore_errors option in some default FireTasks (S.P. Ong)
+* fix bug in Windows $HOME var (thanks to A. Berg)
+* fig bug in reporting of lost FWs; rerun option should be OK in prev. versions
+* change FIZZLED to have lower STATE_RANK than READY/RESERVED/RUNNING/etc
+
+**v0.85**
+
+* fix bug in running daemon mode locally with qlaunch rapidfire (B. Foster)
+* better handling of duplicate path detection (S.P. Ong)
+* add support for nodes keyword in SLURM adapter (S.P. Ong)
+
+**v0.84**
+
+* ability to define links when defining FireWorks rather than all at the Workflow level (based on conversation with H. Rusche)
+* better handling of config files and better reporting on config file conflicts
+
+**v0.83**
+
+* misc multiprocessing improvements (X. Qu)
+* better handling of dir creation conflicts (X. Qu)
+
 **v0.82**
 
 * add ability to define links via {fw1:fw2} objects rather than explicit IDs (based on conversation with H. Rusche)

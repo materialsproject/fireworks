@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 TODO: Modify unittest doc.
 """
@@ -34,6 +32,13 @@ class FireTaskBaseTest(unittest.TestCase):
         self.assertEqual(d.run_task({}), "world")
         d = DummyTask({"hello": "world2"})
         self.assertEqual(d.run_task({}), "world2")
+
+        class DummyTask2(FireTaskBase):
+
+            pass
+
+        d = DummyTask2()
+        self.assertRaises(NotImplementedError, d.run_task, {})
 
 
 class WorkflowTest(unittest.TestCase):

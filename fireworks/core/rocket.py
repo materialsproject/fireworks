@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
@@ -166,8 +164,9 @@ class Rocket():
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
             # execute the FireTasks!
-            for my_task in m_fw.tasks:
-                m_action = my_task.run_task(my_spec)
+            for t in m_fw.tasks:
+                lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
+                m_action = t.run_task(my_spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -187,7 +186,7 @@ class Rocket():
                 my_spec.update(m_action.update_spec)
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
-
+                lp.log_message(logging.INFO, "Task completed: %s " % t.fw_name)
                 if m_action.skip_remaining_tasks:
                     break
 
@@ -227,9 +226,10 @@ class Rocket():
 
         except:
             stop_backgrounds(ping_stop, btask_stops)
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             traceback.print_exc()
             try:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
+                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': t.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
             except:
                 m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,

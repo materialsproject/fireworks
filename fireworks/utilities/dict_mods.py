@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 This module allows you to modify a dict (a spec) using another dict (an instruction). The main method of interest is apply_dictmod().
 

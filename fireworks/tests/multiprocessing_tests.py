@@ -39,6 +39,11 @@ class TestCheckoutFW(TestCase):
             raise unittest.SkipTest('MongoDB is not running in localhost:'
                                     '27017! Skipping tests.')
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
     def setUp(self):
         self.old_wd = os.getcwd()
 
@@ -51,14 +56,7 @@ class TestCheckoutFW(TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
             shutil.rmtree(i)
 
-    @classmethod
-    def tearDownClass(cls):
-        if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
-
     def test_checkout_fw(self):
-        old__stdout__t = sys.__stdout__
-        sys.__stdout__ = sys.stdout
         os.chdir(MODULE_DIR)
         self.lp.add_wf(FireWork(ScriptTask.from_str(
             shell_cmd='echo "hello 1"',
@@ -74,12 +72,9 @@ class TestCheckoutFW(TestCase):
         self.assertEqual(fw2.launches[0].state_history[-1]["state"],
                          "COMPLETED")
         with open(os.path.join(fw1.launches[0].launch_dir, "task.out")) as f:
-            task1out = f.readlines()
-        self.assertEqual(task1out, ['hello 1\n'])
+            self.assertEqual(f.readlines(), ['hello 1\n'])
         with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
-            task2out = f.readlines()
-        self.assertEqual(task2out, ['hello 2\n'])
-        sys.__stdout__ = old__stdout__t
+            self.assertEqual(f.readlines(), ['hello 2\n'])
 
 
 if __name__ == '__main__':

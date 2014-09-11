@@ -5,8 +5,6 @@ FireWorks ToDo List
 Major Features
 ==============
 
-* Allow the server to submit jobs to workers (maybe using ssh-commands?)
-
 * Put all worker config files in a central location on the server, rather than scatter them amongst worker nodes?
 
 * Add send e-mail?
@@ -26,6 +24,8 @@ Misc.
 * remove use_global_spec option, and just have the parameters be taken from the root spec and overridden by the task parameters.
 
 * Speed up database queries
+
+* add max_runtime parameter to detect_lostruns()
 
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command? e.g. lpad setup
 
@@ -80,7 +80,7 @@ FW Docs
 
 * Show to use RocketLauncher to run a particular fw_id (probably in the priorities tutorial) (note, this is already implemented, just needs documentation)
 
-* Update all tutorials so config file is handled smoothly, not terribly...
+* Update all tutorials so config file is handled smoothly, not terribly...and clean up options like CONFIG_FILE_LOC, make .fireworks dir integration more clear, etc...
 
 * Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
 

@@ -85,11 +85,8 @@ Python Example (optional)
 
 Here is a complete Python example that runs multiple FireTasks within a single FireWork::
 
-    from fireworks import FireWork, FWorker, LaunchPad
+    from fireworks import FireWork, FWorker, LaunchPad, ScriptTask, TemplateWriterTask, FileTransferTask
     from fireworks.core.rocket_launcher import launch_rocket
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
-    from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
-    from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()

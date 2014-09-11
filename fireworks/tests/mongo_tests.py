@@ -7,11 +7,13 @@ import unittest
 import time
 from fireworks.core.firework import FireWork, Workflow
 from fireworks.core.fworker import FWorker
-from fireworks.core.launchpad import LaunchPad
+from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
+from fireworks.fw_config import WFLOCK_EXPIRATION_KILL
+from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
-from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
@@ -42,6 +44,9 @@ def random_launch(lp_creds):
             launch_rocket(lp)
             time.sleep(random.random()/3+0.1)
 
+def throw_error(msg):
+    raise ValueError(msg)
+
 class MongoTests(unittest.TestCase):
 
     @classmethod
@@ -53,6 +58,11 @@ class MongoTests(unittest.TestCase):
             cls.lp.reset(password=None, require_password=False)
         except:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
 
     def _teardown(self, dests):
         for f in dests:
@@ -201,11 +211,78 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_fw_by_id(1).tasks[0]['script'][0], 'echo "Task 1"')
         self.assertEqual(self.lp.get_fw_by_id(2).tasks[0]['script'][0], 'echo "Task 2"')
 
+    def test_delete_fw(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
+            'stdout'], 'test1\n')
+        self.lp.delete_wf(fw.fw_id)
+        self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
+        self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
+
+
+    def test_duplicate_delete_fw(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1, {"_dupefinder": DupeFinderExact()})
+        self.lp.add_wf(fw)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+
+        self.lp.delete_wf(2)
+        self.assertRaises(ValueError, self.lp.get_fw_by_id, 2)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
+            'stdout'], 'test1\n')
+
+    def test_dupefinder(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1, {"_dupefinder": DupeFinderExact()})
+        self.lp.add_wf(fw)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+
+        self.assertEqual(self.lp.launches.count(), 1)
+
+    def test_force_lock_removal(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
+        self.lp.add_wf(fw)
+        self.assertEqual(WFLOCK_EXPIRATION_KILL, True)
+        # add a manual lock
+        with WFLock(self.lp, 1):
+            with WFLock(self.lp, 1, expire_secs=1):
+                self.assertTrue(True)  # dummy to make sure we got here
+
+    def test_fizzle(self):
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["Testing; this error is normal."])
+        fw = FireWork(p)
+        self.lp.add_wf(fw)
+        self.assertTrue(launch_rocket(self.lp, self.fworker))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, 'FIZZLED')
+        self.assertFalse(launch_rocket(self.lp, self.fworker))
+
+    def test_defuse(self):
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
+        fw = FireWork(p)
+        self.lp.add_wf(fw)
+        self.lp.defuse_fw(fw.fw_id)
+        self.assertFalse(launch_rocket(self.lp, self.fworker))
+
+    def test_archive(self):
+        p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
+        fw = FireWork(p)
+        self.lp.add_wf(fw)
+        self.lp.archive_wf(fw.fw_id)
+        self.assertFalse(launch_rocket(self.lp, self.fworker))
+
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
-        os.chdir(self.old_wd)
         if os.path.exists(os.path.join('FW.json')):
             os.remove('FW.json')
+        os.chdir(self.old_wd)
         for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
             shutil.rmtree(i)
 

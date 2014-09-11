@@ -49,7 +49,7 @@ Add a Workflow
 
 #. Let's look at our test workflow::
 
-    lpad get_wfs -n test_workflow -d more
+    lpad get_wflows -n test_workflow -d more
 
    *Output*::
 
@@ -86,7 +86,7 @@ Run all Workflows
 
 #. Let's again look at our workflows::
 
-    lpad get_wfs -n test_workflow -d more
+    lpad get_wflows -n test_workflow -d more
 
    *Output*::
 
@@ -123,9 +123,8 @@ Python code
 
 The following Python code achieves the same behavior::
 
-    from fireworks import FireWork, Workflow, LaunchPad
+    from fireworks import FireWork, Workflow, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import rapidfire
-    from fireworks.user_objects.firetasks.script_task import ScriptTask
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()
@@ -140,7 +139,11 @@ The following Python code achieves the same behavior::
     launchpad.add_wf(wf)
     rapidfire(launchpad)
 
-.. note:: The ``{fw1:fw2}`` argument is adding a dependency of fw2 to fw1.
+In the code above, the ``{fw1:fw2}`` argument to ``Workflow`` is adding a dependency of fw2 to fw1. You could instead define this dependency when defining your FireWorks::
+
+    fw1 = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
+    fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye", parents=[fw1])
+    wf = Workflow([fw1, fw2], name="test workflow")
 
 Next steps
 ==========

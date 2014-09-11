@@ -16,7 +16,7 @@ module_dir = os.path.dirname(os.path.abspath(__file__))
 if __name__ == "__main__":
     setup(
         name='FireWorks',
-        version='0.82',
+        version='0.89',
         description='FireWorks workflow software',
         long_description=open(os.path.join(module_dir, 'README.rst')).read(),
         url='https://github.com/materialsproject/fireworks',
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         package_data={'fireworks':['user_objects/queue_adapters/*.txt', 'user_objects/firetasks/templates/*', 'base_site/static/*', 'base_site/templates/*']},
         zip_safe=False,
         install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'Jinja2>=2.7.1',
-                          'six>=1.5.2', 'monty>=0.1.3'],
+                          'six>=1.5.2', 'monty>=0.3.6'],
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
                         'webgui':['django>=1.6'],

@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-
 """
 A set of global constants for FireWorks (Python code as a config file)
 """
 
 import os
-import yaml
+from monty.serialization import loadfn, dumpfn
 from monty.design_patterns import singleton
 
 __author__ = 'Anubhav Jain'
@@ -14,7 +12,6 @@ __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
-
 
 NEGATIVE_FWID_CTR = 0
 
@@ -25,7 +22,7 @@ USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
 
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
                    'Script Task': 'ScriptTask',
-                   'Template Writer Task':'TemplateWriterTask',
+                   'Template Writer Task': 'TemplateWriterTask',
                    'Dupe Finder Exact': 'DupeFinderExact'}
 # if you update a _fw_name, you can use this to record the change and
 # maintain deserialization
@@ -51,6 +48,9 @@ MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals when running in
 
 RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue this long before we
 # cancel its reservation
+
+WFLOCK_EXPIRATION_SECS = 60 * 5  # wait this long for a WFLock before expiring
+WFLOCK_EXPIRATION_KILL = True  # kill WFLock on expiration (or give a warning)
 
 RAPIDFIRE_SLEEP_SECS = 60  # seconds to sleep between rapidfire loops
 
@@ -80,44 +80,60 @@ SORT_FWS = ''  # sort equal priority FWs? "FILO" or "FIFO".
 
 
 def override_user_settings():
+    module_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(module_dir)  # FW root dir
 
-    MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.dirname(MODULE_DIR)  # FW root dir
+    config_paths = []
 
-    if os.path.exists(os.path.join(os.getcwd(), 'FW_config.yaml')):
-        config_path = os.path.join(os.getcwd(), 'FW_config.yaml')
+    test_paths = [os.getcwd(), os.path.join(os.path.expanduser('~'), ".fireworks"), root_dir]
 
-    elif "FW_CONFIG_FILE" in os.environ:
-        config_path = os.environ['FW_CONFIG_FILE']
+    for p in test_paths:
+        fp = os.path.join(p, 'FW_config.yaml')
+        if fp not in config_paths and os.path.exists(fp):
+            config_paths.append(fp)
 
-    elif os.path.exists(os.path.join(root_dir, 'FW_config.yaml')):
-        config_path=os.path.join(root_dir, 'FW_config.yaml')
+    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in\
+            config_paths:
+        config_paths.append(os.environ["FW_CONFIG_FILE"])
 
-    else:
-        config_path = os.path.join(os.environ["HOME"], ".fireworks",
-                                   'FW_config.yaml')
+    config_paths = config_paths or [os.path.join(
+        os.path.expanduser('~'), ".fireworks", 'FW_config.yaml')]
 
-    if os.path.exists(config_path):
-        with open(config_path) as f:
-            overrides = yaml.load(f.read())
-            for key, v in overrides.items():
-                if key == 'ADD_USER_PACKAGES':
-                    USER_PACKAGES.extend(v)
-                elif key == 'ECHO_TEST':
-                    print(v)
-                elif key not in globals():
-                    raise ValueError(
-                        'Invalid FW_config file has unknown parameter: {}'.format(
-                            key))
-                else:
-                    globals()[key] = v
+    if len(config_paths) > 1:
+        print("Found many potential paths for {}: {}\nChoosing: {}"
+              .format("FW_CONFIG_FILE", config_paths, config_paths[0]))
+
+    if os.path.exists(config_paths[0]):
+        overrides = loadfn(config_paths[0])
+        for key, v in overrides.items():
+            if key == 'ADD_USER_PACKAGES':
+                USER_PACKAGES.extend(v)
+            elif key == 'ECHO_TEST':
+                print(v)
+            elif key not in globals():
+                raise ValueError(
+                    'Invalid FW_config file has unknown parameter: {}'.format(
+                        key))
+            else:
+                globals()[key] = v
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
-        fname = "my_{}.yaml".format(k.split("_")[0].lower())
-        default_path = os.path.join(
-            os.environ["HOME"], ".fireworks", fname)
-        if globals().get(k, None) is None and os.path.exists(default_path):
-            globals()[k] = default_path
+        if globals().get(k, None) is None:
+            fname = "my_{}.yaml".format(k.split("_")[0].lower())
+            m_paths = []
+            if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
+                test_paths.insert(0, CONFIG_FILE_DIR)
+            for p in test_paths:
+                fp = os.path.join(p, fname)
+                if os.path.exists(fp) and fp not in m_paths:
+                    m_paths.append(fp)
+
+            if len(m_paths) > 1:
+                print("Found many potential paths for {}: {}\nChoosing: {}"
+                      .format(k, m_paths, m_paths[0]))
+
+            if len(m_paths) > 0:
+                globals()[k] = m_paths[0]
 
 
 override_user_settings()
@@ -132,10 +148,9 @@ def config_to_dict():
 
 
 def write_config(path=None):
-    path = os.path.join(os.environ["HOME"], ".fireworks",
+    path = os.path.join(os.path.expanduser('~'), ".fireworks",
                         'FW_config.yaml') if path is None else path
-    with open(path, "w") as f:
-        yaml.dump(config_to_dict(), f)
+    dumpfn(config_to_dict(), path)
 
 
 @singleton
@@ -145,7 +160,7 @@ class FWData(object):
     """
 
     def __init__(self):
-        self.MULTIPROCESSING = None # default single process framework
+        self.MULTIPROCESSING = None  # default single process framework
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job
         self.DATASERVER = None  # the shared object manager

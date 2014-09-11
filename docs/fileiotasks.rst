@@ -141,7 +141,9 @@ Required parameters
 Optional parameters
 -------------------
 
-* compress: (str) - choose between "gz" (default) and "bz2" compression modes
+* compression: (str) - choose between "gz" (default) and "bz2" compression modes
+* dest: (str) - destination location
+* ignore_errors: (bool) - whether to ignore errors
 
 ArchiveDirTask
 ===============
@@ -152,6 +154,7 @@ Required parameters
 -------------------
 
 * base_name: (str) the full file path of the output archive file
+* format: (str) "zip", "tar", "bztar" or "gztar"
 
 Optional parameters
 -------------------

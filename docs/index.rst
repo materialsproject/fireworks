@@ -14,7 +14,7 @@
 .. pull-quote:: | "Give me six hours to chop down a tree and I will spend the first four sharpening the axe."
                 |    - Abraham Lincoln
 
-FireWorks is a free, open-source code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
+FireWorks is a free, `open-source <https://github.com/materialsproject/fireworks>`_ code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
 
 Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers.
 
@@ -188,6 +188,7 @@ The built-in FireTasks
     scripttask
     templatewritertask
     fileiotasks
+    pytask
 
 Misc
 ----
@@ -210,8 +211,20 @@ Reference
     :maxdepth: 2
 
     reference
+    guide_to_writing_firetasks
 
 .. _contributing-label:
+
+================
+Citing FireWorks
+================
+
+A paper for FireWorks is in preparation. In the meantime, you can cite FireWorks as follows:
+
+FireWorks workflow software, http://pythonhosted.org/FireWorks.
+
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.11618.png
+        :target: http://dx.doi.org/10.5281/zenodo.11618
 
 ====================================
 Contributing / Contact / Bug Reports
