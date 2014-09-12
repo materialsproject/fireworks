@@ -150,7 +150,7 @@ Let's explore custom FireTasks with by writing custom Python for adding two numb
             input_array = fw_spec['input_array']
             m_sum = sum(input_array)
 
-            print "The sum of {} is: {}".format(input_array, m_sum)
+            print("The sum of {} is: {}".format(input_array, m_sum))
 
             return FWAction(stored_data={'sum': m_sum})
 
