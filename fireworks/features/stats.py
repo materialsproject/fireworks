@@ -286,7 +286,7 @@ class FWStats:
         if end_time:
             end_time = parser.parse(end_time)
         else:
-            end_time = datetime.now()
+            end_time = datetime.utcnow()
         if not start_time:
             if not time_delta:
                 time_delta = {"days":30}
