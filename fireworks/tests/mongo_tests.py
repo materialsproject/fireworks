@@ -171,17 +171,18 @@ class MongoTests(unittest.TestCase):
 
     def test_parallel_fibadder(self):
         # this is really testing to see if a Workflow can handle multiple FWs updating it at once
-        parent = FireWork(ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True}), fw_id=1)
-        fib1 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, fw_id=2)
-        fib2 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, fw_id=3)
-        wf = Workflow([parent, fib1, fib2], {1: [2, 3]})
+        parent = FireWork(ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True}))
+        fib1 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, parents=[parent])
+        fib2 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, parents=[parent])
+        fib3 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, parents=[parent])
+        fib4 = FireWork(FibonacciAdderTask(), {'smaller': 0, 'larger': 1, 'stop_point': 30}, parents=[parent])
+        wf = Workflow([parent, fib1, fib2, fib3, fib4])
         self.lp.add_wf(wf)
 
         p = Pool(NCORES_PARALLEL_TEST)
 
         creds_array = [self.lp.to_dict()] * NCORES_PARALLEL_TEST
         p.map(random_launch, creds_array)
-
 
     def test_fworkerenv(self):
         t = DummyTask()
