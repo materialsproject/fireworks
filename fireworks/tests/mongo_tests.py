@@ -18,6 +18,7 @@ from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterT
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
 from fireworks.tests.tasks import DummyTask
+from fireworks.features.stats import FWStats
 import six
 
 __author__ = 'Anubhav Jain'
@@ -278,6 +279,23 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         self.lp.archive_wf(fw.fw_id)
         self.assertFalse(launch_rocket(self.lp, self.fworker))
+
+    def test_stats(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
+        fw = FireWork(test1)
+        self.lp.add_wf(fw)
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+        s=FWStats(self.lp)
+        launch_results=s.get_launch_summary(time_field="updated_on")[0]
+        self.assertEqual((launch_results["_id"],launch_results["count"]), ("COMPLETED", 2))
+        self.lp.add_wf(fw)
+        fireworks_results=s.get_fireworks_summary(time_field="updated_on")
+        self.assertEqual((fireworks_results[1]["_id"], fireworks_results[1]["count"]), ("READY", 1))
+        launch_rocket(self.lp, self.fworker)
+        workflow_results=s.get_workflow_summary(time_field="updated_on")
+        self.assertEqual((workflow_results[0]["_id"], workflow_results[0]["count"]), ("COMPLETED", 3))
 
     def tearDown(self):
         self.lp.reset(password=None, require_password=False)
