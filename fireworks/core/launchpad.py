@@ -876,6 +876,8 @@ class LaunchPad(FWSerializable):
 
 
     def _update_wf(self, wf, updated_ids):
+        # note: must be called within an enclosing WFLock
+
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
@@ -891,7 +893,9 @@ class LaunchPad(FWSerializable):
         if not self.workflows.find_one({'nodes': query_node}):
             raise ValueError("BAD QUERY_NODE! {}".format(query_node))
         # redo the links
-        self.workflows.find_and_modify({'nodes': query_node}, wf.to_db_dict())
+        wf = wf.to_db_dict()
+        wf['locked'] = True  # preserve the lock!
+        self.workflows.find_and_modify({'nodes': query_node}, wf)
 
 
     def _steal_launches(self, thief_fw):
