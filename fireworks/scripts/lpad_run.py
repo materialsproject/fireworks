@@ -451,18 +451,18 @@ def report(args):
     lp=get_lp(args)
     def print_results(results):
         for i in results:
-            print i["_id"] +": " + str(i['count'])
+            print('{}: {}'.format(i["_id"], str(i['count'])))
             for k in i.keys():
                 if k not in ["_id", "count", "ids"]:
-                    print " "+k+ ": "+str(i[k])
+                    print(' {}: {}'.format(k, str(i[k])))
             if "ids" in i.keys():
-                print " ids:",
-                print i["ids"]
+                print(" ids:"),
+                print(i["ids"])
     def print_daily_results(results):
         for i in results:
-            print i["_id"]
+            print(i["_id"])
             for k in i["run_counts"]:
-                print " "+k["state"]+": "+str(k["count"])
+                print(" {}: {}".format(k["state"], k["count"]))
     if args.action_command=="get_fw_report":
         results=FWStats(lp).get_fireworks_summary(query_start=args.start, query_end=args.end, query=args.query,
                                                   time_field=args.time_field, weeks=args.weeks, days=args.days,
@@ -494,7 +494,7 @@ def report(args):
                                                   query=args.query, weeks=args.weeks, days=args.days,hours=args.hours,
                                                   minutes=args.minutes,runtime_stats=args.runtime_stats,
                                                   include_ids=args.include_ids)
-        print results
+        print(results)
 
 def track_fws(args):
     lp = get_lp(args)
