@@ -472,8 +472,7 @@ class LaunchPad(FWSerializable):
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
 
-        with WFLock(self, fw_id):
-            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+        self._refresh_wf(fw_id)
         return f
 
     def reignite_fw(self, fw_id):
@@ -481,8 +480,7 @@ class LaunchPad(FWSerializable):
                                            {'$set': {'state': 'WAITING',
                                                      'updated_on': datetime.datetime.utcnow()}})
         if f:
-            with WFLock(self, fw_id):
-                self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+            self._refresh_wf(fw_id)
         return f
 
     def defuse_wf(self, fw_id):
@@ -490,8 +488,7 @@ class LaunchPad(FWSerializable):
         for fw in wf.fws:
             self.defuse_fw(fw.fw_id)
 
-        with WFLock(self, fw_id):
-            self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+        self._refresh_wf(fw_id)
 
     def reignite_wf(self, fw_id):
         wf = self.get_wf_by_fw_id(fw_id)
@@ -513,8 +510,7 @@ class LaunchPad(FWSerializable):
                                                {'$set': {'state': 'ARCHIVED',
                                                          'updated_on': datetime.datetime.utcnow()}})
 
-            with WFLock(self, fw_id):
-                self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+            self._refresh_wf(fw_id)
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
@@ -537,9 +533,7 @@ class LaunchPad(FWSerializable):
             return True
 
         self._upsert_fws([m_fw])  # update the DB with the new launches
-        with WFLock(self, m_fw.fw_id):
-            self._refresh_wf(self.get_wf_by_fw_id(m_fw.fw_id),
-                         m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
+        self._refresh_wf(m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
 
         return False
 
@@ -653,10 +647,7 @@ class LaunchPad(FWSerializable):
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
-            with WFLock(self, fw_id):
-                fw_id = fw_data['fw_id']
-                wf = self.get_wf_by_fw_id(fw_id)
-                self._refresh_wf(wf, fw_id)
+            self._refresh_wf(fw_data['fw_id'])
 
     def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None, min_runtime=None):
         lost_launch_ids = []
@@ -789,8 +780,7 @@ class LaunchPad(FWSerializable):
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
-            with WFLock(self, fw_id):
-                self._refresh_wf(self.get_wf_by_fw_id(fw_id), fw_id)
+            self._refresh_wf(fw_id)
         # change return type to dict to make return type seriazlizable to
         # support job packing
         return m_launch.to_dict()
@@ -868,17 +858,18 @@ class LaunchPad(FWSerializable):
 
         return reruns  # return the ids that were rerun
 
-    def _refresh_wf(self, wf, fw_id):
+    def _refresh_wf(self, fw_id):
 
         """
         Update the FW state of all jobs in workflow
-        :param wf: a Workflow object
         :param fw_id: the parent fw_id - children will be refreshed
         """
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
-        updated_ids = wf.refresh(fw_id)
-        self._update_wf(wf, updated_ids)
+        with WFLock(self, fw_id):
+            wf = self.get_wf_by_fw_id(fw_id)
+            updated_ids = wf.refresh(fw_id)
+            self._update_wf(wf, updated_ids)
 
 
     def _update_wf(self, wf, updated_ids):
