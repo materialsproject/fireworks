@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.91**
+
+* Major: Rename FireWork to Firework. Should be fully backward-compatible for the moment, but users must switch by ~v1.0.
+* Unicode compatibility for Py3k (S.P. Ong)
+
 **v0.90**
 
 * Introduce reporting tools via lpad report (W. Chen)
