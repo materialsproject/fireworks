@@ -223,8 +223,8 @@ A paper for FireWorks is in preparation. In the meantime, you can cite FireWorks
 
 FireWorks workflow software, http://pythonhosted.org/FireWorks.
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.11779.png
-        :target: http://dx.doi.org/10.5281/zenodo.11779
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.11794.png
+        :target: http://dx.doi.org/10.5281/zenodo.11794
 
 ====================================
 Contributing / Contact / Bug Reports
