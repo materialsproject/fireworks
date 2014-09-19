@@ -159,7 +159,7 @@ class PyTask(FireTaskBase):
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
             modname, funcname = toks
-            mod = __import__(modname, globals(), locals(), [funcname], 0)
+            mod = __import__(modname, globals(), locals(), [str(funcname)], 0)
             func = getattr(mod, funcname)
         else:
             #Handle built in functions.
