@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """

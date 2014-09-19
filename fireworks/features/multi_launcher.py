@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 This module contains methods for launching several Rockets in a parallel environment
 """

@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
@@ -246,5 +250,3 @@ class Rocket():
                     f.truncate()
 
             return True
-
-

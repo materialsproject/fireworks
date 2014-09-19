@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 __author__ = 'Morgan Hargrove'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'

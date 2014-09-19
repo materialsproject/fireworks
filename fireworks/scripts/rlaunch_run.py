@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """

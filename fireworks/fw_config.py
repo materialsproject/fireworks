@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 A set of global constants for FireWorks (Python code as a config file)
 """

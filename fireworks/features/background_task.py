@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, serialize_fw, \
     recursive_deserialize
 
