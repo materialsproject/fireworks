@@ -40,9 +40,9 @@ import sys
 import yaml
 # Use CLoader for faster performance where possible.
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CLoader as Loader, CSafeDumper as Dumper
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import Loader as Loader, SafeDumper as Dumper
 import six
 
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES
@@ -202,8 +202,8 @@ class FWSerializable(object):
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                                  allow_unicode=True)
+            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
+                             allow_unicode=True, Dumper=Dumper)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
