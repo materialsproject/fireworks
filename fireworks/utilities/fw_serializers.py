@@ -202,8 +202,8 @@ class FWSerializable(object):
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                             allow_unicode=True, Dumper=Dumper)
+            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
+                                  allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
