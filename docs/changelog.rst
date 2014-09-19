@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v0.90**
+
+* Introduce reporting tools via lpad report (W. Chen)
+* Fix bug in locking
+* Greatly speed up rlaunch rapidfire by removing artificial sleep
+* Use monty CLoader (S.P. Ong)
+
 **v0.89**
 
 * Fix small FireTaskMeta issue (G. Petretto w/S.P. Ong)

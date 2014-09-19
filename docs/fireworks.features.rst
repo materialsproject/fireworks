@@ -33,3 +33,11 @@ features Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`stats` Module
+-------------------
+
+.. automodule:: fireworks.features.stats
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
