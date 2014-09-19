@@ -14,6 +14,7 @@ import ast
 import json
 import datetime
 import traceback
+import string
 
 from pymongo import DESCENDING, ASCENDING
 import yaml
@@ -549,9 +550,8 @@ def lpad():
 
     parser = ArgumentParser(description=m_description)
     parent_parser = ArgumentParser(add_help=False)
-
     parser.add_argument("-o", "--output", choices=["json", "yaml"],
-                        default="json", type=str.lower,
+                        default="json", type=string.lower,
                         help="Set output display format to either json or "
                              "YAML. YAML is easier to read for long "
                              "documents. JSON is the default.")
@@ -564,10 +564,11 @@ def lpad():
     fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
 
     state_args = ['-s', '--state']
-    state_kwargs = {"type": str.upper, "help": "Select by state.",
+    state_kwargs = {"type": string.upper, "help": "Select by state.",
                     "choices": FireWork.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
-    disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
+    disp_kwargs = {"type": string.lower, "help": "Display format.", "default":
+                   "less",
                    "choices": ["all", "more", "less", "ids", "count",
                                "reservations"]}
 
