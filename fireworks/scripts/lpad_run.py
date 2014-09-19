@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
@@ -24,7 +28,6 @@ from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 from fireworks.features.stats import FWStats
-from pprint import pprint
 from six.moves import input
 
 
@@ -545,9 +548,8 @@ def lpad():
 
     parser = ArgumentParser(description=m_description)
     parent_parser = ArgumentParser(add_help=False)
-
     parser.add_argument("-o", "--output", choices=["json", "yaml"],
-                        default="json", type=str.lower,
+                        default="json", type=lambda s: s.lower(),
                         help="Set output display format to either json or "
                              "YAML. YAML is easier to read for long "
                              "documents. JSON is the default.")
@@ -560,10 +562,11 @@ def lpad():
     fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
 
     state_args = ['-s', '--state']
-    state_kwargs = {"type": str.upper, "help": "Select by state.",
+    state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
                     "choices": FireWork.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
-    disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
+    disp_kwargs = {"type": lambda s: s.lower(), "help": "Display format.",
+                   "default": "less",
                    "choices": ["all", "more", "less", "ids", "count",
                                "reservations"]}
 

@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.

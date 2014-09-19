@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import logging
 import datetime
 from multiprocessing.managers import BaseManager, DictProxy

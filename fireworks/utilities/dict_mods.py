@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 This module allows you to modify a dict (a spec) using another dict (an instruction). The main method of interest is apply_dictmod().
 
@@ -166,4 +170,3 @@ def apply_mod(modification, obj):
             DictMods().supported_actions[action].__call__(obj, settings)
         else:
             raise ValueError("{} is not a supported action!".format(action))
-

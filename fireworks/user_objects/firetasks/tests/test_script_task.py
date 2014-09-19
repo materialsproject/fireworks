@@ -1,8 +1,11 @@
+# coding: utf-8
+
+from __future__ import unicode_literals, division
+
 """
 TODO: Modify unittest doc.
 """
 
-from __future__ import division
 
 __author__ = "Shyue Ping Ong, Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"

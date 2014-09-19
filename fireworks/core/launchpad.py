@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 The LaunchPad manages the FireWorks database.
 """
@@ -998,4 +1002,3 @@ class LaunchPad(FWSerializable):
     # support for job packing
     def log_message(self, level, message):
         self.m_logger.log(level, message)
-

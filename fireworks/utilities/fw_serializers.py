@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 """
 This module aids in serializing and deserializing objects.
 
@@ -36,9 +40,9 @@ import sys
 import yaml
 # Use CLoader for faster performance where possible.
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CLoader as Loader, CSafeDumper as Dumper
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import Loader as Loader, SafeDumper as Dumper
 import six
 
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES
