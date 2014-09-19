@@ -463,23 +463,23 @@ def report(args):
             print(i["_id"])
             for k in i["run_counts"]:
                 print(" {}: {}".format(k["state"], k["count"]))
-    if args.action_command=="get_fw_report":
+    if args.action_command=="fws":
         results=FWStats(lp).get_fireworks_summary(query_start=args.start, query_end=args.end, query=args.query,
                                                   time_field=args.time_field, weeks=args.weeks, days=args.days,
                                                   hours=args.hours, minutes=args.minutes)
         print_results(results)
-    elif args.action_command=="get_launch_report":
+    elif args.action_command=="launches":
         results=FWStats(lp).get_launch_summary(query_start=args.start, query_end=args.end, query=args.query,
                                                time_field=args.time_field, weeks=args.weeks, days=args.days,
                                                hours=args.hours, minutes=args.minutes, runtime_stats=args.runtime_stats,
                                                include_ids=args.include_ids)
         print_results(results)
-    elif args.action_command=="get_wf_report":
+    elif args.action_command=="wfs":
         results=FWStats(lp).get_workflow_summary(query_start=args.start, query_end=args.end, query=args.query,
                                                time_field=args.time_field, weeks=args.weeks, days=args.days,
                                                hours=args.hours, minutes=args.minutes)
         print_results(results)
-    elif args.action_command=="get_daily_report":
+    elif args.action_command=="daily":
         results=FWStats(lp).get_daily_completion_summary(query_start=args.start, query_end=args.end, query=args.query,
                                                time_field=args.time_field, weeks=args.weeks, days=args.days,
                                                hours=args.hours, minutes=args.minutes)
@@ -489,7 +489,7 @@ def report(args):
                                                     query=args.query, weeks=args.weeks, days=args.days, hours=args.hours,
                                                     minutes=args.minutes, include_ids=args.include_ids)
         print_results(results)
-    elif args.action_command=="identify_catastrophes":
+    elif args.action_command=="catastrophes":
         results=FWStats(lp).identify_catastrophes(error_ratio=args.error_ratio, query_start=args.start, query_end=args.end,
                                                   query=args.query, weeks=args.weeks, days=args.days,hours=args.hours,
                                                   minutes=args.minutes,runtime_stats=args.runtime_stats,
@@ -828,25 +828,25 @@ def lpad():
     report_parent_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries for process.")
     report_subparser = report_parser.add_subparsers(title="action", dest="action_command")
 
-    fw_report_parser = report_subparser.add_parser('get_fw_report', help='Get a report for fireworks', parents=[report_parent_parser])
+    fw_report_parser = report_subparser.add_parser('fws', help='Get a report for fireworks', parents=[report_parent_parser])
     fw_report_parser.add_argument('-f', '--time_field', default="time_end")
     fw_report_parser.set_defaults(func=report)
-    launch_report_parser = report_subparser.add_parser('get_launch_report', help='Get a report for luanches', parents=[report_parent_parser])
+    launch_report_parser = report_subparser.add_parser('launches', help='Get a report for luanches', parents=[report_parent_parser])
     launch_report_parser.add_argument('-f', '--time_field', default="time_end")
     launch_report_parser.add_argument('-r', '--runtime_stats', action="store_true")
     launch_report_parser.add_argument('-i', '--include_ids', action="store_true")
     launch_report_parser.set_defaults(func=report)
-    wf_report_parser = report_subparser.add_parser('get_wf_report', help='Get a report for workflows', parents=[report_parent_parser])
+    wf_report_parser = report_subparser.add_parser('wfs', help='Get a report for workflows', parents=[report_parent_parser])
     wf_report_parser.add_argument('-f', '--time_field', default="updated_on")
     wf_report_parser.set_defaults(func=report)
-    daily_report_parser = report_subparser.add_parser('get_daily_report', help='Get a daily report for fireworks', parents=[report_parent_parser])
+    daily_report_parser = report_subparser.add_parser('daily', help='Get a daily report for fireworks', parents=[report_parent_parser])
     daily_report_parser.add_argument("-f", '--time_field', default="time_end")
     daily_report_parser.set_defaults(func=report)
     group_fizzled_fw_parser = report_subparser.add_parser('group_fizzled_fws', help='Group fizzled fireworks', parents=[report_parent_parser])
     group_fizzled_fw_parser.add_argument("group_by", help="Database field used to group fireworks items. For example: 'spec.task_type'")
     group_fizzled_fw_parser.add_argument("-i", '--include_ids', action="store_true")
     group_fizzled_fw_parser.set_defaults(func=report)
-    identify_catastrophes_parser = report_subparser.add_parser('identify_catastrophes', help='Get days with higher failure ratio', parents=[report_parent_parser])
+    identify_catastrophes_parser = report_subparser.add_parser('catastrophes', help='Get days with higher failure ratio', parents=[report_parent_parser])
     identify_catastrophes_parser.add_argument('-t', '--error_ratio', type=float, default=0.01)
     identify_catastrophes_parser.add_argument('-i', '--include_ids', action="store_true")
     identify_catastrophes_parser.add_argument('-r', '--runtime_stats', action="store_true")

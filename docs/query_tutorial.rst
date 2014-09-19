@@ -1,13 +1,14 @@
-================================
-Querying FireWorks and Workflows
-================================
+=======================================================
+Querying FireWorks and Workflows and Generating Reports
+=======================================================
 
-FireWorks provides two functions for getting information about your Workflows. The ``lpad get_fws`` command queries individual FireWorks (steps in a Workflow), whereas the ``lpad get_wflows`` command queries entire Workflows.
+FireWorks provides two functions for getting information about your Workflows. The ``lpad get_fws`` command queries individual FireWorks (steps in a Workflow), whereas the ``lpad get_wflows`` command queries entire Workflows. The reporting features allows you to generate detailed reports about runtime statistics.
 
 Full usage of these commands can be found through the built-in help::
 
     lpad get_fws --help
     lpad get_wflows --help
+    lpad report --help
 
 Example queries - FireWorks
 ===========================
@@ -54,3 +55,18 @@ Example queries - Workflows
 #. Show a summary of all Workflows where the **metadata** contains a value of *my_parameter* equal to 3::
 
     lpad get_wflows -q '{"metadata.my_parameter":3}' -d more
+
+Example queries - Reporting
+===========================
+
+#. Get a daily report::
+
+    lpad report daily
+
+#. Get report about workflows::
+
+    lpad report wfs
+
+#. Find days with high failure rates
+
+    lpad report catastrophes
