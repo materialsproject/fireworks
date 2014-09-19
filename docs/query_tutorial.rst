@@ -1,6 +1,6 @@
-=======================================================
-Querying FireWorks and Workflows and Generating Reports
-=======================================================
+=====================================================
+Querying FireWorks and Workflows / Generating Reports
+=====================================================
 
 FireWorks provides two functions for getting information about your Workflows. The ``lpad get_fws`` command queries individual FireWorks (steps in a Workflow), whereas the ``lpad get_wflows`` command queries entire Workflows. The reporting features allows you to generate detailed reports about runtime statistics.
 
