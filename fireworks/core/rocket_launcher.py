@@ -75,7 +75,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
             if num_launched == nlaunches:
                 break
             if launchpad.run_exists(fworker):
-                skip_check = True # don't wait, pull the next FW right away
+                skip_check = True  # don't wait, pull the next FW right away
             else:
                 time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh in case we have a dynamic WF
                 skip_check = False

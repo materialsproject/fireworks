@@ -27,8 +27,6 @@ Misc.
 
 * Speed up database queries
 
-* add max_runtime parameter to detect_lostruns()
-
 * Make it easy to set up the FW_config, my_launchpad.yaml, etc as environment variable. A separate tutorial, or maybe a single command? e.g. lpad setup
 
 * Store FW templates in "cloud". Lpad has command to read/write template to Mongo, and templatewritertask can grab template from MongoDB.
