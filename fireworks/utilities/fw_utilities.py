@@ -1,7 +1,5 @@
 # coding: utf-8
 
-from __future__ import unicode_literals
-
 import logging
 import datetime
 from multiprocessing.managers import BaseManager, DictProxy
