@@ -21,11 +21,11 @@ Example queries - FireWorks
 
     lpad get_fws -s FIZZLED -d all -m 3 --rsort updated_on
 
-#. Show all information of the FireWork with *name* set to ``my_fw``::
+#. Show all information of the Firework with *name* set to ``my_fw``::
 
     lpad get_fws -n my_fw -d all
 
-#. Show a summary of the FireWork with *fw_id* of 1::
+#. Show a summary of the Firework with *fw_id* of 1::
 
     lpad get_fws -i 1 -d more
 
@@ -48,7 +48,7 @@ Example queries - Workflows
 
     lpad get_wflows -n my_wf -d all
 
-#. Show a summary of the Workflow containing a FireWork with *fw_id* of 1::
+#. Show a summary of the Workflow containing a Firework with *fw_id* of 1::
 
     lpad get_wflows -i 1 -d more
 

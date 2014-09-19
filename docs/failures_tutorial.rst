@@ -9,7 +9,7 @@ Job exceptions, node failures, and system outages are all unfortunate realities 
 Normal operation
 ================
 
-Let's first introduce normal operation of a FireWork that prints ``starting``, sleeps for 10 seconds, and then prints ``ending``. The FireWork is completed successfully only if ``ending`` gets printed.
+Let's first introduce normal operation of a Firework that prints ``starting``, sleeps for 10 seconds, and then prints ``ending``. The Firework is completed successfully only if ``ending`` gets printed.
 
 #. Move to the ``failures`` tutorial directory on your FireServer::
 
@@ -19,7 +19,7 @@ Let's first introduce normal operation of a FireWork that prints ``starting``, s
 
    .. note:: You can increase or decrease the sleep time, depending on your patience level and reaction time later on in the tutorial.
 
-#. Let's add and run this FireWork. You'll have to wait 10 seconds for it to complete::
+#. Let's add and run this Firework. You'll have to wait 10 seconds for it to complete::
 
     lpad reset
     lpad add fw_sleep.yaml
@@ -32,23 +32,23 @@ Error during run - a *FIZZLED* Firework!
 
 If your job throws an exception (error), FireWorks will automatically mark your job as *FIZZLED*. Any jobs that depend on this job will not run until you fix things. Let's simulate this situation.
 
-#. Reset your database and add back the sleeping FireWork::
+#. Reset your database and add back the sleeping Firework::
 
     lpad reset
     lpad add fw_sleep.yaml
 
-#. We'll run the FireWork again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
+#. We'll run the Firework again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C). Make sure you hit that keyboard combo immediately after running the job, before you see the text ``ending``::
 
     rlaunch singleshot
     (Ctrl+C)
 
 #. If you did this correctly, you'll have seen the text ``starting`` but not the text ``ending``. You might also see some error text printed to your terminal.
 
-#. This behavior is what happens when your job throws an error (such as the *KeyboardInterrupt* error we just simulated). Let's see what became of this ill-fated FireWork::
+#. This behavior is what happens when your job throws an error (such as the *KeyboardInterrupt* error we just simulated). Let's see what became of this ill-fated Firework::
 
     lpad get_fws -i 1 -d all
 
-#. You should notice the state of this FireWork is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
+#. You should notice the state of this Firework is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
 
 #. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
 
@@ -59,12 +59,12 @@ Catastrophic Failure
 
 The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as *FIZZLED*. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let's see how to handle this case.
 
-#. Reset your database and add back the sleeping FireWork::
+#. Reset your database and add back the sleeping Firework::
 
     lpad reset
     lpad add fw_sleep.yaml
 
-#. We'll run the FireWork again, but this time you should interrupt its operation by **forcibly closing your terminal window** (immediately after running the job, before you see the text ``ending``)::
+#. We'll run the Firework again, but this time you should interrupt its operation by **forcibly closing your terminal window** (immediately after running the job, before you see the text ``ending``)::
 
     rlaunch singleshot
     ----(forcibly close your terminal window)
@@ -77,14 +77,14 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 
     lpad detect_lostruns --time 1 --fizzle
 
-   .. note:: Instead of using ``--fizzle``, you could instead use ``--rerun``. This would mark the Launch as being FIZZLED and then rerun the FireWork.
+   .. note:: Instead of using ``--fizzle``, you could instead use ``--rerun``. This would mark the Launch as being FIZZLED and then rerun the Firework.
    .. note:: An additional constraint, ``--max_runtime``, can be used if you are looking for jobs that ran only a short time before failing. This can be useful to track down if a job was killed because it did not have walltime to run (if it was started in the middle of the queue job). Note that you should set this parameter to be in slightly larger intervals of the ping_time, since runtime is determined using pings.
 
 #. This command will mark all jobs that have been running for more than 1 second as *FIZZLED*. We'll improve this in a bit, but for now let's check to make sure the command worked::
 
     lpad get_fws -i 1 -d more
 
-#. The FireWork should now be correctly listed as *FIZZLED*!
+#. The Firework should now be correctly listed as *FIZZLED*!
 
 #. Of course, in production you'll never want to mark all jobs running for 1 second as being *FIZZLED*; this will mark jobs that are running properly as *FIZZLED*!
 

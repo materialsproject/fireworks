@@ -2,7 +2,7 @@
 Tracking an output file during execution
 ========================================
 
-You can track the last few lines of file during FireWork execution. For example, you can monitor an output file to make sure the run is progressing as expected. Setting one or more such *trackers* is simple.
+You can track the last few lines of file during Firework execution. For example, you can monitor an output file to make sure the run is progressing as expected. Setting one or more such *trackers* is simple.
 
 Adding a tracker (via files)
 ============================
@@ -32,17 +32,17 @@ You can see this example in <INSTALL_DIR>/fw_tutorials/tracker.
 Adding a tracker (via code)
 ===========================
 
-The following code example creates the FireWork above with two trackers::
+The following code example creates the Firework above with two trackers::
 
-    from fireworks import FireWork, Tracker, ScriptTask, TemplateWriterTask
+    from fireworks import Firework, Tracker, ScriptTask, TemplateWriterTask
 
-    # create the FireWork consisting of multiple tasks
+    # create the Firework consisting of multiple tasks
     firetask1 = TemplateWriterTask({'context': {'opt1': 5.0, 'opt2': 'fast method'}, 'template_file': 'simple_template.txt', 'output_file': 'inputs.txt'})
     firetask2 = ScriptTask.from_str('wc -w < inputs.txt > words.txt')
     # define the trackers
     tracker1 = Tracker('words.txt', nlines=25)
     tracker2 = Tracker('inputs.txt', nlines=25)
-    fw = FireWork([firetask1, firetask2], spec={"_trackers": [tracker1, tracker2]})
+    fw = Firework([firetask1, firetask2], spec={"_trackers": [tracker1, tracker2]})
 
     fw.to_file('fw_tracker.yaml')
 
@@ -64,9 +64,9 @@ which will print out data like::
     option1 = 5.0
     option2 = fast method
 
-Choosing the FireWork(s) for which to view the tracked files
+Choosing the Firework(s) for which to view the tracked files
 ------------------------------------------------------------
-Besides for the <FW_ID>, there are additional options for specifying the FireWork(s) that you want to get the tracked data for. For example, you can search for the tracker data of a particular FireWork id or of all *FIZZLED* FireWorks via::
+Besides for the <FW_ID>, there are additional options for specifying the Firework(s) that you want to get the tracked data for. For example, you can search for the tracker data of a particular Firework id or of all *FIZZLED* FireWorks via::
 
     lpad track_fws -i <FW_ID>
     lpad track_fws -s FIZZLED

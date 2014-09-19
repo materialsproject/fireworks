@@ -25,23 +25,23 @@ Reserving FireWorks
 
 1. Begin in your working directory from the :doc:`previous tutorial </queue_tutorial>`. You should have four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
-#. Let's reset our database and add a FireWork for testing::
+#. Let's reset our database and add a Firework for testing::
 
     lpad reset
     lpad add fw_test.yaml
 
-#. Reserving a FireWork is as simple as adding the ``-r`` option to the Queue Launcher. Let's queue up a reserved FireWork and immediately check its state::
+#. Reserving a Firework is as simple as adding the ``-r`` option to the Queue Launcher. Let's queue up a reserved Firework and immediately check its state::
 
 
     qlaunch -r singleshot
     lpad get_fws -i 1 -d all
 
-#. When you get the FireWork, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that FireWork; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the FireWork. In addition, the **state_history** key should contain the reservation id of your submitted job.
+#. When you get the Firework, you should notice that its state is *RESERVED*. No other Rocket Launchers will run that Firework; it is now bound to your queue. Some details of the reservation are given in the **launches** key of the Firework. In addition, the **state_history** key should contain the reservation id of your submitted job.
 
 #. There are few different commands you can use to leverage the reservation id (often shortened as *qid*) of your job::
 
     lpad get_qid -i 1  # gets the queue id of FW 1
-    lpad get_fws --qid 1234  # gets the FireWork with queue id 1234
+    lpad get_fws --qid 1234  # gets the Firework with queue id 1234
     lpad cancel_qid --qid 1234  # cancels reservation 1234. WARNING: the user must remove the job from the queue manually before executing this command.
 
 #. When your queue runs and completes your job, you should see that the state is updated to *COMPLETED*::
@@ -55,12 +55,12 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
 #. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
-#. Reset the database and add a FireWork for testing::
+#. Reset the database and add a Firework for testing::
 
     lpad reset
     lpad add fw_test.yaml
 
-#. We have only one FireWork in the database, so we should only be able to submit one job to the queue. Let's try submitting two::
+#. We have only one Firework in the database, so we should only be able to submit one job to the queue. Let's try submitting two::
 
     qlaunch -r singleshot
     qlaunch -r singleshot
@@ -69,10 +69,10 @@ One nice feature of reserving FireWorks is that you are automatically prevented 
 
    .. note:: Once the job starts *running* or *completes*, both the simple version of the QueueLauncher and the reservation mode will stop you from submitting jobs. However, only the reservation mode will identify that a job is already queued.
 
-Overriding Queue Parameters within the FireWork
+Overriding Queue Parameters within the Firework
 ===============================================
 
-Another key feature of reserving FireWorks before queue submission is that the FireWork can override queue parameters. This is done by specifying the ``_queueadapter`` reserved key in the ``spec``. For example, let's override the walltime parameter.
+Another key feature of reserving FireWorks before queue submission is that the Firework can override queue parameters. This is done by specifying the ``_queueadapter`` reserved key in the ``spec``. For example, let's override the walltime parameter.
 
 #. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
@@ -82,26 +82,26 @@ Another key feature of reserving FireWorks before queue submission is that the F
 
     cp <INSTALL_DIR>/fw_tutorials/queue_pt2/fw_walltime.yaml .
 
-#. Look inside ``fw_walltime.yaml``. You will see a ``_queueadapter`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueadapter`` key will override the corresponding parameter in ``my_qadapter.yaml`` when the Queue Launcher is run in reservation mode. So now, the FireWork itself is determining key properties of the queue submission.
+#. Look inside ``fw_walltime.yaml``. You will see a ``_queueadapter`` key in the spec that specifies a ``walltime`` of 10 minutes. Anything in the ``_queueadapter`` key will override the corresponding parameter in ``my_qadapter.yaml`` when the Queue Launcher is run in reservation mode. So now, the Firework itself is determining key properties of the queue submission.
 
-#. Let's add and run this FireWork::
+#. Let's add and run this Firework::
 
     lpad reset
     lpad add fw_walltime.yaml
     qlaunch -r singleshot
 
-#. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your FireWork, not the default walltime from ``my_qadapter.yaml``.
+#. You might check the walltime that your job was submitted with using your queue manager's built-in commands (e.g., *qstat* or *mstat*). You can also see the queue submission script by looking inside the file ``FW_submit.script``. Inside, you'll see the job was submitted with the walltime specified by your Firework, not the default walltime from ``my_qadapter.yaml``.
 
 #. Your job should complete successfully as before. You could also try to override other queue parameters such as the number of cores for running the job or the account which is charged for running the job. In this way, your queue submission can be tailored on a per-job basis!
 
 Limitations: dealing with failure
 =================================
 
-One limitation of reserving FireWorks is that the FireWork's fate is tied to that of the queue submission. If the place in the queue is deleted, that FireWork is stuck in limbo unless you reset its state from *RESERVED* back to *READY*. Let's try to simulate this:
+One limitation of reserving FireWorks is that the Firework's fate is tied to that of the queue submission. If the place in the queue is deleted, that Firework is stuck in limbo unless you reset its state from *RESERVED* back to *READY*. Let's try to simulate this:
 
 #. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``
 
-#. Let's add and run this FireWork. Before the job starts running, delete it from the queue (if you're too slow, repeat this entire step)::
+#. Let's add and run this Firework. Before the job starts running, delete it from the queue (if you're too slow, repeat this entire step)::
 
     lpad reset
     lpad add fw_test.yaml
@@ -110,15 +110,15 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
    .. note:: The job id should have been printed by the Queue Launcher, or you can check your queue manager. The ``qdel`` command might need to be modified, depending on the type of queue manager you use.
 
-#. Now we have no jobs in the queue. But our FireWork still shows up as *RESERVED*::
+#. Now we have no jobs in the queue. But our Firework still shows up as *RESERVED*::
 
     lpad get_fws -i 1 -d more
 
-#. Because our FireWork is *RESERVED*, we cannot run it::
+#. Because our Firework is *RESERVED*, we cannot run it::
 
     qlaunch -r singleshot
 
-   tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this FireWork and is not letting us submit another queue script for the same job.
+   tells us that ``No jobs exist in the LaunchPad for submission to queue!``. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this Firework and is not letting us submit another queue script for the same job.
 
 #. The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then cancel the reservation ("qdel") them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks)::
 
@@ -126,7 +126,7 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
    .. note:: In production, you will want to increase the ``--time`` parameter considerably. The default value is 2 weeks (``--time 1209600``).
 
-#. Now the FireWork should be in the *READY* state::
+#. Now the Firework should be in the *READY* state::
 
     lpad get_fws -i 1 -d more
 
@@ -134,11 +134,11 @@ One limitation of reserving FireWorks is that the FireWork's fate is tied to tha
 
     qlaunch -r singleshot
 
-.. note:: If you un-reserve a FireWork that is still in a queue and hasn't crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same FireWork. The first queue script to run will run the FireWork properly. The second job to run will not find a FireWork to run and simply exit.
+.. note:: If you un-reserve a Firework that is still in a queue and hasn't crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same Firework. The first queue script to run will run the Firework properly. The second job to run will not find a Firework to run and simply exit.
 
 Conclusion
 ==========
 
-As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a FireWork until you run a command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
+As we demonstrated, reserving jobs in the queue has several advantages, but also adds the complication that queue failure can hold up a Firework until you run a command to free up broken reservations. Is is up to you which mode you prefer for your application. However, we suggest that you use only one of the two methods throughout your application. In particular, do not use the Simple Queue Launcher if you are defining the ``_queueadapter`` parameter in your ``spec``.
 
 If you are using the QueueLauncher in reservation mode, we suggest that you look at the tutorial on maintaining your FireWorks database (future). This will show you how to automatically clear out bad reservations periodically without needing human intervention.

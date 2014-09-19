@@ -21,7 +21,7 @@ import shutil
 import sys
 import argparse
 
-from fireworks.core.firework import FireWork, Tracker, FWorker, Workflow
+from fireworks.core.firework import Firework, Tracker, FWorker, Workflow
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket
 from fireworks.features.multi_launcher import launch_multiprocess
@@ -81,7 +81,7 @@ class TrackerTest(unittest.TestCase):
                 ft = ScriptTask.from_str('echo "' + str(i) + '" >> ' + self.dest1, {'store_stdout':True})
                 fts.append(ft)
 
-            fw = FireWork(fts, spec={'_trackers':[self.tracker1]}, fw_id=20, name='test_fw')
+            fw = Firework(fts, spec={'_trackers':[self.tracker1]}, fw_id=20, name='test_fw')
             self.lp.add_wf(fw)
             launch_rocket(self.lp, self.fworker)
 
@@ -108,7 +108,7 @@ class TrackerTest(unittest.TestCase):
                                         {'store_stdout':True})
                 fts.append(ft)
 
-            fw = FireWork(fts, spec={'_trackers':[self.tracker1]}, fw_id=21, name='test_fw')
+            fw = Firework(fts, spec={'_trackers':[self.tracker1]}, fw_id=21, name='test_fw')
             self.lp.add_wf(fw)
 
             try:
@@ -136,7 +136,7 @@ class TrackerTest(unittest.TestCase):
                     ft = ScriptTask.from_str('echo "' + str(i) + '" >> '+ dest,
                                               {'store_stdout':True})
                     fts.append(ft)
-                fw1 = FireWork(fts, spec={'_trackers':[tracker]},
+                fw1 = Firework(fts, spec={'_trackers':[tracker]},
                                fw_id=j+1, name=name+'1')
 
                 fts = []
@@ -144,7 +144,7 @@ class TrackerTest(unittest.TestCase):
                     ft = ScriptTask.from_str('echo "' + str(i) + '" >> ' + dest,
                                               {'store_stdout':True})
                     fts.append(ft)
-                fw2 = FireWork(fts, spec={'_trackers':[tracker]},
+                fw2 = Firework(fts, spec={'_trackers':[tracker]},
                                fw_id=j+2, name=name+'2')
                 wf = Workflow([fw1, fw2], links_dict={fw1:[fw2]})
                 self.lp.add_wf(wf)

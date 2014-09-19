@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.
 """
-from fireworks import FireWork
+from fireworks import Firework
 from fireworks.core.firework import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
@@ -39,8 +39,8 @@ class BasicTests(unittest.TestCase):
     """
 
     def test_fwconnector(self):
-        fw1 = FireWork(ScriptTask.from_str('echo "1"'))
-        fw2 = FireWork(ScriptTask.from_str('echo "1"'))
+        fw1 = Firework(ScriptTask.from_str('echo "1"'))
+        fw2 = Firework(ScriptTask.from_str('echo "1"'))
 
         wf1 = Workflow([fw1, fw2], {fw1.fw_id: fw2.fw_id})
         self.assertEqual(wf1.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
@@ -52,9 +52,9 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(wf3.links, {fw1.fw_id: [], fw2.fw_id: []})
 
     def test_parentconnector(self):
-        fw1 = FireWork(ScriptTask.from_str('echo "1"'))
-        fw2 = FireWork(ScriptTask.from_str('echo "1"'), parents=fw1)
-        fw3 = FireWork(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
+        fw1 = Firework(ScriptTask.from_str('echo "1"'))
+        fw2 = Firework(ScriptTask.from_str('echo "1"'), parents=fw1)
+        fw3 = Firework(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
 
         self.assertEqual(Workflow([fw1, fw2, fw3]).links, {fw1.fw_id: [fw2.fw_id, fw3.fw_id], fw2.fw_id: [fw3.fw_id], fw3.fw_id: []})
         self.assertRaises(ValueError, Workflow, [fw1, fw3])  # can't make this

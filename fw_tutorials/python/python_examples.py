@@ -1,4 +1,4 @@
-from fireworks.core.firework import FireWork, Workflow
+from fireworks.core.firework import Firework, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -27,9 +27,9 @@ def basic_fw_ex():
     # setup
     launchpad = setup()
 
-    # add FireWork
+    # add Firework
     firetask = ScriptTask.from_str('echo "howdy, your job launched successfully!"')
-    firework = FireWork(firetask)
+    firework = Firework(firetask)
     launchpad.add_wf(firework)
 
     # launch Rocket
@@ -44,13 +44,13 @@ def rapid_fire_ex():
 
     # add FireWorks
     firetask = ScriptTask.from_str('echo "howdy, your job launched successfully!"')
-    fw1 = FireWork(firetask)
+    fw1 = Firework(firetask)
     launchpad.add_wf(fw1)
 
     # re-add multiple times
-    fw2 = FireWork(firetask)
+    fw2 = Firework(firetask)
     launchpad.add_wf(fw2)
-    fw3 = FireWork(firetask)
+    fw3 = Firework(firetask)
     launchpad.add_wf(fw3)
 
     # launch Rocket
@@ -67,7 +67,7 @@ def multiple_tasks_ex():
     firetask1 = ScriptTask.from_str('echo "This is TASK #1"')
     firetask2 = ScriptTask.from_str('echo "This is TASK #2"')
     firetask3 = ScriptTask.from_str('echo "This is TASK #3"')
-    fw = FireWork([firetask1, firetask2, firetask3])
+    fw = Firework([firetask1, firetask2, firetask3])
     launchpad.add_wf(fw)
 
     # launch Rocket
@@ -86,10 +86,10 @@ def basic_wf_ex():
     task3 = ScriptTask.from_str('echo "Jack is a manager."')
     task4 = ScriptTask.from_str('echo "Kip is an intern."')
 
-    fw1 = FireWork(task1, fw_id=1)
-    fw2 = FireWork(task2, fw_id=2)
-    fw3 = FireWork(task3, fw_id=3)
-    fw4 = FireWork(task4, fw_id=4)
+    fw1 = Firework(task1, fw_id=1)
+    fw2 = Firework(task2, fw_id=2)
+    fw3 = Firework(task3, fw_id=3)
+    fw4 = Firework(task4, fw_id=4)
 
     # make workflow
     workflow = Workflow([fw1, fw2, fw3, fw4], {1: [2, 3], 2: [4], 3: [4]})

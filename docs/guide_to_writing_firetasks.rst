@@ -85,7 +85,7 @@ Here's an example of a FireTask implementation that includes dynamic actions via
         if m_sum < stop_point:
             print('The next Fibonacci number is: {}'.format(m_sum))
             # create a new Fibonacci Adder to add to the workflow
-            new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
+            new_fw = Firework(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
             return FWAction(stored_data={'next_fibnum': m_sum}, additions=new_fw)
 
         else:
@@ -113,12 +113,12 @@ A FireTask (or a function called by :doc:`PyTask <pytask>`) can return a *FWActi
 The parameters of FWAction are as follows:
 
 * **stored_data**: *(dict)* data to store from the run. The data is put in the Launch database along with the rest of the FWAction. Does not affect the operation of FireWorks.
-* **exit**: *(bool)* if set to True, any remaining FireTasks within the same FireWork are skipped (like a ``break`` statement for a FireWork).
-* **update_spec**: *(dict)* A data dict that will update the spec for any remaining FireTasks *and* the following FireWork. Thus, this parameter can be used to pass data between FireTasks or between FireWorks. Note that if the original fw_spec and the update_spec contain the same key, the original will be overwritten.
+* **exit**: *(bool)* if set to True, any remaining FireTasks within the same Firework are skipped (like a ``break`` statement for a Firework).
+* **update_spec**: *(dict)* A data dict that will update the spec for any remaining FireTasks *and* the following Firework. Thus, this parameter can be used to pass data between FireTasks or between FireWorks. Note that if the original fw_spec and the update_spec contain the same key, the original will be overwritten.
 * **mod_spec**: ([dict]) This has the same purpose as update_spec - to pass data between FireTasks/FireWorks. However, the update_spec option is limited in that it can't increment variables or append to lists. This parameter allows one to update the child FW's spec using the DictMod language, a Mongo-like syntax that allows more fine-grained changes to the fw_spec.
-* **additions**: ([Workflow]) a list of WFs/FWs to add as children to this FireWork.
+* **additions**: ([Workflow]) a list of WFs/FWs to add as children to this Firework.
 * **detours**: ([Workflow]) a list of WFs/FWs to add as children (they will inherit the current FW's children)
-* **defuse_children**: (bool) defuse all the original children of this FireWork
+* **defuse_children**: (bool) defuse all the original children of this Firework
 
 The FWAction thereby allows you to *command* the workflow programmatically, allowing for the design of intelligent workflows that react dynamically to results.
 

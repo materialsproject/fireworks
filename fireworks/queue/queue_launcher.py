@@ -79,7 +79,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     qadapter.update({'job_name': job_name})
 
                     if '_queueadapter' in fw.spec:
-                        l_logger.debug('updating queue params using FireWork spec..')
+                        l_logger.debug('updating queue params using Firework spec..')
                         qadapter.update(fw.spec['_queueadapter'])
 
                     # reservation mode includes --fw_id in rocket launch

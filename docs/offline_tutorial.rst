@@ -24,7 +24,7 @@ This is the *offline* mode of FireWorks operation. Before using this option, how
 Part 1: Checkout and submit jobs in offline mode
 ================================================
 
-In offline mode, the login node will checkout a job, serialize it to a ``FW.json`` file, and put that file in the launch directory. When the compute node starts running the job, it will read the ``FW.json`` file to instantiate the FireWork and run it using the ``--offline`` option of the *rlaunch* command.
+In offline mode, the login node will checkout a job, serialize it to a ``FW.json`` file, and put that file in the launch directory. When the compute node starts running the job, it will read the ``FW.json`` file to instantiate the Firework and run it using the ``--offline`` option of the *rlaunch* command.
 
 To submit jobs in offline mode:
 
@@ -50,7 +50,7 @@ To recover all offline jobs, type the command *from the login node*::
 This will look inside all the offline job locations in search of ``FW_ping.json`` and ``FW_action.json`` files. If it finds them, it will connect to the LaunchPad and update the status of the jobs based on the files' contents. At this point, we should note a few things:
 
 * If you move the files around before the ``lpad`` command can recover them, FireWorks may never know that your job finished. FireWorks looks in the directory the job was submitted in for these files.
-* If job B depends on job A, job B will never run until FireWork A has been recovered and reported completed. So, you should run ``lpad recover_offline`` frequently.
+* If job B depends on job A, job B will never run until Firework A has been recovered and reported completed. So, you should run ``lpad recover_offline`` frequently.
 
 Forgetting about offline jobs
 -----------------------------

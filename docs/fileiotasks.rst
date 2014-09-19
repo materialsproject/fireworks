@@ -42,7 +42,7 @@ The FileTransferTask is a built-in FireTask for moving and copying files, perhap
 * a ``files`` key that contains a list of files to move or copy
 * additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors
 
-An example of a FireWork that copies two files, ``file1.txt`` and ``file2.txt``, to the home directory looks as follows::
+An example of a Firework that copies two files, ``file1.txt`` and ``file2.txt``, to the home directory looks as follows::
 
     spec:
       _tasks:
@@ -58,7 +58,7 @@ In Python code, the same task would be defined as::
 
     firetask1 = FileTransferTask({'files': [{'src': 'file1.txt', 'dest': '~/file1.txt'}, {'src': 'file2.txt', 'dest': '~/file2.txt'}], 'mode': 'copy'})
 
-The ``files`` parameter *must* be specified, and is an array of dictionaries with ``src`` and ``dest`` keys. The default mode of operation is to move files from the source to destination; by changing the ``mode`` to copy, we will copy the files instead. Note that you can put as many files (or directories) in the ``files`` list as you want; the same ``mode`` will be applied to all of them. If you want to move some files and copy others, you'd need to include two different ``FileTransferTask``s in your FireWork.
+The ``files`` parameter *must* be specified, and is an array of dictionaries with ``src`` and ``dest`` keys. The default mode of operation is to move files from the source to destination; by changing the ``mode`` to copy, we will copy the files instead. Note that you can put as many files (or directories) in the ``files`` list as you want; the same ``mode`` will be applied to all of them. If you want to move some files and copy others, you'd need to include two different ``FileTransferTask``s in your Firework.
 
 A more compact representation for File Transfers can be given if several files are being moved/copied to the same directory::
 
@@ -125,7 +125,7 @@ If all this is configured properly, you should be able to transfer files to a re
 The _use_global_spec option
 ---------------------------
 
-By default, the parameters for the FileTransferTask should be defined within the ``_task`` section of the **spec** corresponding to the FileTransferTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same FireWork.
+By default, the parameters for the FileTransferTask should be defined within the ``_task`` section of the **spec** corresponding to the FileTransferTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same Firework.
 
 
 CompressDirTask

@@ -34,7 +34,7 @@ On your FireServer (which hosts your Mongo database), you must set up at least o
 
    .. note:: If you are using the ``--dbpath`` option, make sure to set it.
 
-Your admin user is now configured, and your Mongo instance is now protected from unauthorized access by outsiders without your credentials. Next we must set up your LaunchPad configuration file so that you can authenticate yourself when running FireWork scripts.
+Your admin user is now configured, and your Mongo instance is now protected from unauthorized access by outsiders without your credentials. Next we must set up your LaunchPad configuration file so that you can authenticate yourself when running Firework scripts.
 
 .. note:: Your *admin_user* and *admin_password* can be used to set passwords for all databases in your Mongo installation, including databases that are unrelated to FireWorks. The *FW_user* and *FW_password* are used specifically to log in to the **fireworks** database.
 
@@ -54,7 +54,7 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
 
 #. **Make sure you store your LaunchPad file in a secure location with protected filesystem access.** It contains your password as plain text!
 
-#. Whenever running any FireWork scripts, make sure to specify the ``-l`` option and link to your configuration file. For example::
+#. Whenever running any Firework scripts, make sure to specify the ``-l`` option and link to your configuration file. For example::
 
     lpad -l my_launchpad.yaml get_fws
 

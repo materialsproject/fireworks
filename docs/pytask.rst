@@ -20,6 +20,6 @@ Example
 
 Here is an example of defining a PyTask that sleeps for 5 seconds::
 
-    fw_timer = FireWork(PyTask(func='time.sleep',args=[5]))
+    fw_timer = Firework(PyTask(func='time.sleep',args=[5]))
 
 Note that you can call any Python function this way!

@@ -27,10 +27,10 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
 
-#. The workflow is encapsulated in the ``hamlet_wf.yaml`` file. Look inside this file. The first section, labeled ``fws``, contains a list of FireWork objects:
+#. The workflow is encapsulated in the ``hamlet_wf.yaml`` file. Look inside this file. The first section, labeled ``fws``, contains a list of Firework objects:
 
-    * We define a FireWork with ``fw_id`` set to 1, and that prints *"To be, or not to be,"*.
-    * We define another FireWork with ``fw_id`` set to 2, and that prints *"that is the question:"*
+    * We define a Firework with ``fw_id`` set to 1, and that prints *"To be, or not to be,"*.
+    * We define another Firework with ``fw_id`` set to 2, and that prints *"that is the question:"*
 
     The second section, labeled ``links``, connects these FireWorks into a workflow:
 
@@ -48,7 +48,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
     lpad get_fws -i 1 -d all
     lpad get_fws -i 2 -d all
 
-#. You should notice that the FireWork that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the FireWork that writes the second line is not yet *READY*. The second line will not run until the first line is complete.
+#. You should notice that the Firework that writes the first line of the text (*"To be, or not to be,"*) shows a state that is *READY* to run. In contrast, the Firework that writes the second line is not yet *READY*. The second line will not run until the first line is complete.
 
 #. Let's run the just first step of this workflow, and then examine the state of our FireWorks::
 
@@ -63,7 +63,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 
 #. We see now that the first step is ``COMPLETED``, and the second step has automatically graduated from ``WAITING`` to ``READY``.
 
-#. Let's now launch a Rocket that will run the second FireWork of this Workflow::
+#. Let's now launch a Rocket that will run the second Firework of this Workflow::
 
     rlaunch -s singleshot
 
@@ -93,7 +93,7 @@ Let's quickly define and execute this workflow.
 
 #. The workflow is encapsulated in the ``org_wf.yaml`` file. Look inside this file.
 
-    * The ``fws`` section should make sense - we have defined one FireWork for each position in the company (4 in total).
+    * The ``fws`` section should make sense - we have defined one Firework for each position in the company (4 in total).
     * The ``links`` section should also make sense. The CEO has two children (the managers). The managers each have the same child (the intern). (The company appears to be quite the oligarchy!)
 
 #. Once everything makes sense, let's add the workflow and run everything at once::
@@ -113,7 +113,7 @@ Python example (optional)
 
 Here is a complete Python example that runs a Workflow::
 
-    from fireworks import FireWork, Workflow, FWorker, LaunchPad, ScriptTask
+    from fireworks import Firework, Workflow, FWorker, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import rapidfire
 
     # set up the LaunchPad and reset it
@@ -126,10 +126,10 @@ Here is a complete Python example that runs a Workflow::
     task3 = ScriptTask.from_str('echo "Jack is a manager."')
     task4 = ScriptTask.from_str('echo "Kip is an intern."')
 
-    fw1 = FireWork(task1)
-    fw2 = FireWork(task2)
-    fw3 = FireWork(task3)
-    fw4 = FireWork(task4)
+    fw1 = Firework(task1)
+    fw2 = Firework(task2)
+    fw3 = Firework(task3)
+    fw4 = Firework(task4)
 
     # assemble Workflow from FireWorks and their connections by id
     workflow = Workflow([fw1, fw2, fw3, fw4], {fw1: [fw2, fw3], fw2: [fw4], fw3: [fw4]})
@@ -141,6 +141,6 @@ Here is a complete Python example that runs a Workflow::
 Next steps
 ==========
 
-Neither our *Hamlet* workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single FireWork <firetask_tutorial>`. Indeed, the single-FireWork solution with multiple FireTasks is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial. For example, you might want to use a Workflow if each step requires a different type of computing resource.
+Neither our *Hamlet* workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single Firework <firetask_tutorial>`. Indeed, the single-Firework solution with multiple FireTasks is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial. For example, you might want to use a Workflow if each step requires a different type of computing resource.
 
 Meanwhile, you can continue on to the last step of this tutorial series, which better illustrates the power of workflows: :doc:`Dynamic workflows <dynamic_wf_tutorial>`.

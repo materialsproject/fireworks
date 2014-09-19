@@ -39,7 +39,7 @@ We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutoria
 
    Note that we have specified a ``template_file``, a ``context``, and an ``output_file``. All three of these parameters are needed to use the *TemplateWriterTask*.
 
-#. In the FireWork above, we are setting **opt1** to 5.0 and **opt2** to "fast method". If we wanted to change these parameters, we can create a file like ``fw_template2.yaml``::
+#. In the Firework above, we are setting **opt1** to 5.0 and **opt2** to "fast method". If we wanted to change these parameters, we can create a file like ``fw_template2.yaml``::
 
     spec:
       _tasks:
@@ -50,7 +50,7 @@ We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutoria
           opt2: stable method
         output_file: inputs.txt
 
-#. This second FireWork is identical to the first, except that we have changed the value of variables **opt1** and **opt2**. Thus, we have only changed the parameter values we care about when creating a new FireWork. In addition, one could easily perform searches based on **opt1** and **opt2** values using MongoDB's built-in search capabilities.
+#. This second Firework is identical to the first, except that we have changed the value of variables **opt1** and **opt2**. Thus, we have only changed the parameter values we care about when creating a new Firework. In addition, one could easily perform searches based on **opt1** and **opt2** values using MongoDB's built-in search capabilities.
 
 #. Let's reset the database, add these FireWorks to the LaunchPad, and then execute them::
 
@@ -59,7 +59,7 @@ We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutoria
 	lpad add fw_template2.yaml
 	rlaunch --silencer rapidfire
 
-#. If all went well, you should have two ``launcher_`` subdirectories. Each directory contains a file called ``inputs.txt`` that uses the same template file but different Contexts to create unique input files. Recall from the :doc:`FireTask tutorial <firetask_tutorial>` that you could use a multi-task FireWork to subsequently run a code that processes the input file to produce useful outputs.
+#. If all went well, you should have two ``launcher_`` subdirectories. Each directory contains a file called ``inputs.txt`` that uses the same template file but different Contexts to create unique input files. Recall from the :doc:`FireTask tutorial <firetask_tutorial>` that you could use a multi-task Firework to subsequently run a code that processes the input file to produce useful outputs.
 
 A more advanced template - *if/then* and *for*
 ==============================================
@@ -99,7 +99,7 @@ Template files are not restricted to simple variable substitutions with curly br
         output_file: inputs_advanced.txt
         template_file: advanced_template.txt
 
-#. Let's run this FireWork and examine what happens::
+#. Let's run this Firework and examine what happens::
 
     lpad reset
 	lpad add fw_advanced.yaml
@@ -139,7 +139,7 @@ In addition to ``template_file``, ``context``, and ``output_file``, the followin
 The _use_global_spec option
 ===========================
 
-By default, the parameters for the TemplateWriterTask should be defined within the ``_task`` section of the **spec** corresponding to the TemplateWriterTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple TemplateWriterTasks within the same FireWork.
+By default, the parameters for the TemplateWriterTask should be defined within the ``_task`` section of the **spec** corresponding to the TemplateWriterTask, not as a root key of the **spec**. If you'd like to instead specify the parameters in the root of the **spec**, you can set ``_use_global_spec`` to True within the ``_task`` section. Note that ``_use_global_spec`` can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple TemplateWriterTasks within the same Firework.
 
 Python example
 ==============

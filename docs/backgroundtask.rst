@@ -2,17 +2,17 @@
 Running Tasks in the Background
 ===============================
 
-When running a FireWork, the FireTasks are run sequentially in the main thread. One way to run a background thread would be to write a FireTask that spawns a new Thread to perform some work. However, FireWorks also has a built-in method to run background tasks via BackgroundTasks. Each BackgroundTask is run in its own thread, in *parallel* to the main FireTasks, and can be repeated at stated intervals.
+When running a Firework, the FireTasks are run sequentially in the main thread. One way to run a background thread would be to write a FireTask that spawns a new Thread to perform some work. However, FireWorks also has a built-in method to run background tasks via BackgroundTasks. Each BackgroundTask is run in its own thread, in *parallel* to the main FireTasks, and can be repeated at stated intervals.
 
 BackgroundTasks parameters
 ==========================
 
 BackgroundTasks have the following properties:
 
-* **tasks** - a list of FireTasks to execute in sequence. The FireTasks can read the initial spec of the FireWork. Any action returned by FireTasks within a BackgroundTask is *NOT* interpreted (including instructions to store data).
+* **tasks** - a list of FireTasks to execute in sequence. The FireTasks can read the initial spec of the Firework. Any action returned by FireTasks within a BackgroundTask is *NOT* interpreted (including instructions to store data).
 * **num_launches** - the total number of times to repeat the BackgroundTask. 0 or less indicates infinite repeats.
 * **sleep_time** - amount of time in seconds to sleep before repeating the BackgroundTask
-* **run_on_finish** - if True, the BackgroundTask will be run one last time at the end of the FireWork
+* **run_on_finish** - if True, the BackgroundTask will be run one last time at the end of the Firework
 
 Setting one or more BackgroundTasks (via file)
 ==============================================
@@ -54,16 +54,16 @@ You can define a BackgroundTask via::
 
     bg_task = BackgroundTask(ScriptTask.from_str('echo "hello from BACKGROUND thread"'), num_launches=0, sleep_time=5, run_on_finish=True)
 
-and add it to a FireWork via::
+and add it to a Firework via::
 
-    fw = FireWork([my_firetasks], spec={'_background_tasks':[bg_task]})
+    fw = Firework([my_firetasks], spec={'_background_tasks':[bg_task]})
 
 Python example
 ==============
 
 The following code runs a script that, in the main thread, prints 'starting', sleeps, then prints 'ending'. In separate threads, two background threads run at different intervals. The second BackgroundTask has ``run_on_finish`` set to True, so it also runs after the main thread finishes::
 
-    from fireworks import FireWork, FWorker, LaunchPad, ScriptTask
+    from fireworks import Firework, FWorker, LaunchPad, ScriptTask
     from fireworks.features.background_task import BackgroundTask
     from fireworks.core.rocket_launcher import rapidfire
 
@@ -75,8 +75,8 @@ The following code runs a script that, in the main thread, prints 'starting', sl
     bg_task1 = BackgroundTask(ScriptTask.from_str('echo "hello from BACKGROUND thread #1"'), sleep_time=10)
     bg_task2 = BackgroundTask(ScriptTask.from_str('echo "hello from BACKGROUND thread #2"'), num_launches=0, sleep_time=5, run_on_finish=True)
 
-    # create the FireWork consisting of a custom "Fibonacci" task
-    firework = FireWork(firetask1, spec={'_background_tasks': [bg_task1, bg_task2]})
+    # create the Firework consisting of a custom "Fibonacci" task
+    firework = Firework(firetask1, spec={'_background_tasks': [bg_task1, bg_task2]})
 
     ## store workflow and launch it locally
     launchpad.add_wf(firework)

@@ -10,7 +10,7 @@ from unittest import TestCase
 import unittest
 import sys
 
-from fireworks import LaunchPad, FireWork, FWorker
+from fireworks import LaunchPad, Firework, FWorker
 from fireworks.core.firework import Workflow
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -62,10 +62,10 @@ class TestCheckoutFW(TestCase):
 
     def test_checkout_fw(self):
         os.chdir(MODULE_DIR)
-        self.lp.add_wf(FireWork(ScriptTask.from_str(
+        self.lp.add_wf(Firework(ScriptTask.from_str(
             shell_cmd='echo "hello 1"',
             parameters={"stdout_file": "task.out"}), fw_id=1))
-        self.lp.add_wf(FireWork(ScriptTask.from_str(
+        self.lp.add_wf(Firework(ScriptTask.from_str(
             shell_cmd='echo "hello 2"',
             parameters={"stdout_file": "task.out"}), fw_id=2))
         launch_multiprocess(self.lp, FWorker(), 'DEBUG', 0, 2, 10)

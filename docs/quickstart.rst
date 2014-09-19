@@ -123,7 +123,7 @@ Python code
 
 The following Python code achieves the same behavior::
 
-    from fireworks import FireWork, Workflow, LaunchPad, ScriptTask
+    from fireworks import Firework, Workflow, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import rapidfire
 
     # set up the LaunchPad and reset it
@@ -131,8 +131,8 @@ The following Python code achieves the same behavior::
     launchpad.reset('', require_password=False)
 
     # create the individual FireWorks and Workflow
-    fw1 = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
-    fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
+    fw1 = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
+    fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
     wf = Workflow([fw1, fw2], {fw1:fw2}, name="test workflow")
 
     # store workflow and launch it locally
@@ -141,8 +141,8 @@ The following Python code achieves the same behavior::
 
 In the code above, the ``{fw1:fw2}`` argument to ``Workflow`` is adding a dependency of fw2 to fw1. You could instead define this dependency when defining your FireWorks::
 
-    fw1 = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
-    fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye", parents=[fw1])
+    fw1 = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
+    fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye", parents=[fw1])
     wf = Workflow([fw1, fw2], name="test workflow")
 
 Next steps

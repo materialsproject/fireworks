@@ -125,7 +125,7 @@ FireWorks Changelog
 v0.7
 ----
 
-.. caution:: The default behavior is now that mod_spec and update_spec push updates to next FireWork AND the next FireTask
+.. caution:: The default behavior is now that mod_spec and update_spec push updates to next Firework AND the next FireTask
 .. caution:: The FWConfig parameters are no longer called via a FWConfig() class instantiation; you can import these parameters directly now.
 
 * Python 3 support! via 'six' library (S.P. Ong)
@@ -180,7 +180,7 @@ v0.7
 * Allow config file in $HOME/.fireworks (S.P. Ong)
 * Add remote options to qlaunch via fabric library (S.P. Ong)
 * _fw_name automatically set to class name if unspecified (S.P. Ong)
-* Remove ValueError upon not finding a FireWork to run and handle this situation better
+* Remove ValueError upon not finding a Firework to run and handle this situation better
 
 **v0.61**
 
