@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 import os
 from fireworks.queue.queue_adapter import QueueAdapterBase
 import getpass

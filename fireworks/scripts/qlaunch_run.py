@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)

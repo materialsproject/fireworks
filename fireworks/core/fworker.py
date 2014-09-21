@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 This module contains FireWorker, which encapsulates information about a
@@ -27,7 +29,7 @@ class FWorker(FWSerializable):
             name: the name of the resource, should be unique
             category: a String describing the computing resource, does not
                 need to be unique
-            query: a dict query that restricts the type of FireWork this
+            query: a dict query that restricts the type of Firework this
                 resource will run
             env: a dict of special environment variables for the resource.
                 This env is passed to running FireTasks as a _fw_env in the

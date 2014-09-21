@@ -1,10 +1,11 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals, division
 
 """
 TODO: Modify unittest doc.
 """
 
-from __future__ import division
 
 __author__ = "Shyue Ping Ong, Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -25,7 +26,6 @@ class ScriptTaskTest(unittest.TestCase):
             os.remove('hello.txt')
         s = ScriptTask({'script':"echo 'hello world'",'stdout_file':'hello.txt'})
         s.run_task({})
-        print os.getcwd()
         self.assertTrue(os.path.exists('hello.txt'))
         with open('hello.txt') as fp:
             line = fp.readlines()[0]
@@ -33,7 +33,7 @@ class ScriptTaskTest(unittest.TestCase):
         os.remove('hello.txt')
 
 
-class PythonTaskTest(unittest.TestCase):
+class PyTaskTest(unittest.TestCase):
 
     def test_task(self):
         p = PyTask(func="json.dumps", obj={"hello": "world"},
@@ -44,7 +44,7 @@ class PythonTaskTest(unittest.TestCase):
         a = p.run_task({})
         self.assertEqual(a.stored_data["data"], 9)
         p = PyTask(func="print", args=[3])
-        a = p.run_task({})
+        p.run_task({})
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
@@ -77,7 +79,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     qadapter.update({'job_name': job_name})
 
                     if '_queueadapter' in fw.spec:
-                        l_logger.debug('updating queue params using FireWork spec..')
+                        l_logger.debug('updating queue params using Firework spec..')
                         qadapter.update(fw.spec['_queueadapter'])
 
                     # reservation mode includes --fw_id in rocket launch

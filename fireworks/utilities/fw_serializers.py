@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 This module aids in serializing and deserializing objects.
@@ -36,6 +38,11 @@ import abc
 import sys
 
 import yaml
+# Use CLoader for faster performance where possible.
+try:
+    from yaml import CLoader as Loader, CSafeDumper as Dumper
+except ImportError:
+    from yaml import Loader as Loader, SafeDumper as Dumper
 import six
 
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES
@@ -55,18 +62,18 @@ else:
     ENCODING_PARAMS = {}
 
 
-def recursive_dict(obj):
+def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
 
     if hasattr(obj, 'to_dict'):
-        return recursive_dict(obj.to_dict())
+        return recursive_dict(obj.to_dict(), preserve_unicode)
 
     if isinstance(obj, dict):
-        return {k: recursive_dict(v) for k, v in obj.items()}
+        return {recursive_dict(k, preserve_unicode): recursive_dict(v, preserve_unicode) for k, v in obj.items()}
 
     if isinstance(obj, (list, tuple)):
-        return [recursive_dict(v) for v in obj]
+        return [recursive_dict(v, preserve_unicode) for v in obj]
 
     if isinstance(obj, int) or isinstance(obj, float):
         return obj
@@ -74,7 +81,7 @@ def recursive_dict(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
+    if preserve_unicode and isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
         return obj
 
     return str(obj)
@@ -196,7 +203,7 @@ class FWSerializable(object):
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
             return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                             allow_unicode=True)
+                             allow_unicode=True, Dumper=Dumper)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -210,7 +217,8 @@ class FWSerializable(object):
         if f_format == 'json':
             return cls.from_dict(_reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
-            return cls.from_dict(_reconstitute_dates(yaml.load(f_str)))
+            return cls.from_dict(_reconstitute_dates(
+                yaml.load(f_str, Loader=Loader)))
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -338,7 +346,7 @@ def load_object_from_file(filename, f_format=None):
         if f_format == 'json':
             m_dict = _reconstitute_dates(json.loads(f.read()))
         elif f_format == 'yaml':
-            m_dict = _reconstitute_dates(yaml.load(f.read()))
+            m_dict = _reconstitute_dates(yaml.load(f, Loader=Loader))
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 

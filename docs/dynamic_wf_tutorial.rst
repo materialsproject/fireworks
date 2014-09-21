@@ -24,10 +24,10 @@ The text in blue lettering is not known in advance and can only be determined af
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
-#. The workflow is encapsulated in the ``addmod_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of FireWork objects:
+#. The workflow is encapsulated in the ``addmod_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of Firework objects:
 
  * ``fw_id`` 1 looks like it adds the numbers 1 and 1 (defined in the **input_array**) within an ``Add and Modify`` FireTask. This is clearly the first step of our desired workflow. Although we don't yet know what the ``Add and Modify`` FireTask is, we can guess that it at least adds the numbers in the **input_array**.
- * ``fw_id`` 2 only adds the number 10 thus far. Without knowing the details of the ``Add and Modify`` FireTask, it is unclear how this FireWork will obtain the output of the previous FireWork.  We'll explain that in the next step.
+ * ``fw_id`` 2 only adds the number 10 thus far. Without knowing the details of the ``Add and Modify`` FireTask, it is unclear how this Firework will obtain the output of the previous Firework.  We'll explain that in the next step.
  * The second section, labeled ``links``, connects these FireWorks into a workflow in the same manner as in the :doc:`first workflow tutorial <workflow_tutorial>`.
 
 #. We pass information by defining a custom FireTask that returns an instruction to modify the workflow. To see how this happens, we need to look inside the definition of our custom ``Add and Modify`` FireTask. Look inside the file ``addmod_task.py``:
@@ -37,11 +37,11 @@ The text in blue lettering is not known in advance and can only be determined af
 
         return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])
 
- * The first argument, *{'sum': m_sum}*, is the data we want to store in our database for future reference. (We've explored this before when :ref:`customtask-label`). It does not affect this FireWork's operation.
- * The second argument, *mod_spec=[{'_push': {'input_array': m_sum}}]*, is more complex. This argument describes a list of modifications to make to the next FireWork's **spec** using a special language.
- * The instruction *{'_push': {'input_array': m_sum}}* means that the *input_array* key of the next FireWork(s) will have another item *pushed* to the end of it. In our case, we will be pushing the sum of (1 + 1) to the ``input_array`` of the next FireWork.
+ * The first argument, *{'sum': m_sum}*, is the data we want to store in our database for future reference. (We've explored this before when :ref:`customtask-label`). It does not affect this Firework's operation.
+ * The second argument, *mod_spec=[{'_push': {'input_array': m_sum}}]*, is more complex. This argument describes a list of modifications to make to the next Firework's **spec** using a special language.
+ * The instruction *{'_push': {'input_array': m_sum}}* means that the *input_array* key of the next Firework(s) will have another item *pushed* to the end of it. In our case, we will be pushing the sum of (1 + 1) to the ``input_array`` of the next Firework.
 
-#. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next FireWork. Let's see how this operates in practice by inserting the workflow in our database::
+#. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next Firework. Let's see how this operates in practice by inserting the workflow in our database::
 
     lpad reset
     lpad add addmod_wf.yaml
@@ -60,7 +60,7 @@ The text in blue lettering is not known in advance and can only be determined af
     lpad get_fws -i 1 -d all
     lpad get_fws -i 2 -d all
 
-#. You should notice that the FireWork that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask has pushed its sum onto the ``input_array`` of the second FireWork!
+#. You should notice that the Firework that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask has pushed its sum onto the ``input_array`` of the second Firework!
 
 #. Finally, let's run the second step to ensure we successfully passed information between FireWorks::
 
@@ -73,24 +73,24 @@ You've now successfully completed an example of passing information between work
 A Fibonacci Adder
 =================
 
-You may not know in advance how many workflow steps you require to achieve a result. For example, let's generate all the `Fibonacci numbers <http://en.wikipedia.org/wiki/Fibonacci_number>`_ less than 100, but only using a single addition in each FireWork. It's unclear how many additions we'll need, so we can't set up this workflow explicitly.
+You may not know in advance how many workflow steps you require to achieve a result. For example, let's generate all the `Fibonacci numbers <http://en.wikipedia.org/wiki/Fibonacci_number>`_ less than 100, but only using a single addition in each Firework. It's unclear how many additions we'll need, so we can't set up this workflow explicitly.
 
-Instead, we will start with a single FireWork that contains the start of the sequence (0, 1). This FireWork will generate the next Fibonacci number in the sequence by addition, and then *generate its own child FireWork* to carry out the next addition operation. That child will in turn generate its own children. Starting from a single FireWork, we will end up with as many FireWorks as are needed to generate all the Fibonacci numbers less than 100.
+Instead, we will start with a single Firework that contains the start of the sequence (0, 1). This Firework will generate the next Fibonacci number in the sequence by addition, and then *generate its own child Firework* to carry out the next addition operation. That child will in turn generate its own children. Starting from a single Firework, we will end up with as many FireWorks as are needed to generate all the Fibonacci numbers less than 100.
 
-A diagram of our the first two steps of operation of our FireWork looks like this:
+A diagram of our the first two steps of operation of our Firework looks like this:
 
 .. image:: _static/fibnum_wf.png
    :width: 200px
    :align: center
    :alt: Fibonacci Number Workflow
 
-Our single FireWork will contain a custom FireTask that does the following:
+Our single Firework will contain a custom FireTask that does the following:
 
 * Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).
 * If this next Fibonacci number is less than 100 (the **stop_point**):
     * Print it
-    * Create its own child FireWork that will sum the new Fibonacci number we just found with the larger of the current inputs. In our example, this would mean to create a new FireWork with inputs 1 and 1.
-    * This new FireWork will output the next Fibonacci number (2), and then create its own child FireWork to continue the sequence (not shown)
+    * Create its own child Firework that will sum the new Fibonacci number we just found with the larger of the current inputs. In our example, this would mean to create a new Firework with inputs 1 and 1.
+    * This new Firework will output the next Fibonacci number (2), and then create its own child Firework to continue the sequence (not shown)
 
 * When the next Fibonacci number is greater than 100, print a message that we have exceeded our limit and stop the workflow rather than generate more FireWorks.
 
@@ -101,34 +101,34 @@ Let's see how this is achieved:
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
     rm FW.json
 
-#. The initial FireWork is in the file ``fw_fibnum.yaml``. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, along with the **stop_point** of 100, and asking to run the ``Fibonacci Adder Task``.
+#. The initial Firework is in the file ``fw_fibnum.yaml``. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, along with the **stop_point** of 100, and asking to run the ``Fibonacci Adder Task``.
 
 #. The dynamicism is in the ``Fibonacci Adder Task``, which is defined in the file ``fibadd_task.py``. Look inside this file.
 
  * The most important part of the code are the lines::
 
-    new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
+    new_fw = Firework(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
     return FWAction(stored_data={'next_fibnum': m_sum}, additions=new_fw)
 
- * The first line defines a new FireWork that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the **smaller** number of the new FireWork is the larger number of the current FireWork, and the **larger** number of the new FireWork is the sum of the two numbers of the current FireWork (just like in our diagram). The **stop_point** is kept the same.
- * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect the FireWork's operation.
- * The *additions* argument contains our dynamicism. Here, you can add a FireWork to the workflow (as shown), or even add lists of FireWorks or entire lists of Workflows!
+ * The first line defines a new Firework that is also a ``Fibonacci Adder Task``. However, the inputs are slightly changed: the **smaller** number of the new Firework is the larger number of the current Firework, and the **larger** number of the new Firework is the sum of the two numbers of the current Firework (just like in our diagram). The **stop_point** is kept the same.
+ * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect the Firework's operation.
+ * The *additions* argument contains our dynamicism. Here, you can add a Firework to the workflow (as shown), or even add lists of FireWorks or entire lists of Workflows!
 
-#. Now that we see how our FireTask will create a new FireWork dynamically, let's run the example::
+#. Now that we see how our FireTask will create a new Firework dynamically, let's run the example::
 
     lpad reset
     lpad add fw_fibnum.yaml
     lpad get_fws
 
-#. That last command should prove that there is only one FireWork in the database. Let's run it::
+#. That last command should prove that there is only one Firework in the database. Let's run it::
 
     rlaunch -s singleshot
 
-#. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one FireWork, one Rocket. But let's try to again to get all the FireWorks in the database::
+#. You should see the text ``The next Fibonacci number is: 1``. Normally this would be the end of the story - one Firework, one Rocket. But let's try to again to get all the FireWorks in the database::
 
     lpad get_fws
 
-#. Now there are *two* FireWorks in the database! The previous FireWork created a new FireWork dynamically. We can now run this new FireWork::
+#. Now there are *two* FireWorks in the database! The previous Firework created a new Firework dynamically. We can now run this new Firework::
 
     rlaunch -s singleshot
 
@@ -174,9 +174,9 @@ That was quick! You might even try again with the **stop_point** in fw_fibnum.ya
 Python example (optional)
 -------------------------
 
-Here is complete Python code for running a dynamic workflow. Note that this code is no different than running any other custom FireWork - it is almost identical to the code we used to run the AdditionTask() two tutorials ago::
+Here is complete Python code for running a dynamic workflow. Note that this code is no different than running any other custom Firework - it is almost identical to the code we used to run the AdditionTask() two tutorials ago::
 
-    from fireworks import FireWork, FWorker, LaunchPad
+    from fireworks import Firework, FWorker, LaunchPad
     from fireworks.core.rocket_launcher import rapidfire
     from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 
@@ -184,8 +184,8 @@ Here is complete Python code for running a dynamic workflow. Note that this code
     launchpad = LaunchPad()
     launchpad.reset('', require_password=False)
 
-    # create the FireWork consisting of a custom "Fibonacci" task
-    firework = FireWork(FibonacciAdderTask(), spec={"smaller": 0, "larger": 1, "stop_point": 100})
+    # create the Firework consisting of a custom "Fibonacci" task
+    firework = Firework(FibonacciAdderTask(), spec={"smaller": 0, "larger": 1, "stop_point": 100})
 
     # store workflow and launch it locally
     launchpad.add_wf(firework)

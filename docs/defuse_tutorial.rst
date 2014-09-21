@@ -24,12 +24,12 @@ If you later decide you want to run a defused workflow (resume), you can use the
 
     lpad reignite_wflows -i <FW_IDS>
 
-where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to reignite (or a list of space-separated ids). This will **reignite** the entire Workflow. Note that the *reignite* command will not re-run FireWorks in a workflow that have already been run. Only FireWorks that were never run before will be run upon reignition. To re-run a FireWork, please see the :doc:`rerun tutorial </rerun_tutorial>`.
+where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to reignite (or a list of space-separated ids). This will **reignite** the entire Workflow. Note that the *reignite* command will not re-run FireWorks in a workflow that have already been run. Only FireWorks that were never run before will be run upon reignition. To re-run a Firework, please see the :doc:`rerun tutorial </rerun_tutorial>`.
 
 Canceling and restarting individual FireWorks
 =============================================
 
-You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws`` and ``lpad rerun_fws`` commands. These commands will only pause/restart the current FireWork (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
+You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws`` and ``lpad rerun_fws`` commands. These commands will only pause/restart the current Firework (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
 
 Archiving workflows
 ===================
@@ -40,7 +40,7 @@ To archive Workflows, use the command::
 
     lpad archive_wflows -i <FW_IDS>
 
-where ``<FW_IDS>`` is the numerical id of the FireWork you want to defuse (or a list of space-separated ids). Note that all FireWorks in the Workflow will be archived, regardless of which **fw_id** you chose.
+where ``<FW_IDS>`` is the numerical id of the Firework you want to defuse (or a list of space-separated ids). Note that all FireWorks in the Workflow will be archived, regardless of which **fw_id** you chose.
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 

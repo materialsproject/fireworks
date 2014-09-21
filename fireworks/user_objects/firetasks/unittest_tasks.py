@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 import datetime
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 
@@ -41,7 +45,7 @@ class ExportTestSerializer(FWSerializable):
         return self.a == other.a
 
     def to_dict(self):
-        return {"a": self.a, "_fw_name": self._fw_name}
+        return {"a": self.a, "_fw_name": self.fw_name}
 
     @classmethod
     def from_dict(cls, m_dict):

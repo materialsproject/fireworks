@@ -11,7 +11,7 @@ Like the previous tutorial, our purpose is to get you set up as quickly as possi
 Launch a Rocket on a worker machine (FireWorker)
 ================================================
 
-In the Introductory tutorial, we entered a FireWork (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the FireWork from the database and executed it, all within the same machine.
+In the Introductory tutorial, we entered a Firework (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the Firework from the database and executed it, all within the same machine.
 
 A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). We'll next configure a worker machine.
 
@@ -23,7 +23,7 @@ On the worker machine, follow the instructions listed at :doc:`Basic FireWorks I
 Reset the FireWorks database
 ----------------------------
 
-1. Back at the **FireServer**, let's reset our database and add a FireWork::
+1. Back at the **FireServer**, let's reset our database and add a Firework::
 
     lpad reset
     cd <INSTALL_DIR>/fw_tutorials/worker
@@ -52,7 +52,7 @@ The FireWorker needs to know the login information for the FireServer. On the **
 
     lpad get_fws -i 1 -d all
 
-   This should print out the description of a FireWork that is *READY* to run.
+   This should print out the description of a Firework that is *READY* to run.
 
    .. tip:: If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the `Port Map <http://www.codingmonkeys.de/portmap/>`_ application to easily open ports. If you're still having problems, you can use telnet to check if a port is open: ``telnet <HOSTNAME> <PORTNAME>``, where ``<HOSTNAME>`` is your FireServer hostname and ``<PORTNAME>`` is your Mongo port (probably 27017).
 
@@ -60,7 +60,7 @@ The FireWorker needs to know the login information for the FireServer. On the **
 Configure your FireWorker
 -------------------------
 
-The FireWorker file contains information about this worker's configuration. Staying in the ``worker`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your FireWork later on. For example, you might want to use the hostname of the worker machine.
+The FireWorker file contains information about this worker's configuration. Staying in the ``worker`` tutorial directory on the FireWorker, modify your ``my_fworker.yaml`` by changing the ``name`` parameter to something that will help you identify the worker that ran your Firework later on. For example, you might want to use the hostname of the worker machine.
 
    .. note:: The name ``my_fworker.yaml`` is a special filename that contains your FireWorker's credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-w`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
@@ -71,15 +71,15 @@ Launch a Rocket on the FireWorker
 
     rlaunch singleshot
 
-   This should successfully launch a rocket that finds and runs your FireWork from the central server.
+   This should successfully launch a rocket that finds and runs your Firework from the central server.
 
    .. tip:: Remember that we are getting database and FireWorker credentials automatically from ``my_launchpad.yaml`` and ``my_fworker.yaml``.
 
-#. Confirm that the FireWork was run::
+#. Confirm that the Firework was run::
 
     lpad get_fws -i 1 -d all
 
-You should notice that the FireWork is listed as being *COMPLETED*. In addition, the ``name`` parameter under the ``launches.fworker`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``. If you have multiple FireWorkers, this can help you identify where your job ran later on.
+You should notice that the Firework is listed as being *COMPLETED*. In addition, the ``name`` parameter under the ``launches.fworker`` field should match the name that you gave to your FireWorker in ``my_fworker.yaml``. If you have multiple FireWorkers, this can help you identify where your job ran later on.
 
 Running rapidfire mode on the FireWorker
 ========================================

@@ -2,14 +2,14 @@
 Controlling the directory and Worker of execution
 =================================================
 
-Controlling the directory in which a FireWork is executed
+Controlling the directory in which a Firework is executed
 =========================================================
 
 By default, FireWorks automatically creates a datestamped directory containing each job. This directory structure can be difficult to browse through manually, or you might need your runs in a particular directory format for another reason (e.g., to be compatible with a post-processing script).
 
-To set the directory where a FireWork will execute:
+To set the directory where a Firework will execute:
 
-#. set the ``_launch_dir`` key in your FireWork *spec* to the *full path* of the directory you want to execute the FireWork in.
+#. set the ``_launch_dir`` key in your Firework *spec* to the *full path* of the directory you want to execute the Firework in.
 
 *(that's it!)*
 
@@ -29,15 +29,15 @@ Alternatives to using _launch_dir
 Potential alternatives to using ``_launch_dir`` are:
 
 #. If you are worried about finding your jobs on the filesystem, try :doc:`exploring all the features of LaunchPad queries <query_tutorial>`. In general, the database method of searching for jobs is much more powerful than browsing filesystems, especially if you set up your FireWorks *name* and *spec* to include things you care about in your search.
-#. Another solution is to have your FireWork write an empty file in its directory that has a name like "JOB--Cadmium" or "JOB--Silicon". Then you can quickly see what kind of job is in a bunch of ``launcher`` directories using a command like ``ls launcher*/JOB*`` - you'll see a list of launcher directories and which one contains "Cadmium" or "Silicon".
-#. If you have a job that depends on knowing the location of other FireWork runs, try writing your FireTasks to pass the location of execution to children using the *FWAction* object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.
+#. Another solution is to have your Firework write an empty file in its directory that has a name like "JOB--Cadmium" or "JOB--Silicon". Then you can quickly see what kind of job is in a bunch of ``launcher`` directories using a command like ``ls launcher*/JOB*`` - you'll see a list of launcher directories and which one contains "Cadmium" or "Silicon".
+#. If you have a job that depends on knowing the location of other Firework runs, try writing your FireTasks to pass the location of execution to children using the *FWAction* object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.
 
 Of course, these are just suggestions. In the end, do what works!
 
-Controlling the Worker that executes a FireWork
+Controlling the Worker that executes a Firework
 ===============================================
 
-By default, any FireWorker can pull and run any FireWork. However, in some cases you might want to control which computing resources should run a FireWork. For example, if some of your FireWorks require a lot of memory and fast processors, you might want to direct those jobs to only a subset of FireWorkers that have sufficiently high computing specifications.
+By default, any FireWorker can pull and run any Firework. However, in some cases you might want to control which computing resources should run a Firework. For example, if some of your FireWorks require a lot of memory and fast processors, you might want to direct those jobs to only a subset of FireWorkers that have sufficiently high computing specifications.
 
 There are two methods to control where FireWorks are executed.
 
@@ -46,21 +46,21 @@ Method 1: Using categories
 
 A simple method to direct FireWorks to FireWorks is by assigning *categories*. You can do this by:
 
-#. setting a ``_category`` key in your FireWork spec **AND**
+#. setting a ``_category`` key in your Firework spec **AND**
 #. setting the ``category`` variable in your FireWorker to match that value
 
 .. note:: Recall the ``my_fworker.yaml`` file from the :doc:`FireWorker tutorial </worker_tutorial>`. To set the FireWorker category, modify this file so that the ``category`` key is non-empty.
 
 Once you've set these values, job execution occurs as follows:
 
-* FireWorkers with no ``category`` variable set will be able to run **any** FireWork (even FireWorks with a ``_category`` key in the spec).
-* FireWorkers with a ``category`` set will only run the FireWorks with an exactly matching ``_category`` variable in the FireWork spec.
+* FireWorkers with no ``category`` variable set will be able to run **any** Firework (even FireWorks with a ``_category`` key in the spec).
+* FireWorkers with a ``category`` set will only run the FireWorks with an exactly matching ``_category`` variable in the Firework spec.
 
 And finally, a few final notes and limitations about this method:
 
 * The same ``category`` can be shared by multiple FireWorkers (if desired).
 * Each FireWorker can only have a single String category
-* A FireWork can have an array of Strings for the ``_category`` variable, but we suggest you stick to a simple String where possible.
+* A Firework can have an array of Strings for the ``_category`` variable, but we suggest you stick to a simple String where possible.
 
 Method 2: Using raw queries
 ---------------------------

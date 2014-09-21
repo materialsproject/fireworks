@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
@@ -20,11 +22,12 @@ from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
     LAUNCHPAD_LOC
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import Workflow, FireWork
+from fireworks.core.firework import Workflow, Firework
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
+from fireworks.features.stats import FWStats
 from six.moves import input
 
 
@@ -299,7 +302,7 @@ def display_wfs(args):
 
 def detect_lostruns(args):
     lp = get_lp(args)
-    fl,ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime)
+    fl, ff = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime, min_runtime=args.min_runtime)
     lp.m_logger.debug('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
     lp.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
 
@@ -418,7 +421,7 @@ def add_scripts(args):
     fws = []
     links = {}
     for idx, s in enumerate(args.scripts):
-        fws.append(FireWork(ScriptTask({'script': s, 'use_shell': True}), name=args.names[idx], fw_id=idx))
+        fws.append(Firework(ScriptTask({'script': s, 'use_shell': True}), name=args.names[idx], fw_id=idx))
         if idx != 0:
             links[idx-1] = idx
 
@@ -447,6 +450,54 @@ def forget_offline(args):
 
     lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
 
+def report(args):
+    lp=get_lp(args)
+    def print_results(results):
+        for i in results:
+            print('{}: {}'.format(i["_id"], str(i['count'])))
+            for k in i.keys():
+                if k not in ["_id", "count", "ids"]:
+                    print(' {}: {}'.format(k, str(i[k])))
+            if "ids" in i.keys():
+                print(" ids:"),
+                print(i["ids"])
+    def print_daily_results(results):
+        for i in results:
+            print(i["_id"])
+            for k in i["run_counts"]:
+                print(" {}: {}".format(k["state"], k["count"]))
+    if args.action_command=="fws":
+        results=FWStats(lp).get_fireworks_summary(query_start=args.start, query_end=args.end, query=args.query,
+                                                  time_field=args.time_field, weeks=args.weeks, days=args.days,
+                                                  hours=args.hours, minutes=args.minutes)
+        print_results(results)
+    elif args.action_command=="launches":
+        results=FWStats(lp).get_launch_summary(query_start=args.start, query_end=args.end, query=args.query,
+                                               time_field=args.time_field, weeks=args.weeks, days=args.days,
+                                               hours=args.hours, minutes=args.minutes, runtime_stats=args.runtime_stats,
+                                               include_ids=args.include_ids)
+        print_results(results)
+    elif args.action_command=="wfs":
+        results=FWStats(lp).get_workflow_summary(query_start=args.start, query_end=args.end, query=args.query,
+                                               time_field=args.time_field, weeks=args.weeks, days=args.days,
+                                               hours=args.hours, minutes=args.minutes)
+        print_results(results)
+    elif args.action_command=="daily":
+        results=FWStats(lp).get_daily_completion_summary(query_start=args.start, query_end=args.end, query=args.query,
+                                               time_field=args.time_field, weeks=args.weeks, days=args.days,
+                                               hours=args.hours, minutes=args.minutes)
+        print_daily_results(results)
+    elif args.action_command=="group_fizzled_fws":
+        results=FWStats(lp).group_fizzled_fireworks(group_by=args.group_by, query_start=args.start, query_end=args.end,
+                                                    query=args.query, weeks=args.weeks, days=args.days, hours=args.hours,
+                                                    minutes=args.minutes, include_ids=args.include_ids)
+        print_results(results)
+    elif args.action_command=="catastrophes":
+        results=FWStats(lp).identify_catastrophes(error_ratio=args.error_ratio, query_start=args.start, query_end=args.end,
+                                                  query=args.query, weeks=args.weeks, days=args.days,hours=args.hours,
+                                                  minutes=args.minutes,runtime_stats=args.runtime_stats,
+                                                  include_ids=args.include_ids)
+        print(results)
 
 def track_fws(args):
     lp = get_lp(args)
@@ -488,7 +539,7 @@ def get_output_func(format):
         return lambda x: json.dumps(x, default=DATETIME_HANDLER,
                                     indent=4)
     else:
-        return lambda x: yaml.dump(recursive_dict(x), default_flow_style=False)
+        return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
 
 
 def lpad():
@@ -497,9 +548,8 @@ def lpad():
 
     parser = ArgumentParser(description=m_description)
     parent_parser = ArgumentParser(add_help=False)
-
     parser.add_argument("-o", "--output", choices=["json", "yaml"],
-                        default="json", type=str.lower,
+                        default="json", type=lambda s: s.lower(),
                         help="Set output display format to either json or "
                              "YAML. YAML is easier to read for long "
                              "documents. JSON is the default.")
@@ -512,11 +562,13 @@ def lpad():
     fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
 
     state_args = ['-s', '--state']
-    state_kwargs = {"type": str.upper, "help": "Select by state.",
-                    "choices": FireWork.STATE_RANKS.keys()}
+    state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
+                    "choices": Firework.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
-    disp_kwargs = {"type": str, "help": "Display format.", "default": "less",
-                   "choices": ["all", "more", "less", "ids", "count"]}
+    disp_kwargs = {"type": lambda s: s.lower(), "help": "Display format.",
+                   "default": "less",
+                   "choices": ["all", "more", "less", "ids", "count",
+                               "reservations"]}
 
     query_args = ["-q", "--query"]
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
@@ -547,12 +599,12 @@ def lpad():
                               help="Directory mode. Finds all files in the "
                                    "paths given by wf_file.")
     addwf_parser.add_argument('wf_file', nargs="+",
-                              help="Path to a FireWork or Workflow file")
+                              help="Path to a Firework or Workflow file")
     addwf_parser.set_defaults(func=add_wf)
 
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script (or several scripts) to run in sequence')
     addscript_parser.add_argument('scripts', help="Script to run, or space-separated names", nargs='*')
-    addscript_parser.add_argument('-n', '--names', help='FireWork name, or space-separated names', nargs='*')
+    addscript_parser.add_argument('-n', '--names', help='Firework name, or space-separated names', nargs='*')
     addscript_parser.add_argument('-w', '--wf_name', help='Workflow name')
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
     addscript_parser.set_defaults(func=add_scripts)
@@ -585,7 +637,7 @@ def lpad():
                                 help='exclude these files from the report')
     trackfw_parser.set_defaults(func=track_fws)
 
-    rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
+    rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run Firework(s)')
     rerun_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     rerun_fws_parser.add_argument('-n', '--name', help='name')
     rerun_fws_parser.add_argument(*state_args, **state_kwargs)
@@ -593,7 +645,7 @@ def lpad():
     rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     rerun_fws_parser.set_defaults(func=rerun_fws)
 
-    defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single FireWork')
+    defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single Firework')
     defuse_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     defuse_fw_parser.add_argument('-n', '--name', help='name')
     defuse_fw_parser.add_argument(*state_args, **state_kwargs)
@@ -601,7 +653,7 @@ def lpad():
     defuse_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     defuse_fw_parser.set_defaults(func=defuse_fws)
 
-    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single FireWork')
+    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single Firework')
     reignite_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     reignite_fw_parser.add_argument('-n', '--name', help='name')
     reignite_fw_parser.add_argument(*state_args, **state_kwargs)
@@ -681,7 +733,7 @@ def lpad():
     delete_wfs_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     delete_wfs_parser.set_defaults(func=delete_wfs)
 
-    get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a FireWork')
+    get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a Firework')
     get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_qid_parser.set_defaults(func=get_qid)
 
@@ -702,8 +754,8 @@ def lpad():
                                 type=int)
     fizzled_parser.add_argument('--fizzle', help='mark lost runs as fizzled', action='store_true')
     fizzled_parser.add_argument('--rerun', help='rerun lost runs', action='store_true')
-    fizzled_parser.add_argument('--max_runtime', help='max runtime, helpful for tracing down walltime kills (seconds)',
-                                type=int)
+    fizzled_parser.add_argument('--max_runtime', help='max runtime, matching failures ran no longer than this (seconds)', type=int)
+    fizzled_parser.add_argument('--min_runtime', help='min runtime, matching failures must have run at least this long (seconds)', type=int)
     fizzled_parser.set_defaults(func=detect_lostruns)
 
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
@@ -766,6 +818,42 @@ def lpad():
     refresh_parser.add_argument(*query_args, **query_kwargs)
     refresh_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     refresh_parser.set_defaults(func=refresh)
+
+    report_parser = subparsers.add_parser('report', help='Various statistics, type "lpad report -h" for more.',
+                    parents=[parent_parser])
+    report_parent_parser=ArgumentParser(add_help=False)
+    report_parent_parser.add_argument('-s', '--start', help="The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm). Default is 30 days from now.")
+    report_parent_parser.add_argument('-e', '--end', help="The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm). Default is now.")
+    report_parent_parser.add_argument('-w', '--weeks', help="Time difference in weeks to calculate start time from end time.", type=float, default=0)
+    report_parent_parser.add_argument('-d', '--days', help="Time difference in days to calculate start time from end time.", type=float, default=30)
+    report_parent_parser.add_argument('-o', '--hours', help="Time difference in hours to calculate start time from end time.", type=float, default=0)
+    report_parent_parser.add_argument('-m', '--minutes', help="Time difference in minutes to calculate start time from end time.", type=float, default=0)
+    report_parent_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries for process.")
+    report_subparser = report_parser.add_subparsers(title="action", dest="action_command")
+
+    fw_report_parser = report_subparser.add_parser('fws', help='Get a report for fireworks', parents=[report_parent_parser])
+    fw_report_parser.add_argument('-f', '--time_field', default="time_end")
+    fw_report_parser.set_defaults(func=report)
+    launch_report_parser = report_subparser.add_parser('launches', help='Get a report for luanches', parents=[report_parent_parser])
+    launch_report_parser.add_argument('-f', '--time_field', default="time_end")
+    launch_report_parser.add_argument('-r', '--runtime_stats', action="store_true")
+    launch_report_parser.add_argument('-i', '--include_ids', action="store_true")
+    launch_report_parser.set_defaults(func=report)
+    wf_report_parser = report_subparser.add_parser('wfs', help='Get a report for workflows', parents=[report_parent_parser])
+    wf_report_parser.add_argument('-f', '--time_field', default="updated_on")
+    wf_report_parser.set_defaults(func=report)
+    daily_report_parser = report_subparser.add_parser('daily', help='Get a daily report for fireworks', parents=[report_parent_parser])
+    daily_report_parser.add_argument("-f", '--time_field', default="time_end")
+    daily_report_parser.set_defaults(func=report)
+    group_fizzled_fw_parser = report_subparser.add_parser('group_fizzled_fws', help='Group fizzled fireworks', parents=[report_parent_parser])
+    group_fizzled_fw_parser.add_argument("group_by", help="Database field used to group fireworks items. For example: 'spec.task_type'")
+    group_fizzled_fw_parser.add_argument("-i", '--include_ids', action="store_true")
+    group_fizzled_fw_parser.set_defaults(func=report)
+    identify_catastrophes_parser = report_subparser.add_parser('catastrophes', help='Get days with higher failure ratio', parents=[report_parent_parser])
+    identify_catastrophes_parser.add_argument('-t', '--error_ratio', type=float, default=0.01)
+    identify_catastrophes_parser.add_argument('-i', '--include_ids', action="store_true")
+    identify_catastrophes_parser.add_argument('-r', '--runtime_stats', action="store_true")
+    identify_catastrophes_parser.set_defaults(func=report)
 
     args = parser.parse_args()
 
