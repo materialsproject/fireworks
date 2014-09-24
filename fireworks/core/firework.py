@@ -903,7 +903,9 @@ class Workflow(FWSerializable):
 
         updated_ids = updated_ids if updated_ids else set()
         m_fw = self.id_fw[fw_id]
+        print ('fw state before rerun', m_fw.state)
         m_fw._rerun()
+        print ('fw state after rerun', m_fw.state)
         updated_ids.add(fw_id)
 
         # re-run all the children
