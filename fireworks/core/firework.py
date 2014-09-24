@@ -256,10 +256,10 @@ class Firework(FWSerializable):
                   'created_on': self.created_on, 'updated_on': self.updated_on}
 
         # only serialize these fields if non-empty
-        if len(self.launches) > 0:
+        if len(list(self.launches)) > 0:
             m_dict['launches'] = self.launches
 
-        if len(self.archived_launches) > 0:
+        if len(list(self.archived_launches)) > 0:
             m_dict['archived_launches'] = self.archived_launches
 
         if self.state != 'WAITING':
