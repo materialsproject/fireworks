@@ -500,14 +500,17 @@ class LaunchPad(FWSerializable):
         f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self._refresh_wf(fw_id)
 
         if not f:
             self.rerun_fw(fw_id, rerun_duplicates)
             f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
+            if f:
+                self._refresh_wf(fw_id)
 
-        self._refresh_wf(fw_id)
         return f
 
     def reignite_fw(self, fw_id):
@@ -523,7 +526,7 @@ class LaunchPad(FWSerializable):
         for fw in wf.fws:
             self.defuse_fw(fw.fw_id)
 
-        self._refresh_wf(fw_id)
+        #self._refresh_wf(fw_id)
 
     def reignite_wf(self, fw_id):
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
@@ -545,7 +548,7 @@ class LaunchPad(FWSerializable):
                                                {'$set': {'state': 'ARCHIVED',
                                                          'updated_on': datetime.datetime.utcnow()}})
 
-            self._refresh_wf(fw_id)
+                self._refresh_wf(fw.fw_id)
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         """

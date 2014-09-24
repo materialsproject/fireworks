@@ -334,7 +334,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # Launch all fireworks
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        first_ldir = fw.launches[0].launch_dir
+        launches = fw.launches
+        first_ldir = launches[0].launch_dir
         ts = datetime.datetime.utcnow()
 
         # Rerun Zeus
@@ -342,8 +343,9 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        fw_start_t =  fw.launches[0].time_start
-        second_ldir = fw.launches[0].launch_dir
+        launches = fw.launches
+        fw_start_t =  launches[0].time_start
+        second_ldir = launches[0].launch_dir
 
         self.assertNotEqual(first_ldir,second_ldir)
 
