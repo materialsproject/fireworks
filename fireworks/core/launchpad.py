@@ -898,6 +898,7 @@ class LaunchPad(FWSerializable):
                 print ('wf.states', wf.fw_states)
                 updated_ids = wf.rerun_fw(fw_id)
                 print ('updated ids', updated_ids)
+                print ('wf.states after wf.rerurn', wf.fw_states)
                 self._update_wf(wf, updated_ids)
                 print ('wf.states after updated_ids', wf.fw_states)
                 reruns.append(fw_id)
@@ -908,6 +909,7 @@ class LaunchPad(FWSerializable):
             r = self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
             reruns.extend(r)
 
+        print ('exiting return')
         return reruns  # return the ids that were rerun
 
     def _refresh_wf(self, fw_id):
