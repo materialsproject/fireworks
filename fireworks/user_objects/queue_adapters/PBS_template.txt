@@ -10,6 +10,7 @@
 #PBS -o FW_job.out
 #PBS -e FW_job.error
 #PBS -V $${env}
+#PBS -M $${email} -m $${notification_options}
 
 $${pre_rocket}
 cd $${launch_dir}
