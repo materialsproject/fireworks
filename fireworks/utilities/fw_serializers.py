@@ -106,7 +106,7 @@ def _recursive_load(obj):
     if isinstance(obj, six.string_types):
         try:
             # convert String to datetime if really datetime
-            return datetime.datetime.strptime(obj, "%Y-%m-%dT%H:%M:%S.%f")
+            return reconstitute_dates(obj)
         except:
             # convert unicode to ASCII if not really unicode
             if obj == obj.encode('ascii', 'ignore'):
@@ -218,9 +218,9 @@ class FWSerializable(object):
         :param f_format: serialization format of the String (default json)
         """
         if f_format == 'json':
-            return cls.from_dict(_reconstitute_dates(json.loads(f_str)))
+            return cls.from_dict(reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
-            return cls.from_dict(_reconstitute_dates(
+            return cls.from_dict(reconstitute_dates(
                 yaml.load(f_str, Loader=Loader)))
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
@@ -347,9 +347,9 @@ def load_object_from_file(filename, f_format=None):
 
     with open(filename, 'r', **ENCODING_PARAMS) as f:
         if f_format == 'json':
-            m_dict = _reconstitute_dates(json.loads(f.read()))
+            m_dict = reconstitute_dates(json.loads(f.read()))
         elif f_format == 'yaml':
-            m_dict = _reconstitute_dates(yaml.load(f, Loader=Loader))
+            m_dict = reconstitute_dates(yaml.load(f, Loader=Loader))
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 
@@ -369,21 +369,24 @@ def _search_module_for_obj(m_module, obj_dict):
             return obj.from_dict(obj_dict)
 
 
-def _reconstitute_dates(obj_dict):
+def reconstitute_dates(obj_dict):
     if obj_dict is None:
         return None
 
     if isinstance(obj_dict, dict):
-        return {k: _reconstitute_dates(v) for k, v in obj_dict.items()}
+        return {k: reconstitute_dates(v) for k, v in obj_dict.items()}
 
     if isinstance(obj_dict, (list, tuple)):
-        return [_reconstitute_dates(v) for v in obj_dict]
+        return [reconstitute_dates(v) for v in obj_dict]
 
     if isinstance(obj_dict, six.string_types):
         try:
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
         except:
-            pass
+            try:
+                return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S")
+            except:
+                pass
 
     return obj_dict
 
