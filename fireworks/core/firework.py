@@ -321,6 +321,15 @@ class FireWork(Firework):
 
 
 class LazyFirework(object):
+    """
+    A LazyFirework only has the fw_id, and grabs other data just-in-time.
+    This representation can speed up Workflow loading as only "important" FWs need to be
+    fully loaded.
+    :param fw_id:
+    :param fw_coll:
+    :param launch_coll:
+    """
+
     # Get these fields from DB when creating new FireWork object
     db_fields = ('name', 'fw_id', 'spec', 'created_on', 'state')
     db_launch_fields = ('launches', 'archived_launches')
@@ -778,7 +787,11 @@ class Workflow(FWSerializable):
         :param fireworks: ([Firework]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
         child_id1, child_id2)]
+        :param name: (str) naem of workflow
         :param metadata: (dict) metadata for this Workflow
+        :param created_on: (datetime)
+        :param updated_on: (datetime)
+        :param fw_states: (dict) - leave alone unless you are purposefully creating a Lazy-style WF
         """
 
         name = name or 'unnamed WF'  # prevent None names
@@ -817,6 +830,7 @@ class Workflow(FWSerializable):
         self.metadata = metadata if metadata else {}
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
+
         # Dict containing mapping of an id to a firework state. The states are stored locally and redundantly for speed purpose
         if fw_states:
             self.fw_states = fw_states
