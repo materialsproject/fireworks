@@ -27,13 +27,12 @@ from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 from six import add_metaclass
 
-from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR
+from fireworks.fw_config import TRACKER_LINES
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, \
-    NestedClassGetter, dict_extract
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
 
 __author__ = "Anubhav Jain"
