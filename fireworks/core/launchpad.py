@@ -497,14 +497,10 @@ class LaunchPad(FWSerializable):
 
     def defuse_fw(self, fw_id, rerun_duplicates=True):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
-        print ('inside defuse_fw')
-        print ('fw_id', fw_id)
         f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
         if f:
-            print ('inside first f in defuse_fw')
-            print ('fw state', f['state'])
             self._refresh_wf(fw_id)
 
         if not f:
@@ -513,11 +509,8 @@ class LaunchPad(FWSerializable):
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
             if f:
-                print ('inside second f in defuse_fw')
-                print ('fw state', f['state'])
                 self._refresh_wf(fw_id)
 
-        print ('exiting defuse fw')
         return f
 
     def reignite_fw(self, fw_id):
@@ -530,11 +523,8 @@ class LaunchPad(FWSerializable):
 
     def defuse_wf(self, fw_id):
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-        print ('in defuse wf')
-        print ('wf.states', wf.fw_states)
         for fw in wf.fws:
             self.defuse_fw(fw.fw_id)
-            #print ('wf.states', wf.fw_states)
 
         self._refresh_wf(fw_id)
 
@@ -894,13 +884,8 @@ class LaunchPad(FWSerializable):
         else:
             with WFLock(self, fw_id):
                 wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-                print ('inside rerun fw')
-                print ('wf.states', wf.fw_states)
                 updated_ids = wf.rerun_fw(fw_id)
-                print ('updated ids', updated_ids)
-                print ('wf.states after wf.rerurn', wf.fw_states)
                 self._update_wf(wf, updated_ids)
-                print ('wf.states after updated_ids', wf.fw_states)
                 reruns.append(fw_id)
 
         # rerun duplicated FWs
@@ -909,7 +894,6 @@ class LaunchPad(FWSerializable):
             r = self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
             reruns.extend(r)
 
-        print ('exiting return')
         return reruns  # return the ids that were rerun
 
     def _refresh_wf(self, fw_id):
@@ -922,24 +906,16 @@ class LaunchPad(FWSerializable):
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
         with WFLock(self, fw_id):
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-            print ('inside _refresh')
-            print ('wf.id_fws', [fw.state for fw in wf.id_fw.values()])
             updated_ids = wf.refresh(fw_id)
-            print ('wf.fw_states', wf.fw_states)
-            print ('updated_ids', updated_ids)
             self._update_wf(wf, updated_ids)
-            print ('exiting _refresh')
 
 
     def _update_wf(self, wf, updated_ids):
         # note: must be called within an enclosing WFLock
 
-        print ('inside _update')
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
-        print ('old_new', old_new)
         wf._reassign_ids(old_new)
-        print ('wf after old_new', wf.fw_states)
 
         # find a node for which the id did not change, so we can query on it to get WF
         query_node = None

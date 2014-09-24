@@ -349,8 +349,6 @@ class LazyFirework(object):
 
     def _rerun(self):
         self.full_fw._rerun()
-        print (self.state)
-        print (self.launches)
 
     def to_db_dict(self):
         return self.full_fw.to_db_dict()
@@ -903,12 +901,9 @@ class Workflow(FWSerializable):
         :return: ([int]) list of Firework ids that were updated
         """
 
-        print ('updated ids enter', fw_id, updated_ids)
         updated_ids = updated_ids if updated_ids else set()
         m_fw = self.id_fw[fw_id]
-        print ('fw state before rerun', m_fw.state)
         m_fw._rerun()
-        print ('fw state after rerun', m_fw.state)
         updated_ids.add(fw_id)
 
         # re-run all the children
@@ -917,8 +912,6 @@ class Workflow(FWSerializable):
                 self.rerun_fw(child_id, updated_ids))
 
         # refresh the WF to get the states updated
-        print ('updated ids leave', fw_id, updated_ids)
-        print ('wf.state before wf.refresh inside rerun', self.fw_states)
         return self.refresh(fw_id, updated_ids)
 
     def _add_wf_to_fw(self, wf, fw_id, detour):
@@ -978,7 +971,6 @@ class Workflow(FWSerializable):
         # if we're defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
             self.fw_states[fw_id] = fw.state
-            print ('wf.state before leaving wf.refresh', self.fw_states)
             return updated_ids
 
         # what are the parent states?
@@ -996,7 +988,6 @@ class Workflow(FWSerializable):
         else:
             # my state depends on launch whose state has the highest 'score'
             # in STATE_RANKS
-            print ('fw_launches length', len(list(fw.launches)))
             m_state = 'READY' if len(list(fw.launches)) == 0 else 'FIZZLED'
             max_score = Firework.STATE_RANKS[m_state]
             m_action = None
@@ -1038,7 +1029,6 @@ class Workflow(FWSerializable):
 
         self.updated_on = datetime.utcnow()
 
-        print ('wf.state before leaving wf.refresh', self.fw_states)
         return updated_ids
 
     @property
