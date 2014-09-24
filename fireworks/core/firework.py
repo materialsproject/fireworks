@@ -438,7 +438,7 @@ class LazyFirework(object):
             launch_ids = self._lids[name]
             if launch_ids:
                 data = self._lc.find({'launch_id': {"$in": launch_ids}})
-                result = map(Launch.from_dict, data)
+                result = list(map(Launch.from_dict, data))
             else:
                 result = []
             setattr(fw, name, result)  # put into real FireWork obj
