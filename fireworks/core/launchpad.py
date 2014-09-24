@@ -275,15 +275,6 @@ class LaunchPad(FWSerializable):
 
         return Firework.from_dict(fw_dict)
 
-    def get_lzyfw_by_id(self, fw_id):
-        """
-        Given a FireWork id, give back a FireWork object
-
-        :param fw_id: FireWork id (int)
-        :return: LazyFireWork object
-        """
-        return LazyFirework(fw_id, self.fireworks, self.launches)
-
     def get_wf_by_fw_id(self, fw_id):
         """
         Given a Firework id, give back the Workflow containing that Firework
