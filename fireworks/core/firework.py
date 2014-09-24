@@ -422,7 +422,9 @@ class LazyFirework(object):
 
     @property
     def full_fw(self):
-        map(self._get_launch_data, self.db_launch_fields)
+        #map(self._get_launch_data, self.db_launch_fields)
+        for launch_field in self.db_launch_fields:
+            self._get_launch_data(launch_field)
         return self._fw
 
     # Get a type of Launch object
@@ -994,6 +996,7 @@ class Workflow(FWSerializable):
         else:
             # my state depends on launch whose state has the highest 'score'
             # in STATE_RANKS
+            print ('fw_launches length', len(list(fw.launches)))
             m_state = 'READY' if len(list(fw.launches)) == 0 else 'FIZZLED'
             max_score = Firework.STATE_RANKS[m_state]
             m_action = None
