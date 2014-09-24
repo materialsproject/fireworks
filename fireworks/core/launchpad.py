@@ -910,7 +910,8 @@ class LaunchPad(FWSerializable):
         with WFLock(self, fw_id):
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             print ('inside _refresh')
-            print ('wf', wf)
+            print ('wf.id_fws', wf.id_fws)
+            print ('wf.fw_states', wf.fw_states)
             updated_ids = wf.refresh(fw_id)
             print ('updated_ids', updated_ids)
             self._update_wf(wf, updated_ids)
