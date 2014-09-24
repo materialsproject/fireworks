@@ -86,13 +86,14 @@ class LaunchPadTest(unittest.TestCase):
     def test_add_wf(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
-        wf = self.lp.get_wf_ids()
-        self.assertTrue(wf)  # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
+        for fw_id in self.lp.get_wf_ids():
+            wf = self.lp.get_wf_by_fw_id_lzyfw(fw_id)
+            self.assertEqual(len(wf.id_fw.keys()), 1)
         fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name='test_workflow')
         self.lp.add_wf(wf)
         fw = self.lp.get_fw_ids()
-        self.assertTrue(fw) # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
+        self.assertEqual(len(wf.id_fw.keys()), 2)
         self.lp.reset('',require_password=False)
 
 
@@ -309,7 +310,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # Query for provenance
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        self.assertTrue(fw)  # can probably do a better query than True
+        self.assertEqual(fw.state,'ARCHIVED') 
 
     def test_delete_wf(self):
         # Run a firework before deleting Zeus

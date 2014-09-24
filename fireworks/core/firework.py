@@ -33,7 +33,7 @@ from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, \
-    NestedClassGetter
+    NestedClassGetter, dict_extract
 
 
 __author__ = "Anubhav Jain"
@@ -318,6 +318,132 @@ class Firework(FWSerializable):
 @deprecated(replacement=Firework)
 class FireWork(Firework):
     pass
+
+
+class LazyFirework(object):
+    # Get these fields from DB when creating new FireWork object
+    db_fields = ('name', 'fw_id', 'spec', 'created_on', 'state')
+    db_launch_fields = ('launches', 'archived_launches')
+
+    def __init__(self, fw_id, fw_coll, launch_coll):
+        # This is the only attribute known w/o a DB query
+        self.fw_id = fw_id
+
+        self._fwc, self._lc = fw_coll, launch_coll
+        self._launches = {k: False for k in self.db_launch_fields}
+        self._fw, self._lids = None, None
+
+    # FireWork methods
+
+    @property
+    def state(self):
+        return self.partial_fw._state
+
+    @state.setter
+    def state(self, state):
+        self.partial_fw._state = state
+        self.partial_fw.updated_on = datetime.utcnow()
+
+    def to_dict(self):
+        return self.full_fw.to_dict()
+
+    def _rerun(self):
+        self.full_fw._rerun()
+        print (self.state)
+        print (self.launches)
+
+    def to_db_dict(self):
+        return self.full_fw.to_db_dict()
+
+    def __str__(self):
+        return 'LazyFireWork object: (id: {})'.format(self.fw_id)
+
+    # Properties that shadow FireWork attributes
+
+    @property
+    def tasks(self): return self.partial_fw.tasks
+    @tasks.setter
+    def tasks(self, value): self.partial_fw.tasks = value
+
+    @property
+    def spec(self): return self.partial_fw.spec
+    @spec.setter
+    def spec(self, value): self.partial_fw.spec = value
+
+    @property
+    def name(self): return self.partial_fw.name
+    @name.setter
+    def name(self, value): self.partial_fw.name = value
+
+    @property
+    def created_on(self): return self.partial_fw.created_on
+    @created_on.setter
+    def created_on(self, value): self.partial_fw.created_on = value
+
+    @property
+    def updated_on(self): return self.partial_fw.updated_on
+    @updated_on.setter
+    def updated_on(self, value): self.partial_fw.updated_on = value
+
+    @property
+    def parents(self): return self.partial_fw.parents
+    @parents.setter
+    def parents(self, value): self.partial_fw.parents = value
+
+    # Properties that shadow FireWork attributes, but which are
+    # fetched individually from the DB (i.e. launch objects)
+
+    @property
+    def launches(self):
+        return self._get_launch_data('launches')
+    @launches.setter
+    def launches(self, value):
+        self._launches['launches'] = True
+        self.partial_fw.launches = value
+
+    @property
+    def archived_launches(self):
+        return self._get_launch_data('archived_launches')
+    @archived_launches.setter
+    def archived_launches(self, value):
+        self._launches['archived_launches'] = True
+        self.partial_fw.archived_launches = value
+
+    # Lazy properties that idempotently instantiate a FireWork object
+
+    @property
+    def partial_fw(self):
+        if not self._fw:
+            fields = list(self.db_fields) + list(self.db_launch_fields)
+            data = self._fwc.find_one({'fw_id': self.fw_id}, fields=fields)
+            self._lids = dict_extract(data, self.db_launch_fields)
+            self._fw = Firework.from_dict(data)
+        return self._fw
+
+    @property
+    def full_fw(self):
+        map(self._get_launch_data, self.db_launch_fields)
+        return self._fw
+
+    # Get a type of Launch object
+
+    def _get_launch_data(self, name):
+        """Pull launch data individually for each field.
+
+        :param name: Name of field, e.g. 'archived_launches'.
+        :return: Launch obj (also propagated to self._fw)
+        """
+        fw = self.partial_fw  # assure stage 1
+        if not self._launches[name]:
+            launch_ids = self._lids[name]
+            if launch_ids:
+                data = self._lc.find({'launch_id': {"$in": launch_ids}})
+                result = map(Launch.from_dict, data)
+            else:
+                result = []
+            setattr(fw, name, result)  # put into real FireWork obj
+            self._launches[name] = True
+        return getattr(fw, name)
 
 
 class Tracker(FWSerializable, object):
@@ -641,7 +767,7 @@ class Workflow(FWSerializable):
                     state)
 
     def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
-                 updated_on=None):
+                 updated_on=None, fw_states=None):
         """
         :param fireworks: ([Firework]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
@@ -685,6 +811,11 @@ class Workflow(FWSerializable):
         self.metadata = metadata if metadata else {}
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
+        # Dict containing mapping of an id to a firework state. The states are stored locally and redundantly for speed purpose
+        if fw_states:
+            self.fw_states = fw_states
+        else:
+            self.fw_states = {key:self.id_fw[key].state for key in self.id_fw}
 
     @property
     def fws(self):
@@ -695,7 +826,8 @@ class Workflow(FWSerializable):
 
         # get state of workflow
         m_state = 'READY'
-        states = [fw.state for fw in self.fws]
+        #states = [fw.state for fw in self.fws]
+        states = self.fw_states.values()
         if all([s == 'COMPLETED' for s in states]):
             m_state = 'COMPLETED'
         elif all([s == 'ARCHIVED' for s in states]):
@@ -838,6 +970,7 @@ class Workflow(FWSerializable):
 
         # if we're defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
+            self.fw_states[fw_id] = fw.state
             return updated_ids
 
         # what are the parent states?
@@ -879,6 +1012,8 @@ class Workflow(FWSerializable):
                     updated_ids.add(fw_id)
 
         fw.state = m_state
+        # Brings self.fw_states in sync with fw_states in db
+        self.fw_states[fw_id] = m_state
 
         if m_state != prev_state:
             updated_ids.add(fw_id)
@@ -943,6 +1078,12 @@ class Workflow(FWSerializable):
                                                   child in children]
         self.links = Workflow.Links(new_l)
 
+        # update the states
+        new_fw_states = {}
+        for (fwid, fw_state) in self.fw_states.items():
+            new_fw_states[old_new.get(fwid, fwid)] = fw_state
+        self.fw_states = new_fw_states
+
     def to_dict(self):
         return {'fws': [f.to_dict() for f in self.id_fw.values()],
                 'links': self.links.to_dict(),
@@ -956,6 +1097,7 @@ class Workflow(FWSerializable):
         m_dict['name'] = self.name
         m_dict['created_on'] = self.created_on
         m_dict['updated_on'] = self.updated_on
+        m_dict['fw_states'] = dict([(str(k), v) for (k, v) in self.fw_states.items()])
         return m_dict
 
     def to_display_dict(self):

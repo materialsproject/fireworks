@@ -20,7 +20,7 @@ from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
     RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, \
     WFLOCK_EXPIRATION_KILL
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import Firework, Launch, Workflow, FWAction, \
+from fireworks.core.firework import Firework, LazyFirework, Launch, Workflow, FWAction, \
     Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
@@ -276,6 +276,15 @@ class LaunchPad(FWSerializable):
 
         return Firework.from_dict(fw_dict)
 
+    def get_lzyfw_by_id(self, fw_id):
+        """
+        Given a FireWork id, give back a FireWork object
+
+        :param fw_id: FireWork id (int)
+        :return: LazyFireWork object
+        """
+        return LazyFirework(fw_id, self.fireworks, self.launches)
+
     def get_wf_by_fw_id(self, fw_id):
         """
         Given a Firework id, give back the Workflow containing that Firework
@@ -288,6 +297,28 @@ class LaunchPad(FWSerializable):
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
+
+    def get_wf_by_fw_id_lzyfw(self, fw_id):
+        """
+        Given a FireWork id, give back the Workflow containing that FireWork
+        :param fw_id:
+        :return: A Workflow object
+        """
+        links_dict = self.workflows.find_one({'nodes': fw_id})
+        if not links_dict:
+            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
+
+        fws = []
+        for fw_id in links_dict['nodes']:
+            fws.append(LazyFirework(fw_id, self.fireworks, self.launches))
+        # Check for fw_states in links_dict to conform with preoptimized workflows
+        if 'fw_states' in links_dict:
+            fw_states = dict([(int(k), v) for (k, v) in links_dict['fw_states'].items()])
+        else:
+            fw_states = None
+
+        return Workflow(fws, links_dict['links'], links_dict['name'],
+                        links_dict['metadata'], fw_states=fw_states)
 
     def delete_wf(self, fw_id):
         links_dict = self.workflows.find_one({'nodes': fw_id})
@@ -488,27 +519,27 @@ class LaunchPad(FWSerializable):
         return f
 
     def defuse_wf(self, fw_id):
-        wf = self.get_wf_by_fw_id(fw_id)
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
             self.defuse_fw(fw.fw_id)
 
         self._refresh_wf(fw_id)
 
     def reignite_wf(self, fw_id):
-        wf = self.get_wf_by_fw_id(fw_id)
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
             self.reignite_fw(fw.fw_id)
 
     def archive_wf(self, fw_id):
         # first archive all the launches, so they are not used in duplicate checks
-        wf = self.get_wf_by_fw_id(fw_id)
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         if wf.state != 'ARCHIVED':
             fw_ids = [f.fw_id for f in wf.fws]
             for fw_id in fw_ids:
                 self.rerun_fw(fw_id)
 
             # second set the state of all FWs to ARCHIVED
-            wf = self.get_wf_by_fw_id(fw_id)
+            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf.fws:
                 self.fireworks.find_and_modify({'fw_id': fw.fw_id},
                                                {'$set': {'state': 'ARCHIVED',
@@ -849,7 +880,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
         else:
             with WFLock(self, fw_id):
-                wf = self.get_wf_by_fw_id(fw_id)
+                wf = self.get_wf_by_fw_id_lzyfw(fw_id)
                 updated_ids = wf.rerun_fw(fw_id)
                 self._update_wf(wf, updated_ids)
                 reruns.append(fw_id)
@@ -871,7 +902,7 @@ class LaunchPad(FWSerializable):
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
         with WFLock(self, fw_id):
-            wf = self.get_wf_by_fw_id(fw_id)
+            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             updated_ids = wf.refresh(fw_id)
             self._update_wf(wf, updated_ids)
 
