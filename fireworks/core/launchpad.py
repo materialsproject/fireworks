@@ -19,7 +19,7 @@ from pymongo import DESCENDING, ASCENDING
 from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
     RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, \
     WFLOCK_EXPIRATION_KILL
-from fireworks.utilities.fw_serializers import FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
 from fireworks.core.firework import Firework, Launch, Workflow, FWAction, \
     Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -954,7 +954,7 @@ class LaunchPad(FWSerializable):
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
                 with open(ping_loc) as f:
-                    ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
+                    ping_time = reconstitute_dates(json.loads(f.read())['ping_time'])
                     self.ping_launch(launch_id, ping_time)
 
             # look for action in FW_offline.json
@@ -965,7 +965,7 @@ class LaunchPad(FWSerializable):
                     m_launch.state = 'RUNNING'
                     for s in m_launch.state_history:
                         if s['state'] == 'RUNNING':
-                            s['created_on'] = datetime.datetime.strptime(offline_data['started_on'], "%Y-%m-%dT%H:%M:%S.%f")
+                            s['created_on'] = reconstitute_dates(offline_data['started_on'])
                     self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
                 if 'fwaction' in offline_data:
@@ -975,7 +975,7 @@ class LaunchPad(FWSerializable):
                         self.complete_launch(launch_id, fwaction, state))
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
-                            s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
+                            s['created_on'] = reconstitute_dates(offline_data['completed_on'])
                     self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
