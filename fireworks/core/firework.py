@@ -988,7 +988,7 @@ class Workflow(FWSerializable):
         else:
             # my state depends on launch whose state has the highest 'score'
             # in STATE_RANKS
-            m_state = 'READY' if len(fw.launches) == 0 else 'FIZZLED'
+            m_state = 'READY' if len(list(fw.launches)) == 0 else 'FIZZLED'
             max_score = Firework.STATE_RANKS[m_state]
             m_action = None
 
