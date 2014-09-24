@@ -513,7 +513,7 @@ class LaunchPad(FWSerializable):
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
             if f:
-                print 'inside second f in defuse_fw'
+                print ('inside second f in defuse_fw')
                 print ('fw state', f['state'])
                 self._refresh_wf(fw_id)
 
