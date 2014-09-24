@@ -894,8 +894,12 @@ class LaunchPad(FWSerializable):
         else:
             with WFLock(self, fw_id):
                 wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+                print ('inside rerun fw')
+                print ('wf.states', wf.fw_states)
                 updated_ids = wf.rerun_fw(fw_id)
+                print ('updated ids', updated_ids)
                 self._update_wf(wf, updated_ids)
+                print ('wf.states after updated_ids', wf.fw_states)
                 reruns.append(fw_id)
 
         # rerun duplicated FWs
