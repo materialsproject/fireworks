@@ -27,7 +27,7 @@ from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 from six import add_metaclass
 
-from fireworks.fw_config import TRACKER_LINES
+from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
@@ -182,12 +182,13 @@ class FWAction(FWSerializable):
 
 class Firework(FWSerializable):
     """
-    A Firework is a workflow step and might be contain several FireTasks
+    A Firework is a workflow step and might be contain several FireTasks.
     """
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
                    'RESERVED': 3, 'RUNNING': 4, 'COMPLETED': 5}
 
+    # note: if you modify this signature, you must also modify LazyFirework
     def __init__(self, tasks, spec=None, name=None, launches=None,
                  archived_launches=None, state='WAITING', created_on=None,
                  fw_id=None, parents=None, updated_on=None):
@@ -317,147 +318,6 @@ class Firework(FWSerializable):
 @deprecated(replacement=Firework)
 class FireWork(Firework):
     pass
-
-
-class LazyFirework(object):
-    """
-    A LazyFirework only has the fw_id, and grabs other data just-in-time.
-    This representation can speed up Workflow loading as only "important" FWs need to be
-    fully loaded.
-    :param fw_id:
-    :param fw_coll:
-    :param launch_coll:
-    """
-
-    # Get these fields from DB when creating new FireWork object
-    db_fields = ('name', 'fw_id', 'spec', 'created_on', 'state')
-    db_launch_fields = ('launches', 'archived_launches')
-
-    def __init__(self, fw_id, fw_coll, launch_coll):
-        # This is the only attribute known w/o a DB query
-        self.fw_id = fw_id
-
-        self._fwc, self._lc = fw_coll, launch_coll
-        self._launches = {k: False for k in self.db_launch_fields}
-        self._fw, self._lids = None, None
-
-    # FireWork methods
-
-    @property
-    def state(self):
-        return self.partial_fw._state
-
-    @state.setter
-    def state(self, state):
-        self.partial_fw._state = state
-        self.partial_fw.updated_on = datetime.utcnow()
-
-    def to_dict(self):
-        return self.full_fw.to_dict()
-
-    def _rerun(self):
-        self.full_fw._rerun()
-
-    def to_db_dict(self):
-        return self.full_fw.to_db_dict()
-
-    def __str__(self):
-        return 'LazyFireWork object: (id: {})'.format(self.fw_id)
-
-    # Properties that shadow FireWork attributes
-
-    @property
-    def tasks(self): return self.partial_fw.tasks
-    @tasks.setter
-    def tasks(self, value): self.partial_fw.tasks = value
-
-    @property
-    def spec(self): return self.partial_fw.spec
-    @spec.setter
-    def spec(self, value): self.partial_fw.spec = value
-
-    @property
-    def name(self): return self.partial_fw.name
-    @name.setter
-    def name(self, value): self.partial_fw.name = value
-
-    @property
-    def created_on(self): return self.partial_fw.created_on
-    @created_on.setter
-    def created_on(self, value): self.partial_fw.created_on = value
-
-    @property
-    def updated_on(self): return self.partial_fw.updated_on
-    @updated_on.setter
-    def updated_on(self, value): self.partial_fw.updated_on = value
-
-    @property
-    def parents(self): return self.partial_fw.parents
-    @parents.setter
-    def parents(self, value): self.partial_fw.parents = value
-
-    # Properties that shadow FireWork attributes, but which are
-    # fetched individually from the DB (i.e. launch objects)
-
-    @property
-    def launches(self):
-        return self._get_launch_data('launches')
-    @launches.setter
-    def launches(self, value):
-        self._launches['launches'] = True
-        self.partial_fw.launches = value
-
-    @property
-    def archived_launches(self):
-        return self._get_launch_data('archived_launches')
-    @archived_launches.setter
-    def archived_launches(self, value):
-        self._launches['archived_launches'] = True
-        self.partial_fw.archived_launches = value
-
-    # Lazy properties that idempotently instantiate a FireWork object
-
-    @property
-    def partial_fw(self):
-        if not self._fw:
-            fields = list(self.db_fields) + list(self.db_launch_fields)
-            data = self._fwc.find_one({'fw_id': self.fw_id}, fields=fields)
-
-            launch_data = {}  # move some data to separate launch dict
-            for key in self.db_launch_fields:
-                launch_data[key] = data[key]
-                del data[key]
-
-            self._lids = launch_data
-            self._fw = Firework.from_dict(data)
-        return self._fw
-
-    @property
-    def full_fw(self):
-        #map(self._get_launch_data, self.db_launch_fields)
-        for launch_field in self.db_launch_fields:
-            self._get_launch_data(launch_field)
-        return self._fw
-
-    # Get a type of Launch object
-
-    def _get_launch_data(self, name):
-        """Pull launch data individually for each field.
-
-        :param name: Name of field, e.g. 'archived_launches'.
-        :return: Launch obj (also propagated to self._fw)
-        """
-        fw = self.partial_fw  # assure stage 1
-        if not self._launches[name]:
-            launch_ids = self._lids[name]
-            if launch_ids:
-                data = self._lc.find({'launch_id': {"$in": launch_ids}})
-                result = list(map(Launch.from_dict, data))
-            else:
-                result = []
-            setattr(fw, name, result)  # put into real FireWork obj
-            self._launches[name] = True
-        return getattr(fw, name)
 
 
 class Tracker(FWSerializable, object):
