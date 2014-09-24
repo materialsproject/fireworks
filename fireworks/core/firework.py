@@ -916,6 +916,7 @@ class Workflow(FWSerializable):
 
         # refresh the WF to get the states updated
         print ('updated ids leave', fw_id, updated_ids)
+        print ('wf.state before wf.refresh inside rerun', self.fw_states)
         return self.refresh(fw_id, updated_ids)
 
     def _add_wf_to_fw(self, wf, fw_id, detour):
@@ -975,6 +976,7 @@ class Workflow(FWSerializable):
         # if we're defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
             self.fw_states[fw_id] = fw.state
+            print ('wf.state before leaving wf.refresh', self.fw_states)
             return updated_ids
 
         # what are the parent states?
@@ -1033,6 +1035,7 @@ class Workflow(FWSerializable):
 
         self.updated_on = datetime.utcnow()
 
+        print ('wf.state before leaving wf.refresh', self.fw_states)
         return updated_ids
 
     @property
