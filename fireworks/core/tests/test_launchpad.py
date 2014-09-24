@@ -271,6 +271,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        print ('def ids', defused_ids)
+        print ('zeus id', self.zeus_fw_id)
         self.assertIn(self.zeus_fw_id,defused_ids)
 
         fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))

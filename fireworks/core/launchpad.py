@@ -497,9 +497,12 @@ class LaunchPad(FWSerializable):
 
     def defuse_fw(self, fw_id, rerun_duplicates=True):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
+        print ('inside fw')
+        print ('fw_id', fw_id)
         f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
+        print ('fw', f)
         if f:
             self._refresh_wf(fw_id)
 
@@ -906,16 +909,23 @@ class LaunchPad(FWSerializable):
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
         with WFLock(self, fw_id):
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+            print ('inside _refresh')
+            print ('wf', wf)
             updated_ids = wf.refresh(fw_id)
+            print ('updated_ids', updated_ids)
             self._update_wf(wf, updated_ids)
+            print ('exiting _refresh')
 
 
     def _update_wf(self, wf, updated_ids):
         # note: must be called within an enclosing WFLock
 
+        print ('inside _update')
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
+        print ('old_new', old_new)
         wf._reassign_ids(old_new)
+        print ('wf after old_new', wf)
 
         # find a node for which the id did not change, so we can query on it to get WF
         query_node = None
