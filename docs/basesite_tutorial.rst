@@ -4,7 +4,7 @@ Using the Web GUI *(alpha)*
 
 .. note:: You must have Django installed as an optional dependency (just type 'pip install Django') in order to use the web gui
 
-An easy way to monitor FireWorks is to use its web interface (in *alpha* mode), which provides an overview of the state of your workflows and provides clickable links to see details on any FireWork or Workflow:
+An easy way to monitor FireWorks is to use its web interface (in *alpha* mode), which provides an overview of the state of your workflows and provides clickable links to see details on any Firework or Workflow:
 
 .. image:: _static/base_site.png
    :width: 600px
@@ -29,8 +29,8 @@ The ``-s`` (or ``--server``) option runs in 'server mode', e.g. skips opening up
 Using the web framework
 =======================
 
-The current web framework is limited but simple - just click the links you are interested in. One thing to note is that the URLs can be easily modified to quickly bring up a particular FireWork, e.g.::
+The current web framework is limited but simple - just click the links you are interested in. One thing to note is that the URLs can be easily modified to quickly bring up a particular Firework, e.g.::
 
     http://127.0.0.1:8000/fw/1/
 
-points to the data for FireWork id #1 (for the default host and port). You can easily modify this URL to check up on a particular FireWork.
+points to the data for Firework id #1 (for the default host and port). You can easily modify this URL to check up on a particular Firework.

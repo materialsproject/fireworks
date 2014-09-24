@@ -8,7 +8,7 @@ If you are running just a few jobs, or if your set of jobs is well-constrained, 
 * The input data changes and grows over time. In this case, it might be difficult take a lot of user bookkeeping to track what input data was already processed and what workflow steps were already submitted.
 * Multiple users are submitting workflows, and two or more users might submit the same thing.
 
-One way to prevent duplicate jobs is to pre-filter workflows yourself before submitting them to FireWorks. However, FireWorks includes a built-in, customizable duplicate checker. One advantage of this built-in duplicate checker is that it detects duplicates at the FireWork (*sub-workflow*) level. Let's see how this works.
+One way to prevent duplicate jobs is to pre-filter workflows yourself before submitting them to FireWorks. However, FireWorks includes a built-in, customizable duplicate checker. One advantage of this built-in duplicate checker is that it detects duplicates at the Firework (*sub-workflow*) level. Let's see how this works.
 
 Preventing Trivial Duplicates
 =============================
@@ -33,7 +33,7 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
     _dupefinder:
       _fw_name: DupeFinderExact
 
-   * The ``_dupefinder`` key is a special key inside the FireWork **spec** that tells us how to identify duplicates. The ``DupeFinderExact`` text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same **spec**.
+   * The ``_dupefinder`` key is a special key inside the Firework **spec** that tells us how to identify duplicates. The ``DupeFinderExact`` text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same **spec**.
 
 #. Let's add our workflow to the database and run it::
 
@@ -65,7 +65,7 @@ A trivial duplicate might occur if two users submit the same workflow to the Fir
 
 #. All four FireWorks - both the ones we ran explicitly and the second set of duplicated runs - show Launch data as if they had been *all* been run explicitly.
 
-In summary, when the ``_dupefinder`` key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow has its run data copied from an earlier run (in other words, the duplicate run *steals* the launches of the original run). This process occurs when you run the Rocket Launcher - before running a FireWork, the Rocket will check to see if it's been run before. If so, it will just copy the Launch output from the previous FireWork that had the same **spec**.
+In summary, when the ``_dupefinder`` key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow has its run data copied from an earlier run (in other words, the duplicate run *steals* the launches of the original run). This process occurs when you run the Rocket Launcher - before running a Firework, the Rocket will check to see if it's been run before. If so, it will just copy the Launch output from the previous Firework that had the same **spec**.
 
 Sub-Workflow Duplicate Detection
 ================================
@@ -110,6 +110,6 @@ Performance and Customization
 The built-in duplicate finder, ``Exact Dupe Finder``, suffers from two limitations:
 
 * performance is not great when the number of FireWorks is large
-* matching is limited to *exact* matches of the FireWork spec. You cannot, for example, define two FireWorks to be duplicated if a portion of the spec matches within some numerical tolerance.
+* matching is limited to *exact* matches of the Firework spec. You cannot, for example, define two FireWorks to be duplicated if a portion of the spec matches within some numerical tolerance.
 
 In the future, we will include a tutorial on implementing custom Dupe Finders for your application that overcome these limitations. For now, we suggest that you refer to the internal docs or contact us for help. (see :ref:`contributing-label`). You can also try to improve performance by manually adding database indices to :doc:`improve performance <performance_tutorial>`.

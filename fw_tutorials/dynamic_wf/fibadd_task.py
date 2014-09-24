@@ -3,7 +3,7 @@
 """
 TODO: add docs
 """
-from fireworks.core.firework import FWAction, FireWork, FireTaskBase
+from fireworks.core.firework import FWAction, Firework, FireTaskBase
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -13,7 +13,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 25, 2013'
 
 
-from fireworks.core.firework import FWAction, FireWork, FireTaskBase
+from fireworks.core.firework import FWAction, Firework, FireTaskBase
 
 class FibonacciAdderTask(FireTaskBase):
 
@@ -28,7 +28,7 @@ class FibonacciAdderTask(FireTaskBase):
         if m_sum < stop_point:
             print('The next Fibonacci number is: {}'.format(m_sum))
             # create a new Fibonacci Adder to add to the workflow
-            new_fw = FireWork(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
+            new_fw = Firework(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
             return FWAction(stored_data={'next_fibnum': m_sum}, additions=new_fw)
 
         else:

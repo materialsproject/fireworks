@@ -70,7 +70,7 @@ FW Docs
 
 * Update all tutorials so config file is handled smoothly, not terribly...and clean up options like CONFIG_FILE_LOC, make .fireworks dir integration more clear, etc...
 
-* Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the FireWork rather than the id. Also talk about the metadata parameter of workflows
+* Update all tutorials so that FireWorks have names, and lpad get_fws command uses the name of the Firework rather than the id. Also talk about the metadata parameter of workflows
 
 * Give examples on how to implement certain things, e.g. a workflow where one step gives an output file used as input by the second step. Set up an example which lets you change queue parameters if the previous job FIZZLED. Examples library can point to docs because some examples are already there.
 

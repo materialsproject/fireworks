@@ -20,7 +20,7 @@ from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
     RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, \
     WFLOCK_EXPIRATION_KILL
 from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import FireWork, Launch, Workflow, FWAction, \
+from fireworks.core.firework import Firework, Launch, Workflow, FWAction, \
     Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
@@ -223,7 +223,7 @@ class LaunchPad(FWSerializable):
 
         :param wf: a Workflow object.
         """
-        if isinstance(wf, FireWork):
+        if isinstance(wf, Firework):
             wf = Workflow.from_FireWork(wf)
 
         # sets the root FWs as READY
@@ -257,15 +257,15 @@ class LaunchPad(FWSerializable):
 
     def get_fw_by_id(self, fw_id):
         """
-        Given a FireWork id, give back a FireWork object
+        Given a Firework id, give back a Firework object
 
-        :param fw_id: FireWork id (int)
-        :return: FireWork object
+        :param fw_id: Firework id (int)
+        :return: Firework object
         """
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})
 
         if not fw_dict:
-            raise ValueError('No FireWork exists with id: {}'.format(fw_id))
+            raise ValueError('No Firework exists with id: {}'.format(fw_id))
             # recreate launches from the launch collection
 
         fw_dict['launches'] = list(self.launches.find(
@@ -274,11 +274,11 @@ class LaunchPad(FWSerializable):
         fw_dict['archived_launches'] = list(self.launches.find(
                     {'launch_id': {"$in": fw_dict['archived_launches']}}))
 
-        return FireWork.from_dict(fw_dict)
+        return Firework.from_dict(fw_dict)
 
     def get_wf_by_fw_id(self, fw_id):
         """
-        Given a FireWork id, give back the Workflow containing that FireWork
+        Given a Firework id, give back the Workflow containing that Firework
         :param fw_id:
         :return: A Workflow object
         """
@@ -520,7 +520,7 @@ class LaunchPad(FWSerializable):
         """
         (internal method) Used to reset id counters
 
-        :param next_fw_id: id to give next FireWork (int)
+        :param next_fw_id: id to give next Firework (int)
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
@@ -686,7 +686,7 @@ class LaunchPad(FWSerializable):
             else:
                 for l_id in not_lost:
                     l_state = self.launches.find_one({"launch_id": l_id}, {"state": 1})['state']
-                    if FireWork.STATE_RANKS[l_state] > FireWork.STATE_RANKS['FIZZLED']:
+                    if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
                         break
                 else:
                     lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
@@ -707,14 +707,14 @@ class LaunchPad(FWSerializable):
 
     def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
-        (internal method) Finds a FireWork that's ready to be run, marks it as running,
-        and returns it to the caller. The caller is responsible for running the FireWork.
+        (internal method) Finds a Firework that's ready to be run, marks it as running,
+        and returns it to the caller. The caller is responsible for running the Firework.
 
         :param fworker: A FWorker instance
         :param host: the host making the request (for creating a Launch object)
         :param ip: the ip making the request (for creating a Launch object)
         :param launch_dir: the dir the FW will be run in (for creating a Launch object)
-        :return: a FireWork, launch_id tuple
+        :return: a Firework, launch_id tuple
         """
 
         # TODO: this method is confusing, says AJ of Xmas past. Clean it up, remove duplication, etc.
@@ -740,7 +740,7 @@ class LaunchPad(FWSerializable):
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
         if not reserved_launch:
-            # we're appending a new FireWork
+            # we're appending a new Firework
             m_fw.launches.append(m_launch)
         else:
             # we're updating an existing launch
@@ -771,7 +771,7 @@ class LaunchPad(FWSerializable):
 
     def complete_launch(self, launch_id, action, state='COMPLETED'):
         """
-        (internal method) used to mark a FireWork's Launch as completed.
+        (internal method) used to mark a Firework's Launch as completed.
         :param launch_id:
         :param action: the FWAction of what to do next
         """
@@ -800,7 +800,7 @@ class LaunchPad(FWSerializable):
 
     def get_new_fw_id(self):
         """
-        Checkout the next FireWork id
+        Checkout the next Firework id
         """
         try:
             return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_fw_id': 1}})['next_fw_id']
@@ -817,7 +817,7 @@ class LaunchPad(FWSerializable):
             raise ValueError("Could not get next launch id! If you have not yet initialized the database, please do so by performing a database reset (e.g., lpad reset)")
 
     def _upsert_fws(self, fws, reassign_all=False):
-        old_new = {} # mapping between old and new FireWork ids
+        old_new = {} # mapping between old and new Firework ids
 
         # sort the FWs by id, then the new FW_ids will match the order of the old ones...
         fws.sort(key=lambda x: x.fw_id)
@@ -950,7 +950,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         try:
             self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
-            # look for ping file - update the FireWork if this is the case
+            # look for ping file - update the Firework if this is the case
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
                 with open(ping_loc) as f:

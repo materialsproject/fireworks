@@ -26,7 +26,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     Run a single rocket in the current directory
     :param launchpad: (LaunchPad)
     :param fworker: (FWorker)
-    :param fw_id: (int) if set, a particular FireWork to run
+    :param fw_id: (int) if set, a particular Firework to run
     :param strm_lvl: (str) level at which to output logs to stdout
     """
     fworker = fworker if fworker else FWorker()

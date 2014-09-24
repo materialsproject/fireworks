@@ -22,7 +22,7 @@ from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
     LAUNCHPAD_LOC
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.firework import Workflow, FireWork
+from fireworks.core.firework import Workflow, Firework
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -421,7 +421,7 @@ def add_scripts(args):
     fws = []
     links = {}
     for idx, s in enumerate(args.scripts):
-        fws.append(FireWork(ScriptTask({'script': s, 'use_shell': True}), name=args.names[idx], fw_id=idx))
+        fws.append(Firework(ScriptTask({'script': s, 'use_shell': True}), name=args.names[idx], fw_id=idx))
         if idx != 0:
             links[idx-1] = idx
 
@@ -563,7 +563,7 @@ def lpad():
 
     state_args = ['-s', '--state']
     state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
-                    "choices": FireWork.STATE_RANKS.keys()}
+                    "choices": Firework.STATE_RANKS.keys()}
     disp_args = ['-d', '--display_format']
     disp_kwargs = {"type": lambda s: s.lower(), "help": "Display format.",
                    "default": "less",
@@ -599,12 +599,12 @@ def lpad():
                               help="Directory mode. Finds all files in the "
                                    "paths given by wf_file.")
     addwf_parser.add_argument('wf_file', nargs="+",
-                              help="Path to a FireWork or Workflow file")
+                              help="Path to a Firework or Workflow file")
     addwf_parser.set_defaults(func=add_wf)
 
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script (or several scripts) to run in sequence')
     addscript_parser.add_argument('scripts', help="Script to run, or space-separated names", nargs='*')
-    addscript_parser.add_argument('-n', '--names', help='FireWork name, or space-separated names', nargs='*')
+    addscript_parser.add_argument('-n', '--names', help='Firework name, or space-separated names', nargs='*')
     addscript_parser.add_argument('-w', '--wf_name', help='Workflow name')
     addscript_parser.add_argument('-d', '--delimiter', help='delimiter for separating scripts', default=',')
     addscript_parser.set_defaults(func=add_scripts)
@@ -637,7 +637,7 @@ def lpad():
                                 help='exclude these files from the report')
     trackfw_parser.set_defaults(func=track_fws)
 
-    rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run FireWork(s)')
+    rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run Firework(s)')
     rerun_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     rerun_fws_parser.add_argument('-n', '--name', help='name')
     rerun_fws_parser.add_argument(*state_args, **state_kwargs)
@@ -645,7 +645,7 @@ def lpad():
     rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     rerun_fws_parser.set_defaults(func=rerun_fws)
 
-    defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single FireWork')
+    defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single Firework')
     defuse_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     defuse_fw_parser.add_argument('-n', '--name', help='name')
     defuse_fw_parser.add_argument(*state_args, **state_kwargs)
@@ -653,7 +653,7 @@ def lpad():
     defuse_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     defuse_fw_parser.set_defaults(func=defuse_fws)
 
-    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single FireWork')
+    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single Firework')
     reignite_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     reignite_fw_parser.add_argument('-n', '--name', help='name')
     reignite_fw_parser.add_argument(*state_args, **state_kwargs)
@@ -733,7 +733,7 @@ def lpad():
     delete_wfs_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     delete_wfs_parser.set_defaults(func=delete_wfs)
 
-    get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a FireWork')
+    get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a Firework')
     get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_qid_parser.set_defaults(func=get_qid)
 

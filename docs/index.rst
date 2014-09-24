@@ -82,8 +82,8 @@ Workflow Model
 Workflows in FireWorks are made up of three main components:
 
 * A **FireTask** is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package).
-* A **FireWork** contains the JSON *spec* that includes all the information needed to bootstrap your job. For example, the spec contains an array of FireTasks to execute in sequence. The spec also includes any input parameters to pass to your FireTasks. You can easily perform the same function over different input data by creating FireWorks with identical FireTasks but different input parameters in the spec. You can design your spec however you'd like, as long as it's valid JSON. The JSON format used for FireWork specs is extremely flexible, very easy to learn (Python users familiar with *dicts* and *arrays* essentially already know JSON), and immediately makes rich searches over the input data available to end users through MongoDB's JSON document search capabilities.
-* A **Workflow** is a set of FireWorks with dependencies between them. For example, you might need a parent FireWork to finish and generate some output files before running two child FireWorks.
+* A **Firework** contains the JSON *spec* that includes all the information needed to bootstrap your job. For example, the spec contains an array of FireTasks to execute in sequence. The spec also includes any input parameters to pass to your FireTasks. You can easily perform the same function over different input data by creating FireWorks with identical FireTasks but different input parameters in the spec. You can design your spec however you'd like, as long as it's valid JSON. The JSON format used for Firework specs is extremely flexible, very easy to learn (Python users familiar with *dicts* and *arrays* essentially already know JSON), and immediately makes rich searches over the input data available to end users through MongoDB's JSON document search capabilities.
+* A **Workflow** is a set of FireWorks with dependencies between them. For example, you might need a parent Firework to finish and generate some output files before running two child FireWorks.
 
 Between FireWorks, you can return a **FWAction** that can store data or modify the Workflow depending on the output (e.g., pass data to the next step, cancel the remaining parts of the Workflow, or even add new FireWorks that are defined within the object).
 
@@ -223,8 +223,8 @@ A paper for FireWorks is in preparation. In the meantime, you can cite FireWorks
 
 FireWorks workflow software, http://pythonhosted.org/FireWorks.
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.11779.png
-        :target: http://dx.doi.org/10.5281/zenodo.11779
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.11794.png
+        :target: http://dx.doi.org/10.5281/zenodo.11794
 
 ====================================
 Contributing / Contact / Bug Reports

@@ -66,6 +66,9 @@ def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
 
+    if hasattr(obj, 'as_dict'):  # strictly for pymatgen compatibility
+        return recursive_dict(obj.as_dict(), preserve_unicode)
+
     if hasattr(obj, 'to_dict'):
         return recursive_dict(obj.to_dict(), preserve_unicode)
 

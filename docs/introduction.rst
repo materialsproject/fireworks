@@ -42,15 +42,15 @@ Reset/Initialize the FireServer
 
    .. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h`` or ``lpad reset -h``. The ``-h`` help option is available for all of the scripts and sub-commands (like ``reset``) in FireWorks. For example, if you ``lpad reset`` using the ``--password`` option set to today's date, e.g. 2012-02-01, you can bypass the prompt asking you to confirm the reset.
 
-Add a FireWork to the FireServer database
+Add a Firework to the FireServer database
 -----------------------------------------
 
-A FireWork contains a list of computing tasks (FireTasks) to be performed. For this tutorial, we will use a FireWork that consists of only a single step. We'll tackle more complex workflows in other tutorials. Our workflow consisting of one FireWork and one FireTask thus looks like this:
+A Firework contains a list of computing tasks (FireTasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We'll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one FireTask thus looks like this:
 
 .. image:: _static/single_fw.png
    :width: 200px
    :align: center
-   :alt: Single FireWork
+   :alt: Single Firework
 
 #. Staying in the tutorial directory, run the following command::
 
@@ -65,11 +65,11 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
 
    If you've ever used other XML-based workflow systems, you might be surprised at how succintly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we'll provide more details and demonstrate how to add a workflow within Python code (rather than files).
 
-#. You should have received confirmation that the FireWork got added. You can query the database for this FireWork as follows::
+#. You should have received confirmation that the Firework got added. You can query the database for this Firework as follows::
 
     lpad get_fws -i 1 -d all
 
-   This prints, in JSON format, *all* details of the FireWork with ``fw_id`` = 1 (the first FireWork entered into the database)::
+   This prints, in JSON format, *all* details of the Firework with ``fw_id`` = 1 (the first Firework entered into the database)::
 
     {
         "fw_id": 1,
@@ -86,15 +86,15 @@ A FireWork contains a list of computing tasks (FireTasks) to be performed. For t
         }
     }
 
-#. Some of the FireWork is straightforward, but a few sections deserve further explanation:
+#. Some of the Firework is straightforward, but a few sections deserve further explanation:
 
-* The **spec** of the FireWork contains *all* the information about what job to run and the parameters needed to run it.
+* The **spec** of the Firework contains *all* the information about what job to run and the parameters needed to run it.
 * Within the **spec**, the **_tasks** section tells you what jobs will run. The ``ScriptTask`` is a particular type of task that runs commands through the shell. Other sections of the **spec** can be also be defined, but for now we'll stick to just **_tasks**. Later on, we'll describe how to run multiple **_tasks** or customized **_tasks**.
-* This FireWork runs the script ``echo "howdy, your job launched successfully!" >> howdy.txt"``, which prints text to a file named ``howdy.txt``.
-* The **state** of *READY* means the FireWork is ready to be run.
+* This Firework runs the script ``echo "howdy, your job launched successfully!" >> howdy.txt"``, which prints text to a file named ``howdy.txt``.
+* The **state** of *READY* means the Firework is ready to be run.
 * The **name** is an optional field that we can set to help query for FireWorks later on. In this case, we did not specify one so a default name was used.
 
-You have now stored a FireWork in the LaunchPad, and it's ready to run!
+You have now stored a Firework in the LaunchPad, and it's ready to run!
 
 .. note:: The ScriptTask provides more options than what's presented here; more details on using the ``ScriptTask`` can be found :doc:`here <scripttask>`.
 .. note:: The ``lpad get_fws`` command is a powerful way to search for FireWorks in the database. For details on its usage, see :doc:`Querying FireWorks and Workflows </query_tutorial>`
@@ -102,13 +102,13 @@ You have now stored a FireWork in the LaunchPad, and it's ready to run!
 Launch a Rocket on the FireServer
 =================================
 
-A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be run on a separate machine (FireWorker) or through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.
+A Rocket fetches a Firework from the LaunchPad and runs it. A Rocket might be run on a separate machine (FireWorker) or through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.
 
 1. We can launch Rockets using the Rocket Launcher. Execute the following command (once)::
 
     rlaunch singleshot
 
-   The Rocket fetches an available FireWork from the FireServer and runs it.
+   The Rocket fetches an available Firework from the FireServer and runs it.
 
 #. Verify that the desired task ran::
 
@@ -116,19 +116,19 @@ A Rocket fetches a FireWork from the LaunchPad and runs it. A Rocket might be ru
 
    You should see the text: ``howdy, your job launched successfully!``
 
-.. note:: In addition to ``howdy.txt``, you should also see a file called ``FW.json``. This contains a JSON representation of the FireWork that the Rocket ran and can be useful later for tracking down a launch or debugging.
+.. note:: In addition to ``howdy.txt``, you should also see a file called ``FW.json``. This contains a JSON representation of the Firework that the Rocket ran and can be useful later for tracking down a launch or debugging.
 
-#. Check the status of your FireWork::
+#. Check the status of your Firework::
 
     lpad get_fws -i 1 -d all
 
-   You will now see lots of information about your Rocket launch, such as the time and directory of the launch. A lot of it is probably unclear, but you should notice that the state of the FireWork is now ``COMPLETED``.
+   You will now see lots of information about your Rocket launch, such as the time and directory of the launch. A lot of it is probably unclear, but you should notice that the state of the Firework is now ``COMPLETED``.
 
 #. Try launching another rocket::
 
     rlaunch singleshot
 
-   The message ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a FireWork from the database, but none could be found. Indeed, we had previously run the only FireWork that was in the database.
+   The message ``No FireWorks are ready to run and match query!`` indicates that the Rocket tried to fetch a Firework from the database, but none could be found. Indeed, we had previously run the only Firework that was in the database.
 
 Launch many Rockets (rapidfire mode)
 ====================================
@@ -183,7 +183,7 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 
     cat launch*/howdy.txt
 
-   You should see two outputs, one for each FireWork we inserted.
+   You should see two outputs, one for each Firework we inserted.
 
 #. You can continue adding FireWorks as desired; the Rocket Launcher will run them automatically and create a new directory for each job. When you are finished, you can exit out of the Rocket Launcher terminal window and clean up your working directory.
 
@@ -196,7 +196,7 @@ We can set our Rocket Launcher to continuously look for new FireWorks to run. Le
 What just happened?
 ===================
 
-It's important to understand that when you add a FireWork to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new FireWork is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher.
+It's important to understand that when you add a Firework to the LaunchPad using the ``lpad`` script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new Firework is added to the LaunchPad. Rather, a computing resource must *request* a computing task by running the Rocket Launcher.
 
 By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.
 
@@ -205,16 +205,16 @@ Python Examples (optional)
 
 While it's possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it::
 
-    from fireworks import FireWork, LaunchPad, ScriptTask
+    from fireworks import Firework, LaunchPad, ScriptTask
     from fireworks.core.rocket_launcher import launch_rocket
 
     # set up the LaunchPad and reset it
     launchpad = LaunchPad()
     launchpad.reset('', require_password=False)
 
-    # create the FireWork consisting of a single task
+    # create the Firework consisting of a single task
     firetask = ScriptTask.from_str('echo "howdy, your job launched successfully!"')
-    firework = FireWork(firetask)
+    firework = Firework(firetask)
 
     # store workflow and launch it locally
     launchpad.add_wf(firework)
@@ -241,7 +241,7 @@ Only output warnings and above::
     # <code omitted>
     launch_rocket(launchpad, FWorker(), strm_lvl='WARNING')
 
-Write out the Workflow to a flat file, or load a FireWork object from a file::
+Write out the Workflow to a flat file, or load a Firework object from a file::
 
     fw_yaml = firework.to_file("my_firework.yaml")
     fw = firework.from_file("my_firework.yaml")
@@ -251,7 +251,7 @@ Write out the Workflow to a flat file, or load a FireWork object from a file::
     fw = firework.from_file("my_firework.json")
     print fw
 
-.. note:: The *to_file()* and *from_file()* functions are available for many FireWork objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* (which is most of them) will allow serialization/deserialization to files if desired.
+.. note:: The *to_file()* and *from_file()* functions are available for many Firework objects, including the LaunchPad and Workflows (which are covered in a later tutorial). Technically, any class in FireWorks that subclasses *FWSerializable* (which is most of them) will allow serialization/deserialization to files if desired.
 
 .. note:: FireWorks automatically detects what type of format you're writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you're using Python, there may not be any need to use files at all!
 

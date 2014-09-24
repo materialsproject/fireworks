@@ -22,7 +22,7 @@ class BackgroundTask(FWSerializable, object):
         :param tasks: [FireTask] - a list of FireTasks to perform
         :param num_launches: (int) the total number of times to run the process (0=infinite)
         :param sleep_time: (int) sleep time in seconds between background runs
-        :param run_on_finish (bool): always run this task upon completion of FireWork
+        :param run_on_finish (bool): always run this task upon completion of Firework
         """
         self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
         self.num_launches = num_launches

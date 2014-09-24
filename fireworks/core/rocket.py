@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 """
-A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
+A Rocket fetches a Firework from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
 from datetime import datetime
 import json
@@ -12,7 +12,7 @@ import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction, FireWork
+from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
 
@@ -92,7 +92,7 @@ class Rocket():
 
         :param launchpad: (LaunchPad) A LaunchPad object for interacting with the FW database. If none, reads FireWorks from FW.json and writes to FWAction.json
         :param fworker: (FWorker) A FWorker object describing the computing resource
-        :param fw_id: (int) id of a specific FireWork to run (quit if it cannot be found)
+        :param fw_id: (int) id of a specific Firework to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -113,7 +113,7 @@ class Rocket():
         if lp:
             m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
         else:  # offline mode
-            m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
+            m_fw = Firework.from_file(os.path.join(os.getcwd(), "FW.json"))
 
             # set the run start time
             with open('FW_offline.json', 'r+') as f:

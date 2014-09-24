@@ -17,7 +17,7 @@ import shutil
 import datetime
 from multiprocessing import Process
 
-from fireworks import FireWork, Workflow, LaunchPad, FWorker
+from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
@@ -70,7 +70,7 @@ class LaunchPadTest(unittest.TestCase):
     def test_reset(self):
         # Store some test fireworks
         # Atempt couple of ways to reset the lp and check
-        fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
+        fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name='test_workflow')
         self.lp.add_wf(wf)
         self.lp.reset('',require_password=False)
@@ -78,17 +78,17 @@ class LaunchPadTest(unittest.TestCase):
         self.assertFalse(self.lp.get_wf_ids())
 
     def test_pw_check(self):
-        fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
+        fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         args = ('',)
         self.assertRaises(ValueError,self.lp.reset, *args)
 
     def test_add_wf(self):
-        fw = FireWork(ScriptTask.from_str('echo "hello"'), name="hello")
+        fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         wf = self.lp.get_wf_ids()
         self.assertTrue(wf)  # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
-        fw2 = FireWork(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
+        fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name='test_workflow')
         self.lp.add_wf(wf)
         fw = self.lp.get_fw_ids()
@@ -116,48 +116,48 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
     def setUp(self):
         # define the individual FireWorks used in the Workflow
         # Parent Firework
-        fw_p = FireWork(ScriptTask.from_str(
+        fw_p = Firework(ScriptTask.from_str(
             'echo "Cronus is the ruler of titans"',
             {'store_stdout':True}), name="parent", fw_id=1)
         # Sibling fireworks
-        fw_s1 = FireWork(ScriptTask.from_str(
+        fw_s1 = Firework(ScriptTask.from_str(
             'echo "Zeus is son of Cronus"',
             {'store_stdout':True}), name="sib1", fw_id=2, parents=fw_p)
-        fw_s2 = FireWork(ScriptTask.from_str(
+        fw_s2 = Firework(ScriptTask.from_str(
             'echo "Poisedon is brother of Zeus"',
             {'store_stdout':True}), name="sib2", fw_id=3, parents=fw_p)
-        fw_s3 = FireWork(ScriptTask.from_str(
+        fw_s3 = Firework(ScriptTask.from_str(
             'echo "Hades is brother of Zeus"',
             {'store_stdout':True}), name="sib3", fw_id=4, parents=fw_p)
-        fw_s4 = FireWork(ScriptTask.from_str(
+        fw_s4 = Firework(ScriptTask.from_str(
             'echo "Demeter is sister & wife of Zeus"',
             {'store_stdout':True}), name="sib4", fw_id=5, parents=fw_p)
-        fw_s5 = FireWork(ScriptTask.from_str(
+        fw_s5 = Firework(ScriptTask.from_str(
             'echo "Lapetus is son of Oceanus"',
             {'store_stdout':True}), name="cousin1", fw_id=6)
         # Children fireworks
-        fw_c1 = FireWork(ScriptTask.from_str(
+        fw_c1 = Firework(ScriptTask.from_str(
             'echo "Ares is son of Zeus"',
             {'store_stdout':True}), name="c1", fw_id=7, parents=fw_s1)
-        fw_c2 = FireWork(ScriptTask.from_str(
+        fw_c2 = Firework(ScriptTask.from_str(
             'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"',
             {'store_stdout':True}), name="c2", fw_id=8, parents=[fw_s1,fw_s4])
-        fw_c3 = FireWork(ScriptTask.from_str(
+        fw_c3 = Firework(ScriptTask.from_str(
             'echo "Makaria is daughter of Hades & Persephone"',
             {'store_stdout':True}), name="c3", fw_id=9, parents=[fw_s3,fw_c2])
-        fw_c4 = FireWork(ScriptTask.from_str(
+        fw_c4 = Firework(ScriptTask.from_str(
             'echo "Dione is descendant of Lapetus"',
             {'store_stdout':True}), name="c4", fw_id=10, parents=fw_s5)
-        fw_c5 = FireWork(ScriptTask.from_str(
+        fw_c5 = Firework(ScriptTask.from_str(
             'echo "Aphrodite is son of of Zeus and Dione"',
             {'store_stdout':True}), name="c5", fw_id=11, parents=[fw_s1,fw_c4])
-        fw_c6 = FireWork(ScriptTask.from_str(
+        fw_c6 = Firework(ScriptTask.from_str(
             'echo "Atlas is son of of Lapetus"',
             {'store_stdout':True}), name="c6", fw_id=12,parents=fw_s5)
-        fw_c7 = FireWork(ScriptTask.from_str(
+        fw_c7 = Firework(ScriptTask.from_str(
             'echo "Maia is daughter of Atlas"',
             {'store_stdout':True}), name="c7", fw_id=13, parents=fw_c6)
-        fw_c8 = FireWork(ScriptTask.from_str(
+        fw_c8 = Firework(ScriptTask.from_str(
             'echo "Hermes is daughter of Maia and Zeus"',
             {'store_stdout':True}), name="c8", fw_id=14, parents=[fw_s1,fw_c7])
 
@@ -372,7 +372,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     def setUp(self):
         # Define a timed fireWork
-        fw_timer = FireWork(PyTask(func='time.sleep',args=[5]), name="timer")
+        fw_timer = Firework(PyTask(func='time.sleep',args=[5]), name="timer")
         self.lp.add_wf(fw_timer)
 
         # Get assigned fwid for timer firework

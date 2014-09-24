@@ -11,11 +11,11 @@ You might want to control the order in which your FireWorks are run. Setting job
 Set job priority using the command line after adding FWs
 ========================================================
 
-If you would like to set the priority of a FireWork *after* you have already entered it into the LaunchPad, you can do so via the command::
+If you would like to set the priority of a Firework *after* you have already entered it into the LaunchPad, you can do so via the command::
 
     lpad set_priority -i <FW_IDS> <PRIORITY>
 
-where ``<FW_IDS>`` is the numerical id of the FireWork you want to set the priority of (or a list of space-separated ids), and ``<PRIORITY`` is the priority to assign.
+where ``<FW_IDS>`` is the numerical id of the Firework you want to set the priority of (or a list of space-separated ids), and ``<PRIORITY`` is the priority to assign.
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 
@@ -26,7 +26,7 @@ Refer to the documentation (``lpad set_priority -h``) for more information.
 Set job priority when creating FireWorks
 ========================================
 
-To set job priority, simply set a key named ``_priority`` in your FireWork spec to your desired priority. FireWorks will automatically prioritize jobs based on their value of this key.
+To set job priority, simply set a key named ``_priority`` in your Firework spec to your desired priority. FireWorks will automatically prioritize jobs based on their value of this key.
 
 Example 1: Prioritize one workflow over another
 -----------------------------------------------
