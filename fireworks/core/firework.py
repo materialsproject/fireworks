@@ -901,6 +901,7 @@ class Workflow(FWSerializable):
         :return: ([int]) list of Firework ids that were updated
         """
 
+        print ('updated ids enter', fw_id, updated_ids)
         updated_ids = updated_ids if updated_ids else set()
         m_fw = self.id_fw[fw_id]
         print ('fw state before rerun', m_fw.state)
@@ -914,6 +915,7 @@ class Workflow(FWSerializable):
                 self.rerun_fw(child_id, updated_ids))
 
         # refresh the WF to get the states updated
+        print ('updated ids leave', fw_id, updated_ids)
         return self.refresh(fw_id, updated_ids)
 
     def _add_wf_to_fw(self, wf, fw_id, detour):
