@@ -2,7 +2,7 @@
 Improving FireWorks performance
 ===============================
 
-For the most part, you shouldn't need to tinker with FireWork's performance. One issue you might run into is speed of querying FireWorks by their spec or workflows by a field in their metadata. This issue might also manifest itself as slow duplicate checking queries. You can add *indices* to certain fields of your FireWork specification in order to improve query performances.
+For the most part, you shouldn't need to tinker with Firework's performance. One issue you might run into is speed of querying FireWorks by their spec or workflows by a field in their metadata. This issue might also manifest itself as slow duplicate checking queries. You can add *indices* to certain fields of your Firework specification in order to improve query performances.
 
 How to add an index to a FW spec
 ================================

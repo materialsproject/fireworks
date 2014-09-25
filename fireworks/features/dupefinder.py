@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 This module contains the base class for implementing Duplicate Finders

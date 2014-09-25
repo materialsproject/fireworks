@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 # Django settings for base_site project.
 
 import os

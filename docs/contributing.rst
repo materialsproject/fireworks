@@ -51,8 +51,9 @@ If you're ready to contribute, awesome! The best way is to fork the FireWorks re
 
 Two great tutorials for how to do this are:
 
-* The `Eqqon Collaborative Github Workflow <http://www.eqqon.com/index.php/Collaborative_Github_Workflow>`_.
-* The `Pymatgen Collaborative Workflow Guide <http://pythonhosted.org/pymatgen/contributing.html>`_.
+* The `Pymatgen Collaborative Workflow Guide <http://pymatgen.org/contributing.html>`_.
+* (more detailed) The `Eqqon Collaborative Github Workflow <http://www.eqqon.com/index.php/Collaborative_Github_Workflow>`_.
+
 
 If you encounter trouble, please let us know. We look forward to your merge request!
 

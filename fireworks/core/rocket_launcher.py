@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 This module contains methods for launching Rockets, both singly and in rapid-fire mode
@@ -24,7 +26,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     Run a single rocket in the current directory
     :param launchpad: (LaunchPad)
     :param fworker: (FWorker)
-    :param fw_id: (int) if set, a particular FireWork to run
+    :param fw_id: (int) if set, a particular Firework to run
     :param strm_lvl: (str) level at which to output logs to stdout
     """
     fworker = fworker if fworker else FWorker()
@@ -62,7 +64,8 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
     num_loops = 0
 
     while num_loops != max_loops:
-        while launchpad.run_exists(fworker):
+        skip_check = False  # this is used to speed operation
+        while skip_check or launchpad.run_exists(fworker):
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
@@ -75,7 +78,11 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 os.rmdir(launcher_dir)
             if num_launched == nlaunches:
                 break
-            time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh, etc.
+            if launchpad.run_exists(fworker):
+                skip_check = True  # don't wait, pull the next FW right away
+            else:
+                time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh in case we have a dynamic WF
+                skip_check = False
         if num_launched == nlaunches or nlaunches == 0:
             break
         log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))

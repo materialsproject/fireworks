@@ -1,7 +1,9 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
-A Rocket fetches a FireWork from the database, runs the sequence of FireTasks inside, and then completes the Launch
+A Rocket fetches a Firework from the database, runs the sequence of FireTasks inside, and then completes the Launch
 """
 from datetime import datetime
 import json
@@ -10,7 +12,7 @@ import multiprocessing
 import os
 import traceback
 import threading
-from fireworks.core.firework import FWAction, FireWork
+from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
 
@@ -90,7 +92,7 @@ class Rocket():
 
         :param launchpad: (LaunchPad) A LaunchPad object for interacting with the FW database. If none, reads FireWorks from FW.json and writes to FWAction.json
         :param fworker: (FWorker) A FWorker object describing the computing resource
-        :param fw_id: (int) id of a specific FireWork to run (quit if it cannot be found)
+        :param fw_id: (int) id of a specific Firework to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -111,7 +113,7 @@ class Rocket():
         if lp:
             m_fw, launch_id = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
         else:  # offline mode
-            m_fw = FireWork.from_file(os.path.join(os.getcwd(), "FW.json"))
+            m_fw = Firework.from_file(os.path.join(os.getcwd(), "FW.json"))
 
             # set the run start time
             with open('FW_offline.json', 'r+') as f:
@@ -166,8 +168,9 @@ class Rocket():
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
             # execute the FireTasks!
-            for my_task in m_fw.tasks:
-                m_action = my_task.run_task(my_spec)
+            for t in m_fw.tasks:
+                lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
+                m_action = t.run_task(my_spec)
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -187,7 +190,7 @@ class Rocket():
                 my_spec.update(m_action.update_spec)
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
-
+                lp.log_message(logging.INFO, "Task completed: %s " % t.fw_name)
                 if m_action.skip_remaining_tasks:
                     break
 
@@ -227,9 +230,10 @@ class Rocket():
 
         except:
             stop_backgrounds(ping_stop, btask_stops)
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             traceback.print_exc()
             try:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': my_task.to_dict(),
+                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': t.to_dict(),
                                              '_exception': traceback.format_exc()}, exit=True)
             except:
                 m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
@@ -246,5 +250,3 @@ class Rocket():
                     f.truncate()
 
             return True
-
-

@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
@@ -158,11 +160,11 @@ class CommonAdapter(QueueAdapterBase):
                         'Job submission was successful and job_id is {}'.format(
                             job_id))
                     return job_id
-                except:
+                except Exception as ex:
                     # probably error parsing job code
                     log_exception(queue_logger,
-                                  'Could not parse job id following {}...'
-                                  .format(submit_cmd))
+                                  'Could not parse job id following {} due to error {}...'
+                                  .format(submit_cmd, str(ex)))
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [

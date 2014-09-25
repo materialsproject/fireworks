@@ -1,3 +1,7 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
 import os
 import shutil
 import traceback
@@ -39,6 +43,7 @@ class FileDeleteTask(FireTaskBase):
         - files_to_delete: ([str]) Filenames to delete
     Optional params:
         - dest: (str) Shared path for files
+        - ignore_errors (bool): Whether to ignore errors. Defaults to True.
     """
     _fw_name = 'FileDeleteTask'
     required_params = ["files_to_delete"]
@@ -46,8 +51,13 @@ class FileDeleteTask(FireTaskBase):
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
+        ignore_errors = self.get('ignore_errors', True)
         for f in self["files_to_delete"]:
-            os.remove(os.path.join(pth, f))
+            try:
+                os.remove(os.path.join(pth, f))
+            except Exception as ex:
+                if not ignore_errors:
+                    raise OSError(str(ex))
 
 
 class FileTransferTask(FireTaskBase):
@@ -146,14 +156,26 @@ class CompressDirTask(FireTaskBase):
     Compress all files in a directory.
 
     Args:
-        compression: Optional. Can only be gz or bz2. Defaults to gz.
+        dest (str): Optional. Path to compress.
+        compression (str): Optional. Can only be gz or bz2. Defaults to gz.
+        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to
+            False.
     """
 
     _fw_name = 'CompressDirTask'
-    optional_params = ["compression"]
+    optional_params = ["compression", "dest", "ignore_errors"]
 
     def run_task(self, fw_spec):
-        compress_dir(".", compression=self["compression"])
+        ignore_errors = self.get('ignore_errors', False)
+        dest = self.get("dest", os.getcwd())
+        compression = self.get("compression", "gz")
+        try:
+            compress_dir(dest, compression=compression)
+        except:
+            if not ignore_errors:
+                raise ValueError(
+                    "There was an error performing compression {} in {}."
+                    .format(compression, dest))
 
 
 class ArchiveDirTask(FireTaskBase):

@@ -1,11 +1,13 @@
-#!/usr/bin/env python
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 """
 A set of global constants for FireWorks (Python code as a config file)
 """
 
 import os
-import yaml
+from monty.serialization import loadfn, dumpfn
 from monty.design_patterns import singleton
 
 __author__ = 'Anubhav Jain'
@@ -51,6 +53,9 @@ MAINTAIN_INTERVAL = 120  # seconds between maintenance intervals when running in
 RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue this long before we
 # cancel its reservation
 
+WFLOCK_EXPIRATION_SECS = 60 * 5  # wait this long for a WFLock before expiring
+WFLOCK_EXPIRATION_KILL = True  # kill WFLock on expiration (or give a warning)
+
 RAPIDFIRE_SLEEP_SECS = 60  # seconds to sleep between rapidfire loops
 
 LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
@@ -84,34 +89,37 @@ def override_user_settings():
 
     config_paths = []
 
-    test_paths = [os.getcwd(), os.path.join(os.environ["HOME"], ".fireworks"), root_dir]
+    test_paths = [os.getcwd(), os.path.join(os.path.expanduser('~'), ".fireworks"), root_dir]
 
     for p in test_paths:
-        if os.path.exists(os.path.join(p, 'FW_config.yaml')):
-            config_paths.append(os.path.join(p, 'FW_config.yaml'))
+        fp = os.path.join(p, 'FW_config.yaml')
+        if fp not in config_paths and os.path.exists(fp):
+            config_paths.append(fp)
 
-    if "FW_CONFIG_FILE" in os.environ:
-            config_paths.append(os.environ["FW_CONFIG_FILE"])
+    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in\
+            config_paths:
+        config_paths.append(os.environ["FW_CONFIG_FILE"])
 
-    config_paths = config_paths if config_paths else [os.path.join(os.environ["HOME"], ".fireworks", 'FW_config.yaml')]
+    config_paths = config_paths or [os.path.join(
+        os.path.expanduser('~'), ".fireworks", 'FW_config.yaml')]
 
     if len(config_paths) > 1:
-        print("Found many potential paths for {}: {}\nChoosing: {}".format("FW_CONFIG_FILE", config_paths, config_paths[0]))
+        print("Found many potential paths for {}: {}\nChoosing: {}"
+              .format("FW_CONFIG_FILE", config_paths, config_paths[0]))
 
     if os.path.exists(config_paths[0]):
-        with open(config_paths[0]) as f:
-            overrides = yaml.load(f.read())
-            for key, v in overrides.items():
-                if key == 'ADD_USER_PACKAGES':
-                    USER_PACKAGES.extend(v)
-                elif key == 'ECHO_TEST':
-                    print(v)
-                elif key not in globals():
-                    raise ValueError(
-                        'Invalid FW_config file has unknown parameter: {}'.format(
-                            key))
-                else:
-                    globals()[key] = v
+        overrides = loadfn(config_paths[0])
+        for key, v in overrides.items():
+            if key == 'ADD_USER_PACKAGES':
+                USER_PACKAGES.extend(v)
+            elif key == 'ECHO_TEST':
+                print(v)
+            elif key not in globals():
+                raise ValueError(
+                    'Invalid FW_config file has unknown parameter: {}'.format(
+                        key))
+            else:
+                globals()[key] = v
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
         if globals().get(k, None) is None:
@@ -120,17 +128,16 @@ def override_user_settings():
             if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
                 test_paths.insert(0, CONFIG_FILE_DIR)
             for p in test_paths:
-                if os.path.exists(os.path.join(p, fname)):
-                    m_paths.append(os.path.join(p, fname))
+                fp = os.path.join(p, fname)
+                if os.path.exists(fp) and fp not in m_paths:
+                    m_paths.append(fp)
 
             if len(m_paths) > 1:
-                print("Found many potential paths for {}: {}\nChoosing: {}".format(k, m_paths, m_paths[0]))
+                print("Found many potential paths for {}: {}\nChoosing: {}"
+                      .format(k, m_paths, m_paths[0]))
 
             if len(m_paths) > 0:
                 globals()[k] = m_paths[0]
-
-
-
 
 
 override_user_settings()
@@ -145,10 +152,9 @@ def config_to_dict():
 
 
 def write_config(path=None):
-    path = os.path.join(os.environ["HOME"], ".fireworks",
+    path = os.path.join(os.path.expanduser('~'), ".fireworks",
                         'FW_config.yaml') if path is None else path
-    with open(path, "w") as f:
-        yaml.dump(config_to_dict(), f)
+    dumpfn(config_to_dict(), path)
 
 
 @singleton
