@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v0.92**
+
+* Improve large workflow performance using a LazyFirework (B. Medasani, D. Gunter)
+* some code cleanups and minor (rare) bugfix to datetime
+* Add email option to PBS adapter (S.P. Ong)
+* Support for pymatgen as_dict formulation (X. Qu)
+
 **v0.91**
 
 * Major: Rename FireWork to Firework. Should be fully backward-compatible for the moment, but users must switch by ~v1.0.
