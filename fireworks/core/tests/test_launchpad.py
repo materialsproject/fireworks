@@ -86,13 +86,18 @@ class LaunchPadTest(unittest.TestCase):
     def test_add_wf(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
-        wf = self.lp.get_wf_ids()
-        self.assertTrue(wf)  # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
+        wf_id = self.lp.get_wf_ids()
+        self.assertEqual(len(wf_id), 1)  
+        for fw_id in self.lp.get_wf_ids():
+            wf = self.lp.get_wf_by_fw_id_lzyfw(fw_id)
+            self.assertEqual(len(wf.id_fw.keys()), 1)
         fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name='test_workflow')
         self.lp.add_wf(wf)
-        fw = self.lp.get_fw_ids()
-        self.assertTrue(fw) # TODO: assertTrue is very sloppy. Check for something specific and meaningful, e.g. a count
+        #fw = self.lp.get_fw_ids()
+        #self.assertEqual(len(wf.id_fw.keys()), 2)
+        fw_ids = self.lp.get_fw_ids()
+        self.assertEqual(len(fw_ids), 3)
         self.lp.reset('',require_password=False)
 
 
@@ -262,10 +267,16 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
     def test_defuse_wf_after_partial_run(self):
         # Run a firework before defusing Zeus
         launch_rocket(self.lp, self.fworker)
+        print ('----------\nafter launch rocket\n--------')
+
 
         # defuse Workflow containing Zeus
+        print ('----------\nstaring defuse rocket\n--------')
         self.lp.defuse_wf(self.zeus_fw_id)
+        print ('----------\nafter defuse rocket\n--------')
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        print ('def ids', defused_ids)
+        print ('zeus id', self.zeus_fw_id)
         self.assertIn(self.zeus_fw_id,defused_ids)
 
         fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
@@ -309,7 +320,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # Query for provenance
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        self.assertTrue(fw)  # can probably do a better query than True
+        self.assertEqual(fw.state,'ARCHIVED') 
 
     def test_delete_wf(self):
         # Run a firework before deleting Zeus
@@ -329,7 +340,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # Launch all fireworks
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        first_ldir = fw.launches[0].launch_dir
+        launches = fw.launches
+        first_ldir = launches[0].launch_dir
         ts = datetime.datetime.utcnow()
 
         # Rerun Zeus
@@ -337,8 +349,9 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        fw_start_t =  fw.launches[0].time_start
-        second_ldir = fw.launches[0].launch_dir
+        launches = fw.launches
+        fw_start_t =  launches[0].time_start
+        second_ldir = launches[0].launch_dir
 
         self.assertNotEqual(first_ldir,second_ldir)
 

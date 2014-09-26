@@ -1,6 +1,8 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+from datetime import datetime
+from fireworks import Firework, Launch
 
 """
 The LaunchPad manages the FireWorks database.
@@ -16,12 +18,11 @@ from collections import OrderedDict
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
 
-from fireworks.fw_config import LAUNCHPAD_LOC, CONFIG_FILE_DIR, SORT_FWS, \
+from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, \
     RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, \
     WFLOCK_EXPIRATION_KILL
-from fireworks.utilities.fw_serializers import FWSerializable
-from fireworks.core.firework import Firework, Launch, Workflow, FWAction, \
-    Tracker
+from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
+from fireworks.core.firework import Firework, Launch, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 
@@ -289,6 +290,28 @@ class LaunchPad(FWSerializable):
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'])
 
+    def get_wf_by_fw_id_lzyfw(self, fw_id):
+        """
+        Given a FireWork id, give back the Workflow containing that FireWork
+        :param fw_id:
+        :return: A Workflow object
+        """
+        links_dict = self.workflows.find_one({'nodes': fw_id})
+        if not links_dict:
+            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
+
+        fws = []
+        for fw_id in links_dict['nodes']:
+            fws.append(LazyFirework(fw_id, self.fireworks, self.launches))
+        # Check for fw_states in links_dict to conform with preoptimized workflows
+        if 'fw_states' in links_dict:
+            fw_states = dict([(int(k), v) for (k, v) in links_dict['fw_states'].items()])
+        else:
+            fw_states = None
+
+        return Workflow(fws, links_dict['links'], links_dict['name'],
+                        links_dict['metadata'], fw_states=fw_states)
+
     def delete_wf(self, fw_id):
         links_dict = self.workflows.find_one({'nodes': fw_id})
         fw_ids = links_dict["nodes"]
@@ -469,14 +492,17 @@ class LaunchPad(FWSerializable):
         f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self._refresh_wf(fw_id)
 
         if not f:
             self.rerun_fw(fw_id, rerun_duplicates)
             f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
+            if f:
+                self._refresh_wf(fw_id)
 
-        self._refresh_wf(fw_id)
         return f
 
     def reignite_fw(self, fw_id):
@@ -488,33 +514,33 @@ class LaunchPad(FWSerializable):
         return f
 
     def defuse_wf(self, fw_id):
-        wf = self.get_wf_by_fw_id(fw_id)
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
             self.defuse_fw(fw.fw_id)
 
         self._refresh_wf(fw_id)
 
     def reignite_wf(self, fw_id):
-        wf = self.get_wf_by_fw_id(fw_id)
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
             self.reignite_fw(fw.fw_id)
 
     def archive_wf(self, fw_id):
         # first archive all the launches, so they are not used in duplicate checks
-        wf = self.get_wf_by_fw_id(fw_id)
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         if wf.state != 'ARCHIVED':
             fw_ids = [f.fw_id for f in wf.fws]
             for fw_id in fw_ids:
                 self.rerun_fw(fw_id)
 
             # second set the state of all FWs to ARCHIVED
-            wf = self.get_wf_by_fw_id(fw_id)
+            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf.fws:
                 self.fireworks.find_and_modify({'fw_id': fw.fw_id},
                                                {'$set': {'state': 'ARCHIVED',
                                                          'updated_on': datetime.datetime.utcnow()}})
 
-            self._refresh_wf(fw_id)
+                self._refresh_wf(fw.fw_id)
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         """
@@ -849,7 +875,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
         else:
             with WFLock(self, fw_id):
-                wf = self.get_wf_by_fw_id(fw_id)
+                wf = self.get_wf_by_fw_id_lzyfw(fw_id)
                 updated_ids = wf.rerun_fw(fw_id)
                 self._update_wf(wf, updated_ids)
                 reruns.append(fw_id)
@@ -871,7 +897,7 @@ class LaunchPad(FWSerializable):
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
         with WFLock(self, fw_id):
-            wf = self.get_wf_by_fw_id(fw_id)
+            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             updated_ids = wf.refresh(fw_id)
             self._update_wf(wf, updated_ids)
 
@@ -954,7 +980,7 @@ class LaunchPad(FWSerializable):
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
                 with open(ping_loc) as f:
-                    ping_time = datetime.datetime.strptime(json.loads(f.read())['ping_time'], "%Y-%m-%dT%H:%M:%S.%f")
+                    ping_time = reconstitute_dates(json.loads(f.read())['ping_time'])
                     self.ping_launch(launch_id, ping_time)
 
             # look for action in FW_offline.json
@@ -965,7 +991,7 @@ class LaunchPad(FWSerializable):
                     m_launch.state = 'RUNNING'
                     for s in m_launch.state_history:
                         if s['state'] == 'RUNNING':
-                            s['created_on'] = datetime.datetime.strptime(offline_data['started_on'], "%Y-%m-%dT%H:%M:%S.%f")
+                            s['created_on'] = reconstitute_dates(offline_data['started_on'])
                     self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
                 if 'fwaction' in offline_data:
@@ -975,7 +1001,7 @@ class LaunchPad(FWSerializable):
                         self.complete_launch(launch_id, fwaction, state))
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
-                            s['created_on'] = datetime.datetime.strptime(offline_data['completed_on'], "%Y-%m-%dT%H:%M:%S.%f")
+                            s['created_on'] = reconstitute_dates(offline_data['completed_on'])
                     self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
@@ -1002,3 +1028,144 @@ class LaunchPad(FWSerializable):
     # support for job packing
     def log_message(self, level, message):
         self.m_logger.log(level, message)
+
+
+class LazyFirework(object):
+    """
+    A LazyFirework only has the fw_id, and grabs other data just-in-time.
+    This representation can speed up Workflow loading as only "important" FWs need to be
+    fully loaded.
+    :param fw_id:
+    :param fw_coll:
+    :param launch_coll:
+    """
+
+    # Get these fields from DB when creating new FireWork object
+    db_fields = ('name', 'fw_id', 'spec', 'created_on', 'state')
+    db_launch_fields = ('launches', 'archived_launches')
+
+    def __init__(self, fw_id, fw_coll, launch_coll):
+        # This is the only attribute known w/o a DB query
+        self.fw_id = fw_id
+
+        self._fwc, self._lc = fw_coll, launch_coll
+        self._launches = {k: False for k in self.db_launch_fields}
+        self._fw, self._lids = None, None
+
+    # FireWork methods
+
+    @property
+    def state(self):
+        return self.partial_fw._state
+
+    @state.setter
+    def state(self, state):
+        self.partial_fw._state = state
+        self.partial_fw.updated_on = datetime.datetime.utcnow()
+
+    def to_dict(self):
+        return self.full_fw.to_dict()
+
+    def _rerun(self):
+        self.full_fw._rerun()
+
+    def to_db_dict(self):
+        return self.full_fw.to_db_dict()
+
+    def __str__(self):
+        return 'LazyFireWork object: (id: {})'.format(self.fw_id)
+
+    # Properties that shadow FireWork attributes
+
+    @property
+    def tasks(self): return self.partial_fw.tasks
+    @tasks.setter
+    def tasks(self, value): self.partial_fw.tasks = value
+
+    @property
+    def spec(self): return self.partial_fw.spec
+    @spec.setter
+    def spec(self, value): self.partial_fw.spec = value
+
+    @property
+    def name(self): return self.partial_fw.name
+    @name.setter
+    def name(self, value): self.partial_fw.name = value
+
+    @property
+    def created_on(self): return self.partial_fw.created_on
+    @created_on.setter
+    def created_on(self, value): self.partial_fw.created_on = value
+
+    @property
+    def updated_on(self): return self.partial_fw.updated_on
+    @updated_on.setter
+    def updated_on(self, value): self.partial_fw.updated_on = value
+
+    @property
+    def parents(self): return self.partial_fw.parents
+    @parents.setter
+    def parents(self, value): self.partial_fw.parents = value
+
+    # Properties that shadow FireWork attributes, but which are
+    # fetched individually from the DB (i.e. launch objects)
+
+    @property
+    def launches(self):
+        return self._get_launch_data('launches')
+    @launches.setter
+    def launches(self, value):
+        self._launches['launches'] = True
+        self.partial_fw.launches = value
+
+    @property
+    def archived_launches(self):
+        return self._get_launch_data('archived_launches')
+    @archived_launches.setter
+    def archived_launches(self, value):
+        self._launches['archived_launches'] = True
+        self.partial_fw.archived_launches = value
+
+    # Lazy properties that idempotently instantiate a FireWork object
+
+    @property
+    def partial_fw(self):
+        if not self._fw:
+            fields = list(self.db_fields) + list(self.db_launch_fields)
+            data = self._fwc.find_one({'fw_id': self.fw_id}, fields=fields)
+
+            launch_data = {}  # move some data to separate launch dict
+            for key in self.db_launch_fields:
+                launch_data[key] = data[key]
+                del data[key]
+
+            self._lids = launch_data
+            self._fw = Firework.from_dict(data)
+        return self._fw
+
+    @property
+    def full_fw(self):
+        #map(self._get_launch_data, self.db_launch_fields)
+        for launch_field in self.db_launch_fields:
+            self._get_launch_data(launch_field)
+        return self._fw
+
+    # Get a type of Launch object
+
+    def _get_launch_data(self, name):
+        """Pull launch data individually for each field.
+
+        :param name: Name of field, e.g. 'archived_launches'.
+        :return: Launch obj (also propagated to self._fw)
+        """
+        fw = self.partial_fw  # assure stage 1
+        if not self._launches[name]:
+            launch_ids = self._lids[name]
+            if launch_ids:
+                data = self._lc.find({'launch_id': {"$in": launch_ids}})
+                result = list(map(Launch.from_dict, data))
+            else:
+                result = []
+            setattr(fw, name, result)  # put into real FireWork obj
+            self._launches[name] = True
+        return getattr(fw, name)

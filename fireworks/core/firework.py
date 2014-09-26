@@ -32,8 +32,7 @@ from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
     recursive_serialize, recursive_deserialize, serialize_fw
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, \
-    NestedClassGetter
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
 
 __author__ = "Anubhav Jain"
@@ -183,12 +182,13 @@ class FWAction(FWSerializable):
 
 class Firework(FWSerializable):
     """
-    A Firework is a workflow step and might be contain several FireTasks
+    A Firework is a workflow step and might be contain several FireTasks.
     """
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
                    'RESERVED': 3, 'RUNNING': 4, 'COMPLETED': 5}
 
+    # note: if you modify this signature, you must also modify LazyFirework
     def __init__(self, tasks, spec=None, name=None, launches=None,
                  archived_launches=None, state='WAITING', created_on=None,
                  fw_id=None, parents=None, updated_on=None):
@@ -256,10 +256,10 @@ class Firework(FWSerializable):
                   'created_on': self.created_on, 'updated_on': self.updated_on}
 
         # only serialize these fields if non-empty
-        if len(self.launches) > 0:
+        if len(list(self.launches)) > 0:
             m_dict['launches'] = self.launches
 
-        if len(self.archived_launches) > 0:
+        if len(list(self.archived_launches)) > 0:
             m_dict['archived_launches'] = self.archived_launches
 
         if self.state != 'WAITING':
@@ -641,12 +641,16 @@ class Workflow(FWSerializable):
                     state)
 
     def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
-                 updated_on=None):
+                 updated_on=None, fw_states=None):
         """
         :param fireworks: ([Firework]) - all FireWorks in this workflow
         :param links_dict: (dict) links between the FWs as (parent_id):[(
         child_id1, child_id2)]
+        :param name: (str) naem of workflow
         :param metadata: (dict) metadata for this Workflow
+        :param created_on: (datetime)
+        :param updated_on: (datetime)
+        :param fw_states: (dict) - leave alone unless you are purposefully creating a Lazy-style WF
         """
 
         name = name or 'unnamed WF'  # prevent None names
@@ -686,6 +690,12 @@ class Workflow(FWSerializable):
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
+        # Dict containing mapping of an id to a firework state. The states are stored locally and redundantly for speed purpose
+        if fw_states:
+            self.fw_states = fw_states
+        else:
+            self.fw_states = {key:self.id_fw[key].state for key in self.id_fw}
+
     @property
     def fws(self):
         return list(self.id_fw.values())
@@ -695,7 +705,8 @@ class Workflow(FWSerializable):
 
         # get state of workflow
         m_state = 'READY'
-        states = [fw.state for fw in self.fws]
+        #states = [fw.state for fw in self.fws]
+        states = self.fw_states.values()
         if all([s == 'COMPLETED' for s in states]):
             m_state = 'COMPLETED'
         elif all([s == 'ARCHIVED' for s in states]):
@@ -838,6 +849,7 @@ class Workflow(FWSerializable):
 
         # if we're defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
+            self.fw_states[fw_id] = fw.state
             return updated_ids
 
         # what are the parent states?
@@ -855,7 +867,7 @@ class Workflow(FWSerializable):
         else:
             # my state depends on launch whose state has the highest 'score'
             # in STATE_RANKS
-            m_state = 'READY' if len(fw.launches) == 0 else 'FIZZLED'
+            m_state = 'READY' if len(list(fw.launches)) == 0 else 'FIZZLED'
             max_score = Firework.STATE_RANKS[m_state]
             m_action = None
 
@@ -879,6 +891,8 @@ class Workflow(FWSerializable):
                     updated_ids.add(fw_id)
 
         fw.state = m_state
+        # Brings self.fw_states in sync with fw_states in db
+        self.fw_states[fw_id] = m_state
 
         if m_state != prev_state:
             updated_ids.add(fw_id)
@@ -943,6 +957,12 @@ class Workflow(FWSerializable):
                                                   child in children]
         self.links = Workflow.Links(new_l)
 
+        # update the states
+        new_fw_states = {}
+        for (fwid, fw_state) in self.fw_states.items():
+            new_fw_states[old_new.get(fwid, fwid)] = fw_state
+        self.fw_states = new_fw_states
+
     def to_dict(self):
         return {'fws': [f.to_dict() for f in self.id_fw.values()],
                 'links': self.links.to_dict(),
@@ -956,6 +976,7 @@ class Workflow(FWSerializable):
         m_dict['name'] = self.name
         m_dict['created_on'] = self.created_on
         m_dict['updated_on'] = self.updated_on
+        m_dict['fw_states'] = dict([(str(k), v) for (k, v) in self.fw_states.items()])
         return m_dict
 
     def to_display_dict(self):
