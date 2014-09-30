@@ -1,4 +1,4 @@
-PyYAML==3.1.1
+PyYAML==3.11
 pymongo==2.7.2
 Jinja2==2.7.3
 six==1.7.3
