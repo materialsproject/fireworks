@@ -10,6 +10,11 @@ import os
 from monty.serialization import loadfn, dumpfn
 from monty.design_patterns import singleton
 
+try:
+    from yaml import CSafeDumper as Dumper
+except ImportError:
+    from yaml import SafeDumper as Dumper
+
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
@@ -154,7 +159,7 @@ def config_to_dict():
 def write_config(path=None):
     path = os.path.join(os.path.expanduser('~'), ".fireworks",
                         'FW_config.yaml') if path is None else path
-    dumpfn(config_to_dict(), path)
+    dumpfn(config_to_dict(), path, Dumper=Dumper)
 
 
 @singleton
