@@ -26,5 +26,7 @@ Brian Foster and Guido Petretto stomped bugs.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey for helpful discussions.
 
+We thank JetBrains for providing PyCharm IDE licenses for FireWorks developers.
+
 .. _pymatgen: http://packages.python.org/pymatgen/
 .. _custodian: https://pypi.python.org/pypi/custodian
