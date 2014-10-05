@@ -847,9 +847,11 @@ class Workflow(FWSerializable):
         fw = self.id_fw[fw_id]
         prev_state = fw.state
 
+
         # if we're defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
             self.fw_states[fw_id] = fw.state
+            updated_ids.add(fw_id)
             return updated_ids
 
         # what are the parent states?

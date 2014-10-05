@@ -231,6 +231,7 @@ class LaunchPad(FWSerializable):
         # prefer to wf.refresh() for speed reasons w/many root FWs
         for fw_id in wf.root_fw_ids:
             wf.id_fw[fw_id].state = 'READY'
+            wf.fw_states[fw_id] = 'READY'
 
         # insert the FireWorks and get back mapping of old to new ids
         old_new = self._upsert_fws(list(wf.id_fw.values()), reassign_all=reassign_all)
@@ -491,7 +492,8 @@ class LaunchPad(FWSerializable):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
         f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
-            {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
+            {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}},
+            )
         if f:
             self._refresh_wf(fw_id)
 
