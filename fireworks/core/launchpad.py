@@ -492,8 +492,7 @@ class LaunchPad(FWSerializable):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
         f = self.fireworks.find_and_modify(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
-            {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}},
-            )
+            {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
         if f:
             self._refresh_wf(fw_id)
 
