@@ -158,7 +158,7 @@ def serialize_fw(func):
     return _decorator
 
 
-six.add_metaclass(abc.ABCMeta)
+@six.add_metaclass(abc.ABCMeta)
 class FWSerializable(object):
     """
     To create a serializable object within FireWorks, you should subclass this
