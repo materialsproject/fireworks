@@ -431,5 +431,221 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         self.assertEqual((l, f), ([], []))
 
 
+class WorkflowFireworkStatesTest(unittest.TestCase):
+    """
+    Class to test the firework states locally cached in workflow.
+    The states have to be in sync with the actual firework state.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        # define the individual FireWorks used in the Workflow
+        # Parent Firework
+        fw_p = Firework(ScriptTask.from_str(
+            'echo "Cronus is the ruler of titans"',
+            {'store_stdout':True}), name="parent", fw_id=1)
+        # Sibling fireworks
+        fw_s1 = Firework(ScriptTask.from_str(
+            'echo "Zeus is son of Cronus"',
+            {'store_stdout':True}), name="sib1", fw_id=2, parents=fw_p)
+        fw_s2 = Firework(ScriptTask.from_str(
+            'echo "Poisedon is brother of Zeus"',
+            {'store_stdout':True}), name="sib2", fw_id=3, parents=fw_p)
+        fw_s3 = Firework(ScriptTask.from_str(
+            'echo "Hades is brother of Zeus"',
+            {'store_stdout':True}), name="sib3", fw_id=4, parents=fw_p)
+        fw_s4 = Firework(ScriptTask.from_str(
+            'echo "Demeter is sister & wife of Zeus"',
+            {'store_stdout':True}), name="sib4", fw_id=5, parents=fw_p)
+        fw_s5 = Firework(ScriptTask.from_str(
+            'echo "Lapetus is son of Oceanus"',
+            {'store_stdout':True}), name="cousin1", fw_id=6)
+        # Children fireworks
+        fw_c1 = Firework(ScriptTask.from_str(
+            'echo "Ares is son of Zeus"',
+            {'store_stdout':True}), name="c1", fw_id=7, parents=fw_s1)
+        fw_c2 = Firework(ScriptTask.from_str(
+            'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"',
+            {'store_stdout':True}), name="c2", fw_id=8, parents=[fw_s1,fw_s4])
+        fw_c3 = Firework(ScriptTask.from_str(
+            'echo "Makaria is daughter of Hades & Persephone"',
+            {'store_stdout':True}), name="c3", fw_id=9, parents=[fw_s3,fw_c2])
+        fw_c4 = Firework(ScriptTask.from_str(
+            'echo "Dione is descendant of Lapetus"',
+            {'store_stdout':True}), name="c4", fw_id=10, parents=fw_s5)
+        fw_c5 = Firework(ScriptTask.from_str(
+            'echo "Aphrodite is son of of Zeus and Dione"',
+            {'store_stdout':True}), name="c5", fw_id=11, parents=[fw_s1,fw_c4])
+        fw_c6 = Firework(ScriptTask.from_str(
+            'echo "Atlas is son of of Lapetus"',
+            {'store_stdout':True}), name="c6", fw_id=12,parents=fw_s5)
+        fw_c7 = Firework(ScriptTask.from_str(
+            'echo "Maia is daughter of Atlas"',
+            {'store_stdout':True}), name="c7", fw_id=13, parents=fw_c6)
+        fw_c8 = Firework(ScriptTask.from_str(
+            'echo "Hermes is daughter of Maia and Zeus"',
+            {'store_stdout':True}), name="c8", fw_id=14, parents=[fw_s1,fw_c7])
+
+
+        # assemble Workflow from FireWorks and their connections by id
+        workflow = Workflow([fw_p,fw_s1,fw_s2,fw_s3,fw_s4,fw_s5,fw_c1,fw_c2,
+                             fw_c3,fw_c4,fw_c5,fw_c6,fw_c7,fw_c8])
+        self.lp.add_wf(workflow)
+
+        # Give names to fw_ids
+        self.zeus_fw_id = 2
+        self.zeus_child_fw_ids = set([7,8,9,11,14])
+        self.lapetus_desc_fw_ids = set([6,10,12,13])
+        self.zeus_sib_fw_ids = set([3,4,5])
+        self.par_fw_id = 1
+        self.all_ids = self.zeus_child_fw_ids | self.lapetus_desc_fw_ids | \
+                       self.zeus_sib_fw_ids | set([self.zeus_fw_id]) | \
+                       set([self.par_fw_id])
+
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None,require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
+            shutil.rmtree(ldir)
+
+    def _teardown(self, dests):
+        for f in dests:
+            if os.path.exists(f):
+                os.remove(f)
+
+    def test_defuse_fw(self):
+        # defuse Zeus
+        self.lp.defuse_fw(self.zeus_fw_id)
+        # Ensure the states are sync after defusing fw
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+        try:
+            # Launch remaining fireworks
+            rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+            # Ensure the states are sync after launching remaining fw 
+            wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+            fws = wf.id_fw
+            for fw_id in wf.fw_states:
+                fw_state = fws[fw_id].state
+                fw_cache_state = wf.fw_states[fw_id]
+                self.assertEqual(fw_state, fw_cache_state)
+        except:
+            raise
+
+    def test_defuse_fw_after_completion(self):
+        # Launch rockets in rapidfire
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        # defuse Zeus
+        self.lp.defuse_fw(self.zeus_fw_id)
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+    def test_reignite_fw(self):
+        # Defuse Zeus and launch remaining fireworks
+        self.lp.defuse_fw(self.zeus_fw_id)
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        # Reignite Zeus and his children's fireworks 
+        self.lp.reignite_fw(self.zeus_fw_id)
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+    def test_defuse_wf(self):
+        # defuse Workflow containing Zeus
+        self.lp.defuse_wf(self.zeus_fw_id)
+        defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
+        self.assertIn(self.zeus_fw_id,defused_ids)
+
+        # Ensure the states are in sync after defusing wf
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+    def test_reignite_wf(self):
+        # Defuse workflow containing Zeus
+        self.lp.defuse_wf(self.zeus_fw_id)
+
+        # Launch any remaining fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        # Reignite Zeus and his children's fireworks and launch them
+        self.lp.reignite_wf(self.zeus_fw_id)
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+    def test_archive_wf(self):
+        # Run a firework before archiving Zeus
+        launch_rocket(self.lp, self.fworker)
+        # archive Workflow containing Zeus. 
+        self.lp.archive_wf(self.zeus_fw_id)
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+    def test_rerun_fws(self):
+        # Launch all fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        launches = fw.launches
+        first_ldir = launches[0].launch_dir
+        ts = datetime.datetime.utcnow()
+
+        # Rerun Zeus
+        self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+
 if __name__ == '__main__':
     unittest.main()
