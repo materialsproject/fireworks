@@ -23,7 +23,7 @@ from datetime import datetime
 import os
 import pprint
 
-from monty.io import reverse_readfile, zopen
+from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 from six import add_metaclass
 
@@ -347,10 +347,11 @@ class Tracker(FWSerializable, object):
 
         lines = []
         if os.path.exists(m_file):
-            for l in reverse_readfile(zpath(m_file)):
-                lines.append(l)
-                if len(lines) == self.nlines:
-                    break
+            with zopen(zpath(m_file)) as f:
+                for l in reverse_readline(f):
+                    lines.append(l)
+                    if len(lines) == self.nlines:
+                        break
             self.content = '\n'.join(reversed(lines))
 
         return self.content
