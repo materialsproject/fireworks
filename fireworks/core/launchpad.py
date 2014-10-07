@@ -349,11 +349,12 @@ class LaunchPad(FWSerializable):
         """
         wf_fields = ["state", "created_on", "name", "nodes"]
         fw_fields = ["state", "fw_id"]
-        launch_fields = ["launch_id"]
+        launch_fields = []
 
         if mode != "less":
             wf_fields.append("updated_on")
             fw_fields.extend(["name", "launches"])
+            launch_fields.append("launch_id")
             launch_fields.append("launch_dir")
 
         if mode == "reservations":
@@ -368,7 +369,8 @@ class LaunchPad(FWSerializable):
         launch_ids = []
         for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
                                       fields=fw_fields):
-            launch_ids.extend(fw["launches"])
+            if launch_fields:
+                launch_ids.extend(fw["launches"])
             fw_data.append(fw)
             if mode != "less":
                 id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
