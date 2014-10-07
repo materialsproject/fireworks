@@ -380,7 +380,6 @@ class LaunchPad(FWSerializable):
                 for i, fw in enumerate(fw_data):
                     if l["launch_id"] in fw["launches"]:
                         launch_info[i].append(l)
-                        break
             for k, v in launch_info.items():
                 fw_data[k]["launches"] = v
 
