@@ -2,7 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v0.93**
+
+* Fix bug in performance improvement cached state + unit tests (B. Medasani)
+* minor bug fixes, installation changes
+
 **v0.92**
+
+.. caution:: This version has a minor bug affecting defusing of FWs and cached states for performance, fixed in v0.93
 
 * Improve large workflow performance using a LazyFirework (B. Medasani, D. Gunter)
 * some code cleanups and minor (rare) bugfix to datetime
