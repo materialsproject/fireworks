@@ -13,7 +13,7 @@ import os
 import random
 import time
 import traceback
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from pymongo.mongo_client import MongoClient
 from pymongo import DESCENDING, ASCENDING
@@ -348,7 +348,7 @@ class LaunchPad(FWSerializable):
         """
         wf_fields = ["state", "created_on", "name", "nodes"]
         fw_fields = ["state", "fw_id"]
-        launch_fields = []
+        launch_fields = ["launch_id"]
 
         if mode != "less":
             wf_fields.append("updated_on")
@@ -364,15 +364,25 @@ class LaunchPad(FWSerializable):
         wf = self.workflows.find_one({"nodes": fw_id}, fields=wf_fields)
         fw_data = []
         id_name_map = {}
+        launch_ids = []
         for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
                                       fields=fw_fields):
-            if launch_fields:
-                fw["launches"] = list(
-                    self.launches.find({'launch_id': {"$in": fw['launches']}},
-                                       fields=launch_fields))
+            launch_ids.extend(fw["launches"])
             fw_data.append(fw)
             if mode != "less":
                 id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
+
+        if launch_fields:
+            launch_info = defaultdict(list)
+            for l in self.launches.find({'launch_id': {"$in": launch_ids}},
+                                        fields=launch_fields):
+                for i, fw in enumerate(fw_data):
+                    if l["launch_id"] in fw["launches"]:
+                        launch_info[i].append(l)
+                        break
+            for k, v in launch_info.items():
+                fw_data[k]["launches"] = v
+
         wf["fw"] = fw_data
 
         # Post process the summary dict so that it "looks" better.
