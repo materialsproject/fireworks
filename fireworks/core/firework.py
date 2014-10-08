@@ -278,6 +278,17 @@ class Firework(FWSerializable):
         after calling this method.
 
         """
+        if self.state == 'FIZZLED':
+            last_launch = self.launches[-1]
+            if (last_launch.action and
+                last_launch.action.stored_data.get('_exception') and
+                last_launch.action.stored_data.get('_exception').get('details')):
+                # add the exception details to the spec
+                self.spec['exception_details'] = last_launch.action.stored_data['_exception']['details']
+                print self.spec
+            else:
+                # clean spec from stale details
+                self.spec.pop('exception_details', None)
 
         self.archived_launches.extend(self.launches)
         self.archived_launches = list(set(self.archived_launches))  # filter duplicates

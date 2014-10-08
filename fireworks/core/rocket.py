@@ -171,7 +171,44 @@ class Rocket():
             for t in m_fw.tasks:
                 if lp:
                     lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
-                m_action = t.run_task(my_spec)
+                try:
+                    m_action = t.run_task(my_spec)
+                except BaseException as e:
+                    stop_backgrounds(ping_stop, btask_stops)
+                    traceback.print_exc()
+                    do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+                    # If the exception is serializable, save its details
+                    try:
+                        exception_details = e.to_dict()
+                        print e.to_dict()
+                    except AttributeError:
+                        exception_details = None
+                    except BaseException as e:
+                        if lp:
+                            lp.log_message(logging.WARNING, "Exception couldn't be serialized: %s " % e)
+                        exception_details = None
+
+                    try:
+                        m_task = t.to_dict()
+                    except:
+                        m_task = None
+
+                    m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
+                                                     '_exception': {'stacktrace': traceback.format_exc(),
+                                                     'details': exception_details}}, exit=True)
+                    if lp:
+                        lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                    else:
+                        with open('FW_offline.json', 'r+') as f:
+                            d = json.loads(f.read())
+                            d['fwaction'] = m_action.to_dict()
+                            d['state'] = 'FIZZLED'
+                            f.seek(0)
+                            f.write(json.dumps(d))
+                            f.truncate()
+
+                    return True
+
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -231,15 +268,18 @@ class Rocket():
             return True
 
         except:
-            stop_backgrounds(ping_stop, btask_stops)
-            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+            # problems while processing the results. high probability of malformed data.
             traceback.print_exc()
-            try:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': t.to_dict(),
-                                             '_exception': traceback.format_exc()}, exit=True)
-            except:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
-                                             '_exception': traceback.format_exc()}, exit=True)
+            stop_backgrounds(ping_stop, btask_stops)
+            # restore initial state to prevent the raise of further exceptions
+            if lp:
+                lp.restore_backup_data(launch_id, m_fw.fw_id)
+
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+            # the action produced by the task is discarded
+            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
+                                             '_exception': {'stacktrace': traceback.format_exc(),
+                                             'details': None}}, exit=True)
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')
             else:
