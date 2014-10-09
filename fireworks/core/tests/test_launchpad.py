@@ -448,9 +448,8 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
-            fw_state = fws[fw_id].state
-            fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            self.assertEqual(fws[fw_id].state, wf.fw_states[fw_id])
+            self.assertEqual(wf.fw_states[fw_id], 'RUNNING')
         rp.terminate()
 
 
