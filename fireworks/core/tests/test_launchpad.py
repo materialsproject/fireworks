@@ -430,6 +430,29 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         l, f = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
         self.assertEqual((l, f), ([], []))
 
+    def test_state_after_run_start(self):
+        # Launch the timed firework in a separate process
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
+
+        rp = RocketProcess(self.lp, self.fworker)
+        rp.start()
+        time.sleep(1)   # Wait 1 sec 
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+        rp.terminate()
+
 
 class WorkflowFireworkStatesTest(unittest.TestCase):
     """
@@ -459,9 +482,12 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             'echo "Cronus is the ruler of titans"',
             {'store_stdout':True}), name="parent", fw_id=1)
         # Sibling fireworks
-        fw_s1 = Firework(ScriptTask.from_str(
-            'echo "Zeus is son of Cronus"',
-            {'store_stdout':True}), name="sib1", fw_id=2, parents=fw_p)
+        #fw_s1 = Firework(ScriptTask.from_str(
+        #    'echo "Zeus is son of Cronus"',
+        #    {'store_stdout':True}), name="sib1", fw_id=2, parents=fw_p)
+        # Timed firework
+        fw_s1 = Firework(PyTask(func='time.sleep',args=[5]), name="sib1",
+                fw_id=2, parents=fw_p)
         fw_s2 = Firework(ScriptTask.from_str(
             'echo "Poisedon is brother of Zeus"',
             {'store_stdout':True}), name="sib2", fw_id=3, parents=fw_p)
@@ -634,7 +660,6 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         launches = fw.launches
         first_ldir = launches[0].launch_dir
-        ts = datetime.datetime.utcnow()
 
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
@@ -646,6 +671,52 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             self.assertEqual(fw_state, fw_cache_state)
 
+    def test_rerun_timed_fws(self):
+        # Launch all firework in a separate process
+        class RapidfireProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                rapidfire(self.lpad, self.fworker)
+        rp = RapidfireProcess(self.lp, self.fworker)
+        rp.start()
+        time.sleep(1)   # Wait 1 sec  and kill the running fws
+        rp.terminate()
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+        # Detect lostruns
+        lost_lids, lost_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+
+        # Rerun fizzled runs
+        for fwid in lost_fwids:
+            self.lp.rerun_fw(fw_id)
+        rp = RapidfireProcess(self.lp, self.fworker)
+        rp.start()
+        time.sleep(1)   # Wait 1 sec  
+        # Ensure the states are sync 
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            self.assertEqual(fw_state, fw_cache_state)
+        rp.terminate()
 
 if __name__ == '__main__':
     unittest.main()
