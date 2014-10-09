@@ -449,9 +449,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         fws = wf.id_fw
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
-            print fw_state
             fw_cache_state = wf.fw_states[fw_id]
-            print fw_cache_state
             self.assertEqual(fw_state, fw_cache_state)
         rp.terminate()
 
@@ -697,7 +695,6 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         # Detect lostruns
         lost_lids, lost_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
-        print lost_fwids
         # Ensure the states are sync 
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
