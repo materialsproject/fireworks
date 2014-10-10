@@ -1,6 +1,8 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
+from fireworks.utilities.fw_serializers import load_object
 
 """
 Master tests for FireWorks - generally used to ensure that installation was \
@@ -59,7 +61,24 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(Workflow([fw1, fw2, fw3]).links, {fw1.fw_id: [fw2.fw_id, fw3.fw_id], fw2.fw_id: [fw3.fw_id], fw3.fw_id: []})
         self.assertRaises(ValueError, Workflow, [fw1, fw3])  # can't make this
 
+class SerializationTests(unittest.TestCase):
 
+    def get_data(self, obj_dict):
+        modname = "fireworks.user_objects.queue_adapters.common_adapter"
+        classname = "CommonAdapter"
+        mod = __import__(modname, globals(), locals(), [classname], 0)
+        if hasattr(mod, classname):
+            cls_ = getattr(mod, classname)
+            return cls_.from_dict(obj_dict)
+
+    def test_serialization_details(self):
+        # This detects a weird bug found in early version of serializers
+
+        pbs = CommonAdapter('PBS')
+        self.assertTrue(isinstance(pbs, CommonAdapter))
+        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))
+        self.assertTrue(isinstance(load_object(pbs.to_dict()), CommonAdapter))
+        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))  # repeated test on purpose!!
 
 if __name__ == "__main__":
     unittest.main()

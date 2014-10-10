@@ -309,7 +309,7 @@ def load_object(obj_dict):
         for loader, mod_name, is_pkg in pkgutil.walk_packages(
                 root_module.__path__, package + '.'):
             try:
-                m_module = loader.find_module(mod_name).load_module(mod_name)
+                m_module = importlib.import_module(mod_name)
                 m_object = _search_module_for_obj(m_module, obj_dict)
                 if m_object is not None:
                     found_objects.append((m_object, mod_name))
