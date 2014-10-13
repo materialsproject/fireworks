@@ -1039,8 +1039,8 @@ class LaunchPad(FWSerializable):
             if not ignore_errors:
                 traceback.print_exc()
                 m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
-                                                     '_exception': {'stacktrace': traceback.format_exc(),
-                                                     'details': None}}, exit=True)
+                                                     '_exception': {'_stacktrace': traceback.format_exc(),
+                                                     '_details': None}}, exit=True)
                 self.complete_launch(launch_id, m_action, 'FIZZLED')
                 self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
             return m_launch.fw_id

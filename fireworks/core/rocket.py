@@ -174,13 +174,12 @@ class Rocket():
                 try:
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
-                    stop_backgrounds(ping_stop, btask_stops)
                     traceback.print_exc()
+                    stop_backgrounds(ping_stop, btask_stops)
                     do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
                     # If the exception is serializable, save its details
                     try:
                         exception_details = e.to_dict()
-                        print e.to_dict()
                     except AttributeError:
                         exception_details = None
                     except BaseException as e:
@@ -194,8 +193,8 @@ class Rocket():
                         m_task = None
 
                     m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
-                                                     '_exception': {'stacktrace': traceback.format_exc(),
-                                                     'details': exception_details}}, exit=True)
+                                                     '_exception': {'_stacktrace': traceback.format_exc(),
+                                                     '_details': exception_details}}, exit=True)
                     if lp:
                         lp.complete_launch(launch_id, m_action, 'FIZZLED')
                     else:
@@ -278,8 +277,8 @@ class Rocket():
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             # the action produced by the task is discarded
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
-                                             '_exception': {'stacktrace': traceback.format_exc(),
-                                             'details': None}}, exit=True)
+                                             '_exception': {'_stacktrace': traceback.format_exc(),
+                                             '_details': None}}, exit=True)
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')
             else:
