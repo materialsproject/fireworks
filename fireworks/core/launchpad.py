@@ -790,6 +790,7 @@ class LaunchPad(FWSerializable):
 
         m_fw.state = 'RUNNING'
         self._upsert_fws([m_fw])
+        self._refresh_wf(m_fw.fw_id)
 
         # update any duplicated runs
         for fw in self.fireworks.find(
@@ -799,6 +800,7 @@ class LaunchPad(FWSerializable):
             fw = self.get_fw_by_id(fw_id)
             fw.state = 'RUNNING'
             self._upsert_fws([fw])
+            self._refresh_wf(fw.fw_id)
 
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
 

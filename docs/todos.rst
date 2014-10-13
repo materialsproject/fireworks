@@ -41,9 +41,6 @@ Misc.
 
 * Add option to automatically pass run dirs, e.g. send dict of {"fw_name":"run_dir"} from parents to children
 
-* get isinstance() working - create a PBSAdaptor p, use x=load_object(p.to_dict()), and try "isinstance(x, PBSAdaptor)
-	* Note the failure seems to have something to do with extending dict, and the fact that dict is an old-style class
-
 * change docstring format to Google-style like pymatgen
 
 Tests
