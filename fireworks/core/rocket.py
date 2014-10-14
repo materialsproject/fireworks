@@ -175,6 +175,7 @@ class Rocket():
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
                     traceback.print_exc()
+                    tb = traceback.format_exc()
                     stop_backgrounds(ping_stop, btask_stops)
                     do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
                     # If the exception is serializable, save its details
@@ -193,7 +194,7 @@ class Rocket():
                         m_task = None
 
                     m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
-                                                     '_exception': {'_stacktrace': traceback.format_exc(),
+                                                     '_exception': {'_stacktrace': tb,
                                                      '_details': exception_details}}, exit=True)
                     if lp:
                         lp.complete_launch(launch_id, m_action, 'FIZZLED')
