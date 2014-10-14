@@ -443,12 +443,19 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         rp = RocketProcess(self.lp, self.fworker)
         rp.start()
-        time.sleep(1)   # Wait 1 sec 
-        # Ensure the states are sync 
+
+        # Wait for running
+        it = 0
+        while not any([f.state == 'RUNNING' for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+            time.sleep(1)   # Wait 1 sec
+            it += 1
+            if it == 10:
+                raise ValueError("FW never starts running")
+
+        # WF should be running
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
-        fws = wf.id_fw
         for fw_id in wf.fw_states:
-            self.assertEqual(fws[fw_id].state, wf.fw_states[fw_id])
+            self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
             self.assertEqual(wf.fw_states[fw_id], 'RUNNING')
         rp.terminate()
 
