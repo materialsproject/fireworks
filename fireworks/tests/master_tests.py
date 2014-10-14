@@ -2,13 +2,13 @@
 
 from __future__ import unicode_literals
 from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
-from fireworks.utilities.fw_serializers import load_object
+from fireworks.utilities.fw_serializers import load_object, recursive_deserialize
 
 """
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.
 """
-from fireworks import Firework
+from fireworks import Firework, FWAction
 from fireworks.core.firework import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
@@ -78,7 +78,18 @@ class SerializationTests(unittest.TestCase):
         self.assertTrue(isinstance(pbs, CommonAdapter))
         self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))
         self.assertTrue(isinstance(load_object(pbs.to_dict()), CommonAdapter))
-        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))  # repeated test on purpose!!
+        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))  # repeated test on purpose!
+
+    @recursive_deserialize
+    def _recurse(self, d):
+        return d
+
+    def test_recursive_deserialize(self):
+        my_dict = {'update_spec': {}, 'mod_spec': [], 'stored_data': {}, 'exit': False, 'detours': [], 'additions': [{'updated_on': '2014-10-14T00:56:27.758673', 'fw_id': -2, 'spec': {'_tasks': [{'use_shell': True, '_fw_name': 'ScriptTask', 'script': ['echo "1"']}]}, 'created_on': '2014-10-14T00:56:27.758669', 'name': 'Unnamed FW'}], 'defuse_children': False}
+        FWAction.from_dict(my_dict)
+
+
+
 
 if __name__ == "__main__":
     unittest.main()

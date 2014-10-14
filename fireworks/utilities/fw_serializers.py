@@ -95,6 +95,9 @@ def _recursive_load(obj):
     if obj is None:
         return None
 
+    if hasattr(obj, '_fw_name'):
+        return obj
+
     if isinstance(obj, dict):
         if '_fw_name' in obj:
             return load_object(obj)
