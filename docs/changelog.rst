@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v0.94**
+
+* Improve performance of get_wflows (S.P. Ong)
+* Fix another bug due to performance improvements (B. Medasani)
+* Fix bug in de-serialization of non dict-like FireTasks and other serialization issues
+
 **v0.93**
 
 * Fix bug in performance improvement cached state + unit tests (B. Medasani)
@@ -9,7 +15,7 @@ FireWorks Changelog
 
 **v0.92**
 
-.. caution:: This version has a minor bug affecting defusing of FWs and cached states for performance, fixed in v0.93
+.. caution:: This version has a minor bug affecting defusing of FWs and cached states for performance, fixed in v0.94
 
 * Improve large workflow performance using a LazyFirework (B. Medasani, D. Gunter)
 * some code cleanups and minor (rare) bugfix to datetime
