@@ -72,6 +72,7 @@ A few basic parameters that can be tweaked are:
 * ``ALWAYS_CREATE_NEW_BLOCK: False`` - set True if you want the Queue Launcher to always create a new block directory every time it is called, False if you want to re-use previous blocks
 * ``TEMPLATE_DIR`` - where to store templates if you are using the :doc:`TemplateWriterTask <templatewritertask>`.
 * ``REMOVE_USELESS_DIRS: False`` - tries to delete empty launch directories created when setting the ``_launch_dir`` in the spec of your Firework.
+* ``EXCEPT_DETAILS_ON_RERUN: False`` - if True, when rerunning a FIZZLED Firework, the serialized exception details are added to the spec.
 
 Parameters that you probably shouldn't change
 ---------------------------------------------
