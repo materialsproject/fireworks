@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v0.95**
+
+* Add decompressdir task (S.P. Ong)
+* Fix bugs in offline launch (G. Petretto)
+* Improve failure handling in case of FW system failure (G. Petretto)
+* Allow embedding error message on FW rerun (G. Petretto)
+* Minor testing improvements
+
 **v0.94**
 
 * Improve performance of get_wflows (S.P. Ong)
