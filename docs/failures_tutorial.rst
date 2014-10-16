@@ -50,6 +50,8 @@ If your job throws an exception (error), FireWorks will automatically mark your 
 
 #. You should notice the state of this Firework is automatically marked as *FIZZLED*. In addition, if you look at the **stored_data** key, you'll see that there's information about the error that was encountered during the run. If you're thorough, you'll see something about a *KeyboardInterruptError*.
 
+   .. note:: If the exception thrown by the job implements the ``to_dict()`` method, this will be called to serialize customized information about the exception and add them to the ``stored_data``.
+
 #. If at any point you want to review what FireWorks have *FIZZLED*, you can use the following query::
 
     lpad get_fws -s FIZZLED -d ids
@@ -106,6 +108,6 @@ The previous failure was easy to detect; the job threw an error, and the Rocket 
 Life after *FIZZLED*
 ====================
 
-Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you can also :doc:`rerun your workflow </rerun_tutorial>`, starting from the failed job. The only caveat to this latter method is that dynamic actions already taken by your workflow will **not** be reset to their initial state.
+Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you can also :doc:`rerun your workflow </rerun_tutorial>`, starting from the failed job. If the ``EXCEPT_DETAILS_ON_RERUN`` option is enabled in your :doc:`FW configuration </config_tutorial>`, the exception details serialized during the last launch will be copied in the spec under the key ``_exception_details``. Customized exceptions can then be implemented to store information that help properly restart the job. The only caveat to this latter method is that dynamic actions already taken by your workflow will **not** be reset to their initial state.
 
 You can also continue on with the Workflow even after *FIZZLED* by setting the ``_allow_fizzled_parents`` parameter in your **spec**. This will allow you to algorithmically fix errors using FireWorks' dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.

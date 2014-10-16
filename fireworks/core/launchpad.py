@@ -123,6 +123,9 @@ class LaunchPad(FWSerializable):
         self.fw_id_assigner = self.db.fw_id_assigner
         self.workflows = self.db.workflows
 
+        self.backup_launch_data = {}
+        self.backup_fw_data = {}
+
     def to_dict(self):
         """
         Note: usernames/passwords are exported as unencrypted Strings!
@@ -801,6 +804,10 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
 
+        # Store backup copies of the initial data for retrieval in case of failure
+        self.backup_launch_data[m_launch.launch_id] = m_launch.to_db_dict()
+        self.backup_fw_data[fw_id] = m_fw.to_db_dict()
+
         # use dict as return type, just to be compatible with multiprocessing
         return m_fw, l_id
 
@@ -808,6 +815,12 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.launch_dir = launch_dir
         self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+
+    def restore_backup_data(self, launch_id, fw_id):
+        if launch_id in self.backup_launch_data:
+            self.launches.find_and_modify({'launch_id': launch_id}, self.backup_launch_data[launch_id])
+        if fw_id in self.backup_fw_data:
+            self.fireworks.find_and_modify({'fw_id': fw_id}, self.backup_fw_data[fw_id])
 
     def complete_launch(self, launch_id, action, state='COMPLETED'):
         """
@@ -1025,6 +1038,11 @@ class LaunchPad(FWSerializable):
         except:
             if not ignore_errors:
                 traceback.print_exc()
+                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
+                                                     '_exception': {'_stacktrace': traceback.format_exc(),
+                                                     '_details': None}}, exit=True)
+                self.complete_launch(launch_id, m_action, 'FIZZLED')
+                self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
             return m_launch.fw_id
 
     def forget_offline(self, fw_id):

@@ -169,8 +169,46 @@ class Rocket():
 
             # execute the FireTasks!
             for t in m_fw.tasks:
-                lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
-                m_action = t.run_task(my_spec)
+                if lp:
+                    lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
+                try:
+                    m_action = t.run_task(my_spec)
+                except BaseException as e:
+                    traceback.print_exc()
+                    tb = traceback.format_exc()
+                    stop_backgrounds(ping_stop, btask_stops)
+                    do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+                    # If the exception is serializable, save its details
+                    try:
+                        exception_details = e.to_dict()
+                    except AttributeError:
+                        exception_details = None
+                    except BaseException as e:
+                        if lp:
+                            lp.log_message(logging.WARNING, "Exception couldn't be serialized: %s " % e)
+                        exception_details = None
+
+                    try:
+                        m_task = t.to_dict()
+                    except:
+                        m_task = None
+
+                    m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
+                                                     '_exception': {'_stacktrace': tb,
+                                                     '_details': exception_details}}, exit=True)
+                    if lp:
+                        lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                    else:
+                        with open('FW_offline.json', 'r+') as f:
+                            d = json.loads(f.read())
+                            d['fwaction'] = m_action.to_dict()
+                            d['state'] = 'FIZZLED'
+                            f.seek(0)
+                            f.write(json.dumps(d))
+                            f.truncate()
+
+                    return True
+
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -190,7 +228,8 @@ class Rocket():
                 my_spec.update(m_action.update_spec)
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
-                lp.log_message(logging.INFO, "Task completed: %s " % t.fw_name)
+                if lp:
+                    lp.log_message(logging.INFO, "Task completed: %s " % t.fw_name)
                 if m_action.skip_remaining_tasks:
                     break
 
@@ -229,15 +268,18 @@ class Rocket():
             return True
 
         except:
-            stop_backgrounds(ping_stop, btask_stops)
-            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+            # problems while processing the results. high probability of malformed data.
             traceback.print_exc()
-            try:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': t.to_dict(),
-                                             '_exception': traceback.format_exc()}, exit=True)
-            except:
-                m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
-                                             '_exception': traceback.format_exc()}, exit=True)
+            stop_backgrounds(ping_stop, btask_stops)
+            # restore initial state to prevent the raise of further exceptions
+            if lp:
+                lp.restore_backup_data(launch_id, m_fw.fw_id)
+
+            do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
+            # the action produced by the task is discarded
+            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
+                                             '_exception': {'_stacktrace': traceback.format_exc(),
+                                             '_details': None}}, exit=True)
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')
             else:
