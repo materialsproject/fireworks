@@ -13,9 +13,9 @@ import unittest
 import os
 
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask, \
-    CompressDirTask, ArchiveDirTask
+    CompressDirTask, ArchiveDirTask, DecompressDirTask
 from fireworks.utilities.fw_serializers import load_object_from_file
-from monty.shutil import decompress_dir
+
 
 module_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -39,7 +39,8 @@ class FileWriteDeleteTest(unittest.TestCase):
             self.assertFalse(os.path.exists("myfile{}".format(i + 1)))
 
 
-class CompressArchiveDirTest(unittest.TestCase):
+class CompressDecompressArchiveDirTest(unittest.TestCase):
+
     def setUp(self):
         self.cwd = os.getcwd()
         os.chdir(module_dir)
@@ -49,7 +50,10 @@ class CompressArchiveDirTest(unittest.TestCase):
         c.run_task({})
         self.assertTrue(os.path.exists("delete.yaml.gz"))
         self.assertFalse(os.path.exists("delete.yaml"))
-        decompress_dir(".")
+        c = DecompressDirTask()
+        c.run_task({})
+        self.assertFalse(os.path.exists("delete.yaml.gz"))
+        self.assertTrue(os.path.exists("delete.yaml"))
 
     def test_archive_dir(self):
         a = ArchiveDirTask(base_name="archive", format="gztar")
