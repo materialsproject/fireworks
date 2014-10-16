@@ -8,7 +8,7 @@ import traceback
 
 from os.path import expandvars, expanduser, abspath
 from fireworks.core.firework import FireTaskBase
-from monty.shutil import compress_dir
+from monty.shutil import compress_dir, decompress_dir
 
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -176,6 +176,31 @@ class CompressDirTask(FireTaskBase):
                 raise ValueError(
                     "There was an error performing compression {} in {}."
                     .format(compression, dest))
+
+
+class DecompressDirTask(FireTaskBase):
+    """
+    Decompress all files in a directory. Autodetects gz, bz2 and z file
+    extensions.
+
+    Args:
+        dest (str): Optional. Path to decompress.
+        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to
+            False.
+    """
+
+    _fw_name = 'DecompressDirTask'
+    optional_params = ["dest", "ignore_errors"]
+
+    def run_task(self, fw_spec):
+        ignore_errors = self.get('ignore_errors', False)
+        dest = self.get("dest", os.getcwd())
+        try:
+            decompress_dir(dest)
+        except:
+            if not ignore_errors:
+                raise ValueError(
+                    "There was an error performing decompression in %s." % dest)
 
 
 class ArchiveDirTask(FireTaskBase):
