@@ -2,7 +2,7 @@
 Configuring Security
 ====================
 
-The FireWorks tutorials so far have not configured any security on your LaunchPad. We strongly suggest that you password-protect your Mongo database. We'll walk you through this process in this tutorial.
+The FireWorks tutorials so far have not configured any security on your LaunchPad. We strongly suggest that you password-protect your Mongo database. We'll walk you through this process in this tutorial. Note that if you are using a cloud service to host MongoDB, you should use the instructions provided by that service to configure database security.
 
 There are several other actions you can take for added security, such as restricting the IPs that can connect to your Mongo instance. Additional details can be found in the `MongoDB official documentation <http://docs.mongodb.org/manual/administration/security/>`_.
 

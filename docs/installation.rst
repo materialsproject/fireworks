@@ -7,9 +7,13 @@ Installing FireWorks
 Install MongoDB
 ===============
 
-MongoDB powers the database backend of FireWorks. You need to install MongoDB on one machine to host the FireWorks database (the same machine can also be used to run jobs). Additional machines (i.e., that are used to run FireWorks jobs) do not require a MongoDB installation. FireWorks does not need to be installed on the same machine as your MongoDB installation.
+FireWorks requires a single MongoDB instance to store and access your workflows. You can either install MongoDB yourself and run/maintain the server, or use a cloud provider (which often provide for small amounts of data for free). For testing things out locally, running MongoDB yourself may be your best bet.
 
-To install MongoDB, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
+ FireWorks does not need to be installed on the same machine as your MongoDB installation.
+
+To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
+
+To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one.
 
 Preparing to Install FireWorks (Python and pip)
 ===============================================
