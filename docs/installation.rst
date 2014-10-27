@@ -7,13 +7,16 @@ Installing FireWorks
 Install MongoDB
 ===============
 
-FireWorks requires a single MongoDB instance to store and access your workflows. You can either install MongoDB yourself and run/maintain the server, or use a cloud provider (which often provide for small amounts of data for free). For testing things out locally, running MongoDB yourself may be your best bet.
-
- FireWorks does not need to be installed on the same machine as your MongoDB installation.
+FireWorks requires a single MongoDB instance to store and access your workflows. You can either install MongoDB yourself and run/maintain the server, or use a cloud provider (which often provide for small amounts of data for free). For testing things out locally, running MongoDB yourself and on your local machine may be your best bet. For production, or for running on supercomputing centers on which you are unable to install MongoDB, you likely want to use a cloud service provider. You could also maintain your own MongoDB server or contact your sysadmin for help.
 
 To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
 
-To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one.
+To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one. If you are using Mongolab, here are a few notes:
+
+    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started
+    * Mongolab will ask you to create a database; any name is fine, but make sure you write down what it is.
+    * After creating a database, note that you'll need to create at least one admin user in order to access the database.
+    * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
 
 Preparing to Install FireWorks (Python and pip)
 ===============================================
@@ -87,6 +90,43 @@ Run unit tests
     python setup.py test
     
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
+
+.. _remote_test-label:
+
+Testing connection to a remote server
+-------------------------------------
+We've set up a test database to see if you can connect to it.
+
+1. Create a file called ``my_launchpad_read.yaml`` and put the following contents inside::
+
+    host: ds049170.mongolab.com
+    port: 49170
+    name: fireworks
+    username: test_user
+    password: testing123
+
+2. Execute the command::
+
+    lpad -l my_launchpad_read.yaml get_wflows
+
+3. If successful, you should see a couple of results::
+
+    [
+        {
+            "name": "Tracker FW--1",
+            "state": "READY",
+            "states_list": "REA",
+            "created_on": "2014-10-27T15:00:25.408000"
+        },
+        {
+            "name": "Tracker FW--2",
+            "state": "READY",
+            "states_list": "REA",
+            "created_on": "2014-10-27T15:00:25.775000"
+        }
+    ]
+
+Note that this is a read-only testing database. You can't run, add, or modify workflows - you'll only be able to do that on your own MongoDB setup.
 
 .. _updating-label:
 
