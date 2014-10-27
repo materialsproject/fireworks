@@ -111,7 +111,7 @@ def override_user_settings():
         os.path.expanduser('~'), ".fireworks", 'FW_config.yaml')]
 
     if len(config_paths) > 1:
-        print("Found many potential paths for {}: {}\nChoosing: {}"
+        print("Found many potential paths for {}: {}\nChoosing as default: {}"
               .format("FW_CONFIG_FILE", config_paths, config_paths[0]))
 
     if os.path.exists(config_paths[0]):
@@ -140,7 +140,7 @@ def override_user_settings():
                     m_paths.append(fp)
 
             if len(m_paths) > 1:
-                print("Found many potential paths for {}: {}\nChoosing: {}"
+                print("Found many potential paths for {}: {}\nChoosing as default: {}"
                       .format(k, m_paths, m_paths[0]))
 
             if len(m_paths) > 0:
