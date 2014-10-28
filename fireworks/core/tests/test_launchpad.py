@@ -415,8 +415,15 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         rp = RocketProcess(self.lp, self.fworker)
         rp.start()
-        time.sleep(1)   # Wait 1 sec and kill the rocket
-        rp.terminate()
+
+        # Wait for fw to start
+        it = 0
+        while not any([f.state == 'RUNNING' for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+            time.sleep(1)   # Wait 1 sec
+            it += 1
+            if it == 10:
+                raise ValueError("FW never starts running")
+        rp.terminate() # Kill the rocket
 
         l, f = self.lp.detect_lostruns(0.5, max_runtime=5, min_runtime=0)
         self.assertEqual((l, f), ([1], [1]))
