@@ -13,7 +13,7 @@ To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mo
 
 To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one. If you are using Mongolab, here are a few notes:
 
-    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started
+    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
     * Mongolab will ask you to create a database; any name is fine, but make sure you write down what it is.
     * After creating a database, note that you'll need to create at least one admin user in order to access the database.
     * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
