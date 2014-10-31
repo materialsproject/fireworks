@@ -885,6 +885,7 @@ class LaunchPad(FWSerializable):
         return old_new
 
     def rerun_fw(self, fw_id, rerun_duplicates=True):
+        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         # detect FWs that share the same launch. Must do this before rerun
         duplicates = []
         reruns = []
@@ -895,7 +896,6 @@ class LaunchPad(FWSerializable):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
         # rerun this FW
-        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         if m_fw['state'] in ['ARCHIVED', 'DEFUSED'] :
             self.m_logger.info("Cannot rerun fw_id: {}: it is {}.".format(fw_id, m_fw['state']))
         elif m_fw['state'] == 'WAITING':
@@ -914,6 +914,37 @@ class LaunchPad(FWSerializable):
             reruns.extend(r)
 
         return reruns  # return the ids that were rerun
+
+    def rerun_fws_task_level(self, fw_id, rerun_duplicates=True, launch_id=None, recover_mode=None):
+        m_fw = self.get_fw_by_id(fw_id)
+
+        # check if task_level parameters are properly defined
+        if not launch_id:
+            try:
+                launch_id = m_fw.launches[-1].launch_id
+            except:
+                traceback.print_exc()
+                self.m_logger.info("Can't find a launch to recover fw_id {}. Skipping...".format(fw_id))
+                return None
+        elif launch_id not in [l.launch_id for l in m_fw.launches+m_fw.archived_launches]:
+            self.m_logger.info("Launch id {} not existent for m_fw {}. Skipping...".format(launch_id, fw_id))
+            return None
+        # check if the failed task information is available, can't recover otherwise
+        if self.get_launch_by_id(launch_id).action.stored_data.get('_exception', {}).get('_failed_task_n', None) is None:
+            self.m_logger.info("No information to recover launch id {} for m_fw {}. Skipping..."
+                               .format(launch_id, fw_id))
+
+        #rerun jobs and duplicates
+        reruns = self.rerun_fw(fw_id, rerun_duplicates)
+
+        # if rerun was fine, set the task_level parameters
+        if reruns:
+            set_spec = {'$set': {'spec._recover_launch._launch_id': launch_id,
+                                 'spec._recover_launch._recover_mode': recover_mode}}
+            if recover_mode == 'prev_dir':
+                set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
+
+            self.fireworks.find_and_modify({"fw_id": fw_id}, set_spec)
 
     def _refresh_wf(self, fw_id):
 

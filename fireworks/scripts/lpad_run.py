@@ -365,9 +365,19 @@ def reignite_fws(args):
 def rerun_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
-    for f in fw_ids:
-        lp.rerun_fw(int(f))
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    if args.task_level:
+        launch_ids = args.launch_id
+        if launch_ids is None:
+            launch_ids = [None]*len(fw_ids)
+        elif len(launch_ids) != len(fw_ids):
+            raise ValueError("Specify the same number of tasks and launches")
+        for f, l in zip(fw_ids, launch_ids):
+            lp.rerun_fws_task_level(int(f), launch_id=l, recover_mode=args.recover_mode)
+            lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    else:
+        for f in fw_ids:
+            lp.rerun_fw(int(f))
+            lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
 
@@ -643,6 +653,14 @@ def lpad():
     rerun_fws_parser.add_argument(*state_args, **state_kwargs)
     rerun_fws_parser.add_argument(*query_args, **query_kwargs)
     rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
+    rerun_fws_parser.add_argument('--task-level', action='store_true', help='Enable task level recovery')
+    rerun_fws_parser.add_argument('-lid', '--launch_id', nargs='+',
+                                  help='Recover launch id. --task-level must be given', default=None, type=int)
+    recover_mode_group = rerun_fws_parser.add_mutually_exclusive_group()
+    recover_mode_group.add_argument('-cp', '--copy-data', action='store_const', const='cp', dest='recover_mode',
+                                    help='Copy data from previous run. --task-level must be given')
+    recover_mode_group.add_argument('-pd', '--previous-dir', action='store_const', const='prev_dir', dest='recover_mode',
+                                    help='Reruns in the previous folder. --task-level must be given')
     rerun_fws_parser.set_defaults(func=rerun_fws)
 
     defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single Firework')

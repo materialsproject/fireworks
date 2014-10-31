@@ -12,6 +12,7 @@ import multiprocessing
 import os
 import traceback
 import threading
+import distutils.dir_util
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
@@ -155,6 +156,19 @@ class Rocket():
             m_fw.to_file('FW.yaml')
 
         try:
+            if m_fw.spec.get('_recover_launch', None):
+                launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
+                starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
+                recover_launch_dir = launch_to_recover.launch_dir
+                if m_fw.spec['_recover_launch']['_recover_mode'] == 'cp' and launch_dir != recover_launch_dir:
+                    distutils.dir_util.copy_tree(recover_launch_dir, launch_dir, update=1)
+                if lp:
+                    lp.log_message(
+                        logging.INFO,
+                        'Recovering from task number {} in folder {}.'.format(starting_task, recover_launch_dir))
+            else:
+                starting_task = 0
+
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
             my_spec["_fw_env"] = self.fworker.env
 
@@ -168,7 +182,7 @@ class Rocket():
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
             # execute the FireTasks!
-            for t in m_fw.tasks:
+            for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
                 if lp:
                     lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
                 try:
@@ -194,8 +208,8 @@ class Rocket():
                         m_task = None
 
                     m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
-                                                     '_exception': {'_stacktrace': tb,
-                                                     '_details': exception_details}}, exit=True)
+                                                     '_exception': {'_stacktrace': tb, '_details': exception_details,
+                                                                    '_failed_task_n': t_counter}}, exit=True)
                     if lp:
                         lp.complete_launch(launch_id, m_action, 'FIZZLED')
                     else:
