@@ -1,35 +1,38 @@
-tests Package
-=============
+fireworks.core.tests package
+============================
 
-:mod:`tests` Package
---------------------
+Submodules
+----------
 
-.. automodule:: fireworks.core.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_firework` Module
----------------------------
+fireworks.core.tests.test_firework module
+-----------------------------------------
 
 .. automodule:: fireworks.core.tests.test_firework
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_launchpad` Module
-----------------------------
+fireworks.core.tests.test_launchpad module
+------------------------------------------
 
 .. automodule:: fireworks.core.tests.test_launchpad
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_tracker` Module
---------------------------
+fireworks.core.tests.test_tracker module
+----------------------------------------
 
 .. automodule:: fireworks.core.tests.test_tracker
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: fireworks.core.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:

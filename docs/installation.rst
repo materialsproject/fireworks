@@ -97,7 +97,7 @@ Testing connection to a remote server
 -------------------------------------
 We've set up a test database to see if you can connect to it.
 
-1. Create a file called ``my_launchpad_read.yaml`` and put the following contents inside::
+1. Create a file called ``my_launchpad_testing.yaml`` and put the following contents inside::
 
     host: ds049170.mongolab.com
     port: 49170
@@ -107,7 +107,7 @@ We've set up a test database to see if you can connect to it.
 
 2. Execute the command::
 
-    lpad -l my_launchpad_read.yaml get_wflows
+    lpad -l my_launchpad_testing.yaml get_wflows
 
 3. If successful, you should see a couple of results::
 

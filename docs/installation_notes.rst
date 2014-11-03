@@ -10,16 +10,20 @@ NERSC
 Loading the FireWorks code
 --------------------------
 
-You can simply load FireWorks through the NERSC modules system via ``module load fireworks``.
+You can simply load FireWorks through the NERSC modules system via::
 
-Note a few other options:
-* If there are multiple modules, they are generally labeled by the FW version and by the Python version. You can type ``module avail fireworks`` to see all options.
-* If you want to attempt a manual install, you can follow the normal :doc:`installation instructions </installation>` but use the :doc:`virtualenv </virtualenv_tutorial>` option to make sure your $PYTHONPATH is set up correctly and to install outside of the NERSC system Python.
+    module unload python
+    module load fireworks python
+
+A few notes:
+  * The ``module unload python`` command will unload your Python environment and load the proper Python version for the FireWorks.
+  * There may be multiple options available for the FireWorks module and the Python version - they are generally labeled as "fireworks/<FW_VERSION>-<PYTHON_VERSION>". You can type ``module avail fireworks`` to see all options. If you don't see the version you want, you can contact the NERSC help desk.
+  * If you want to attempt a manual install, you can follow the normal :doc:`installation instructions </installation>` but use the :doc:`virtualenv </virtualenv_tutorial>` option to make sure your $PYTHONPATH is set up correctly and to install outside of the NERSC system Python. In general this is also easy, but not as easy as the modules system.
 
 Verifying your installation - connect to a test server
 ------------------------------------------------------
 
-Follow the instructions for :ref:`remote_test-label` to test that you can connect to a FireWorks database hosted externally to NERSC.
+Follow the instructions for :ref:`remote_test-label` to test that you can connect to a FireWorks database hosted externally to NERSC. This verifies that your software installation is OK.
 
 
 Installing the database
@@ -32,3 +36,8 @@ Misc notes
 
 * NERSC times-out your scripts, even if they are performing actions. For example, if you are running the Queue Launcher on Hopper/Carver in infinite mode, the script will time out after a few hours. This makes it difficult to run FireWorks as a "service" that always pulls any new jobs you enter into the database over the span of days or weeks. To get around this, you can try setting up a cron job at NERSC that regularly pulls jobs from the database and submits them to the queue.
 * Once you get the hang of things, make sure you set up your :doc:`configuration file <config_tutorial>` to save time and typing - in particular, set the path to your LaunchPad, FireWorker, and QueueAdapter files.
+
+After installation
+==================
+
+After you've installed the FireWorks software and set up a Mongo database for your workflows, you should proceed with the tutorails on the :doc:`main page </index>`.

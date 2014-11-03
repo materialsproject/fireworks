@@ -1,19 +1,22 @@
-tests Package
-=============
+fireworks.user_objects.queue_adapters.tests package
+===================================================
 
-:mod:`tests` Package
---------------------
+Submodules
+----------
 
-.. automodule:: fireworks.user_objects.queue_adapters.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_common_adaptor` Module
----------------------------------
+fireworks.user_objects.queue_adapters.tests.test_common_adaptor module
+----------------------------------------------------------------------
 
 .. automodule:: fireworks.user_objects.queue_adapters.tests.test_common_adaptor
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: fireworks.user_objects.queue_adapters.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
