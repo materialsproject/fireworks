@@ -12,6 +12,7 @@ import multiprocessing
 import os
 import traceback
 import threading
+import errno
 import distutils.dir_util
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
@@ -130,20 +131,6 @@ class Rocket():
             print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
             return False
 
-        if '_launch_dir' in m_fw.spec:
-            prev_dir = launch_dir
-            os.chdir(m_fw.spec['_launch_dir'])
-            launch_dir = os.path.abspath(os.getcwd())
-
-            if lp:
-                lp.change_launch_dir(launch_id, launch_dir)
-
-            if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
-                try:
-                    os.rmdir(prev_dir)
-                except:
-                    pass
-
         if lp:
             message = 'RUNNING fw_id: {} in directory: {}'.\
                 format(m_fw.fw_id, os.getcwd())
@@ -156,6 +143,27 @@ class Rocket():
             m_fw.to_file('FW.yaml')
 
         try:
+            if '_launch_dir' in m_fw.spec:
+                prev_dir = launch_dir
+                launch_dir = os.path.expandvars(m_fw.spec['_launch_dir'])
+                # thread-safe "mkdir -p"
+                try:
+                    os.makedirs(launch_dir)
+                except OSError as exception:
+                    if exception.errno != errno.EEXIST:
+                        raise
+                os.chdir(launch_dir)
+                launch_dir = os.path.abspath(os.getcwd())
+
+                if lp:
+                    lp.change_launch_dir(launch_id, launch_dir)
+
+                if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
+                    try:
+                        os.rmdir(prev_dir)
+                    except:
+                        pass
+
             if m_fw.spec.get('_recover_launch', None):
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
                 starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
