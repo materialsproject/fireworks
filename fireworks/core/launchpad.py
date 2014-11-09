@@ -1165,7 +1165,6 @@ class LazyFirework(object):
         if not self._fw:
             fields = list(self.db_fields) + list(self.db_launch_fields)
             data = self._fwc.find_one({'fw_id': self.fw_id}, fields=fields)
-
             launch_data = {}  # move some data to separate launch dict
             for key in self.db_launch_fields:
                 launch_data[key] = data[key]
