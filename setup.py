@@ -43,6 +43,6 @@ if __name__ == "__main__":
                      'Topic :: Scientific/Engineering'],
         test_suite='nose.collector',
         tests_require=['nose'],
-        scripts=[os.path.join(module_dir, 'scripts', f) for f in
+        scripts=[os.path.join('fireworks', 'scripts', f) for f in
                  os.listdir(os.path.join(module_dir, 'scripts'))]
     )
