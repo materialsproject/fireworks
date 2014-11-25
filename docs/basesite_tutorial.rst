@@ -2,7 +2,7 @@
 Using the Web GUI *(alpha)*
 ===========================
 
-.. note:: You must have Django installed as an optional dependency (just type 'pip install Django') in order to use the web gui
+.. note:: You must have Django installed as an optional dependency (just type 'pip install django==1.6.5') in order to use the web gui. Note that Django 1.7 currently does not work with FireWorks; we are working on a redesigned interface that should make this no longer an issue in the future.
 
 An easy way to monitor FireWorks is to use its web interface (in *alpha* mode), which provides an overview of the state of your workflows and provides clickable links to see details on any Firework or Workflow:
 
