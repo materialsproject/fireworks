@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v0.96**
+
+* Address some installation issues (thanks to kpoman)
+* fix minor issues and docs
+
 **v0.95**
 
 * Add decompressdir task (S.P. Ong)
