@@ -2,7 +2,12 @@ include LICENSE *.txt
 include user_objects/queue_adapters/*.txt
 include user_objects/firetasks/templates/*.txt
 recursive-include fireworks *
+recursive-exclude fireworks *.pyc
 recursive-include docs *
+recursive-exclude docs *.pyc
 recursive-include fw_tutorials *
+recursive-exclude fw_tutorials *.pyc
 recursive-include scripts *
+recursive-exclude scripts *.pyc
 recursive-include base_site *
+recursive-exclude base_site *.pyc
