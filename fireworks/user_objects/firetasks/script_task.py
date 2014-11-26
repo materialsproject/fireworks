@@ -126,7 +126,7 @@ class ScriptTask(FireTaskBase):
         parameters = parameters if parameters else {}
         parameters['script'] = [shell_cmd]
         parameters['use_shell'] = True
-        return ScriptTask(parameters)
+        return cls(parameters)
 
 
 class PyTask(FireTaskBase):
