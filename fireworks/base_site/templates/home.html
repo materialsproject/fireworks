@@ -6,10 +6,10 @@
 {% block content %}
 <h2>{{ comp_fws|intcomma }} Completed FireWorks as of {% now "Y-m-d, H:i (T)" %}</h2>
 
-<h3>Recent Activity</h3>
+<h4>Recent Activity</h4>
 
 <!-- TABLES -->
-<table style="display: inline-table; margin: 10px;">
+<table class="table table-bordered">
     <tr><th colspan="3"><a href="/fw">Newest Fireworks</a></th></tr>
     <tr>
         <th>ID</th>
@@ -27,7 +27,7 @@
     {% endfor %}
 </table>
 
-<table style="display: inline-table; margin: 10px;">
+<table class="table table-bordered">
     <tr><th colspan="3">Current Database Status</th></tr>
     <tr>
         <th></th>
@@ -48,7 +48,7 @@
     </tr>
 </table>
 
-<table style="display: inline-table; margin: 10px;">
+<table class="table table-bordered">
     <tr><th colspan="3"><a href="/wf">Newest Workflows</a></th></tr>
     <tr>
         <th>ID</th>

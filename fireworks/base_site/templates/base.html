@@ -1,37 +1,58 @@
+{% load staticfiles %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
-
-<style type="text/css">
-    body {font-family: "Lucida Sans Unicode", sans-serif}
-    a {text-decoration: none}
-    table, td, th, thead {border: none; font-size: 95%}
-    th {background-color: #bbbbbb;}
-    table tr:nth-child(even) { background-color: #dddddd}
-    #fw_logo { width: 200px; float: left; margin-left: 100px; }
-    h1 { margin-left: 50px; float: left; }
-   h2 { clear: both; }
-</style>
-
 <head>
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/flat-ui.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 
 {% load staticfiles %}
 
-<body><center>
- <img src="{% static "FireWorks_logo.png" %}" id="fw_logo">&nbsp;</img>
-    <h1>Workflow Dashboard</h1>
+<body>
+    <div class="container">
+        <a href="/" >
+            <img  class="brand" src="{% static 'images/fw-logo.png' %}"></img>
+        </a>
+    </div>
+    <hr>
+    <div class="container">
+         <div class="row">
+            <div class="span12">
+                <h3 class="text-center">Workflow Dashboard</h3>
+            </div>
+         </div>
+        {% block content %}{% endblock %}
+    </div>
     
-    {% block content %}{% endblock %}
     
     {% block footer %}
     <hr>
-    <h5><a href="/home">Home</a> |
-        <a href="/fw">Fireworks Index</a> |
-        <a href="/wf">Workflows Index</a> |
-        <a href="/testing">Testing</a>
-        <br><br>
-        &copy Copyright 2013, <a href="http://pythonhosted.org/FireWorks/">FireWorks</a>.</h5>
+    <footer class="footer container text-center">
+            <div class="navbar">
+                <center>
+                <ul class="nav">
+                    <li>
+                        <a href="/home">Home</a>
+                    </li>
+                    <li>
+                        <a href="/fw">Fireworks Index</a>
+                    </li>
+                    <li>
+                        <a href="/wf">Workflows Index</a>
+                    </li>
+                    <li>
+                        <a href="/testing">Testing</a>
+                    </li>
+                </ul>
+            </center>
+            </div>
+                <br><br>
+                &copy Copyright 2013, <a href="http://pythonhosted.org/FireWorks/">FireWorks</a>.</h5>
+    </footer>
     {% endblock %}
-</center></body>
+
+</body>
 </html>

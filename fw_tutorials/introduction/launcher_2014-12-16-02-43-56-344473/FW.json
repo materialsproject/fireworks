@@ -1,0 +1,40 @@
+{
+    "name": "Unnamed FW", 
+    "launches": [
+        {
+            "fworker": {
+                "category": "", 
+                "query": "{\"$or\": [{\"spec._fworker\": {\"$exists\": false}}, {\"spec._fworker\": null}, {\"spec._fworker\": \"Automatically generated Worker\"}]}", 
+                "name": "Automatically generated Worker", 
+                "env": {}
+            }, 
+            "trackers": [], 
+            "ip": "10.0.10.22", 
+            "fw_id": 5, 
+            "state": "RUNNING", 
+            "host": "Miriam-2.local", 
+            "launch_dir": "/Users/volvox/src/mp/fireworks/fw_tutorials/introduction/launcher_2014-12-16-02-43-56-344473", 
+            "action": null, 
+            "launch_id": 5, 
+            "state_history": [
+                {
+                    "updated_on": "2014-12-16T02:43:56.346688", 
+                    "state": "RUNNING", 
+                    "created_on": "2014-12-16T02:43:56.346684"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 5, 
+    "state": "RUNNING", 
+    "created_on": "2014-12-16T02:42:03.032674", 
+    "updated_on": "2014-12-16T02:43:56.347517", 
+    "spec": {
+        "_tasks": [
+            {
+                "_fw_name": "ScriptTask", 
+                "script": "echo \"howdy, your job launched successfully!\" >> howdy.txt"
+            }
+        ]
+    }
+}

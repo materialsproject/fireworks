@@ -1,0 +1,41 @@
+{
+    "name": "goodbye", 
+    "launches": [
+        {
+            "fworker": {
+                "category": "", 
+                "query": "{}", 
+                "name": "Automatically generated Worker", 
+                "env": {}
+            }, 
+            "trackers": [], 
+            "ip": "10.0.10.22", 
+            "fw_id": 2, 
+            "state": "RUNNING", 
+            "host": "Miriam-2.local", 
+            "launch_dir": "/Users/volvox/src/mp/fireworks/launcher_2014-11-24-21-53-34-023782", 
+            "action": null, 
+            "launch_id": 2, 
+            "state_history": [
+                {
+                    "updated_on": "2014-11-24T21:53:34.025797", 
+                    "state": "RUNNING", 
+                    "created_on": "2014-11-24T21:53:34.025793"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 2, 
+    "state": "RUNNING", 
+    "created_on": "2014-11-24T21:53:17.800466", 
+    "updated_on": "2014-11-24T21:53:34.026603", 
+    "spec": {
+        "_tasks": [
+            {
+                "use_shell": true, 
+                "_fw_name": "ScriptTask", 
+                "script": "echo \"goodbye\""
+            }
+        ]
+    }
+}

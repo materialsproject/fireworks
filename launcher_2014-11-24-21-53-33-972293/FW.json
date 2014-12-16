@@ -1,0 +1,41 @@
+{
+    "name": "hello", 
+    "launches": [
+        {
+            "fworker": {
+                "category": "", 
+                "query": "{}", 
+                "name": "Automatically generated Worker", 
+                "env": {}
+            }, 
+            "trackers": [], 
+            "ip": "10.0.10.22", 
+            "fw_id": 1, 
+            "state": "RUNNING", 
+            "host": "Miriam-2.local", 
+            "launch_dir": "/Users/volvox/src/mp/fireworks/launcher_2014-11-24-21-53-33-972293", 
+            "action": null, 
+            "launch_id": 1, 
+            "state_history": [
+                {
+                    "updated_on": "2014-11-24T21:53:33.975755", 
+                    "state": "RUNNING", 
+                    "created_on": "2014-11-24T21:53:33.975749"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 1, 
+    "state": "RUNNING", 
+    "created_on": "2014-11-24T21:53:17.800387", 
+    "updated_on": "2014-11-24T21:53:33.976772", 
+    "spec": {
+        "_tasks": [
+            {
+                "use_shell": true, 
+                "_fw_name": "ScriptTask", 
+                "script": "echo \"hello\""
+            }
+        ]
+    }
+}

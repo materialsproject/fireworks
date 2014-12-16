@@ -1,0 +1,10 @@
+footer .navbar .nav {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+}
+
+.brand {
+	margin-top: 20px;
+	max-width: 170px;
+}
