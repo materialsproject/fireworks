@@ -68,7 +68,14 @@ def home(request):
     wfs_shown = lp.workflows.find({}, limit=shown, sort=[('updated_on', DESCENDING)])
     wf_info = []
     for item in wfs_shown:
-        wf_info.append((item['nodes'][0], item['name'],item['state']))
+        wf_info.append( {
+            "id": item['nodes'][0], 
+            "name": item['name'],
+            "state": item['state'],
+            "fireworks": list(lp.fireworks.find({"fw_id": { "$in": item["nodes"]} }, 
+                limit=shown, sort=[('created_on', DESCENDING)], 
+                fields=["state", "name", "fw_id"] ))
+        })
     _dbg("workflows.end")
 
     return render_to_response('home.html', {'fw_info': fw_info, 'info': info,

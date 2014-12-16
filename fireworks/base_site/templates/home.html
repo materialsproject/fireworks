@@ -10,26 +10,30 @@
 <div class="row pull-down">
     <div class="span6">
         <table class="table table-bordered">
-            <tr><th colspan="3"><a href="/fw">Newest Fireworks</a></th></tr>
+            <tr><th colspan="3"><a href="/wf">Newest Workflows</a></th></tr>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>State</th>
             </tr>
-            {% for ids, names, states in fw_info %}
+            {% for wf in wf_info %}
                 <tr>
-                    <td><a href="/fw/{{ ids }}">{{ ids }}</a></td>
-                    <td>{{ names }}</td>
-                    <td>{% include 'state.html' %}</td>
+                    <td><center><a href="/wf/{{ wf.id }}">{{ wf.id }}</a></center></td>
+                    <td>
+                        <div>
+                            {{ wf.name }}
+                        </div>
+                        {% for fw  in wf.fireworks %}
+                            <small><a class="fw-link" href="/fw/{{ fw.fw_id }}">{{fw.name}}</a></small>
+                        {% endfor %}
+                    </td>
+                    <td>{% include 'state.html' with states=wf.state %}</td>
                 </tr>
             {% empty %}
-                <tr>
-                    <td colspan="3">(no fireworks in database)</td>
-                </tr>
+                <tr><td colspan="3"><center>(no workflows in database)</center></td></tr>
             {% endfor %}
         </table>
     </div>
-
     <div class="span6">
         <table class="table table-bordered">
             <tr><th colspan="3">Current Database Status</th></tr>
@@ -56,21 +60,5 @@
 <!-- TABLES -->
 
 
-<table class="table table-bordered">
-    <tr><th colspan="3"><a href="/wf">Newest Workflows</a></th></tr>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>State</th>
-    </tr>
-    {% for ids, names, states in wf_info %}
-        <tr>
-            <td><center><a href="/wf/{{ ids }}">{{ ids }}</a></center></td>
-            <td>{{ names }}</td>
-            <td>{% include 'state.html' %}</td>
-        </tr>
-    {% empty %}
-        <tr><td colspan="3"><center>(no workflows in database)</center></td></tr>
-    {% endfor %}
-</table>
+
 {% endblock %}

@@ -14,3 +14,12 @@ footer .navbar .nav {
 }
 
 .pull-up { margin-bottom: 30px;}
+
+.fw-link {
+	border-bottom: 1px dotted;
+	margin-left: 10px;
+}
+
+.table td{
+	vertical-align: middle;
+}
