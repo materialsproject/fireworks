@@ -4,49 +4,57 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h2>{{ comp_fws|intcomma }} Completed FireWorks as of {% now "Y-m-d, H:i (T)" %}</h2>
 
-<h4>Recent Activity</h4>
+<center>{{ comp_fws|intcomma }} Completed FireWorks as of {% now "Y-m-d, H:i (T)" %}</center>
 
+<div class="row pull-down">
+    <div class="span6">
+        <table class="table table-bordered">
+            <tr><th colspan="3"><a href="/fw">Newest Fireworks</a></th></tr>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>State</th>
+            </tr>
+            {% for ids, names, states in fw_info %}
+                <tr>
+                    <td><a href="/fw/{{ ids }}">{{ ids }}</a></td>
+                    <td>{{ names }}</td>
+                    <td>{% include 'state.html' %}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">(no fireworks in database)</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="span6">
+        <table class="table table-bordered">
+            <tr><th colspan="3">Current Database Status</th></tr>
+            <tr>
+                <th></th>
+                <th><a href="/fw">Fireworks</a></th>
+                <th><a href="/wf">Workflows</a></th>
+            </tr>
+            {% for states, fw_info, wf_info in info %}
+                <tr>
+                    <td>{% include 'state.html' %}</td>
+                    <td><center><a href="/fw/{{ states }}">{{ fw_info|intcomma }}</a></center></td>
+                    <td><center><a href="/wf/{{ states }}">{{ wf_info|intcomma }}</a></center></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th><div align="right">TOTAL</div></th>
+                <td><center><a href="/fw">{{ tot_fws|intcomma }}</a></center></td>
+                <td><center><a href="/wf">{{ tot_wfs|intcomma }}</a></center></td>
+            </tr>
+        </table>
+    </div>
+</div>
 <!-- TABLES -->
-<table class="table table-bordered">
-    <tr><th colspan="3"><a href="/fw">Newest Fireworks</a></th></tr>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>State</th>
-    </tr>
-    {% for ids, names, states in fw_info %}
-        <tr>
-            <td><center><a href="/fw/{{ ids }}">{{ ids }}</a></center></td>
-            <td>{{ names }}</td>
-            <td><center>{{ states }}</center></td>
-        </tr>
-    {% empty %}
-        <tr><td colspan="3"><center>(no fireworks in database)</center></td></tr>
-    {% endfor %}
-</table>
 
-<table class="table table-bordered">
-    <tr><th colspan="3">Current Database Status</th></tr>
-    <tr>
-        <th></th>
-        <th><a href="/fw">Fireworks</a></th>
-        <th><a href="/wf">Workflows</a></th>
-    </tr>
-    {% for states, fw_info, wf_info in info %}
-        <tr>
-            <td><div align="right">{{ states }}</div></td>
-            <td><center><a href="/fw/{{ states }}">{{ fw_info|intcomma }}</a></center></td>
-            <td><center><a href="/wf/{{ states }}">{{ wf_info|intcomma }}</a></center></td>
-        </tr>
-    {% endfor %}
-    <tr>
-        <th><div align="right">TOTAL</div></th>
-        <td><center><a href="/fw">{{ tot_fws|intcomma }}</a></center></td>
-        <td><center><a href="/wf">{{ tot_wfs|intcomma }}</a></center></td>
-    </tr>
-</table>
 
 <table class="table table-bordered">
     <tr><th colspan="3"><a href="/wf">Newest Workflows</a></th></tr>
@@ -59,7 +67,7 @@
         <tr>
             <td><center><a href="/wf/{{ ids }}">{{ ids }}</a></center></td>
             <td>{{ names }}</td>
-            <td><center>{{ states }}</center></td>
+            <td>{% include 'state.html' %}</td>
         </tr>
     {% empty %}
         <tr><td colspan="3"><center>(no workflows in database)</center></td></tr>

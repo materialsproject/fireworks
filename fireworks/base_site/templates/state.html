@@ -1,0 +1,9 @@
+{% if states == 'COMPLETED' or states == 'RUNNING' %}
+<span class="label label-success">{{ states }}</span>
+{% elif states == 'FIZZLED' %}
+<span class="label label-important">{{ states }}</span>
+{% elif states == 'DEFUSED' or states == 'WAITING' %}
+<span class="label label-warning">{{ states }}</span>
+{% else %}
+<span class="label">{{ states }}</span>
+{% endif %}
