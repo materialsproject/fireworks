@@ -1,16 +1,14 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% block title %}FireWorks Dashboard{% endblock %}
 
-{% block title %}Home{% endblock %}
-
-{% block content %}
-
+{% block content %} 
+{% import 'state.html' as state_tmpl with context %}
+	
  <div class="row">
     <div class="span12">
         <h3 class="text-center">Workflow Dashboard</h3>
     </div>
  </div>
-<center>{{ comp_fws|intcomma }} Completed FireWorks as of {% now "Y-m-d, H:i (T)" %}</center>
 
 <div class="row pull-down">
     <div class="span6">
@@ -32,10 +30,8 @@
                             <small><a class="fw-link" href="/fw/{{ fw.fw_id }}">{{fw.name}}</a></small>
                         {% endfor %}
                     </td>
-                    <td>{% include 'state.html' with states=wf.state %}</td>
+                    <td>{{ state_tmpl.state(state) }}</td>
                 </tr>
-            {% empty %}
-                <tr><td colspan="3"><center>(no workflows in database)</center></td></tr>
             {% endfor %}
         </table>
     </div>
@@ -49,21 +45,19 @@
             </tr>
             {% for states, fw_info, wf_info in info %}
                 <tr>
-                    <td>{% include 'state.html' %}</td>
-                    <td><center><a href="/fw/{{ states }}">{{ fw_info|intcomma }}</a></center></td>
-                    <td><center><a href="/wf/{{ states }}">{{ wf_info|intcomma }}</a></center></td>
+                    <td>{{ state_tmpl.state(states) }}</td>
+                    <td><center><a href="/fw/{{ states }}">{{ fw_info }}</a></center></td>
+                    <td><center><a href="/wf/{{ states }}">{{ wf_info }}</a></center></td>
                 </tr>
             {% endfor %}
             <tr>
                 <th><div align="right">TOTAL</div></th>
-                <td><center><a href="/fw">{{ tot_fws|intcomma }}</a></center></td>
-                <td><center><a href="/wf">{{ tot_wfs|intcomma }}</a></center></td>
+                <td><center><a href="/fw">{{ tot_fws }}</a></center></td>
+                <td><center><a href="/wf">{{ tot_wfs }}</a></center></td>
             </tr>
         </table>
     </div>
 </div>
 <!-- TABLES -->
-
-
 
 {% endblock %}

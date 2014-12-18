@@ -180,7 +180,9 @@ def fw_id_all(request, id):
         raise Http404()
     fw = lp.get_fw_by_id(id)
     fw_data = json.dumps(fw.to_dict(), default=DATETIME_HANDLER, indent=4)
-    return render_to_response('fw_id.html', {'fw_id': id, 'fw_data': fw_data})
+    print fw
+    return render_to_response('fw_id.html', 
+        {'fw_id': id, 'fw_data': fw_data, 'name':fw["name"]})
 
 def fw_id_less(request, id):
     try:

@@ -1,21 +1,18 @@
-{% load staticfiles %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
     <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/flat-ui.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-    <script type="text/javascript" href="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/flat-ui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 
-{% load staticfiles %}
 
 <body>
     <div class="container">
         <a href="/" >
-            <img  class="brand" src="{% static 'images/fw-logo.png' %}"></img>
+            <img  class="brand" src="{{ url_for('static', filename='images/fw-logo.png') }}"></img>
         </a>
     </div>
     <hr>

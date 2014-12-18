@@ -1,0 +1,25 @@
+footer .navbar .nav {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+}
+
+.brand {
+	margin-top: 20px;
+	max-width: 170px;
+}
+
+.pull-down {
+	margin-top: 30px;
+}
+
+.pull-up { margin-bottom: 30px;}
+
+.fw-link {
+	border-bottom: 1px dotted;
+	margin-left: 10px;
+}
+
+.table td{
+	vertical-align: middle;
+}
