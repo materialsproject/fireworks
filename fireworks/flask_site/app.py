@@ -12,6 +12,12 @@ app.use_reloader=True
 
 lp = LaunchPad.from_dict(get_lp())
 
+@app.template_filter('datetime')
+def datetime(value):
+  import datetime as dt
+  date = dt.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+  return date.strftime('%Y-%m-%d')
+
 @app.route("/")
 def home():
     shown = 20
@@ -54,7 +60,21 @@ def home():
 
 
 
-
+@app.route('/fw/<int:fw_id>')
+def show_fw(fw_id):
+    try:
+        int(fw_id)
+    except ValueError:
+        raise Http404()
+    fw = lp.get_fw_by_id(fw_id)
+    fw = fw.to_dict()
+    if 'archived_launches' in fw:
+        del fw['archived_launches']
+    del fw['spec']
+    fw_data = json.dumps(fw, default=DATETIME_HANDLER, indent=4)
+    return render_template('fw_details.html', **locals())
 
 if __name__ == "__main__":
     app.run()
+
+
