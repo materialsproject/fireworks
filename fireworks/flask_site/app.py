@@ -59,7 +59,6 @@ def home():
     return render_template('home.html', **locals())
 
 
-
 @app.route('/fw/<int:fw_id>')
 def show_fw(fw_id):
     try:
@@ -73,6 +72,24 @@ def show_fw(fw_id):
     del fw['spec']
     fw_data = json.dumps(fw, default=DATETIME_HANDLER, indent=4)
     return render_template('fw_details.html', **locals())
+
+@app.route('/wf/<int:wf_id>')
+def show_workflow(wf_id):
+    try:
+        int(wf_id)
+    except ValueError:
+        raise Http404()
+    wf = lp.get_wf_by_fw_id(wf_id)
+    wf_dict = wf.to_display_dict()
+    del wf_dict['name']
+    del wf_dict['parent_links']
+    del wf_dict['nodes']
+    del wf_dict['links']
+    del wf_dict['metadata']
+    del wf_dict['states_list']
+    wf_data = json.dumps(wf_dict, default=DATETIME_HANDLER, indent=4)
+    return render_template('wf_details.html', **locals())
+
 
 if __name__ == "__main__":
     app.run()
