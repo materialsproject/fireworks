@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import 'state.html' as state_tmpl with context %}
+
+{% block title %}{{ state }} Fireworks Index{% endblock %}
+
+{% block content %}
+<h3 class="text-center">{{ fw_count }} {{ state|lower }} Firework{{ fw_count|pluralize }}</h3>
+
+<!-- FILTERS / NAVIGATION -->
+<div class="pull-down">
+    <ul class="inline">
+        {% for s, stats in all_states %}
+        <li>
+            <a href="/fw/{{s}}">{{ state_tmpl.state(stats) }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- TABLE -->
+<table class="table table-bordered">
+    <tr><th colspan="2">{{ state }} Fireworks</th></tr>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>State</th>
+        <th>Created On</th>
+    </tr>
+    {% for row in rows %}
+        <tr>
+            <td><center><a href="/fw/{{ row.fw_id }}">{{ row.fw_id }}</a></center></td>
+            <td>{{ row.name }}</td>
+            <td>{{ state_tmpl.state(row.state) }}</td>
+            <td>{{ row.created_on|datetime }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{{ pagination.links|safe }}
+
+{% endblock %}

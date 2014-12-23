@@ -23,3 +23,9 @@ footer .navbar .nav {
 .table td{
 	vertical-align: middle;
 }
+
+
+.label {
+  font-size: 11px;
+  letter-spacing: .08em;
+}
