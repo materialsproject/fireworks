@@ -916,6 +916,14 @@ class LaunchPad(FWSerializable):
         return reruns  # return the ids that were rerun
 
     def rerun_fws_task_level(self, fw_id, rerun_duplicates=True, launch_id=None, recover_mode=None):
+        """
+        Rerun a fw at the task level
+        :param fw_id: (int) fw_id to rerun
+        :param rerun_duplicates: (bool) also rerun duplicate FWs
+        :param launch_id: (int) launch id to rerun, if known. otherwise the last launch_id will be used
+        :param recover_mode: (str) use "prev_dir" to run again in previous dir, "cp" to try to copy data to new dir, or None to start from scratch
+        :return: ([int]) list of rerun fw_ids
+        """
         m_fw = self.get_fw_by_id(fw_id)
 
         # check if task_level parameters are properly defined
@@ -933,6 +941,7 @@ class LaunchPad(FWSerializable):
         if self.get_launch_by_id(launch_id).action.stored_data.get('_exception', {}).get('_failed_task_n', None) is None:
             self.m_logger.info("No information to recover launch id {} for m_fw {}. Skipping..."
                                .format(launch_id, fw_id))
+            return None
 
         #rerun jobs and duplicates
         reruns = self.rerun_fw(fw_id, rerun_duplicates)
@@ -945,6 +954,8 @@ class LaunchPad(FWSerializable):
                 set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
 
             self.fireworks.find_and_modify({"fw_id": fw_id}, set_spec)
+
+        return reruns
 
     def _refresh_wf(self, fw_id):
 
