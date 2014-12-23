@@ -1,10 +1,10 @@
 {% macro state(state) -%}
 
-	{% if state == 'COMPLETED' or state == 'RUNNING' %}
+	{% if 'COMPLETED' in state or 'RUNNING' in state %}
 	<span class="label label-success">{{ state }}</span>
-	{% elif state == 'FIZZLED' %}
+	{% elif 'FIZZLED' in state %}
 	<span class="label label-important">{{ state }}</span>
-	{% elif state == 'DEFUSED' or state == 'WAITING' %}
+	{% elif 'DEFUSED' in state or 'WAITING' in state %}
 	<span class="label label-warning">{{ state }}</span>
 	{% else %}
 	<span class="label">{{ state }}</span>
