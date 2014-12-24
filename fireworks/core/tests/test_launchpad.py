@@ -16,11 +16,14 @@ import glob
 import shutil
 import datetime
 from multiprocessing import Process
+import filecmp
 
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
+from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask
+import fireworks.fw_config
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -717,7 +720,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.assertEqual(fw_state, fw_cache_state)
 
         # Rerun fizzled runs
-        for fwid in lost_fwids:
+        for fw_id in lost_fwids:
             self.lp.rerun_fw(fw_id)
         rp = RapidfireProcess(self.lp, self.fworker)
         rp.start()
@@ -730,6 +733,85 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             self.assertEqual(fw_state, fw_cache_state)
         rp.terminate()
+
+
+class LaunchPadRerunExceptionTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        fireworks.fw_config.EXCEPT_DETAILS_ON_RERUN = True
+
+        self.error_test_dict = {'error': 'description', 'error_code': 1}
+        fw = Firework([ExecutionCounterTask(),
+                       ScriptTask.from_str('date +"%s %N" > date_file'),
+                      ExceptionTestTask(exc_details=self.error_test_dict)])
+        self.lp.add_wf(fw)
+        ExecutionCounterTask.exec_counter = 0
+        ExceptionTestTask.exec_counter = 0
+
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None, require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
+            shutil.rmtree(ldir)
+
+    def test_except_details_on_rerun(self):
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        self.lp.rerun_fw(1)
+        fw = self.lp.get_fw_by_id(1)
+        self.assertEqual(fw.spec['_exception_details'], self.error_test_dict)
+
+    def test_task_level_rerun(self):
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        self.lp.rerun_fws_task_level(1)
+        self.lp.update_spec([1], {'skip_exception': True})
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        dirs = sorted(glob.glob(os.path.join(MODULE_DIR, "launcher_*")))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, 'COMPLETED')
+        self.assertEqual(ExecutionCounterTask.exec_counter, 1)
+        self.assertEqual(ExceptionTestTask.exec_counter, 2)
+        self.assertFalse(os.path.exists(os.path.join(dirs[1], "date_file")))
+
+    def test_task_level_rerun_cp(self):
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        self.lp.rerun_fws_task_level(1, recover_mode="cp")
+        self.lp.update_spec([1], {'skip_exception': True})
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        dirs = sorted(glob.glob(os.path.join(MODULE_DIR, "launcher_*")))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, 'COMPLETED')
+        self.assertEqual(ExecutionCounterTask.exec_counter, 1)
+        self.assertEqual(ExceptionTestTask.exec_counter, 2)
+        self.assertTrue(filecmp.cmp(os.path.join(dirs[0], "date_file"), os.path.join(dirs[1], "date_file")))
+
+    def test_task_level_rerun_prev_dir(self):
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        self.lp.rerun_fws_task_level(1, recover_mode="prev_dir")
+        self.lp.update_spec([1], {'skip_exception': True})
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        fw = self.lp.get_fw_by_id(1)
+        self.assertEqual(fw.state, 'COMPLETED')
+        self.assertEqual(fw.launches[0].launch_dir, fw.archived_launches[0].launch_dir)
+        self.assertEqual(ExecutionCounterTask.exec_counter, 1)
+        self.assertEqual(ExceptionTestTask.exec_counter, 2)
 
 if __name__ == '__main__':
     unittest.main()
