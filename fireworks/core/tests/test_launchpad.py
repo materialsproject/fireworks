@@ -757,7 +757,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
 
         self.error_test_dict = {'error': 'description', 'error_code': 1}
         fw = Firework([ExecutionCounterTask(),
-                       ScriptTask.from_str('date +"%s %N" > date_file'),
+                       ScriptTask.from_str('date +"%s %N"', parameters={'stdout_file': 'date_file'}),
                       ExceptionTestTask(exc_details=self.error_test_dict)])
         self.lp.add_wf(fw)
         ExecutionCounterTask.exec_counter = 0
