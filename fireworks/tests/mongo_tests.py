@@ -57,7 +57,7 @@ def throw_error(msg):
 class MultipleDetourTask(FireTaskBase):
 
     def run_task(self, fw_spec):
-        print 'Running the Multiple Detour Task'
+        print('Running the Multiple Detour Task')
         dt1 = Firework(ScriptTask.from_str('echo "this is intermediate job 1"'))
         dt2 = Firework(ScriptTask.from_str('echo "this is intermediate job 2"'))
         dt3 = Firework(ScriptTask.from_str('echo "this is intermediate job 3"'))
