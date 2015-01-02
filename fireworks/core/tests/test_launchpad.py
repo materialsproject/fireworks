@@ -778,6 +778,8 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         self.lp.rerun_fw(1)
         fw = self.lp.get_fw_by_id(1)
+        print fireworks.fw_config.EXCEPT_DETAILS_ON_RERUN
+        print fw.spec
         self.assertEqual(fw.spec['_exception_details'], self.error_test_dict)
 
     def test_task_level_rerun(self):
