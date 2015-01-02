@@ -237,7 +237,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Point us to areas of the code that are difficult to understand or use.
 * Contribute code! If you are interested in this option, please see our :doc:`contribution guidelines</contributing>`.
 
-Please submit questions, issues / bug reports, and all other communication is through the `FireWorks Google Groups <https://groups.google.com/forum/#!forum/fireworkflows>`_.
+Please submit questions, issues / bug reports, and all other communication through the `FireWorks Google Groups <https://groups.google.com/forum/#!forum/fireworkflows>`_.
 
 The list of contributors to FireWorks can be found :doc:`here </contributors>`.
 
