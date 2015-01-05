@@ -27,8 +27,7 @@ from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 from six import add_metaclass
 
-from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR
-import fireworks.fw_config
+from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, \
@@ -281,10 +280,10 @@ class Firework(FWSerializable):
         """
         if self.state == 'FIZZLED':
             last_launch = self.launches[-1]
-            print 'rerun', fireworks.fw_config.EXCEPT_DETAILS_ON_RERUN, last_launch.action, \
+            print 'rerun', EXCEPT_DETAILS_ON_RERUN, last_launch.action, \
                 last_launch.action.stored_data.get('_exception', {}), \
                 last_launch.action.stored_data.get('_exception', {}).get('_details')
-            if (fireworks.fw_config.EXCEPT_DETAILS_ON_RERUN and last_launch.action and
+            if (EXCEPT_DETAILS_ON_RERUN and last_launch.action and
                 last_launch.action.stored_data.get('_exception', {}).get('_details')):
                 # add the exception details to the spec
                 self.spec['_exception_details'] = last_launch.action.stored_data['_exception']['_details']
