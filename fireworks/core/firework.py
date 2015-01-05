@@ -280,6 +280,9 @@ class Firework(FWSerializable):
         """
         if self.state == 'FIZZLED':
             last_launch = self.launches[-1]
+            print 'rerun', EXCEPT_DETAILS_ON_RERUN, last_launch.action, \
+                last_launch.action.stored_data.get('_exception', {}), \
+                last_launch.action.stored_data.get('_exception', {}).get('_details')
             if (EXCEPT_DETAILS_ON_RERUN and last_launch.action and
                 last_launch.action.stored_data.get('_exception', {}).get('_details')):
                 # add the exception details to the spec
