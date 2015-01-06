@@ -112,11 +112,34 @@ def fw_states(state):
       page = int(request.args.get('page', 1))
   except ValueError:
       page = 1  
-  rows = list(lp.fireworks.find(query, fields=["fw_id", "name", "state", "created_on"], 
+  rows = list(db.find(query, fields=["fw_id", "name", "state", "created_on"], 
     sort=[('created_on', DESCENDING)]).skip(page-1).limit(PER_PAGE))
   pagination = Pagination(page=page, total=fw_count,  
     record_name='fireworks', per_page=PER_PAGE)
   return render_template('fw_state.html', **locals())
+
+@app.route('/wf/', defaults={"state": "total"})
+@app.route("/wf/<state>/")
+def wf_states(state):
+  db = lp.workflows
+  if state is "total":
+    query = {}    
+  else: 
+    query = {'state': state.upper()}
+  wf_count = lp.get_fw_ids(query=query, count_only=True)
+  wf_stats = get_totals(STATES, lp)["wf_stats"]
+  all_states = map(lambda s: s + ": " + str(wf_stats[s]), 
+    STATES)
+  all_states = zip(STATES, all_states)
+  try:
+      page = int(request.args.get('page', 1))
+  except ValueError:
+      page = 1  
+  rows = list(db.find(query, 
+    sort=[('created_on', DESCENDING)]).skip(page-1).limit(PER_PAGE))
+  pagination = Pagination(page=page, total=wf_count,  
+    record_name='workflows', per_page=PER_PAGE)
+  return render_template('wf_state.html', **locals())
 
      
 if __name__ == "__main__":
