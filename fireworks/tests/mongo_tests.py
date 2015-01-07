@@ -103,7 +103,7 @@ class MongoTests(unittest.TestCase):
         self.old_wd = os.getcwd()
 
     def tearDown(self):
-        # self.lp.reset(password=None, require_password=False)
+        self.lp.reset(password=None, require_password=False)
         if os.path.exists(os.path.join('FW.json')):
             os.remove('FW.json')
         os.chdir(self.old_wd)
