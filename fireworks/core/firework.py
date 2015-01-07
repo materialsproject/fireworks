@@ -805,6 +805,7 @@ class Workflow(FWSerializable):
     def add_wf_to_fws(self, new_wf, fw_ids, pull_spec_mods=True, detour=False):
         """
         Internal method to add a workflow as a child to a Firework
+        Note: detours must have children that have STATE_RANK that is WAITING or below
 
         :param new_wf: (Workflow) New Workflow to add
         :param fw_ids: ([int]) ids of the parent Fireworks on which to add the Workflow
@@ -829,6 +830,10 @@ class Workflow(FWSerializable):
             for fw_id in fw_ids:
                 if new_fw.fw_id in leaf_ids:
                     if detour:
+                        # make sure all of these links are WAITING, else the DETOUR is not well defined
+                        ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
+                        if any(ready_run):
+                            raise ValueError("Detour option only works if all children of detours are not READY to run and have not already run")
                         self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
                     else:
                         self.links[new_fw.fw_id] = []
@@ -842,13 +847,14 @@ class Workflow(FWSerializable):
                 if pull_spec_mods:  # re-apply some actions of the parent
                     m_fw = self.id_fw[fw_id]  # get the parent FW
                     m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
-                    # pull spec update
-                    if m_launch.state == 'COMPLETED' and m_launch.action.update_spec:
-                        new_wf.id_fw[root_id].spec.update(m_launch.action.update_spec)
-                    # pull spec mods
-                    if m_launch.state == 'COMPLETED' and m_launch.action.mod_spec:
-                        for mod in m_launch.action.mod_spec:
-                            apply_mod(mod, new_wf.id_fw[root_id].spec)
+                    if m_launch:
+                        # pull spec update
+                        if m_launch.state == 'COMPLETED' and m_launch.action.update_spec:
+                            new_wf.id_fw[root_id].spec.update(m_launch.action.update_spec)
+                        # pull spec mods
+                        if m_launch.state == 'COMPLETED' and m_launch.action.mod_spec:
+                            for mod in m_launch.action.mod_spec:
+                                apply_mod(mod, new_wf.id_fw[root_id].spec)
 
         for new_fw in new_wf.fws:
             updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))

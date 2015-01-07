@@ -297,7 +297,7 @@ class MongoTests(unittest.TestCase):
 
         self.assertEqual(self.lp.launches.count(), 1)
 
-    def test_add_wf(self):
+    def test_add_wf_to_fws(self):
         fw1 = Firework([UpdateSpecTask()])
         fw2 = Firework([ModSpecTask()])
         self.lp.add_wf(Workflow([fw1, fw2]))
@@ -324,6 +324,23 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)  # launch new FW
         new_fw = self.lp.get_fw_by_id(5)
         self.assertEqual(new_fw.spec['dummy2'], [True])
+
+        new_wf = Workflow([Firework([ModSpecTask()])])
+        self.assertRaises(ValueError, self.lp.add_wf_to_fws, new_wf, [4], detour=True)
+
+    def test_add_wf_to_fws_detour(self):
+        fw1 = Firework([ModSpecTask()], fw_id=1)
+        fw2 = Firework([ModSpecTask()], fw_id=2, parents=[fw1])
+        self.lp.add_wf(Workflow([fw1, fw2]))
+
+        new_wf = Workflow([Firework([ModSpecTask()])])
+        self.lp.add_wf_to_fws(new_wf, [1], detour=True)
+
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+
+        self.assertEqual(self.lp.get_fw_by_id(2).spec['dummy2'], [True, True])
+
 
     def test_force_lock_removal(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
