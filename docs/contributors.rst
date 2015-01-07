@@ -18,6 +18,8 @@ Morgan Hargrove wrote the "base site" web frontend as part of a summer project a
 
 Guido Petretto added useful features and helped detect and fix bugs.
 
+Miriam Brafman ported the web frontend to Flask and reworked the CSS.
+
 David Waroquiers wrote the SLURM queue adapter, helped write the FileTransferTask, and provided useful feedback.
 
 William Davidson Richards wrote the SGE queue adapter and provided useful feedback.

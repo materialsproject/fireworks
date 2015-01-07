@@ -1,10 +1,10 @@
-===========================
-Using the Web GUI *(alpha)*
-===========================
+=================
+Using the Web GUI
+=================
 
 .. note:: You must have Flask installed as an optional dependency (type ``pip install flask`` and then ``pip install flask-paginate``).
 
-An easy way to monitor FireWorks is to use its web interface (in *alpha* mode), which provides an overview of the state of your workflows and provides clickable links to see details on any Firework or Workflow:
+An easy way to monitor FireWorks is to use its web interface, which provides an overview of the state of your workflows and provides clickable links to see details on any Firework or Workflow:
 
 .. image:: _static/base_site.png
    :width: 600px

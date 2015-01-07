@@ -9,6 +9,7 @@ Subpackages
     fireworks.base_site
     fireworks.core
     fireworks.features
+    fireworks.flask_site
     fireworks.queue
     fireworks.scripts
     fireworks.tests
