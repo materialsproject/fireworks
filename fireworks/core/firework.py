@@ -1010,7 +1010,6 @@ class Workflow(FWSerializable):
                 max_score = Firework.STATE_RANKS[l.state]
                 m_launch = l
 
-        print m_launch, '**8'
         return m_launch
 
     @classmethod
