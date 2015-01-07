@@ -739,7 +739,6 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        fireworks.fw_config.EXCEPT_DETAILS_ON_RERUN = True
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -754,6 +753,8 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
             cls.lp.connection.drop_database(TESTDB_NAME)
 
     def setUp(self):
+        fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
+
         self.error_test_dict = {'error': 'description', 'error_code': 1}
         fw = Firework([ExecutionCounterTask(),
                        ScriptTask.from_str('date +"%s %N"', parameters={'stdout_file': 'date_file'}),
