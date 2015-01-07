@@ -78,3 +78,9 @@ footer .navbar .nav {
 .DEFUSED{
   background: #63B4E1;
 }
+
+.total{
+  color: #405063;
+  background: none;
+  font-weight: bold;
+}
