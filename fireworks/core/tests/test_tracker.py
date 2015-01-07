@@ -112,9 +112,9 @@ class TrackerTest(unittest.TestCase):
             self.lp.add_wf(fw)
 
             try:
-                print ("===========================================")
-                print ("Bad rocket launched. The failure below is OK")
-                print ("===========================================")
+                print("===========================================")
+                print("Bad rocket launched. The failure below is OK")
+                print("===========================================")
                 launch_rocket(self.lp, self.fworker)
             except:
                 pass

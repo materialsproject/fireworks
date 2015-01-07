@@ -850,6 +850,9 @@ class Workflow(FWSerializable):
                         for mod in m_launch.action.mod_spec:
                             apply_mod(mod, new_wf.id_fw[root_id].spec)
 
+        for new_fw in new_wf.fws:
+            updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))
+
         return updated_ids
 
     def refresh(self, fw_id, updated_ids=None):
@@ -858,7 +861,7 @@ class Workflow(FWSerializable):
 
         :param fw_id: (int) id of the Firework on which to perform the refresh
         :param updated_ids: ([int])
-        :return: ([int]) list of Firework ids that were updated
+        :return: (set(int)) list of Firework ids that were updated
         """
 
         updated_ids = updated_ids if updated_ids else set()  # these are the

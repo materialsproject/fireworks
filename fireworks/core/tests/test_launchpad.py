@@ -267,16 +267,16 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
     def test_defuse_wf_after_partial_run(self):
         # Run a firework before defusing Zeus
         launch_rocket(self.lp, self.fworker)
-        print ('----------\nafter launch rocket\n--------')
+        print('----------\nafter launch rocket\n--------')
 
 
         # defuse Workflow containing Zeus
-        print ('----------\nstaring defuse rocket\n--------')
+        print('----------\nstaring defuse rocket\n--------')
         self.lp.defuse_wf(self.zeus_fw_id)
-        print ('----------\nafter defuse rocket\n--------')
+        print('----------\nafter defuse rocket\n--------')
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})
-        print ('def ids', defused_ids)
-        print ('zeus id', self.zeus_fw_id)
+        print('def ids', defused_ids)
+        print('zeus id', self.zeus_fw_id)
         self.assertIn(self.zeus_fw_id,defused_ids)
 
         fws_no_run = set(self.lp.get_fw_ids({'state':'COMPLETED'}))

@@ -63,6 +63,19 @@ class MultipleDetourTask(FireTaskBase):
         dt3 = Firework(ScriptTask.from_str('echo "this is intermediate job 3"'))
         return FWAction(detours=[dt1, dt2, dt3])
 
+@explicit_serialize
+class UpdateSpecTask(FireTaskBase):
+    def run_task(self, fw_spec):
+        print('Running the Update Spec Task')
+        dt1 = Firework(ScriptTask.from_str('echo "this is dummy job 1"'))
+        return FWAction(update_spec={"dummy1": 1}, additions=[dt1])
+
+@explicit_serialize
+class ModSpecTask(FireTaskBase):
+    def run_task(self, fw_spec):
+        print('Running the Mod Spec Task')
+        return FWAction(mod_spec=[{"_push": {"dummy2": True}}])
+
 
 class MongoTests(unittest.TestCase):
 
@@ -79,7 +92,8 @@ class MongoTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            # cls.lp.connection.drop_database(TESTDB_NAME)
+            pass
 
     def _teardown(self, dests):
         for f in dests:
@@ -88,6 +102,14 @@ class MongoTests(unittest.TestCase):
 
     def setUp(self):
         self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        # self.lp.reset(password=None, require_password=False)
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
+            shutil.rmtree(i)
 
     def test_basic_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
@@ -276,6 +298,35 @@ class MongoTests(unittest.TestCase):
 
         self.assertEqual(self.lp.launches.count(), 1)
 
+    def test_add_wf(self):
+        fw1 = Firework([UpdateSpecTask()])
+        fw2 = Firework([ModSpecTask()])
+        self.lp.add_wf(Workflow([fw1, fw2]))
+        self.assertEqual(self.lp.fireworks.count(), 2)
+        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp, self.fworker)
+        self.assertEqual(self.lp.launches.count(), 2)
+        self.assertEqual(self.lp.fireworks.count(), 3)  # due to detour
+
+        new_wf = Workflow([Firework([ModSpecTask()])])
+        self.lp.add_wf_to_fws(new_wf, [1, 2])
+        launch_rocket(self.lp, self.fworker)  # launch detour
+        launch_rocket(self.lp, self.fworker)  # launch new FW
+        launch_rocket(self.lp, self.fworker)  # dummy launch
+        new_fw = self.lp.get_fw_by_id(4)
+        self.assertEqual(new_fw.spec['dummy1'], 1)
+        self.assertEqual(new_fw.spec['dummy2'], [True])
+
+        self.assertEqual(self.lp.launches.count(), 4)
+        self.assertEqual(self.lp.fireworks.count(), 4)
+
+        new_wf = Workflow([Firework([ModSpecTask()])])
+        self.lp.add_wf_to_fws(new_wf, [4])
+        launch_rocket(self.lp, self.fworker)  # launch new FW
+        new_fw = self.lp.get_fw_by_id(5)
+        self.assertEqual(new_fw.spec['dummy2'], [True])
+
+
     def test_force_lock_removal(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
@@ -325,18 +376,6 @@ class MongoTests(unittest.TestCase):
         workflow_results=s.get_workflow_summary(time_field="updated_on")
         self.assertEqual((workflow_results[0]["_id"], workflow_results[0]["count"]), ("COMPLETED", 3))
 
-    def tearDown(self):
-        self.lp.reset(password=None, require_password=False)
-        if os.path.exists(os.path.join('FW.json')):
-            os.remove('FW.json')
-        os.chdir(self.old_wd)
-        for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
-            shutil.rmtree(i)
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
 
 if __name__ == "__main__":
     unittest.main()
