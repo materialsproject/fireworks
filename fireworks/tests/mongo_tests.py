@@ -9,7 +9,8 @@ import shutil
 import glob
 import unittest
 import time
-from fireworks.core.firework import Firework, Workflow
+from fireworks import explicit_serialize, FWAction
+from fireworks.core.firework import Firework, Workflow, FireTaskBase
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -51,6 +52,17 @@ def random_launch(lp_creds):
 
 def throw_error(msg):
     raise ValueError(msg)
+
+@explicit_serialize
+class MultipleDetourTask(FireTaskBase):
+
+    def run_task(self, fw_spec):
+        print('Running the Multiple Detour Task')
+        dt1 = Firework(ScriptTask.from_str('echo "this is intermediate job 1"'))
+        dt2 = Firework(ScriptTask.from_str('echo "this is intermediate job 2"'))
+        dt3 = Firework(ScriptTask.from_str('echo "this is intermediate job 3"'))
+        return FWAction(detours=[dt1, dt2, dt3])
+
 
 class MongoTests(unittest.TestCase):
 
@@ -188,6 +200,18 @@ class MongoTests(unittest.TestCase):
 
         creds_array = [self.lp.to_dict()] * NCORES_PARALLEL_TEST
         p.map(random_launch, creds_array)
+
+    def test_multi_detour(self):
+        fw1 = Firework([MultipleDetourTask()], fw_id=1)
+        fw2 = Firework([ScriptTask.from_str('echo "DONE"')], parents=[fw1], fw_id=2)
+        self.lp.add_wf(Workflow([fw1, fw2]))
+        rapidfire(self.lp)
+        links = self.lp.get_wf_by_fw_id(1).links
+        self.assertEqual(set(links[1]), set([2, 3, 4, 5]))
+        self.assertEqual(set(links[2]), set([]))
+        self.assertEqual(set(links[3]), set([2]))
+        self.assertEqual(set(links[4]), set([2]))
+        self.assertEqual(set(links[5]), set([2]))
 
     def test_fworkerenv(self):
         t = DummyTask()

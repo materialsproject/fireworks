@@ -818,7 +818,7 @@ class Workflow(FWSerializable):
         leaf_ids = wf.leaf_fw_ids
 
         for new_fw in wf.fws:
-            if new_fw.fw_id > 0:
+            if new_fw.fw_id >= 0:  # note - this is also used later in the 'detour' code
                 raise ValueError(
                     'FireWorks to add must use a negative fw_id! Got fw_id: '
                     '{}'.format(
@@ -828,8 +828,7 @@ class Workflow(FWSerializable):
 
             if new_fw.fw_id in leaf_ids:
                 if detour:
-                    self.links[new_fw.fw_id] = list(
-                        self.links[fw_id])  # add children of current FW to new FW
+                    self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
                 else:
                     self.links[new_fw.fw_id] = []
             else:

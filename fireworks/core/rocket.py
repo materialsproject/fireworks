@@ -168,12 +168,17 @@ class Rocket():
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
                 starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
                 recover_launch_dir = launch_to_recover.launch_dir
-                if m_fw.spec['_recover_launch']['_recover_mode'] == 'cp' and launch_dir != recover_launch_dir:
-                    distutils.dir_util.copy_tree(recover_launch_dir, launch_dir, update=1)
                 if lp:
                     lp.log_message(
                         logging.INFO,
                         'Recovering from task number {} in folder {}.'.format(starting_task, recover_launch_dir))
+                if m_fw.spec['_recover_launch']['_recover_mode'] == 'cp' and launch_dir != recover_launch_dir:
+                    if lp:
+                        lp.log_message(
+                            logging.INFO,
+                            'Copying data from recovery folder {} to folder {}.'.format(recover_launch_dir, launch_dir))
+                    distutils.dir_util.copy_tree(recover_launch_dir, launch_dir, update=1)
+
             else:
                 starting_task = 0
 

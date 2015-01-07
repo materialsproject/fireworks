@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v0.97**
+
+* Fix bug in adding multiple detours
+* Task-level reruns (G. Petretto)
+* Better Fworker default restrictions (G. Petretto)
+* Make _launch_dir if doesn't exist (G. Petretto)
+* Bug fixes (G. Petretto)
+
 **v0.96**
 
 * Address some installation issues (thanks to kpoman)

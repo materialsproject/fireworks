@@ -32,3 +32,12 @@ Example: Rerunning all FIZZLED FireWorks
 A common use case is to rerun all FIZZLED fireworks. You can do this via::
 
     lpad rerun_fws -s FIZZLED
+
+Task-level reruns
+=================
+
+A Firework might fail while running one of its intermediate or final FireTasks. In that case, sometimes it is desirable not to rerun the entire FireWork, but rather just the tasks that failed. In case of *clean* failures, FireWorks stores data about what step failed inside the database. This data can later be used to restart at the task level. The ``--task-level`` option to the ``rerun_fws`` command allows this type of recovery. For example::
+
+    lpad rerun_fws -s FIZZLED  --task-level
+
+Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via ``--copy-data`` or attempt to rerun in the same directory (``--previous-dir``). Refer to the documentation (``lpad rerun_fws -h``) for more information.

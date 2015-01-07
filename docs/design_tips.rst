@@ -41,8 +41,8 @@ In general, using fewer FireWorks is simpler to implement, but less powerful. We
 | all jobs executed on the same directory, | jobs executed in different directories,  |
 | on the same machine                      | perhaps on different machines (custom)   |
 +------------------------------------------+------------------------------------------+
-| cannot rerun individual task (e.g. on    | can rerun individual FW; each Firework   |
-| failure); must rerun all tasks in FW     | acts as a "checkpoint"                   |
+| rerunning failed tasks is possible       | can rerun individual FW; each Firework   |
+| but one must be a little more careful    | acts as a natural "checkpoint"           |
 +------------------------------------------+------------------------------------------+
 | all tasks receive the same spec. Cannot  | each FW can have its own spec; dynamic   |
 | modify spec between tasks                | changes can be passed between FW through |
