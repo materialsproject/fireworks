@@ -8,15 +8,11 @@ install:
 before_script:
   - python setup.py develop
 script:
-  - nosetests
+  - nosetests --nocapture
   - source fireworks/tests/cmd_line_test.sh
 notifications:
   email:
     recipients:
-      - ajain@lbl.gov
-      - dkgunter@lbl.gov
-      - ongsp@ucsd.edu
-      - xqu@lbl.gov
-      - mbkumar@gmail.com
+      - g.petretto@gmail.com
     on_success: change
     on_failure: always
