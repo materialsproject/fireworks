@@ -92,8 +92,7 @@ class MongoTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            # cls.lp.connection.drop_database(TESTDB_NAME)
-            pass
+            cls.lp.connection.drop_database(TESTDB_NAME)
 
     def _teardown(self, dests):
         for f in dests:
