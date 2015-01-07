@@ -765,7 +765,7 @@ class Workflow(FWSerializable):
         # this should be done *before* additions
         if action.detours:
             for wf in action.detours:
-                new_updates = self.add_wf_to_fw(wf, fw_id, pull_spec_mods=False, detour=True)
+                new_updates = self.add_wf_to_fws(wf, [fw_id], pull_spec_mods=False, detour=True)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
                     raise ValueError(
                         "Cannot use duplicated fw_ids when dynamically detouring workflows!")
@@ -774,7 +774,7 @@ class Workflow(FWSerializable):
         # add additional FireWorks
         if action.additions:
             for wf in action.additions:
-                new_updates = self.add_wf_to_fw(wf, fw_id, pull_spec_mods=False, detour=False)
+                new_updates = self.add_wf_to_fws(wf, [fw_id], pull_spec_mods=False, detour=False)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
                     raise ValueError(
                         "Cannot use duplicated fw_ids when dynamically adding workflows!")
@@ -802,12 +802,12 @@ class Workflow(FWSerializable):
         # refresh the WF to get the states updated
         return self.refresh(fw_id, updated_ids)
 
-    def add_wf_to_fw(self, new_wf, fw_id, pull_spec_mods=True, detour=False):
+    def add_wf_to_fws(self, new_wf, fw_ids, pull_spec_mods=True, detour=False):
         """
         Internal method to add a workflow as a child to a Firework
 
         :param new_wf: (Workflow) New Workflow to add
-        :param fw_id: (int) id of the Firework on which to add the Workflow
+        :param fw_ids: ([int]) ids of the parent Fireworks on which to add the Workflow
         :param pull_spec_mods: (bool) pull spec mods of COMPLETED parents
         :param detour: (bool) add children of the current Firework to the Workflow's leaves
         :return: ([int]) list of Firework ids that were updated or new
@@ -826,17 +826,29 @@ class Workflow(FWSerializable):
 
             self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
 
-            if new_fw.fw_id in leaf_ids:
-                if detour:
-                    self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
+            for fw_id in fw_ids:
+                if new_fw.fw_id in leaf_ids:
+                    if detour:
+                        self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
+                    else:
+                        self.links[new_fw.fw_id] = []
                 else:
-                    self.links[new_fw.fw_id] = []
-            else:
-                self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
-            updated_ids.append(new_fw.fw_id)
+                    self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
+                updated_ids.append(new_fw.fw_id)
 
-        for root_id in root_ids:
-            self.links[fw_id].append(root_id)  # add the root id as my child
+        for fw_id in fw_ids:
+            for root_id in root_ids:
+                self.links[fw_id].append(root_id)  # add the root id as my child
+                if pull_spec_mods:  # re-apply some actions of the parent
+                    m_fw = self.id_fw[fw_id]  # get the parent FW
+                    m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
+                    # pull spec update
+                    if m_launch.state == 'COMPLETED' and m_launch.action.update_spec:
+                        new_wf.id_fw[root_id].spec.update(m_launch.action.update_spec)
+                    # pull spec mods
+                    if m_launch.state == 'COMPLETED' and m_launch.action.mod_spec:
+                        for mod in m_launch.action.mod_spec:
+                            apply_mod(mod, new_wf.id_fw[root_id].spec)
 
         return updated_ids
 
@@ -1004,7 +1016,7 @@ class Workflow(FWSerializable):
         max_score = Firework.STATE_RANKS['ARCHIVED']  # state rank must be greater than this
         m_launch = None
 
-        # TODO: if muliple COMPLETED laucnhes, pick the first launch in terms of end date
+        # TODO: if muliple COMPLETED launches, pick the first launch in terms of end date
         for l in fw.launches:
             if Firework.STATE_RANKS[l.state] > max_score:
                 max_score = Firework.STATE_RANKS[l.state]
