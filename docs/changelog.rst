@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v0.98**
+
+.. caution:: Users of the frontend will need to install Flask, ``pip install flask; pip install flask-paginate``. Django is no longer required for the frontend.
+
+* Ability to add FireWorks to existing workflow (launchpad.add_wf_to_fwids)
+* Better unit tests for task-level reruns (G. Petretto)
+* Redesigned web site using Flask (M. Brafman)
+
 **v0.97**
 
 * Fix bug in adding multiple detours

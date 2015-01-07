@@ -16,7 +16,7 @@ Michael Kocher and Dan Gunter initiated the architecture of a central MongoDB da
 
 Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL.
 
-Guido Petretto added useful features and helped detect and fix bugs.
+Guido Petretto added useful features, including task-level reruns, and helped detect and fix bugs.
 
 Miriam Brafman ported the web frontend to Flask and reworked the CSS.
 
