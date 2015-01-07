@@ -8,7 +8,6 @@ A runnable script for managing a FireWorks database (a command-line interface to
 
 from argparse import ArgumentParser
 import os
-import webbrowser
 import time
 import ast
 import json
@@ -410,19 +409,16 @@ def set_priority(args):
 
 
 def webgui(args):
-    lp = get_lp(args)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
-    os.environ["FWDB_CONFIG"] = json.dumps(lp.to_dict())
-    from django.core.management import call_command
+    os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
+    from fireworks.flask_site.app import app
     from multiprocessing import Process
-    p1 = Process(target=call_command,
-                 args=("runserver",  "{}:{}".format(args.host, args.port)))
+    p1 = Process(target=app.run, args=())
     p1.start()
     if not args.server_mode:
+        import webbrowser
         time.sleep(2)
         webbrowser.open("http://{}:{}".format(args.host, args.port))
     p1.join()
-
 
 def add_scripts(args):
     lp = get_lp(args)
@@ -796,9 +792,8 @@ def lpad():
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
     webgui_parser = subparsers.add_parser('webgui', help='launch the web GUI')
-    webgui_parser.add_argument("--port", dest="port", type=int, default=8000,
-                        help="Port to run the server on (default: 8000)")
-
+    webgui_parser.add_argument("--port", dest="port", type=int, default=5000,
+                        help="Port to run the server on (default: 5000)")
     webgui_parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
                         help="Host to run the server on (default: 127.0.0.1)")
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')

@@ -3,15 +3,14 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from pymongo import DESCENDING
 import os, json
 from fireworks.core.launchpad import LaunchPad
-DEFAULT_LPAD_YAML = "my_launchpad.yaml"
-from helpers import get_lp, get_totals
+from helpers import get_totals
 from flask.ext.paginate import Pagination
 
 app = Flask(__name__)
 app.debug = True
 app.use_reloader=True
-
-lp = LaunchPad.from_dict(get_lp())
+hello = __name__
+lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 PER_PAGE = 20
 STATES = "archived defused waiting ready reserved fizzled running completed".upper().split(" ")
 
@@ -68,8 +67,8 @@ def home():
 def show_fw(fw_id):
     try:
         int(fw_id)
-    except ValueError:
-        raise Http404()
+    except:
+        raise ValueError("Invalid fw_id: {}".format(fw_id))
     fw = lp.get_fw_by_id(fw_id)
     fw = fw.to_dict()
     if 'archived_launches' in fw:
@@ -83,7 +82,7 @@ def show_workflow(wf_id):
     try:
         int(wf_id)
     except ValueError:
-        raise Http404()
+        raise ValueError("Invalid fw_id: {}".format(wf_id))
     wf = lp.get_wf_by_fw_id(wf_id)
     wf_dict = wf.to_display_dict()
     del wf_dict['name']
