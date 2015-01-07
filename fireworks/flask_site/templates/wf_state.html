@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import 'state.html' as state_tmpl with context %}
 
 {% block title %}{{ state }} Fireworks Index{% endblock %}
 
@@ -11,7 +10,11 @@
     <ul class="inline">
         {% for s, stats in all_states %}
         <li>
-            <a href="/wf/{{s}}">{{ state_tmpl.state(stats) }}</a>
+            <a href="/wf/{{s}}">
+                <span class="label {{s}}">
+                    {{ stats }}
+                </span>
+            </a>
         </li>
         {% endfor %}
     </ul>
@@ -23,14 +26,12 @@
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>State</th>
         <th>Created On</th>
     </tr>
     {% for row in rows %}
         <tr>
             <td><center><a href="/wf/{{ row.fw_id }}">{{ row.fw_id }}</a></center></td>
             <td>{{ row.name }}</td>
-            <td>{{ state_tmpl.state(row.state) }}</td>
             <td>{{ row.created_on }}</td>
         </tr>
     {% endfor %}

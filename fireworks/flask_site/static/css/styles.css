@@ -13,6 +13,10 @@ footer .navbar .nav {
 	margin-top: 30px;
 }
 
+.pull-down-sm {
+  margin-top: 10px;
+}
+
 .pull-up { margin-bottom: 30px;}
 
 .fw-link {
@@ -28,4 +32,49 @@ footer .navbar .nav {
 .label {
   font-size: 11px;
   letter-spacing: .08em;
+  color: #fff;
+}
+
+.fw-link{
+  color: white;
+  padding:2px 5px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 0px #aaa;
+}
+
+.fw-link:hover{
+  color:white;
+  opacity: .7;
+}
+
+.READY{
+  background: #EEBB00;
+}
+
+.WAITING{
+  background: #E6E8EB;
+  color: slategray;
+}
+
+.FIZZLED{
+  background: #BB0013;
+}
+
+.RUNNING, .COMPLETED{
+  background: #24C75A;
+}
+
+.RUNNING{
+  background:#3EA003;
+}
+.RESERVED{
+  background: #60BB19;
+}
+
+.ARCHIVED{
+  background: #43A5BB;
+}
+
+.DEFUSED{
+  background: #63B4E1;
 }
