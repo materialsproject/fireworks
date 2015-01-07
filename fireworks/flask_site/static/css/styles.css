@@ -47,6 +47,11 @@ footer .navbar .nav {
   opacity: .7;
 }
 
+.fw-link.WAITING:hover{
+  color:#1BB38D;
+  opacity: .7;
+}
+
 .READY{
   background: #EEBB00;
 }
@@ -56,11 +61,12 @@ footer .navbar .nav {
   color: slategray;
 }
 
+
 .FIZZLED{
   background: #BB0013;
 }
 
-.RUNNING, .COMPLETED{
+.COMPLETED{
   background: #24C75A;
 }
 
