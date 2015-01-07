@@ -114,7 +114,7 @@ Run all Workflows
 Launch the web GUI
 ==================
 
-#. If you have a web browser and installed Django (``pip install django``), you can launch the web browser to see your results::
+#. If you have a web browser and installed Flask (``pip install flask; pip install flask-paginate``), you can launch the web browser to see your results::
 
     lpad webgui
 
