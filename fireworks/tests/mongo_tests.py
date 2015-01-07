@@ -325,7 +325,6 @@ class MongoTests(unittest.TestCase):
         new_fw = self.lp.get_fw_by_id(5)
         self.assertEqual(new_fw.spec['dummy2'], [True])
 
-
     def test_force_lock_removal(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
