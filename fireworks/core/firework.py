@@ -765,7 +765,7 @@ class Workflow(FWSerializable):
         # this should be done *before* additions
         if action.detours:
             for wf in action.detours:
-                new_updates = self._add_wf_to_fw(wf, fw_id, True)
+                new_updates = self.add_wf_to_fw(wf, fw_id, pull_spec_mods=False, detour=True)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
                     raise ValueError(
                         "Cannot use duplicated fw_ids when dynamically detouring workflows!")
@@ -774,7 +774,7 @@ class Workflow(FWSerializable):
         # add additional FireWorks
         if action.additions:
             for wf in action.additions:
-                new_updates = self._add_wf_to_fw(wf, fw_id, False)
+                new_updates = self.add_wf_to_fw(wf, fw_id, pull_spec_mods=False, detour=False)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
                     raise ValueError(
                         "Cannot use duplicated fw_ids when dynamically adding workflows!")
@@ -802,22 +802,22 @@ class Workflow(FWSerializable):
         # refresh the WF to get the states updated
         return self.refresh(fw_id, updated_ids)
 
-    def _add_wf_to_fw(self, wf, fw_id, detour):
+    def add_wf_to_fw(self, new_wf, fw_id, pull_spec_mods=True, detour=False):
         """
         Internal method to add a workflow as a child to a Firework
 
-        :param wf: New Workflow to add
-        :param fw_id: id of the Firework on which to add the Workflow
-        :param detour: whether to add the children of the current Firework to
-         the Workflow's leaves
+        :param new_wf: (Workflow) New Workflow to add
+        :param fw_id: (int) id of the Firework on which to add the Workflow
+        :param pull_spec_mods: (bool) pull spec mods of COMPLETED parents
+        :param detour: (bool) add children of the current Firework to the Workflow's leaves
         :return: ([int]) list of Firework ids that were updated or new
         """
         updated_ids = []
 
-        root_ids = wf.root_fw_ids
-        leaf_ids = wf.leaf_fw_ids
+        root_ids = new_wf.root_fw_ids
+        leaf_ids = new_wf.leaf_fw_ids
 
-        for new_fw in wf.fws:
+        for new_fw in new_wf.fws:
             if new_fw.fw_id >= 0:  # note - this is also used later in the 'detour' code
                 raise ValueError(
                     'FireWorks to add must use a negative fw_id! Got fw_id: '
@@ -832,7 +832,7 @@ class Workflow(FWSerializable):
                 else:
                     self.links[new_fw.fw_id] = []
             else:
-                self.links[new_fw.fw_id] = wf.links[new_fw.fw_id]
+                self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
             updated_ids.append(new_fw.fw_id)
 
         for root_id in root_ids:
@@ -876,21 +876,11 @@ class Workflow(FWSerializable):
         else:
             # my state depends on launch whose state has the highest 'score'
             # in STATE_RANKS
-            m_state = 'READY' if len(list(fw.launches)) == 0 else 'FIZZLED'
-            max_score = Firework.STATE_RANKS[m_state]
-            m_action = None
+            m_launch = self._get_representative_launch(fw)
+            m_state = m_launch.state if m_launch else 'READY'
+            m_action = m_launch.action if (m_launch and m_launch.state == "COMPLETED") else None
 
-            # TODO: pick the first launch in terms of end date that matches
-            # 'COMPLETED'; multiple might exist
-            for l in fw.launches:
-                if Firework.STATE_RANKS[l.state] > max_score:
-                    max_score = Firework.STATE_RANKS[l.state]
-                    m_state = l.state
-                    if m_state == 'COMPLETED':
-                        m_action = l.action
-
-            # This part is confusing and rare - report any FIZZLED parents if allow_fizzed
-            # allows us to handle FIZZLED jobs
+            # report any FIZZLED parents if allow_fizzed allows us to handle FIZZLED jobs
             if fw.spec.get('_allow_fizzled_parents'):
                 parent_fws = [self.id_fw[p].to_dict() for p in
                               self.links.parent_links.get(fw_id, []) if
@@ -1009,6 +999,19 @@ class Workflow(FWSerializable):
 
     def _str_fw(self, fw_id):
         return self.id_fw[int(fw_id)].name + '--' + str(fw_id)
+
+    def _get_representative_launch(self, fw):
+        max_score = Firework.STATE_RANKS['ARCHIVED']  # state rank must be greater than this
+        m_launch = None
+
+        # TODO: if muliple COMPLETED laucnhes, pick the first launch in terms of end date
+        for l in fw.launches:
+            if Firework.STATE_RANKS[l.state] > max_score:
+                max_score = Firework.STATE_RANKS[l.state]
+                m_launch = l
+
+        print m_launch, '**8'
+        return m_launch
 
     @classmethod
     def from_dict(cls, m_dict):
