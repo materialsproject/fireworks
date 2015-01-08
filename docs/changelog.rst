@@ -42,7 +42,7 @@ FireWorks Changelog
 
 * Fix bug in performance improvement cached state + unit tests (B. Medasani)
 * minor bug fixes, installation changes
-
+lpad
 **v0.92**
 
 .. caution:: This version has a minor bug affecting defusing of FWs and cached states for performance, fixed in v0.94
