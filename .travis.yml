@@ -13,6 +13,10 @@ script:
 notifications:
   email:
     recipients:
+      - ajain@lbl.gov
+      - dkgunter@lbl.gov
+      - ongsp@ucsd.edu
+      - xqu@lbl.gov
       - g.petretto@gmail.com
     on_success: change
     on_failure: always
