@@ -428,7 +428,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f = self.lp.detect_lostruns(0.5, max_runtime=5, min_runtime=0)
+        l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
         self.assertEqual((l, f), ([1], [1]))
         time.sleep(4)   # Wait double the expected exec time and test
         l, f = self.lp.detect_lostruns(2)
