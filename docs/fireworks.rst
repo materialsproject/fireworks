@@ -26,14 +26,6 @@ fireworks.fw_config module
     :undoc-members:
     :show-inheritance:
 
-fireworks.manage module
------------------------
-
-.. automodule:: fireworks.manage
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------
