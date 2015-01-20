@@ -2,13 +2,13 @@
 FireWorks Changelog
 ===================
 
-**v1.02**
+**v1.03**
 
-.. note:: v1.00-v1.01 are skipped due to problems in pip installation
+.. note:: v1.00-v1.02 are skipped due to problems in pip installation
 
 * fix non-default host/port on Flask site
 * remove base site (old frontend)
-* address installation issues (MANIFEST.in)
+* address installation issues (MANIFEST.in, package_data)
 
 **v0.99**
 
