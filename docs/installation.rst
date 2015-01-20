@@ -49,6 +49,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
     pip install networkx  # (only needed if you want to use the workflow plotter!)
 
    .. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
+   .. note:: If installation fails with a message like "error: can't copy 'XXXXX': doesn't exist or not a regular file", try updating pip via ``pip install --upgrade pip``.
 
 #. Separately, you can download the Firework tutorial files if you plan on going through the tutorials. You can download these from the `FireWorks Github page <https://github.com/materialsproject/fireworks>`_. All you need is the ``fw_tutorial`` directory, but it might be easiest to download the entire source and just copy the ``fw_tutorial`` directory somewhere else.
 
