@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    fireworks.base_site
     fireworks.core
     fireworks.features
     fireworks.flask_site

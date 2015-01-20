@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.00**
+
+* fix non-default host/port on Flask site
+* remove base site (old frontend)
+* address installation issues (MANIFEST.in)
+
 **v0.99**
 
 .. note:: v0.98 is skipped, as it has a faulty dependency.
