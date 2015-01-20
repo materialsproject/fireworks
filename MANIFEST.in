@@ -9,5 +9,3 @@ recursive-include fw_tutorials *
 recursive-exclude fw_tutorials *.pyc
 recursive-include scripts *
 recursive-exclude scripts *.pyc
-recursive-include fireworks/flask_site *
-recursive-exclude fireworks/flask_site *.pyc
