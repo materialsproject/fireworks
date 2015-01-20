@@ -11,3 +11,5 @@ recursive-include scripts *
 recursive-exclude scripts *.pyc
 recursive-include base_site *
 recursive-exclude base_site *.pyc
+recursive-include flask_site *
+recursive-include flask_site *.pyc
