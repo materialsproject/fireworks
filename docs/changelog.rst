@@ -2,7 +2,9 @@
 FireWorks Changelog
 ===================
 
-**v1.00**
+**v1.01**
+
+.. note:: v1.00 is skipped, it has a problem in pip installation
 
 * fix non-default host/port on Flask site
 * remove base site (old frontend)
