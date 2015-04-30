@@ -1,0 +1,14 @@
+[run]
+branch = True
+erase = True
+source = fireworks, fw_tutorials
+[report]
+exclude_lines =
+    # Ignore coverage of code that requires the module to be executed.
+    if __name__ == .__main__.:
+omit =
+    */python?.?/*
+    */site-packages/*
+    *tests/*
+    */versioneer.py
+    */_version.py
