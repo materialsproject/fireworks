@@ -102,8 +102,8 @@ Template files are not restricted to simple variable substitutions with curly br
 #. Let's run this Firework and examine what happens::
 
     lpad reset
-	lpad add fw_advanced.yaml
-	rlaunch --silencer singleshot
+    lpad add fw_advanced.yaml
+    rlaunch --silencer singleshot
 
 #. You'll notice that we've iterated over our loop, and the optional parameter is indeed written to ``inputs_advanced.txt``.
 
