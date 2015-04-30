@@ -5,11 +5,15 @@ python:
   - "3.3"
 install:
   - "pip install -r requirements.txt --use-mirrors"
+  - pip install coverage
+  - pip install python-coveralls
 before_script:
   - python setup.py develop
 script:
-  - nosetests --nocapture
+  - nosetests --nocapture --with-coverage
   - source fireworks/tests/cmd_line_test.sh
+after_success:
+  - coveralls
 notifications:
   email:
     recipients:
