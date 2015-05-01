@@ -132,7 +132,7 @@ class ScriptTask(FireTaskBase):
 class PyTask(FireTaskBase):
     _fw_name = 'PyTask'
 
-    """
+    __doc__ = """
     Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system.
 
