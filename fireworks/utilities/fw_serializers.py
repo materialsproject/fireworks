@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-"""
+__doc__ = """
 This module aids in serializing and deserializing objects.
 
 To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize an object,
