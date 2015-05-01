@@ -28,6 +28,7 @@ Some advantages:
 A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder,
 when the serialize_fw() decorator is used.
 """
+
 import traceback
 import pkgutil
 import inspect
