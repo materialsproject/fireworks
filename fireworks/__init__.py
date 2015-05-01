@@ -11,7 +11,8 @@ from fireworks.core.firework import FireTaskBase, Firework, Launch, Workflow, \
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_utilities import explicit_serialize
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask, \
+    PyWrappedTask
 from fireworks.user_objects.firetasks.fileio_tasks import FileDeleteTask, FileTransferTask, \
     FileWriteTask, ArchiveDirTask, CompressDirTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
