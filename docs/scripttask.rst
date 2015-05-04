@@ -25,7 +25,7 @@ The ScriptTask can take in many parameters. We already examined the ``script`` p
 * ``stdin_file`` - *(default:None)* - feed this filepath as standard input to the script
 * ``stdin_key`` - *(default:None)* - feed this String as standard input to the script
 * ``store_stdout`` *(default:False)* - store the entire standard output in the Firework Launch object's *stored_data*
-* `stdout_file`` - *(default:None)* - store the entire standard output in this filepath. If None, the standard out will be streamed to *sys.stdout*
+* ``stdout_file`` - *(default:None)* - store the entire standard output in this filepath. If None, the standard out will be streamed to *sys.stdout*
 * ``store_stderr`` - *(default:False)* - store the entire standard error in the Firework Launch object's *stored_data*
 * ``stderr_file`` - *(default:None)* - store the entire standard error in this filepath. If None, the standard error will be streamed to  *sys.stderr*
 
