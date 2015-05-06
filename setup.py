@@ -16,7 +16,7 @@ module_dir = os.path.dirname(os.path.abspath(__file__))
 if __name__ == "__main__":
     setup(
         name='FireWorks',
-        version='0.95',
+        version='1.04',
         description='FireWorks workflow software',
         long_description=open(os.path.join(module_dir, 'README.rst')).read(),
         url='https://github.com/materialsproject/fireworks',
@@ -24,13 +24,13 @@ if __name__ == "__main__":
         author_email='anubhavster@gmail.com',
         license='modified BSD',
         packages=find_packages(),
-        package_data={'fireworks':['user_objects/queue_adapters/*.txt', 'user_objects/firetasks/templates/*', 'base_site/static/*', 'base_site/templates/*']},
+        package_data={'fireworks.user_objects.queue_adapters': ['*.txt'], 'fireworks.user_objects.firetasks': ['templates/*.txt'], 'fireworks.flask_site': ['static/images/*', 'static/css/*', 'templates/*']},
         zip_safe=False,
-        install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'Jinja2>=2.7.1',
+        install_requires=['pyyaml>=3.1.0', 'pymongo>=2.4.2', 'Jinja2>=2.7.3',
                           'six>=1.5.2', 'monty>=0.5.6', 'python-dateutil>=2.2'],
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
-                        'webgui':['django>=1.6'],
+                        'webgui':['flask>=0.10.1', 'flask-paginate>=0.2.8'],
                         'daemon_mode':['fabric>=1.8.1'],
                         'plotting':['matplotlib>=1.1.1', 'networkx>=1.8.1']},
         classifiers=['Programming Language :: Python :: 2.7',
@@ -43,6 +43,6 @@ if __name__ == "__main__":
                      'Topic :: Scientific/Engineering'],
         test_suite='nose.collector',
         tests_require=['nose'],
-        scripts=[os.path.join(module_dir, 'scripts', f) for f in
+        scripts=[os.path.join('scripts', f) for f in
                  os.listdir(os.path.join(module_dir, 'scripts'))]
     )

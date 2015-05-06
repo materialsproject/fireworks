@@ -19,7 +19,7 @@ Built-in FireTasks
 Misc.
 =====
 
-* Address self-locking in WFLock (trying to obtain a lock from myself)
+* Make it easy to pass directories between jobs, e.g. "_pass_dir: True" in spec.
 
 * Tools for unreserving a FW
 

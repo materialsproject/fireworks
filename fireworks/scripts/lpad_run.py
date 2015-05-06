@@ -8,7 +8,6 @@ A runnable script for managing a FireWorks database (a command-line interface to
 
 from argparse import ArgumentParser
 import os
-import webbrowser
 import time
 import ast
 import json
@@ -365,9 +364,19 @@ def reignite_fws(args):
 def rerun_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
-    for f in fw_ids:
-        lp.rerun_fw(int(f))
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    if args.task_level:
+        launch_ids = args.launch_id
+        if launch_ids is None:
+            launch_ids = [None]*len(fw_ids)
+        elif len(launch_ids) != len(fw_ids):
+            raise ValueError("Specify the same number of tasks and launches")
+        for f, l in zip(fw_ids, launch_ids):
+            lp.rerun_fws_task_level(int(f), launch_id=l, recover_mode=args.recover_mode)
+            lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    else:
+        for f in fw_ids:
+            lp.rerun_fw(int(f))
+            lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
 
@@ -400,19 +409,16 @@ def set_priority(args):
 
 
 def webgui(args):
-    lp = get_lp(args)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fireworks.base_site.settings")
-    os.environ["FWDB_CONFIG"] = json.dumps(lp.to_dict())
-    from django.core.management import call_command
+    os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
+    from fireworks.flask_site.app import app
     from multiprocessing import Process
-    p1 = Process(target=call_command,
-                 args=("runserver",  "{}:{}".format(args.host, args.port)))
+    p1 = Process(target=app.run, kwargs={"host": args.host, "port": args.port})
     p1.start()
     if not args.server_mode:
+        import webbrowser
         time.sleep(2)
         webbrowser.open("http://{}:{}".format(args.host, args.port))
     p1.join()
-
 
 def add_scripts(args):
     lp = get_lp(args)
@@ -643,6 +649,14 @@ def lpad():
     rerun_fws_parser.add_argument(*state_args, **state_kwargs)
     rerun_fws_parser.add_argument(*query_args, **query_kwargs)
     rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
+    rerun_fws_parser.add_argument('--task-level', action='store_true', help='Enable task level recovery')
+    rerun_fws_parser.add_argument('-lid', '--launch_id', nargs='+',
+                                  help='Recover launch id. --task-level must be given', default=None, type=int)
+    recover_mode_group = rerun_fws_parser.add_mutually_exclusive_group()
+    recover_mode_group.add_argument('-cp', '--copy-data', action='store_const', const='cp', dest='recover_mode',
+                                    help='Copy data from previous run. --task-level must be given')
+    recover_mode_group.add_argument('-pd', '--previous-dir', action='store_const', const='prev_dir', dest='recover_mode',
+                                    help='Reruns in the previous folder. --task-level must be given')
     rerun_fws_parser.set_defaults(func=rerun_fws)
 
     defuse_fw_parser = subparsers.add_parser('defuse_fws', help='cancel (de-fuse) a single Firework')
@@ -671,6 +685,7 @@ def lpad():
                                    help='Doc update (enclose pymongo-style dict '
                                         'in single-quotes, e.g. \'{'
                                         '"_tasks.1.hello": "world"}\')')
+    update_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     update_fws_parser.set_defaults(func=update_fws)
 
     get_wf_parser = subparsers.add_parser(
@@ -777,9 +792,8 @@ def lpad():
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
     webgui_parser = subparsers.add_parser('webgui', help='launch the web GUI')
-    webgui_parser.add_argument("--port", dest="port", type=int, default=8000,
-                        help="Port to run the server on (default: 8000)")
-
+    webgui_parser.add_argument("--port", dest="port", type=int, default=5000,
+                        help="Port to run the server on (default: 5000)")
     webgui_parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
                         help="Host to run the server on (default: 127.0.0.1)")
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')

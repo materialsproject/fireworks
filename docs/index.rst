@@ -223,8 +223,8 @@ A paper for FireWorks is in preparation. In the meantime, you can cite FireWorks
 
 FireWorks workflow software, http://pythonhosted.org/FireWorks.
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.12274.png
-        :target: http://dx.doi.org/10.5281/zenodo.12274
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.14096.png
+        :target: http://dx.doi.org/10.5281/zenodo.14096
 
 ====================================
 Contributing / Contact / Bug Reports
@@ -237,11 +237,7 @@ Want to see something added or changed? There are many ways to make that a reali
 * Point us to areas of the code that are difficult to understand or use.
 * Contribute code! If you are interested in this option, please see our :doc:`contribution guidelines</contributing>`.
 
-The collaborative way to submit questions, issues / bug reports, and all other communication is through the `FireWorks Github page <https://github.com/materialsproject/fireworks/issues>`_. You can also contact: |Mail|
-
-.. |Mail| image:: _static/mail.png
-   :alt: developer contact
-   :align: bottom
+Please submit questions, issues / bug reports, and all other communication through the `FireWorks Google Groups <https://groups.google.com/forum/#!forum/fireworkflows>`_.
 
 The list of contributors to FireWorks can be found :doc:`here </contributors>`.
 

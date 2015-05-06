@@ -13,7 +13,7 @@ To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mo
 
 To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one. If you are using Mongolab, here are a few notes:
 
-    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started
+    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
     * Mongolab will ask you to create a database; any name is fine, but make sure you write down what it is.
     * After creating a database, note that you'll need to create at least one admin user in order to access the database.
     * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
@@ -40,7 +40,8 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 #. To install, simply type::
 
     pip install FireWorks
-    pip install django  # (only needed if you want to use the built-in web frontend!)
+    pip install flask  # (only needed if you want to use the built-in web frontend!)
+    pip install flask-paginate  # (only needed if you want to use the built-in web frontend!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
@@ -48,6 +49,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
     pip install networkx  # (only needed if you want to use the workflow plotter!)
 
    .. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
+   .. note:: If installation fails with a message like "error: can't copy 'XXXXX': doesn't exist or not a regular file", try updating pip via ``pip install --upgrade pip``.
 
 #. Separately, you can download the Firework tutorial files if you plan on going through the tutorials. You can download these from the `FireWorks Github page <https://github.com/materialsproject/fireworks>`_. All you need is the ``fw_tutorial`` directory, but it might be easiest to download the entire source and just copy the ``fw_tutorial`` directory somewhere else.
 
@@ -74,14 +76,13 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
 
 #. Install optional dependencies using pip with the following commands (with administrator privileges)::
 
-    pip install django  # (only needed if you want to use the built-in web frontend!)
+    pip install flask  # (only needed if you want to use the built-in web frontend!)
+    pip install flask-paginate  # (only needed if you want to use the built-in web frontend!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
     pip install matplotlib  # (only needed if you want to use the workflow plotter!)
     pip install networkx  # (only needed if you want to use the workflow plotter!)
-
-.. tip:: If you have an old version of these libraries installed, you might need to run ``pip install --upgrade <PACKAGE>``. In particular, ensure that Django is greater than v1.5.
     
 Run unit tests
 --------------
@@ -97,7 +98,7 @@ Testing connection to a remote server
 -------------------------------------
 We've set up a test database to see if you can connect to it.
 
-1. Create a file called ``my_launchpad_read.yaml`` and put the following contents inside::
+1. Create a file called ``my_launchpad_testing.yaml`` and put the following contents inside::
 
     host: ds049170.mongolab.com
     port: 49170
@@ -107,7 +108,7 @@ We've set up a test database to see if you can connect to it.
 
 2. Execute the command::
 
-    lpad -l my_launchpad_read.yaml get_wflows
+    lpad -l my_launchpad_testing.yaml get_wflows
 
 3. If successful, you should see a couple of results::
 

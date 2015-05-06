@@ -128,7 +128,7 @@ Appendix: alternate ways to identify the FireTask and changing the identificatio
 Other than explicitly defining a ``_fw_name`` parameter, there are two alternate ways to identify the FireTask:
 
 * You can omit the ``_fw_name`` parameter altogether, and the code will then use the Class name as the identifier. However, note that this is dangerous as changing your Class name later on can break your code. In addition, if you have two FireTasks with the same name the code will throw an error.
-* (or) You can omit the ``_fw_name_`` **and** add an ``@explicit_serialize`` decorator to your Class. This will identify your class by the module name AND class name. This prevents namespace collisions, AND it allows you to skip registering your FireTask! However, the serialization is even more sensitive to refactoring: moving your Class to a different module will break the code, as will renaming it. Here's an example of how to use the decorator::
+* (or) You can omit the ``_fw_name`` **and** add an ``@explicit_serialize`` decorator to your Class. This will identify your class by the module name AND class name. This prevents namespace collisions, AND it allows you to skip registering your FireTask! However, the serialization is even more sensitive to refactoring: moving your Class to a different module will break the code, as will renaming it. Here's an example of how to use the decorator::
 
     @explicit_serialize
     class PrintFW(FireTaskBase):

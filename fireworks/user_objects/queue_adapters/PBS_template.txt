@@ -11,6 +11,7 @@
 #PBS -e FW_job.error
 #PBS -V $${env}
 #PBS -M $${email} -m $${notification_options}
+#PBS -l pmem=$${pmem}
 
 $${pre_rocket}
 cd $${launch_dir}

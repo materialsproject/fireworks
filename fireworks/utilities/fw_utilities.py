@@ -217,5 +217,9 @@ class NestedClassGetter(object):
 
 
 def explicit_serialize(o):
-    o._fw_name = '{{%s.%s}}' % (o.__module__, o.__name__)
+    module_name = o.__module__
+    if module_name == '__main__':
+        import __main__
+        module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
+    o._fw_name = '{{%s.%s}}' % (module_name, o.__name__)
     return o

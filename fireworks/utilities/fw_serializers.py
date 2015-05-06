@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-"""
+__doc__ = """
 This module aids in serializing and deserializing objects.
 
 To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize an object,
@@ -28,6 +28,7 @@ Some advantages:
 A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder,
 when the serialize_fw() decorator is used.
 """
+
 import traceback
 import pkgutil
 import inspect

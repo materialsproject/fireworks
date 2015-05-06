@@ -2,6 +2,37 @@
 FireWorks Changelog
 ===================
 
+**v1.04**
+
+.. note:: v1.00-v1.03 are skipped due to problems in pip installation
+
+* fix non-default host/port on Flask site
+* remove base site (old frontend)
+* address installation issues (MANIFEST.in, package_data)
+* improve unit tests
+
+**v0.99**
+
+.. note:: v0.98 is skipped, as it has a faulty dependency.
+.. note:: Users of the frontend will need to install Flask, ``pip install flask; pip install flask-paginate``. Django is no longer required for the frontend.
+
+* Ability to add FireWorks to existing workflow (launchpad.add_wf_to_fwids)
+* Better unit tests for task-level reruns (G. Petretto)
+* Redesigned web site using Flask (M. Brafman)
+
+**v0.97**
+
+* Fix bug in adding multiple detours
+* Task-level reruns (G. Petretto)
+* Better Fworker default restrictions (G. Petretto)
+* Make _launch_dir if doesn't exist (G. Petretto)
+* Bug fixes (G. Petretto)
+
+**v0.96**
+
+* Address some installation issues (thanks to kpoman)
+* fix minor issues and docs
+
 **v0.95**
 
 * Add decompressdir task (S.P. Ong)
@@ -20,7 +51,7 @@ FireWorks Changelog
 
 * Fix bug in performance improvement cached state + unit tests (B. Medasani)
 * minor bug fixes, installation changes
-
+lpad
 **v0.92**
 
 .. caution:: This version has a minor bug affecting defusing of FWs and cached states for performance, fixed in v0.94

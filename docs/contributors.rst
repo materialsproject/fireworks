@@ -16,7 +16,9 @@ Michael Kocher and Dan Gunter initiated the architecture of a central MongoDB da
 
 Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL.
 
-Guido Petretto added useful features and helped detect and fix bugs.
+Guido Petretto added useful features, including task-level reruns, and helped detect and fix bugs.
+
+Miriam Brafman ported the web frontend to Flask and reworked the CSS.
 
 David Waroquiers wrote the SLURM queue adapter, helped write the FileTransferTask, and provided useful feedback.
 
@@ -24,7 +26,7 @@ William Davidson Richards wrote the SGE queue adapter and provided useful feedba
 
 Felix Brockherde added support for the IBM LoadLeveler queueing system and helped stomp bugs.
 
-Brian Foster stomped bugs.
+Brian Foster and kpoman helped stomp bugs.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey for helpful discussions.
 

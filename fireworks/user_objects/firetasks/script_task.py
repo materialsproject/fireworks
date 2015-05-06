@@ -126,13 +126,13 @@ class ScriptTask(FireTaskBase):
         parameters = parameters if parameters else {}
         parameters['script'] = [shell_cmd]
         parameters['use_shell'] = True
-        return ScriptTask(parameters)
+        return cls(parameters)
 
 
 class PyTask(FireTaskBase):
     _fw_name = 'PyTask'
 
-    """
+    __doc__ = """
     Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system.
 

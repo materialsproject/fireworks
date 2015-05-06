@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Firework {{ fw_id }} Details{% endblock %}
+
+{% block content %}
+
+<center>
+  <span class="{{fw.state}} label">
+    {{ fw.state }}
+  </span>
+</center>
+
+<h4 class="text-center">Firework {{ fw_id }} : {{fw.name}} </h4>
+
+<center>created on {{ fw.created_on|datetime }}</center>
+
+<div class="pull-down"></center><pre>{{ fw_data }}</pre></div>
+{% endblock %}

@@ -1,43 +1,46 @@
-features Package
-================
+fireworks.features package
+==========================
 
-:mod:`features` Package
------------------------
+Submodules
+----------
 
-.. automodule:: fireworks.features
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`background_task` Module
------------------------------
+fireworks.features.background_task module
+-----------------------------------------
 
 .. automodule:: fireworks.features.background_task
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`dupefinder` Module
-------------------------
+fireworks.features.dupefinder module
+------------------------------------
 
 .. automodule:: fireworks.features.dupefinder
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`multi_launcher` Module
-----------------------------
+fireworks.features.multi_launcher module
+----------------------------------------
 
 .. automodule:: fireworks.features.multi_launcher
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`stats` Module
--------------------
+fireworks.features.stats module
+-------------------------------
 
 .. automodule:: fireworks.features.stats
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: fireworks.features
+    :members:
+    :undoc-members:
+    :show-inheritance:

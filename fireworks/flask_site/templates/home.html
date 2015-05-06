@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}FireWorks Dashboard{% endblock %}
+
+{% block content %} 
+	
+ <div class="row">
+    <div class="span12">
+        <h3 class="text-center">Workflow Dashboard</h3>
+    </div>
+ </div>
+
+<div class="row pull-down">
+    <div class="span6">
+        <table class="table table-bordered">
+            <tr><th colspan="3"><a href="/wf">Newest Workflows</a></th></tr>
+            {% for wf in wf_info %}
+                <tr>
+                    <td>
+                        <div class="row pull-down-sm">
+                            <div class="span2">
+                                <strong>{{ wf.name }}</strong>
+                            </div>
+                            <div class="span3">
+                                <span class="label {{wf.state}}">{{wf.state}}</span>
+                                <span class="pull-right">  
+                                    ID: <a href="/wf/{{ wf.id }}">{{ wf.id }}</a>
+                                </span>
+                            </div>
+                           
+                        </div>
+                        <hr>
+                        <div class="pull-up">
+                            {% for fw  in wf.fireworks %}
+                            <div>
+                                <small><a class="fw-link {{fw.state}}" href="/fw/{{ fw.fw_id }}">{{fw.name}}</a></small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="span6">
+        <table class="table table-bordered">
+            <tr><th colspan="3">Current Database Status</th></tr>
+            <tr>
+                <th></th>
+                <th><a href="/fw">Fireworks</a></th>
+                <th><a href="/wf">Workflows</a></th>
+            </tr>
+            {% for states, fw_info, wf_info in info %}
+                <tr>
+                    <td>
+                        <span class="label {{states}}">
+                            {{ states }}
+                        </span>
+                    </td>
+                    <td><center><a href="/fw/{{ states }}">{{ fw_info }}</a></center></td>
+                    <td><center><a href="/wf/{{ states }}">{{ wf_info }}</a></center></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th><div align="right">TOTAL</div></th>
+                <td><center><a href="/fw">{{ tot_fws }}</a></center></td>
+                <td><center><a href="/wf">{{ tot_wfs }}</a></center></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<!-- TABLES -->
+
+{% endblock %}

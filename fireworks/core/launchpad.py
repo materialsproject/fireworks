@@ -152,7 +152,7 @@ class LaunchPad(FWSerializable):
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
         allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
         self.fireworks.update({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
-                              {"$set": mod_spec})
+                              {"$set": mod_spec}, multi=True)
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
             self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "
@@ -247,6 +247,13 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
+
+    def add_wf_to_fws(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
+        wf = self.get_wf_by_fw_id(fw_ids[0])
+        updated_ids = wf.add_wf_to_fws(new_wf, fw_ids, detour=detour, pull_spec_mods=pull_spec_mods)
+
+        with WFLock(self, fw_ids[0]):
+            self._update_wf(wf, updated_ids)
 
     def get_launch_by_id(self, launch_id):
         """
@@ -885,6 +892,7 @@ class LaunchPad(FWSerializable):
         return old_new
 
     def rerun_fw(self, fw_id, rerun_duplicates=True):
+        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         # detect FWs that share the same launch. Must do this before rerun
         duplicates = []
         reruns = []
@@ -895,7 +903,6 @@ class LaunchPad(FWSerializable):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
         # rerun this FW
-        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
         if m_fw['state'] in ['ARCHIVED', 'DEFUSED'] :
             self.m_logger.info("Cannot rerun fw_id: {}: it is {}.".format(fw_id, m_fw['state']))
         elif m_fw['state'] == 'WAITING':
@@ -914,6 +921,48 @@ class LaunchPad(FWSerializable):
             reruns.extend(r)
 
         return reruns  # return the ids that were rerun
+
+    def rerun_fws_task_level(self, fw_id, rerun_duplicates=True, launch_id=None, recover_mode=None):
+        """
+        Rerun a fw at the task level
+        :param fw_id: (int) fw_id to rerun
+        :param rerun_duplicates: (bool) also rerun duplicate FWs
+        :param launch_id: (int) launch id to rerun, if known. otherwise the last launch_id will be used
+        :param recover_mode: (str) use "prev_dir" to run again in previous dir, "cp" to try to copy data to new dir, or None to start from scratch
+        :return: ([int]) list of rerun fw_ids
+        """
+        m_fw = self.get_fw_by_id(fw_id)
+
+        # check if task_level parameters are properly defined
+        if not launch_id:
+            try:
+                launch_id = m_fw.launches[-1].launch_id
+            except:
+                traceback.print_exc()
+                self.m_logger.info("Can't find a launch to recover fw_id {}. Skipping...".format(fw_id))
+                return None
+        elif launch_id not in [l.launch_id for l in m_fw.launches+m_fw.archived_launches]:
+            self.m_logger.info("Launch id {} not existent for m_fw {}. Skipping...".format(launch_id, fw_id))
+            return None
+        # check if the failed task information is available, can't recover otherwise
+        if self.get_launch_by_id(launch_id).action.stored_data.get('_exception', {}).get('_failed_task_n', None) is None:
+            self.m_logger.info("No information to recover launch id {} for m_fw {}. Skipping..."
+                               .format(launch_id, fw_id))
+            return None
+
+        #rerun jobs and duplicates
+        reruns = self.rerun_fw(fw_id, rerun_duplicates)
+
+        # if rerun was fine, set the task_level parameters
+        if reruns:
+            set_spec = {'$set': {'spec._recover_launch._launch_id': launch_id,
+                                 'spec._recover_launch._recover_mode': recover_mode}}
+            if recover_mode == 'prev_dir':
+                set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
+
+            self.fireworks.find_and_modify({"fw_id": fw_id}, set_spec)
+
+        return reruns
 
     def _refresh_wf(self, fw_id):
 
@@ -1165,7 +1214,6 @@ class LazyFirework(object):
         if not self._fw:
             fields = list(self.db_fields) + list(self.db_launch_fields)
             data = self._fwc.find_one({'fw_id': self.fw_id}, fields=fields)
-
             launch_data = {}  # move some data to separate launch dict
             for key in self.db_launch_fields:
                 launch_data[key] = data[key]

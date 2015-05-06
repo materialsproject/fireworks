@@ -1,0 +1,69 @@
+{
+    "name": "Tracker FW", 
+    "launches": [
+        {
+            "fworker": {
+                "category": "", 
+                "query": "{\"$or\": [{\"spec._fworker\": {\"$exists\": false}}, {\"spec._fworker\": null}, {\"spec._fworker\": \"Automatically generated Worker\"}]}", 
+                "name": "Automatically generated Worker", 
+                "env": {}
+            }, 
+            "trackers": [
+                {
+                    "nlines": 50, 
+                    "filename": "words.txt"
+                }, 
+                {
+                    "nlines": 50, 
+                    "filename": "inputs.txt"
+                }
+            ], 
+            "ip": "10.0.10.22", 
+            "fw_id": 4, 
+            "state": "RUNNING", 
+            "host": "Miriam-2.local", 
+            "launch_dir": "/Users/volvox/src/mp/fireworks/fw_tutorials/tracker", 
+            "action": null, 
+            "launch_id": 4, 
+            "state_history": [
+                {
+                    "updated_on": "2014-12-01T23:03:51.470415", 
+                    "state": "RUNNING", 
+                    "created_on": "2014-12-01T23:03:51.470409"
+                }
+            ]
+        }
+    ], 
+    "fw_id": 4, 
+    "state": "RUNNING", 
+    "created_on": "2014-12-01T23:03:09.321435", 
+    "updated_on": "2014-12-01T23:03:51.471637", 
+    "spec": {
+        "_tasks": [
+            {
+                "output_file": "inputs.txt", 
+                "_fw_name": "TemplateWriterTask", 
+                "context": {
+                    "opt1": 5.0, 
+                    "opt2": "fast method"
+                }, 
+                "template_file": "simple_template.txt"
+            }, 
+            {
+                "use_shell": true, 
+                "_fw_name": "ScriptTask", 
+                "script": "wc -w < inputs.txt > words.txt"
+            }
+        ], 
+        "_trackers": [
+            {
+                "nlines": 50, 
+                "filename": "words.txt"
+            }, 
+            {
+                "nlines": 50, 
+                "filename": "inputs.txt"
+            }
+        ]
+    }
+}

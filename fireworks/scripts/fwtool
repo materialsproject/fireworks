@@ -63,21 +63,21 @@ def do_cleanup(args):
                     to_delete.append((fw.fw_name, fw.fw_id,
                                       l.launch_dir, os.listdir(l.launch_dir)))
     if len(to_delete) == 0:
-        print "Your directories are clean!"
+        print("Your directories are clean!")
         sys.exit(0)
-    print "The following will be deleted:"
+    print("The following will be deleted:")
     for name, fwid, d, files in to_delete:
-        print "{}-{} - {} - {}".format(name, fwid, d, ", ".join(files))
+        print("{}-{} - {} - {}".format(name, fwid, d, ", ".join(files)))
     ans = raw_input("Confirm? (Y/N)")
     if ans.startswith("Y"):
         for name, fwid, d, files in to_delete:
             try:
                 shutil.rmtree(d)
-                print "Deleted {}".format(d)
+                print("Deleted {}".format(d))
             except Exception as ex:
-                print "Unable to delete {} because of {}".format(d, ex)
+                print("Unable to delete {} because of {}".format(d, ex))
     else:
-        print "Canceled!"
+        print("Canceled!")
 
 
 if __name__ == '__main__':

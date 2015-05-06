@@ -1,35 +1,46 @@
-base_site Package
-=================
+fireworks.base_site package
+===========================
 
-:mod:`settings` Module
-----------------------
+Submodules
+----------
+
+fireworks.base_site.settings module
+-----------------------------------
 
 .. automodule:: fireworks.base_site.settings
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`urls` Module
-------------------
+fireworks.base_site.urls module
+-------------------------------
 
 .. automodule:: fireworks.base_site.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`views` Module
--------------------
+fireworks.base_site.views module
+--------------------------------
 
 .. automodule:: fireworks.base_site.views
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`wsgi` Module
-------------------
+fireworks.base_site.wsgi module
+-------------------------------
 
 .. automodule:: fireworks.base_site.wsgi
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: fireworks.base_site
+    :members:
+    :undoc-members:
+    :show-inheritance:

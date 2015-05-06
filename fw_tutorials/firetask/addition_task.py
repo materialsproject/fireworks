@@ -23,4 +23,4 @@ class AdditionTask(FireTaskBase):
 
         print("The sum of {} is: {}".format(input_array, m_sum))
 
-        return FWAction(stored_data={'sum': m_sum})
+        return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])
