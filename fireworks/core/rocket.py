@@ -131,17 +131,6 @@ class Rocket():
             print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
             return False
 
-        if lp:
-            message = 'RUNNING fw_id: {} in directory: {}'.\
-                format(m_fw.fw_id, os.getcwd())
-            lp.log_message(logging.INFO, message)
-
-        # write FW.json and/or FW.yaml to the directory
-        if PRINT_FW_JSON:
-            m_fw.to_file('FW.json', indent=4)
-        if PRINT_FW_YAML:
-            m_fw.to_file('FW.yaml')
-
         try:
             if '_launch_dir' in m_fw.spec:
                 prev_dir = launch_dir
@@ -181,6 +170,17 @@ class Rocket():
 
             else:
                 starting_task = 0
+
+            if lp:
+                message = 'RUNNING fw_id: {} in directory: {}'.\
+                    format(m_fw.fw_id, os.getcwd())
+                lp.log_message(logging.INFO, message)
+
+            # write FW.json and/or FW.yaml to the directory
+            if PRINT_FW_JSON:
+                m_fw.to_file('FW.json', indent=4)
+            if PRINT_FW_YAML:
+                m_fw.to_file('FW.yaml')
 
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
             my_spec["_fw_env"] = self.fworker.env
