@@ -21,8 +21,7 @@ import filecmp
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask,\
-    PyWrappedTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask
 import fireworks.fw_config
 
@@ -370,7 +369,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertFalse(fw_start_t > ts)
 
 
-class LaunchPadLostRunsDetectTest1(unittest.TestCase):
+class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -390,110 +389,6 @@ class LaunchPadLostRunsDetectTest1(unittest.TestCase):
     def setUp(self):
         # Define a timed fireWork
         fw_timer = Firework(PyTask(func='time.sleep',args=[5]), name="timer")
-        self.lp.add_wf(fw_timer)
-
-        # Get assigned fwid for timer firework
-        self.fw_id = self.lp.get_fw_ids({'name':'timer'},limit=1)[0]
-
-        self.old_wd = os.getcwd()
-
-    def tearDown(self):
-        self.lp.reset(password=None,require_password=False)
-        # Delete launch locations
-        if os.path.exists(os.path.join('FW.json')):
-            os.remove('FW.json')
-        os.chdir(self.old_wd)
-        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
-            shutil.rmtree(ldir)
-
-    def test_detect_lostruns(self):
-        # Launch the timed firework in a separate process
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker):
-                super(self.__class__,self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-
-            def run(self):
-                launch_rocket(self.lpad, self.fworker)
-
-        rp = RocketProcess(self.lp, self.fworker)
-        rp.start()
-
-        # Wait for fw to start
-        it = 0
-        while not any([f.state == 'RUNNING' for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
-            time.sleep(1)   # Wait 1 sec
-            it += 1
-            if it == 10:
-                raise ValueError("FW never starts running")
-        rp.terminate() # Kill the rocket
-
-        l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
-        self.assertEqual((l, f), ([1], [1]))
-        time.sleep(4)   # Wait double the expected exec time and test
-        l, f = self.lp.detect_lostruns(2)
-        self.assertEqual((l, f), ([1], [1]))
-
-        l, f = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
-        self.assertEqual((l, f), ([], []))
-
-        l, f = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
-        self.assertEqual((l, f), ([], []))
-
-    def test_state_after_run_start(self):
-        # Launch the timed firework in a separate process
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker):
-                super(self.__class__,self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-
-            def run(self):
-                launch_rocket(self.lpad, self.fworker)
-
-        rp = RocketProcess(self.lp, self.fworker)
-        rp.start()
-
-        # Wait for running
-        it = 0
-        while not any([f.state == 'RUNNING' for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
-            time.sleep(1)   # Wait 1 sec
-            it += 1
-            if it == 10:
-                raise ValueError("FW never starts running")
-
-        # WF should be running
-        wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
-        for fw_id in wf.fw_states:
-            self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
-            self.assertEqual(wf.fw_states[fw_id], 'RUNNING')
-        rp.terminate()
-
-
-class LaunchPadLostRunsDetectTest2(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.lp = None
-        cls.fworker = FWorker()
-        try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
-            cls.lp.reset(password=None, require_password=False)
-        except:
-            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
-
-    def setUp(self):
-        # Define a timed fireWork
-        fw_timer = Firework(
-            PyWrappedTask(func='time.sleep',args=[5]),
-            name="timer"
-        )
         self.lp.add_wf(fw_timer)
 
         # Get assigned fwid for timer firework

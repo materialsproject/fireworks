@@ -189,7 +189,6 @@ The built-in FireTasks
     templatewritertask
     fileiotasks
     pytask
-    pywrappedtask
 
 Misc
 ----

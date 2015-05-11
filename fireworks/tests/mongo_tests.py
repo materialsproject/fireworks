@@ -18,8 +18,7 @@ from fireworks.features.background_task import BackgroundTask
 from fireworks.fw_config import WFLOCK_EXPIRATION_KILL
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask,\
-    PyWrappedTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
@@ -353,7 +352,7 @@ class MongoTests(unittest.TestCase):
             with WFLock(self.lp, 1, expire_secs=1):
                 self.assertTrue(True)  # dummy to make sure we got here
 
-    def test_fizzle_1(self):
+    def test_fizzle(self):
         p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["Testing; this error is normal."])
         fw = Firework(p)
         self.lp.add_wf(fw)
@@ -361,37 +360,15 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'FIZZLED')
         self.assertFalse(launch_rocket(self.lp, self.fworker))
 
-    def test_fizzle_2(self):
-        p = PyWrappedTask(func="fireworks.tests.mongo_tests.throw_error", args=["Testing; this error is normal."])
-        fw = Firework(p)
-        self.lp.add_wf(fw)
-        self.assertTrue(launch_rocket(self.lp, self.fworker))
-        self.assertEqual(self.lp.get_fw_by_id(1).state, 'FIZZLED')
-        self.assertFalse(launch_rocket(self.lp, self.fworker))
-
-    def test_defuse_1(self):
+    def test_defuse(self):
         p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
         fw = Firework(p)
         self.lp.add_wf(fw)
         self.lp.defuse_fw(fw.fw_id)
         self.assertFalse(launch_rocket(self.lp, self.fworker))
 
-    def test_defuse_2(self):
-        p = PyWrappedTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
-        fw = Firework(p)
-        self.lp.add_wf(fw)
-        self.lp.defuse_fw(fw.fw_id)
-        self.assertFalse(launch_rocket(self.lp, self.fworker))
-
-    def test_archive_1(self):
+    def test_archive(self):
         p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
-        fw = Firework(p)
-        self.lp.add_wf(fw)
-        self.lp.archive_wf(fw.fw_id)
-        self.assertFalse(launch_rocket(self.lp, self.fworker))
-
-    def test_archive_2(self):
-        p = PyWrappedTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
         fw = Firework(p)
         self.lp.add_wf(fw)
         self.lp.archive_wf(fw.fw_id)

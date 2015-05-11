@@ -17,8 +17,7 @@ __date__ = "2/16/14"
 import unittest
 import os
 
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask,\
-    PyWrappedTask
+from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 
 class ScriptTaskTest(unittest.TestCase):
 
@@ -36,8 +35,8 @@ class ScriptTaskTest(unittest.TestCase):
 
 class PyTaskTest(unittest.TestCase):
 
-    def test_task_1(self):
-        p = PyTask(func="json.dumps", obj={"hello": "world"},
+    def test_task(self):
+        p = PyTask(func="json.dumps", kwargs={"obj":{"hello": "world"}},
                        stored_data_varname="json")
         a = p.run_task({})
         self.assertEqual(a.stored_data["json"], '{"hello": "world"}')
@@ -47,18 +46,15 @@ class PyTaskTest(unittest.TestCase):
         p = PyTask(func="print", args=[3])
         p.run_task({})
 
-    def test_task_2(self):
-        p = PyWrappedTask(
-            func="json.dumps",
-            kwargs={"obj": {"hello": "world"}},
-            stored_data_varname="json"
-        )
+    def test_task_auto_kwargs(self):
+        p = PyTask(func="json.dumps", obj={"hello": "world"},
+                       stored_data_varname="json", auto_kwargs=True)
         a = p.run_task({})
         self.assertEqual(a.stored_data["json"], '{"hello": "world"}')
-        p = PyWrappedTask(func="pow", args=[3, 2], stored_data_varname="data")
+        p = PyTask(func="pow", args=[3, 2], stored_data_varname="data")
         a = p.run_task({})
         self.assertEqual(a.stored_data["data"], 9)
-        p = PyWrappedTask(func="print", args=[3])
+        p = PyTask(func="print", args=[3])
         p.run_task({})
 
 
