@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.05**
+
+.. caution:: The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the "auto_kwargs" option to True in your FireTasks.
+
+* Update PyTask kwargs handling (J. Kirkham)
+* Fix writing of FW.json files with _launch_dir param (G. Petretto)
+* update PBS template (K. Matthew)
+* minor fixes (J. Kirkham)
+
 **v1.04**
 
 .. note:: v1.00-v1.03 are skipped due to problems in pip installation
