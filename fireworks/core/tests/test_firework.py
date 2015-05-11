@@ -17,7 +17,7 @@ __date__ = "2/26/14"
 import unittest
 
 from fireworks.core.firework import Firework, Workflow, FireTaskBase
-from fireworks.user_objects.firetasks.script_task import PyTask
+from fireworks.user_objects.firetasks.script_task import PyTask, PyWrappedTask
 
 
 class FireTaskBaseTest(unittest.TestCase):
@@ -46,11 +46,24 @@ class FireTaskBaseTest(unittest.TestCase):
 
 class WorkflowTest(unittest.TestCase):
 
-    def test_init(self):
+    def test_init_1(self):
 
         fws = []
         for i in range(5):
             fw = Firework([PyTask(func="print", args=[i])], fw_id=i)
+            fws.append(fw)
+        wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
+        self.assertIsInstance(wf, Workflow)
+        self.assertRaises(ValueError, Workflow, fws,
+                          links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
+        self.assertRaises(ValueError, Workflow, fws,
+                          links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
+
+    def test_init_2(self):
+
+        fws = []
+        for i in range(5):
+            fw = Firework([PyWrappedTask(func="print", args=[i])], fw_id=i)
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
         self.assertIsInstance(wf, Workflow)

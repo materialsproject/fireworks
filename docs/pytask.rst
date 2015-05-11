@@ -23,3 +23,8 @@ Here is an example of defining a PyTask that sleeps for 5 seconds::
     fw_timer = Firework(PyTask(func='time.sleep',args=[5]))
 
 Note that you can call any Python function this way!
+
+See Also
+========
+
+In the event that PyTask doesn't work perfectly, please take a look at :doc:`PyWrappedTask <pywrappedtask>`, which provides more flexibility regarding the arguments that can be passed through to your function.
