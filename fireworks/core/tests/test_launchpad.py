@@ -710,7 +710,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             self.assertEqual(fw_state, fw_cache_state)
 
-        # Detect lostruns
+        # Detect lost runs
         lost_lids, lost_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
         # Ensure the states are sync 
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
