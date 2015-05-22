@@ -29,7 +29,6 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 # TODO: clean up method signatures
-
 def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO'):
     """
     Submit a single job to the queue.
@@ -94,11 +93,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                             launcher_dir = os.path.abspath(os.getcwd())
                             launchpad.change_launch_dir(launch_id, launcher_dir)
 
-                        fw.to_file("FW.json")
-                        with open('FW_offline.json', 'w') as f:
-                            f.write('{"launch_id":%s}' % launch_id)
-
-                        launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)
+                        setup_offline_job(fw, launch_id)
 
                 l_logger.debug('writing queue script')
                 with open(SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -238,3 +233,10 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
         RETRY_INTERVAL *= 2
 
     raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')
+
+def setup_offline_job(launchpad, fw, launch_id):
+    # separate this function out for reuse in unit testing
+    fw.to_file("FW.json")
+    with open('FW_offline.json', 'w') as f:
+        f.write('{"launch_id":%s}' % launch_id)
+    launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)

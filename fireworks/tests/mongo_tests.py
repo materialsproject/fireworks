@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+import json
 
 from multiprocessing import Pool
 import os
@@ -16,6 +17,7 @@ from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
 from fireworks.fw_config import WFLOCK_EXPIRATION_KILL
+from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
@@ -106,6 +108,10 @@ class MongoTests(unittest.TestCase):
         self.lp.reset(password=None, require_password=False)
         if os.path.exists(os.path.join('FW.json')):
             os.remove('FW.json')
+        if os.path.exists(os.path.join('FW_offline.json')):
+            os.remove('FW_offline.json')
+        if os.path.exists(os.path.join('FW_ping.json')):
+            os.remove('FW_ping.json')
         os.chdir(self.old_wd)
         for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
             shutil.rmtree(i)
@@ -118,6 +124,32 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
             'stdout'], 'test1\n')
+
+    def test_basic_fw_offline(self):
+        test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
+                                    {'store_stdout': True})
+        fw = Firework(test1)
+        self.lp.add_wf(fw)
+
+        fw, launch_id = self.lp.reserve_fw(FWorker(), os.getcwd())
+
+        setup_offline_job(self.lp, fw, launch_id)
+
+        launch_rocket(None, self.fworker)
+
+        with open(os.path.join(os.getcwd(), "FW_offline.json")) as f:
+            fwo = json.load(f)
+            self.assertEquals(fwo["state"], "COMPLETED")
+            self.assertEquals(fwo["launch_id"], 1)
+            self.assertEquals(fwo["fwaction"], {'update_spec': {}, 'mod_spec': [], 'stored_data': {'returncode': 0, 'stdout': u'test1\n', 'all_returncodes': [0]}, 'exit': False, 'detours': [], 'additions': [], 'defuse_children': False})
+
+        with open(os.path.join(os.getcwd(), "FW_ping.json")) as f:
+            fwp = json.load(f)
+            self.assertIsNotNone(fwp["ping_time"])
+
+        l = self.lp.offline_runs.find_one({"completed": False, "deprecated": False}, {"launch_id": 1})
+        self.lp.recover_offline(l['launch_id'])
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
 
     def test_multi_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
