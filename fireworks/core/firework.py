@@ -262,6 +262,7 @@ class Firework(FWSerializable):
         if len(list(self.archived_launches)) > 0:
             m_dict['archived_launches'] = self.archived_launches
 
+        # keep export of new FWs to files clean
         if self.state != 'WAITING':
             m_dict['state'] = self.state
 

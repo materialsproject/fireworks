@@ -193,6 +193,7 @@ def get_fws(args):
         for id in ids:
             fw = lp.get_fw_by_id(id)
             d = fw.to_dict()
+            d['state'] = d.get('state', 'WAITING')
             if args.display_format == 'more' or args.display_format == 'less':
                 if 'archived_launches' in d:
                     del d['archived_launches']
