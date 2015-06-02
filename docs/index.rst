@@ -18,6 +18,8 @@ FireWorks is a free, `open-source <https://github.com/materialsproject/fireworks
 
 Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers.
 
+**New!** An academic paper on FireWorks is now available. For details, see :ref:`citing-label`.
+
 .. raw::</div>
 
 ====================
@@ -213,18 +215,32 @@ Reference
     reference
     guide_to_writing_firetasks
 
-.. _contributing-label:
+.. _citing-label:
 
 ================
 Citing FireWorks
 ================
 
-A paper for FireWorks is in preparation. In the meantime, you can cite FireWorks as follows:
+Citation helps support our development! Please cite your usage of FireWorks through the `following manuscript <http://dx.doi.org/10.1002/cpe.3505>`_, which provides details on the design and features of the FireWorks software::
 
-FireWorks workflow software, http://pythonhosted.org/FireWorks.
+    @article {CPE:CPE3505,
+    author = {Jain, Anubhav and Ong, Shyue Ping and Chen, Wei and Medasani, Bharat and Qu, Xiaohui and Kocher, Michael and Brafman, Miriam and Petretto, Guido and Rignanese, Gian-Marco and Hautier, Geoffroy and Gunter, Daniel and Persson, Kristin A.},
+    title = {FireWorks: a dynamic workflow system designed for high-throughput applications},
+    journal = {Concurrency and Computation: Practice and Experience},
+    issn = {1532-0634},
+    url = {http://dx.doi.org/10.1002/cpe.3505},
+    doi = {10.1002/cpe.3505},
+    pages = {n/a--n/a},
+    keywords = {scientific workflows, high-throughput computing, fault-tolerant computing},
+    year = {2015},
+    }
+
+To refer to a specific version of FireWorks, you can use the DOI badge below:
 
 .. image:: https://zenodo.org/badge/doi/10.5281/zenodo.18240.png
         :target: http://dx.doi.org/10.5281/zenodo.18240
+
+.. _contributing-label:
 
 ====================================
 Contributing / Contact / Bug Reports
