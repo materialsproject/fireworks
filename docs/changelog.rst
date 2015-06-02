@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.06**
+
+* Pymongo3 compatibility
+* fix double tab open on lpad webgui (G. Pettreto)
+* show FW WAITING state
+* unit test offline mode
+
 **v1.05**
 
 .. caution:: The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the "auto_kwargs" option to True in your FireTasks.
