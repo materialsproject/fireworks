@@ -373,12 +373,12 @@ class LaunchPad(FWSerializable):
         if mode == "all":
             wf_fields = None
 
-        wf = self.workflows.find_one({"nodes": fw_id}, fields=wf_fields)
+        wf = self.workflows.find_one({"nodes": fw_id}, projection=wf_fields)
         fw_data = []
         id_name_map = {}
         launch_ids = []
         for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
-                                      fields=fw_fields):
+                                      projection=fw_fields):
             if launch_fields:
                 launch_ids.extend(fw["launches"])
             fw_data.append(fw)
@@ -388,7 +388,7 @@ class LaunchPad(FWSerializable):
         if launch_fields:
             launch_info = defaultdict(list)
             for l in self.launches.find({'launch_id': {"$in": launch_ids}},
-                                        fields=launch_fields):
+                                        projection=launch_fields):
                 for i, fw in enumerate(fw_data):
                     if l["launch_id"] in fw["launches"]:
                         launch_info[i].append(l)
@@ -1213,7 +1213,7 @@ class LazyFirework(object):
     def partial_fw(self):
         if not self._fw:
             fields = list(self.db_fields) + list(self.db_launch_fields)
-            data = self._fwc.find_one({'fw_id': self.fw_id}, fields=fields)
+            data = self._fwc.find_one({'fw_id': self.fw_id}, projection=fields)
             launch_data = {}  # move some data to separate launch dict
             for key in self.db_launch_fields:
                 launch_data[key] = data[key]

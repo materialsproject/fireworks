@@ -266,11 +266,7 @@ class FWStats:
             query.insert(2, {"$unwind":"$"+unwind})
         if return_query_only:
             return query
-        result = coll.aggregate(query)
-        if result["ok"] == 1:
-            return result["result"]
-        else:
-            raise RuntimeError("Database aggregation error!")
+        return list(coll.aggregate(query))
 
     @staticmethod
     def _query_datetime_range(start_time=None, end_time=None, isoformat=True, **time_delta):
