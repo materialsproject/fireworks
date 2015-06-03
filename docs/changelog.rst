@@ -2,7 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.07**
+
+* fix bug in offline mode
+
 **v1.06**
+.. caution:: Offline mode unusable in this release
 
 * Pymongo3 compatibility
 * fix double tab open on lpad webgui (G. Pettreto)
@@ -12,6 +17,7 @@ FireWorks Changelog
 **v1.05**
 
 .. caution:: The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the "auto_kwargs" option to True in your FireTasks.
+.. caution:: Offline mode unusable in this release
 
 * Update PyTask kwargs handling (J. Kirkham)
 * Fix writing of FW.json files with _launch_dir param (G. Petretto)
