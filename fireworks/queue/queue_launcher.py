@@ -93,7 +93,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                             launcher_dir = os.path.abspath(os.getcwd())
                             launchpad.change_launch_dir(launch_id, launcher_dir)
 
-                        setup_offline_job(fw, launch_id)
+                        setup_offline_job(launchpad, fw, launch_id)
 
                 l_logger.debug('writing queue script')
                 with open(SUBMIT_SCRIPT_NAME, 'w') as f:
