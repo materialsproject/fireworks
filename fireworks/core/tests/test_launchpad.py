@@ -687,9 +687,9 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             self.assertEqual(fw_state, fw_cache_state)
 
-    @unittest.skip("Test fails spuriously.")
+    #@unittest.skip("Test fails spuriously.")
     def test_rerun_timed_fws(self):
-        # Launch all firework in a separate process
+        # Launch all fireworks in a separate process
         class RapidfireProcess(Process):
             def __init__(self, lpad, fworker):
                 super(self.__class__,self).__init__()
@@ -725,8 +725,19 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.lp.rerun_fw(fw_id)
         rp = RapidfireProcess(self.lp, self.fworker)
         rp.start()
-        time.sleep(1)   # Wait 1 sec  
-        # Ensure the states are sync 
+        for i in range(20):
+            wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+            fws = wf.id_fw
+            if fws[self.zeus_fw_id].state == 'READY':
+                time.sleep(0.5)   # Wait 1 sec  
+            else:
+                break
+        else:
+            # Firework hasn't started yet. Waited too long.
+            rp.terminate()
+            return
+
+        # Ensure the states are in sync 
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
