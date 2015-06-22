@@ -55,7 +55,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
 
     if '--offline' in qadapter['rocket_launch'] and not reserve:
-                raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline option of rlaunch!!")
+        raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline option of rlaunch!!")
 
     if reserve and 'singleshot' not in qadapter.get('rocket_launch', ''):
         raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
