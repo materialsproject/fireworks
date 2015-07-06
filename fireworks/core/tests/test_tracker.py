@@ -131,7 +131,7 @@ class TrackerTest(unittest.TestCase):
         self._teardown([self.dest1,self.dest2])
         try:
             def add_wf(j, dest, tracker, name):
-                fts =  []
+                fts = []
                 for i in range(j,j+25):
                     ft = ScriptTask.from_str('echo "' + str(i) + '" >> '+ dest,
                                               {'store_stdout':True})

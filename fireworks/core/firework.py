@@ -834,7 +834,7 @@ class Workflow(FWSerializable):
                         # make sure all of these links are WAITING, else the DETOUR is not well defined
                         ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
                         if any(ready_run):
-                            raise ValueError("Detour option only works if all children of detours are not READY to run and have not already run")
+                            raise ValueError("fw_id: {}: Detour option only works if all children of detours are not READY to run and have not already run".format(fw_id))
                         self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
                     else:
                         self.links[new_fw.fw_id] = []
