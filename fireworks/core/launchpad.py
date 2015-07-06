@@ -742,9 +742,10 @@ class LaunchPad(FWSerializable):
         if fizzle or rerun:
             for lid in lost_launch_ids:
                 self.mark_fizzled(lid)
-        if rerun:
-            for fw_id in lost_fw_ids:
-                self.rerun_fw(fw_id)
+                if rerun:
+                    fw_id = self.launches.find_one({"launch_id": lid}, {"fw_id": 1})['fw_id']
+                    if fw_id in lost_fw_ids:
+                        self.rerun_fw(fw_id)
 
         return lost_launch_ids, lost_fw_ids
 
