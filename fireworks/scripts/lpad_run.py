@@ -19,7 +19,7 @@ import yaml
 
 from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
-    LAUNCHPAD_LOC
+    LAUNCHPAD_LOC, WEBSERVER_PORT
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import Workflow, Firework
 from fireworks import __version__ as FW_VERSION
@@ -793,10 +793,10 @@ def lpad():
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
     webgui_parser = subparsers.add_parser('webgui', help='launch the web GUI')
-    webgui_parser.add_argument("--port", dest="port", type=int, default=5000,
-                        help="Port to run the server on (default: 5000)")
+    webgui_parser.add_argument("--port", dest="port", type=int, default=WEBSERVER_PORT,
+                        help="Port to run the web server on (default: 5000 or WEBSERVER_PORT arg in FWConfig.yaml)")
     webgui_parser.add_argument("--host", dest="host", type=str, default="127.0.0.1",
-                        help="Host to run the server on (default: 127.0.0.1)")
+                        help="Host to run the web server on (default: 127.0.0.1)")
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')
     webgui_parser.set_defaults(func=webgui)
 
