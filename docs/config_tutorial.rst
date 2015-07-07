@@ -73,6 +73,8 @@ A few basic parameters that can be tweaked are:
 * ``TEMPLATE_DIR`` - where to store templates if you are using the :doc:`TemplateWriterTask <templatewritertask>`.
 * ``REMOVE_USELESS_DIRS: False`` - tries to delete empty launch directories created when setting the ``_launch_dir`` in the spec of your Firework.
 * ``EXCEPT_DETAILS_ON_RERUN: False`` - if True, when rerunning a FIZZLED Firework, the serialized exception details are added to the spec.
+* ``WEBSERVER_HOST: 127.0.0.1`` - the default host on which to run the web server
+* ``WEBSERVER_PORT: 5000`` - the default port on which to run the web server
 
 Parameters that you probably shouldn't change
 ---------------------------------------------
