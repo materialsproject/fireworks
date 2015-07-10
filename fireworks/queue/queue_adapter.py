@@ -140,7 +140,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     @abc.abstractmethod
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs currently in the queu efor the user
+        returns the number of jobs currently in the queue for the user
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue
