@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.08**
+
+* allow PyTask to return FWAction
+* allow FWConfig to set web host and port for GUI
+* make detect_lostruns more robust to failure halfway through
+* minor fixes and typo corrections (jakirkham)
+
 **v1.07**
 
 * fix bug in offline mode
