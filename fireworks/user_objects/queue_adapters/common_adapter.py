@@ -32,7 +32,7 @@ class CommonAdapter(QueueAdapterBase):
         "PBS": "qsub",
         "SGE": "qsub",
         "SLURM": "sbatch",
-        "LoadLeveler": "llsubmit"
+        "LoadLeveler": "llsubmit",
         "LoadSharingFacility": "bsub"
     }
 
