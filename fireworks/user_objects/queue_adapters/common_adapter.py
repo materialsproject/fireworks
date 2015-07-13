@@ -32,7 +32,8 @@ class CommonAdapter(QueueAdapterBase):
         "PBS": "qsub",
         "SGE": "qsub",
         "SLURM": "sbatch",
-        "LoadLeveler": "llsubmit"
+        "LoadLeveler": "llsubmit",
+        "LoadSharingFacility": "bsub"
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
@@ -79,6 +80,9 @@ class CommonAdapter(QueueAdapterBase):
             return ['squeue', '-o "%u"', '-u', username]
         elif self.q_type == "LoadLeveler":
             return ['llq', '-u', username]
+        elif self.q_type == "LoadSharingFacility":
+            #use no header and the wide format so that there is one line per job, and display only running and pending jobs
+            return ['bjobs', '-p','-r','-o','jobID user queue','-noheader','-u',username]
         else:
             return ['qstat', '-u', username]
 
@@ -96,6 +100,9 @@ class CommonAdapter(QueueAdapterBase):
             else:
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
                 return int(output_str.split('\n')[-2].split()[0])
+        if self.q_type == "LoadSharingFacility":
+                #Just count the number of lines
+                return len(output_str.split('\n'))
 
         count = 0
         for l in output_str.split('\n'):
@@ -135,8 +142,14 @@ class CommonAdapter(QueueAdapterBase):
         # submit the job
         try:
             cmd = [submit_cmd, script_file]
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
+            #For most of the queues handled by common_adapter, it's best to simply submit the file name
+            #as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
+            #when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
+            if self.q_type == 'LoadSharingFacility':
+                with open(script_file,'r') as inputFile:
+                    p = subprocess.Popen([submit_cmd],stdin=inputFile,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            else:
+                p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
 
             # grab the returncode. PBS returns 0 if the job was successful
