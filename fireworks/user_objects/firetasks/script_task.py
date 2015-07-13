@@ -172,5 +172,7 @@ class PyTask(FireTaskBase):
             kwargs = self.get("kwargs", {})
 
         output = func(*args, **kwargs)
-        if self.get("stored_data_varname"):
+        if isinstance(output,FWAction):
+            return output
+        elif self.get("stored_data_varname"):
             return FWAction(stored_data={self["stored_data_varname"]: output})
