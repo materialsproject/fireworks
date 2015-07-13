@@ -235,11 +235,6 @@ Citation helps support our development! Please cite your usage of FireWorks thro
     year = {2015},
     }
 
-To refer to a specific version of FireWorks, you can use the DOI badge below:
-
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.18251.png
-        :target: http://dx.doi.org/10.5281/zenodo.18251
-
 .. _contributing-label:
 
 ====================================
