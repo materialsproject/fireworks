@@ -146,8 +146,8 @@ class CommonAdapter(QueueAdapterBase):
             #as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
             #when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
             if self.q_type == 'LoadSharingFacility':
-                inputFile=open(script_file,'r')
-                p = subprocess.Popen([submit_cmd],stdin=inputFile,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+                with open(script_file,'r') as inputFile:
+                    p = subprocess.Popen([submit_cmd],stdin=inputFile,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
             else:
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
