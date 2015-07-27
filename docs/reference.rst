@@ -63,4 +63,5 @@ _allow_fizzled_parents  Run this Firework if all parents are *either* COMPLETED 
 _fizzled_parents        Reserved for automatically putting information about FIZZLED parents in a child Firework with the ``_allow_fizzled_parents`` option.
 _trackers               Reserved for specifying Trackers.
 _background_tasks       Reserved for specifying BackgroundTasks
+_fw_env                 Reserved for setting worker-specifc environment variables. More information :doc:`here </worker_tutorial>`.
 ======================  ==============
