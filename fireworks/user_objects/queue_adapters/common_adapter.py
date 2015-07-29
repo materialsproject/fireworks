@@ -8,6 +8,7 @@ queues.
 """
 import getpass
 import os
+import stat
 import re
 import subprocess
 from fireworks.queue.queue_adapter import QueueAdapterBase, Command
@@ -152,7 +153,7 @@ class CommonAdapter(QueueAdapterBase):
         try:
             if self.q_type == "Cobalt":
                 # Cobalt requires scripts to be executable
-                os.chmod(script_file,0750)
+                os.chmod(script_file,stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP)
             cmd = [submit_cmd, script_file]
             #For most of the queues handled by common_adapter, it's best to simply submit the file name
             #as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
