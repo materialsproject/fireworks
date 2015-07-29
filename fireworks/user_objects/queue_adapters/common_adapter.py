@@ -117,7 +117,6 @@ class CommonAdapter(QueueAdapterBase):
                     # Cobalt capitalzes headers
                     l=l.lower()
                 header = l.split()
-                print header
                 if self.q_type == "PBS":
                     #PBS has a ridiculous two word "Job ID" in header
                     state_index = header.index("S") - 1
