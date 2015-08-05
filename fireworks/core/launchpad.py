@@ -15,7 +15,7 @@ import time
 import traceback
 from collections import OrderedDict, defaultdict
 
-from pymongo.mongo_client import MongoClient
+from pymongo import MongoClient
 from pymongo import DESCENDING, ASCENDING
 
 from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, \
