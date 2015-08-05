@@ -39,12 +39,26 @@ Controlling the Worker that executes a Firework
 
 By default, any FireWorker can pull and run any Firework. However, in some cases you might want to control which computing resources should run a Firework. For example, if some of your FireWorks require a lot of memory and fast processors, you might want to direct those jobs to only a subset of FireWorkers that have sufficiently high computing specifications.
 
-There are two methods to control where FireWorks are executed.
+There are three methods to control where FireWorks are executed.
 
-Method 1: Using categories
+Method 1: Using name
 --------------------------
 
-A simple method to direct FireWorks to FireWorks is by assigning *categories*. You can do this by:
+A simple method to direct FireWorks to FireWorks is by assigning the name of the resource where you want the job to run. You can do this by:
+
+#. setting a ``_fworker`` key in your Firework spec **AND**
+#. setting the ``name`` variable in your FireWorker to match that value
+
+.. note:: Recall the ``my_fworker.yaml`` file from the :doc:`FireWorker tutorial </worker_tutorial>`. To set the FireWorker name, modify the ``name`` key.
+
+Once you've set these values, job execution occurs as follows:
+
+* FireWorks with a ``_fworker`` variable set will only run on a FireWorker with the exactly matching ``name`` variable.
+
+Method 2: Using categories
+--------------------------
+
+Another simple method to direct FireWorks to FireWorks is by assigning *categories*. You can do this by:
 
 #. setting a ``_category`` key in your Firework spec **AND**
 #. setting the ``category`` variable in your FireWorker to match that value
@@ -62,7 +76,7 @@ And finally, a few final notes and limitations about this method:
 * Each FireWorker can only have a single String category
 * A Firework can have an array of Strings for the ``_category`` variable, but we suggest you stick to a simple String where possible.
 
-Method 2: Using raw queries
+Method 3: Using raw queries
 ---------------------------
 
 A more flexible, but less intuitive method to restrict the FireWorks that a FireWorker through a raw MongoDB query. The query will restrict the FireWorker to only running FireWorks matching the query. For example, your query might specify that the ``spec.parameter1`` is under 100. In this case, FireWorks with ``spec.parameter1`` greater than 100 must be run elsewhere.
