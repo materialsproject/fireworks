@@ -1,0 +1,13 @@
+#BSUB -n $${ntasks}
+#BSUB -W $${walltime}
+#BSUB -q $${queue}
+#BSUB -J $${job_name}
+#BSUB -o $${job_name}-%J.out
+#BSUB -e $${job_name}-%J.error
+
+$${pre_rocket}
+cd $${launch_dir}
+$${rocket_launch}
+$${post_rocket}
+
+# CommonAdapter (SLURM) completed writing Template

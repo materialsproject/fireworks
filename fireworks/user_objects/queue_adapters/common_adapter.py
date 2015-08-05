@@ -8,6 +8,7 @@ queues.
 """
 import getpass
 import os
+import stat
 import re
 import subprocess
 from fireworks.queue.queue_adapter import QueueAdapterBase, Command
@@ -31,14 +32,16 @@ class CommonAdapter(QueueAdapterBase):
     supported_q_types = {
         "PBS": "qsub",
         "SGE": "qsub",
+        "Cobalt": "qsub",
         "SLURM": "sbatch",
-        "LoadLeveler": "llsubmit"
+        "LoadLeveler": "llsubmit",
+        "LoadSharingFacility": "bsub"
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
         """
         :param q_type: The type of queue. Right now it should be either PBS,
-                       SGE, SLURM or LoadLeveler.
+                       SGE, SLURM, Cobalt or LoadLeveler.
         :param q_name: A name for the queue. Can be any string.
         :param template_file: The path to the template file. Leave it as
                               None (the default) to use Fireworks' built-in
@@ -68,6 +71,7 @@ class CommonAdapter(QueueAdapterBase):
         else:
             # PBS: "1234.whatever",
             # SGE: "Your job 44275 ("jobname") has been submitted"
+            # Cobalt: "199768"
             re_string = r"(\d+)"
         m = re.search(re_string, output_str)
         if m:
@@ -79,11 +83,18 @@ class CommonAdapter(QueueAdapterBase):
             return ['squeue', '-o "%u"', '-u', username]
         elif self.q_type == "LoadLeveler":
             return ['llq', '-u', username]
+        elif self.q_type == "LoadSharingFacility":
+            #use no header and the wide format so that there is one line per job, and display only running and pending jobs
+            return ['bjobs', '-p','-r','-o','jobID user queue','-noheader','-u',username]
         else:
-            return ['qstat', '-u', username]
+            return ['qstat', '-fu', username]
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
+
+	# WRS: I may come back to this after confirming that Cobalt
+        #      strictly follows the PBS standard and replace the spliting
+        #      with a regex that would solve length issues
 
         if self.q_type == 'SLURM': # this special case might not be needed
             # TODO: currently does not filter on queue name or job state
@@ -96,10 +107,16 @@ class CommonAdapter(QueueAdapterBase):
             else:
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
                 return int(output_str.split('\n')[-2].split()[0])
+        if self.q_type == "LoadSharingFacility":
+                #Just count the number of lines
+                return len(output_str.split('\n'))
 
         count = 0
         for l in output_str.split('\n'):
             if l.lower().startswith("job"):
+                if self.q_type == "Cobalt":
+                    # Cobalt capitalzes headers
+                    l=l.lower()
                 header = l.split()
                 if self.q_type == "PBS":
                     #PBS has a ridiculous two word "Job ID" in header
@@ -134,9 +151,18 @@ class CommonAdapter(QueueAdapterBase):
         submit_cmd = CommonAdapter.supported_q_types[self.q_type]
         # submit the job
         try:
+            if self.q_type == "Cobalt":
+                # Cobalt requires scripts to be executable
+                os.chmod(script_file,stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP)
             cmd = [submit_cmd, script_file]
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
+            #For most of the queues handled by common_adapter, it's best to simply submit the file name
+            #as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
+            #when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
+            if self.q_type == 'LoadSharingFacility':
+                with open(script_file,'r') as inputFile:
+                    p = subprocess.Popen([submit_cmd],stdin=inputFile,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            else:
+                p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
 
             # grab the returncode. PBS returns 0 if the job was successful
