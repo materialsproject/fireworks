@@ -62,7 +62,8 @@ class FWorker(FWSerializable):
         fworker_check = [{"spec._fworker": {"$exists": False}}, {"spec._fworker": None}, {"spec._fworker": self.name}]
         if '$or' in q:
             # TODO: cover case where user sets an $and query?
-            q['$and'] = [{'$or': q.pop('$or')}, {'$or': fworker_check}]
+            q['$and'] = q.get('$and', [])
+            q['$and'].extend([{'$or': q.pop('$or')}, {'$or': fworker_check}])
         else:
             q['$or'] = fworker_check
         if self.category:
