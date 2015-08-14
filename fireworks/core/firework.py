@@ -662,7 +662,6 @@ class Workflow(FWSerializable):
         :param updated_on: (datetime)
         :param fw_states: (dict) - leave alone unless you are purposefully creating a Lazy-style WF
         """
-
         name = name or 'unnamed WF'  # prevent None names
 
         links_dict = links_dict if links_dict else {}
@@ -988,7 +987,7 @@ class Workflow(FWSerializable):
         return {'fws': [f.to_dict() for f in self.id_fw.values()],
                 'links': self.links.to_dict(),
                 'name': self.name,
-                'metadata': self.metadata, 'updated_on': self.updated_on}
+                'metadata': self.metadata, 'updated_on': self.updated_on, 'created_on': self.created_on}
 
     def to_db_dict(self):
         m_dict = self.links.to_db_dict()
@@ -1049,7 +1048,8 @@ class Workflow(FWSerializable):
     @classmethod
     def from_FireWork(cls, fw, name=None, metadata=None):
         name = name if name else fw.name
-        return Workflow([fw], None, name=name, metadata=metadata)
+        return Workflow([fw], None, name=name, metadata=metadata, created_on=fw.created_on,
+                        updated_on=fw.updated_on)
 
     def __str__(self):
         return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)

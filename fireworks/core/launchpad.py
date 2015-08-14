@@ -299,7 +299,7 @@ class LaunchPad(FWSerializable):
             raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
-                        links_dict['metadata'])
+                        links_dict['metadata'], links_dict['created_on'], links_dict['updated_on'])
 
     def get_wf_by_fw_id_lzyfw(self, fw_id):
         """
@@ -321,7 +321,8 @@ class LaunchPad(FWSerializable):
             fw_states = None
 
         return Workflow(fws, links_dict['links'], links_dict['name'],
-                        links_dict['metadata'], fw_states=fw_states)
+                        links_dict['metadata'], links_dict['created_on'],
+                        links_dict['updated_on'], fw_states)
 
     def delete_wf(self, fw_id):
         links_dict = self.workflows.find_one({'nodes': fw_id})
