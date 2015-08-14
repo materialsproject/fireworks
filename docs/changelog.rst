@@ -2,7 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.1.0**
+
+* fix bug in created_on for workflows (thanks to W. Zhao for pointing it out)
+* fix bug in FWorker query for certain situations (P. Huck)
+* Updates for Cobalt, Py3 (W. Scullin)
+* Updates for IBM Loadsharing facility (Z. Ulissi)
+
 **v1.08**
+.. note:: v1.08 is not in pip due to version number issues, use Github to get this legacy version
 
 * allow PyTask to return FWAction
 * allow FWConfig to set web host and port for GUI
@@ -10,10 +18,12 @@ FireWorks Changelog
 * minor fixes and typo corrections (jakirkham)
 
 **v1.07**
+.. note:: v1.07 is not in pip due to version number issues, use Github to get this legacy version
 
 * fix bug in offline mode
 
 **v1.06**
+.. note:: v1.06 is not in pip due to version number issues, use Github to get this legacy version
 .. caution:: Offline mode unusable in this release
 
 * Pymongo3 compatibility
@@ -22,6 +32,7 @@ FireWorks Changelog
 * unit test offline mode
 
 **v1.05**
+.. note:: v1.05 is not in pip due to version number issues, use Github to get this legacy version
 
 .. caution:: The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the "auto_kwargs" option to True in your FireTasks.
 .. caution:: Offline mode unusable in this release

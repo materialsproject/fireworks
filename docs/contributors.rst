@@ -26,7 +26,11 @@ William Davidson Richards wrote the SGE queue adapter and provided useful feedba
 
 Felix Brockherde added support for the IBM LoadLeveler queueing system and helped stomp bugs.
 
-Brian Foster, kpoman, jakirkham, zulissi, and Ganesh Panchapakesan helped stomp bugs and provide improvements.
+Zach Ulissi added support for IBM LoadSharing facility.
+
+William Scullin added ALCF Cobalt support and helped stomp bugs.
+
+Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan helped stomp bugs and provide improvements.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey for helpful discussions.
 
