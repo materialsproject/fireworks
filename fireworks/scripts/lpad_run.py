@@ -413,7 +413,7 @@ def webgui(args):
     os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
     from fireworks.flask_site.app import app
     from multiprocessing import Process
-    p1 = Process(target=app.run, kwargs={"host": args.host, "port": args.port, "debug": False})
+    p1 = Process(target=app.run, kwargs={"host": args.host, "port": args.port, "debug": args.debug})
     p1.start()
     if not args.server_mode:
         import webbrowser
@@ -797,6 +797,7 @@ def lpad():
                         help="Port to run the web server on (default: 5000 or WEBSERVER_PORT arg in FW_config.yaml)")
     webgui_parser.add_argument("--host", dest="host", type=str, default=WEBSERVER_HOST,
                         help="Host to run the web server on (default: 127.0.0.1 or WEBSERVER_HOST arg in FW_config.yaml)")
+    webgui_parser.add_argument('--debug', help='print debug messages', action='store_true')
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')
     webgui_parser.set_defaults(func=webgui)
 

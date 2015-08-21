@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from fireworks.flask_site.helpers import get_totals
+from fireworks import Firework
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from pymongo import DESCENDING
 import os, json
@@ -7,12 +7,12 @@ from fireworks.core.launchpad import LaunchPad
 from flask.ext.paginate import Pagination
 
 app = Flask(__name__)
-app.debug = True
 app.use_reloader=True
 hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
+#lp = LaunchPad.from_file("/Users/ajain/fw_dbs/my_launchpad.yaml")
 PER_PAGE = 20
-STATES = "archived defused waiting ready reserved fizzled running completed".upper().split(" ")
+STATES = Firework.STATE_RANKS.keys()
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -90,53 +90,45 @@ def show_workflow(wf_id):
 @app.route('/fw/', defaults={"state": "total"})
 @app.route("/fw/<state>/")
 def fw_states(state):
-  db = lp.fireworks
-  if state is "total":
-    query = {}    
-  else: 
-    query = {'state': state.upper()}
-  fw_count = lp.get_fw_ids(query=query, count_only=True)
-  fw_stats = get_totals(STATES, lp)["fw_stats"]
-  all_states = map(lambda s: s + ": " + str(fw_stats[s]), 
-    STATES)
-  all_states = zip(STATES, all_states)
-  try:
+    db = lp.fireworks
+    q = {} if state == "total" else {"state": state}
+    import datetime
+    print(datetime.datetime.utcnow(), '1')
+    fw_count = lp.get_fw_ids(query=q, count_only=True)
+    print(datetime.datetime.utcnow(), '2')
+    try:
       page = int(request.args.get('page', 1))
-  except ValueError:
-      page = 1  
-  rows = list(db.find(query, projection=["fw_id", "name", "created_on"])
-    .skip(page-1).sort([("created_on", DESCENDING)]).limit(PER_PAGE))
-  pagination = Pagination(page=page, total=fw_count,  
+    except ValueError:
+      page = 1
+    print(datetime.datetime.utcnow(), '3')
+    rows = list(db.find(q, projection=["fw_id", "name", "created_on"])
+    .skip(page-1).sort([("_id", DESCENDING)]).limit(PER_PAGE))
+    print(datetime.datetime.utcnow(), '4')
+    pagination = Pagination(page=page, total=fw_count,
     record_name='fireworks', per_page=PER_PAGE)
-  return render_template('fw_state.html', **locals())
+    print(datetime.datetime.utcnow(), '5')
+    return render_template('fw_state.html', **locals())
 
 @app.route('/wf/', defaults={"state": "total"})
 @app.route("/wf/<state>/")
 def wf_states(state):
-  db = lp.workflows
-  if state is "total":
-    query = {}    
-  else: 
-    query = {'state': state.upper()}
-  wf_count = lp.get_fw_ids(query=query, count_only=True)
-  wf_stats = get_totals(STATES, lp)["wf_stats"]
-  all_states = map(lambda s: s + ": " + str(wf_stats[s]), 
-    STATES)
-  all_states = zip(STATES, all_states)
-  try:
+    db = lp.workflows
+    q = {} if state == "total" else {"state": state}
+    wf_count = lp.get_fw_ids(query=q, count_only=True)
+    try:
       page = int(request.args.get('page', 1))
-  except ValueError:
-      page = 1  
-  rows = list(db.find(query).skip(page-1)
-    .sort([('created_on', DESCENDING)])
+    except ValueError:
+      page = 1
+    rows = list(db.find(q).skip(page-1)
+    .sort([('_id', DESCENDING)])
     .limit(PER_PAGE))
-  for r in rows:
-    r["fw_id"] = r["nodes"][0]
-  pagination = Pagination(page=page, total=wf_count,  
+    for r in rows:
+        r["fw_id"] = r["nodes"][0]
+    pagination = Pagination(page=page, total=wf_count,
     record_name='workflows', per_page=PER_PAGE)
-  return render_template('wf_state.html', **locals())
+    return render_template('wf_state.html', **locals())
 
      
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, port=8080)
 
