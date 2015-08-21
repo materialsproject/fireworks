@@ -8,10 +8,11 @@
 <!-- FILTERS / NAVIGATION -->
 <div class="pull-down">
     <ul class="inline">
-        {% for s in STATES %}
+        {% for s in all_states %}
         <li>
             <a href="/wf/{{s}}">
                 <span class="label {{s}}">
+                    {{ s }}
                 </span>
             </a>
         </li>

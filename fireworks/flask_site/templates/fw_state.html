@@ -7,10 +7,11 @@
 <!-- FILTERS / NAVIGATION -->
 <div class="pull-down">
     <ul class="inline">
-        {% for s in STATES %}
+        {% for s in all_states %}
         <li>
             <a href="/fw/{{s}}">
-                <span class="label {{s}}">
+                <span class="label {{ s }}">
+                    {{ s }}
                 </span>
             </a>
         </li>
@@ -36,6 +37,7 @@
         </tr>
     {% endfor %}
 </table>
+
 {{ pagination.links|safe }}
 
 {% endblock %}

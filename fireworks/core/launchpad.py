@@ -267,13 +267,7 @@ class LaunchPad(FWSerializable):
             return Launch.from_dict(m_launch)
         raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
-    def get_fw_by_id(self, fw_id):
-        """
-        Given a Firework id, give back a Firework object
-
-        :param fw_id: Firework id (int)
-        :return: Firework object
-        """
+    def get_fw_dict_by_id(self, fw_id):
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})
 
         if not fw_dict:
@@ -285,8 +279,16 @@ class LaunchPad(FWSerializable):
 
         fw_dict['archived_launches'] = list(self.launches.find(
                     {'launch_id': {"$in": fw_dict['archived_launches']}}))
+        return fw_dict
 
-        return Firework.from_dict(fw_dict)
+    def get_fw_by_id(self, fw_id):
+        """
+        Given a Firework id, give back a Firework object
+
+        :param fw_id: Firework id (int)
+        :return: Firework object
+        """
+        return Firework.from_dict(self.get_fw_dict_by_id(fw_id))
 
     def get_wf_by_fw_id(self, fw_id):
         """
@@ -446,7 +448,9 @@ class LaunchPad(FWSerializable):
         criteria = query if query else {}
 
         if count_only:
-            return self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit).count()
+            if limit:
+                return ValueError("Cannot count_only and limit at the same time!")
+            return self.fireworks.find(criteria, {}, sort=sort).count()
 
         for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
@@ -502,6 +506,10 @@ class LaunchPad(FWSerializable):
 
         for idx in self.wf_user_indices:
             self.workflows.ensure_index(idx, background=bkground)
+
+        # for frontend, which needs to sort on _id after querying on state
+        self.fireworks.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
+        self.workflows.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
 
         if not bkground:
             self.m_logger.debug('Compacting database...')
