@@ -53,17 +53,16 @@ footer .navbar .nav {
 }
 
 .READY{
-  background: #EEBB00;
+  background: #2E92F2;
 }
 
 .WAITING{
-  background: #E6E8EB;
-  color: slategray;
+  background: #1F62A2;
 }
 
 
 .FIZZLED{
-  background: #BB0013;
+  background: #DB0051;
 }
 
 .COMPLETED{
@@ -71,18 +70,18 @@ footer .navbar .nav {
 }
 
 .RUNNING{
-  background:#3EA003;
+  background: #F8CE00;
 }
 .RESERVED{
-  background: #60BB19;
+  background: #BB8BC1;
 }
 
 .ARCHIVED{
-  background: #43A5BB;
+  background: #7F8287;
 }
 
 .DEFUSED{
-  background: #63B4E1;
+  background: #B7BCC3;
 }
 
 .total{
