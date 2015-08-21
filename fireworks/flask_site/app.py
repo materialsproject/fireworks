@@ -30,24 +30,17 @@ def pluralize(number, singular = '', plural = 's'):
 @app.route("/")
 def home():
     comp_fws = lp.get_fw_ids(query={'state': 'COMPLETED'}, count_only=True)
-    # Newest Fireworks table data
-    fws_shown = lp.fireworks.find({}, limit=PER_PAGE, sort=[('created_on', DESCENDING)])
-    fw_info = []
-    for item in fws_shown:
-        fw_info.append((item['fw_id'], item['name'], item['state']))
 
-    # Current Database Status table data
-    tot_fws   = lp.get_fw_ids(count_only=True)
-    tot_wfs   = lp.get_wf_ids(count_only=True)
     fw_nums = []
     wf_nums = []
     for state in STATES:
         fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
-        if state == 'WAITING' or state == 'RESERVED':
-            wf_nums.append('')
-        else:
-            wf_nums.append(lp.get_wf_ids(query={'state': state}, count_only=True))
-    info = zip(STATES, fw_nums, wf_nums)
+        wf_nums.append(lp.get_wf_ids(query={'state': state}, count_only=True))
+    state_nums = zip(STATES, fw_nums, wf_nums)
+
+    tot_fws = sum(fw_nums)
+    tot_wfs = sum(wf_nums)
+
     # Newest Workflows table data
     wfs_shown = lp.workflows.find({}, limit=PER_PAGE, sort=[('updated_on', DESCENDING)])
     wf_info = []

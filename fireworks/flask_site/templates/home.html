@@ -50,15 +50,15 @@
                 <th><a href="/fw">Fireworks</a></th>
                 <th><a href="/wf">Workflows</a></th>
             </tr>
-            {% for states, fw_info, wf_info in info %}
+            {% for state, fw_num, wf_num in state_nums %}
                 <tr>
                     <td>
-                        <span class="label {{states}}">
-                            {{ states }}
+                        <span class="label {{state}}">
+                            {{ state }}
                         </span>
                     </td>
-                    <td><center><a href="/fw/{{ states }}">{{ fw_info }}</a></center></td>
-                    <td><center><a href="/wf/{{ states }}">{{ wf_info }}</a></center></td>
+                    <td><center><a href="/fw/{{ state }}">{{ fw_num }}</a></center></td>
+                    <td><center><a href="/wf/{{ state }}">{{ wf_num }}</a></center></td>
                 </tr>
             {% endfor %}
             <tr>
