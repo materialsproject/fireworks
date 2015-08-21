@@ -487,6 +487,7 @@ class LaunchPad(FWSerializable):
             self.fireworks.ensure_index(f, background=bkground)
 
         self.launches.ensure_index('launch_id', unique=True, background=bkground)
+        self.launches.ensure_index('fw_id', background=bkground)
         self.launches.ensure_index('state_history.reservation_id', background=bkground)
 
         for f in ('state', 'time_start', 'time_end', 'host', 'ip',
