@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/flat-ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block morehead %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 

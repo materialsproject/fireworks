@@ -2,17 +2,54 @@
 
 {% block title %}Firework {{ fw_id }} Details{% endblock %}
 
+{% block morehead %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.jsonview.css') }}" />
+  <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.jsonview.js') }}"></script>
+  <script type="text/javascript">
+    var json = {{ fw | tojson }};
+
+    $(function() {
+      $("#json").JSONView(json);
+
+      $('#collapse-btn').on('click', function() {
+        $('#json').JSONView('collapse');
+      });
+      $('#expand-btn').on('click', function() {
+        $('#json').JSONView('expand');
+      });
+
+      $('#toggle-btn').on('click', function() {
+        $('#json').JSONView('toggle');
+      });
+
+      $('#toggle-level1-btn').on('click', function() {
+        $('#json').JSONView('toggle', 1);
+      });
+
+      $('#toggle-level2-btn').on('click', function() {
+        $('#json').JSONView('toggle', 2);
+      });
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
+  <center>
+    <span class="{{fw.state}} label">
+      {{ fw.state }}
+    </span>
+  </center>
 
-<center>
-  <span class="{{fw.state}} label">
-    {{ fw.state }}
-  </span>
-</center>
+  <h4 class="text-center">Firework {{ fw_id }} : {{fw.name}} </h4>
 
-<h4 class="text-center">Firework {{ fw_id }} : {{fw.name}} </h4>
+  <center>created on {{ fw.created_on|datetime }}</center>
 
-<center>created on {{ fw.created_on|datetime }}</center>
+  <button id="collapse-btn">Collapse</button>
+  <button id="expand-btn">Expand</button>
+  <button id="toggle-btn">Toggle</button>
+  <button id="toggle-level1-btn">Toggle level1</button>
+  <button id="toggle-level2-btn">Toggle level2</button>
+  <div id="json"></div>
 
-<div class="pull-down"></center><pre>{{ fw_data }}</pre></div>
 {% endblock %}
