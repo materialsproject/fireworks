@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.1.1**
+
+* greatly improve webgui: stability, clarity, functionality, and speed
+
 **v1.1.0**
 
 * fix bug in created_on for workflows (thanks to W. Zhao for pointing it out)
