@@ -87,7 +87,7 @@ class CommonAdapter(QueueAdapterBase):
             #use no header and the wide format so that there is one line per job, and display only running and pending jobs
             return ['bjobs', '-p','-r','-o','jobID user queue','-noheader','-u',username]
         else:
-            return ['qstat', '-fu', username]
+            return ['qstat', '-u', username]
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
