@@ -198,6 +198,11 @@ class Rocket():
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
                 if lp:
                     lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
+
+                if my_spec.get("_add_launchpad_and_fw_id"):
+                    t.launchpad = self.launchpad
+                    t.fw_id = self.fw_id
+
                 try:
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
@@ -223,6 +228,8 @@ class Rocket():
                     m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
                                                      '_exception': {'_stacktrace': tb, '_details': exception_details,
                                                                     '_failed_task_n': t_counter}}, exit=True)
+                    m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
+
                     if lp:
                         lp.complete_launch(launch_id, m_action, 'FIZZLED')
                     else:
@@ -235,7 +242,6 @@ class Rocket():
                             f.truncate()
 
                     return True
-
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
                 if os.path.exists('FWAction.json'):
@@ -280,6 +286,8 @@ class Rocket():
             m_action.mod_spec = all_mod_spec
             m_action.update_spec = all_update_spec
 
+            m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
+
             if lp:
                 lp.complete_launch(launch_id, m_action, 'COMPLETED')
             else:
@@ -307,6 +315,12 @@ class Rocket():
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
                                              '_exception': {'_stacktrace': traceback.format_exc(),
                                              '_details': None}}, exit=True)
+
+            try:
+                m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
+            except:
+                traceback.print_exc()
+
             if lp:
                 lp.complete_launch(launch_id, m_action, 'FIZZLED')
             else:
@@ -319,3 +333,13 @@ class Rocket():
                     f.truncate()
 
             return True
+
+    def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
+
+        if my_spec.get("_pass_job_info"):
+            fwaction.mod_spec.append({"_push": {"_job_info": {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir}}})
+
+        if my_spec.get("_preserve_fworker"):
+            fwaction.update_spec['_fworker'] = self.fworker.name
+
+        return fwaction
