@@ -75,12 +75,35 @@ job-ID  prior   name       user         state submit/start at     queue         
   44275 10.55000 test4         ongsp        qw    12/31/2013 19:35:04     all.q                               8
   44275 10.55000 test5         ongsp        qw    12/31/2013 19:35:04     all.q                               8
 """
+        cobalt = """
+JobId   User    Queue     Jobname  Nodes  Procs  Mode    WallTime  State    RunTime   Project       Location             
+=========================================================================================================================
+966975  roxeanne  prod-capability      bundle.565975                         8192   8192    script  24:00:00  running     10:02:12  RED_lights           OBL-40000-73FF1-8192 
+977799  fungui    prod-short           N/A                                   1024   32768   c32     01:00:00  running     00:26:38  RuberDucks2          OBL-04880-37BF1-1-1024 
+978183  wsculline prod-short           LOG-.n512.c.577183                    512    512     script  04:00:00  queued      N/A       NoDucks              None
+978083  zaphod    backfill             N/A                                   512    512     script  00:45:00  queued      N/A       RoastDucks           None                    
+978109  btender   prod-short           raptor_attack                         512    512     script  05:00:00  queued      N/A       LostWorldArt         None                   
+977799  btender   prod-short           N/A                                   1024   32768   c32     01:00:00  running     00:26:38  SupermanArt          OBL-04880-37BF1-1-1024  
+978144  wscullin  prod-long            R4Ndom                                512    512     script  12:00:00  queued      N/A       Z0mb13-Model         None     
+977812  funguy    prod-short           N/A                                   1024   32766   c32     01:00:00  queued      N/A       RubberDucks          None                    
+977824  sokawaii  prod-long            N2048-P8192                           2048   8192    c4      12:00:00  queued      N/A       SeaSurvey            None                    
+977850  wscullin  prod-capability      hello                                 8192   32768   c4      24:00:00  queued      N/A       UQ2014               None 
+977859  wscullin  prod-long            goodbye                               8192   32768   c4      24:00:00  queued      N/A       UQ2014               None  
+"""
+
         p = CommonAdapter(
             q_type="PBS",
             q_name="hello",
             queue="home-ong",
             hello="world")
         self.assertEqual(p._parse_njobs(pbs, "ongsp"), 1)
+        
+        p = CommonAdapter(
+            q_type="Cobalt",
+            q_name="hello",
+            queue="prod-capability",
+            hello="world")
+        self.assertEqual(p._parse_njobs(cobalt, "wscullin"), 1)
 
         p = CommonAdapter(
             q_type="SGE",
@@ -99,6 +122,15 @@ job-ID  prior   name       user         state submit/start at     queue         
 SOME PREAMBLE
 Submitted batch job 1234"""
         self.assertEqual(p._parse_jobid(sbatch_output), 1234)
+        p = CommonAdapter(
+            q_type="Cobalt",
+            q_name="hello",
+            queue="home-ong",
+            hello="world")
+        qsub_output = """
+Project: JCESR2015
+12345"""
+        self.assertEqual(p._parse_jobid(qsub_output), '12345')
         p = CommonAdapter(
                     q_type="PBS",
                     q_name="hello",

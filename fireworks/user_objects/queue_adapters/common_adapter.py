@@ -68,6 +68,13 @@ class CommonAdapter(QueueAdapterBase):
         if self.q_type == "LoadLeveler":
             # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
             re_string = r"The job \"(.*?)\" has been submitted"
+        elif self.q_type == "Cobalt":
+            # 99% of the time you just get:
+            # Cobalt: "199768"
+            # but there's a version that also includes project and queue
+            # information on preceeding lines and both of those  might 
+            # contain a number in any position.
+            re_string = r"(\b\d+\b)"
         else:
             # PBS: "1234.whatever",
             # SGE: "Your job 44275 ("jobname") has been submitted"
@@ -86,6 +93,9 @@ class CommonAdapter(QueueAdapterBase):
         elif self.q_type == "LoadSharingFacility":
             #use no header and the wide format so that there is one line per job, and display only running and pending jobs
             return ['bjobs', '-p','-r','-o','jobID user queue','-noheader','-u',username]
+        elif self.q_type == "Cobalt":
+            header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
+            return ['qstat','--header',header,'-u',username]
         else:
             return ['qstat', '-u', username]
 
