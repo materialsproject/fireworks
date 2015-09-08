@@ -200,6 +200,9 @@ class FWSerializable(object):
     def from_dict(cls, m_dict):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
 
+    def __repr__(self):
+        return json.dumps(self.to_dict())
+
     def to_format(self, f_format='json', **kwargs):
         """
         returns a String representation in the given format
