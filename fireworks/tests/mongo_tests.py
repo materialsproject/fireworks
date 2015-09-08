@@ -24,7 +24,7 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
-from fireworks.tests.tasks import DummyTask
+from fireworks.tests.tasks import DummyFWEnvTask, DummyJobPassTask, DummyLPTask
 from fireworks.features.stats import FWStats
 import six
 
@@ -266,19 +266,49 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(set(links[4]), set([2]))
         self.assertEqual(set(links[5]), set([2]))
 
-    def test_fworkerenv(self):
-        t = DummyTask()
+    def test_fw_env(self):
+        t = DummyFWEnvTask()
         fw = Firework(t)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
-                             'data'],
-                         "hello")
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['data'], "hello")
         self.lp.add_wf(fw)
         launch_rocket(self.lp, FWorker(env={"hello": "world"}))
         self.assertEqual(self.lp.get_launch_by_id(2).action.stored_data[
                              'data'],
                          "world")
+
+    def test_job_info(self):
+        fw1 = Firework([ScriptTask.from_str('echo "Testing job info"')], spec={"_pass_job_info": True}, fw_id=1)
+        fw2 = Firework([DummyJobPassTask()], parents=[fw1], spec={"_pass_job_info": True}, fw_id=2)
+        fw3 = Firework([DummyJobPassTask()], parents=[fw2], fw_id=3)
+        self.lp.add_wf(Workflow([fw1, fw2, fw3]))
+        launch_rocket(self.lp, self.fworker)
+        modified_spec = self.lp.get_fw_by_id(2).spec
+        self.assertIsNotNone(modified_spec['_job_info'])
+        self.assertTrue(modified_spec['_job_info'][0].has_key("launch_dir"))
+        self.assertEqual(modified_spec['_job_info'][0]['name'], 'Unnamed FW')
+        self.assertEqual(modified_spec['_job_info'][0]['fw_id'], 1)
+
+        launch_rocket(self.lp, self.fworker)
+        modified_spec = self.lp.get_fw_by_id(3).spec
+        print modified_spec
+        self.assertEqual(len(modified_spec['_job_info']), 2)
+
+    def test_preserve_fworker(self):
+        fw1 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker"')], spec={"_preserve_fworker": True}, fw_id=1)
+        fw2 = Firework([DummyJobPassTask()], parents=[fw1], fw_id=2)
+        self.lp.add_wf(Workflow([fw1, fw2]))
+        launch_rocket(self.lp, self.fworker)
+        modified_spec = self.lp.get_fw_by_id(2).spec
+        self.assertIsNotNone(modified_spec['_fworker'])
+
+    def test_add_lp_and_fw_id(self):
+        fw1 = Firework([DummyLPTask()], spec={"_add_launchpad_and_fw_id": True})
+        self.lp.add_wf(fw1)
+        launch_rocket(self.lp, self.fworker)
+        self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['fw_id'], 1)
+        self.assertIsNotNone(self.lp.get_launch_by_id(1).action.stored_data['host'])
 
     def test_spec_copy(self):
         task1 = ScriptTask.from_str('echo "Task 1"')

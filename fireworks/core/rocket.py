@@ -201,7 +201,7 @@ class Rocket():
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
                     t.launchpad = self.launchpad
-                    t.fw_id = self.fw_id
+                    t.fw_id = m_fw.fw_id
 
                 try:
                     m_action = t.run_task(my_spec)
@@ -337,7 +337,9 @@ class Rocket():
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
         if my_spec.get("_pass_job_info"):
-            fwaction.mod_spec.append({"_push": {"_job_info": {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir}}})
+            job_info = my_spec.get("_job_info", [])
+            job_info.append({"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir})
+            fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
 
         if my_spec.get("_preserve_fworker"):
             fwaction.update_spec['_fworker'] = self.fworker.name
