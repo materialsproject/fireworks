@@ -46,7 +46,7 @@ class FWorker(FWSerializable):
     @recursive_serialize
     def to_dict(self):
         return {'name': self.name, 'category': self.category,
-                'query': json.dumps(self.query, default=DATETIME_HANDLER),
+                'query': json.dumps(self._query, default=DATETIME_HANDLER),
                 'env': self.env}
 
     @classmethod
@@ -58,7 +58,7 @@ class FWorker(FWSerializable):
 
     @property
     def query(self):
-        q = self._query
+        q = dict(self._query)
         fworker_check = [{"spec._fworker": {"$exists": False}}, {"spec._fworker": None}, {"spec._fworker": self.name}]
         if '$or' in q:
             # TODO: cover case where user sets an $and query?

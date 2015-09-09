@@ -309,7 +309,7 @@ class MongoTests(unittest.TestCase):
 
     def test_preserve_fworker(self):
         fw1 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker"')], spec={"_preserve_fworker": True}, fw_id=1)
-        fw2 = Firework([DummyJobPassTask()], parents=[fw1], fw_id=2)
+        fw2 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker pt 2"')], parents=[fw1], fw_id=2)
         self.lp.add_wf(Workflow([fw1, fw2]))
         launch_rocket(self.lp, self.fworker)
 
