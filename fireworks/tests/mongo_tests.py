@@ -287,6 +287,7 @@ class MongoTests(unittest.TestCase):
         modified_spec = self.lp.get_fw_by_id(2).spec
         cnt = 0
         while '_job_info' not in modified_spec and cnt < 5:
+            print(modified_spec)
             modified_spec = self.lp.get_fw_by_id(2).spec
             time.sleep(5)
             cnt += 1
@@ -301,6 +302,7 @@ class MongoTests(unittest.TestCase):
         modified_spec = self.lp.get_fw_by_id(3).spec
         cnt = 0
         while '_job_info' not in modified_spec and cnt < 5:
+            print(modified_spec)
             modified_spec = self.lp.get_fw_by_id(3).spec
             time.sleep(5)
             cnt += 1
@@ -317,6 +319,7 @@ class MongoTests(unittest.TestCase):
         cnt = 0
         while '_fworker' not in modified_spec and cnt < 5:
             modified_spec = self.lp.get_fw_by_id(2).spec
+            print(modified_spec)
             time.sleep(5)
             cnt += 1
 
