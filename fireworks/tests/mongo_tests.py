@@ -285,14 +285,26 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(Workflow([fw1, fw2, fw3]))
         launch_rocket(self.lp, self.fworker)
         modified_spec = self.lp.get_fw_by_id(2).spec
+        cnt = 0
+        while '_job_info' not in modified_spec and cnt < 5:
+            modified_spec = self.lp.get_fw_by_id(2).spec
+            time.sleep(5)
+            cnt += 1
+
         self.assertIsNotNone(modified_spec['_job_info'])
         self.assertTrue(modified_spec['_job_info'][0].has_key("launch_dir"))
         self.assertEqual(modified_spec['_job_info'][0]['name'], 'Unnamed FW')
         self.assertEqual(modified_spec['_job_info'][0]['fw_id'], 1)
 
         launch_rocket(self.lp, self.fworker)
+
         modified_spec = self.lp.get_fw_by_id(3).spec
-        print modified_spec
+        cnt = 0
+        while '_job_info' not in modified_spec and cnt < 5:
+            modified_spec = self.lp.get_fw_by_id(3).spec
+            time.sleep(5)
+            cnt += 1
+
         self.assertEqual(len(modified_spec['_job_info']), 2)
 
     def test_preserve_fworker(self):
@@ -300,7 +312,14 @@ class MongoTests(unittest.TestCase):
         fw2 = Firework([DummyJobPassTask()], parents=[fw1], fw_id=2)
         self.lp.add_wf(Workflow([fw1, fw2]))
         launch_rocket(self.lp, self.fworker)
+
         modified_spec = self.lp.get_fw_by_id(2).spec
+        cnt = 0
+        while '_fworker' not in modified_spec and cnt < 5:
+            modified_spec = self.lp.get_fw_by_id(2).spec
+            time.sleep(5)
+            cnt += 1
+
         self.assertIsNotNone(modified_spec['_fworker'])
 
     def test_add_lp_and_fw_id(self):
