@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.1.3**
+
+* fix bug that caused FWorker queries to chain on themselves
+* fix issue of Python runners that override sys.stdout, causing problems in ScriptTask
+* fix unit tests
+
 **v1.1.2**
 
 * new special keyword _add_launchpad_and_fw_id allows accessing the LaunchPad in the FireTask
