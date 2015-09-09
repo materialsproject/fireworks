@@ -280,17 +280,21 @@ class MongoTests(unittest.TestCase):
 
     def test_job_info(self):
         fw1 = Firework([ScriptTask.from_str('echo "Testing job info"')], spec={"_pass_job_info": True}, fw_id=1)
-        fw2 = Firework([DummyJobPassTask()], parents=[fw1], spec={"_pass_job_info": True}, fw_id=2)
-        fw3 = Firework([DummyJobPassTask()], parents=[fw2], fw_id=3)
+        fw2 = Firework([DummyJobPassTask()], parents=[fw1], spec={"_pass_job_info": True, "target": 1}, fw_id=2)
+        fw3 = Firework([DummyJobPassTask()], parents=[fw2], spec={"target":2}, fw_id=3)
         self.lp.add_wf(Workflow([fw1, fw2, fw3]))
         launch_rocket(self.lp, self.fworker)
-        modified_spec = self.lp.get_fw_by_id(2).spec
+
+        target_fw_id = self.lp.get_fw_ids({"spec.target": 1})[0]
+        modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
+        """
         cnt = 0
         while '_job_info' not in modified_spec and cnt < 5:
             print(modified_spec)
-            modified_spec = self.lp.get_fw_by_id(2).spec
+            modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
             time.sleep(5)
             cnt += 1
+        """
 
         self.assertIsNotNone(modified_spec['_job_info'])
         self.assertTrue(modified_spec['_job_info'][0].has_key("launch_dir"))
@@ -299,29 +303,35 @@ class MongoTests(unittest.TestCase):
 
         launch_rocket(self.lp, self.fworker)
 
-        modified_spec = self.lp.get_fw_by_id(3).spec
+        target_fw_id = self.lp.get_fw_ids({"spec.target": 2})[0]
+        modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
+        """
         cnt = 0
         while '_job_info' not in modified_spec and cnt < 5:
             print(modified_spec)
-            modified_spec = self.lp.get_fw_by_id(3).spec
+            modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
             time.sleep(5)
             cnt += 1
+        """
 
         self.assertEqual(len(modified_spec['_job_info']), 2)
 
     def test_preserve_fworker(self):
         fw1 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker"')], spec={"_preserve_fworker": True}, fw_id=1)
-        fw2 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker pt 2"')], parents=[fw1], fw_id=2)
+        fw2 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker pt 2"')], spec={"target": 1}, parents=[fw1], fw_id=2)
         self.lp.add_wf(Workflow([fw1, fw2]))
         launch_rocket(self.lp, self.fworker)
 
-        modified_spec = self.lp.get_fw_by_id(2).spec
+        target_fw_id = self.lp.get_fw_ids({"spec.target": 1})[0]
+        modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
+        """
         cnt = 0
         while '_fworker' not in modified_spec and cnt < 5:
-            modified_spec = self.lp.get_fw_by_id(2).spec
+            modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
             print(modified_spec)
             time.sleep(5)
             cnt += 1
+        """
 
         self.assertIsNotNone(modified_spec['_fworker'])
 
