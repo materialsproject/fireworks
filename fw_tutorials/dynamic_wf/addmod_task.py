@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-"""
-TODO: add docs
-"""
 from fireworks.core.firework import FireTaskBase, FWAction
 
 __author__ = 'Anubhav Jain'

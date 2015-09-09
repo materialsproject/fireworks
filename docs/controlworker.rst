@@ -39,10 +39,10 @@ Controlling the Worker that executes a Firework
 
 By default, any FireWorker can pull and run any Firework. However, in some cases you might want to control which computing resources should run a Firework. For example, if some of your FireWorks require a lot of memory and fast processors, you might want to direct those jobs to only a subset of FireWorkers that have sufficiently high computing specifications.
 
-There are three methods to control where FireWorks are executed.
+There are four methods to control where FireWorks are executed.
 
 Method 1: Using name
---------------------------
+--------------------
 
 A simple method to direct FireWorks to FireWorks is by assigning the name of the resource where you want the job to run. You can do this by:
 
@@ -88,3 +88,8 @@ To set up a raw query:
 .. note:: Recall the ``my_fworker.yaml`` file from the :doc:`FireWorker tutorial </worker_tutorial>`. To set the FireWorker query, modify this file so that the ``query`` key is non-empty. An example of a query string in YAML format would be ``'{"spec.parameter1": {"$lte":100}}'``
 
 Note that if you set both a category and a query for a FireWorker, both constraints will be used.
+
+Method 4: Running child Fireworks on the same resource as the parent
+--------------------------------------------------------------------
+
+If you want the a child Firework to run on the same FireWorker as the parent, set the ``_preserve_fworker`` key in the Firework spec of the *parent* to True. This will automatically pass the ``_fworker`` of the child to be the FWorker of the parent. See :doc:`reference <reference>` for more details.

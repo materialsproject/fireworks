@@ -50,23 +50,23 @@ Reserved keywords in FW spec
 
 The FW spec has certain **reserved keywords** that indicate special instructions to the FireWorks software. They are listed below:
 
-======================      ==============
-**Keyword**                 **Meaning**
-----------------------      --------------
-_tasks                      Reserved for specifying the list of FireTasks in the spec.
-_priority                   Used to specify the job's priority. More information :doc:`here </priority_tutorial>`.
-_pass_job_info              This will pass a dictionary with keys ["fw_id", "fw_name", "launch_dir"] to the "_job_info" key
-_launch_dir                 Pre-specify the directory to run the job rather than using default FW directory. More information :doc:`here </controlworker>`.
-_fworker                    Used to control what resources run this job. More information :doc:`here </controlworker>`.
-_category                   Used to control what resources run this job. More information :doc:`here </controlworker>`.
-_queueadapter               Special queue parameters for this job. More information :doc:`here </queue_tutorial_pt2>`.
-_add_launchpad_and_fw_id    Embeds LaunchPad (``launchpad``) and fw_id (``fw_id``) variables inside the FireTask just before runtime. Not best practice but maybe useful.
-_dupefinder                 Used to specify a duplicate finder object for avoiding duplicated runs. More information :doc:`here </duplicates_tutorial>`.
-_allow_fizzled_parents      Run this Firework if all parents are *either* COMPLETED or FIZZLED.
-_preserve_fworker           Run the children on the same FireWorker as the parent
-_job_info                   Reserved for automatically putting putting information about previous jobs via the ``_pass_job_info`` option.
-_fizzled_parents            Reserved for automatically putting information about FIZZLED parents in a child Firework with the ``_allow_fizzled_parents`` option.
-_trackers                   Reserved for specifying Trackers.
-_background_tasks           Reserved for specifying BackgroundTasks
-_fw_env                     Reserved for setting worker-specifc environment variables. More information :doc:`here </worker_tutorial>`.
-======================      ==============
+========================  ==============
+**Keyword**               **Meaning**
+------------------------  --------------
+_tasks                    Reserved for specifying the list of FireTasks in the spec.
+_priority                 Used to specify the job's priority. More information :doc:`here </priority_tutorial>`.
+_pass_job_info            This will pass a dictionary with keys ["fw_id", "fw_name", "launch_dir"] to the "_job_info" key. More information :doc:`here </dynamic_wf_tutorial>`.
+_launch_dir               Pre-specify the directory to run the job rather than using default FW directory. More information :doc:`here </controlworker>`.
+_fworker                  Used to control what resources run this job. More information :doc:`here </controlworker>`.
+_category                 Used to control what resources run this job. More information :doc:`here </controlworker>`.
+_queueadapter             Special queue parameters for this job. More information :doc:`here </queue_tutorial_pt2>`.
+_add_launchpad_and_fw_id  Embeds LaunchPad (``launchpad``) and fw_id (``fw_id``) variables inside the FireTask just before runtime. Not best practice but maybe useful.
+_dupefinder               Used to specify a duplicate finder object for avoiding duplicated runs. More information :doc:`here </duplicates_tutorial>`.
+_allow_fizzled_parents    Run this Firework if all parents are *either* COMPLETED or FIZZLED.
+_preserve_fworker         Run the children on the same FireWorker as the parent
+_job_info                 Reserved for automatically putting putting information about previous jobs via the ``_pass_job_info`` option.
+_fizzled_parents          Reserved for automatically putting information about FIZZLED parents in a child Firework with the ``_allow_fizzled_parents`` option.
+_trackers                 Reserved for specifying Trackers.
+_background_tasks         Reserved for specifying BackgroundTasks
+_fw_env                   Reserved for setting worker-specifc environment variables. More information :doc:`here </worker_tutorial>`.
+========================  ==============

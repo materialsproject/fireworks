@@ -1,0 +1,18 @@
+fws:
+- fw_id: 1
+  spec:
+    _pass_job_info: true
+    _tasks:
+    - _fw_name: ScriptTask
+      script:
+      - echo "This is the first Firework"
+      use_shell: true
+- fw_id: 2
+  spec:
+    _tasks:
+    - _fw_name: Print Job Task
+links:
+  '1':
+  - 2
+  '2': []
+metadata: {}

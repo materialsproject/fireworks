@@ -69,7 +69,9 @@ You are now ready to use your FireTask!
 Dynamic and message-passing Workflows
 =====================================
 
-In the previous example, the ``run_task`` method did not return anything, nor does it pass data to downstream FireTasks or FireWorks. However, one can return a ``FWAction`` object that performs many powerful actions including dynamic workflows.
+In the previous example, the ``run_task`` method did not return anything, nor does it pass data to downstream FireTasks or FireWorks. Remember that the setting the ``_pass_job_info`` key in the Firework spec to True will automatically pass information about the current job to the child job - see :doc:`reference <reference>` for more details.
+
+However, one can also return a ``FWAction`` object that performs many powerful actions including dynamic workflows.
 
 Here's an example of a FireTask implementation that includes dynamic actions via the *FWAction* object::
 
@@ -122,7 +124,13 @@ The parameters of FWAction are as follows:
 
 The FWAction thereby allows you to *command* the workflow programmatically, allowing for the design of intelligent workflows that react dynamically to results.
 
-Appendix: alternate ways to identify the FireTask and changing the identification
+Appendix 1: accessing the LaunchPad within the FireTask
+=======================================================
+
+It is generally not good practice to use the LaunchPad within the FireTask because this makes the task specification less explicit. For example, this could make duplicate checking more problematic. However, if you really need to access the LaunchPad within a FireTask, you can set the ``_add_launchpad_and_fw_id`` key of the Firework spec to be True. Then, your tasks will be able to access two new variables, ``launchpad`` (a LaunchPad object) and ``fw_id`` (an int), as members of your FireTask. One example is shown in the unit test ``test_add_lp_and_fw_id()``.
+
+
+Appendix 2: alternate ways to identify the FireTask and changing the identification
 =================================================================================
 
 Other than explicitly defining a ``_fw_name`` parameter, there are two alternate ways to identify the FireTask:

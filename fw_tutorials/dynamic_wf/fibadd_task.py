@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-"""
-TODO: add docs
-"""
 from fireworks.core.firework import FWAction, Firework, FireTaskBase
 
 __author__ = 'Anubhav Jain'
@@ -12,8 +9,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 25, 2013'
 
-
-from fireworks.core.firework import FWAction, Firework, FireTaskBase
 
 class FibonacciAdderTask(FireTaskBase):
 
