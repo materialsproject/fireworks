@@ -2,6 +2,16 @@
 FireWorks Changelog
 ===================
 
+**v1.1.2**
+
+* new special keyword _add_launchpad_and_fw_id allows accessing the LaunchPad in the FireTask
+* new special keyword _pass_job_info makes it easy to pass run locations between jobs in a Workflow
+* new special keyword _preserve_fworker makes it easy to run multiple jobs on the same FWorker
+* default __repr__ for FWSerializable
+* fix Hopper qstat bug
+* Cobalt queue fixes (W. Scullin)
+* SLURM template update (P. Huck)
+
 **v1.1.1**
 
 * greatly improve webgui: stability, clarity, functionality, and speed
