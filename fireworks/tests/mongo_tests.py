@@ -298,7 +298,7 @@ class MongoTests(unittest.TestCase):
         """
 
         self.assertIsNotNone(modified_spec['_job_info'])
-        self.assertTrue(modified_spec['_job_info'][0].has_key("launch_dir"))
+        self.assertIsNotNone(modified_spec['_job_info'][0]["launch_dir"])
         self.assertEqual(modified_spec['_job_info'][0]['name'], 'Unnamed FW')
         self.assertEqual(modified_spec['_job_info'][0]['fw_id'], 1)
 
