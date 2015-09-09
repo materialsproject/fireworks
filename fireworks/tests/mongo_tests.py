@@ -287,14 +287,12 @@ class MongoTests(unittest.TestCase):
 
         target_fw_id = self.lp.get_fw_ids({"spec.target": 1})[0]
         modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
-        """
         cnt = 0
         while '_job_info' not in modified_spec and cnt < 5:
             print(modified_spec)
             modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
             time.sleep(5)
             cnt += 1
-        """
 
         self.assertIsNotNone(modified_spec['_job_info'])
         self.assertTrue(modified_spec['_job_info'][0].has_key("launch_dir"))
@@ -305,14 +303,13 @@ class MongoTests(unittest.TestCase):
 
         target_fw_id = self.lp.get_fw_ids({"spec.target": 2})[0]
         modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
-        """
+
         cnt = 0
         while '_job_info' not in modified_spec and cnt < 5:
             print(modified_spec)
             modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
             time.sleep(5)
             cnt += 1
-        """
 
         self.assertEqual(len(modified_spec['_job_info']), 2)
 
@@ -323,15 +320,14 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
 
         target_fw_id = self.lp.get_fw_ids({"spec.target": 1})[0]
+
         modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
-        """
         cnt = 0
         while '_fworker' not in modified_spec and cnt < 5:
             modified_spec = self.lp.get_fw_by_id(target_fw_id).spec
             print(modified_spec)
             time.sleep(5)
             cnt += 1
-        """
 
         self.assertIsNotNone(modified_spec['_fworker'])
 
