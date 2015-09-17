@@ -102,7 +102,7 @@ class CommonAdapter(QueueAdapterBase):
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
 
-	# WRS: I may come back to this after confirming that Cobalt
+        # WRS: I may come back to this after confirming that Cobalt
         #      strictly follows the PBS standard and replace the spliting
         #      with a regex that would solve length issues
 

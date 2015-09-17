@@ -39,13 +39,6 @@ TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 NCORES_PARALLEL_TEST = 4
 
-#TODO: make these tests much better. Right now they are just a crude first line of defense.
-
-# TODO: add dupefinder tests
-# TODO: test serialization of YAML on at least one WF
-
-# TODO: cleanup!!
-
 def random_launch(lp_creds):
         lp = LaunchPad.from_dict(lp_creds)
         while lp.run_exists(None):

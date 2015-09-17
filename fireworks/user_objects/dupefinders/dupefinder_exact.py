@@ -14,7 +14,7 @@ __date__ = 'Mar 01, 2013'
 
 class DupeFinderExact(DupeFinderBase):
     """
-    TODO: add docs
+    This DupeFinder requires an exact spec match between FireWorks.
     """
 
     _fw_name = 'DupeFinderExact'

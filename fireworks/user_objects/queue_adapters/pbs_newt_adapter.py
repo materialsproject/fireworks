@@ -13,8 +13,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Nov 21, 2013'
 
-# TODO: add logging
-
 class PBSAdapterNEWT(QueueAdapterBase):
     """
     A special PBS adapter that works via the NEWT interface (https://newt.nersc.gov)

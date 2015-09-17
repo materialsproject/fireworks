@@ -2,7 +2,7 @@
 Contributing Code to FireWorks
 ==============================
 
-FireWorks is an open-source codebase, and one if its advantages is the possibility for community contribution and improvement. If you are interested in contributing code to FireWorks, we'd be very happy to have you join the team! As a contributor, your code will be made available to the entire FireWorks community, and your name will be added to our :doc:`list of contributors </contributors>`. If you don't know what you want to contribute and are the adventurous type, you can look for the ``TODO`` tag inside various code sections for ideas as well as browse our :doc:`list of TODOs </todos>`.
+FireWorks is an open-source codebase, and one if its advantages is the possibility for community contribution and improvement. If you are interested in contributing code to FireWorks, we'd be very happy to have you join the team! As a contributor, your code will be made available to the entire FireWorks community, and your name will be added to our :doc:`list of contributors </contributors>`.
 
 We ask that all potential collaborators review our contribution criteria. You might also contact us directly at |Mail| to let us know what you're planning to contribute; we can discuss your plans and how to integrate your code for public release.
 

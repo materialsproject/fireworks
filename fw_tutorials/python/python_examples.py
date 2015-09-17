@@ -11,8 +11,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 28, 2013'
 
-# TODO: add serialization / deserialization examples
-
 # All examples assume you have MongoDB running on port 27017!
 
 def setup():

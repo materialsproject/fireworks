@@ -2,9 +2,6 @@
 
 #from __future__ import unicode_literals
 
-"""
-TODO: add docs
-"""
 import sys
 from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
 from fireworks.utilities.fw_serializers import load_object, FWSerializable
