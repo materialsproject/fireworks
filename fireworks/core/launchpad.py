@@ -509,6 +509,8 @@ class LaunchPad(FWSerializable):
 
         # for frontend, which needs to sort on _id after querying on state
         self.fireworks.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
+        self.fireworks.ensure_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", DESCENDING)], background=bkground)
+        self.fireworks.ensure_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", ASCENDING)], background=bkground)
         self.workflows.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
 
         if not bkground:
