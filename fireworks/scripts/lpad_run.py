@@ -76,10 +76,19 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     if args.state:
         query['state'] = args.state
 
-    if wf_mode:
-        return pw_check(lp.get_wf_ids(query), args, skip_pw)
+    if hasattr(args, "sort") and args.sort:
+        sort = [(args.sort, ASCENDING)]
+    elif hasattr(args, "sort") and args.rsort:
+        sort = [(args.rsort, DESCENDING)]
+    else:
+        sort = None
 
-    return pw_check(lp.get_fw_ids(query), args, skip_pw)
+    max = args.max if hasattr(args, "max") else 0
+
+    if wf_mode:
+        return pw_check(lp.get_wf_ids(query, sort=sort, limit=max), args, skip_pw)
+
+    return pw_check(lp.get_fw_ids(query, sort=sort, limit=max), args, skip_pw)
 
 
 def get_lp(args):
@@ -642,6 +651,7 @@ def lpad():
                                 help='only include these files in the report')
     trackfw_parser.add_argument('-x', '--exclude', nargs="+",
                                 help='exclude these files from the report')
+    trackfw_parser.add_argument('-m', '--max', help='limit results', default=0, type=int)
     trackfw_parser.set_defaults(func=track_fws)
 
     rerun_fws_parser = subparsers.add_parser('rerun_fws', help='re-run Firework(s)')
