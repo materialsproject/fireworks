@@ -12,6 +12,7 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 import os
 import glob
 import time
+import errno
 from monty.os import cd
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import load_object
@@ -28,7 +29,9 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
-def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO'):
+
+def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO',
+                           create_launcher_dir=False):
     """
     Submit a single job to the queue.
     
@@ -38,6 +41,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     :param launcher_dir: (str) The directory where to submit the job
     :param reserve: (bool) Whether to queue in reservation mode
     :param strm_lvl: (str) level at which to stream log messages
+    :param create_launcher_dir: (bool) Whether to create a subfolder launcher+timestamp, if needed
     """
 
     fworker = fworker if fworker else FWorker()
@@ -48,7 +52,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     qadapter = load_object(qadapter.to_dict())  # make a defensive copy, mainly for reservation mode
 
     fw, launch_id = None, None  # only needed in reservation mode
-    oldlaunch_dir = None  # only needed in --offline mode with _launch_dir option
 
     if not os.path.exists(launcher_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
@@ -61,38 +64,57 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
     if launchpad.run_exists(fworker):
         try:
+            if reserve:
+                l_logger.debug('finding a FW to reserve...')
+                fw, launch_id = launchpad.reserve_fw(fworker, launcher_dir)
+                if not fw:
+                    l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
+                    return False
+                l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
+
+                # update qadapter job_name based on FW name
+                job_name = get_slug(fw.name)[0:20]
+                qadapter.update({'job_name': job_name})
+
+                if '_queueadapter' in fw.spec:
+                    l_logger.debug('updating queue params using Firework spec..')
+                    qadapter.update(fw.spec['_queueadapter'])
+
+                # reservation mode includes --fw_id in rocket launch
+                qadapter['rocket_launch'] += ' --fw_id {}'.format(fw.fw_id)
+
+                # update launcher_dir if _launch_dir is selected in reserved fw
+                if '_launch_dir' in fw.spec:
+                    fw_launch_dir = os.path.expandvars(fw.spec['_launch_dir'])
+
+                    if not os.path.isabs(fw_launch_dir):
+                        fw_launch_dir = os.path.join(launcher_dir, fw_launch_dir)
+
+                    launcher_dir = fw_launch_dir
+
+                    try:
+                        os.makedirs(launcher_dir)
+                    except OSError as exception:
+                        if exception.errno != errno.EEXIST:
+                            raise
+
+                    launchpad.change_launch_dir(launch_id, launcher_dir)
+                elif create_launcher_dir:
+                    # create launcher_dir
+                    launcher_dir = create_datestamp_dir(launcher_dir, l_logger, prefix='launcher_')
+                    launchpad.change_launch_dir(launch_id, launcher_dir)
+
+            elif create_launcher_dir:
+                # create launcher_dir
+                launcher_dir = create_datestamp_dir(launcher_dir, l_logger, prefix='launcher_')
+
             # move to the launch directory
             l_logger.info('moving to launch_dir {}'.format(launcher_dir))
+
             with cd(launcher_dir):
-                if reserve:
-                    l_logger.debug('finding a FW to reserve...')
-                    fw, launch_id = launchpad.reserve_fw(fworker, launcher_dir)
-                    if not fw:
-                        l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
-                        return False
-                    l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
 
-                    # update qadapter job_name based on FW name
-                    job_name = get_slug(fw.name)[0:20]
-                    qadapter.update({'job_name': job_name})
-
-                    if '_queueadapter' in fw.spec:
-                        l_logger.debug('updating queue params using Firework spec..')
-                        qadapter.update(fw.spec['_queueadapter'])
-
-                    # reservation mode includes --fw_id in rocket launch
-                    qadapter['rocket_launch'] += ' --fw_id {}'.format(fw.fw_id)
-
-                    if '--offline' in qadapter['rocket_launch']:
-                        # handle _launch_dir parameter now b/c we can't call
-                        # launchpad.change_launch_dir() later on in offline mode
-                        if '_launch_dir' in fw.spec:
-                            os.chdir(fw.spec['_launch_dir'])
-                            oldlaunch_dir = launcher_dir
-                            launcher_dir = os.path.abspath(os.getcwd())
-                            launchpad.change_launch_dir(launch_id, launcher_dir)
-
-                        setup_offline_job(launchpad, fw, launch_id)
+                if '--offline' in qadapter['rocket_launch']:
+                    setup_offline_job(launchpad, fw, launch_id)
 
                 l_logger.debug('writing queue script')
                 with open(SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -114,9 +136,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             log_exception(l_logger, 'Error writing/submitting queue script!')
             return False
 
-        finally:
-            if oldlaunch_dir:
-                os.chdir(oldlaunch_dir)  # this only matters in --offline mode with _launch_dir!
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
         return False
@@ -172,10 +191,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
                     block_dir = create_datestamp_dir(launch_dir, l_logger)
 
-                # create launcher_dir
-                launcher_dir = create_datestamp_dir(block_dir, l_logger, prefix='launcher_')
                 # launch a single job
-                if not launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir, reserve, strm_lvl):
+                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True):
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if num_launched == nlaunches:
