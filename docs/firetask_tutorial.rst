@@ -201,12 +201,12 @@ should contain in its output a section that looks like this::
     ...
 
 Writing your own custom FireTasks
----------------------------------
+=================================
 
 If you'd like to attempt writing your own FireTask, a guide to doing so can be found :doc:`here <guide_to_writing_firetasks>`.
 
 Python example (optional)
--------------------------
+=========================
 
 Here is a complete Python example that runs a custom FireTask::
 
