@@ -1173,31 +1173,37 @@ class LazyFirework(object):
 
     @property
     def tasks(self): return self.partial_fw.tasks
+
     @tasks.setter
     def tasks(self, value): self.partial_fw.tasks = value
 
     @property
     def spec(self): return self.partial_fw.spec
+
     @spec.setter
     def spec(self, value): self.partial_fw.spec = value
 
     @property
     def name(self): return self.partial_fw.name
+
     @name.setter
     def name(self, value): self.partial_fw.name = value
 
     @property
     def created_on(self): return self.partial_fw.created_on
+
     @created_on.setter
     def created_on(self, value): self.partial_fw.created_on = value
 
     @property
     def updated_on(self): return self.partial_fw.updated_on
+
     @updated_on.setter
     def updated_on(self, value): self.partial_fw.updated_on = value
 
     @property
     def parents(self): return self.partial_fw.parents
+
     @parents.setter
     def parents(self, value): self.partial_fw.parents = value
 
@@ -1207,6 +1213,7 @@ class LazyFirework(object):
     @property
     def launches(self):
         return self._get_launch_data('launches')
+
     @launches.setter
     def launches(self, value):
         self._launches['launches'] = True
@@ -1215,13 +1222,13 @@ class LazyFirework(object):
     @property
     def archived_launches(self):
         return self._get_launch_data('archived_launches')
+
     @archived_launches.setter
     def archived_launches(self, value):
         self._launches['archived_launches'] = True
         self.partial_fw.archived_launches = value
 
     # Lazy properties that idempotently instantiate a FireWork object
-
     @property
     def partial_fw(self):
         if not self._fw:
