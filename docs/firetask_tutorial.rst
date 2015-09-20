@@ -134,7 +134,7 @@ Before diving into an example of custom FireTask, it is worth understanding how 
 Custom FireTask example: Addition Task
 --------------------------------------
 
-Let's explore custom FireTasks with by writing custom Python for adding two numbers specified in the **spec**.
+Let's explore custom FireTasks with an example: a custom Python script for adding two numbers specified in the **spec**.
 
 1. Staying in the firetasks tutorial directory, remove any output from the previous step::
 
@@ -199,6 +199,11 @@ should contain in its output a section that looks like this::
             "sum": 3
         },
     ...
+
+Writing your own custom FireTasks
+---------------------------------
+
+If you'd like to attempt writing your own FireTask, a guide to doing so can be found :doc:`here <guide_to_writing_firetasks>`.
 
 Python example (optional)
 -------------------------
