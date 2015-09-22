@@ -24,7 +24,7 @@ if __name__ == "__main__":
         author_email='anubhavster@gmail.com',
         license='modified BSD',
         packages=find_packages(),
-        package_data={'fireworks.user_objects.queue_adapters': ['*.txt'], 'fireworks.user_objects.firetasks': ['templates/*.txt'], 'fireworks.flask_site': ['static/images/*', 'static/css/*', 'templates/*']},
+        package_data={'fireworks.user_objects.queue_adapters': ['*.txt'], 'fireworks.user_objects.firetasks': ['templates/*.txt'], 'fireworks.flask_site': ['static/images/*', 'static/css/*', 'static/js/*', 'templates/*']},
         zip_safe=False,
         install_requires=['pyyaml>=3.1.0', 'pymongo>=3.0', 'Jinja2>=2.7.3',
                           'six>=1.5.2', 'monty>=0.5.6', 'python-dateutil>=2.2'],
