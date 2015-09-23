@@ -44,6 +44,7 @@ FW_LOGGING_FORMAT = '%(asctime)s %(levelname)s %(message)s'  # format for logger
 
 QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in failures
 QUEUE_UPDATE_INTERVAL = 5  # max interval (seconds) needed for queue to update after submitting a job
+QUEUE_JOBNAME_MAXLEN = 20  # max length of the jobname for queue systems
 
 SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
 
