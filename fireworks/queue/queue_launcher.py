@@ -19,7 +19,7 @@ from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, \
     create_datestamp_dir, get_slug
 from fireworks.fw_config import SUBMIT_SCRIPT_NAME, ALWAYS_CREATE_NEW_BLOCK, \
     QUEUE_RETRY_ATTEMPTS, QUEUE_UPDATE_INTERVAL, QSTAT_FREQUENCY, \
-    RAPIDFIRE_SLEEP_SECS
+    RAPIDFIRE_SLEEP_SECS, QUEUE_JOBNAME_MAXLEN
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -73,7 +73,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
 
                     # update qadapter job_name based on FW name
-                    job_name = get_slug(fw.name)[0:20]
+                    job_name = get_slug(fw.name)[0:QUEUE_JOBNAME_MAXLEN]
                     qadapter.update({'job_name': job_name})
 
                     if '_queueadapter' in fw.spec:
