@@ -75,6 +75,7 @@ A few basic parameters that can be tweaked are:
 * ``EXCEPT_DETAILS_ON_RERUN: False`` - if True, when rerunning a FIZZLED Firework, the serialized exception details are added to the spec.
 * ``WEBSERVER_HOST: 127.0.0.1`` - the default host on which to run the web server
 * ``WEBSERVER_PORT: 5000`` - the default port on which to run the web server
+* ``QUEUE_JOBNAME_MAXLEN: 20`` - the max length of the job name to send to the queuing system (some queuing systems limit the size of job names)
 
 Parameters that you probably shouldn't change
 ---------------------------------------------
