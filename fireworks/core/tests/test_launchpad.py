@@ -76,9 +76,18 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name='test_workflow')
         self.lp.add_wf(wf)
+        self.assertRaises(ValueError, self.lp.reset, '', False, 0)
+        self.assertEqual(self.lp.workflows.count(), 1)
         self.lp.reset('',require_password=False)
         self.assertFalse(self.lp.get_fw_ids())
         self.assertFalse(self.lp.get_wf_ids())
+
+        # test failsafe in a strict way
+        for x in range(30):
+            self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
+
+        self.assertRaises(ValueError, self.lp.reset, '')
+        self.lp.reset('', False, 100)  # reset back
 
     def test_pw_check(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")

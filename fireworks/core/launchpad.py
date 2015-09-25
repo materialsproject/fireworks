@@ -174,7 +174,7 @@ class LaunchPad(FWSerializable):
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         return LaunchPad()
 
-    def reset(self, password, require_password=True):
+    def reset(self, password, require_password=True, max_reset_wo_password=25):
         """
         Create a new FireWorks database. This will overwrite the existing FireWorks database! \
         To safeguard against accidentally erasing an existing database, a password must \
@@ -183,10 +183,11 @@ class LaunchPad(FWSerializable):
         :param password: A String representing today's date, e.g. '2012-12-31'
         :param require_password: Whether a password is required to reset the DB. Highly \
         recommended to leave this set to True, otherwise you are inviting disaster!
+        :param max_reset_wo_password: A failsafe: even when require_password is set to False, FWS will not clear DBs that contain more workflows than this parameter
         """
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
-        if password == m_password or not require_password:
+        if password == m_password or (not require_password and self.workflows.count() <= max_reset_wo_password):
             self.fireworks.remove()
             self.launches.remove()
             self.workflows.remove()
@@ -194,6 +195,10 @@ class LaunchPad(FWSerializable):
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
+        elif not require_password:
+            raise ValueError("Password check cannot be overridden since the size of DB "
+                  "({} workflows) is greater than the max_reset_wo_password "
+                  "parameter ({}).".format(self.fireworks.count(), max_reset_wo_password))
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
