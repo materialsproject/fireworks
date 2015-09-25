@@ -132,9 +132,11 @@ class Rocket():
             return False
 
         try:
-            if '_launch_dir' in m_fw.spec:
+            if '_launch_dir' in m_fw.spec and lp:
                 prev_dir = launch_dir
                 launch_dir = os.path.expandvars(m_fw.spec['_launch_dir'])
+                if not os.path.abspath(launch_dir):
+                    launch_dir = os.path.normpath(os.path.join(os.getcwd(), launch_dir))
                 # thread-safe "mkdir -p"
                 try:
                     os.makedirs(launch_dir)
@@ -142,9 +144,8 @@ class Rocket():
                     if exception.errno != errno.EEXIST:
                         raise
                 os.chdir(launch_dir)
-                launch_dir = os.path.abspath(os.getcwd())
 
-                if lp:
+                if not os.path.samefile(launch_dir, prev_dir):
                     lp.change_launch_dir(launch_id, launch_dir)
 
                 if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
