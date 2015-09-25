@@ -87,7 +87,11 @@ class CommonAdapter(QueueAdapterBase):
 
     def _get_status_cmd(self, username):
         if self.q_type == 'SLURM':
-            return ['squeue', '-o "%u"', '-u', username]
+            # by default, squeue lists pending and running jobs
+            # -p: filter queue (partition)
+            # -h: no header line
+            # -o: reduce output to user only (shorter string to parse)
+            return ['squeue', '-o "%u"', '-u', username, '-p', self['queue'], '-h']
         elif self.q_type == "LoadLeveler":
             return ['llq', '-u', username]
         elif self.q_type == "LoadSharingFacility":
@@ -106,10 +110,9 @@ class CommonAdapter(QueueAdapterBase):
         #      strictly follows the PBS standard and replace the spliting
         #      with a regex that would solve length issues
 
-        if self.q_type == 'SLURM': # this special case might not be needed
-            # TODO: currently does not filter on queue name or job state
-            outs = output_str.split('\n')
-            return len([line.split() for line in outs if username in line])
+        if self.q_type == 'SLURM':
+            # subtract one due to trailing '\n' and split behavior
+            return len(output_str.split('\n'))-1
 
         if self.q_type == "LoadLeveler":
             if 'There is currently no job status to report' in output_str:
