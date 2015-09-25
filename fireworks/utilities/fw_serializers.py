@@ -45,7 +45,7 @@ except ImportError:
     from yaml import Loader as Loader, SafeDumper as Dumper
 import six
 
-from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES
+from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -66,7 +66,7 @@ def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
 
-    if hasattr(obj, 'as_dict'):  # compatible with new monty JSONEncoder (MontyEncoder)
+    if ENCODE_MONTY and hasattr(obj, 'as_dict'):  # compatible with new monty JSONEncoder (MontyEncoder)
         return recursive_dict(obj.as_dict(), preserve_unicode)
 
     if hasattr(obj, 'to_dict'):
@@ -102,7 +102,7 @@ def _recursive_load(obj):
         if '_fw_name' in obj:
             return load_object(obj)
 
-        if '@module' in obj and '@class' in obj:  # compatibility with MontyDecoder
+        if DECODE_MONTY and '@module' in obj and '@class' in obj:  # MontyDecoder compatibility
             return json.loads(json.dumps(obj), cls=MontyDecoder)
 
         return {k: _recursive_load(v) for k, v in obj.items()}

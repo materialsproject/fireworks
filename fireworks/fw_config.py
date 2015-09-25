@@ -88,6 +88,10 @@ TRACKER_LINES = 25  # number of lines to return in Tracker
 
 SORT_FWS = ''  # sort equal priority FWs? "FILO" or "FIFO".
 
+ENCODE_MONTY = True  # detect and use Monty-style as_dict()
+
+DECODE_MONTY = True  # detect and use Monty-style from_dict() with @class and @module
+
 EXCEPT_DETAILS_ON_RERUN = False  # add exception details to the spec when rerunning the FW
 
 WEBSERVER_HOST = "127.0.0.1"  # default host on which the Flask web server runs
