@@ -174,19 +174,19 @@ class LaunchPad(FWSerializable):
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         return LaunchPad()
 
-    def reset(self, password, require_password=True):
+    def reset(self, password, require_password=True, max_reset_wo_password=25):
         """
         Create a new FireWorks database. This will overwrite the existing FireWorks database! \
         To safeguard against accidentally erasing an existing database, a password must \
         be entered.
 
         :param password: A String representing today's date, e.g. '2012-12-31'
-        :param require_password: Whether a password is required to reset the DB. Highly \
-        recommended to leave this set to True, otherwise you are inviting disaster!
+        :param require_password: Whether a password is required to reset the DB. Setting to false is dangerous because running code unintentionally could clear your DB - use max_reset_wo_password to minimize risk.
+        :param max_reset_wo_password: A failsafe: when require_password is set to False, FWS will not clear DBs that contain more workflows than this parameter
         """
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
-        if password == m_password or not require_password:
+        if password == m_password or (not require_password and self.workflows.count() <= max_reset_wo_password):
             self.fireworks.remove()
             self.launches.remove()
             self.workflows.remove()
@@ -194,6 +194,10 @@ class LaunchPad(FWSerializable):
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
+        elif not require_password:
+            raise ValueError("Password check cannot be overridden since the size of DB "
+                  "({} workflows) is greater than the max_reset_wo_password "
+                  "parameter ({}).".format(self.fireworks.count(), max_reset_wo_password))
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
@@ -739,17 +743,19 @@ class LaunchPad(FWSerializable):
                 potential_lost_fw_ids.append(ld['fw_id'])
 
         for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
-            l_ids = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1})["launches"]
-            not_lost = [x for x in l_ids if x not in lost_launch_ids]
-            if len(not_lost) == 0:  # all launches are lost - we are lost!
-                lost_fw_ids.append(fw_id)
-            else:
-                for l_id in not_lost:
-                    l_state = self.launches.find_one({"launch_id": l_id}, {"state": 1})['state']
-                    if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
-                        break
+            f = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1, "state": 1})
+            if f['state'] == "RUNNING":  # only RUNNING FireWorks can be "lost", i.e. not defused or archived
+                l_ids = f["launches"]
+                not_lost = [x for x in l_ids if x not in lost_launch_ids]
+                if len(not_lost) == 0:  # all launches are lost - we are lost!
+                    lost_fw_ids.append(fw_id)
                 else:
-                    lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
+                    for l_id in not_lost:
+                        l_state = self.launches.find_one({"launch_id": l_id}, {"state": 1})['state']
+                        if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
+                            break
+                    else:
+                        lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
 
         if fizzle or rerun:
             for lid in lost_launch_ids:
@@ -1173,31 +1179,37 @@ class LazyFirework(object):
 
     @property
     def tasks(self): return self.partial_fw.tasks
+
     @tasks.setter
     def tasks(self, value): self.partial_fw.tasks = value
 
     @property
     def spec(self): return self.partial_fw.spec
+
     @spec.setter
     def spec(self, value): self.partial_fw.spec = value
 
     @property
     def name(self): return self.partial_fw.name
+
     @name.setter
     def name(self, value): self.partial_fw.name = value
 
     @property
     def created_on(self): return self.partial_fw.created_on
+
     @created_on.setter
     def created_on(self, value): self.partial_fw.created_on = value
 
     @property
     def updated_on(self): return self.partial_fw.updated_on
+
     @updated_on.setter
     def updated_on(self, value): self.partial_fw.updated_on = value
 
     @property
     def parents(self): return self.partial_fw.parents
+
     @parents.setter
     def parents(self, value): self.partial_fw.parents = value
 
@@ -1207,6 +1219,7 @@ class LazyFirework(object):
     @property
     def launches(self):
         return self._get_launch_data('launches')
+
     @launches.setter
     def launches(self, value):
         self._launches['launches'] = True
@@ -1215,13 +1228,13 @@ class LazyFirework(object):
     @property
     def archived_launches(self):
         return self._get_launch_data('archived_launches')
+
     @archived_launches.setter
     def archived_launches(self, value):
         self._launches['archived_launches'] = True
         self.partial_fw.archived_launches = value
 
     # Lazy properties that idempotently instantiate a FireWork object
-
     @property
     def partial_fw(self):
         if not self._fw:

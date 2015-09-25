@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+from monty.json import MontyDecoder
 
 __doc__ = """
 This module aids in serializing and deserializing objects.
@@ -25,8 +26,6 @@ Some advantages:
     - In some cases, objects can be serialized/deserialized extremely concisely, by use of only their fw_name (if no
     parameters are needed to describe the object)
 
-A dict created using FWSerializer's to_dict() method should be readable by Pymatgen's PMGDecoder,
-when the serialize_fw() decorator is used.
 """
 
 import traceback
@@ -67,7 +66,7 @@ def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
 
-    if hasattr(obj, 'as_dict'):  # strictly for pymatgen compatibility
+    if hasattr(obj, 'as_dict'):  # compatible with new monty JSONEncoder (MontyEncoder)
         return recursive_dict(obj.as_dict(), preserve_unicode)
 
     if hasattr(obj, 'to_dict'):
@@ -102,6 +101,10 @@ def _recursive_load(obj):
     if isinstance(obj, dict):
         if '_fw_name' in obj:
             return load_object(obj)
+
+        if '@module' in obj and '@class' in obj:  # compatibility with MontyDecoder
+            return json.loads(json.dumps(obj), cls=MontyDecoder)
+
         return {k: _recursive_load(v) for k, v in obj.items()}
 
     if isinstance(obj, (list, tuple)):

@@ -58,7 +58,11 @@ You can copy this code to a new place and make the following modifications in or
 Step 3: Register your FireTask
 ------------------------------
 
-When FireWorks bootstraps your FireTask from a database definition, it needs to know where to look for FireTasks. Thus you must register your FireTask so that it can be found. There are a couple of options for registering your FireTask (you only need to do *one* of the below):
+When FireWorks bootstraps your FireTask from a database definition, it needs to know where to look for FireTasks.
+
+**First**, you need to make sure your FireTask is defined in a file location that can be found by Python, i.e. is within Python's search path and that you can import your FireTask in a Python shell. This usually means either installing the code into the ``site-packages`` directory or modifying your ``PYTHONPATH`` environment variable to include the location of the FireTask. You can see the locations where Python looks for code by typing ``import sys`` followed by ``print(sys.path)``. If you are unfamiliar with this topic, some more details about this process can be found `here <http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch28s04.html>`_, or try Googling "how does Python find modules?"
+
+**Second**, you must register your FireTask so that it can be found by the FireWorks software. There are a couple of options for registering your FireTask (you only need to do *one* of the below):
 
 1. Use the **@explicit_serialize** decorator to define your FW name (see the Appendix). No further registration is needed if you use this option.
 #. (or) if you have access to the FireWorks source directory, put your FireTask definition anywhere in ``fireworks.user_objects`` or it subdirectories - it will be automatically be found there.
@@ -131,12 +135,14 @@ It is generally not good practice to use the LaunchPad within the FireTask becau
 
 
 Appendix 2: alternate ways to identify the FireTask and changing the identification
-=================================================================================
+===================================================================================
 
 Other than explicitly defining a ``_fw_name`` parameter, there are two alternate ways to identify the FireTask:
 
 * You can omit the ``_fw_name`` parameter altogether, and the code will then use the Class name as the identifier. However, note that this is dangerous as changing your Class name later on can break your code. In addition, if you have two FireTasks with the same name the code will throw an error.
 * (or) You can omit the ``_fw_name`` **and** add an ``@explicit_serialize`` decorator to your Class. This will identify your class by the module name AND class name. This prevents namespace collisions, AND it allows you to skip registering your FireTask! However, the serialization is even more sensitive to refactoring: moving your Class to a different module will break the code, as will renaming it. Here's an example of how to use the decorator::
+
+    from fireworks.utilities.fw_utilities import explicit_serialize
 
     @explicit_serialize
     class PrintFW(FireTaskBase):

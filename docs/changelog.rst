@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.1.4**
+
+* added JS folder to pip install (should fix JSONview issues)
+* optional max param for track_fws command
+* performance updates
+* doc updates
+
 **v1.1.3**
 
 * fix bug that caused FWorker queries to chain on themselves

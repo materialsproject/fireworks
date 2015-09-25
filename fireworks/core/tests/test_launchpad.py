@@ -76,9 +76,18 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name='test_workflow')
         self.lp.add_wf(wf)
+        self.assertRaises(ValueError, self.lp.reset, '', False, 0)
+        self.assertEqual(self.lp.workflows.count(), 1)
         self.lp.reset('',require_password=False)
         self.assertFalse(self.lp.get_fw_ids())
         self.assertFalse(self.lp.get_wf_ids())
+
+        # test failsafe in a strict way
+        for x in range(30):
+            self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
+
+        self.assertRaises(ValueError, self.lp.reset, '')
+        self.lp.reset('', False, 100)  # reset back
 
     def test_pw_check(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
@@ -443,6 +452,40 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'READY')
+
+
+    def test_detect_lostruns_defuse(self):
+        # Launch the timed firework in a separate process
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
+
+        rp = RocketProcess(self.lp, self.fworker)
+        rp.start()
+
+        # Wait for fw to start
+        it = 0
+        while not any([f.state == 'RUNNING' for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+            time.sleep(1)   # Wait 1 sec
+            it += 1
+            if it == 10:
+                raise ValueError("FW never starts running")
+        rp.terminate() # Kill the rocket
+
+        l, f = self.lp.detect_lostruns(0.01)
+        self.assertEqual((l, f), ([1], [1]))
+
+        self.lp.defuse_fw(1)
+
+        l, f = self.lp.detect_lostruns(0.01, rerun=True)
+        self.assertEqual((l, f), ([1], []))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, 'DEFUSED')
+
 
     def test_state_after_run_start(self):
         # Launch the timed firework in a separate process
