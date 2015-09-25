@@ -181,9 +181,8 @@ class LaunchPad(FWSerializable):
         be entered.
 
         :param password: A String representing today's date, e.g. '2012-12-31'
-        :param require_password: Whether a password is required to reset the DB. Highly \
-        recommended to leave this set to True, otherwise you are inviting disaster!
-        :param max_reset_wo_password: A failsafe: even when require_password is set to False, FWS will not clear DBs that contain more workflows than this parameter
+        :param require_password: Whether a password is required to reset the DB. Setting to false is dangerous because running code unintentionally could clear your DB - use max_reset_wo_password to minimize risk.
+        :param max_reset_wo_password: A failsafe: when require_password is set to False, FWS will not clear DBs that contain more workflows than this parameter
         """
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
