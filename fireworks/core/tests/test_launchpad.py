@@ -444,6 +444,40 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'READY')
 
+
+    def test_detect_lostruns_defuse(self):
+        # Launch the timed firework in a separate process
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
+
+        rp = RocketProcess(self.lp, self.fworker)
+        rp.start()
+
+        # Wait for fw to start
+        it = 0
+        while not any([f.state == 'RUNNING' for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+            time.sleep(1)   # Wait 1 sec
+            it += 1
+            if it == 10:
+                raise ValueError("FW never starts running")
+        rp.terminate() # Kill the rocket
+
+        l, f = self.lp.detect_lostruns(0.01)
+        self.assertEqual((l, f), ([1], [1]))
+
+        self.lp.defuse_fw(1)
+
+        l, f = self.lp.detect_lostruns(0.01, rerun=True)
+        self.assertEqual((l, f), ([1], []))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, 'DEFUSED')
+
+
     def test_state_after_run_start(self):
         # Launch the timed firework in a separate process
         class RocketProcess(Process):

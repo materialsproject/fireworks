@@ -739,17 +739,19 @@ class LaunchPad(FWSerializable):
                 potential_lost_fw_ids.append(ld['fw_id'])
 
         for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
-            l_ids = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1})["launches"]
-            not_lost = [x for x in l_ids if x not in lost_launch_ids]
-            if len(not_lost) == 0:  # all launches are lost - we are lost!
-                lost_fw_ids.append(fw_id)
-            else:
-                for l_id in not_lost:
-                    l_state = self.launches.find_one({"launch_id": l_id}, {"state": 1})['state']
-                    if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
-                        break
+            f = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1, "state": 1})
+            if f['state'] == "RUNNING":  # only RUNNING FireWorks can be "lost", i.e. not defused or archived
+                l_ids = f["launches"]
+                not_lost = [x for x in l_ids if x not in lost_launch_ids]
+                if len(not_lost) == 0:  # all launches are lost - we are lost!
+                    lost_fw_ids.append(fw_id)
                 else:
-                    lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
+                    for l_id in not_lost:
+                        l_state = self.launches.find_one({"launch_id": l_id}, {"state": 1})['state']
+                        if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
+                            break
+                    else:
+                        lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
 
         if fizzle or rerun:
             for lid in lost_launch_ids:
