@@ -11,6 +11,10 @@ __maintainer__ = 'Wei Chen'
 __email__ = 'weichen@lbl.gov'
 __date__ = 'Sep 8, 2014'
 
+"""
+Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.
+"""
+
 from datetime import datetime, timedelta
 from dateutil import parser
 from bson.son import SON
@@ -266,6 +270,7 @@ class FWStats:
             query.insert(2, {"$unwind":"$"+unwind})
         if return_query_only:
             return query
+        print(query)
         return list(coll.aggregate(query))
 
     @staticmethod
