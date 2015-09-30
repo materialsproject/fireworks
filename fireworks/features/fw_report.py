@@ -1,3 +1,5 @@
+from __future__ import division
+
 from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -27,13 +29,18 @@ class FWReport():
         date_key_idx = DATE_KEYS[interval]
 
         # initialize collection
-        string_type_dates = None  # whether the collection uses String or Date time dates
         if coll.lower() in ["fws", "fireworks"]:
             coll = "fireworks"
-            string_type_dates = True
+        elif coll.lower() in ["launches"]:
+            coll = "launches"
         elif coll.lower() in ["wflows", "workflows"]:
             coll = "workflows"
-            string_type_dates = False
+        else:
+            raise ValueError("Unrecognized collection!")
+
+        string_type_dates = True if coll in ["fireworks", "launches"] else False  # whether the collection uses String or Date time dates
+        time_field = "updated_on" if coll in ["fireworks", "workflows"] else "time_end"
+
         coll = self.db[coll]
 
         pipeline = []
@@ -42,28 +49,39 @@ class FWReport():
             now_time = datetime.utcnow()
             start_time = now_time - relativedelta(**{interval:num_intervals})
             date_q = {"$gte": start_time.isoformat()} if string_type_dates else {"$gte": start_time}
-            match_q.update({"updated_on": date_q})
+            match_q.update({time_field: date_q})
 
         pipeline.append({"$match": match_q})
-        pipeline.append({"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$updated_on", 0, date_key_idx]}}})
+        pipeline.append({"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$"+time_field, 0, date_key_idx]}}})
         pipeline.append({"$group": {"_id": {"state:": "$state", "date_key": "$date_key"}, "count": {"$sum": 1}, "state": {"$first": "$state"}}})
         pipeline.append({"$group": {"_id": {"_id.date_key": "$_id.date_key"}, "date_key": {"$first": "$_id.date_key"}, "states": {"$push": {"count": "$count", "state": "$state"}}}})
         pipeline.append({"$sort": {"date_key": -1}})
 
         print("query: {}".format(pipeline))
 
-        # add in missing states
+        # add in missing states and more fields
         decorated_list = []
         for x in coll.aggregate(pipeline):
+            count = 0
+            fizzled_cnt = 0
+            completed_cnt = 0
             new_states = OrderedDict()
             for s in sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.__getitem__):
                 count = 0
                 for i in x['states']:
                     if i['state'] == s:
                         count = i['count']
-                new_states[s] = count
+                    if s == "FIZZLED":
+                        fizzled_cnt = count
+                    if s == "COMPLETED":
+                        completed_cnt = count
 
-            decorated_list.append({"date_key": x["date_key"], "states": new_states})
+                new_states[s] = count
+                count += count
+
+            completed_score = 0 if completed_cnt == 0 else (completed_cnt/(completed_cnt+fizzled_cnt))
+            completed_score = round(completed_score, 3)
+            decorated_list.append({"date_key": x["date_key"], "states": new_states, "count": count, "completed_score": completed_score})
 
         return decorated_list
 
@@ -77,8 +95,12 @@ class FWReport():
             for i in x['states']:
                 print("{} : {}").format(i, x['states'][i])
             print("")
+            print("total : {}".format(x['count']))
+            print("C/(C+F) : {}".format(x['completed_score']))
+            print("")
+            print("")
 
 if __name__ == "__main__":
     lp = LaunchPad.from_file("/Users/ajain/fw_dbs/my_launchpad.yaml")
     fwr = FWReport(lp)
-    fwr.print_stats((fwr.get_stats(coll="fireworks", interval="days", num_intervals=5)))
+    fwr.print_stats((fwr.get_stats(coll="launches", interval="days", num_intervals=5)))
