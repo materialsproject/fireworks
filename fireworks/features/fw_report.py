@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from fireworks import LaunchPad, Firework
@@ -50,27 +51,34 @@ class FWReport():
         pipeline.append({"$sort": {"date_key": -1}})
 
         print("query: {}".format(pipeline))
-        return list(coll.aggregate(pipeline))
 
-    def print_stats(self, stat_list):
-        for x in stat_list:
-            stats_str = 'Stats for time-period {}'.format(x['date_key'])
-            border_str = "=" * len(stats_str)
-            print(stats_str)
-            print(border_str)
-
+        # add in missing states
+        decorated_list = []
+        for x in coll.aggregate(pipeline):
+            new_states = OrderedDict()
             for s in sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.__getitem__):
                 count = 0
                 for i in x['states']:
                     if i['state'] == s:
                         count = i['count']
+                new_states[s] = count
 
-                print ("{} : {}").format(s, count)
+            decorated_list.append({"date_key": x["date_key"], "states": new_states})
+
+        return decorated_list
+
+    def print_stats(self, decorated_stat_list):
+        for x in decorated_stat_list:
+            stats_str = 'Stats for time-period {}'.format(x['date_key'])
+            border_str = "=" * len(stats_str)
+            print(stats_str)
+            print(border_str)
+
+            for i in x['states']:
+                print("{} : {}").format(i, x['states'][i])
             print("")
 
-
 if __name__ == "__main__":
-    #lp = LaunchPad.from_file("/Users/ajain/fw_dbs/my_launchpad.yaml")
-    lp = LaunchPad()
+    lp = LaunchPad.from_file("/Users/ajain/fw_dbs/my_launchpad.yaml")
     fwr = FWReport(lp)
-    fwr.print_stats(fwr.get_stats(coll="fireworks", interval="days", num_intervals=20))
+    fwr.print_stats((fwr.get_stats(coll="fireworks", interval="days", num_intervals=5)))
