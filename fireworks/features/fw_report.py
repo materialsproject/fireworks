@@ -19,7 +19,7 @@ class FWReport():
         """
         self.db = lpad.db
 
-    def get_stats(self, coll="workflows", interval="days", num_intervals=5, additional_query=None):
+    def get_stats(self, coll="fireworks", interval="days", num_intervals=5, additional_query=None):
         # TODO: add docs
 
         # confirm interval
@@ -57,12 +57,10 @@ class FWReport():
         pipeline.append({"$group": {"_id": {"_id.date_key": "$_id.date_key"}, "date_key": {"$first": "$_id.date_key"}, "states": {"$push": {"count": "$count", "state": "$state"}}}})
         pipeline.append({"$sort": {"date_key": -1}})
 
-        print("query: {}".format(pipeline))
-
         # add in missing states and more fields
         decorated_list = []
         for x in coll.aggregate(pipeline):
-            count = 0
+            total_count = 0
             fizzled_cnt = 0
             completed_cnt = 0
             new_states = OrderedDict()
@@ -77,11 +75,11 @@ class FWReport():
                         completed_cnt = count
 
                 new_states[s] = count
-                count += count
+                total_count += count
 
             completed_score = 0 if completed_cnt == 0 else (completed_cnt/(completed_cnt+fizzled_cnt))
-            completed_score = round(completed_score, 3)
-            decorated_list.append({"date_key": x["date_key"], "states": new_states, "count": count, "completed_score": completed_score})
+            completed_score = round(completed_score, 3)*100
+            decorated_list.append({"date_key": x["date_key"], "states": new_states, "count": total_count, "completed_score": completed_score})
 
         return decorated_list
 

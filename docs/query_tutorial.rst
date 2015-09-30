@@ -59,14 +59,15 @@ Example queries - Workflows
 Example queries - Reporting
 ===========================
 
-#. Get a daily report::
+#. Get a report of what happened to recently updated Fireworks::
 
-    lpad report daily
+    lpad report
 
-#. Get report about workflows::
+#. Get report about workflows or jobs::
 
-    lpad report wfs
+    lpad report -c wflows
+    lpad report -c launches
 
-#. Find days with high failure rates
+#. Customize the reporting interval, e.g. see what happened the last 6 months::
 
-    lpad report catastrophes
+    lpad report -i months -n 6

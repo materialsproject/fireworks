@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+from fireworks.features.fw_report import FWReport
 
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
@@ -26,7 +27,6 @@ from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
-from fireworks.features.stats import FWStats
 from six.moves import input
 
 
@@ -468,52 +468,15 @@ def forget_offline(args):
 
 def report(args):
     lp=get_lp(args)
-    def print_results(results):
-        for i in results:
-            print('{}: {}'.format(i["_id"], str(i['count'])))
-            for k in i.keys():
-                if k not in ["_id", "count", "ids"]:
-                    print(' {}: {}'.format(k, str(i[k])))
-            if "ids" in i.keys():
-                print(" ids:"),
-                print(i["ids"])
-    def print_daily_results(results):
-        for i in results:
-            print(i["_id"])
-            for k in i["run_counts"]:
-                print(" {}: {}".format(k["state"], k["count"]))
-    if args.action_command=="fws":
-        results=FWStats(lp).get_fireworks_summary(query_start=args.start, query_end=args.end, query=args.query,
-                                                  time_field=args.time_field, weeks=args.weeks, days=args.days,
-                                                  hours=args.hours, minutes=args.minutes)
-        print_results(results)
-    elif args.action_command=="launches":
-        results=FWStats(lp).get_launch_summary(query_start=args.start, query_end=args.end, query=args.query,
-                                               time_field=args.time_field, weeks=args.weeks, days=args.days,
-                                               hours=args.hours, minutes=args.minutes, runtime_stats=args.runtime_stats,
-                                               include_ids=args.include_ids)
-        print_results(results)
-    elif args.action_command=="wfs":
-        results=FWStats(lp).get_workflow_summary(query_start=args.start, query_end=args.end, query=args.query,
-                                               time_field=args.time_field, weeks=args.weeks, days=args.days,
-                                               hours=args.hours, minutes=args.minutes)
-        print_results(results)
-    elif args.action_command=="daily":
-        results=FWStats(lp).get_daily_completion_summary(query_start=args.start, query_end=args.end, query=args.query,
-                                               time_field=args.time_field, weeks=args.weeks, days=args.days,
-                                               hours=args.hours, minutes=args.minutes)
-        print_daily_results(results)
-    elif args.action_command=="group_fizzled_fws":
-        results=FWStats(lp).group_fizzled_fireworks(group_by=args.group_by, query_start=args.start, query_end=args.end,
-                                                    query=args.query, weeks=args.weeks, days=args.days, hours=args.hours,
-                                                    minutes=args.minutes, include_ids=args.include_ids)
-        print_results(results)
-    elif args.action_command=="catastrophes":
-        results=FWStats(lp).identify_catastrophes(error_ratio=args.error_ratio, query_start=args.start, query_end=args.end,
-                                                  query=args.query, weeks=args.weeks, days=args.days,hours=args.hours,
-                                                  minutes=args.minutes,runtime_stats=args.runtime_stats,
-                                                  include_ids=args.include_ids)
-        print(results)
+    fwr = FWReport(lp)
+    stats = fwr.get_stats(coll=args.collection, interval=args.interval, num_intervals=args.num_intervals, additional_query=args.query)
+    title_str = "Stats on {}".format(args.collection)
+    title_dec = "-" * len(title_str)
+    print(title_dec)
+    print(title_str)
+    print(title_dec)
+    fwr.print_stats(stats)
+
 
 def track_fws(args):
     lp = get_lp(args)
@@ -845,41 +808,12 @@ def lpad():
     refresh_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     refresh_parser.set_defaults(func=refresh)
 
-    report_parser = subparsers.add_parser('report', help='Various statistics, type "lpad report -h" for more.',
-                    parents=[parent_parser])
-    report_parent_parser=ArgumentParser(add_help=False)
-    report_parent_parser.add_argument('-s', '--start', help="The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm). Default is 30 days from now.")
-    report_parent_parser.add_argument('-e', '--end', help="The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm). Default is now.")
-    report_parent_parser.add_argument('-w', '--weeks', help="Time difference in weeks to calculate start time from end time.", type=float, default=0)
-    report_parent_parser.add_argument('-d', '--days', help="Time difference in days to calculate start time from end time.", type=float, default=30)
-    report_parent_parser.add_argument('-o', '--hours', help="Time difference in hours to calculate start time from end time.", type=float, default=0)
-    report_parent_parser.add_argument('-m', '--minutes', help="Time difference in minutes to calculate start time from end time.", type=float, default=0)
-    report_parent_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries for process.")
-    report_subparser = report_parser.add_subparsers(title="action", dest="action_command")
-
-    fw_report_parser = report_subparser.add_parser('fws', help='Get a report for fireworks', parents=[report_parent_parser])
-    fw_report_parser.add_argument('-f', '--time_field', default="time_end")
-    fw_report_parser.set_defaults(func=report)
-    launch_report_parser = report_subparser.add_parser('launches', help='Get a report for luanches', parents=[report_parent_parser])
-    launch_report_parser.add_argument('-f', '--time_field', default="time_end")
-    launch_report_parser.add_argument('-r', '--runtime_stats', action="store_true")
-    launch_report_parser.add_argument('-i', '--include_ids', action="store_true")
-    launch_report_parser.set_defaults(func=report)
-    wf_report_parser = report_subparser.add_parser('wfs', help='Get a report for workflows', parents=[report_parent_parser])
-    wf_report_parser.add_argument('-f', '--time_field', default="updated_on")
-    wf_report_parser.set_defaults(func=report)
-    daily_report_parser = report_subparser.add_parser('daily', help='Get a daily report for fireworks', parents=[report_parent_parser])
-    daily_report_parser.add_argument("-f", '--time_field', default="time_end")
-    daily_report_parser.set_defaults(func=report)
-    group_fizzled_fw_parser = report_subparser.add_parser('group_fizzled_fws', help='Group fizzled fireworks', parents=[report_parent_parser])
-    group_fizzled_fw_parser.add_argument("group_by", help="Database field used to group fireworks items. For example: 'spec.task_type'")
-    group_fizzled_fw_parser.add_argument("-i", '--include_ids', action="store_true")
-    group_fizzled_fw_parser.set_defaults(func=report)
-    identify_catastrophes_parser = report_subparser.add_parser('catastrophes', help='Get days with higher failure ratio', parents=[report_parent_parser])
-    identify_catastrophes_parser.add_argument('-t', '--error_ratio', type=float, default=0.01)
-    identify_catastrophes_parser.add_argument('-i', '--include_ids', action="store_true")
-    identify_catastrophes_parser.add_argument('-r', '--runtime_stats', action="store_true")
-    identify_catastrophes_parser.set_defaults(func=report)
+    report_parser = subparsers.add_parser('report', help='Compile a report of runtime stats, type "lpad report -h" for more options.')
+    report_parser.add_argument("-c", "--collection", help="The collection to report on; choose from 'fws' (default), 'wflows', or 'launches'.", default="fws")
+    report_parser.add_argument('-i', '--interval', help="Interval on which to split the report. Choose from 'minutes', 'hours', 'days' (default), 'months', or 'years'.", default="days")
+    report_parser.add_argument("-n", "--num_intervals", help="The number of intervals on which to report (default=5)", type=int, default=5)
+    report_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries before processing.")
+    report_parser.set_defaults(func=report)
 
     args = parser.parse_args()
 
