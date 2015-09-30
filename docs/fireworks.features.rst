@@ -20,6 +20,14 @@ fireworks.features.dupefinder module
     :undoc-members:
     :show-inheritance:
 
+fireworks.features.fw_report module
+-----------------------------------
+
+.. automodule:: fireworks.features.fw_report
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks.features.multi_launcher module
 ----------------------------------------
 

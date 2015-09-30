@@ -2,6 +2,17 @@
 FireWorks Changelog
 ===================
 
+**v1.1.5**
+.. caution:: FWS now decodes monty-style objects, e.g. pymatgen. If you encounter decoding issues, set DECODE_MONTY=False in your fw_config.
+
+* completely reimplemented reporting (type ``lpad report`` for an example)
+* both encode and decode for monty-style objects
+* safer require_password=False option
+* fix njobs for SLURM (P. Huck)
+* fix bug in remove_useless_dirs (G. Petretto)
+* fix bug in detect_lostruns (thanks to G. Petretto)
+* add QUEUE_JOBNAME_MAXLEN config parameter, i.e. maximum char length for job names sent to queueing systems (D. Waroquiers)
+
 **v1.1.4**
 
 * added JS folder to pip install (should fix JSONview issues)
