@@ -3,6 +3,7 @@ FireWorks Changelog
 ===================
 
 **v1.1.5**
+
 .. caution:: FWS now decodes monty-style objects, e.g. pymatgen. If you encounter decoding issues, set DECODE_MONTY=False in your fw_config.
 
 * completely reimplemented reporting (type ``lpad report`` for an example)
