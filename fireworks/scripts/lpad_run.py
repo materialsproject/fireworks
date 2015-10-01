@@ -468,8 +468,9 @@ def forget_offline(args):
 
 def report(args):
     lp=get_lp(args)
+    query = ast.literal_eval(args.query) if args.query else None
     fwr = FWReport(lp)
-    stats = fwr.get_stats(coll=args.collection, interval=args.interval, num_intervals=args.num_intervals, additional_query=args.query)
+    stats = fwr.get_stats(coll=args.collection, interval=args.interval, num_intervals=args.num_intervals, additional_query=query)
     title_str = "Stats on {}".format(args.collection)
     title_dec = "-" * len(title_str)
     print(title_dec)

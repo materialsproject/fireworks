@@ -1,6 +1,5 @@
 from __future__ import division
 
-import ast
 from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -45,7 +44,7 @@ class FWReport():
         coll = self.db[coll]
 
         pipeline = []
-        match_q = ast.literal_eval(additional_query) if additional_query else {}
+        match_q = additional_query if additional_query else {}
         if num_intervals:
             now_time = datetime.utcnow()
             start_time = now_time - relativedelta(**{interval:num_intervals})
