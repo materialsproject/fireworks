@@ -3,7 +3,7 @@ from __future__ import division
 from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from fireworks import LaunchPad, Firework
+from fireworks import Firework
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
@@ -13,7 +13,6 @@ DATE_KEYS = {"years": 4, "months": 7, "days": 10, "hours": 13, "minutes": 16}
 
 class FWReport():
     def __init__(self, lpad):
-
         """
         :param lpad: (LaunchPad)
         """
@@ -97,8 +96,3 @@ class FWReport():
             print("C/(C+F) : {}".format(x['completed_score']))
             print("")
             print("")
-
-if __name__ == "__main__":
-    lp = LaunchPad.from_file("/Users/ajain/fw_dbs/my_launchpad.yaml")
-    fwr = FWReport(lp)
-    fwr.print_stats((fwr.get_stats(coll="launches", interval="days", num_intervals=5)))
