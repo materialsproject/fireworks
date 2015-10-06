@@ -1,6 +1,13 @@
 fireworks.features package
 ==========================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    fireworks.features.tests
+
 Submodules
 ----------
 
@@ -24,6 +31,14 @@ fireworks.features.fw_report module
 -----------------------------------
 
 .. automodule:: fireworks.features.fw_report
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fireworks.features.introspect module
+------------------------------------
+
+.. automodule:: fireworks.features.introspect
     :members:
     :undoc-members:
     :show-inheritance:

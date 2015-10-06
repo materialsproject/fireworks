@@ -30,7 +30,7 @@ Zach Ulissi added support for IBM LoadSharing facility.
 
 William Scullin added ALCF Cobalt support and helped stomp bugs.
 
-Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, and Patrick Huck helped stomp bugs and provide improvements.
+Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, and Donny Winston helped stomp bugs and provide improvements.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey and Deborah Bard for helpful discussions.
 

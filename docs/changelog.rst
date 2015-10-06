@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.1.6**
+
+* add beta of ``lpad introspect`` (no docs yet)
+* fix ``-q`` option of ``lpad report`` (D. Winston)
+
 **v1.1.5**
 
 .. caution:: FWS now decodes monty-style objects, e.g. pymatgen. If you encounter decoding issues, set DECODE_MONTY=False in your fw_config.
