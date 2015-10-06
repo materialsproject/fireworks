@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 from fireworks.features.fw_report import FWReport
+from fireworks.features.introspect import Introspector
 
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
@@ -479,6 +480,20 @@ def report(args):
     fwr.print_stats(stats)
 
 
+def introspect(args):
+    print("NOTE: This feature is in beta mode...")
+    lp=get_lp(args)
+    max = args.max if hasattr(args, "max") else 100
+
+    isp = Introspector(lp)
+    for coll in ['tasks', 'fireworks', 'workflows']:
+        print('generating report...please wait...')
+        print('')
+        table = isp.introspect_fizzled(coll=coll, limit=max)
+        isp.print_report(table, coll=coll)
+        print('')
+
+
 def track_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, skip_pw=True)
@@ -815,6 +830,10 @@ def lpad():
     report_parser.add_argument("-n", "--num_intervals", help="The number of intervals on which to report (default=5)", type=int, default=5)
     report_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries before processing.")
     report_parser.set_defaults(func=report)
+
+    introspect_parser = subparsers.add_parser('introspect', help='Introspect recent runs to pin down errors')
+    introspect_parser.add_argument('-m', '--max', help='examine past <max> results', default=100, type=int)
+    introspect_parser.set_defaults(func=introspect)
 
     args = parser.parse_args()
 
