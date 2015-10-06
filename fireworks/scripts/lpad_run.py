@@ -486,11 +486,11 @@ def introspect(args):
     max = args.max if hasattr(args, "max") else 100
 
     isp = Introspector(lp)
-    for coll in ['tasks', 'fireworks', 'workflows']:
-        print('generating report...please wait...')
+    for coll in ['launches', 'tasks', 'fireworks', 'workflows']:
+        print('generating report for {}...please wait...'.format(coll))
         print('')
         table = isp.introspect_fizzled(coll=coll, limit=max)
-        isp.print_report(table, coll=coll)
+        isp.print_report(table, coll)
         print('')
 
 

@@ -2,9 +2,10 @@ from __future__ import division
 from collections import defaultdict
 from pymongo import DESCENDING
 from tabulate import tabulate
-from fireworks import LaunchPad
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
+
+separator_str = ":%%:"
 
 def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
@@ -18,7 +19,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
     """
     if isinstance(curr_doc, dict):
         if curr_recurs > max_recurs:
-            return [":<TRUNCATED_OBJECT>"]
+            return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
         my_list = []
         for k in curr_doc:
             for val in flatten_to_keys(curr_doc[k], curr_recurs+1, max_recurs):
@@ -31,13 +32,13 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
         my_list = []
         for k in curr_doc:
             if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
-                return [":<TRUNCATED_OBJECT>"]
-            my_list.append(":"+str(k))
+                return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
+            my_list.append(separator_str+str(k))
         return my_list
 
         return [flatten_to_keys(k, curr_recurs+1, max_recurs) for k in curr_doc]
 
-    return [":"+str(curr_doc)]
+    return [separator_str+str(curr_doc)]
 
 def collect_stats(list_keys, filter_truncated=True):
     """
@@ -93,11 +94,17 @@ class Introspector():
         elif coll.lower() in ["wflows", "workflows"]:
             coll = "workflows"
             state_key = "metadata"
+
+        elif coll.lower() in ["launches"]:
+            coll = "launches"
+            state_key = "action.stored_data._exception._stacktrace"
+
         else:
             raise ValueError("Unrecognized collection!")
 
+        sort_field = "time_end" if coll == "launches" else "updated_on"
         if rsort:
-            sort_key=[("updated_on", DESCENDING)]
+            sort_key=[(sort_field, DESCENDING)]
         else:
             sort_key=None
 
@@ -109,7 +116,10 @@ class Introspector():
             nsamples_fizzled += 1
             if state_key == "spec._tasks":
                 for t in doc['spec']['_tasks']:
-                    fizzled_keys.append('_fw_name:{}'.format(t['_fw_name']))
+                    fizzled_keys.append('_fw_name{}{}'.format(separator_str, t['_fw_name']))
+            elif state_key == "action.stored_data._exception._stacktrace":
+                stacktrace = doc.get("action", {}).get("stored_data", {}).get("_exception", {}).get("_stacktrace", "<NO_STACKTRACE>")
+                fizzled_keys.append('_stacktrace{}{}'.format(separator_str, stacktrace))
             else:
                 fizzled_keys.extend(flatten_to_keys(doc[state_key]))
 
@@ -119,13 +129,14 @@ class Introspector():
         completed_keys = []
         nsamples_completed = 0
 
-        for doc in self.db[coll].find({"state": "COMPLETED"}, {state_key: 1}, sort=sort_key).limit(limit):
-            nsamples_completed += 1
-            if state_key == "spec._tasks":
-                for t in doc['spec']['_tasks']:
-                    completed_keys.append('_fw_name:{}'.format(t['_fw_name']))
-            else:
-                completed_keys.extend(flatten_to_keys(doc[state_key]))
+        if coll != "launches":
+            for doc in self.db[coll].find({"state": "COMPLETED"}, {state_key: 1}, sort=sort_key).limit(limit):
+                nsamples_completed += 1
+                if state_key == "spec._tasks":
+                    for t in doc['spec']['_tasks']:
+                        completed_keys.append('_fw_name{}{}'.format(separator_str, t['_fw_name']))
+                else:
+                    completed_keys.extend(flatten_to_keys(doc[state_key]))
 
         completed_d = collect_stats(completed_keys)
 
@@ -133,25 +144,32 @@ class Introspector():
 
         table = []
         for w in sorted(diff_d, key=diff_d.get, reverse=True):
-            table.append([w.split(":")[0], w.split(":")[1], completed_d.get(w, 0), fizzled_d.get(w, 0), diff_d[w]])
+            table.append([w.split(separator_str)[0], w.split(separator_str)[1], completed_d.get(w, 0), fizzled_d.get(w, 0), diff_d[w]])
 
         return table
 
-    def print_report(self, table, coll=None):
+    def print_report(self, table, coll):
 
-        if coll:
-            if coll.lower() in ["fws", "fireworks"]:
-                coll = "fireworks.spec"
-            elif coll.lower() in ["tasks"]:
-                coll = "fireworks.spec._tasks"
-            elif coll.lower() in ["wflows", "workflows"]:
-                coll = "workflows.metadata"
+        if coll.lower() in ["fws", "fireworks"]:
+            header_txt = "fireworks.spec"
+        elif coll.lower() in ["tasks"]:
+            header_txt = "fireworks.spec._tasks"
+        elif coll.lower() in ["wflows", "workflows"]:
+            header_txt = "workflows.metadata"
+        elif coll.lower() in ["launches"]:
+            header_txt = "launches.actions.stored_data._exception._stacktrace"
 
-            coll = "Introspection report for {}".format(coll)
-            print('=' * len(coll))
-            print(coll)
-            print('=' * len(coll))
+        header_txt = "Introspection report for {}".format(header_txt)
+        print('=' * len(header_txt))
+        print(header_txt)
+        print('=' * len(header_txt))
 
-        print(tabulate(table, headers=['key', 'value', '#C', '#F', '%C - %F']))
+        if coll.lower() != "launches":
+            print(tabulate(table, headers=['key', 'value', '#C', '#F', '%C - %F']))
+        else:
+            for row in table:
+                print('----{} Failures have the following stack trace--------------'.format(row[3]))
+                print(row[1])
+                print('')
 
 
