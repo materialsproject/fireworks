@@ -861,6 +861,54 @@ class Workflow(FWSerializable):
 
         return updated_ids
 
+    def addAfterAll(self, wf):
+        """
+        Adds a workflow such that it is executed after the current one.
+        """
+
+        root_ids = wf.root_fw_ids
+        leaf_ids = wf.leaf_fw_ids
+
+        my_leaf_ids = self.leaf_fw_ids
+
+        for new_fw in wf.fws:
+            if new_fw.fw_id > 0:
+                raise ValueError(
+                    'FireWorks to add must use a negative fw_id! Got fw_id: '
+                    '{}'.format(
+                        new_fw.fw_id))
+
+            self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
+
+            if new_fw.fw_id in leaf_ids:
+                self.links[new_fw.fw_id] = []
+            else:
+                self.links[new_fw.fw_id] = wf.links[new_fw.fw_id]
+
+        for fw_id in my_leaf_ids:
+            self.links[fw_id].extend(root_ids)  # add the root id as my child
+
+    def addNoLink(self, wf):
+        """
+        Adds a workflow without connecting it.
+        """
+
+        leaf_ids = wf.leaf_fw_ids
+
+        for new_fw in wf.fws:
+            if new_fw.fw_id > 0:
+                raise ValueError(
+                    'FireWorks to add must use a negative fw_id! Got fw_id: '
+                    '{}'.format(
+                        new_fw.fw_id))
+
+            self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
+
+            if new_fw.fw_id in leaf_ids:
+                self.links[new_fw.fw_id] = []
+            else:
+                self.links[new_fw.fw_id] = wf.links[new_fw.fw_id]
+
     def refresh(self, fw_id, updated_ids=None):
         """
         Refreshes the state of a Firework and any affected children.
