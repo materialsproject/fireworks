@@ -236,7 +236,7 @@ class Rocket():
 
                     if lp:
                         final_state = 'FIZZLED'
-                        lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                        lp.complete_launch(launch_id, m_action, final_state)
                     else:
                         with open('FW_offline.json', 'r+') as f:
                             d = json.loads(f.read())
@@ -295,7 +295,7 @@ class Rocket():
 
             if lp:
                 final_state = 'COMPLETED'
-                lp.complete_launch(launch_id, m_action, 'COMPLETED')
+                lp.complete_launch(launch_id, m_action, final_state)
             else:
                 with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())
@@ -312,7 +312,7 @@ class Rocket():
             lp.log_message(logging.DEBUG, traceback.format_exc())
             lp.log_message(logging.WARNING, "Firework {} reached final state {} but couldn't complete the update of the"
                                             " database. Reason: {}\nRefresh the WF to recover the result (lpad admin "
-                                            "refresh -i {}).".format(self.fw_id, final_state, e.message, self.fw_id))
+                                            "refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
             return True
 
         except:
@@ -341,7 +341,7 @@ class Rocket():
                     lp.log_message(logging.DEBUG, traceback.format_exc())
                     lp.log_message(logging.WARNING, "Firework {} fizzled but couldn't complete the update of the database."
                                                     " Reason: {}\nRefresh the WF to recover the result (lpad admin "
-                                                    "refresh -i {}).".format(self.fw_id, final_state, e.message, self.fw_id))
+                                                    "refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
                     return True
             else:
                 with open('FW_offline.json', 'r+') as f:

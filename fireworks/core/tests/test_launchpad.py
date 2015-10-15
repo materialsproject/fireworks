@@ -899,7 +899,7 @@ class WFLockTest(unittest.TestCase):
 
     def setUp(self):
         # set the defaults in the init of wflock to break the lock quickly
-        fireworks.core.launchpad.WFLock.__init__.im_func.func_defaults = (3, False)
+        fireworks.core.launchpad.WFLock(3, False).__init__.__func__.__defaults__= (3, False)
 
         self.error_test_dict = {'error': 'description', 'error_code': 1}
         fw_slow = Firework(SlowAdditionTask(), spec={'seconds': 10}, fw_id=1)
