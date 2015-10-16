@@ -198,7 +198,6 @@ class FWSerializable(object):
     def to_db_dict(self):
         return self.to_dict()
 
-    @property
     def as_dict(self):
         # strictly for pseudo-compatibility with MSONable
         # Note that FWSerializable is not MSONable, it uses _fw_name instead of __class__ and __module__
