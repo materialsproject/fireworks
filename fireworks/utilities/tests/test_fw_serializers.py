@@ -129,6 +129,9 @@ class SerializationTest(unittest.TestCase):
         self.assertEqual(load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}), self.obj_4,
                          'Implicit import fails!')
 
+    def test_as_dict(self):
+        self.assertEqual(self.obj_1.as_dict, self.obj_1.to_dict())
+
 
 class ExplicitSerializationTest(unittest.TestCase):
     def setUp(self):
