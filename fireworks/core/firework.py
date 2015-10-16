@@ -716,7 +716,8 @@ class Workflow(FWSerializable):
         m_state = 'READY'
         #states = [fw.state for fw in self.fws]
         states = self.fw_states.values()
-        if all([s == 'COMPLETED' for s in states]):
+        leaf_states = [self.fw_states[fw_id] for fw_id in self.leaf_fw_ids]
+        if all([s == 'COMPLETED' for s in leaf_states]):
             m_state = 'COMPLETED'
         elif all([s == 'ARCHIVED' for s in states]):
             m_state = 'ARCHIVED'
