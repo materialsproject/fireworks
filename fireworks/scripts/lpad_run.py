@@ -126,7 +126,9 @@ def init_yaml(args):
     doc["port"] = int(doc["port"])  # enforce the port as an int
     with open(args.config_file, "w") as f:
         import yaml
-        yaml.dump(LaunchPad.from_dict(doc).to_dict(), f)
+        doc = LaunchPad.from_dict(doc).to_dict()
+        doc = recursive_dict(doc, preserve_unicode=False)  # drop unicode
+        yaml.dump(doc, f)
         print("\nConfiguration written to {}!".format(args.config_file))
 
 
