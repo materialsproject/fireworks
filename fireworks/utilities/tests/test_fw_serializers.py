@@ -130,7 +130,7 @@ class SerializationTest(unittest.TestCase):
                          'Implicit import fails!')
 
     def test_as_dict(self):
-        self.assertEqual(self.obj_1.as_dict, self.obj_1.to_dict())
+        self.assertEqual(self.obj_1.as_dict(), self.obj_1.to_dict())
 
 
 class ExplicitSerializationTest(unittest.TestCase):
