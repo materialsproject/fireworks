@@ -57,14 +57,14 @@
                             {{ state }}
                         </span>
                     </td>
-                    <td><center><a href="/fw/{{ state }}">{{ fw_num }}</a></center></td>
-                    <td><center><a href="/wf/{{ state }}">{{ wf_num }}</a></center></td>
+                    <td><center><a href="/fw/{{ state }}">{{ '{:,}'.format(fw_num) }}</a></center></td>
+                    <td><center><a href="/wf/{{ state }}">{{ '{:,}'.format(wf_num) }}</a></center></td>
                 </tr>
             {% endfor %}
             <tr>
                 <th><div align="right">TOTAL</div></th>
-                <td><center><a href="/fw">{{ tot_fws }}</a></center></td>
-                <td><center><a href="/wf">{{ tot_wfs }}</a></center></td>
+                <td><center><a href="/fw">{{ '{:,}'.format(tot_fws) }}</a></center></td>
+                <td><center><a href="/wf">{{ '{:,}'.format(tot_wfs) }}</a></center></td>
             </tr>
         </table>
     </div>

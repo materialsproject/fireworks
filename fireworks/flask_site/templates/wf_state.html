@@ -3,7 +3,7 @@
 {% block title %}{{ state }} Fireworks Index{% endblock %}
 
 {% block content %}
-<h3 class="text-center">{{ wf_count }} {{ state|lower }} Workflow{{ wf_count|pluralize }}</h3>
+<h3 class="text-center">{{ '{:,}'.format(wf_count) }} {{ state|lower }} Workflow{{ wf_count|pluralize }}</h3>
 
 <!-- FILTERS / NAVIGATION -->
 <div class="pull-down">
