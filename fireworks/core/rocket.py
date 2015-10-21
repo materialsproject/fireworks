@@ -17,6 +17,7 @@ import distutils.dir_util
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
+from fireworks.core.launchpad import LockedWorkflowError
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -131,6 +132,8 @@ class Rocket():
             print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
             return False
 
+        final_state = None
+
         try:
             if '_launch_dir' in m_fw.spec and lp:
                 prev_dir = launch_dir
@@ -232,7 +235,8 @@ class Rocket():
                     m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
                     if lp:
-                        lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                        final_state = 'FIZZLED'
+                        lp.complete_launch(launch_id, m_action, final_state)
                     else:
                         with open('FW_offline.json', 'r+') as f:
                             d = json.loads(f.read())
@@ -290,7 +294,8 @@ class Rocket():
             m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
             if lp:
-                lp.complete_launch(launch_id, m_action, 'COMPLETED')
+                final_state = 'COMPLETED'
+                lp.complete_launch(launch_id, m_action, final_state)
             else:
                 with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())
@@ -301,6 +306,13 @@ class Rocket():
                     f.write(json.dumps(d))
                     f.truncate()
 
+            return True
+
+        except LockedWorkflowError as e:
+            lp.log_message(logging.DEBUG, traceback.format_exc())
+            lp.log_message(logging.WARNING, "Firework {} reached final state {} but couldn't complete the update of the"
+                                            " database. Reason: {}\nRefresh the WF to recover the result (lpad admin "
+                                            "refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
             return True
 
         except:
@@ -323,7 +335,14 @@ class Rocket():
                 traceback.print_exc()
 
             if lp:
-                lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                try:
+                    lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                except LockedWorkflowError as e:
+                    lp.log_message(logging.DEBUG, traceback.format_exc())
+                    lp.log_message(logging.WARNING, "Firework {} fizzled but couldn't complete the update of the database."
+                                                    " Reason: {}\nRefresh the WF to recover the result (lpad admin "
+                                                    "refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
+                    return True
             else:
                 with open('FW_offline.json', 'r+') as f:
                     d = json.loads(f.read())

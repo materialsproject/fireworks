@@ -60,7 +60,7 @@ RESERVATION_EXPIRATION_SECS = 60 * 60 * 24 * 14  # a job can stay in a queue thi
 # cancel its reservation
 
 WFLOCK_EXPIRATION_SECS = 60 * 5  # wait this long for a WFLock before expiring
-WFLOCK_EXPIRATION_KILL = True  # kill WFLock on expiration (or give a warning)
+WFLOCK_EXPIRATION_KILL = False  # kill WFLock on expiration (or give a warning)
 
 RAPIDFIRE_SLEEP_SECS = 60  # seconds to sleep between rapidfire loops
 
@@ -97,6 +97,9 @@ EXCEPT_DETAILS_ON_RERUN = False  # add exception details to the spec when rerunn
 WEBSERVER_HOST = "127.0.0.1"  # default host on which the Flask web server runs
 
 WEBSERVER_PORT = 5000  # default port on which the Flask web server runs
+
+MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000  # value of socketTimeoutMS when connection to mongoDB.  See pymongo official
+                                         # documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
 
 
 def override_user_settings():

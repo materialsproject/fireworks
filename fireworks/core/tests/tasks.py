@@ -1,7 +1,9 @@
 from __future__ import unicode_literals, division
 
-from fireworks import FireTaskBase, FWAction
+from fireworks import FireTaskBase, FWAction, Firework
 from fireworks.utilities.fw_utilities import explicit_serialize
+import time
+from unittest import SkipTest
 
 class SerializableException(Exception):
     def __init__(self, exc_details):
@@ -38,3 +40,38 @@ class TodictErrorTask(FireTaskBase):
 
     def run_task(self, fw_spec):
         return FWAction()
+
+@explicit_serialize
+class SlowAdditionTask(FireTaskBase):
+    def run_task(self, fw_spec):
+        time.sleep(5)
+        return FWAction(additions=Firework(SlowTodictTask(seconds=fw_spec.get('seconds', 10))),
+                        update_spec={'SlowAdditionTask': 1})
+
+@explicit_serialize
+class SlowTodictTask(FireTaskBase):
+    def to_dict(self):
+        time.sleep(self.get('seconds', 10))
+        return super(SlowTodictTask, self).to_dict()
+
+    def run_task(self, fw_spec):
+        return FWAction()
+
+@explicit_serialize
+class WaitWFLockTask(FireTaskBase):
+    def run_task(self, fw_spec):
+        if '_add_launchpad_and_fw_id' not in fw_spec:
+            raise SkipTest("Couldn't load lunchpad")
+
+        timeout = 20
+        while not self.launchpad.workflows.find_one({'locked': {"$exists": True}, 'nodes': self.fw_id}) and timeout > 0:
+            time.sleep(1)
+            timeout -= 1
+
+        if timeout == 0:
+            raise SkipTest("The WF wasn't locked")
+
+        if fw_spec.get('fizzle', False):
+            raise ValueError('Testing; this error is normal.')
+
+        return FWAction(update_spec={"WaitWFLockTask": 1})
