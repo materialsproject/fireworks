@@ -20,7 +20,7 @@ from pymongo import DESCENDING, ASCENDING
 
 from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, \
     RESERVATION_EXPIRATION_SECS, RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, \
-    WFLOCK_EXPIRATION_KILL
+    WFLOCK_EXPIRATION_KILL, MONGO_SOCKET_TIMEOUT_MS
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
 from fireworks.core.firework import Firework, Launch, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -36,9 +36,19 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: lots of duplication reduction and cleanup possible
 
+class LockedWorkflowError(ValueError):
+    """
+    Error raised if the context manager WFLock can't acquire the lock on the WF within the selected time interval
+    (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (WFLOCK_EXPIRATION_KILL)
+    """
+    pass
+
+
 class WFLock(object):
     """
     Lock a Workflow, i.e. for performing update operations
+    Raises a LockedWorkflowError if the lock couldn't be acquired withing expire_secs and kill==False.
+    Calling functions are responsible for handling the error in order to avoid database inconsistencies.
     """
 
     def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
@@ -61,12 +71,12 @@ class WFLock(object):
                 wf = self.lp.workflows.find_one({'nodes': self.fw_id})
                 if not wf:
                     raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
-                if self.kill:  # force lock aquisition
+                if self.kill:  # force lock acquisition
                     self.lp.m_logger.warn('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
                     links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id},
                                      {'$set': {'locked': True}})
                 else:  # throw error if we don't want to force lock acquisition
-                    raise ValueError("Could not get workflow - LOCKED: {}".format(self.fw_id))
+                    raise LockedWorkflowError("Could not get workflow - LOCKED: {}".format(self.fw_id))
 
             else:
                 links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}},
@@ -112,7 +122,7 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        self.connection = MongoClient(host, port, j=True)
+        self.connection = MongoClient(host, port, j=True, socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
         self.db = self.connection[name]
         if username:
             self.db.authenticate(username, password)
@@ -717,7 +727,8 @@ class LaunchPad(FWSerializable):
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             self._refresh_wf(fw_data['fw_id'])
 
-    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None, min_runtime=None):
+    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False, max_runtime=None,
+                        min_runtime=None, inconsistent=False, refresh=False):
         lost_launch_ids = []
         lost_fw_ids = []
         potential_lost_fw_ids = []
@@ -765,7 +776,17 @@ class LaunchPad(FWSerializable):
                     if fw_id in lost_fw_ids:
                         self.rerun_fw(fw_id)
 
-        return lost_launch_ids, lost_fw_ids
+        inconsistent_fw_ids = []
+        if inconsistent:
+            running_fws = self.fireworks.find({'state': 'RUNNING'}, {'fw_id': 1, 'launches': 1})
+            for fw in running_fws:
+                if self.launches.find_one({'launch_id': {'$in': fw['launches']},
+                                           'state': {'$in': ['FIZZLED', 'COMPLETED']}}):
+                    inconsistent_fw_ids.append(fw['fw_id'])
+                    if refresh:
+                        self._refresh_wf(fw['fw_id'])
+
+        return lost_launch_ids, lost_fw_ids, inconsistent_fw_ids
 
     def set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
@@ -864,7 +885,7 @@ class LaunchPad(FWSerializable):
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             fw_id = fw['fw_id']
             self._refresh_wf(fw_id)
-        # change return type to dict to make return type seriazlizable to
+        # change return type to dict to make return type serializable to
         # support job packing
         return m_launch.to_dict()
 

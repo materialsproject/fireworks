@@ -22,7 +22,7 @@ from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
-from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask
+from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask, SlowAdditionTask, WaitWFLockTask
 import fireworks.fw_config
 
 TESTDB_NAME = 'fireworks_unittest'
@@ -437,19 +437,19 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
+        l, f, i = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
         self.assertEqual((l, f), ([1], [1]))
         time.sleep(4)   # Wait double the expected exec time and test
-        l, f = self.lp.detect_lostruns(2)
+        l, f, i = self.lp.detect_lostruns(2)
         self.assertEqual((l, f), ([1], [1]))
 
-        l, f = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
+        l, f, i = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
+        l, f, i = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
+        l, f, i = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'READY')
 
@@ -477,12 +477,12 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f = self.lp.detect_lostruns(0.01)
+        l, f, i = self.lp.detect_lostruns(0.01)
         self.assertEqual((l, f), ([1], [1]))
 
         self.lp.defuse_fw(1)
 
-        l, f = self.lp.detect_lostruns(0.01, rerun=True)
+        l, f, i = self.lp.detect_lostruns(0.01, rerun=True)
         self.assertEqual((l, f), ([1], []))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'DEFUSED')
 
@@ -878,6 +878,139 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         self.assertEqual(fw.launches[0].launch_dir, fw.archived_launches[0].launch_dir)
         self.assertEqual(ExecutionCounterTask.exec_counter, 1)
         self.assertEqual(ExceptionTestTask.exec_counter, 2)
+
+
+class WFLockTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        # set the defaults in the init of wflock to break the lock quickly
+        fireworks.core.launchpad.WFLock(3, False).__init__.__func__.__defaults__= (3, False)
+
+        self.error_test_dict = {'error': 'description', 'error_code': 1}
+        fw_slow = Firework(SlowAdditionTask(), spec={'seconds': 10}, fw_id=1)
+        fw_fast = Firework(WaitWFLockTask(), fw_id=2, spec={'_add_launchpad_and_fw_id': True})
+        fw_child = Firework(ScriptTask.from_str('echo "child"'), fw_id=3)
+        wf = Workflow([fw_slow, fw_fast, fw_child], {fw_slow: fw_child, fw_fast: fw_child})
+        self.lp.add_wf(wf)
+
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None, require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
+            shutil.rmtree(ldir)
+
+    def test_fix_db_incosistencies_completed(self):
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker, fw_id):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+                self.fw_id = fw_id
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker, fw_id=self.fw_id)
+        # Launch the slow firework in a separate process
+        rp = RocketProcess(self.lp, self.fworker, fw_id=1)
+        rp.start()
+
+        time.sleep(1)
+        launch_rocket(self.lp, self.fworker, fw_id=2)
+
+        # wait for the slow to complete
+        rp.join()
+
+        fast_fw = self.lp.get_fw_by_id(2)
+
+        if fast_fw.state == 'FIZZLED':
+            stacktrace = self.lp.launches.find_one(
+                {'fw_id': 2}, {'action.stored_data._exception._stacktrace': 1})['action']['stored_data']['_exception']['_stacktrace']
+            if 'SkipTest' in stacktrace:
+                self.skipTest("The test didn't run correctly")
+
+        self.assertEqual(fast_fw.state, 'RUNNING')
+
+        child_fw = self.lp.get_fw_by_id(3)
+
+        self.assertTrue("SlowAdditionTask" in child_fw.spec)
+        self.assertFalse("WaitWFLockTask" in child_fw.spec)
+
+
+
+        self.lp._refresh_wf(fw_id=2)
+
+        child_fw = self.lp.get_fw_by_id(3)
+
+        self.assertTrue("WaitWFLockTask" in child_fw.spec)
+
+        fast_fw = self.lp.get_fw_by_id(2)
+
+        self.assertEqual(fast_fw.state, 'COMPLETED')
+
+    def test_fix_db_incosistencies_fizzled(self):
+
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker, fw_id):
+                super(self.__class__,self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+                self.fw_id = fw_id
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker, fw_id=self.fw_id)
+
+        self.lp.update_spec([2], {'fizzle': True})
+
+        # Launch the slow firework in a separate process
+        rp = RocketProcess(self.lp, self.fworker, fw_id=1)
+        rp.start()
+
+        time.sleep(1)
+        launch_rocket(self.lp, self.fworker, fw_id=2)
+
+        # wait for the slow to complete
+        rp.join()
+
+        fast_fw = self.lp.get_fw_by_id(2)
+
+        if fast_fw.state == 'FIZZLED':
+            stacktrace = self.lp.launches.find_one(
+                {'fw_id': 2}, {'action.stored_data._exception._stacktrace': 1})['action']['stored_data']['_exception']['_stacktrace']
+            if 'SkipTest' in stacktrace:
+                self.skipTest("The test didn't run correctly")
+
+        self.assertEqual(fast_fw.state, 'RUNNING')
+
+        child_fw = self.lp.get_fw_by_id(3)
+
+        self.assertTrue("SlowAdditionTask" in child_fw.spec)
+        self.assertFalse("WaitWFLockTask" in child_fw.spec)
+
+        self.lp._refresh_wf(fw_id=2)
+
+        fast_fw = self.lp.get_fw_by_id(2)
+
+        self.assertEqual(fast_fw.state, 'FIZZLED')
+
 
 if __name__ == '__main__':
     unittest.main()

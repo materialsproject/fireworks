@@ -437,10 +437,9 @@ class MongoTests(unittest.TestCase):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
         self.lp.add_wf(fw)
-        self.assertEqual(WFLOCK_EXPIRATION_KILL, True)
         # add a manual lock
         with WFLock(self.lp, 1):
-            with WFLock(self.lp, 1, expire_secs=1):
+            with WFLock(self.lp, 1, kill=True, expire_secs=1):
                 self.assertTrue(True)  # dummy to make sure we got here
 
     def test_fizzle(self):
