@@ -315,11 +315,10 @@ def display_wfs(args):
 def detect_lostruns(args):
     lp = get_lp(args)
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime,
-                                min_runtime=args.min_runtime, inconsistent=args.inconsistent, refresh=args.refresh)
+                                min_runtime=args.min_runtime, refresh=args.refresh)
     lp.m_logger.debug('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
     lp.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
-    if args.inconsistent:
-        lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
+    lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
 
 
 def detect_unreserved(args):
@@ -765,10 +764,9 @@ def lpad():
                                 type=int)
     fizzled_parser.add_argument('--fizzle', help='mark lost runs as fizzled', action='store_true')
     fizzled_parser.add_argument('--rerun', help='rerun lost runs', action='store_true')
+    fizzled_parser.add_argument('--refresh', help='refresh the detected inconsistent fireworks', action='store_true')
     fizzled_parser.add_argument('--max_runtime', help='max runtime, matching failures ran no longer than this (seconds)', type=int)
     fizzled_parser.add_argument('--min_runtime', help='min runtime, matching failures must have run at least this long (seconds)', type=int)
-    fizzled_parser.add_argument('--inconsistent', help='also checks for possible inconsistency (RUNNING firework with FIZZLED or COMPLETED launches)', action='store_true')
-    fizzled_parser.add_argument('--refresh', help='refresh the detected inconsistent fireworks', action='store_true')
     fizzled_parser.set_defaults(func=detect_lostruns)
 
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
