@@ -2,6 +2,17 @@
 FireWorks Changelog
 ===================
 
+**v1.1.7**
+
+.. caution:: FWS now properly handles workflow states for ``allow_fizzled_parents``. Run ``lpad admin refresh -s FIZZLED`` to update your DB.
+
+* fix WFLock causing inconsistent states in workflows; detect such cases in detect_lostruns; add --refresh as fix (G. Petretto)
+* add ability to introspect launches
+* fix for COMPLETED workflow state when `_allow_fizzled_parents` is True (D. Waroquiers, G. Petretto)
+* allow FWS users to use as_dict() instead of to_dict() if they prefer (psuedo-compatibility with MSONable)
+* add commas to counts in lpad GUI
+
+
 **v1.1.6**
 
 * add beta of ``lpad introspect`` (no docs yet)
