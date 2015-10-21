@@ -116,3 +116,14 @@ Database locks and inconsistencies
 ==================================
 
 When updating the state of the Firework, FireWorks needs to acquire a lock on the database to safely update the state of the whole workflow. As this procedure may require some time, if many Fireworks belonging to the same Workflow try to update their state simultaneously the waiting time could easily reach the limit (see WFLOCK_EXPIRATION_SECS in :doc:`FW config </config_tutorial>`). If this happens, FireWorks by default will let the job stop, leaving the database in an inconsistent state. Like in the previous cases, these jobs could be identified running ``lpad detect_lostruns`` and the consistency in the database could be restored using the option ``--refresh``. This will refresh the state of the Workflow, applying the correct actions where needed.
+
+Automatically report what parameters cause job failures (beta)
+==============================================================
+
+It is one thing to know that many jobs failed via the FIZZLED state, but it is better if one can identify the cause of failure. FireWorks can try to automatically detect what parameters are causing jobs to fail by introspecting the database and compiling a report of what keys in the FireWork ``spec`` and Workflow ``metadata`` are most associated with failed jobs. Thus, if you have a descriptive spec and metadata, it can be used to automatically classify jobs.
+
+The introspect feature is in beta, but you can learn more via::
+
+    lpad introspect -h
+
+The introspect command can be very powerful when used in conjunction with the reporting features (``lpad report``). Contact FireWorks support for more information.
