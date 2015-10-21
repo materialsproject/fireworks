@@ -316,9 +316,13 @@ def detect_lostruns(args):
     lp = get_lp(args)
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime,
                                 min_runtime=args.min_runtime, refresh=args.refresh)
-    lp.m_logger.debug('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
-    lp.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
+    lp.m_logger.debug('Detected {} lost launches: {}'.format(len(fl), fl))
+    lp.m_logger.info('Detected {} lost FWs: {}'.format(len(ff), ff))
     lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
+    if len(ff) > 0 and not args.fizzle and not args.rerun:
+        print("You can fix lost FWs using the --rerun or --fizzle arguments to the detect_lostruns command")
+    if len(fi) > 0 and not args.refresh:
+        print("You can fix inconsistent FWs using the --refresh argument to the detect_lostruns command")
 
 
 def detect_unreserved(args):
