@@ -401,7 +401,7 @@ def refresh(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         wf = lp.get_wf_by_fw_id_lzyfw(f)
-        for fw_id in wf.id_fw:
+        for fw_id in wf.root_fw_ids:
             lp._refresh_wf(fw_id)
         lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
