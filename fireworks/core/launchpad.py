@@ -262,9 +262,9 @@ class LaunchPad(FWSerializable):
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 
-    def add_wf_to_fws(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
+    def append_wf(self, new_wf, fw_ids, detour=False, refresh_wf=True):
         wf = self.get_wf_by_fw_id(fw_ids[0])
-        updated_ids = wf.add_wf_to_fws(new_wf, fw_ids, detour=detour, pull_spec_mods=pull_spec_mods)
+        updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour, refresh_wf=refresh_wf)
 
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)

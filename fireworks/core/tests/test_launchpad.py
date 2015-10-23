@@ -919,7 +919,7 @@ class WFLockTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
 
-    def test_fix_db_incosistencies_completed(self):
+    def test_fix_db_inconsistencies_completed(self):
         class RocketProcess(Process):
             def __init__(self, lpad, fworker, fw_id):
                 super(self.__class__,self).__init__()
@@ -966,7 +966,7 @@ class WFLockTest(unittest.TestCase):
 
         self.assertEqual(fast_fw.state, 'COMPLETED')
 
-    def test_fix_db_incosistencies_fizzled(self):
+    def test_fix_db_inconsistencies_fizzled(self):
 
         class RocketProcess(Process):
             def __init__(self, lpad, fworker, fw_id):

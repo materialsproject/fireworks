@@ -766,7 +766,7 @@ class Workflow(FWSerializable):
         # this should be done *before* additions
         if action.detours:
             for wf in action.detours:
-                new_updates = self.add_wf_to_fws(wf, [fw_id], pull_spec_mods=False, detour=True)
+                new_updates = self.append_wf(wf, [fw_id], detour=True, refresh_wf=False)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
                     raise ValueError(
                         "Cannot use duplicated fw_ids when dynamically detouring workflows!")
@@ -775,7 +775,7 @@ class Workflow(FWSerializable):
         # add additional FireWorks
         if action.additions:
             for wf in action.additions:
-                new_updates = self.add_wf_to_fws(wf, [fw_id], pull_spec_mods=False, detour=False)
+                new_updates = self.append_wf(wf, [fw_id], detour=False, refresh_wf=False)
                 if len(set(updated_ids).intersection(new_updates)) > 0:
                     raise ValueError(
                         "Cannot use duplicated fw_ids when dynamically adding workflows!")
@@ -803,15 +803,15 @@ class Workflow(FWSerializable):
         # refresh the WF to get the states updated
         return self.refresh(fw_id, updated_ids)
 
-    def add_wf_to_fws(self, new_wf, fw_ids, pull_spec_mods=True, detour=False):
+    def append_wf(self, new_wf, fw_ids, detour=False, refresh_wf=False):
         """
-        Internal method to add a workflow as a child to a Firework
+        Method to add a workflow as a child to a Firework
         Note: detours must have children that have STATE_RANK that is WAITING or below
 
         :param new_wf: (Workflow) New Workflow to add
         :param fw_ids: ([int]) ids of the parent Fireworks on which to add the Workflow
-        :param pull_spec_mods: (bool) pull spec mods of COMPLETED parents
         :param detour: (bool) add children of the current Firework to the Workflow's leaves
+        :param refresh_wf: (bool) pull spec mods of COMPLETED parents, refreshes the WF states.
         :return: ([int]) list of Firework ids that were updated or new
         """
         updated_ids = []
@@ -845,7 +845,7 @@ class Workflow(FWSerializable):
         for fw_id in fw_ids:
             for root_id in root_ids:
                 self.links[fw_id].append(root_id)  # add the root id as my child
-                if pull_spec_mods:  # re-apply some actions of the parent
+                if refresh_wf:  # re-apply some actions of the parent
                     m_fw = self.id_fw[fw_id]  # get the parent FW
                     m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
                     if m_launch:
@@ -857,8 +857,9 @@ class Workflow(FWSerializable):
                             for mod in m_launch.action.mod_spec:
                                 apply_mod(mod, new_wf.id_fw[root_id].spec)
 
-        for new_fw in new_wf.fws:
-            updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))
+        if refresh_wf:
+            for new_fw in new_wf.fws:
+                updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))
 
         return updated_ids
 
