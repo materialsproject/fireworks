@@ -857,9 +857,8 @@ class Workflow(FWSerializable):
                             for mod in m_launch.action.mod_spec:
                                 apply_mod(mod, new_wf.id_fw[root_id].spec)
 
-        if refresh_wf:
-            for new_fw in new_wf.fws:
-                updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))
+        for new_fw in new_wf.fws:
+            updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))
 
         return updated_ids
 
