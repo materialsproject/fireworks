@@ -1011,11 +1011,13 @@ class LaunchPad(FWSerializable):
         """
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
-        with WFLock(self, fw_id):
-            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-            updated_ids = wf.refresh(fw_id)
-            self._update_wf(wf, updated_ids)
-
+        try:
+            with WFLock(self, fw_id):
+                wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+                updated_ids = wf.refresh(fw_id)
+                self._update_wf(wf, updated_ids)
+        except LockedWorkflowError:
+            self.m_logger.info("fw_id {} locked. Can't refresh!".format(fw_id))
 
     def _update_wf(self, wf, updated_ids):
         # note: must be called within an enclosing WFLock
