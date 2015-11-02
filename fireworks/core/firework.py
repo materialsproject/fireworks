@@ -602,7 +602,6 @@ class Workflow(FWSerializable):
                             pass  # garbage input
                     del self[k]
 
-
         @property
         def nodes(self):
             allnodes = list(self.keys())
