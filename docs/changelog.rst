@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.1.8**
+
+* Some mods to adding a workflow to another workflow (thanks to H. Rusche & J. Montoya)
+* LaunchPad handles LockedWorkflowException (P. Huck)
+* prevent MSONable objects from being deserialized twice (thanks to J. Montoya)
+
 **v1.1.7**
 
 .. caution:: FWS now properly handles workflow states for ``allow_fizzled_parents``. Run ``lpad admin refresh -s FIZZLED`` to update your DB.
