@@ -58,6 +58,7 @@ class CommonAdapter(QueueAdapterBase):
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
         self.q_name = q_name or q_type
+        self.q_submit_cmd = None
         self.update(dict(kwargs))
 
     def _parse_jobid(self, output_str):
@@ -161,7 +162,10 @@ class CommonAdapter(QueueAdapterBase):
                     script_file))
 
         queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
-        submit_cmd = CommonAdapter.supported_q_types[self.q_type]
+        if self.q_submit_cmd is None:
+            submit_cmd = CommonAdapter.supported_q_types[self.q_type]
+        else:
+            submit_cmd = self.q_submit_cmd
         # submit the job
         try:
             if self.q_type == "Cobalt":
