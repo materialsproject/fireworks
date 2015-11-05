@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from monty.json import MontyDecoder
+from monty.json import MontyDecoder, MSONable
 
 __doc__ = """
 This module aids in serializing and deserializing objects.
@@ -95,7 +95,7 @@ def _recursive_load(obj):
     if obj is None:
         return None
 
-    if hasattr(obj, '_fw_name'):
+    if hasattr(obj, '_fw_name') or isinstance(obj, MSONable):
         return obj
 
     if isinstance(obj, dict):

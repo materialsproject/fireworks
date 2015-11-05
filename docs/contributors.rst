@@ -14,8 +14,6 @@ Xiaohui Qu wrote the multi job launcher, with help from Anubhav Jain and advice 
 
 Michael Kocher and Dan Gunter initiated the architecture of a central MongoDB database with multiple workers that queued 'placeholder' scripts responsible for checking out jobs. Some of Michael's code was refashioned for the QueueLauncher and the PBS QueueAdapter.
 
-Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL.
-
 Guido Petretto added useful features, including task-level reruns, and helped detect and fix bugs.
 
 Miriam Brafman ported the web frontend to Flask and reworked the CSS.
@@ -30,7 +28,9 @@ Zach Ulissi added support for IBM LoadSharing facility.
 
 William Scullin added ALCF Cobalt support and helped stomp bugs.
 
-Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, and Donny Winston helped stomp bugs and provide improvements.
+Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL (later superceded by Flask site).
+
+Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, Donny Winston, Joey Montoya, and Henrik Rusche helped stomp bugs and provide improvements.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey and Deborah Bard for helpful discussions.
 

@@ -262,9 +262,9 @@ class LaunchPad(FWSerializable):
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 
-    def append_wf(self, new_wf, fw_ids, detour=False, refresh_wf=True):
+    def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
         wf = self.get_wf_by_fw_id(fw_ids[0])
-        updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour, refresh_wf=refresh_wf)
+        updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour, pull_spec_mods=pull_spec_mods)
 
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)
@@ -1012,11 +1012,13 @@ class LaunchPad(FWSerializable):
         """
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
-        with WFLock(self, fw_id):
-            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-            updated_ids = wf.refresh(fw_id)
-            self._update_wf(wf, updated_ids)
-
+        try:
+            with WFLock(self, fw_id):
+                wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+                updated_ids = wf.refresh(fw_id)
+                self._update_wf(wf, updated_ids)
+        except LockedWorkflowError:
+            self.m_logger.info("fw_id {} locked. Can't refresh!".format(fw_id))
 
     def _update_wf(self, wf, updated_ids):
         # note: must be called within an enclosing WFLock
