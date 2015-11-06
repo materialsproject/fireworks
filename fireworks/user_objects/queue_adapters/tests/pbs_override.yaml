@@ -16,11 +16,10 @@ nnodes: 1
 ppnode: 8
 account: username
 
-# You can override commands by uncommenting and changing the following lines
+# You can override commands by uncommenting and changing the following lines:
 _q_commands_override:
-    submit_cmd: my_qsubmit
-    status_cmd: my_qstatus
+   submit_cmd: my_qsubmit
+   status_cmd: my_qstatus
 
-#You can also supply your own template by uncommenting and changing the
-#following line
+#You can also supply your own template by uncommenting and changing the following line:
 #template_file: /full/path/to/template
