@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+import copy
 
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
@@ -54,14 +55,14 @@ class CommonAdapter(QueueAdapterBase):
             raise ValueError(
                 "{} is not a supported queue type. "
                 "CommonAdaptor supports {}".format(
-                    q_type, list(self.q_commands.keys())))
+                    q_type, list(self.default_q_commands.keys())))
         self.q_type = q_type
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
         self.q_name = q_name or q_type
         self.update(dict(kwargs))
 
-        self.q_commands = dict(CommonAdapter.default_q_commands)
+        self.q_commands = copy.deepcopy(CommonAdapter.default_q_commands)
         if '_q_commands_override' in self:
             self.q_commands[self.q_type].update(self["_q_commands_override"])
 

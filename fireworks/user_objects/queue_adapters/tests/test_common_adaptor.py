@@ -147,6 +147,8 @@ Project: JCESR2015
         self.assertEqual(p._parse_jobid(qsub_output), '44275')
 
     def test_status_cmd_pbs(self):
+        p = load_object_from_file(os.path.join(os.path.dirname(__file__),  # intentional red herring to test deepcopy
+                              "pbs_override.yaml"))
         p = CommonAdapter(q_type="PBS")
         self.assertEqual(p._get_status_cmd("my_name"), ['qstat', '-u', 'my_name'])
 
