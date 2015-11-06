@@ -708,9 +708,10 @@ class LaunchPad(FWSerializable):
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find({'state': 'RESERVED', 'state_history': {
             '$elemMatch': {'state': 'RESERVED', 'updated_on': {'$lte': cutoff_timestr}}}},
-                                             {'launch_id': 1})
+                                             {'launch_id': 1, 'fw_id': 1})
         for ld in bad_launch_data:
-            bad_launch_ids.append(ld['launch_id'])
+            if self.fireworks.find_one({'fw_id': ld['fw_id'], 'state': 'RESERVED'}, {'fw_id':1}):
+                bad_launch_ids.append(ld['launch_id'])
         if rerun:
             for lid in bad_launch_ids:
                 self.cancel_reservation(lid)
