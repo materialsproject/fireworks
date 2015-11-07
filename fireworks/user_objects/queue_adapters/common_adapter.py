@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+import copy
 
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
@@ -29,13 +30,14 @@ class CommonAdapter(QueueAdapterBase):
     TORQUE), SGE, and SLURM queues.
     """
     _fw_name = 'CommonAdapter'
-    supported_q_types = {
-        "PBS": "qsub",
-        "SGE": "qsub",
-        "Cobalt": "qsub",
-        "SLURM": "sbatch",
-        "LoadLeveler": "llsubmit",
-        "LoadSharingFacility": "bsub"
+
+    default_q_commands = {
+        "PBS": {"submit_cmd": "qsub", "status_cmd": "qstat"},
+        "SGE": {"submit_cmd": "qsub", "status_cmd": "qstat"},
+        "Cobalt": {"submit_cmd": "qsub", "status_cmd": "qstat"},
+        "SLURM": {"submit_cmd": "sbatch", "status_cmd": "squeue"},
+        "LoadLeveler": {"submit_cmd": "llsubmit", "status_cmd": "llq"},
+        "LoadSharingFacility": {"submit_cmd": "bsub", "status_cmd": "bjobs"}
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
@@ -49,16 +51,20 @@ class CommonAdapter(QueueAdapterBase):
                               on most queues.
         :param **kwargs: Series of keyword args for queue parameters.
         """
-        if q_type not in CommonAdapter.supported_q_types:
+        if q_type not in CommonAdapter.default_q_commands:
             raise ValueError(
                 "{} is not a supported queue type. "
                 "CommonAdaptor supports {}".format(
-                    q_type, list(CommonAdapter.supported_q_types.keys())))
+                    q_type, list(self.default_q_commands.keys())))
         self.q_type = q_type
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
         self.q_name = q_name or q_type
         self.update(dict(kwargs))
+
+        self.q_commands = copy.deepcopy(CommonAdapter.default_q_commands)
+        if '_q_commands_override' in self:
+            self.q_commands[self.q_type].update(self["_q_commands_override"])
 
     def _parse_jobid(self, output_str):
         if self.q_type == "SLURM":
@@ -86,22 +92,24 @@ class CommonAdapter(QueueAdapterBase):
         raise RuntimeError("Unable to parse jobid")
 
     def _get_status_cmd(self, username):
+        status_cmd = [self.q_commands[self.q_type]["status_cmd"]]
+
         if self.q_type == 'SLURM':
             # by default, squeue lists pending and running jobs
             # -p: filter queue (partition)
             # -h: no header line
             # -o: reduce output to user only (shorter string to parse)
-            return ['squeue', '-o "%u"', '-u', username, '-p', self['queue'], '-h']
-        elif self.q_type == "LoadLeveler":
-            return ['llq', '-u', username]
+            status_cmd.extend(['-o "%u"', '-u', username, '-p', self['queue'], '-h'])
         elif self.q_type == "LoadSharingFacility":
             #use no header and the wide format so that there is one line per job, and display only running and pending jobs
-            return ['bjobs', '-p','-r','-o','jobID user queue','-noheader','-u',username]
+            status_cmd.extend(['-p','-r','-o', 'jobID user queue', '-noheader', '-u', username])
         elif self.q_type == "Cobalt":
             header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
-            return ['qstat','--header',header,'-u',username]
+            status_cmd.extend(['--header',header,'-u',username])
         else:
-            return ['qstat', '-u', username]
+            status_cmd.extend(['-u', username])
+
+        return status_cmd
 
     def _parse_njobs(self, output_str, username):
         # TODO: what if username is too long for the output and is cut off?
@@ -161,7 +169,7 @@ class CommonAdapter(QueueAdapterBase):
                     script_file))
 
         queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
-        submit_cmd = CommonAdapter.supported_q_types[self.q_type]
+        submit_cmd = self.q_commands[self.q_type]["submit_cmd"]
         # submit the job
         try:
             if self.q_type == "Cobalt":
@@ -172,7 +180,7 @@ class CommonAdapter(QueueAdapterBase):
             #as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
             #when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
             if self.q_type == 'LoadSharingFacility':
-                with open(script_file,'r') as inputFile:
+                with open(script_file, 'r') as inputFile:
                     p = subprocess.Popen([submit_cmd],stdin=inputFile,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
             else:
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

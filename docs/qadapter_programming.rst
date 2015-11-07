@@ -58,12 +58,20 @@ If you need to support a new queueing system, you will change the Python code by
 Modifying the CommonAdapter
 ----------------------------
 
-The CommonAdapter, which supports several queueing systems, is located in ``<INSTALL_DIR>/fireworks/user_objects/queue_adapters/common_adapter.py`` (you can find out ``<INSTALL_DIR`` by typing ``lpad version``). Review the code and make changes as necessary for your queue type to ``commonadapter.py``. In particular, make sure to:
+The CommonAdapter, which supports several queueing systems, is located in ``<INSTALL_DIR>/fireworks/user_objects/queue_adapters/common_adapter.py`` (you can find out ``<INSTALL_DIR`` by typing ``lpad version``). Review the code and make changes as necessary for your queue type to ``commonadapter.py``.
+
+Note that you can make basic changes to the submit commands (e.g., ``qstat`` or ``squeue``) by overriding the ``q_commands_override`` in your qadapter YAML file::
+
+    _q_commands_override:
+        submit_cmd: my_qsubmit
+        status_cmd: my_qstatus
+
+If you decide that modifications to the CommonAdapter are necessary, make sure to:
 
 * Add your queue type to ``supported_q_types``
 * Ensure the ``submit_cmd`` parameter is set correctly
 * Add a default template file for your queue in the same directory as ``common_adapter.py``, e.g. ``QUEUETYPE_template.txt``. Some examples are present in the FireWorks codebase.
-* Review the remaining methods for consistency with your queue.
+* Review the remaining methods for consistency with your queue, e.g. ``get_njobs_in_queue`` and ``get_status_cmd``.
 
 If all methods are implemented correctly, your new adapter should be functional and you can use it by modifying ``my_launchapd.yaml``:
 
