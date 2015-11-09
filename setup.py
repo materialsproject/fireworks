@@ -34,7 +34,7 @@ if __name__ == "__main__":
                         'daemon_mode':['fabric>=1.8.1'],
                         'plotting':['matplotlib>=1.1.1', 'networkx>=1.8.1']},
         classifiers=['Programming Language :: Python :: 2.7',
-                     'Development Status :: 4 - Beta',
+                     'Development Status :: 5 - Production/Stable',
                      'Intended Audience :: Science/Research',
                      'Intended Audience :: System Administrators',
                      'Intended Audience :: Information Technology',
