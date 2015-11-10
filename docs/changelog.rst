@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.2.1**
+
+* attempt to fix further pip install issues in v1.2.0
+
 **v1.2.0**
 
 * attempt to fix pip install issues in v1.1.9
