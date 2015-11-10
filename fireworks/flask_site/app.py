@@ -68,7 +68,7 @@ def get_fw_details(fw_id):
     return jsonify(fw)
 
 @app.route('/fw/<int:fw_id>')
-def show_fw(fw_id):
+def fw_details(fw_id):
     try:
         int(fw_id)
     except:
@@ -118,7 +118,7 @@ def workflow_json(wf_id):
 
 
 @app.route('/wf/<int:wf_id>')
-def show_workflow(wf_id):
+def wf_details(wf_id):
     try:
         int(wf_id)
     except ValueError:
@@ -131,7 +131,7 @@ def show_workflow(wf_id):
 
 @app.route('/fw/', defaults={"state": "total"})
 @app.route("/fw/<state>/")
-def fw_states(state):
+def fw_state(state):
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
     fw_count = lp.get_fw_ids(query=q, count_only=True)
@@ -149,7 +149,7 @@ def fw_states(state):
 
 @app.route('/wf/', defaults={"state": "total"})
 @app.route("/wf/<state>/")
-def wf_states(state):
+def wf_state(state):
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
     wf_count = lp.get_fw_ids(query=q, count_only=True)
