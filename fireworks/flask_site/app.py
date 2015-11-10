@@ -14,13 +14,6 @@ lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
 
-state_to_color= {"RUNNING" : "#F4B90B",
-                 "WAITING" : "#1F62A2",
-                 "FIZZLED" : "#DB0051",
-                 "READY"   : "#2E92F2",
-                 "COMPLETED" : "#24C75A"
-                 }
-
 @app.template_filter('datetime')
 def datetime(value):
     import datetime as dt
@@ -90,6 +83,17 @@ def workflow_json(wf_id):
         int(wf_id)
     except ValueError:
         raise ValueError("Invalid fw_id: {}".format(wf_id))
+
+    # TODO: modify so this doesn't duplicate the .css file that contains the same colors
+    state_to_color = {"RUNNING": "#F4B90B",
+                     "WAITING": "#1F62A2",
+                     "FIZZLED": "#DB0051",
+                     "READY": "#2E92F2",
+                     "COMPLETED": "#24C75A",
+                     "RESERVED": "#BB8BC1",
+                     "ARCHIVED": "#7F8287",
+                     "DEFUSED": "#B7BCC3"
+                    }
 
     wf = lp.workflows.find_one({'nodes':wf_id})
     fireworks = list(lp.fireworks.find({"fw_id": {"$in":wf["nodes"]}}, projection=["name","fw_id"]))
