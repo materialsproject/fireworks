@@ -100,7 +100,7 @@ def workflow_json(wf_id):
     for node in wf['nodes']:
         node_obj = dict()
         node_obj['id'] = str(node)
-        node_obj['name']=node_name[node].replace("Filt.", "Filter ")
+        node_obj['name']=node_name[node]
         node_obj['state']=state_to_color[wf['fw_states'][str(node)]]
         node_obj['width']=len(node_obj['name'])*10
         nodes_and_edges['nodes'].append({'data':node_obj})
