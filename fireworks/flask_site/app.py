@@ -125,7 +125,7 @@ def wf_details(wf_id):
         raise ValueError("Invalid fw_id: {}".format(wf_id))
     wf = lp.get_wf_summary_dict(wf_id)
     wf = json.loads(json.dumps(wf, default=DATETIME_HANDLER))  # formats ObjectIds
-    all_states = STATES
+    all_states = list(set(wf["states"].values()))
     return render_template('wf_details.html', **locals())
 
 
