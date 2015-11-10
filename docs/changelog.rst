@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.2.0**
+
+* attempt to fix pip install issues in v1.1.9
+
 **v1.1.9**
 
 * Workflow graph displayed visually in "lpad webgui" (C. Harris)
