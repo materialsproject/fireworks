@@ -11,3 +11,11 @@ job_name: null
 logdir: path/to/logging
 pre_rocket: null
 post_rocket: null
+
+# You can override commands by uncommenting and changing the following lines:
+# _q_commands_override:
+#    submit_cmd: my_qsubmit
+#    status_cmd: my_qstatus
+
+#You can also supply your own template by uncommenting and changing the following line:
+#template_file: /full/path/to/template

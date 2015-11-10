@@ -3,45 +3,92 @@
 {% block title %}Workflow {{ wf_id }} Details{% endblock %}
 
 {% block morehead %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.jsonview.css') }}" />
-  <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.jsonview.js') }}"></script>
-  <script type="text/javascript">
-    var json = {{ wf | tojson }};
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.jsonview.css') }}" />
+<link href="{{ url_for('static', filename='font-awesome-4.0.3/css/font-awesome.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='css/cytoscape.js-panzoom.css')}}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.jsonview.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/cytoscape.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dagre.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/handlebars-v4.0.2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/cytoscape-panzoom.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/wf_cyto.js') }}"></script>
+{% raw %}
+<script id="job-details" type="text/x-handlebars-template">
+<div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Step Details</h4>
+        </div>
+        <table class="table table-condensed">
+            <tr>
+                <th>name</th>
+                <td>{{name}}</td>
+            </tr>
+            <tr>
+                <th>state</th>
+                <td>{{state}}</td>
+                <tr>
+                    <th>Created On</th>
+                    <td>{{created_on}}</td>
+                    <th>Updated On</th>
+                    <td>{{updated_on}}</td>
+                </tr>
+                </table>
+                </div>
+</script>
+{% endraw %}
+<script type="text/javascript">
+var json = {{ wf | tojson }};
 
-    $(function() {
-      $("#json").JSONView(json);
+$(function() {
+$("#json").JSONView(json);
 
-      $('#collapse-btn').on('click', function() {
-        $('#json').JSONView('collapse');
-      });
-      $('#expand-btn').on('click', function() {
-        $('#json').JSONView('expand');
-      });
+$('#collapse-btn').on('click', function() {
+$('#json').JSONView('collapse');
+});
+$('#expand-btn').on('click', function() {
+$('#json').JSONView('expand');
+});
 
-      $('#toggle-btn').on('click', function() {
-        $('#json').JSONView('toggle');
-      });
+$('#toggle-btn').on('click', function() {
+$('#json').JSONView('toggle');
+});
 
-      $('#toggle-level1-btn').on('click', function() {
-        $('#json').JSONView('toggle', 1);
-      });
+$('#toggle-level1-btn').on('click', function() {
+$('#json').JSONView('toggle', 1);
+});
 
-      $('#toggle-level2-btn').on('click', function() {
-        $('#json').JSONView('toggle', 2);
-      });
-    });
-  </script>
+$('#toggle-level2-btn').on('click', function() {
+$('#json').JSONView('toggle', 2);
+});
+});
+</script>
 {% endblock %}
 
 {% block content %}
 <h4 class="text-center">Workflow {{ wf_id }} </h4>
+<!-- FILTERS / NAVIGATION -->
+<div class="pull-down">
+    <ul class="inline">
+        {% for s in all_states %}
+        <li>
+            <a href="/fw/{{s}}">
+                <span class="label {{ s }}">
+                    {{ s }}
+                </span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<div id="cy"></div>
+<div id="job-details-target"></div>
 
 <button id="collapse-btn">Collapse</button>
-  <button id="expand-btn">Expand</button>
-  <button id="toggle-btn">Toggle</button>
-  <button id="toggle-level1-btn">Toggle level1</button>
-  <button id="toggle-level2-btn">Toggle level2</button>
-  <div id="json"></div>
-
+<button id="expand-btn">Expand</button>
+<button id="toggle-btn">Toggle</button>
+<button id="toggle-level1-btn">Toggle level1</button>
+<button id="toggle-level2-btn">Toggle level2</button>
+<div id="json"></div>
+<div id="wf_id" style="display:none">{{ wf_id }}</div>
 {% endblock %}

@@ -2,6 +2,20 @@
 FireWorks Changelog
 ===================
 
+**v1.2.1**
+
+* attempt to fix further pip install issues in v1.2.0
+
+**v1.2.0**
+
+* attempt to fix pip install issues in v1.1.9
+
+**v1.1.9**
+
+* Workflow graph displayed visually in "lpad webgui" (C. Harris)
+* Add ability to override queue commands (thanks to D. Waroquiers)
+* detect_unreserved should only detect reserved fws (G. Petretto)
+
 **v1.1.8**
 
 * Some mods to adding a workflow to another workflow (thanks to H. Rusche & J. Montoya)
