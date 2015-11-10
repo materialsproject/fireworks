@@ -67,6 +67,20 @@ $('#json').JSONView('toggle', 2);
 
 {% block content %}
 <h4 class="text-center">Workflow {{ wf_id }} </h4>
+<!-- FILTERS / NAVIGATION -->
+<div class="pull-down">
+    <ul class="inline">
+        {% for s in all_states %}
+        <li>
+            <a href="/fw/{{s}}">
+                <span class="label {{ s }}">
+                    {{ s }}
+                </span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 <div id="cy"></div>
 <div id="job-details-target"></div>
 
