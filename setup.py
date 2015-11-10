@@ -26,7 +26,7 @@ if __name__ == "__main__":
         packages=find_packages(),
         include_package_data=True,
         package_data={'fireworks.user_objects.queue_adapters': ['*.txt'], 'fireworks.user_objects.firetasks': ['templates/*.txt'],
-                      'fireworks.flask_site': ['static/images/*', 'static/css/*', 'static/js/*', 'templates/*', ''],
+                      'fireworks.flask_site': ['static/images/*', 'static/css/*', 'static/js/*', 'templates/*'],
                       'fireworks.flask_site.static.font-awesome-4.0.3': ['css/*', 'fonts/*', 'less/*', 'scss/*']},
         zip_safe=False,
         install_requires=['pyyaml>=3.1.0', 'pymongo>=3.0', 'Jinja2>=2.7.3',
