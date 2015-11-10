@@ -9,20 +9,11 @@ from flask.ext.paginate import Pagination
 app = Flask(__name__)
 app.use_reloader=True
 hello = __name__
-try:
-    lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
-except:
-    lp = LaunchPad.from_file(os.environ["FWDB_CONFIG"])
+lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
 
-state_to_class= {"RUNNING" : "warning",
-                 "WAITING" : "primary",
-                 "FIZZLED" : "danger",
-                 "READY"   : "info",
-                 "COMPLETED" : "success"
-                 }
 state_to_color= {"RUNNING" : "#F4B90B",
                  "WAITING" : "#1F62A2",
                  "FIZZLED" : "#DB0051",
