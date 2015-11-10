@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.1.9**
+
+* Workflow graph displayed visually in "lpad webgui" (C. Harris)
+* Add ability to override queue commands (thanks to D. Waroquiers)
+* detect_unreserved should only detect reserved fws (G. Petretto)
+
 **v1.1.8**
 
 * Some mods to adding a workflow to another workflow (thanks to H. Rusche & J. Montoya)
