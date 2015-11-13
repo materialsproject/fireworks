@@ -152,7 +152,7 @@ def fw_state(state):
 def wf_state(state):
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
-    wf_count = lp.get_fw_ids(query=q, count_only=True)
+    wf_count = lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
     except ValueError:
