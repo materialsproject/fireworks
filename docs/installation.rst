@@ -40,8 +40,6 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 #. To install, simply type::
 
     pip install FireWorks
-    pip install flask  # (only needed if you want to use the built-in web frontend!)
-    pip install flask-paginate  # (only needed if you want to use the built-in web frontend!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
@@ -76,8 +74,6 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
 
 #. Install optional dependencies using pip with the following commands (with administrator privileges)::
 
-    pip install flask  # (only needed if you want to use the built-in web frontend!)
-    pip install flask-paginate  # (only needed if you want to use the built-in web frontend!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)

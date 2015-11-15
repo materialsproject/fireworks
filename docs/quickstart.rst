@@ -114,9 +114,11 @@ Run all Workflows
 Launch the web GUI
 ==================
 
-#. If you have a web browser and installed Flask (``pip install flask; pip install flask-paginate``), you can launch the web browser to see your results::
+#. If you have a web browser, you can launch the web GUI to see your results::
 
     lpad webgui
+
+Note that there are options to run the web site in a server mode.
 
 Python code
 ===========
