@@ -60,7 +60,12 @@ class CommonAdapter(QueueAdapterBase):
         self.template_file = os.path.abspath(template_file) if template_file is not None else \
             CommonAdapter._get_default_template_file(q_type)
         self.q_name = q_name or q_type
+
         self.update(dict(kwargs))
+        if 'q_submit_cmd' in self:
+            self.q_submit_cmd = self['q_submit_cmd']
+        else:
+            self.q_submit_cmd = None
 
         self.q_commands = copy.deepcopy(CommonAdapter.default_q_commands)
         if '_q_commands_override' in self:
