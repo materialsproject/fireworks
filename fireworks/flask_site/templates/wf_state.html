@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ state }} Fireworks Index{% endblock %}
+{% block title %}{{ state }} Workflows Index{% endblock %}
 
 {% block content %}
 <h3 class="text-center">{{ '{:,}'.format(wf_count) }} {{ state|lower }} Workflow{{ wf_count|pluralize }}</h3>
@@ -22,7 +22,7 @@
 
 <!-- TABLE -->
 <table class="table table-bordered">
-    <tr><th colspan="2">{{ state }} Fireworks</th></tr>
+    <tr><th colspan="2">{{ state }} Workflows</th></tr>
     <tr>
         <th>ID</th>
         <th>Name</th>
