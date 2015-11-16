@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from pymongo import DESCENDING
@@ -152,7 +153,7 @@ def fw_state(state):
 def wf_state(state):
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
-    wf_count = lp.get_fw_ids(query=q, count_only=True)
+    wf_count = lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
     except ValueError:
@@ -164,6 +165,37 @@ def wf_state(state):
     all_states = STATES
     return render_template('wf_state.html', **locals())
 
+@app.route("/wf/metadata/<key>/<value>/", defaults={"state": "total"})
+@app.route("/wf/metadata/<key>/<value>/<state>/")
+def wf_metadata_find(key, value, state):
+    db = lp.workflows
+    try:
+        value = int(value)
+    except ValueError:
+        pass
+    q = {'metadata.{}'.format(key): value}
+    state_mixin = {} if state == "total" else {"state": state}
+    q.update(state_mixin)
+    wf_count = lp.get_wf_ids(query=q, count_only=True)
+    if wf_count == 0:
+        abort(404)
+    elif wf_count == 1:
+        doc = db.find_one(q, {'nodes': 1, '_id': 0})
+        fw_id = doc['nodes'][0]
+        return redirect(url_for('wf_details', wf_id=fw_id))
+    else:
+        try:
+            page = int(request.args.get('page', 1))
+        except ValueError:
+            page = 1
+        rows = list(db.find(q).sort([('_id', DESCENDING)]).\
+                    skip(page - 1).limit(PER_PAGE))
+        for r in rows:
+            r["fw_id"] = r["nodes"][0]
+        pagination = Pagination(page=page, total=wf_count,
+                                record_name='workflows', per_page=PER_PAGE)
+        all_states = STATES
+        return render_template('wf_metadata.html', **locals())
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

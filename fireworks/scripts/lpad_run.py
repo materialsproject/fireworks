@@ -297,21 +297,6 @@ def get_children(links, start, max_depth):
                 data[l] = c
     return data
 
-def display_wfs(args):
-    lp = get_lp(args)
-
-    query = {'nodes': {"$in": args.fw_id}}
-
-    ids = lp.get_wf_ids(query, None, 0, count_only=False)
-    for i in ids:
-        d = lp.get_wf_summary_dict(i, "all")
-
-        get_fwid = lambda l: int(l.split("--")[-1])
-        links = {get_fwid(k): [get_fwid(i) for i in v]
-                 for k, v in d["links"].items()}
-        c = get_children(links, i, 3)
-        print(args.output(c))
-
 def detect_lostruns(args):
     lp = get_lp(args)
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime,
@@ -705,14 +690,6 @@ def lpad():
                                     'with "-d less"',
                                action="store_true")
     get_wf_parser.set_defaults(func=get_wfs)
-
-    display = subparsers.add_parser(
-            'display_wflows', help='Graphical display of Workflows')
-    display.add_argument(*fw_id_args, **fw_id_kwargs)
-    display.add_argument(
-        '-d', '--depth', help="Depth of links to search for.",
-        default=1, type=int)
-    display.set_defaults(func=display_wfs)
 
     defuse_wf_parser = subparsers.add_parser('defuse_wflows', help='cancel (de-fuse) an entire Workflow')
     defuse_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
