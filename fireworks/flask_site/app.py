@@ -141,8 +141,8 @@ def fw_state(state):
     except ValueError:
         page = 1
 
-    rows = list(db.find(q, projection=["fw_id", "name", "created_on"]).sort([('_id', DESCENDING)]).skip(page - 1).limit(
-        PER_PAGE))
+    rows = list(db.find(q, projection=["fw_id", "name", "created_on"]).sort([('_id', DESCENDING)]).skip(
+        (page - 1)*PER_PAGE).limit(PER_PAGE))
     pagination = Pagination(page=page, total=fw_count, record_name='fireworks', per_page=PER_PAGE)
     all_states = STATES
     return render_template('fw_state.html', **locals())
@@ -158,7 +158,7 @@ def wf_state(state):
         page = int(request.args.get('page', 1))
     except ValueError:
         page = 1
-    rows = list(db.find(q).sort([('_id', DESCENDING)]).skip(page - 1).limit(PER_PAGE))
+    rows = list(db.find(q).sort([('_id', DESCENDING)]).skip((page - 1)*PER_PAGE).limit(PER_PAGE))
     for r in rows:
         r["fw_id"] = r["nodes"][0]
     pagination = Pagination(page=page, total=wf_count, record_name='workflows', per_page=PER_PAGE)
