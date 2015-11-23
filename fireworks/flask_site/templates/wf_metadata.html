@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{key}}={{value}} {{ state }} Workflows Index{% endblock %}
+
+{% block content %}
+<h3 class="text-center">{{ '{:,}'.format(wf_count) }} {{ state|lower }} Workflow{{ wf_count|pluralize }} for {{ key }}={{ value }}</h3>
+
+<!-- FILTERS / NAVIGATION -->
+<div class="pull-down">
+  <ul class="inline">
+    {% for s in all_states %}
+    <li>
+      <a href="/wf/metadata/{{key}}/{{value}}/{{s}}">
+        <span class="label {{s}}">
+          {{ s }}
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<!-- TABLE -->
+<table class="table table-bordered">
+  <tr><th colspan="2">{{ state }} Workflows</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Created On</th>
+  </tr>
+  {% for row in rows %}
+  <tr>
+    <td><center><a href="/wf/{{ row.fw_id }}">{{ row.fw_id }}</a></center></td>
+    <td>{{ row.name }}</td>
+    <td>{{ row.created_on }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{{ pagination.links|safe }}
+
+{% endblock %}

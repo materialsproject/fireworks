@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from pymongo import DESCENDING
@@ -9,26 +10,10 @@ from flask.ext.paginate import Pagination
 app = Flask(__name__)
 app.use_reloader=True
 hello = __name__
-try:
-    lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
-except:
-    lp = LaunchPad.from_file(os.environ["FWDB_CONFIG"])
+lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
-
-state_to_class= {"RUNNING" : "warning",
-                 "WAITING" : "primary",
-                 "FIZZLED" : "danger",
-                 "READY"   : "info",
-                 "COMPLETED" : "success"
-                 }
-state_to_color= {"RUNNING" : "#F4B90B",
-                 "WAITING" : "#1F62A2",
-                 "FIZZLED" : "#DB0051",
-                 "READY"   : "#2E92F2",
-                 "COMPLETED" : "#24C75A"
-                 }
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -84,7 +69,7 @@ def get_fw_details(fw_id):
     return jsonify(fw)
 
 @app.route('/fw/<int:fw_id>')
-def show_fw(fw_id):
+def fw_details(fw_id):
     try:
         int(fw_id)
     except:
@@ -100,6 +85,17 @@ def workflow_json(wf_id):
     except ValueError:
         raise ValueError("Invalid fw_id: {}".format(wf_id))
 
+    # TODO: modify so this doesn't duplicate the .css file that contains the same colors
+    state_to_color = {"RUNNING": "#F4B90B",
+                     "WAITING": "#1F62A2",
+                     "FIZZLED": "#DB0051",
+                     "READY": "#2E92F2",
+                     "COMPLETED": "#24C75A",
+                     "RESERVED": "#BB8BC1",
+                     "ARCHIVED": "#7F8287",
+                     "DEFUSED": "#B7BCC3"
+                    }
+
     wf = lp.workflows.find_one({'nodes':wf_id})
     fireworks = list(lp.fireworks.find({"fw_id": {"$in":wf["nodes"]}}, projection=["name","fw_id"]))
     node_name = dict()
@@ -109,7 +105,7 @@ def workflow_json(wf_id):
     for node in wf['nodes']:
         node_obj = dict()
         node_obj['id'] = str(node)
-        node_obj['name']=node_name[node].replace("Filt.", "Filter ")
+        node_obj['name']=node_name[node]
         node_obj['state']=state_to_color[wf['fw_states'][str(node)]]
         node_obj['width']=len(node_obj['name'])*10
         nodes_and_edges['nodes'].append({'data':node_obj})
@@ -123,19 +119,20 @@ def workflow_json(wf_id):
 
 
 @app.route('/wf/<int:wf_id>')
-def show_workflow(wf_id):
+def wf_details(wf_id):
     try:
         int(wf_id)
     except ValueError:
         raise ValueError("Invalid fw_id: {}".format(wf_id))
     wf = lp.get_wf_summary_dict(wf_id)
     wf = json.loads(json.dumps(wf, default=DATETIME_HANDLER))  # formats ObjectIds
+    all_states = list(set(wf["states"].values()))
     return render_template('wf_details.html', **locals())
 
 
 @app.route('/fw/', defaults={"state": "total"})
 @app.route("/fw/<state>/")
-def fw_states(state):
+def fw_state(state):
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
     fw_count = lp.get_fw_ids(query=q, count_only=True)
@@ -153,10 +150,10 @@ def fw_states(state):
 
 @app.route('/wf/', defaults={"state": "total"})
 @app.route("/wf/<state>/")
-def wf_states(state):
+def wf_state(state):
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
-    wf_count = lp.get_fw_ids(query=q, count_only=True)
+    wf_count = lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
     except ValueError:
@@ -168,6 +165,37 @@ def wf_states(state):
     all_states = STATES
     return render_template('wf_state.html', **locals())
 
+@app.route("/wf/metadata/<key>/<value>/", defaults={"state": "total"})
+@app.route("/wf/metadata/<key>/<value>/<state>/")
+def wf_metadata_find(key, value, state):
+    db = lp.workflows
+    try:
+        value = int(value)
+    except ValueError:
+        pass
+    q = {'metadata.{}'.format(key): value}
+    state_mixin = {} if state == "total" else {"state": state}
+    q.update(state_mixin)
+    wf_count = lp.get_wf_ids(query=q, count_only=True)
+    if wf_count == 0:
+        abort(404)
+    elif wf_count == 1:
+        doc = db.find_one(q, {'nodes': 1, '_id': 0})
+        fw_id = doc['nodes'][0]
+        return redirect(url_for('wf_details', wf_id=fw_id))
+    else:
+        try:
+            page = int(request.args.get('page', 1))
+        except ValueError:
+            page = 1
+        rows = list(db.find(q).sort([('_id', DESCENDING)]).\
+                    skip(page - 1).limit(PER_PAGE))
+        for r in rows:
+            r["fw_id"] = r["nodes"][0]
+        pagination = Pagination(page=page, total=wf_count,
+                                record_name='workflows', per_page=PER_PAGE)
+        all_states = STATES
+        return render_template('wf_metadata.html', **locals())
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

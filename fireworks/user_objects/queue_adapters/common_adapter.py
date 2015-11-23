@@ -99,13 +99,15 @@ class CommonAdapter(QueueAdapterBase):
             # -p: filter queue (partition)
             # -h: no header line
             # -o: reduce output to user only (shorter string to parse)
-            status_cmd.extend(['-o "%u"', '-u', username, '-p', self['queue'], '-h'])
+            status_cmd.extend(['-o "%u"', '-u', username, '-h'])
+            if 'queue' in self and self['queue']:
+                status_cmd.extend(['-p', self['queue']])
         elif self.q_type == "LoadSharingFacility":
             #use no header and the wide format so that there is one line per job, and display only running and pending jobs
             status_cmd.extend(['-p','-r','-o', 'jobID user queue', '-noheader', '-u', username])
         elif self.q_type == "Cobalt":
             header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
-            status_cmd.extend(['--header',header,'-u',username])
+            status_cmd.extend(['--header', header, '-u', username])
         else:
             status_cmd.extend(['-u', username])
 

@@ -20,6 +20,8 @@ Miriam Brafman ported the web frontend to Flask and reworked the CSS.
 
 David Waroquiers wrote the SLURM queue adapter, helped write the FileTransferTask, and provided useful feedback.
 
+Chris Harris helped spruce up the frontend using Cytoscape.
+
 William Davidson Richards wrote the SGE queue adapter and provided useful feedback and bug fixes.
 
 Felix Brockherde added support for the IBM LoadLeveler queueing system and helped stomp bugs.
