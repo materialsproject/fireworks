@@ -818,6 +818,14 @@ class Workflow(FWSerializable):
         root_ids = new_wf.root_fw_ids
         leaf_ids = new_wf.leaf_fw_ids
 
+        if detour:
+            for fw_id in fw_ids:
+                if fw_id in self.links:
+                    # make sure all of these links are WAITING, else the DETOUR is not well defined
+                    ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
+                    if any(ready_run):
+                        raise ValueError("fw_id: {}: Detour option only works if all children of detours are not READY to run and have not already run".format(fw_id))
+
         for new_fw in new_wf.fws:
             if new_fw.fw_id >= 0:  # note - this is also used later in the 'detour' code
                 raise ValueError(
@@ -827,19 +835,15 @@ class Workflow(FWSerializable):
 
             self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
 
-            for fw_id in fw_ids:
-                if new_fw.fw_id in leaf_ids:
-                    if detour:
-                        # make sure all of these links are WAITING, else the DETOUR is not well defined
-                        ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
-                        if any(ready_run):
-                            raise ValueError("fw_id: {}: Detour option only works if all children of detours are not READY to run and have not already run".format(fw_id))
+            if new_fw.fw_id in leaf_ids:
+                if detour:
+                    for fw_id in fw_ids:
                         self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
-                    else:
-                        self.links[new_fw.fw_id] = []
                 else:
-                    self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
-                updated_ids.append(new_fw.fw_id)
+                    self.links[new_fw.fw_id] = []
+            else:
+                self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
+            updated_ids.append(new_fw.fw_id)
 
         for fw_id in fw_ids:
             for root_id in root_ids:
