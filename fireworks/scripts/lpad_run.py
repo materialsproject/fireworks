@@ -474,7 +474,7 @@ def report(args):
     print(title_dec)
     print(title_str)
     print(title_dec)
-    fwr.print_stats(stats)
+    print(fwr.get_stats_str(stats))
 
 
 def introspect(args):
