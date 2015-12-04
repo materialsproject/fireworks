@@ -144,7 +144,6 @@ def fw_state(state):
     rows = list(db.find(q, projection=["fw_id", "name", "created_on"]).sort([('_id', DESCENDING)]).skip(
         (page - 1)*PER_PAGE).limit(PER_PAGE))
     pagination = Pagination(page=page, total=fw_count, record_name='fireworks', per_page=PER_PAGE)
-    all_states = STATES
     return render_template('fw_state.html', **locals())
 
 
@@ -162,7 +161,6 @@ def wf_state(state):
     for r in rows:
         r["fw_id"] = r["nodes"][0]
     pagination = Pagination(page=page, total=wf_count, record_name='workflows', per_page=PER_PAGE)
-    all_states = STATES
     return render_template('wf_state.html', **locals())
 
 @app.route("/wf/metadata/<key>/<value>/", defaults={"state": "total"})

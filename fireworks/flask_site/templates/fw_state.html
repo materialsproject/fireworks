@@ -4,21 +4,6 @@
 {% block content %}
 <h3 class="text-center">{{ '{:,}'.format(fw_count) }} {{ state|lower }} Firework{{ fw_count|pluralize }}</h3>
 
-<!-- FILTERS / NAVIGATION -->
-<div class="pull-down">
-    <ul class="inline">
-        {% for s in all_states %}
-        <li>
-            <a href="/fw/{{s}}">
-                <span class="label {{ s }}">
-                    {{ s }}
-                </span>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-
 <!-- TABLE -->
 <table class="table table-bordered">
     <tr><th colspan="2">
