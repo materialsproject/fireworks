@@ -92,7 +92,7 @@ class FWReport():
         for x in decorated_stat_list:
             header_str = 'Stats for time-period {}\n'.format(x['date_key'])
             my_str.append(header_str)
-            border_str = "=" * len(header_str) + "\n"
+            border_str = "=" * len(header_str)
             my_str.append(border_str)
 
             for i in x['states']:
