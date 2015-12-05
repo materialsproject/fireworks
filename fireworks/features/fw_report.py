@@ -3,7 +3,6 @@ from __future__ import division
 from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from xlwt.antlr import StringBuffer
 
 from fireworks import Firework
 
@@ -88,17 +87,17 @@ class FWReport():
         if not decorated_stat_list:
             return "There are no stats to display for the chosen time period."
 
-        my_str = StringBuffer()
+        my_str = ""
         for x in decorated_stat_list:
             header_str = 'Stats for time-period {}\n'.format(x['date_key'])
-            my_str.append(header_str)
+            my_str += header_str
             border_str = "=" * len(header_str) + "\n"
-            my_str.append(border_str)
+            my_str += border_str
 
             for i in x['states']:
-                my_str.append(("{} : {}\n").format(i, x['states'][i]))
-            my_str.append("\n")
-            my_str.append("total : {}\n".format(x['count']))
-            my_str.append("C/(C+F) : {}\n".format(x['completed_score']))
+                my_str += "{} : {}\n".format(i, x['states'][i])
+            my_str += "\n"
+            my_str += "total : {}\n".format(x['count'])
+            my_str += "C/(C+F) : {}\n".format(x['completed_score'])
 
-        return my_str.getString()
+        return my_str
