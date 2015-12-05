@@ -90,8 +90,9 @@ class FWReport():
 
         my_str = StringBuffer()
         for x in decorated_stat_list:
-            my_str.append('Stats for time-period {}\n'.format(x['date_key']))
-            border_str = "=" * len(my_str.getString()) + "\n"
+            header_str = 'Stats for time-period {}\n'.format(x['date_key'])
+            my_str.append(header_str)
+            border_str = "=" * len(header_str) + "\n"
             my_str.append(border_str)
 
             for i in x['states']:
