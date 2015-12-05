@@ -890,8 +890,7 @@ class Workflow(FWSerializable):
         if fw.spec.get('_allow_fizzled_parents'):
             completed_parent_states.append('FIZZLED')
 
-        if len(parent_states) != 0 and not all(
-                [s in completed_parent_states for s in parent_states]):
+        if len(parent_states) != 0 and not all(s in completed_parent_states for s in parent_states):
             m_state = 'WAITING'
 
         else:
