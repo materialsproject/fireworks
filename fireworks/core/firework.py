@@ -818,6 +818,7 @@ class Workflow(FWSerializable):
         root_ids = new_wf.root_fw_ids
         leaf_ids = new_wf.leaf_fw_ids
 
+        # make sure detour runs do not link to ready/running/completed/etc. runs
         if detour:
             for fw_id in fw_ids:
                 if fw_id in self.links:
@@ -826,6 +827,7 @@ class Workflow(FWSerializable):
                     if any(ready_run):
                         raise ValueError("fw_id: {}: Detour option only works if all children of detours are not READY to run and have not already run".format(fw_id))
 
+        # make sure all new child fws have negative fw_id
         for new_fw in new_wf.fws:
             if new_fw.fw_id >= 0:  # note - this is also used later in the 'detour' code
                 raise ValueError(
@@ -833,6 +835,8 @@ class Workflow(FWSerializable):
                     '{}'.format(
                         new_fw.fw_id))
 
+        # completed checks - go ahead and append
+        for new_fw in new_wf.fws:
             self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
 
             if new_fw.fw_id in leaf_ids:
