@@ -358,6 +358,7 @@ class LaunchPad(FWSerializable):
         print("Remove launches %s" % launch_ids)
         print("Removing workflow.")
         self.launches.remove({'launch_id': {"$in": launch_ids}})
+        self.offline_runs.remove({'launch_id': {"$in": launch_ids}})
         self.fireworks.remove({"fw_id": {"$in": fw_ids}})
         self.workflows.remove({'nodes': fw_id})
 
