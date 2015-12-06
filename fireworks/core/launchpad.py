@@ -358,6 +358,7 @@ class LaunchPad(FWSerializable):
         print("Remove launches %s" % launch_ids)
         print("Removing workflow.")
         self.launches.remove({'launch_id': {"$in": launch_ids}})
+        self.offline_runs.remove({'launch_id': {"$in": launch_ids}})
         self.fireworks.remove({"fw_id": {"$in": fw_ids}})
         self.workflows.remove({'nodes': fw_id})
 
@@ -1173,13 +1174,19 @@ class LazyFirework(object):
 
         self._fwc, self._lc = fw_coll, launch_coll
         self._launches = {k: False for k in self.db_launch_fields}
-        self._fw, self._lids = None, None
+        self._fw, self._lids, self._state = None, None, None
 
     # FireWork methods
 
+    # Treat state as special case as it is always required when accessing a Firework lazily
+    # If the partial fw is not available the state is fetched independently
     @property
     def state(self):
-        return self.partial_fw._state
+        if self._fw is not None:
+            self._state = self._fw.state
+        elif self._state is None:
+            self._state = self._fwc.find_one({'fw_id': self.fw_id}, projection=['state'])['state']
+        return self._state
 
     @state.setter
     def state(self, state):
@@ -1231,7 +1238,11 @@ class LazyFirework(object):
     def updated_on(self, value): self.partial_fw.updated_on = value
 
     @property
-    def parents(self): return self.partial_fw.parents
+    def parents(self):
+        if self._fw is not None:
+            return self.partial_fw.parents
+        else:
+            return []
 
     @parents.setter
     def parents(self, value): self.partial_fw.parents = value
