@@ -20,7 +20,15 @@ class FWReport():
         self.db = lpad.db
 
     def get_stats(self, coll="fireworks", interval="days", num_intervals=5, additional_query=None):
-        # TODO: add docs
+        """
+        Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>, e.g. past 5 days.
+
+        :param coll: collection, either "fireworks", "workflows", or "launches"
+        :param interval: one of "minutes", "hours", "days", "months", "years"
+        :param num_intervals: number of intervals to go back in time from present moment
+        :param additional_query: additional constraints on reporting
+        :return: list, with each item being a dictionary of statistics for a given interval
+        """
 
         # confirm interval
         if interval not in DATE_KEYS.keys():
@@ -84,6 +92,13 @@ class FWReport():
         return decorated_list
 
     def get_stats_str(self, decorated_stat_list):
+        """
+        Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
+
+        :param decorated_stat_list:  list of dict
+        :return: String
+        """
+
         if not decorated_stat_list:
             return "There are no stats to display for the chosen time period."
 
