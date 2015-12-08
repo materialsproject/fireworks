@@ -114,5 +114,6 @@ class FWReport():
             my_str += "\n"
             my_str += "total : {}\n".format(x['count'])
             my_str += "C/(C+F) : {}\n".format(x['completed_score'])
+            my_str += "\n"
 
         return my_str
