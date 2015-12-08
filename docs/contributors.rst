@@ -32,7 +32,7 @@ William Scullin added ALCF Cobalt support and helped stomp bugs.
 
 Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL (later superceded by Flask site).
 
-Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, Donny Winston, Joey Montoya, and Henrik Rusche helped stomp bugs and provide improvements.
+Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, Donny Winston, Joey Montoya, Henrik Rusche, and Felix Zapata helped stomp bugs and provide improvements.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey and Deborah Bard for helpful discussions.
 

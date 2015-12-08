@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.2.3**
+
+* Greatly improve refresh performance of large workflows (G. Petretto)
+* FW Reporting now available on frontend
+* Fix bug in Python 3 queue adapter (thanks to F. Zapata)
+* Fix small bug in offline mode (G. Petretto)
+* Fix bug in frontend pagination (G. Petretto)
+* Improvements to wf.append (H. Rusche)
+
 **v1.2.2**
 
 * Flask and webgui are installed by default (no additional pip install needed)
