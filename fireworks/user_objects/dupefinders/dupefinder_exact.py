@@ -20,7 +20,6 @@ class DupeFinderExact(DupeFinderBase):
     _fw_name = 'DupeFinderExact'
 
     # TODO: move the logic into query() instead of verify() for better performance
-    # TODO: just make the 'prematch' thing be always a list of keys...no custom queries allowed (in theory)
 
     def verify(self, spec1, spec2):
         return spec1 == spec2
