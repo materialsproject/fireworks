@@ -126,9 +126,8 @@ def wf_details(wf_id):
     except ValueError:
         raise ValueError("Invalid fw_id: {}".format(wf_id))
     wf = lp.get_wf_summary_dict(wf_id, mode="all")
-    print(wf)
     wf = json.loads(json.dumps(wf, default=DATETIME_HANDLER))  # formats ObjectIds
-    all_states = list(set(wf["fw_states"].values()))
+    all_states = list(set(wf["states"].values()))
     return render_template('wf_details.html', **locals())
 
 

@@ -421,7 +421,8 @@ class LaunchPad(FWSerializable):
                 [fw["state"][:3] if fw["state"].startswith("R")
                  else fw["state"][0] for fw in wf["fw"]])
             del wf["nodes"]
-        elif mode == "more":
+
+        if mode == "more" or mode == "all":
             wf["states"] = OrderedDict()
             wf["launch_dirs"] = OrderedDict()
             for fw in wf["fw"]:
@@ -430,14 +431,15 @@ class LaunchPad(FWSerializable):
                 wf["launch_dirs"][k] = [l["launch_dir"] for l in fw[
                     "launches"]]
             del wf["nodes"]
-        elif mode == "all":
+
+        if mode == "all":
+            del wf["fw_states"]
             wf["links"] = {id_name_map[int(k)]: [id_name_map[i] for i in v]
                            for k, v in wf["links"].items()}
-            wf["nodes"] = map(id_name_map.get, wf["nodes"])
             wf["parent_links"] = {
                 id_name_map[int(k)]: [id_name_map[i] for i in v]
                 for k, v in wf["parent_links"].items()}
-        elif mode == "reservations":
+        if mode == "reservations":
             wf["states"] = OrderedDict()
             wf["launches"] = OrderedDict()
             for fw in wf["fw"]:
