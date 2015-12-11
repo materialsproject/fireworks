@@ -324,12 +324,6 @@ class Firework(FWSerializable):
     def __str__(self):
         return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
-# TODO: remove this (stop supporting) sometime around FW v1.0
-@deprecated(replacement=Firework)
-class FireWork(Firework):
-    pass
-
-
 class Tracker(FWSerializable, object):
     """
     A Tracker monitors a file and returns the last N lines for updating the Launch object
