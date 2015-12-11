@@ -242,7 +242,7 @@ class LaunchPad(FWSerializable):
         :param wf: a Workflow object.
         """
         if isinstance(wf, Firework):
-            wf = Workflow.from_FireWork(wf)
+            wf = Workflow.from_Firework(wf)
 
         # sets the root FWs as READY
         # prefer to wf.refresh() for speed reasons w/many root FWs

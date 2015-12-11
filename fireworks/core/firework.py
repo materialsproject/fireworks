@@ -1044,10 +1044,10 @@ class Workflow(FWSerializable):
                             Workflow.Links.from_dict(m_dict['links']), m_dict.get('name'),
                             m_dict['metadata'], created_on, updated_on)
         else:
-            return Workflow.from_FireWork(Firework.from_dict(m_dict))
+            return Workflow.from_Firework(Firework.from_dict(m_dict))
 
     @classmethod
-    def from_FireWork(cls, fw, name=None, metadata=None):
+    def from_Firework(cls, fw, name=None, metadata=None):
         name = name if name else fw.name
         return Workflow([fw], None, name=name, metadata=metadata, created_on=fw.created_on,
                         updated_on=fw.updated_on)
