@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.2.4**
+
+.. caution:: The deprecated ``FireWork`` class has been removed. Be sure to use ``Firework`` (see capitalization). Also, use ``Workflow.from_Firework()``.
+
+* remove deprecated capitalization of FireWork
+* better display of workflow info and reporting in frontend
+
 **v1.2.3**
 
 * Greatly improve refresh performance of large workflows (G. Petretto)
