@@ -98,22 +98,20 @@ def workflow_json(wf_id):
                     }
 
     wf = lp.workflows.find_one({'nodes':wf_id})
-    fireworks = list(lp.fireworks.find({"fw_id": {"$in":wf["nodes"]}}, projection=["name","fw_id"]))
-    node_name = dict()
+    fireworks = list(lp.fireworks.find({"fw_id": {"$in":wf["nodes"]}}, projection=["name","fw_id", "state"]))
     nodes_and_edges = { 'nodes': list(), 'edges': list()}
-    for firework in fireworks:
-        node_name[firework['fw_id']]=firework['name']
-    for node in wf['nodes']:
+    for fw in fireworks:
+        fw_id = fw['fw_id']
         node_obj = dict()
-        node_obj['id'] = str(node)
-        node_obj['name']=node_name[node]
-        node_obj['state']=state_to_color[wf['fw_states'][str(node)]]
+        node_obj['id'] = fw_id
+        node_obj['name']= fw["name"]
+        node_obj['state']=state_to_color[fw["state"]]
         node_obj['width']=len(node_obj['name'])*10
         nodes_and_edges['nodes'].append({'data':node_obj})
-        if str(node) in wf['links']:
-            for link in wf['links'][str(node)]:
+        if str(fw_id) in wf['links']:
+            for link in wf['links'][str(fw_id)]:
                 link_object = dict()
-                link_object['source']=str(node)
+                link_object['source']=str(fw_id)
                 link_object['target']=str(link)
                 nodes_and_edges['edges'].append({'data':link_object})
     return jsonify(nodes_and_edges)
