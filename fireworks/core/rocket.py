@@ -206,6 +206,8 @@ class Rocket():
                 if my_spec.get("_add_launchpad_and_fw_id"):
                     t.launchpad = self.launchpad
                     t.fw_id = m_fw.fw_id
+                if my_spec.get("_add_fworker"):
+                    t.fworker = self.fworker
 
                 try:
                     m_action = t.run_task(my_spec)
