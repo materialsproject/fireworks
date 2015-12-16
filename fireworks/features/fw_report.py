@@ -3,6 +3,7 @@ from __future__ import division
 from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 from fireworks import Firework
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
@@ -19,7 +20,15 @@ class FWReport():
         self.db = lpad.db
 
     def get_stats(self, coll="fireworks", interval="days", num_intervals=5, additional_query=None):
-        # TODO: add docs
+        """
+        Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>, e.g. past 5 days.
+
+        :param coll: collection, either "fireworks", "workflows", or "launches"
+        :param interval: one of "minutes", "hours", "days", "months", "years"
+        :param num_intervals: number of intervals to go back in time from present moment
+        :param additional_query: additional constraints on reporting
+        :return: list, with each item being a dictionary of statistics for a given interval
+        """
 
         # confirm interval
         if interval not in DATE_KEYS.keys():
@@ -82,17 +91,29 @@ class FWReport():
 
         return decorated_list
 
-    def print_stats(self, decorated_stat_list):
+    def get_stats_str(self, decorated_stat_list):
+        """
+        Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
+
+        :param decorated_stat_list:  list of dict
+        :return: String
+        """
+
+        if not decorated_stat_list:
+            return "There are no stats to display for the chosen time period."
+
+        my_str = ""
         for x in decorated_stat_list:
-            stats_str = 'Stats for time-period {}'.format(x['date_key'])
-            border_str = "=" * len(stats_str)
-            print(stats_str)
-            print(border_str)
+            header_str = 'Stats for time-period {}\n'.format(x['date_key'])
+            my_str += header_str
+            border_str = "=" * len(header_str) + "\n"
+            my_str += border_str
 
             for i in x['states']:
-                print("{} : {}").format(i, x['states'][i])
-            print("")
-            print("total : {}".format(x['count']))
-            print("C/(C+F) : {}".format(x['completed_score']))
-            print("")
-            print("")
+                my_str += "{} : {}\n".format(i, x['states'][i])
+            my_str += "\n"
+            my_str += "total : {}\n".format(x['count'])
+            my_str += "C/(C+F) : {}\n".format(x['completed_score'])
+            my_str += "\n"
+
+        return my_str

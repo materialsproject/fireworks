@@ -5,24 +5,9 @@
 {% block content %}
 <h3 class="text-center">{{ '{:,}'.format(wf_count) }} {{ state|lower }} Workflow{{ wf_count|pluralize }}</h3>
 
-<!-- FILTERS / NAVIGATION -->
-<div class="pull-down">
-    <ul class="inline">
-        {% for s in all_states %}
-        <li>
-            <a href="/wf/{{s}}">
-                <span class="label {{s}}">
-                    {{ s }}
-                </span>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-
 <!-- TABLE -->
 <table class="table table-bordered">
-    <tr><th colspan="2">{{ state }} Workflows</th></tr>
+    <tr><th colspan="2"><span class="label {{state}}">{{ state }}</span> Workflows</th></tr>
     <tr>
         <th>ID</th>
         <th>Name</th>

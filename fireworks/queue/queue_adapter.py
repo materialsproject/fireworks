@@ -58,6 +58,12 @@ class Command(object):
                 self.process = subprocess.Popen(self.command, **kwargs)
                 self.output, self.error = self.process.communicate()
                 self.status = self.process.returncode
+
+                # Python3 - need to convert string to bytes
+                if isinstance(self.output, bytes):
+                    self.output = self.output.decode("utf-8")
+                if isinstance(self.error, bytes):
+                    self.error = self.error.decode("utf-8")
             except:
                 self.error = traceback.format_exc()
                 self.status = -1

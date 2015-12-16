@@ -442,12 +442,15 @@ def add_scripts(args):
 def recover_offline(args):
     lp = get_lp(args)
     failed_fws = []
+    recovered = 0
     for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
         fw = lp.recover_offline(l['launch_id'], args.ignore_errors)
         if fw:
             failed_fws.append(fw)
+        else:
+            recovered += 1
 
-    lp.m_logger.info("FINISHED recovering offline runs.")
+    lp.m_logger.info("FINISHED recovering offline runs. {} job(s) recovered".format(recovered))
     if failed_fws:
         lp.m_logger.info("FAILED to recover offline fw_ids: {}".format(failed_fws))
 
@@ -471,7 +474,7 @@ def report(args):
     print(title_dec)
     print(title_str)
     print(title_dec)
-    fwr.print_stats(stats)
+    print(fwr.get_stats_str(stats))
 
 
 def introspect(args):

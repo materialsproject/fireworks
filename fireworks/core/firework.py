@@ -324,12 +324,6 @@ class Firework(FWSerializable):
     def __str__(self):
         return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
-# TODO: remove this (stop supporting) sometime around FW v1.0
-@deprecated(replacement=Firework)
-class FireWork(Firework):
-    pass
-
-
 class Tracker(FWSerializable, object):
     """
     A Tracker monitors a file and returns the last N lines for updating the Launch object
@@ -818,6 +812,16 @@ class Workflow(FWSerializable):
         root_ids = new_wf.root_fw_ids
         leaf_ids = new_wf.leaf_fw_ids
 
+        # make sure detour runs do not link to ready/running/completed/etc. runs
+        if detour:
+            for fw_id in fw_ids:
+                if fw_id in self.links:
+                    # make sure all of these links are WAITING, else the DETOUR is not well defined
+                    ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
+                    if any(ready_run):
+                        raise ValueError("fw_id: {}: Detour option only works if all children of detours are not READY to run and have not already run".format(fw_id))
+
+        # make sure all new child fws have negative fw_id
         for new_fw in new_wf.fws:
             if new_fw.fw_id >= 0:  # note - this is also used later in the 'detour' code
                 raise ValueError(
@@ -825,21 +829,19 @@ class Workflow(FWSerializable):
                     '{}'.format(
                         new_fw.fw_id))
 
+        # completed checks - go ahead and append
+        for new_fw in new_wf.fws:
             self.id_fw[new_fw.fw_id] = new_fw  # add new_fw to id_fw
 
-            for fw_id in fw_ids:
-                if new_fw.fw_id in leaf_ids:
-                    if detour:
-                        # make sure all of these links are WAITING, else the DETOUR is not well defined
-                        ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
-                        if any(ready_run):
-                            raise ValueError("fw_id: {}: Detour option only works if all children of detours are not READY to run and have not already run".format(fw_id))
+            if new_fw.fw_id in leaf_ids:
+                if detour:
+                    for fw_id in fw_ids:
                         self.links[new_fw.fw_id] = [f for f in self.links[fw_id] if f >= 0]  # add children of current FW to new FW
-                    else:
-                        self.links[new_fw.fw_id] = []
                 else:
-                    self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
-                updated_ids.append(new_fw.fw_id)
+                    self.links[new_fw.fw_id] = []
+            else:
+                self.links[new_fw.fw_id] = new_wf.links[new_fw.fw_id]
+            updated_ids.append(new_fw.fw_id)
 
         for fw_id in fw_ids:
             for root_id in root_ids:
@@ -890,8 +892,7 @@ class Workflow(FWSerializable):
         if fw.spec.get('_allow_fizzled_parents'):
             completed_parent_states.append('FIZZLED')
 
-        if len(parent_states) != 0 and not all(
-                [s in completed_parent_states for s in parent_states]):
+        if len(parent_states) != 0 and not all(s in completed_parent_states for s in parent_states):
             m_state = 'WAITING'
 
         else:
@@ -1043,10 +1044,10 @@ class Workflow(FWSerializable):
                             Workflow.Links.from_dict(m_dict['links']), m_dict.get('name'),
                             m_dict['metadata'], created_on, updated_on)
         else:
-            return Workflow.from_FireWork(Firework.from_dict(m_dict))
+            return Workflow.from_Firework(Firework.from_dict(m_dict))
 
     @classmethod
-    def from_FireWork(cls, fw, name=None, metadata=None):
+    def from_Firework(cls, fw, name=None, metadata=None):
         name = name if name else fw.name
         return Workflow([fw], None, name=name, metadata=metadata, created_on=fw.created_on,
                         updated_on=fw.updated_on)

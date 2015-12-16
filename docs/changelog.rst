@@ -2,6 +2,29 @@
 FireWorks Changelog
 ===================
 
+**v1.2.4**
+
+.. caution:: The deprecated ``FireWork`` class has been removed. Be sure to use ``Firework`` (see capitalization). Also, use ``Workflow.from_Firework()``.
+
+* remove deprecated capitalization of FireWork
+* better display of workflow info and reporting in frontend
+
+**v1.2.3**
+
+* Greatly improve refresh performance of large workflows (G. Petretto)
+* FW Reporting now available on frontend
+* Fix bug in Python 3 queue adapter (thanks to F. Zapata)
+* Fix small bug in offline mode (G. Petretto)
+* Fix bug in frontend pagination (G. Petretto)
+* Improvements to wf.append (H. Rusche)
+
+**v1.2.2**
+
+* Flask and webgui are installed by default (no additional pip install needed)
+* Fix small bug in squeue (thanks to M. Cahn for pointing it out)
+* webgui improvements, including view for workflow metadata queries (D. Winston)
+* remove display_wflows command and associated docs. It is unmaintained and the web GUI now plots WFs
+
 **v1.2.1**
 
 * attempt to fix further pip install issues in v1.2.0

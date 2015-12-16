@@ -14,7 +14,7 @@
 .. pull-quote:: | "Give me six hours to chop down a tree and I will spend the first four sharpening the axe."
                 |    - Abraham Lincoln
 
-FireWorks is a free, `open-source <https://github.com/materialsproject/fireworks>`_ code for defining, managing, and executing scientific workflows. It can be used to automate calculations over arbitrary computing resources, including those that have a queueing system.
+FireWorks is a free, `open-source <https://github.com/materialsproject/fireworks>`_ code for defining, managing, and executing workflows. Complex workflows can be defined using Python, JSON, or YAML, are stored using MongoDB, and can be monitored through a built-in web interface. Workflow execution can be automated over arbitrary computing resources, including those that have a queueing system. FireWorks has been used to run millions of workflows encompassing tens of millions of CPU-hours across diverse application areas and in long-term production projects over the span of multiple years.
 
 Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers.
 

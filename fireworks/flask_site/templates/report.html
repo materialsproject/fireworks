@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}FireWorks Report{% endblock %}
+
+{% block content %}
+<h3 class="text-center">FireWorks Report</h3>
+
+<pre>
+{{ fw_report_text }}
+</pre>
+
+<h3 class="text-center">Workflows Report</h3>
+
+<pre>
+{{ wf_report_text }}
+</pre>
+
+{% endblock %}

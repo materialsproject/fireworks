@@ -242,7 +242,7 @@ class LaunchPad(FWSerializable):
         :param wf: a Workflow object.
         """
         if isinstance(wf, Firework):
-            wf = Workflow.from_FireWork(wf)
+            wf = Workflow.from_Firework(wf)
 
         # sets the root FWs as READY
         # prefer to wf.refresh() for speed reasons w/many root FWs
@@ -358,6 +358,7 @@ class LaunchPad(FWSerializable):
         print("Remove launches %s" % launch_ids)
         print("Removing workflow.")
         self.launches.remove({'launch_id': {"$in": launch_ids}})
+        self.offline_runs.remove({'launch_id': {"$in": launch_ids}})
         self.fireworks.remove({"fw_id": {"$in": fw_ids}})
         self.workflows.remove({'nodes': fw_id})
 
@@ -420,7 +421,8 @@ class LaunchPad(FWSerializable):
                 [fw["state"][:3] if fw["state"].startswith("R")
                  else fw["state"][0] for fw in wf["fw"]])
             del wf["nodes"]
-        elif mode == "more":
+
+        if mode == "more" or mode == "all":
             wf["states"] = OrderedDict()
             wf["launch_dirs"] = OrderedDict()
             for fw in wf["fw"]:
@@ -429,14 +431,15 @@ class LaunchPad(FWSerializable):
                 wf["launch_dirs"][k] = [l["launch_dir"] for l in fw[
                     "launches"]]
             del wf["nodes"]
-        elif mode == "all":
+
+        if mode == "all":
+            del wf["fw_states"]
             wf["links"] = {id_name_map[int(k)]: [id_name_map[i] for i in v]
                            for k, v in wf["links"].items()}
-            wf["nodes"] = map(id_name_map.get, wf["nodes"])
             wf["parent_links"] = {
                 id_name_map[int(k)]: [id_name_map[i] for i in v]
                 for k, v in wf["parent_links"].items()}
-        elif mode == "reservations":
+        if mode == "reservations":
             wf["states"] = OrderedDict()
             wf["launches"] = OrderedDict()
             for fw in wf["fw"]:
@@ -1173,13 +1176,19 @@ class LazyFirework(object):
 
         self._fwc, self._lc = fw_coll, launch_coll
         self._launches = {k: False for k in self.db_launch_fields}
-        self._fw, self._lids = None, None
+        self._fw, self._lids, self._state = None, None, None
 
     # FireWork methods
 
+    # Treat state as special case as it is always required when accessing a Firework lazily
+    # If the partial fw is not available the state is fetched independently
     @property
     def state(self):
-        return self.partial_fw._state
+        if self._fw is not None:
+            self._state = self._fw.state
+        elif self._state is None:
+            self._state = self._fwc.find_one({'fw_id': self.fw_id}, projection=['state'])['state']
+        return self._state
 
     @state.setter
     def state(self, state):
@@ -1231,7 +1240,11 @@ class LazyFirework(object):
     def updated_on(self, value): self.partial_fw.updated_on = value
 
     @property
-    def parents(self): return self.partial_fw.parents
+    def parents(self):
+        if self._fw is not None:
+            return self.partial_fw.parents
+        else:
+            return []
 
     @parents.setter
     def parents(self, value): self.partial_fw.parents = value

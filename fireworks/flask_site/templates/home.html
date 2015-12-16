@@ -18,7 +18,7 @@
                     <td>
                         <div class="row pull-down-sm">
                             <div class="span2">
-                                <strong>{{ wf.name }}</strong>
+                                <a href="/wf/{{ wf.id }}"><strong>{{ wf.name }}</strong></a>
                             </div>
                             <div class="span3">
                                 <span class="label {{wf.state}}">{{wf.state}}</span>
@@ -67,8 +67,22 @@
                 <td><center><a href="/wf">{{ '{:,}'.format(tot_wfs) }}</a></center></td>
             </tr>
         </table>
+
+        <hr />
+        <h3>Summary Reports</h3>
+        <p>Get a report of all jobs for the past:</p>
+        <ul>
+            <li><a href="/report/minutes/30">30 minutes</a></li>
+            <li><a href="/report/hours/24">24 hours</a></li>
+            <li><a href="/report/days/7">7 days</a></li>
+            <li><a href="/report/days/30">30 days</a></li>
+            <li><a href="/report/months/6">6 months</a></li>
+            <li><a href="/report/months/24">24 months</a></li>
+            <li><a href="/report/years/10">10 years</a></li>
+        </ul>
+        <p>For more reporting options, use the "lpad report --help" command line tool.</p>
     </div>
 </div>
-<!-- TABLES -->
+
 
 {% endblock %}
