@@ -29,6 +29,8 @@ NEGATIVE_FWID_CTR = 0
 USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
                  'fw_tutorials', 'fireworks.features']
 
+PYTHONPATH_ADDITIONS = []
+
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
                    'Script Task': 'ScriptTask',
                    'Template Writer Task': 'TemplateWriterTask',
@@ -131,6 +133,9 @@ def override_user_settings():
         for key, v in overrides.items():
             if key == 'ADD_USER_PACKAGES':
                 USER_PACKAGES.extend(v)
+            elif key == "PYTHONPATH_ADDITIONS":
+                import sys
+                sys.path.extend(PYTHONPATH_ADDITIONS)
             elif key == 'ECHO_TEST':
                 print(v)
             elif key not in globals():
