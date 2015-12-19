@@ -733,7 +733,8 @@ class Workflow(FWSerializable):
                     # WARNING: this does not handle the case in which the childs of this child might be not fizzled
                     #          one would need some recursive check here, but we can assume that _allow_fizzled_parents
                     #          is usually not set twice in a row (in a child as well as in a "grandchild" of a given
-                    #          fw)
+                    #          fw). Anyway, if in the end the workflow reaches completion, its state will be COMPLETED
+                    #          as it will be set as such by the first check on COMPLETED states of all leaf fireworks.
                     if self.fw_states[child_id] == 'FIZZLED':
                         mybreak = True
                         m_state = 'FIZZLED'
