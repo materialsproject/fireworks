@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     fireworks.core
+    fireworks.examples
     fireworks.features
     fireworks.flask_site
     fireworks.queue

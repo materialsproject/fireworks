@@ -4,6 +4,13 @@ The Comprehensive Guide to Writing FireTasks with Python
 
 This guide covers in more detail how one can write their own FireTasks (and return dynamic actions), and assemble those FireTasks into FireWorks and Workflows. This guide will also cover the FWAction object, passing data, and dynamic workflow actions.
 
+A "Hello World Example"
+=======================
+
+If you'd like to see a "Hello World" Example of a custom FireTask, you can go `here <https://github.com/materialsproject/fireworks/tree/master/fireworks/examples/custom_firetasks/hello_world>`_.
+
+If you are able to run that example and want more details of how to modify and extend it, read on...
+
 Writing a Basic FireTask
 ========================
 
@@ -60,7 +67,7 @@ Step 3: Register your FireTask
 
 When FireWorks bootstraps your FireTask from a database definition, it needs to know where to look for FireTasks.
 
-**First**, you need to make sure your FireTask is defined in a file location that can be found by Python, i.e. is within Python's search path and that you can import your FireTask in a Python shell. This usually means either installing the code into the ``site-packages`` directory or modifying your ``PYTHONPATH`` environment variable to include the location of the FireTask. You can see the locations where Python looks for code by typing ``import sys`` followed by ``print(sys.path)``. If you are unfamiliar with this topic, some more details about this process can be found `here <http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch28s04.html>`_, or try Googling "how does Python find modules?"
+**First**, you need to make sure your FireTask is defined in a file location that can be found by Python, i.e. is within Python's search path and that you can import your FireTask in a Python shell. If Python cannot import your code (e.g., from the shell), neither can FireWorks. This step usually means either installing the code into your ``site-packages`` directory (where many Python tools install code) or modifying your ``PYTHONPATH`` environment variable to include the location of the FireTask. You can see the locations where Python looks for code by typing ``import sys`` followed by ``print(sys.path)``. If you are unfamiliar with this topic, some more details about this process can be found `here <http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch28s04.html>`_, or try Googling "how does Python find modules?"
 
 **Second**, you must register your FireTask so that it can be found by the FireWorks software. There are a couple of options for registering your FireTask (you only need to do *one* of the below):
 
