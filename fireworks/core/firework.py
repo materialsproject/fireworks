@@ -720,7 +720,8 @@ class Workflow(FWSerializable):
             # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a given fizzled
             # firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
             # For each fizzled fw, we thus have to check the states of their children
-            fizzled_ids = [fw_id for fw_id, state in self.fw_states.items() if state == 'FIZZLED']
+            fizzled_ids = [fw_id for fw_id, state in self.fw_states.items() if state not in ['READY', 'RUNNING',
+                                                                                             'COMPLETED', 'RESERVED']]
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
                 if fizzled_id in self.leaf_fw_ids:
