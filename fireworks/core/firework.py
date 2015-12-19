@@ -719,6 +719,7 @@ class Workflow(FWSerializable):
         elif any([s == 'FIZZLED' for s in states]):
             # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a given fizzled
             # firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
+            # For each fizzled fw, we thus have to check the states of their children
             fizzled_ids = [fw_id for fw_id, state in self.fw_states.items() if state == 'FIZZLED']
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
@@ -728,8 +729,12 @@ class Workflow(FWSerializable):
                 childs_ids = self.links[fizzled_id]
                 mybreak = False
                 for child_id in childs_ids:
-                    if (self.fw_states[child_id] == 'FIZZLED'
-                        and child_id not in fizzled_ids):
+                    # If one of the childs of a fizzled fw is also fizzled, then the workflow is fizzled
+                    # WARNING: this does not handle the case in which the childs of this child might be not fizzled
+                    #          one would need some recursive check here, but we can assume that _allow_fizzled_parents
+                    #          is usually not set twice in a row (in a child as well as in a "grandchild" of a given
+                    #          fw)
+                    if self.fw_states[child_id] == 'FIZZLED':
                         mybreak = True
                         m_state = 'FIZZLED'
                         break
