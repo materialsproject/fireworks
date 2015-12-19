@@ -717,7 +717,22 @@ class Workflow(FWSerializable):
         elif any([s == 'DEFUSED' for s in states]):
             m_state = 'DEFUSED'
         elif any([s == 'FIZZLED' for s in states]):
-            m_state = 'FIZZLED'
+            # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a given fizzled
+            # firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
+            fizzled_ids = [fw_id for fw_id, state in self.fw_state.items() if state == 'FIZZLED']
+            for fizzled_id in fizzled_ids:
+                childs_fizzled_ids = self.links[fizzled_id]
+                mybreak = False
+                for child_id in childs_fizzled_ids:
+                    if (self.fw_states[child_id] not in ['COMPLETED', 'RUNNING', 'RESERVED', 'READY']
+                        and child_id not in childs_fizzled_ids):
+                        mybreak = True
+                        m_state = 'FIZZLED'
+                        break
+                if mybreak:
+                    break
+            else:
+                m_state = 'RUNNING'
         elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
             m_state = 'RUNNING'
         elif any([s == 'RESERVED' for s in states]):
