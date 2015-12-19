@@ -721,10 +721,13 @@ class Workflow(FWSerializable):
             # firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
             fizzled_ids = [fw_id for fw_id, state in self.fw_states.items() if state == 'FIZZLED']
             for fizzled_id in fizzled_ids:
+                if fizzled_id in self.leaf_fw_ids:
+                    m_state = 'FIZZLED'
+                    break
                 childs_fizzled_ids = self.links[fizzled_id]
                 mybreak = False
                 for child_id in childs_fizzled_ids:
-                    if (self.fw_states[child_id] not in ['COMPLETED', 'RUNNING', 'RESERVED', 'READY']
+                    if (self.fw_states[child_id] == 'FIZZLED'
                         and child_id not in childs_fizzled_ids):
                         mybreak = True
                         m_state = 'FIZZLED'
