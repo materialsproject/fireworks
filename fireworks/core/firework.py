@@ -717,7 +717,33 @@ class Workflow(FWSerializable):
         elif any([s == 'DEFUSED' for s in states]):
             m_state = 'DEFUSED'
         elif any([s == 'FIZZLED' for s in states]):
-            m_state = 'FIZZLED'
+            # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a given fizzled
+            # firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
+            # For each fizzled fw, we thus have to check the states of their children
+            fizzled_ids = [fw_id for fw_id, state in self.fw_states.items() if state not in ['READY', 'RUNNING',
+                                                                                             'COMPLETED', 'RESERVED']]
+            for fizzled_id in fizzled_ids:
+                # If a fizzled fw is a leaf fw, then the workflow is fizzled
+                if fizzled_id in self.leaf_fw_ids:
+                    m_state = 'FIZZLED'
+                    break
+                childs_ids = self.links[fizzled_id]
+                mybreak = False
+                for child_id in childs_ids:
+                    # If one of the childs of a fizzled fw is also fizzled, then the workflow is fizzled
+                    # WARNING: this does not handle the case in which the childs of this child might be not fizzled
+                    #          one would need some recursive check here, but we can assume that _allow_fizzled_parents
+                    #          is usually not set twice in a row (in a child as well as in a "grandchild" of a given
+                    #          fw). Anyway, if in the end the workflow reaches completion, its state will be COMPLETED
+                    #          as it will be set as such by the first check on COMPLETED states of all leaf fireworks.
+                    if self.fw_states[child_id] == 'FIZZLED':
+                        mybreak = True
+                        m_state = 'FIZZLED'
+                        break
+                if mybreak:
+                    break
+            else:
+                m_state = 'RUNNING'
         elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
             m_state = 'RUNNING'
         elif any([s == 'RESERVED' for s in states]):
