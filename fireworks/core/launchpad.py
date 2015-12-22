@@ -564,12 +564,11 @@ class LaunchPad(FWSerializable):
             self._refresh_wf(fw_id)
         return f
 
-    def defuse_wf(self, fw_id):
+    def defuse_wf(self, fw_id, defuse_completed=True):
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
-            self.defuse_fw(fw.fw_id)
-
-        self._refresh_wf(fw_id)
+            if fw.state != "COMPLETED" or defuse_completed:
+                self.defuse_fw(fw.fw_id)
 
     def reignite_wf(self, fw_id):
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)

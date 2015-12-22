@@ -281,9 +281,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         print('----------\nafter launch rocket\n--------')
 
-
         # defuse Workflow containing Zeus
-        print('----------\nstaring defuse rocket\n--------')
+        print('----------\nstarting defuse rocket\n--------')
         self.lp.defuse_wf(self.zeus_fw_id)
         print('----------\nafter defuse rocket\n--------')
         defused_ids = self.lp.get_fw_ids({'state':'DEFUSED'})

@@ -324,9 +324,12 @@ def defuse_wfs(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
-        lp.defuse_wf(f)
+        lp.defuse_wf(f, defuse_completed=args.defuse_completed)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
+    lp.m_logger.info('Finished defusing {} FWs.'.format(len(fw_ids)))
+    if not args.defuse_completed:
+        lp.m_logger.info('Note: COMPLETED FWs were not defused.'.format(len(fw_ids)))
+
 
 
 def archive(args):
@@ -695,6 +698,7 @@ def lpad():
     get_wf_parser.set_defaults(func=get_wfs)
 
     defuse_wf_parser = subparsers.add_parser('defuse_wflows', help='cancel (de-fuse) an entire Workflow')
+    defuse_wf_parser.add_argument('--defuse_completed', help='also defuse COMPLETED workflows', action='store_true')
     defuse_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     defuse_wf_parser.add_argument('-n', '--name', help='name')
     defuse_wf_parser.add_argument(*state_args, **state_kwargs)
