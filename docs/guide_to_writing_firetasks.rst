@@ -132,6 +132,7 @@ The parameters of FWAction are as follows:
 * **additions**: ([Workflow]) a list of WFs/FWs to add as children to this Firework.
 * **detours**: ([Workflow]) a list of WFs/FWs to add as children (they will inherit the current FW's children)
 * **defuse_children**: (bool) defuse all the original children of this Firework
+* **defuse_workflow**: (bool) defuse all incomplete FWs in this Workflow
 
 The FWAction thereby allows you to *command* the workflow programmatically, allowing for the design of intelligent workflows that react dynamically to results.
 

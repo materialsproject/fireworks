@@ -120,7 +120,7 @@ class FWAction(FWSerializable):
 
     def __init__(self, stored_data=None, exit=False, update_spec=None,
                  mod_spec=None, additions=None, detours=None,
-                 defuse_children=False):
+                 defuse_children=False, defuse_workflow=False):
         """
         :param stored_data: (dict) data to store from the run. Does not
         affect the operation of FireWorks.
@@ -134,6 +134,7 @@ class FWAction(FWSerializable):
         they will inherit the current FW's children)
         :param defuse_children: (bool) defuse all the original children of
         this Firework
+        :param defuse_workflow: (bool) defuse all incomplete steps of this workflow
         """
         mod_spec = mod_spec if mod_spec is not None else []
         additions = additions if additions is not None else []
@@ -147,6 +148,7 @@ class FWAction(FWSerializable):
             additions]
         self.detours = detours if isinstance(detours, (list, tuple)) else [detours]
         self.defuse_children = defuse_children
+        self.defuse_workflow = defuse_workflow
 
     @recursive_serialize
     def to_dict(self):
@@ -154,7 +156,8 @@ class FWAction(FWSerializable):
                 'update_spec': self.update_spec,
                 'mod_spec': self.mod_spec, 'additions': self.additions,
                 'detours': self.detours,
-                'defuse_children': self.defuse_children}
+                'defuse_children': self.defuse_children,
+                'defuse_workflow': self.defuse_workflow}
 
     @classmethod
     @recursive_deserialize
@@ -164,7 +167,7 @@ class FWAction(FWSerializable):
         detours = [Workflow.from_dict(f) for f in d['detours']]
         return FWAction(d['stored_data'], d['exit'], d['update_spec'],
                         d['mod_spec'], additions, detours,
-                        d['defuse_children'])
+                        d['defuse_children'], d.get('defuse_workflow', False))
 
     @property
     def skip_remaining_tasks(self):
@@ -174,7 +177,7 @@ class FWAction(FWSerializable):
 
         :return: (bool)
         """
-        return self.exit or self.detours or self.additions or self.defuse_children
+        return self.exit or self.detours or self.additions or self.defuse_children or self.defuse_workflow
 
     def __str__(self):
         return "FWAction\n" + pprint.pformat(self.to_dict())
@@ -781,6 +784,13 @@ class Workflow(FWSerializable):
                 self.id_fw[cfid].state = 'DEFUSED'
                 updated_ids.append(cfid)
 
+        # defuse workflow
+        if action.defuse_workflow:
+            for fw_id in self.links.nodes:
+                if self.id_fw[fw_id].state not in ['ARCHIVED', 'FIZZLED', 'COMPLETED']:
+                    self.id_fw[fw_id].state = 'DEFUSED'
+                    updated_ids.append(fw_id)
+
         # add detour FireWorks
         # this should be done *before* additions
         if action.detours:
@@ -948,8 +958,8 @@ class Workflow(FWSerializable):
                 updated_ids = updated_ids.union(self.apply_action(m_action,
                                                                   fw.fw_id))
 
-            # refresh all the children
-            for child_id in self.links[fw_id]:
+            # refresh all the children and other updated ids (note that defuse_workflow option can affect other branches)
+            for child_id in updated_ids.union(self.links[fw_id]):
                 updated_ids = updated_ids.union(
                     self.refresh(child_id, updated_ids))
 

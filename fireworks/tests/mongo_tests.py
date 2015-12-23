@@ -135,7 +135,7 @@ class MongoTests(unittest.TestCase):
             fwo = json.load(f)
             self.assertEquals(fwo["state"], "COMPLETED")
             self.assertEquals(fwo["launch_id"], 1)
-            self.assertEquals(fwo["fwaction"], {'update_spec': {}, 'mod_spec': [], 'stored_data': {'returncode': 0, 'stdout': u'test1\n', 'all_returncodes': [0]}, 'exit': False, 'detours': [], 'additions': [], 'defuse_children': False})
+            self.assertEquals(fwo["fwaction"], {'update_spec': {}, 'mod_spec': [], 'stored_data': {'returncode': 0, 'stdout': u'test1\n', 'all_returncodes': [0]}, 'exit': False, 'detours': [], 'additions': [], 'defuse_children': False, 'defuse_workflow': False})
 
         with open(os.path.join(os.getcwd(), "FW_ping.json")) as f:
             fwp = json.load(f)
