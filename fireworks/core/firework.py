@@ -787,7 +787,7 @@ class Workflow(FWSerializable):
         # defuse workflow
         if action.defuse_workflow:
             for fw_id in self.links.nodes:
-                if self.id_fw[fw_id].state not in ['ARCHIVED', 'FIZZLED', 'COMPLETED']:
+                if self.id_fw[fw_id].state not in ['FIZZLED', 'COMPLETED']:
                     self.id_fw[fw_id].state = 'DEFUSED'
                     updated_ids.append(fw_id)
 
