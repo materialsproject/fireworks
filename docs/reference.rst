@@ -60,6 +60,7 @@ _launch_dir               Pre-specify the directory to run the job rather than u
 _fworker                  Used to control what resources run this job. More information :doc:`here </controlworker>`.
 _category                 Used to control what resources run this job. More information :doc:`here </controlworker>`.
 _queueadapter             Special queue parameters for this job. More information :doc:`here </queue_tutorial_pt2>`.
+_add_fworker              Embeds FireWorker (``fireworker``) variable inside the FireTask just before runtime.
 _add_launchpad_and_fw_id  Embeds LaunchPad (``launchpad``) and fw_id (``fw_id``) variables inside the FireTask just before runtime. Not best practice but maybe useful.
 _dupefinder               Used to specify a duplicate finder object for avoiding duplicated runs. More information :doc:`here </duplicates_tutorial>`.
 _allow_fizzled_parents    Run this Firework if all parents are *either* COMPLETED or FIZZLED.
