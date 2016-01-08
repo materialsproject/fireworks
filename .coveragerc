@@ -1,6 +1,6 @@
 [run]
 branch = True
-erase = True
+cover-erase=1
 source = fireworks, fw_tutorials
 [report]
 exclude_lines =
