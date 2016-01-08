@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v1.2.5**
+
+* add defuse_workflow to FWAction (thanks to H. Rusche)
+* New _add_fworker option in spec (D. Waroquiers)
+* fix workflow state when allow_fizzled_parents option used (D. Waroquiers)
+* doc updates and example workflows
+* fix minor frontend coloring issues
+
 **v1.2.4**
 
 .. caution:: The deprecated ``FireWork`` class has been removed. Be sure to use ``Firework`` (see capitalization). Also, use ``Workflow.from_Firework()``.
