@@ -125,7 +125,7 @@ class MongoTests(unittest.TestCase):
         fw = Firework(test1)
         self.lp.add_wf(fw)
 
-        fw, launch_id = self.lp.reserve_fw(FWorker(), os.getcwd())
+        fw, launch_id = self.lp.reserve_fw(self.fworker, os.getcwd())
 
         setup_offline_job(self.lp, fw, launch_id)
 
@@ -170,7 +170,7 @@ class MongoTests(unittest.TestCase):
 
             # store workflow and launch it locally, single shot
             self.lp.add_wf(fw)
-            launch_rocket(self.lp, FWorker())
+            launch_rocket(self.lp, self.fworker)
 
             # read inputs.txt, words.txt, dest
             for d in [dest1, dest2]:
