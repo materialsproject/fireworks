@@ -145,6 +145,52 @@ class MongoTests(unittest.TestCase):
         self.lp.recover_offline(l['launch_id'])
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data['stdout'], 'test1\n')
 
+    def test_offline_fw_passinfo(self):
+        fw1 = Firework([AdditionTask()], {"input_array": [1,1]}, name="1")
+        fw2 = Firework([AdditionTask()], {"input_array": [2,2]}, name="2")
+        fw3 = Firework([AdditionTask()], {"input_array": [3]}, parents=[fw1, fw2], name="3")
+
+        wf = Workflow([fw1, fw2, fw3])
+        self.lp.add_wf(wf)
+
+        # make dirs for launching jobs
+        cur_dir = os.path.dirname(os.path.abspath(__file__))
+
+        os.mkdir(os.path.join(cur_dir, "launcher_1"))
+        os.mkdir(os.path.join(cur_dir, "launcher_2"))
+        os.mkdir(os.path.join(cur_dir, "launcher_3"))
+
+        # launch two parent jobs
+        os.chdir(os.path.join(cur_dir, "launcher_1"))
+        fw, launch_id = self.lp.reserve_fw(self.fworker, os.getcwd())
+        setup_offline_job(self.lp, fw, launch_id)
+        launch_rocket(None, self.fworker)
+
+        os.chdir(os.path.join(cur_dir, "launcher_2"))
+        fw, launch_id = self.lp.reserve_fw(self.fworker, os.getcwd())
+        setup_offline_job(self.lp, fw, launch_id)
+        launch_rocket(None, self.fworker)
+
+        # recover jobs
+        for l in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
+            fw = self.lp.recover_offline(l['launch_id'])
+
+        # launch child job
+        os.chdir(os.path.join(cur_dir, "launcher_3"))
+        fw, launch_id = self.lp.reserve_fw(self.fworker, os.getcwd())
+        last_fw_id = fw.fw_id
+        setup_offline_job(self.lp, fw, launch_id)
+        launch_rocket(None, self.fworker)
+
+        # recover jobs
+        for l in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
+            fw = self.lp.recover_offline(l['launch_id'])
+
+        # confirm the sum in the child job
+        child_fw = self.lp.get_fw_by_id(last_fw_id)
+        self.assertEqual(set(child_fw.spec['input_array']), set([2, 3, 4]))
+        self.assertEqual(child_fw.launches[0].action.stored_data["sum"], 9)
+
     def test_multi_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
                                     {'store_stdout': True})
