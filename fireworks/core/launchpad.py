@@ -1,8 +1,6 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from datetime import datetime
-from fireworks import Firework, Launch
 
 """
 The LaunchPad manages the FireWorks database.
