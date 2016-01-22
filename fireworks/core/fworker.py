@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from fireworks.fw_config import FWORKER_LOC
+
 """
 This module contains FireWorker, which encapsulates information about a
 computing resource
@@ -68,3 +70,9 @@ class FWorker(FWSerializable):
         if self.category:
             q['spec._category'] = self.category
         return q
+
+    @classmethod
+    def auto_load(cls):
+        if FWORKER_LOC:
+            return FWorker.from_file(FWORKER_LOC)
+        return FWorker()
