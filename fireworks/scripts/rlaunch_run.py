@@ -56,7 +56,7 @@ def rlaunch():
 
     args = parser.parse_args()
 
-    signal.signal(signal.SIGINT, handle_interrupt)  # graceful exist on ^C
+    signal.signal(signal.SIGINT, handle_interrupt)  # graceful exit on ^C
 
     if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
