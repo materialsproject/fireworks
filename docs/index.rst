@@ -222,16 +222,21 @@ Citing FireWorks
 
 Citation helps support our development! Please cite your usage of FireWorks through the `following manuscript <http://dx.doi.org/10.1002/cpe.3505>`_, which provides details on the design and features of the FireWorks software::
 
+    Jain, A., Ong, S. P., Chen, W., Medasani, B., Qu, X., Kocher, M., Brafman, M., Petretto, G., Rignanese, G.-M., Hautier, G., Gunter, D., and Persson, K. A. (2015) FireWorks: a dynamic workflow system designed for high-throughput applications. Concurrency Computat.: Pract. Exper., 27: 5037–5059. doi: 10.1002/cpe.3505.
+
     @article {CPE:CPE3505,
     author = {Jain, Anubhav and Ong, Shyue Ping and Chen, Wei and Medasani, Bharat and Qu, Xiaohui and Kocher, Michael and Brafman, Miriam and Petretto, Guido and Rignanese, Gian-Marco and Hautier, Geoffroy and Gunter, Daniel and Persson, Kristin A.},
     title = {FireWorks: a dynamic workflow system designed for high-throughput applications},
     journal = {Concurrency and Computation: Practice and Experience},
+    volume = {27},
+    number = {17},
     issn = {1532-0634},
     url = {http://dx.doi.org/10.1002/cpe.3505},
     doi = {10.1002/cpe.3505},
-    pages = {n/a--n/a},
+    pages = {5037--5059},
     keywords = {scientific workflows, high-throughput computing, fault-tolerant computing},
     year = {2015},
+    note = {CPE-14-0307.R2},
     }
 
 .. _contributing-label:
