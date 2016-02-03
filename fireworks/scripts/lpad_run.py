@@ -116,7 +116,8 @@ def init_yaml(args):
         ("port", 27017),
         ("name", "fireworks"),
         ("username", None),
-        ("password", None))
+        ("password", None),
+        ("ssl_ca_file", None))
     doc = {}
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
