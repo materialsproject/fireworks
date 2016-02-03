@@ -271,7 +271,7 @@ class LaunchPad(FWSerializable):
 
         :param new_wf: (Workflow) The new workflow to append
         :param fw_ids: ([int]) The parent fw_ids at which to append the workflow
-        :param detour: (bool) Whether to connect the new Workflow in a "detour" style of the FWAction, i.e., move children of the parent fw_ids to the new_wf
+        :param detour: (bool) Whether to connect the new Workflow in a "detour" style, i.e., move original children of the parent fw_ids to the new_wf
         :param pull_spec_mods: (bool) Whether the new Workflow should pull the FWActions of the parent fw_ids
         """
         wf = self.get_wf_by_fw_id(fw_ids[0])
