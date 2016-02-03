@@ -91,7 +91,7 @@ class LaunchPad(FWSerializable):
 
     def __init__(self, host='localhost', port=27017, name='fireworks',
                  username=None, password=None, logdir=None, strm_lvl=None,
-                 user_indices=None, wf_user_indices=None):
+                 user_indices=None, wf_user_indices=None, ssl_ca_file=None):
         """
 
         :param host:
@@ -103,12 +103,14 @@ class LaunchPad(FWSerializable):
         :param strm_lvl:
         :param user_indices:
         :param wf_user_indices:
+        :param ssl_ca_file:
         """
         self.host = host
         self.port = port
         self.name = name
         self.username = username
         self.password = password
+        self.ssl_ca_file = ssl_ca_file
 
         # set up logger
         self.logdir = logdir
@@ -120,7 +122,8 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        self.connection = MongoClient(host, port, j=True, socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
+        self.connection = MongoClient(host, port, j=True, ssl_ca_certs=self.ssl_ca_file,
+                                        socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
         self.db = self.connection[name]
         if username:
             self.db.authenticate(username, password)
@@ -143,7 +146,8 @@ class LaunchPad(FWSerializable):
             'username': self.username, 'password': self.password,
             'logdir': self.logdir, 'strm_lvl': self.strm_lvl,
             'user_indices': self.user_indices,
-            'wf_user_indices': self.wf_user_indices}
+            'wf_user_indices': self.wf_user_indices,
+            'ssl_ca_file': self.ssl_ca_file}
 
     def update_spec(self, fw_ids, spec_document):
         """
@@ -172,9 +176,10 @@ class LaunchPad(FWSerializable):
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
         wf_user_indices = d.get('wf_user_indices', [])
+        ssl_ca_file = d.get('ssl_ca_file', None)
         return LaunchPad(d['host'], d['port'], d['name'], d['username'],
                          d['password'], logdir, strm_lvl, user_indices,
-                         wf_user_indices)
+                         wf_user_indices, ssl_ca_file)
 
     @classmethod
     def auto_load(cls):
