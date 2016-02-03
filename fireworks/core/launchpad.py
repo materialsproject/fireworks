@@ -261,6 +261,14 @@ class LaunchPad(FWSerializable):
         return old_new
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
+        """
+        Append a new workflow on top of an existing workflow
+
+        :param new_wf: (Workflow) The new workflow to append
+        :param fw_ids: ([int]) The parent fw_ids at which to append the workflow
+        :param detour: (bool) Whether to connect the new Workflow in a "detour" style of the FWAction, i.e., move children of the parent fw_ids to the new_wf
+        :param pull_spec_mods: (bool) Whether the new Workflow should pull the FWActions of the parent fw_ids
+        """
         wf = self.get_wf_by_fw_id(fw_ids[0])
         updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour, pull_spec_mods=pull_spec_mods)
 
