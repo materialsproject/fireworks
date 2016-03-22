@@ -1092,7 +1092,7 @@ class LaunchPad(FWSerializable):
         d['completed'] = False
         self.offline_runs.insert(d)
 
-    def recover_offline(self, launch_id, ignore_errors=False):
+    def recover_offline(self, launch_id, ignore_errors=False, print_errors=False):
         # get the launch directory
         m_launch = self.get_launch_by_id(launch_id)
         try:
@@ -1113,7 +1113,12 @@ class LaunchPad(FWSerializable):
                     for s in m_launch.state_history:
                         if s['state'] == 'RUNNING':
                             s['created_on'] = reconstitute_dates(offline_data['started_on'])
-                    self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+                    l = self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+                    fw_id = l['fw_id']
+                    f = self.fireworks.find_and_modify({'fw_id': fw_id},
+                                                       {'$set': {'state': 'RUNNING', 'updated_on': datetime.datetime.utcnow()}})
+                    if f:
+                        self._refresh_wf(fw_id)
 
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
@@ -1130,6 +1135,8 @@ class LaunchPad(FWSerializable):
             self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
             return None
         except:
+            if print_errors:
+                self.m_logger.error("failed recovering launch_id {}.\n{}".format(launch_id, traceback.format_exc()))
             if not ignore_errors:
                 traceback.print_exc()
                 m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
