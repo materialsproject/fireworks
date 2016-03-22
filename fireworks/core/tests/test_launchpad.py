@@ -21,9 +21,11 @@ import filecmp
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
+from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask, SlowAdditionTask, WaitWFLockTask
 import fireworks.fw_config
+from monty.os import cd
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -1011,6 +1013,86 @@ class WFLockTest(unittest.TestCase):
 
         self.assertEqual(fast_fw.state, 'FIZZLED')
 
+
+class LaunchPadOfflineTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
+
+        self.error_test_dict = {'error': 'description', 'error_code': 1}
+        fw = Firework(ScriptTask.from_str(
+            'echo "test offline"',
+            {'store_stdout':True}), name="offline_fw", fw_id=1)
+        self.lp.add_wf(fw)
+
+        self.launch_dir = os.path.join(MODULE_DIR, "launcher_offline")
+        os.makedirs(self.launch_dir)
+
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None, require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
+            shutil.rmtree(ldir, ignore_errors=True)
+
+    def test__recover_completed(self):
+        fw, launch_id = self.lp.reserve_fw(self.fworker, self.launch_dir)
+        fw = self.lp.get_fw_by_id(1)
+        with cd(self.launch_dir):
+            setup_offline_job(self.lp, fw, launch_id)
+
+            # launch rocket without launchpad to trigger offline mode
+            launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
+
+        self.assertIsNone(self.lp.recover_offline(launch_id))
+
+        fw = self.lp.get_fw_by_id(launch_id)
+
+        self.assertEqual(fw.state, 'COMPLETED')
+
+
+    def test_recover_errors(self):
+        fw, launch_id = self.lp.reserve_fw(self.fworker, self.launch_dir)
+        fw = self.lp.get_fw_by_id(1)
+        with cd(self.launch_dir):
+            setup_offline_job(self.lp, fw, launch_id)
+
+        # remove the directory to cause an exception
+        shutil.rmtree(self.launch_dir)
+
+        # recover ignoring errors
+        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=True, print_errors=True))
+
+        fw = self.lp.get_fw_by_id(launch_id)
+
+        self.assertEqual(fw.state, 'RESERVED')
+
+        #fizzle
+        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=False))
+
+        fw = self.lp.get_fw_by_id(launch_id)
+
+        self.assertEqual(fw.state, 'FIZZLED')
+                
 
 if __name__ == '__main__':
     unittest.main()

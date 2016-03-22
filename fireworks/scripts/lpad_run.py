@@ -21,9 +21,10 @@ import yaml
 
 from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
-    LAUNCHPAD_LOC, WEBSERVER_PORT, WEBSERVER_HOST
+    LAUNCHPAD_LOC, FWORKER_LOC, WEBSERVER_PORT, WEBSERVER_HOST
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.firework import Workflow, Firework
+from fireworks.core.fworker import FWorker
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -445,16 +446,20 @@ def add_scripts(args):
 
 def recover_offline(args):
     lp = get_lp(args)
+    fworker_name = FWorker.from_file(args.fworker_file).name if args.fworker_file else None
     failed_fws = []
-    recovered = 0
-    for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
-        fw = lp.recover_offline(l['launch_id'], args.ignore_errors)
-        if fw:
-            failed_fws.append(fw)
-        else:
-            recovered += 1
+    recovered_fws = []
 
-    lp.m_logger.info("FINISHED recovering offline runs. {} job(s) recovered".format(recovered))
+    for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id":1}):
+        if fworker_name and lp.launches.count({"launch_id": l["launch_id"], "fworker.name": fworker_name}) == 0:
+            continue
+        fw = lp.recover_offline(l['launch_id'], args.ignore_errors, args.print_errors)
+        if fw:
+            failed_fws.append(l['fw_id'])
+        else:
+            recovered_fws.append(l['fw_id'])
+
+    lp.m_logger.info("FINISHED recovering offline runs. {} job(s) recovered: {}".format(len(recovered_fws), recovered_fws))
     if failed_fws:
         lp.m_logger.info("FAILED to recover offline fw_ids: {}".format(failed_fws))
 
@@ -787,6 +792,8 @@ def lpad():
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
     recover_parser.add_argument('-i', '--ignore_errors', help='ignore errors', action='store_true')
+    recover_parser.add_argument('-w', '--fworker_file', help='path to fworker file. An empty string will match all the workers', default=FWORKER_LOC)
+    recover_parser.add_argument('-pe', '--print-errors', help='print errors', action='store_true')
     recover_parser.set_defaults(func=recover_offline)
 
     forget_parser = subparsers.add_parser('forget_offline', help='forget offline workflows')
