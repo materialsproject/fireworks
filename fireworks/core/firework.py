@@ -334,13 +334,14 @@ class Tracker(FWSerializable, object):
 
     MAX_TRACKER_LINES = 1000
 
-    def __init__(self, filename, nlines=TRACKER_LINES, content=''):
+    def __init__(self, filename, nlines=TRACKER_LINES, content='', allow_zipped=False):
         if nlines > self.MAX_TRACKER_LINES:
             raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(
                 self.MAX_TRACKER_LINES, nlines))
         self.filename = filename
         self.nlines = nlines
         self.content = content
+        self.allow_zipped = allow_zipped
 
     def track_file(self, launch_dir=None):
         """
@@ -353,8 +354,11 @@ class Tracker(FWSerializable, object):
             m_file = os.path.join(launch_dir, m_file)
 
         lines = []
+        if self.allow_zipped:
+            m_file = zpath(m_file)
+
         if os.path.exists(m_file):
-            with zopen(zpath(m_file)) as f:
+            with zopen(m_file) as f:
                 for l in reverse_readline(f):
                     lines.append(l)
                     if len(lines) == self.nlines:
@@ -364,14 +368,16 @@ class Tracker(FWSerializable, object):
         return self.content
 
     def to_dict(self):
-        m_dict = {'filename': self.filename, 'nlines': self.nlines}
+        m_dict = {'filename': self.filename, 'nlines': self.nlines,
+                  'allow_zipped': self.allow_zipped}
         if self.content:
             m_dict['content'] = self.content
         return m_dict
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''))
+        return Tracker(m_dict['filename'], m_dict['nlines'],
+                       m_dict.get('content', ''), m_dict.get('allow_zipped', False))
 
     def __str__(self):
         return '### Filename: {}\n{}'.format(self.filename, self.content)
