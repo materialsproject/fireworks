@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.2.6**
+
+* add FWorker auto_load
+* add SSL cert support to LaunchPad (D. Cossey)
+* improve offline recovery (G. Petretto)
+* Add allow_gzipped option to Trackers
+
 **v1.2.5**
 
 * add defuse_workflow to FWAction (thanks to H. Rusche)
