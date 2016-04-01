@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.2.7**
+
+* fix errant print statement
+
 **v1.2.6**
 
 * add FWorker auto_load
