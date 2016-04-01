@@ -139,8 +139,6 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
     processes = start_rockets(fworker, nlaunches, sleep_time, loglvl, port, node_lists,
                               sub_nproc_list)
 
-    print processes
-
     # start pinging service
     ping_stop = threading.Event()
     ping_thread = threading.Thread(target=ping_multilaunch, args=(port, ping_stop))
