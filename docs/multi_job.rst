@@ -11,7 +11,7 @@ If you have a single machine (e.g. workstation or laptop) with multiple cores, i
 
     mlaunch <NP>
 
-where ``<NP>`` is the number of processing cores. For example, ``mlaunch 4`` would execute 4 workflows in parallel so that each core handles one workflow.
+where ``<NP>`` is the number of processing cores. However, please note that one process is reserved for the master process in the current implementation, so the total amount of cores used for processing is <NP-1>. For example, ``mlaunch 4`` would execute 3 Fireworks in parallel (provided that there are no dependencies between them) so that each core handles one Firework.
 
 .. note:: The ``mlaunch`` command has several useful options. Type ``mlaunch -h`` to see them listed. In particular, the ``--nlaunches`` option configures how many jobs are run consecutively in serial per core.
 
