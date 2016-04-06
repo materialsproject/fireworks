@@ -4,6 +4,8 @@
 
 With today's multiprocessor and multi-node machines, it's possible to get a lot of computing done quickly by exploiting parallelism. If you have many independent workflows to run, FireWorks makes this process simple and automatic with the **multi-job launcher**. For example, you might want to simultaneously run 4 workflows over 4 cores, or 4 16-core parallel job workflows over 64 cores.
 
+**Important note**: The ``nlaunches`` parameter is particularly important in multi-job mode. With ``nlaunches`` set to 0, a parallel worker will quit when it cannot find a job that is READY to run (even if further jobs exist in the database). One the worker quits, it is no longer available for running parallel jobs, leading to reduction in parallelization. To avoid this issue, prefer ``nlaunches`` set "infinity" or the specific number of jobs to complete rather than zero.
+
 Parallelizing serial jobs on a single multicore machine
 =======================================================
 
