@@ -142,7 +142,8 @@ def override_user_settings():
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
         if globals().get(k, None) is None:
-            fname = "my_{}.yaml".format(k.split("_")[0].lower())
+            fname = "my_qadapter.yaml" if k == "QUEUEADAPTER_LOC" else \
+                "my_{}.yaml".format(k.split("_")[0].lower())
             m_paths = []
             if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
                 test_paths.insert(0, CONFIG_FILE_DIR)
