@@ -69,6 +69,7 @@ class FileTransferTask(FireTaskBase):
         - dest: (str) destination directory, if not specified within files parameter
     Optional params:
         - server: (str) server host for remote transfer
+        - user: (str) user to authenticate with on remote server
         - key_filename: (str) optional SSH key location for remote transfer
     """
     _fw_name = 'FileTransferTask'
@@ -95,7 +96,7 @@ class FileTransferTask(FireTaskBase):
             import paramiko
             ssh = paramiko.SSHClient()
             ssh.load_host_keys(expanduser(os.path.join("~", ".ssh", "known_hosts")))
-            ssh.connect(self['server'], key_filename=self.get['key_filename'])
+            ssh.connect(self['server'], username=self.get('user'), key_filename=self.get['key_filename'])
             sftp = ssh.open_sftp()
 
         for f in self["files"]:
