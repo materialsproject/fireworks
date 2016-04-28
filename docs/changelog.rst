@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.2.8**
+
+* fix minor bug in my_queueadapter vs my_qadapter (thanks to specter119)
+
 **v1.2.7**
 
 * fix errant print statement
