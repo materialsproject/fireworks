@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
+from datetime import datetime
 
 """
 This module contains methods for launching Rockets, both singly and in rapid-fire mode
@@ -40,7 +41,8 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     return rocket_ran
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None, strm_lvl='INFO'):
+def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1,
+              sleep_time=None, strm_lvl='INFO', timeout=None):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
     Usually stops when we run out of FireWorks from the LaunchPad.
@@ -52,6 +54,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
     :param max_loops: (int) maximum number of loops
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :param strm_lvl: (str) level at which to output logs to stdout
+    :param timeout: (int) # of seconds after which to stop the rapidfire process
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
@@ -61,11 +64,13 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
     fworker = fworker if fworker else FWorker()
 
     num_launched = 0
+    start_time = datetime.now()
     num_loops = 0
 
-    while num_loops != max_loops:
+    while num_loops != max_loops and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
         skip_check = False  # this is used to speed operation
-        while skip_check or launchpad.run_exists(fworker):
+        while (skip_check or launchpad.run_exists(fworker)) and \
+                (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)

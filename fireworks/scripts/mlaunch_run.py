@@ -32,6 +32,7 @@ def mlaunch():
     parser.add_argument('num_jobs', help='the number of jobs to run in parallel', type=int)
     parser.add_argument('--nlaunches', help='number of FireWorks to run in series per parallel job (int or "infinite"; default 0 is all jobs in DB)', default=0)
     parser.add_argument('--sleep', help='sleep time between loops in infinite launch mode (secs)', default=None, type=int)
+    parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)', default=None, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file',
                         default=LAUNCHPAD_LOC)
@@ -71,7 +72,7 @@ def mlaunch():
             total_node_list = [line.strip() for line in f.readlines()]
 
     launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,
-                        args.sleep, total_node_list, args.ppn)
+                        args.sleep, total_node_list, args.ppn, timeout=args.timeout)
 
 
 if __name__ == "__main__":
