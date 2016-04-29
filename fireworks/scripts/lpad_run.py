@@ -22,7 +22,7 @@ import yaml
 from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
     LAUNCHPAD_LOC, FWORKER_LOC, WEBSERVER_PORT, WEBSERVER_HOST
-from fireworks.core.launchpad import LaunchPad
+from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.firework import Workflow, Firework
 from fireworks.core.fworker import FWorker
 from fireworks import __version__ as FW_VERSION
@@ -398,6 +398,17 @@ def refresh(args):
             lp._refresh_wf(fw_id)
         lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
+
+
+def unlock(args):
+    lp = get_lp(args)
+    fw_ids = parse_helper(lp, args, wf_mode=True)
+    for f in fw_ids:
+        with WFLock(lp, f, expire_secs=0, kill=True):
+            lp.m_logger.warn('FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {}'.format(f))
+            lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
+    lp.m_logger.info('Finished unlocking {} Workflows'.format(len(fw_ids)))
+
 
 def get_qid(args):
     lp = get_lp(args)
@@ -825,6 +836,14 @@ def lpad():
     refresh_parser.add_argument(*query_args, **query_kwargs)
     refresh_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     refresh_parser.set_defaults(func=refresh)
+
+    unlock_parser = admin_subparser.add_parser('unlock', help='manually unlock a workflow that is locked (only if you know what you are doing!)')
+    unlock_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    unlock_parser.add_argument('-n', '--name', help='name')
+    unlock_parser.add_argument(*state_args, **state_kwargs)
+    unlock_parser.add_argument(*query_args, **query_kwargs)
+    unlock_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
+    unlock_parser.set_defaults(func=unlock)
 
     report_parser = subparsers.add_parser('report', help='Compile a report of runtime stats, type "lpad report -h" for more options.')
     report_parser.add_argument("-c", "--collection", help="The collection to report on; choose from 'fws' (default), 'wflows', or 'launches'.", default="fws")
