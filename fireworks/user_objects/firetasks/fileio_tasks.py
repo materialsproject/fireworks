@@ -96,7 +96,7 @@ class FileTransferTask(FireTaskBase):
             import paramiko
             ssh = paramiko.SSHClient()
             ssh.load_host_keys(expanduser(os.path.join("~", ".ssh", "known_hosts")))
-            ssh.connect(self['server'], username=self.get('user'), key_filename=self.get['key_filename'])
+            ssh.connect(self['server'], username=self.get('user'), key_filename=self.get('key_filename'))
             sftp = ssh.open_sftp()
 
         for f in self["files"]:
@@ -117,7 +117,10 @@ class FileTransferTask(FireTaskBase):
                             if os.path.isfile(os.path.join(src,f)):
                                 sftp.put(os.path.join(src, f), os.path.join(dest, f))
                     else:
-                        sftp.put(src, dest)
+                        if not self._rexists(sftp, dest):
+                            sftp.mkdir(dest)
+
+                        sftp.put(src, os.path.join(dest, os.path.basename(src)))
 
                 else:
                     if 'dest' in f:
