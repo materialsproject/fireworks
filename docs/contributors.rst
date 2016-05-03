@@ -16,7 +16,7 @@ Michael Kocher and Dan Gunter initiated the architecture of a central MongoDB da
 
 Guido Petretto added useful features, including task-level reruns, and helped detect and fix bugs.
 
-Miriam Brafman ported the web frontend to Flask and reworked the CSS.
+Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL (later superceded by Flask site). Miriam Brafman did the intial port of the web frontend to Flask and reworked the CSS.
 
 David Waroquiers wrote the SLURM queue adapter, helped write the FileTransferTask, and provided useful feedback.
 
@@ -30,9 +30,7 @@ Zach Ulissi added support for IBM LoadSharing facility.
 
 William Scullin added ALCF Cobalt support and helped stomp bugs.
 
-Morgan Hargrove wrote the "base site" web frontend as part of a summer project at LBL (later superceded by Flask site).
-
-Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, Donny Winston, Joey Montoya, Henrik Rusche, David Cossey, and Felix Zapata helped stomp bugs and provide improvements.
+Brian Foster, kpoman, jakirkham, Ganesh Panchapakesan, Patrick Huck, Donny Winston, Joey Montoya, Henrik Rusche, David Cossey, David Doston, specter119, and Felix Zapata helped stomp bugs and provide improvements.
 
 Thanks to Marat Valiev for suggesting Jinja2 as a lightweight templating alternative to Django and Stephen Bailey and Deborah Bard for helpful discussions.
 
