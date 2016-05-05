@@ -88,6 +88,7 @@ class FileTransferTask(FireTaskBase):
     def run_task(self, fw_spec):
         shell_interpret = self.get('shell_interpret', True)
         ignore_errors = self.get('ignore_errors')
+        retry = self.get('retry')
         mode = self.get('mode', 'move')
 
         if mode == 'rtransfer':
@@ -133,10 +134,13 @@ class FileTransferTask(FireTaskBase):
 
             except:
                 traceback.print_exc()
-                if not ignore_errors:
+                if retry:
+                    self.run_task(fw_spec)
+                elif not ignore_errors:
                     raise ValueError(
                         "There was an error performing operation {} from {} "
                         "to {}".format(mode, self["files"], self["dest"]))
+
         if mode == 'rtransfer':
             sftp.close()
             ssh.close()
