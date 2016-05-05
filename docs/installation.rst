@@ -2,7 +2,7 @@
 Installing FireWorks
 ====================
 
-.. note:: We suggest that you use Python 2.7.3 or higher, especially in production (although Python 3+ is not tested). There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet). As of FireWorks v0.7, Python 3.3 should also work.
+.. note:: We suggest that you use Python 2.7.3 or higher, especially in production. There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet). As of FireWorks v0.7, Python 3.3 and higher should also work.
 
 Install MongoDB
 ===============
@@ -44,7 +44,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
 
-   .. note:: You may need administrator access, e.g. ``sudo pip install FireWorks``.
+   .. note:: If you are getting permissions error, you might include the ``--user`` option, i.e., ``pip install --user FireWorks``. Another option is invoking administrator access, e.g., ``sudo pip install FireWorks``.
    .. note:: If installation fails with a message like "error: can't copy 'XXXXX': doesn't exist or not a regular file", try updating pip via ``pip install --upgrade pip``.
 
 #. Separately, you can download the Firework tutorial files if you plan on going through the tutorials. You can download these from the `FireWorks Github page <https://github.com/materialsproject/fireworks>`_. All you need is the ``fw_tutorial`` directory, but it might be easiest to download the entire source and just copy the ``fw_tutorial`` directory somewhere else.
