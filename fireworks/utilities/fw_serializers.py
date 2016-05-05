@@ -209,7 +209,7 @@ class FWSerializable(object):
         raise NotImplementedError('FWSerializable object did not implement from_dict()!')
 
     def __repr__(self):
-        return json.dumps(self.to_dict())
+        return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
     def to_format(self, f_format='json', **kwargs):
         """
