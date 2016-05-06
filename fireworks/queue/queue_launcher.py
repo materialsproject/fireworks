@@ -172,7 +172,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
 
     num_launched = 0
-    start_time = datetime.datetime.now()
+    start_time = datetime.now()
 
     try:
         l_logger.info('getting queue adapter')
