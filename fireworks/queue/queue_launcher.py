@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-import datetime
+from datetime import datetime
 
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
