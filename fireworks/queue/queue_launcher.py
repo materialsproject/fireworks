@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import datetime
+
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, \
 or if used in "rapid-fire" mode, can submit multiple jobs within a directory structure. \
@@ -142,7 +144,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
 
 def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=10, njobs_block=500,
-              sleep_time=None, reserve=False, strm_lvl='INFO'):
+              sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None):
     """
     Submit many jobs to the queue.
     
@@ -156,6 +158,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :param reserve: (bool) Whether to queue in reservation mode
     :param strm_lvl: (str) level at which to stream log messages
+    :param timeout: (int) # of seconds after which to stop the rapidfire process
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
@@ -168,6 +171,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
 
     num_launched = 0
+    start_time = datetime.now()
+
     try:
         l_logger.info('getting queue adapter')
 
@@ -183,7 +188,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker):
+            while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker) \
+                    and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
                 l_logger.info('Launching a rocket!')
 
                 # switch to new block dir if it got too big
@@ -206,7 +212,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
-            if num_launched == nlaunches or nlaunches == 0:
+            if num_launched == nlaunches or nlaunches == 0 or \
+                    (timeout and (datetime.now() - start_time).total_seconds() >= timeout):
                 break
             l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
             time.sleep(sleep_time)

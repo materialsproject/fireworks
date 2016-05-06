@@ -2,6 +2,21 @@
 FireWorks Changelog
 ===================
 
+**v1.2.8**
+
+* fix minor bug in my_queueadapter vs my_qadapter (thanks to specter119)
+
+**v1.2.9**
+
+* add ``lpad admin unlock`` command to force unlock of workflows
+* add ``--timeout`` option for rapidfire launches
+* add ``user`` parameter for FileTransferTask (D. Dotson)
+* fix bug in FileTransferTask (D. Dotson)
+
+**v1.2.8**
+
+* fix spelling of ``my_qadapter.yaml`` (thanks to specter119)
+
 **v1.2.7**
 
 * fix errant print statement

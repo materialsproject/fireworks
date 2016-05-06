@@ -164,7 +164,7 @@ So far, each queue script we submitted has only one job. We can also submit mult
 
 #. You should confirm that only a single job got submitted to the queue. However, when the job starts running, you'll see that all three of your jobs completed in separate ``launcher_`` directories!
 
-.. warning:: Currently, we do not recommend running in this mode unless you are confident that all jobs can finish before the walltime expires. Otherwise, you might run into a situation where the walltime kills one of your jobs mid-run. In future tutorials and FireWorks versions, we'll demonstrate how to handle this case cleanly. For now, we suggest you stick to one Firework per queue script unless you know what you are doing!
+.. warning:: Note that when running in rapidfire mode, there is an increased likelihood that a Firework will be killed by the job walltime. To mitigate this, you can either limit the number of jobs executed by rapidfire (using either the ``nlaunches`` or ``timeout`` parameters), or you can let the Firework be killed and use the error recovery features (see docs on that topic) to rerun the killed Firework.
 
 Remote qlaunch
 ==============

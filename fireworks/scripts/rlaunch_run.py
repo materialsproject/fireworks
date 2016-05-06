@@ -44,6 +44,7 @@ def rlaunch():
     single_parser.add_argument('--offline', help='run in offline mode (FW.json required)', action='store_true')
 
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
+    rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)', default=None, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
@@ -83,7 +84,8 @@ def rlaunch():
     get_my_ip()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker, None, args.nlaunches, -1, args.sleep, args.loglvl)
+        rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=args.nlaunches,
+                  max_loops=-1, sleep_time=args.sleep, strm_lvl=args.loglvl, timeout=args.timeout)
 
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl)
