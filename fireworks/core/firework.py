@@ -21,6 +21,7 @@ from collections import defaultdict, OrderedDict
 import abc
 from datetime import datetime
 import os
+import copy
 import pprint
 
 from monty.io import reverse_readline, zopen
@@ -1075,6 +1076,37 @@ class Workflow(FWSerializable):
                 m_launch = l
 
         return m_launch
+
+    @classmethod
+    def from_Workflow(cls, wflow):
+        """Create a fresh Workflow from a given one.
+
+        """
+        new_wf = Workflow([copy.deepcopy(fw) for fw in wflow.fws],
+                          links_dict=wflow.links,
+                          metadata=wflow.metadata,
+                          name=wflow.name)
+
+        # need to give Fireworks new ids
+        old_new = {} # mapping between old and new Firework ids
+
+        for fw_id, fw in new_wf.id_fw.items():
+            global NEGATIVE_FWID_CTR
+            NEGATIVE_FWID_CTR -= 1
+            new_id = NEGATIVE_FWID_CTR
+
+            old_new[fw_id] = new_id
+            fw.fw_id = new_id
+        
+        new_wf._reassign_ids(old_new)
+
+        # reset states
+        for fw in new_wf.fws:
+            fw.state = 'WAITING'
+
+        new_wf.fw_states = {key: new_wf.id_fw[key].state for key in new_wf.id_fw}
+
+        return new_wf
 
     @classmethod
     def from_dict(cls, m_dict):
