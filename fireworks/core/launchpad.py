@@ -122,6 +122,9 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
+        # WARNING: Note that there might be some problem with the ssl feature for some combination versions of MongoDB
+        # and pymongo such that if you do not use ssl (using ssl_ca_file = None), fireworks can't connect to the
+        # Mongo database. This is why there is the following if condition. DO NOT REMOVE THIS IF CONDITION!
         if self.ssl_ca_file is not None:
             self.connection = MongoClient(host, port, j=True, ssl_ca_certs=self.ssl_ca_file,
                                           socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
