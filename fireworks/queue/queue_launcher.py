@@ -15,7 +15,7 @@ import os
 import glob
 import time
 import errno
-from monty.os import cd
+from monty.os import cd, makedirs_p
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, \
@@ -65,6 +65,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
 
     if launchpad.run_exists(fworker):
+        launch_id = None
         try:
             if reserve:
                 l_logger.debug('finding a FW to reserve...')
@@ -94,11 +95,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
                     launcher_dir = fw_launch_dir
 
-                    try:
-                        os.makedirs(launcher_dir)
-                    except OSError as exception:
-                        if exception.errno != errno.EEXIST:
-                            raise
+                    makedirs_p(launcher_dir)
 
                     launchpad.change_launch_dir(launch_id, launcher_dir)
                 elif create_launcher_dir:
@@ -126,9 +123,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 l_logger.info('submitting queue script')
                 reservation_id = qadapter.submit_to_queue(SUBMIT_SCRIPT_NAME)
                 if not reservation_id:
-                    if reserve:
-                        l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(fw.fw_id, launch_id))
-                        launchpad.cancel_reservation(launch_id)
                     raise RuntimeError('queue script could not be submitted, check queue script/queue adapter/queue server status!')
                 elif reserve:
                     launchpad.set_reservation_id(launch_id, reservation_id)
@@ -136,6 +130,13 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
         except:
             log_exception(l_logger, 'Error writing/submitting queue script!')
+            if reserve and launch_id is not None:
+                try:
+                    l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(fw.fw_id, launch_id))
+                    launchpad.cancel_reservation(launch_id)
+                except:
+                    log_exception(l_logger, 'Error unreserving FW with fw_id {}'.format(fw.fw_id))
+
             return False
 
     else:
