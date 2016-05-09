@@ -29,7 +29,7 @@ if __name__ == "__main__":
                       'fireworks.flask_site.static.font-awesome-4.0.3': ['css/*', 'fonts/*', 'less/*', 'scss/*']},
         zip_safe=False,
         install_requires=['pyyaml>=3.1.0', 'pymongo>=3.0', 'Jinja2>=2.7.3',
-                          'six>=1.5.2', 'monty>=0.5.6', 'python-dateutil>=2.2',
+                          'six>=1.5.2', 'monty>=0.8.1', 'python-dateutil>=2.2',
                           'tabulate>=0.7.5', 'flask>=0.10.1', 'flask-paginate>=0.2.8'],
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
