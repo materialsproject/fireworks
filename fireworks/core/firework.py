@@ -1087,7 +1087,7 @@ class Workflow(FWSerializable):
 
         return new_wf
 
-    def reset(self, reset_ids=False):
+    def reset(self, reset_ids=True):
         """Reset the states of all Fireworks in this workflow to 'WAITING'.
 
         :param reset_ids: (bool) if ``True``, give each Firework a new id.
