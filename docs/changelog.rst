@@ -2,9 +2,11 @@
 FireWorks Changelog
 ===================
 
-**v1.2.8**
+**v1.3.0**
 
-* fix minor bug in my_queueadapter vs my_qadapter (thanks to specter119)
+* fix datetime import (fixes broken queue_launcher) - (D. Winston)
+* fix datetime handler in __repr__
+* always unreserve if queue submission goes wrong (G. Petretto)
 
 **v1.2.9**
 
