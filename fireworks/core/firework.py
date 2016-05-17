@@ -1090,10 +1090,10 @@ class Workflow(FWSerializable):
     def reset(self, reset_ids=False):
         """Reset the states of all Fireworks in this workflow to 'WAITING'.
 
-        :param rest_ids: (bool) if ``True``, give each Firework a new id.
+        :param reset_ids: (bool) if ``True``, give each Firework a new id.
 
         """
-        if rest_ids:
+        if reset_ids:
             old_new = {} # mapping between old and new Firework ids
             for fw_id, fw in self.id_fw.items():
                 global NEGATIVE_FWID_CTR
