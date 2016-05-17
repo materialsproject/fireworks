@@ -21,7 +21,6 @@ from collections import defaultdict, OrderedDict
 import abc
 from datetime import datetime
 import os
-import copy
 import pprint
 
 from monty.io import reverse_readline, zopen
