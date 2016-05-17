@@ -7,6 +7,9 @@ import shutil
 import traceback
 
 from os.path import expandvars, expanduser, abspath
+
+import time
+
 from fireworks.core.firework import FireTaskBase
 from monty.shutil import compress_dir, decompress_dir
 
