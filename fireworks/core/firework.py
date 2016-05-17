@@ -1077,6 +1077,41 @@ class Workflow(FWSerializable):
         return m_launch
 
     @classmethod
+    def from_wflow(cls, wflow):
+        """Create a fresh Workflow from an existing one.
+
+        """
+
+        new_wf = Workflow.from_dict(wflow.to_dict())
+        new_wf.reset(reset_ids=True)
+
+        return new_wf
+
+    def reset(self, reset_ids=False):
+        """Reset the states of all Fireworks in this workflow to 'WAITING'.
+
+        :param reset_ids: (bool) if ``True``, give each Firework a new id.
+
+        """
+        if reset_ids:
+            old_new = {} # mapping between old and new Firework ids
+            for fw_id, fw in self.id_fw.items():
+                global NEGATIVE_FWID_CTR
+                NEGATIVE_FWID_CTR -= 1
+                new_id = NEGATIVE_FWID_CTR
+
+                old_new[fw_id] = new_id
+                fw.fw_id = new_id
+        
+            self._reassign_ids(old_new)
+
+        # reset states
+        for fw in self.fws:
+            fw.state = 'WAITING'
+
+        self.fw_states = {key: self.id_fw[key].state for key in self.id_fw}
+
+    @classmethod
     def from_dict(cls, m_dict):
         # accept either a Workflow dict or a Firework dict
         if 'fws' in m_dict:
