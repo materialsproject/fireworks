@@ -91,7 +91,7 @@ class FileTransferTask(FireTaskBase):
         shell_interpret = self.get('shell_interpret', True)
         ignore_errors = self.get('ignore_errors')
         max_retry = self.get('max_retry', 0)
-        retry_delay = self.get('max_retry', 10)
+        retry_delay = self.get('retry_delay', 10)
         mode = self.get('mode', 'move')
 
         if mode == 'rtransfer':
