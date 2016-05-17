@@ -71,6 +71,8 @@ class FileTransferTask(FireTaskBase):
         - server: (str) server host for remote transfer
         - user: (str) user to authenticate with on remote server
         - key_filename: (str) optional SSH key location for remote transfer
+        - max_retry: (int) number of times to retry failed transfers; defaults to `0` (no retries)
+        - retry_delay: (int) number of seconds to wait between retries; defaults to `10`
     """
     _fw_name = 'FileTransferTask'
     required_params = ["mode", "files"]
@@ -88,7 +90,8 @@ class FileTransferTask(FireTaskBase):
     def run_task(self, fw_spec):
         shell_interpret = self.get('shell_interpret', True)
         ignore_errors = self.get('ignore_errors')
-        retry = self.get('retry')
+        max_retry = self.get('max_retry', 0)
+        retry_delay = self.get('max_retry', 10)
         mode = self.get('mode', 'move')
 
         if mode == 'rtransfer':
@@ -134,8 +137,13 @@ class FileTransferTask(FireTaskBase):
 
             except:
                 traceback.print_exc()
-                if retry:
+                if max_retry:
+
+                    # we want to avoid hammering either the local or remote machine
+                    time.sleep(retry_delay)
+                    self['max_retry'] -= 1
                     self.run_task(fw_spec)
+
                 elif not ignore_errors:
                     raise ValueError(
                         "There was an error performing operation {} from {} "
