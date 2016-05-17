@@ -60,7 +60,7 @@ A Firework contains a list of computing tasks (FireTasks) to be performed. For t
       - _fw_name: ScriptTask
         script: echo "howdy, your job launched successfully!" >> howdy.txt
 
-   If you've ever used other XML-based workflow systems, you might be surprised at how succintly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we'll provide more details and demonstrate how to add a workflow within Python code (rather than files).
+   If you've ever used other XML-based workflow systems, you might be surprised at how succinctly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we'll provide more details and demonstrate how to add a workflow within Python code (rather than files).
 
 #. You should have received confirmation that the Firework got added. You can query the database for this Firework as follows::
 
