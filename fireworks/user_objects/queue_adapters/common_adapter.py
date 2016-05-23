@@ -109,7 +109,7 @@ class CommonAdapter(QueueAdapterBase):
             header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
             status_cmd.extend(['--header', header, '-u', username])
         elif self.q_type == 'SGE':
-            status_cmd.extend(['-q', self.q_name, '-u', username])
+            status_cmd.extend(['-q', self['queue'], '-u', username])
         else:
             status_cmd.extend(['-u', username])
 
@@ -137,7 +137,8 @@ class CommonAdapter(QueueAdapterBase):
             return len(output_str.split('\n'))
         if self.q_type == "SGE":
             # output string has states and separator as first two lines
-            return len(output_str.split('\n')) - 2
+            # one more due to trailing '\n' gets the right number
+            return len(output_str.split('\n')) - 3
 
         count = 0
         for l in output_str.split('\n'):
