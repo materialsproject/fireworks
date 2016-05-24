@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.3.1**
+
+* FileTransferTask has max_retry parameter (D. Dotson)
+* Allow copying workflows but w/reset ids (D. Dotson)
+* add ``max_loops`` option to rlaunch; this allows you to limit infinite mode to a few cycles
+
 **v1.3.0**
 
 * fix datetime import (fixes broken queue_launcher) - (D. Winston)
