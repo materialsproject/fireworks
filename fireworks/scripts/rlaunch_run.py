@@ -45,7 +45,7 @@ def rlaunch():
 
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
     rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)', default=None, type=int)
-    rapid_parser.add_argument('--max_loops', help='after this many sleep loops, quit (default None)', default=-1, type=int)
+    rapid_parser.add_argument('--max_loops', help='after this many sleep loops, quit even in infinite nlaunches mode (default -1 is infinite loops)', default=-1, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None, type=int)
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)

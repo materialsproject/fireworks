@@ -50,8 +50,8 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1,
     :param launchpad: (LaunchPad)
     :param fworker: (FWorker object)
     :param m_dir: (str) the directory in which to loop Rocket running
-    :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
-    :param max_loops: (int) maximum number of loops
+    :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop until max_loops
+    :param max_loops: (int) maximum number of loops (default -1 is infinite)
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :param strm_lvl: (str) level at which to output logs to stdout
     :param timeout: (int) # of seconds after which to stop the rapidfire process
