@@ -136,9 +136,9 @@ class CommonAdapter(QueueAdapterBase):
             #Just count the number of lines
             return len(output_str.split('\n'))
         if self.q_type == "SGE":
-            # output string has states and separator as first two lines
-            # one more due to trailing '\n' gets the right number
-            return len(output_str.split('\n')) - 3
+            # want only lines that include username;
+            # this will exclude e.g. header lines
+            return len([l for l in output_str.split('\n') if username in l])
 
         count = 0
         for l in output_str.split('\n'):
