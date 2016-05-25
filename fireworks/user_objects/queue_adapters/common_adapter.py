@@ -108,6 +108,8 @@ class CommonAdapter(QueueAdapterBase):
         elif self.q_type == "Cobalt":
             header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
             status_cmd.extend(['--header', header, '-u', username])
+        elif self.q_type == 'SGE':
+            status_cmd.extend(['-q', self['queue'], '-u', username])
         else:
             status_cmd.extend(['-u', username])
 
@@ -131,8 +133,12 @@ class CommonAdapter(QueueAdapterBase):
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
                 return int(output_str.split('\n')[-2].split()[0])
         if self.q_type == "LoadSharingFacility":
-                #Just count the number of lines
-                return len(output_str.split('\n'))
+            #Just count the number of lines
+            return len(output_str.split('\n'))
+        if self.q_type == "SGE":
+            # want only lines that include username;
+            # this will exclude e.g. header lines
+            return len([l for l in output_str.split('\n') if username in l])
 
         count = 0
         for l in output_str.split('\n'):
