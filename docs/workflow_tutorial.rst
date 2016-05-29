@@ -70,7 +70,7 @@ Basically, we just want to ensure that *"To be, or not to be,"* is printed out b
 #. This should print the second step of the workflow (*"That is the question"*). You can verify that both steps are completed::
 
     lpad get_fws -i 1 -d less
-    lpad get_fws -i 1 -d less
+    lpad get_fws -i 2 -d less
 
 .. note:: Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines. But at least we printed them in the correct order!
 
