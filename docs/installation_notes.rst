@@ -40,4 +40,4 @@ Misc notes
 After installation
 ==================
 
-After you've installed the FireWorks software and set up a Mongo database for your workflows, you should proceed with the tutorails on the :doc:`main page </index>`.
+After you've installed the FireWorks software and set up a Mongo database for your workflows, you should proceed with the tutorials on the :doc:`main page </index>`.
