@@ -58,8 +58,8 @@ class WFLock(object):
     def __enter__(self):
         ctr = 0
         waiting_time = 0
-        links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists": False}},
-                                                       {'$set': {'locked': True}})  # acquire lock
+        links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id, 'locked': {"$exists": False}},
+                                                           {'$set': {'locked': True}})  # acquire lock
         while not links_dict:  # could not acquire lock b/c WF is already locked for writing
             ctr += 1
             time_incr = ctr/10.0+random.random()/100.0
@@ -71,17 +71,17 @@ class WFLock(object):
                     raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
                 if self.kill:  # force lock acquisition
                     self.lp.m_logger.warn('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
-                    links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id},
+                    links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id},
                                      {'$set': {'locked': True}})
                 else:  # throw error if we don't want to force lock acquisition
                     raise LockedWorkflowError("Could not get workflow - LOCKED: {}".format(self.fw_id))
 
             else:
-                links_dict = self.lp.workflows.find_and_modify({'nodes': self.fw_id, 'locked': {"$exists":False}},
+                links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id, 'locked': {"$exists":False}},
                                                            {'$set': {'locked': True}})  # retry lock
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.lp.workflows.find_and_modify({"nodes": self.fw_id}, {"$unset": {"locked": True}})
+        self.lp.workflows.find_one_and_update({"nodes": self.fw_id}, {"$unset": {"locked": True}})
 
 
 class LaunchPad(FWSerializable):
@@ -260,7 +260,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
-        self.workflows.insert(wf.to_db_dict())
+        self.workflows.insert_one(wf.to_db_dict())
 
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
@@ -551,7 +551,7 @@ class LaunchPad(FWSerializable):
 
     def defuse_fw(self, fw_id, rerun_duplicates=True):
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
-        f = self.fireworks.find_and_modify(
+        f = self.fireworks.find_one_and_update(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
         if f:
@@ -559,7 +559,7 @@ class LaunchPad(FWSerializable):
 
         if not f:
             self.rerun_fw(fw_id, rerun_duplicates)
-            f = self.fireworks.find_and_modify(
+            f = self.fireworks.find_one_and_update(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
             if f:
@@ -568,7 +568,7 @@ class LaunchPad(FWSerializable):
         return f
 
     def reignite_fw(self, fw_id):
-        f = self.fireworks.find_and_modify({'fw_id': fw_id, 'state': 'DEFUSED'},
+        f = self.fireworks.find_one_and_update({'fw_id': fw_id, 'state': 'DEFUSED'},
                                            {'$set': {'state': 'WAITING',
                                                      'updated_on': datetime.datetime.utcnow()}})
         if f:
@@ -597,7 +597,7 @@ class LaunchPad(FWSerializable):
             # second set the state of all FWs to ARCHIVED
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf.fws:
-                self.fireworks.find_and_modify({'fw_id': fw.fw_id},
+                self.fireworks.find_one_and_update({'fw_id': fw.fw_id},
                                                {'$set': {'state': 'ARCHIVED',
                                                          'updated_on': datetime.datetime.utcnow()}})
 
@@ -611,7 +611,7 @@ class LaunchPad(FWSerializable):
         :param next_launch_id: id to give next Launch (int)
         """
         self.fw_id_assigner.remove()
-        self.fw_id_assigner.find_and_modify({'_id': -1}, {'next_fw_id': next_fw_id,
+        self.fw_id_assigner.find_one_and_replace({'_id': -1}, {'next_fw_id': next_fw_id,
                                                           'next_launch_id': next_launch_id},
                                             upsert=True)
         self.m_logger.debug(
@@ -649,9 +649,9 @@ class LaunchPad(FWSerializable):
         while True:
             # check out the matching firework, depending on the query set by the FWorker
             if checkout:
-                m_fw = self.fireworks.find_and_modify(m_query,
-                                                      {'$set': {'state': 'RESERVED',
-                                                       'updated_on': datetime.datetime.utcnow()}},
+                m_fw = self.fireworks.find_one_and_update(m_query,
+                                                          {'$set': {'state': 'RESERVED',
+                                                           'updated_on': datetime.datetime.utcnow()}},
                                                       sort=sortby)
             else:
                 m_fw = self.fireworks.find_one(m_query, {'fw_id': 1, 'spec': 1},
@@ -674,7 +674,7 @@ class LaunchPad(FWSerializable):
         trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
         m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, trackers=trackers, launch_id=launch_id,
                           fw_id=m_fw.fw_id)
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         # add launch to FW
         m_fw.launches.append(m_launch)
@@ -710,7 +710,7 @@ class LaunchPad(FWSerializable):
     def cancel_reservation(self, launch_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'READY'
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id, "state": "RESERVED"}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id, "state": "RESERVED"}, m_launch.to_db_dict(), upsert=True)
 
         for fw in self.fireworks.find({'launches': launch_id, 'state': 'RESERVED'}, {'fw_id': 1}):
             self.rerun_fw(fw['fw_id'], rerun_duplicates=False)
@@ -736,7 +736,7 @@ class LaunchPad(FWSerializable):
         # Do a confirmed write and make sure state_history is preserved
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = 'FIZZLED'
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         for fw_data in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
             self._refresh_wf(fw_data['fw_id'])
@@ -804,7 +804,7 @@ class LaunchPad(FWSerializable):
     def set_reservation_id(self, launch_id, reservation_id):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.set_reservation_id(reservation_id)
-        self.launches.find_and_modify({'launch_id': launch_id}, m_launch.to_db_dict())
+        self.launches.find_one_and_replace({'launch_id': launch_id}, m_launch.to_db_dict())
 
     def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None):
         """
@@ -836,7 +836,7 @@ class LaunchPad(FWSerializable):
                           launch_id=l_id,
                           fw_id=m_fw.fw_id)
 
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
 
@@ -874,13 +874,13 @@ class LaunchPad(FWSerializable):
     def change_launch_dir(self, launch_id, launch_dir):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.launch_dir = launch_dir
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
     def restore_backup_data(self, launch_id, fw_id):
         if launch_id in self.backup_launch_data:
-            self.launches.find_and_modify({'launch_id': launch_id}, self.backup_launch_data[launch_id])
+            self.launches.find_one_and_replace({'launch_id': launch_id}, self.backup_launch_data[launch_id])
         if fw_id in self.backup_fw_data:
-            self.fireworks.find_and_modify({'fw_id': fw_id}, self.backup_fw_data[fw_id])
+            self.fireworks.find_one_and_replace({'fw_id': fw_id}, self.backup_fw_data[fw_id])
 
     def complete_launch(self, launch_id, action, state='COMPLETED'):
         """
@@ -892,7 +892,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = state
         m_launch.action = action
-        self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -916,7 +916,7 @@ class LaunchPad(FWSerializable):
         Checkout the next Firework id
         """
         try:
-            return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_fw_id': 1}})['next_fw_id']
+            return self.fw_id_assigner.find_one_and_update({}, {'$inc': {'next_fw_id': 1}})['next_fw_id']
         except:
             raise ValueError("Could not get next FW id! If you have not yet initialized the database, please do so by performing a database reset (e.g., lpad reset)")
 
@@ -925,7 +925,7 @@ class LaunchPad(FWSerializable):
         Checkout the next Launch id
         """
         try:
-            return self.fw_id_assigner.find_and_modify({}, {'$inc': {'next_launch_id': 1}})['next_launch_id']
+            return self.fw_id_assigner.find_one_and_update({}, {'$inc': {'next_launch_id': 1}})['next_launch_id']
         except:
             raise ValueError("Could not get next launch id! If you have not yet initialized the database, please do so by performing a database reset (e.g., lpad reset)")
 
@@ -940,7 +940,7 @@ class LaunchPad(FWSerializable):
                 new_id = self.get_new_fw_id()
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-            self.fireworks.find_and_modify({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
+            self.fireworks.find_one_and_replace({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
 
         return old_new
 
@@ -1013,7 +1013,7 @@ class LaunchPad(FWSerializable):
             if recover_mode == 'prev_dir':
                 set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
 
-            self.fireworks.find_and_modify({"fw_id": fw_id}, set_spec)
+            self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
 
         return reruns
 
@@ -1053,7 +1053,7 @@ class LaunchPad(FWSerializable):
         # redo the links
         wf = wf.to_db_dict()
         wf['locked'] = True  # preserve the lock!
-        self.workflows.find_and_modify({'nodes': query_node}, wf)
+        self.workflows.find_one_and_replace({'nodes': query_node}, wf)
 
 
     def _steal_launches(self, thief_fw):
@@ -1086,7 +1086,7 @@ class LaunchPad(FWSerializable):
         return stolen
 
     def set_priority(self, fw_id, priority):
-        self.fireworks.find_and_modify({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
+        self.fireworks.find_one_and_update({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
 
     def get_logdir(self):
         # AJ: This is needed for job packing due to Proxy objects not being fully featured...
@@ -1100,7 +1100,7 @@ class LaunchPad(FWSerializable):
         d['updated_on'] = datetime.datetime.utcnow().isoformat()
         d['deprecated'] = False
         d['completed'] = False
-        self.offline_runs.insert(d)
+        self.offline_runs.insert_one(d)
 
     def recover_offline(self, launch_id, ignore_errors=False, print_errors=False):
         # get the launch directory
@@ -1123,10 +1123,10 @@ class LaunchPad(FWSerializable):
                     for s in m_launch.state_history:
                         if s['state'] == 'RUNNING':
                             s['created_on'] = reconstitute_dates(offline_data['started_on'])
-                    l = self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+                    l = self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
                     fw_id = l['fw_id']
-                    f = self.fireworks.find_and_modify({'fw_id': fw_id},
-                                                       {'$set': {'state': 'RUNNING', 'updated_on': datetime.datetime.utcnow()}})
+                    f = self.fireworks.find_one_and_update({'fw_id': fw_id},
+                                                            {'$set': {'state': 'RUNNING', 'updated_on': datetime.datetime.utcnow()}})
                     if f:
                         self._refresh_wf(fw_id)
 
@@ -1138,7 +1138,7 @@ class LaunchPad(FWSerializable):
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = reconstitute_dates(offline_data['completed_on'])
-                    self.launches.find_and_modify({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+                    self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
                     self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
 
             # update the updated_on
