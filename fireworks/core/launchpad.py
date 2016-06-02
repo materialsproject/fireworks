@@ -260,7 +260,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
 
         # insert the WFLinks
-        self.workflows.insert(wf.to_db_dict())
+        self.workflows.insert_one(wf.to_db_dict())
 
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
@@ -1100,7 +1100,7 @@ class LaunchPad(FWSerializable):
         d['updated_on'] = datetime.datetime.utcnow().isoformat()
         d['deprecated'] = False
         d['completed'] = False
-        self.offline_runs.insert(d)
+        self.offline_runs.insert_one(d)
 
     def recover_offline(self, launch_id, ignore_errors=False, print_errors=False):
         # get the launch directory
