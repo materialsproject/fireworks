@@ -361,7 +361,7 @@ class Rocket():
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
         if my_spec.get("_pass_job_info"):
-            job_info = my_spec.get("_job_info", [])
+            job_info = list(my_spec.get("_job_info", []))
             job_info.append({"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir})
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
 
