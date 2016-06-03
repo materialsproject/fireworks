@@ -163,7 +163,7 @@ class LaunchPad(FWSerializable):
         """
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
         allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
-        self.fireworks.update({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
+        self.fireworks.update_many({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
                               {"$set": mod_spec}, multi=True)
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
@@ -908,7 +908,7 @@ class LaunchPad(FWSerializable):
             tracker.track_file(m_launch.launch_dir)
 
         m_launch.touch_history(ptime)
-        self.launches.update({'launch_id': launch_id, 'state': 'RUNNING'},
+        self.launches.update_one({'launch_id': launch_id, 'state': 'RUNNING'},
             {'$set':{'state_history':m_launch.to_db_dict()['state_history'], 'trackers': [t.to_dict() for t in m_launch.trackers]}})
 
     def get_new_fw_id(self):
@@ -1139,10 +1139,10 @@ class LaunchPad(FWSerializable):
                         if s['state'] == offline_data['state']:
                             s['created_on'] = reconstitute_dates(offline_data['completed_on'])
                     self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
-                    self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
+                    self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed":True}})
 
             # update the updated_on
-            self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
+            self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
             return None
         except:
             if print_errors:
@@ -1153,11 +1153,11 @@ class LaunchPad(FWSerializable):
                                                      '_exception': {'_stacktrace': traceback.format_exc(),
                                                      '_details': None}}, exit=True)
                 self.complete_launch(launch_id, m_action, 'FIZZLED')
-                self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
+                self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed":True}})
             return m_launch.fw_id
 
     def forget_offline(self, fw_id):
-        self.offline_runs.update({"fw_id": fw_id}, {"$set": {"deprecated":True}})
+        self.offline_runs.update_one({"fw_id": fw_id}, {"$set": {"deprecated":True}})
 
     def get_tracker_data(self, fw_id):
         data = []
