@@ -200,10 +200,10 @@ class LaunchPad(FWSerializable):
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
         if password == m_password or (not require_password and self.workflows.count() <= max_reset_wo_password):
-            self.fireworks.delete_many()
-            self.launches.delete_many()
-            self.workflows.delete_many()
-            self.offline_runs.delete_many()
+            self.fireworks.delete_many({})
+            self.launches.delete_many({})
+            self.workflows.delete_many({})
+            self.offline_runs.delete_many({})
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
@@ -514,32 +514,32 @@ class LaunchPad(FWSerializable):
         self.m_logger.info('Performing db tune-up')
 
         self.m_logger.debug('Updating indices...')
-        self.fireworks.ensure_index('fw_id', unique=True, background=bkground)
+        self.fireworks.create_index('fw_id', unique=True, background=bkground)
         for f in ("state", 'spec._category', 'created_on', 'updated_on' 'name', 'launches'):
-            self.fireworks.ensure_index(f, background=bkground)
+            self.fireworks.create_index(f, background=bkground)
 
-        self.launches.ensure_index('launch_id', unique=True, background=bkground)
-        self.launches.ensure_index('fw_id', background=bkground)
-        self.launches.ensure_index('state_history.reservation_id', background=bkground)
+        self.launches.create_index('launch_id', unique=True, background=bkground)
+        self.launches.create_index('fw_id', background=bkground)
+        self.launches.create_index('state_history.reservation_id', background=bkground)
 
         for f in ('state', 'time_start', 'time_end', 'host', 'ip',
                   'fworker.name'):
-            self.launches.ensure_index(f, background=bkground)
+            self.launches.create_index(f, background=bkground)
 
         for f in ('name', 'created_on', 'updated_on', 'nodes'):
-            self.workflows.ensure_index(f, background=bkground)
+            self.workflows.create_index(f, background=bkground)
 
         for idx in self.user_indices:
-            self.fireworks.ensure_index(idx, background=bkground)
+            self.fireworks.create_index(idx, background=bkground)
 
         for idx in self.wf_user_indices:
-            self.workflows.ensure_index(idx, background=bkground)
+            self.workflows.create_index(idx, background=bkground)
 
         # for frontend, which needs to sort on _id after querying on state
-        self.fireworks.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
-        self.fireworks.ensure_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", DESCENDING)], background=bkground)
-        self.fireworks.ensure_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", ASCENDING)], background=bkground)
-        self.workflows.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
+        self.fireworks.create_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
+        self.fireworks.create_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", DESCENDING)], background=bkground)
+        self.fireworks.create_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", ASCENDING)], background=bkground)
+        self.workflows.create_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
 
         if not bkground:
             self.m_logger.debug('Compacting database...')
@@ -610,7 +610,7 @@ class LaunchPad(FWSerializable):
         :param next_fw_id: id to give next Firework (int)
         :param next_launch_id: id to give next Launch (int)
         """
-        self.fw_id_assigner.delete_many()
+        self.fw_id_assigner.delete_many({})
         self.fw_id_assigner.find_one_and_replace({'_id': -1}, {'next_fw_id': next_fw_id,
                                                           'next_launch_id': next_launch_id},
                                             upsert=True)
