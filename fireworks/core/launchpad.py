@@ -200,10 +200,10 @@ class LaunchPad(FWSerializable):
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
         if password == m_password or (not require_password and self.workflows.count() <= max_reset_wo_password):
-            self.fireworks.remove()
-            self.launches.remove()
-            self.workflows.remove()
-            self.offline_runs.remove()
+            self.fireworks.delete_many()
+            self.launches.delete_many()
+            self.workflows.delete_many()
+            self.offline_runs.delete_many()
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
@@ -368,10 +368,10 @@ class LaunchPad(FWSerializable):
         print("Remove fws %s" % fw_ids)
         print("Remove launches %s" % launch_ids)
         print("Removing workflow.")
-        self.launches.remove({'launch_id': {"$in": launch_ids}})
-        self.offline_runs.remove({'launch_id': {"$in": launch_ids}})
-        self.fireworks.remove({"fw_id": {"$in": fw_ids}})
-        self.workflows.remove({'nodes': fw_id})
+        self.launches.delete_many({'launch_id': {"$in": launch_ids}})
+        self.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
+        self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
+        self.workflows.delete_one({'nodes': fw_id})
 
     def get_wf_summary_dict(self, fw_id, mode="more"):
         """
@@ -610,7 +610,7 @@ class LaunchPad(FWSerializable):
         :param next_fw_id: id to give next Firework (int)
         :param next_launch_id: id to give next Launch (int)
         """
-        self.fw_id_assigner.remove()
+        self.fw_id_assigner.delete_many()
         self.fw_id_assigner.find_one_and_replace({'_id': -1}, {'next_fw_id': next_fw_id,
                                                           'next_launch_id': next_launch_id},
                                             upsert=True)
