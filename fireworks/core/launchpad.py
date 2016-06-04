@@ -164,7 +164,7 @@ class LaunchPad(FWSerializable):
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
         allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
         self.fireworks.update_many({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
-                              {"$set": mod_spec}, multi=True)
+                              {"$set": mod_spec})
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
             self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "
