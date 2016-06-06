@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.3.2**
+
+* update pymongo commands (X. Qu & A. Jain)
+* minor qadapter updates (D. Dotson & X. Qu)
+* very minor doc updates (S. Bajaj & A. Faghaninia)
+
 **v1.3.1**
 
 * FileTransferTask has max_retry parameter (D. Dotson)
