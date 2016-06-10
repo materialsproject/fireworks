@@ -99,7 +99,7 @@ class CommonAdapter(QueueAdapterBase):
             # -p: filter queue (partition)
             # -h: no header line
             # -o: reduce output to user only (shorter string to parse)
-            status_cmd.extend(['-o "%u"', '-u', username, '-h'])
+            status_cmd.extend(['-u', username, '-h'])
             if 'queue' in self and self['queue']:
                 status_cmd.extend(['-p', self['queue']])
         elif self.q_type == "LoadSharingFacility":
