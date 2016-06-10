@@ -175,10 +175,10 @@ class CommonAdapter(QueueAdapterBase):
             # subtract one due to trailing '\n' and split behavior
             count = 0
             for line in output_str.split('\n'):
-                ll = line.split()
-                if ll[ll.index(username)+1] == 'PD':
-                    count += 1
-
+                if (username in line):
+                    ll = line.split()
+                    if ll[ll.index(username)+1] == 'PD':
+                        count += 1
             return count
 
         if self.q_type == "SGE":
