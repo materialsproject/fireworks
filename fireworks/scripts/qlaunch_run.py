@@ -113,6 +113,9 @@ def qlaunch():
     rapid_parser.add_argument('-m', '--maxjobs_queue',
                               help='maximum jobs to keep in queue for this user', default=10,
                               type=int)
+    rapid_parser.add_argument('-m', '--maxjobs_waiting',
+                              help='maximum jobs to have waiting in queue for this user; -1 implies no limit', default=-1,
+                              type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
                               help='maximum jobs to put in a block',
                               default=500, type=int)
@@ -144,7 +147,7 @@ def qlaunch():
                             if os.path.isfile(f):
                                 put(f, os.path.join(r, f))
     non_default = []
-    for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
+    for k in ["maxjobs_queue", "maxjobs_waiting", "maxjobs_block", "nlaunches", "sleep"]:
         v = getattr(args, k, None)
         if v != rapid_parser.get_default(k):
             non_default.append("--{} {}".format(k, v))
