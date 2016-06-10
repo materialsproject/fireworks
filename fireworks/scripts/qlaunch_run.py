@@ -48,6 +48,7 @@ def do_launch(args):
     if args.command == 'rapidfire':
         rapidfire(launchpad, fworker=fworker, qadapter=queueadapter, launch_dir=args.launch_dir,
                   nlaunches=args.nlaunches, njobs_queue=args.maxjobs_queue,
+                  njobs_waiting=args.maxjobs_waiting,
                   njobs_block=args.maxjobs_block, sleep_time=args.sleep,
                   reserve=args.reserve, strm_lvl=args.loglvl, timeout=args.timeout)
     else:
@@ -113,7 +114,7 @@ def qlaunch():
     rapid_parser.add_argument('-m', '--maxjobs_queue',
                               help='maximum jobs to keep in queue for this user', default=10,
                               type=int)
-    rapid_parser.add_argument('-m', '--maxjobs_waiting',
+    rapid_parser.add_argument('-p', '--maxjobs_waiting',
                               help='maximum jobs to have waiting in queue for this user; -1 implies no limit', default=-1,
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',

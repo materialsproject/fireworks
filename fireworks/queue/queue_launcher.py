@@ -170,8 +170,6 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
 
-    if njobs_waiting == -1
-
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
         raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
@@ -195,7 +193,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
             # get number of jobs waiting
-            jobs_waiting = _get_number_of_jobs_in_queue(qadapter, njobs_waiting, l_logger)
+            jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
             job_waiting_counter = 0  # this is for QSTAT_FREQUENCY option
 
             while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker) \
@@ -223,7 +221,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     if job_counter % QSTAT_FREQUENCY == 0:
                         job_counter = 0
                         jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
-                        jobs_waiting = _get_number_of_jobs_in_queue(qadapter, njobs_waiting, l_logger)
+                        jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
                 else:
                     time.sleep(sleep_time)
 
@@ -288,7 +286,7 @@ def _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger):
         try:
             jobs_in_queue = qadapter.get_njobs_waiting()
             if jobs_in_queue is not None:
-                l_logger.info('{} jobs in queue. Maximum allowed by user: {}'.format(jobs_in_queue, njobs_queue))
+                l_logger.info('{} jobs waiting. Maximum allowed by user: {}'.format(jobs_in_queue, njobs_waiting))
                 return jobs_in_queue
         except:
             log_exception(l_logger, 'Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
