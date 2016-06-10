@@ -194,36 +194,35 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
 
             # get number of jobs waiting
             jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
-            job_waiting_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker) \
+            while (jobs_in_queue < njobs_queue) \
+                    and ((njobs_waiting == -1) or (jobs_waiting < njobs_waiting)) \
+                    and launchpad.run_exists(fworker) \
                     and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
 
-                if (njobs_waiting == -1) or (jobs_waiting < njobs_waiting):
-                    l_logger.info('Launching a rocket!')
+                l_logger.info('Launching a rocket!')
 
-                    # switch to new block dir if it got too big
-                    if _njobs_in_dir(block_dir) >= njobs_block:
-                        l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
-                        block_dir = create_datestamp_dir(launch_dir, l_logger)
+                # switch to new block dir if it got too big
+                if _njobs_in_dir(block_dir) >= njobs_block:
+                    l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
+                    block_dir = create_datestamp_dir(launch_dir, l_logger)
 
-                    # launch a single job
-                    if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True):
-                        raise RuntimeError("Launch unsuccessful!")
-                    num_launched += 1
-                    if num_launched == nlaunches:
-                        break
-                    # wait for the queue system to update
-                    l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
-                    time.sleep(QUEUE_UPDATE_INTERVAL)
-                    jobs_in_queue += 1
-                    job_counter += 1
-                    if job_counter % QSTAT_FREQUENCY == 0:
-                        job_counter = 0
-                        jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
-                        jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
-                else:
-                    time.sleep(sleep_time)
+                # launch a single job
+                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True):
+                    raise RuntimeError("Launch unsuccessful!")
+                num_launched += 1
+                if num_launched == nlaunches:
+                    break
+                # wait for the queue system to update
+                l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
+                time.sleep(QUEUE_UPDATE_INTERVAL)
+                jobs_in_queue += 1
+                jobs_waiting += 1
+                job_counter += 1
+                if job_counter % QSTAT_FREQUENCY == 0:
+                    job_counter = 0
+                    jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
+                    jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
 
             if num_launched == nlaunches or nlaunches == 0 or \
                     (timeout and (datetime.now() - start_time).total_seconds() >= timeout):
