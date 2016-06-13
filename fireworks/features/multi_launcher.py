@@ -74,9 +74,9 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     sleep_time = sleep if sleep else RAPIDFIRE_SLEEP_SECS
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
+    rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
+              max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
     while nlaunches == 0:
-        rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
-                  max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
         time.sleep(1.5) # wait for LaunchPad to be initialized
         launch_ids = FWData().Running_IDs.values()
         live_ids = list(set(launch_ids) - {None})
