@@ -195,7 +195,6 @@ class DataServer(BaseManager):
         :return:
         """
         DataServer.register('LaunchPad', callable=lambda: launchpad)
-        DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
         m = DataServer(address=('127.0.0.1', 0), authkey=DS_PASSWORD)  # random port
         m.start()
         return m
