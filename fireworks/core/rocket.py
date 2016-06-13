@@ -43,8 +43,7 @@ def start_ping_launch(launchpad, launch_id):
     if fd.MULTIPROCESSING:
         if not launch_id:
             raise ValueError("Multiprocessing cannot be run in offline mode!")
-        m = fd.DATASERVER
-        m.Running_IDs()[os.getpid()] = launch_id
+        fd.Running_IDs[os.getpid()] = launch_id
         return None
     else:
         ping_stop = threading.Event()
@@ -56,8 +55,7 @@ def start_ping_launch(launchpad, launch_id):
 def stop_backgrounds(ping_stop, btask_stops):
     fd = FWData()
     if fd.MULTIPROCESSING:
-        m = fd.DATASERVER
-        m.Running_IDs()[os.getpid()] = None
+        fd.Running_IDs[os.getpid()] = None
     else:
         ping_stop.set()
 

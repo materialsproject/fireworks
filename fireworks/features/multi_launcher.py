@@ -6,11 +6,11 @@ from __future__ import unicode_literals
 This module contains methods for launching several Rockets in a parallel environment
 """
 
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 import os
 import threading
 import time
-from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD
+from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD, RAPIDFIRE_SLEEP_SECS
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi
 
@@ -32,21 +32,24 @@ def ping_multilaunch(port, stop_event):
 
     ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
     ds.connect()
+    fd = FWData()
 
     lp = ds.LaunchPad()
     while not stop_event.is_set():
-        for pid, lid in ds.Running_IDs().items():
+        for pid, lid in fd.Running_IDs.items():
             if lid:
                 try:
                     os.kill(pid, 0)  # throws OSError if the process is dead
                     lp.ping_launch(lid)
                 except OSError:
+                    fd.Running_IDs[pid] = None
                     pass  # means this process is dead!
 
         stop_event.wait(PING_TIME_SECS)
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout):
+def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout,
+                      running_ids_dict):
     """
     Initializes shared data with multiprocessing parameters and starts a rapidfire
 
@@ -67,14 +70,30 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     FWData().MULTIPROCESSING = True
     FWData().NODE_LIST = node_list
     FWData().SUB_NPROCS = sub_nproc
-    rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
-              max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
+    FWData().Running_IDs = running_ids_dict
+    sleep_time = sleep if sleep else RAPIDFIRE_SLEEP_SECS
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
+    while nlaunches == 0:
+        rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
+                  max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
+        time.sleep(1.5) # wait for LaunchPad to be initialized
+        launch_ids = FWData().Running_IDs.values()
+        live_ids = list(set(launch_ids) - {None})
+        if len(live_ids) > 0:
+            # Some other sub jobs are still running
+            log_multi(l_logger, 'Sleeping for {} secs before resubmit sub job'.format(sleep_time))
+            time.sleep(sleep_time)
+            log_multi(l_logger, 'Resubmit sub job'.format(sleep_time))
+            rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
+                      max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
+        else:
+            break
     log_multi(l_logger, 'Sub job finished')
 
 
-def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, timeout=None):
+def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, timeout=None,
+                  running_ids_dict=None):
     """
     Create each sub job and start a rocket launch in each one
 
@@ -86,10 +105,12 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
     :param node_lists: ([str]) computer node list
     :param sub_nproc_list: ([int]) list of the number of the process of sub jobs
     :param timeout: (int) # of seconds after which to stop the rapidfire process
+    :param running_ids_dict: Shared dict between process to record IDs
     :return: ([multiprocessing.Process]) all the created processes
     """
 
-    processes = [Process(target=rapidfire_process, args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout))
+    processes = [Process(target=rapidfire_process,
+                         args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
@@ -141,9 +162,13 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
     ds = DataServer.setup(launchpad)
     port = ds.address[1]
 
+    manager = Manager()
+    running_ids_dict = manager.dict()
+
     # launch rapidfire processes
     processes = start_rockets(fworker, nlaunches, sleep_time, loglvl, port, node_lists,
-                              sub_nproc_list, timeout=timeout)
+                              sub_nproc_list, timeout=timeout, running_ids_dict=running_ids_dict)
+    FWData().Running_IDs = running_ids_dict
 
     # start pinging service
     ping_stop = threading.Event()
