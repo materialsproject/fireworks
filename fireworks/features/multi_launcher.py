@@ -12,8 +12,7 @@ import threading
 import time
 from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD
 from fireworks.core.rocket_launcher import rapidfire
-from fireworks.utilities.fw_utilities import DataServer
-
+from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi
 
 __author__ = 'Xiaohui Qu, Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Material Project & The Electrolyte Genome Project'
@@ -70,6 +69,9 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     FWData().SUB_NPROCS = sub_nproc
     rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
               max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
+    l_dir = launchpad.get_logdir() if launchpad else None
+    l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
+    log_multi(l_logger, 'Sub job finished')
 
 
 def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, timeout=None):
