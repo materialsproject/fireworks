@@ -229,7 +229,7 @@ Change the MongoDB configuration::
 
 Run in rapid-fire mode::
 
-    from fireworks import Firework, LaunchPad, ScriptTask, FWorker #use this line instead of the first line
+    from fireworks import Firework, LaunchPad, ScriptTask, FWorker # use this line instead of the first line
     from fireworks.core.rocket_launcher import rapidfire
     rapidfire(launchpad, FWorker())  # use this line instead of launch_rocket()
 
