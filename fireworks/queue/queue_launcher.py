@@ -144,7 +144,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         return False
 
 
-def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=10, njobs_block=500,
+def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0, njobs_block=500,
               sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None):
     """
     Submit many jobs to the queue.
