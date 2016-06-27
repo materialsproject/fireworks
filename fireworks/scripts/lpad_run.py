@@ -432,6 +432,13 @@ def set_priority(args):
 def webgui(args):
     os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
     from fireworks.flask_site.app import app
+    if args.wflowquery:
+        app.BASE_Q_WF = json.loads(args.wflowquery)
+    if args.fwquery:
+        app.BASE_Q = json.loads(args.fwquery)
+        if "state" in app.BASE_Q:
+            app.BASE_Q_WF["state"] = app.BASE_Q["state"]
+
     from multiprocessing import Process
     p1 = Process(target=app.run, kwargs={"host": args.host, "port": args.port, "debug": args.debug})
     p1.start()
@@ -799,6 +806,8 @@ def lpad():
                         help="Host to run the web server on (default: 127.0.0.1 or WEBSERVER_HOST arg in FW_config.yaml)")
     webgui_parser.add_argument('--debug', help='print debug messages', action='store_true')
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')
+    webgui_parser.add_argument('--fwquery', help='additional query filter for FireWorks as JSON string')
+    webgui_parser.add_argument('--wflowquery', help='additional query filter for Workflows as JSON string')
     webgui_parser.set_defaults(func=webgui)
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
