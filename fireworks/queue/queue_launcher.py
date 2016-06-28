@@ -65,6 +65,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     if reserve and 'singleshot' not in qadapter.get('rocket_launch', ''):
         raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
 
+    if fill_mode and reserve:
+        raise ValueError("Fill_mode cannot be used in conjunction with reserve mode!")
+
     if fill_mode or launchpad.run_exists(fworker):
         launch_id = None
         try:
@@ -201,7 +204,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     block_dir = create_datestamp_dir(launch_dir, l_logger)
 
                 # launch a single job
-                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True):
+                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True, fill_mode):
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if num_launched == nlaunches:
