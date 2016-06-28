@@ -358,7 +358,7 @@ class Tracker(FWSerializable, object):
             m_file = zpath(m_file)
 
         if os.path.exists(m_file):
-            with zopen(m_file) as f:
+            with zopen(m_file, "rt") as f:
                 for l in reverse_readline(f):
                     lines.append(l)
                     if len(lines) == self.nlines:
