@@ -111,7 +111,7 @@ def qlaunch():
                         default=CONFIG_FILE_DIR)
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
-                              help='maximum jobs to keep in queue for this user', default=10,
+                              help='maximum jobs to keep in queue for this user', default=0,
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
                               help='maximum jobs to put in a block',

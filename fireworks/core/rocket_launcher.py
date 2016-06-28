@@ -9,7 +9,7 @@ This module contains methods for launching Rockets, both singly and in rapid-fir
 
 import os
 import time
-from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS
+from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS, FWORKER_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi
@@ -22,6 +22,17 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
+def get_fworker(fworker):
+    if fworker:
+        my_fwkr = fworker
+    elif FWORKER_LOC:
+        my_fwkr = FWorker.from_file(FWORKER_LOC)
+    else:
+        my_fwkr = FWorker()
+
+    return my_fwkr
+
+
 def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     """
     Run a single rocket in the current directory
@@ -30,7 +41,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     :param fw_id: (int) if set, a particular Firework to run
     :param strm_lvl: (str) level at which to output logs to stdout
     """
-    fworker = fworker if fworker else FWorker()
+    fworker = get_fworker(fworker)
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=strm_lvl)
 
@@ -61,7 +72,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1,
     curdir = m_dir if m_dir else os.getcwd()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
-    fworker = fworker if fworker else FWorker()
+    fworker = get_fworker(fworker)
 
     num_launched = 0
     start_time = datetime.now()

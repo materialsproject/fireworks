@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.3.3**
+
+* Load default FWorker location when running launch commands from Python
+* qlaunch: default maxjobs_queue is zero, meaning don't automatically restrict to 10 jobs in queue
+* Add --wfquery and --fwquery options to ``lpad_webgui`` for advanced users (alpha version)
+
 **v1.3.2**
 
 * update pymongo commands (X. Qu & A. Jain)
