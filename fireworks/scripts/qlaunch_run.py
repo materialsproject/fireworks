@@ -109,6 +109,7 @@ def qlaunch():
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=CONFIG_FILE_DIR)
+    parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run', action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
                               help='maximum jobs to keep in queue for this user', default=0,
@@ -117,7 +118,6 @@ def qlaunch():
                               help='maximum jobs to put in a block',
                               default=500, type=int)
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
-    rapid_parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run', action='store_true')
     rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)', default=None, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 

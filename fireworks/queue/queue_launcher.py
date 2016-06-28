@@ -33,7 +33,7 @@ __date__ = 'Dec 12, 2012'
 
 
 def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO',
-                           create_launcher_dir=False):
+                           create_launcher_dir=False, fill_mode=False):
     """
     Submit a single job to the queue.
     
@@ -44,6 +44,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     :param reserve: (bool) Whether to queue in reservation mode
     :param strm_lvl: (str) level at which to stream log messages
     :param create_launcher_dir: (bool) Whether to create a subfolder launcher+timestamp, if needed
+    :param fill_mode: (bool) whether to submit jobs even when there is nothing to run (only in non-reservation mode)
     """
 
     fworker = fworker if fworker else FWorker()
@@ -64,7 +65,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     if reserve and 'singleshot' not in qadapter.get('rocket_launch', ''):
         raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
 
-    if launchpad.run_exists(fworker):
+    if fill_mode or launchpad.run_exists(fworker):
         launch_id = None
         try:
             if reserve:
