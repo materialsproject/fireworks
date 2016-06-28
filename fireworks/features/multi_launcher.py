@@ -12,7 +12,7 @@ import threading
 import time
 from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD, RAPIDFIRE_SLEEP_SECS
 from fireworks.core.rocket_launcher import rapidfire
-from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi
+from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi, get_my_host
 
 __author__ = 'Xiaohui Qu, Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Material Project & The Electrolyte Genome Project'
@@ -142,7 +142,8 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
 
 
 def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_time,
-                        total_node_list=None, ppn=1, timeout=None):
+                        total_node_list=None, ppn=1, timeout=None,
+                        exclude_current_node=False):
     """
     Launch the jobs in the job packing mode.
     :param launchpad: (LaunchPad) object
@@ -154,8 +155,19 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
     :param total_node_list: ([str]) contents of NODEFILE (doesn't affect execution)
     :param ppn: (int) processors per node (doesn't affect execution)
     :param timeout: (int) # of seconds after which to stop the rapidfire process
+    :param exclude_current_node: Don't use the script launching node as a compute node
     """
     # parse node file contents
+    if exclude_current_node:
+        host = get_my_host()
+        l_dir = launchpad.get_logdir() if launchpad else None
+        l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
+        if host in total_node_list:
+            log_multi(l_logger, "Remove the current node \"{}\" from compute node".format(host))
+            total_node_list.remove(host)
+        else:
+            log_multi(l_logger, "The current node is not in the node list, "
+                                "keep the node list as is")
     node_lists, sub_nproc_list = split_node_lists(num_jobs, total_node_list, ppn)
 
     # create shared dataserver
