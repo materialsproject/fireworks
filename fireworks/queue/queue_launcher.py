@@ -145,7 +145,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
 
 def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0, njobs_block=500,
-              sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None):
+              sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None, fill_mode=False):
     """
     Submit many jobs to the queue.
     
@@ -160,6 +160,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     :param reserve: (bool) Whether to queue in reservation mode
     :param strm_lvl: (str) level at which to stream log messages
     :param timeout: (int) # of seconds after which to stop the rapidfire process
+    :param fill_mode: (bool) whether to submit jobs even when there is nothing to run (only in non-reservation mode)
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
@@ -189,7 +190,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while jobs_in_queue < njobs_queue and launchpad.run_exists(fworker) \
+            while jobs_in_queue < njobs_queue and (launchpad.run_exists(fworker) or (fill_mode and not reserve)) \
                     and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
                 l_logger.info('Launching a rocket!')
 
