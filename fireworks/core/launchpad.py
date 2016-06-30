@@ -471,23 +471,26 @@ class LaunchPad(FWSerializable):
 
         return wf
 
-    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
+    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False,
+                   launches_mode=False):
         """
         Return all the fw ids that match a query,
         :param query: (dict) representing a Mongo query
         :param sort: [(str,str)] sort argument in Pymongo format
         :param limit: (int) limit the results
         :param count_only: (bool) only return the count rather than explicit ids
+        :param launches_mode: (bool) query the launches collection instead of fireworks
         """
         fw_ids = []
         criteria = query if query else {}
+        coll = "launches" if launches_mode else "fireworks"
 
         if count_only:
             if limit:
                 return ValueError("Cannot count_only and limit at the same time!")
-            return self.fireworks.find(criteria, {}, sort=sort).count()
+            return getattr(self, coll).find(criteria, {}, sort=sort).count()
 
-        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit):
+        for fw in getattr(self, coll).find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
         return fw_ids
 
