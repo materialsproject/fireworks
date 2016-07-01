@@ -148,7 +148,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         return False
 
 
-def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue="infinite", njobs_block=500,
+def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0, njobs_block=500,
               sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None, fill_mode=False):
     """
     Submit many jobs to the queue.
@@ -158,7 +158,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     :param qadapter: (QueueAdapterBase)
     :param launch_dir: directory where we want to write the blocks
     :param nlaunches: total number of launches desired; "infinite" for loop, 0 for one round
-    :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue, "infinite" for no limit
+    :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :param reserve: (bool) Whether to queue in reservation mode
@@ -194,7 +194,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while (njobs_queue == "infinite" or jobs_in_queue < njobs_queue) and (launchpad.run_exists(fworker) or (fill_mode and not reserve)) \
+            while (not njobs_queue or jobs_in_queue < njobs_queue) and (launchpad.run_exists(fworker) or (fill_mode and not reserve)) \
                     and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
                 l_logger.info('Launching a rocket!')
 

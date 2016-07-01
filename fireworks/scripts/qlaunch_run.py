@@ -112,7 +112,7 @@ def qlaunch():
     parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run', action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
-                              help='maximum jobs to keep in queue for this user (default "infinite")', default="infinite",
+                              help='maximum jobs to keep in queue for this user', default=0,
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
                               help='maximum jobs to put in a block',
