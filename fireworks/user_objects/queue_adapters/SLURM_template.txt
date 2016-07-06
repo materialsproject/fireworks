@@ -9,6 +9,7 @@
 #SBATCH --partition=$${queue}
 #SBATCH --account=$${account}
 #SBATCH --job-name=$${job_name}
+#SBATCH --license=$${license}
 #SBATCH --output=$${job_name}-%j.out
 #SBATCH --error=$${job_name}-%j.error
 
