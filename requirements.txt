@@ -7,3 +7,4 @@ python-dateutil==2.2
 tabulate>=0.7.5
 flask>=0.10.1
 Flask-paginate>=0.2.8
+gunicorn>=19.6.0

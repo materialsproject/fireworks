@@ -439,14 +439,30 @@ def webgui(args):
         if "state" in app.BASE_Q:
             app.BASE_Q_WF["state"] = app.BASE_Q["state"]
 
-    from multiprocessing import Process
-    p1 = Process(target=app.run, kwargs={"host": args.host, "port": args.port, "debug": args.debug})
-    p1.start()
     if not args.server_mode:
+        from multiprocessing import Process
+        p1 = Process(
+            target=app.run,
+            kwargs={"host": args.host, "port": args.port, "debug": args.debug})
+        p1.start()
         import webbrowser
         time.sleep(2)
         webbrowser.open("http://{}:{}".format(args.host, args.port))
-    p1.join()
+        p1.join()
+    else:
+        from fireworks.flask_site.app import bootstrap_app
+        try:
+            from fireworks.flask_site.gunicorn import (
+                StandaloneApplication, number_of_workers)
+        except ImportError:
+            import sys
+            sys.exit("Gunicorn is required for server mode. "
+                     "Install using `pip install guncorn`.")
+        options = {
+            'bind': '%s:%s' % (args.host, args.port),
+            'workers': number_of_workers(),
+        }
+        StandaloneApplication(bootstrap_app, options).run()
 
 def add_scripts(args):
     lp = get_lp(args)
