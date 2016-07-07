@@ -220,6 +220,17 @@ def report(interval, num_intervals):
 
     return render_template('report.html', **locals())
 
+def bootstrap_app(*args, **kwargs):
+    """Pass instead of `app` to a forking process.
+
+    This is so a server process will re-initialize a MongoDB client
+    connection after forking. This is useful to avoid deadlock when
+    using pymongo with multiprocessing.
+    """
+    import fireworks.flask_site.app
+    fireworks.flask_site.app.lp = LaunchPad.from_dict(
+        json.loads(os.environ["FWDB_CONFIG"]))
+    return app(*args, **kwargs)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
