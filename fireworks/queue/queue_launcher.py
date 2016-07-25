@@ -33,7 +33,7 @@ __date__ = 'Dec 12, 2012'
 
 
 def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False, strm_lvl='INFO',
-                           create_launcher_dir=False):
+                           create_launcher_dir=False, fill_mode=False):
     """
     Submit a single job to the queue.
     
@@ -44,6 +44,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     :param reserve: (bool) Whether to queue in reservation mode
     :param strm_lvl: (str) level at which to stream log messages
     :param create_launcher_dir: (bool) Whether to create a subfolder launcher+timestamp, if needed
+    :param fill_mode: (bool) whether to submit jobs even when there is nothing to run (only in non-reservation mode)
     """
 
     fworker = fworker if fworker else FWorker()
@@ -64,7 +65,10 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     if reserve and 'singleshot' not in qadapter.get('rocket_launch', ''):
         raise ValueError('Reservation mode of queue launcher only works for singleshot Rocket Launcher!')
 
-    if launchpad.run_exists(fworker):
+    if fill_mode and reserve:
+        raise ValueError("Fill_mode cannot be used in conjunction with reserve mode!")
+
+    if fill_mode or launchpad.run_exists(fworker):
         launch_id = None
         try:
             if reserve:
@@ -144,8 +148,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         return False
 
 
-def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=10, njobs_block=500,
-              njobs_waiting=-1, sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None):
+def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0, njobs_block=500,
+              njobs_waiting=-1, sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None,
+              fill_mode=False):
     """
     Submit many jobs to the queue.
     
@@ -154,15 +159,16 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
     :param qadapter: (QueueAdapterBase)
     :param launch_dir: directory where we want to write the blocks
     :param nlaunches: total number of launches desired; "infinite" for loop, 0 for one round
-    :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue
+    :param njobs_queue: stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit
     :param njobs_waiting: stops submitting jobs when njobs_waiting are waiting
-                          in the queue; only works with reservation mode;
-                          can be combined with njobs_queue; -1 disables this behavior
+                          in the queue; can be combined with njobs_queue;
+                          -1 disables this behavior
     :param njobs_block: automatically write a new block when njobs_block jobs are in a single block
     :param sleep_time: (int) secs to sleep between rapidfire loop iterations
     :param reserve: (bool) Whether to queue in reservation mode
     :param strm_lvl: (str) level at which to stream log messages
     :param timeout: (int) # of seconds after which to stop the rapidfire process
+    :param fill_mode: (bool) whether to submit jobs even when there is nothing to run (only in non-reservation mode)
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
@@ -195,9 +201,9 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             # get number of jobs waiting
             jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
 
-            while (jobs_in_queue < njobs_queue) \
+            while (not njobs_queue or jobs_in_queue < njobs_queue) \
                     and ((njobs_waiting == -1) or (jobs_waiting < njobs_waiting)) \
-                    and launchpad.run_exists(fworker) \
+                    and (launchpad.run_exists(fworker)  or (fill_mode and not reserve)) \
                     and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
 
                 l_logger.info('Launching a rocket!')
@@ -208,7 +214,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     block_dir = create_datestamp_dir(launch_dir, l_logger)
 
                 # launch a single job
-                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True):
+                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve, strm_lvl, True, fill_mode):
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if num_launched == nlaunches:

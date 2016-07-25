@@ -46,6 +46,8 @@ def mlaunch():
 
     parser.add_argument('--nodefile', help='nodefile name or environment variable name containing the node file name (for populating FWData only)', default=None, type=str)
     parser.add_argument('--ppn', help='processors per node (for populating FWData only)', default=1, type=int)
+    parser.add_argument('--exclude_current_node', help="Don't use the script launching node as compute node",
+                        action="store_true")
 
     args = parser.parse_args()
 
@@ -72,7 +74,8 @@ def mlaunch():
             total_node_list = [line.strip() for line in f.readlines()]
 
     launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,
-                        args.sleep, total_node_list, args.ppn, timeout=args.timeout)
+                        args.sleep, total_node_list, args.ppn, timeout=args.timeout,
+                        exclude_current_node=args.exclude_current_node)
 
 
 if __name__ == "__main__":

@@ -73,7 +73,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
         return pw_check(args.fw_id, args, skip_pw)
     if args.query:
         query = ast.literal_eval(args.query)
-    if args.name:
+    if args.name and not args.launches_mode:
         query['name'] = args.name
     if args.state:
         query['state'] = args.state
@@ -90,7 +90,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     if wf_mode:
         return pw_check(lp.get_wf_ids(query, sort=sort, limit=max), args, skip_pw)
 
-    return pw_check(lp.get_fw_ids(query, sort=sort, limit=max), args, skip_pw)
+    return pw_check(lp.get_fw_ids(query, sort=sort, limit=max, launches_mode=args.launches_mode), args, skip_pw)
 
 
 def get_lp(args):
@@ -174,7 +174,7 @@ def get_fws(args):
 
     if args.fw_id:
         query = {'fw_id': {"$in": args.fw_id}}
-    elif args.name:
+    elif args.name and not args.launches_mode:
         query = {'name': args.name}
     elif args.state:
         query = {'state': args.state}
@@ -194,10 +194,10 @@ def get_fws(args):
         ids = lp.get_fw_ids_from_reservation_id(args.qid)
         if query:
             query['fw_id'] = {"$in": ids}
-            ids = lp.get_fw_ids(query, sort, args.max)
+            ids = lp.get_fw_ids(query, sort, args.max, launches_mode=args.launches_mode)
 
     else:
-        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count')
+        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count', launches_mode=args.launches_mode)
     fws = []
     if args.display_format == 'ids':
         fws = ids
@@ -432,14 +432,37 @@ def set_priority(args):
 def webgui(args):
     os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
     from fireworks.flask_site.app import app
-    from multiprocessing import Process
-    p1 = Process(target=app.run, kwargs={"host": args.host, "port": args.port, "debug": args.debug})
-    p1.start()
+    if args.wflowquery:
+        app.BASE_Q_WF = json.loads(args.wflowquery)
+    if args.fwquery:
+        app.BASE_Q = json.loads(args.fwquery)
+        if "state" in app.BASE_Q:
+            app.BASE_Q_WF["state"] = app.BASE_Q["state"]
+
     if not args.server_mode:
+        from multiprocessing import Process
+        p1 = Process(
+            target=app.run,
+            kwargs={"host": args.host, "port": args.port, "debug": args.debug})
+        p1.start()
         import webbrowser
         time.sleep(2)
         webbrowser.open("http://{}:{}".format(args.host, args.port))
-    p1.join()
+        p1.join()
+    else:
+        from fireworks.flask_site.app import bootstrap_app
+        try:
+            from fireworks.flask_site.gunicorn import (
+                StandaloneApplication, number_of_workers)
+        except ImportError:
+            import sys
+            sys.exit("Gunicorn is required for server mode. "
+                     "Install using `pip install guncorn`.")
+        options = {
+            'bind': '%s:%s' % (args.host, args.port),
+            'workers': number_of_workers(),
+        }
+        StandaloneApplication(bootstrap_app, options).run()
 
 def add_scripts(args):
     lp = get_lp(args)
@@ -586,6 +609,11 @@ def lpad():
     query_kwargs = {"help": 'Query (enclose pymongo-style dict in '
                             'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
+    launches_mode_args = ["-lm", "--launches_mode"]
+    launches_mode_kwargs = {"action": "store_true",
+                            "help": 'Query the launches collection (enclose pymongo-style '
+                                    'dict in single-quotes, e.g. \'{"launch_id": 1}\')'}
+
     qid_args = ["--qid"]
     qid_kwargs = {"help": "Query by reservation id of job in queue"}
 
@@ -627,6 +655,7 @@ def lpad():
     get_fw_parser.add_argument('-n', '--name', help='get FWs with this name')
     get_fw_parser.add_argument(*state_args, **state_kwargs)
     get_fw_parser.add_argument(*query_args, **query_kwargs)
+    get_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     get_fw_parser.add_argument(*qid_args, **qid_kwargs)
     get_fw_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_parser.add_argument('-m', '--max', help='limit results', default=0,
@@ -643,6 +672,7 @@ def lpad():
     trackfw_parser.add_argument('-n', '--name', help='name')
     trackfw_parser.add_argument(*state_args, **state_kwargs)
     trackfw_parser.add_argument(*query_args, **query_kwargs)
+    trackfw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     trackfw_parser.add_argument('-c', '--include', nargs="+",
                                 help='only include these files in the report')
     trackfw_parser.add_argument('-x', '--exclude', nargs="+",
@@ -655,6 +685,7 @@ def lpad():
     rerun_fws_parser.add_argument('-n', '--name', help='name')
     rerun_fws_parser.add_argument(*state_args, **state_kwargs)
     rerun_fws_parser.add_argument(*query_args, **query_kwargs)
+    rerun_fws_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     rerun_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     rerun_fws_parser.add_argument('--task-level', action='store_true', help='Enable task level recovery')
     rerun_fws_parser.add_argument('-lid', '--launch_id', nargs='+',
@@ -671,6 +702,7 @@ def lpad():
     defuse_fw_parser.add_argument('-n', '--name', help='name')
     defuse_fw_parser.add_argument(*state_args, **state_kwargs)
     defuse_fw_parser.add_argument(*query_args, **query_kwargs)
+    defuse_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     defuse_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     defuse_fw_parser.set_defaults(func=defuse_fws)
 
@@ -679,6 +711,7 @@ def lpad():
     reignite_fw_parser.add_argument('-n', '--name', help='name')
     reignite_fw_parser.add_argument(*state_args, **state_kwargs)
     reignite_fw_parser.add_argument(*query_args, **query_kwargs)
+    reignite_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     reignite_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     reignite_fw_parser.set_defaults(func=reignite_fws)
 
@@ -688,6 +721,7 @@ def lpad():
     update_fws_parser.add_argument('-n', '--name', help='get FWs with this name')
     update_fws_parser.add_argument(*state_args, **state_kwargs)
     update_fws_parser.add_argument(*query_args, **query_kwargs)
+    update_fws_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     update_fws_parser.add_argument("-u", "--update", type=str,
                                    help='Doc update (enclose pymongo-style dict '
                                         'in single-quotes, e.g. \'{'
@@ -780,6 +814,7 @@ def lpad():
     priority_parser.add_argument('-n', '--name', help='name')
     priority_parser.add_argument(*state_args, **state_kwargs)
     priority_parser.add_argument(*query_args, **query_kwargs)
+    priority_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     priority_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. Password or positive response to input prompt required when modifying more than {} entries.".format(PW_CHECK_NUM))
     priority_parser.set_defaults(func=set_priority)
 
@@ -799,6 +834,8 @@ def lpad():
                         help="Host to run the web server on (default: 127.0.0.1 or WEBSERVER_HOST arg in FW_config.yaml)")
     webgui_parser.add_argument('--debug', help='print debug messages', action='store_true')
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)', action='store_true')
+    webgui_parser.add_argument('--fwquery', help='additional query filter for FireWorks as JSON string')
+    webgui_parser.add_argument('--wflowquery', help='additional query filter for Workflows as JSON string')
     webgui_parser.set_defaults(func=webgui)
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')

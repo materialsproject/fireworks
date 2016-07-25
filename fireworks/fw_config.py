@@ -188,3 +188,4 @@ class FWData(object):
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job
         self.DATASERVER = None  # the shared object manager
+        self.Running_IDs = None

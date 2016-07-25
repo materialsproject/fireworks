@@ -41,3 +41,12 @@ A Firework might fail while running one of its intermediate or final FireTasks. 
     lpad rerun_fws -s FIZZLED  --task-level
 
 Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via ``--copy-data`` or attempt to rerun in the same directory (``--previous-dir``). Refer to the documentation (``lpad rerun_fws -h``) for more information.
+
+Rerunning based on error message
+================================
+
+The ``launches`` collection in the LaunchPad contains data on the stack trace of the error, which is located in the ``action.stored_data._exception._stacktrace`` key. You can rerun jobs that have a certain text in the error stack trace using something like the following::
+
+    lpad rerun_fws -q '{"action.stored_data._exception._stacktrace": {"$regex": "My custom error message"}}' -lm
+
+Here, the ``My custom error message`` will be searched as a regular expression inside the stack trace. Note the use of the ``lm`` argument - this stands for ``launch_mode`` and indicates that you want to query the ``launches`` collection data. Note the same arguments will work for other commands, e.g. the ``lpad get_fws`` command, in case you want to preview your results before rerunning.

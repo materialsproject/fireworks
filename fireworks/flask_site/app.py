@@ -12,9 +12,15 @@ app = Flask(__name__)
 app.use_reloader=True
 hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
+app.BASE_Q = {}
+app.BASE_Q_WF = {}
 
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
+
+
+def _addq(base, q):
+    return {"$and": [q, base]} if base else q
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -37,15 +43,15 @@ def home():
     fw_nums = []
     wf_nums = []
     for state in STATES:
-        fw_nums.append(lp.get_fw_ids(query={'state': state}, count_only=True))
-        wf_nums.append(lp.get_wf_ids(query={'state': state}, count_only=True))
+        fw_nums.append(lp.get_fw_ids(query=_addq(app.BASE_Q, {'state': state}), count_only=True))
+        wf_nums.append(lp.get_wf_ids(query=_addq(app.BASE_Q_WF, {'state': state}), count_only=True))
     state_nums = zip(STATES, fw_nums, wf_nums)
 
     tot_fws = sum(fw_nums)
     tot_wfs = sum(wf_nums)
 
     # Newest Workflows table data
-    wfs_shown = lp.workflows.find({}, limit=PER_PAGE, sort=[('_id', DESCENDING)])
+    wfs_shown = lp.workflows.find(app.BASE_Q_WF, limit=PER_PAGE, sort=[('_id', DESCENDING)])
     wf_info = []
     for item in wfs_shown:
         wf_info.append({
@@ -134,6 +140,7 @@ def wf_details(wf_id):
 def fw_state(state):
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
+    q = _addq(app.BASE_Q, q)
     fw_count = lp.get_fw_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
@@ -151,6 +158,7 @@ def fw_state(state):
 def wf_state(state):
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
+    q= _addq(app.BASE_Q_WF, q)
     wf_count = lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
@@ -174,6 +182,7 @@ def wf_metadata_find(key, value, state):
     q = {'metadata.{}'.format(key): value}
     state_mixin = {} if state == "total" else {"state": state}
     q.update(state_mixin)
+    q = _addq(app.BASE_Q_WF, q)
     wf_count = lp.get_wf_ids(query=q, count_only=True)
     if wf_count == 0:
         abort(404)
@@ -203,14 +212,25 @@ def report(interval, num_intervals):
     num_intervals = int(num_intervals)
     fwr = FWReport(lp)
 
-    fw_report_data = fwr.get_stats(coll="fireworks", interval=interval, num_intervals=num_intervals)
+    fw_report_data = fwr.get_stats(coll="fireworks", interval=interval, num_intervals=num_intervals, additional_query=app.BASE_Q)
     fw_report_text = fwr.get_stats_str(fw_report_data)
 
-    wf_report_data = fwr.get_stats(coll="workflows", interval=interval, num_intervals=num_intervals)
+    wf_report_data = fwr.get_stats(coll="workflows", interval=interval, num_intervals=num_intervals, additional_query=app.BASE_Q_WF)
     wf_report_text = fwr.get_stats_str(wf_report_data)
 
     return render_template('report.html', **locals())
 
+def bootstrap_app(*args, **kwargs):
+    """Pass instead of `app` to a forking process.
+
+    This is so a server process will re-initialize a MongoDB client
+    connection after forking. This is useful to avoid deadlock when
+    using pymongo with multiprocessing.
+    """
+    import fireworks.flask_site.app
+    fireworks.flask_site.app.lp = LaunchPad.from_dict(
+        json.loads(os.environ["FWDB_CONFIG"]))
+    return app(*args, **kwargs)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

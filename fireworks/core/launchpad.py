@@ -122,8 +122,15 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        self.connection = MongoClient(host, port, j=True, ssl_ca_certs=self.ssl_ca_file,
-                                        socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
+        # WARNING: Note that there might be some problem with the ssl feature for some combination versions of MongoDB
+        # and pymongo such that if you do not use ssl (using ssl_ca_file = None), fireworks can't connect to the
+        # Mongo database. This is why there is the following if condition. DO NOT REMOVE THIS IF CONDITION!
+        if self.ssl_ca_file is not None:
+            self.connection = MongoClient(host, port, j=True, ssl_ca_certs=self.ssl_ca_file,
+                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
+        else:
+            self.connection = MongoClient(host, port, j=True,
+                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
         self.db = self.connection[name]
         if username:
             self.db.authenticate(username, password)
@@ -163,8 +170,8 @@ class LaunchPad(FWSerializable):
         """
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
         allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
-        self.fireworks.update({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
-                              {"$set": mod_spec}, multi=True)
+        self.fireworks.update_many({'fw_id': {"$in": fw_ids}, 'state': {"$in": allowed_states}},
+                              {"$set": mod_spec})
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
             self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "
@@ -200,10 +207,10 @@ class LaunchPad(FWSerializable):
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
         if password == m_password or (not require_password and self.workflows.count() <= max_reset_wo_password):
-            self.fireworks.remove()
-            self.launches.remove()
-            self.workflows.remove()
-            self.offline_runs.remove()
+            self.fireworks.delete_many({})
+            self.launches.delete_many({})
+            self.workflows.delete_many({})
+            self.offline_runs.delete_many({})
             self._restart_ids(1, 1)
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
@@ -368,10 +375,10 @@ class LaunchPad(FWSerializable):
         print("Remove fws %s" % fw_ids)
         print("Remove launches %s" % launch_ids)
         print("Removing workflow.")
-        self.launches.remove({'launch_id': {"$in": launch_ids}})
-        self.offline_runs.remove({'launch_id': {"$in": launch_ids}})
-        self.fireworks.remove({"fw_id": {"$in": fw_ids}})
-        self.workflows.remove({'nodes': fw_id})
+        self.launches.delete_many({'launch_id': {"$in": launch_ids}})
+        self.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
+        self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
+        self.workflows.delete_one({'nodes': fw_id})
 
     def get_wf_summary_dict(self, fw_id, mode="more"):
         """
@@ -464,23 +471,26 @@ class LaunchPad(FWSerializable):
 
         return wf
 
-    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
+    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False,
+                   launches_mode=False):
         """
         Return all the fw ids that match a query,
         :param query: (dict) representing a Mongo query
         :param sort: [(str,str)] sort argument in Pymongo format
         :param limit: (int) limit the results
         :param count_only: (bool) only return the count rather than explicit ids
+        :param launches_mode: (bool) query the launches collection instead of fireworks
         """
         fw_ids = []
         criteria = query if query else {}
+        coll = "launches" if launches_mode else "fireworks"
 
         if count_only:
             if limit:
                 return ValueError("Cannot count_only and limit at the same time!")
-            return self.fireworks.find(criteria, {}, sort=sort).count()
+            return getattr(self, coll).find(criteria, {}, sort=sort).count()
 
-        for fw in self.fireworks.find(criteria, {"fw_id": True}, sort=sort).limit(limit):
+        for fw in getattr(self, coll).find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
         return fw_ids
 
@@ -514,32 +524,32 @@ class LaunchPad(FWSerializable):
         self.m_logger.info('Performing db tune-up')
 
         self.m_logger.debug('Updating indices...')
-        self.fireworks.ensure_index('fw_id', unique=True, background=bkground)
+        self.fireworks.create_index('fw_id', unique=True, background=bkground)
         for f in ("state", 'spec._category', 'created_on', 'updated_on' 'name', 'launches'):
-            self.fireworks.ensure_index(f, background=bkground)
+            self.fireworks.create_index(f, background=bkground)
 
-        self.launches.ensure_index('launch_id', unique=True, background=bkground)
-        self.launches.ensure_index('fw_id', background=bkground)
-        self.launches.ensure_index('state_history.reservation_id', background=bkground)
+        self.launches.create_index('launch_id', unique=True, background=bkground)
+        self.launches.create_index('fw_id', background=bkground)
+        self.launches.create_index('state_history.reservation_id', background=bkground)
 
         for f in ('state', 'time_start', 'time_end', 'host', 'ip',
                   'fworker.name'):
-            self.launches.ensure_index(f, background=bkground)
+            self.launches.create_index(f, background=bkground)
 
         for f in ('name', 'created_on', 'updated_on', 'nodes'):
-            self.workflows.ensure_index(f, background=bkground)
+            self.workflows.create_index(f, background=bkground)
 
         for idx in self.user_indices:
-            self.fireworks.ensure_index(idx, background=bkground)
+            self.fireworks.create_index(idx, background=bkground)
 
         for idx in self.wf_user_indices:
-            self.workflows.ensure_index(idx, background=bkground)
+            self.workflows.create_index(idx, background=bkground)
 
         # for frontend, which needs to sort on _id after querying on state
-        self.fireworks.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
-        self.fireworks.ensure_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", DESCENDING)], background=bkground)
-        self.fireworks.ensure_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", ASCENDING)], background=bkground)
-        self.workflows.ensure_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
+        self.fireworks.create_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
+        self.fireworks.create_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", DESCENDING)], background=bkground)
+        self.fireworks.create_index([("state", DESCENDING), ("spec._priority", DESCENDING), ("created_on", ASCENDING)], background=bkground)
+        self.workflows.create_index([("state", DESCENDING), ("_id", DESCENDING)], background=bkground)
 
         if not bkground:
             self.m_logger.debug('Compacting database...')
@@ -610,7 +620,7 @@ class LaunchPad(FWSerializable):
         :param next_fw_id: id to give next Firework (int)
         :param next_launch_id: id to give next Launch (int)
         """
-        self.fw_id_assigner.remove()
+        self.fw_id_assigner.delete_many({})
         self.fw_id_assigner.find_one_and_replace({'_id': -1}, {'next_fw_id': next_fw_id,
                                                           'next_launch_id': next_launch_id},
                                             upsert=True)
@@ -908,7 +918,7 @@ class LaunchPad(FWSerializable):
             tracker.track_file(m_launch.launch_dir)
 
         m_launch.touch_history(ptime)
-        self.launches.update({'launch_id': launch_id, 'state': 'RUNNING'},
+        self.launches.update_one({'launch_id': launch_id, 'state': 'RUNNING'},
             {'$set':{'state_history':m_launch.to_db_dict()['state_history'], 'trackers': [t.to_dict() for t in m_launch.trackers]}})
 
     def get_new_fw_id(self):
@@ -1139,10 +1149,10 @@ class LaunchPad(FWSerializable):
                         if s['state'] == offline_data['state']:
                             s['created_on'] = reconstitute_dates(offline_data['completed_on'])
                     self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
-                    self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
+                    self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed":True}})
 
             # update the updated_on
-            self.offline_runs.update({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
+            self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
             return None
         except:
             if print_errors:
@@ -1153,11 +1163,11 @@ class LaunchPad(FWSerializable):
                                                      '_exception': {'_stacktrace': traceback.format_exc(),
                                                      '_details': None}}, exit=True)
                 self.complete_launch(launch_id, m_action, 'FIZZLED')
-                self.offline_runs.update({"launch_id": launch_id}, {"$set": {"completed":True}})
+                self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed":True}})
             return m_launch.fw_id
 
     def forget_offline(self, fw_id):
-        self.offline_runs.update({"fw_id": fw_id}, {"$set": {"deprecated":True}})
+        self.offline_runs.update_one({"fw_id": fw_id}, {"$set": {"deprecated":True}})
 
     def get_tracker_data(self, fw_id):
         data = []

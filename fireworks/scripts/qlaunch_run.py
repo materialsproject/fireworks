@@ -50,10 +50,10 @@ def do_launch(args):
                   nlaunches=args.nlaunches, njobs_queue=args.maxjobs_queue,
                   njobs_waiting=args.maxjobs_waiting,
                   njobs_block=args.maxjobs_block, sleep_time=args.sleep,
-                  reserve=args.reserve, strm_lvl=args.loglvl, timeout=args.timeout)
+                  reserve=args.reserve, strm_lvl=args.loglvl, timeout=args.timeout, fill_mode=args.fill_mode)
     else:
         launch_rocket_to_queue(launchpad, fworker, queueadapter,
-                               args.launch_dir, args.reserve, args.loglvl, False)
+                               args.launch_dir, args.reserve, args.loglvl, False, args.fill_mode)
 
 def qlaunch():
     m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
@@ -110,9 +110,10 @@ def qlaunch():
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=CONFIG_FILE_DIR)
+    parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run', action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
-                              help='maximum jobs to keep in queue for this user', default=10,
+                              help='maximum jobs to keep in queue for this user', default=0,
                               type=int)
     rapid_parser.add_argument('-p', '--maxjobs_waiting',
                               help='maximum jobs to have waiting in queue for this user; -1 implies no limit', default=-1,

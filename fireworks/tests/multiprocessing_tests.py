@@ -6,9 +6,8 @@ import glob
 import os
 import pickle
 import shutil
-from unittest import TestCase
 import unittest
-import sys
+from unittest import TestCase
 
 from fireworks import LaunchPad, Firework, FWorker
 from fireworks.core.firework import Workflow
@@ -80,6 +79,62 @@ class TestCheckoutFW(TestCase):
         with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
             self.assertEqual(f.readlines(), ['hello 2\n'])
 
+
+class TestEarlyExit(TestCase):
+    lp = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:'
+                                    '27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None, require_password=False)
+        os.chdir(self.old_wd)
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        # noinspection PyUnresolvedReferences
+        for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
+            shutil.rmtree(i)
+
+    def test_early_exit(self):
+        os.chdir(MODULE_DIR)
+        script_text = "echo hello from process $PPID; sleep 2"
+        fw1 = Firework(ScriptTask.from_str(shell_cmd=script_text,
+                                           parameters={"stdout_file": "task.out"}),
+                       fw_id=1)
+        fw2 = Firework(ScriptTask.from_str(shell_cmd=script_text,
+                                           parameters={"stdout_file": "task.out"}),
+                       fw_id=2)
+        fw3 = Firework(ScriptTask.from_str(shell_cmd=script_text,
+                                           parameters={"stdout_file": "task.out"}),
+                       fw_id=3)
+        fw4 = Firework(ScriptTask.from_str(shell_cmd=script_text,
+                                           parameters={"stdout_file": "task.out"}),
+                       fw_id=4)
+        wf = Workflow([fw1, fw2, fw3, fw4], {1: [2, 3], 2: [4], 3: [4]})
+        self.lp.add_wf(wf)
+        launch_multiprocess(self.lp, FWorker(), 'DEBUG', 0, 2, sleep_time=0.5)
+        fw2 = self.lp.get_fw_by_id(2)
+        fw3 = self.lp.get_fw_by_id(3)
+        with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
+            fw2_text = f.read()
+        with open(os.path.join(fw3.launches[0].launch_dir, "task.out")) as f:
+            fw3_text = f.read()
+        self.assertNotEqual(fw2_text, fw3_text)
 
 if __name__ == '__main__':
     unittest.main()
