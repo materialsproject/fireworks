@@ -48,7 +48,7 @@ class Command(object):
             text_type = str
         else:
             text_type = basestring
-        if isinstance(command, basestring):
+        if isinstance(command, text_type):
             command = shlex.split(command)
         self.command = command
 
