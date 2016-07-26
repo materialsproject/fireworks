@@ -94,7 +94,11 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
     :param add_traceback: (bool) add traceback text, useful when logging exceptions (default False)
     """
 
-    if isinstance(msgs, basestring):
+    if sys.version_info[0] > 2:
+        text_type = str
+    else:
+        text_type = basestring
+    if isinstance(msgs, str):
         msgs = [msgs]
 
     _log_fnc = getattr(m_logger, log_lvl.lower())

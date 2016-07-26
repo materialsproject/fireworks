@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import sys
+
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """
@@ -42,6 +44,10 @@ class Command(object):
         initialize the object
         :param command: command to run
         """
+        if sys.version_info[0] > 2:
+            text_type = str
+        else:
+            text_type = basestring
         if isinstance(command, basestring):
             command = shlex.split(command)
         self.command = command
