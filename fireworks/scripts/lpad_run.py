@@ -523,13 +523,12 @@ def report(args):
 def introspect(args):
     print("NOTE: This feature is in beta mode...")
     lp=get_lp(args)
-    max = args.max if hasattr(args, "max") else 100
 
     isp = Introspector(lp)
     for coll in ['launches', 'tasks', 'fireworks', 'workflows']:
         print('generating report for {}...please wait...'.format(coll))
         print('')
-        table = isp.introspect_fizzled(coll=coll, limit=max)
+        table = isp.introspect_fizzled(coll=coll, threshold=args.threshold, limit=args.max)
         isp.print_report(table, coll)
         print('')
 
@@ -891,6 +890,9 @@ def lpad():
 
     introspect_parser = subparsers.add_parser('introspect', help='Introspect recent runs to pin down errors')
     introspect_parser.add_argument('-m', '--max', help='examine past <max> results', default=100, type=int)
+    introspect_parser.add_argument('-t', '--threshold',
+                                   help='controls signal to noise ratio, e.g., 10 means difference of at least 10 runs between fizzled/completed count',
+                                   default=10, type=int)
     introspect_parser.set_defaults(func=introspect)
 
     args = parser.parse_args()
