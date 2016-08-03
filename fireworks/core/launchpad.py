@@ -482,8 +482,11 @@ class LaunchPad(FWSerializable):
         :param launches_mode: (bool) query the launches collection instead of fireworks
         """
         fw_ids = []
-        criteria = query if query else {}
         coll = "launches" if launches_mode else "fireworks"
+        criteria = query if query else {}
+        if launches_mode:
+            lids = self._get_active_launch_ids()
+            criteria["launch_id"] = {"$in": lids}
 
         if count_only:
             if limit:
