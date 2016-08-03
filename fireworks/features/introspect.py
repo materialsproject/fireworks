@@ -116,7 +116,6 @@ class Introspector():
         q = {"state": "FIZZLED"}
         if coll == "launches":
             all_launch_ids = self.lpad._get_active_launch_ids()
-            print(all_launch_ids)
             q["launch_id"] = {"$in": all_launch_ids}
 
         for doc in self.db[coll].find(q, {state_key: 1}, sort=sort_key).limit(limit):
