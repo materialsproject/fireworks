@@ -78,6 +78,7 @@ class Introspector():
             """
             :param lpad: (LaunchPad)
             """
+            self.lpad = lpad
             self.db = lpad.db
 
     def introspect_fizzled(self, coll="fws", rsort=True, threshold=10, limit=100):
@@ -112,7 +113,13 @@ class Introspector():
         fizzled_keys = []
         nsamples_fizzled = 0
 
-        for doc in self.db[coll].find({"state": "FIZZLED"}, {state_key: 1}, sort=sort_key).limit(limit):
+        q = {"state": "FIZZLED"}
+        if coll == "launches":
+            all_launch_ids = self.lpad._get_active_launch_ids()
+            print(all_launch_ids)
+            q["launch_id"] = {"$in": all_launch_ids}
+
+        for doc in self.db[coll].find(q, {state_key: 1}, sort=sort_key).limit(limit):
             nsamples_fizzled += 1
             if state_key == "spec._tasks":
                 for t in doc['spec']['_tasks']:

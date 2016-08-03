@@ -674,6 +674,13 @@ class LaunchPad(FWSerializable):
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
+    def _get_active_launch_ids(self):
+        all_launch_ids = []
+        for l in self.fireworks.find({}, {"launches": 1}):
+            all_launch_ids.extend(l['launches'])
+
+        return all_launch_ids
+
     def reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         m_fw = self._get_a_fw_to_run(fworker.query)
         if not m_fw:
