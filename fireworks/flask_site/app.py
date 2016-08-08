@@ -28,7 +28,7 @@ def check_auth(username, password):
     This function is called to check if a username /
     password combination is valid.
     """
-    if AUTH_USER is None:
+    if (AUTH_USER is None) or (AUTH_PASSWD is None):
         return True
     return username == AUTH_USER and password == AUTH_PASSWD
 
@@ -54,6 +54,7 @@ def requires_auth(f):
 
 def _addq(base, q):
     return {"$and": [q, base]} if base else q
+
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -262,6 +263,7 @@ def report(interval, num_intervals):
 
     return render_template('report.html', **locals())
 
+
 def bootstrap_app(*args, **kwargs):
     """Pass instead of `app` to a forking process.
 
@@ -273,6 +275,7 @@ def bootstrap_app(*args, **kwargs):
     fireworks.flask_site.app.lp = LaunchPad.from_dict(
         json.loads(os.environ["FWDB_CONFIG"]))
     return app(*args, **kwargs)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
