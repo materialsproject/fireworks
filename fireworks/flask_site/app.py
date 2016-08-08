@@ -6,7 +6,7 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from pymongo import DESCENDING
 import os, json
 from fireworks.core.launchpad import LaunchPad
-from flask.ext.paginate import Pagination
+from flask_paginate import Pagination
 from functools import wraps
 
 app = Flask(__name__)
