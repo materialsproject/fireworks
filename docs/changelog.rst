@@ -2,6 +2,17 @@
 FireWorks Changelog
 ===================
 
+**v1.3.4**
+
+* add launches mode query (query launches collection when performing lpad tasks)
+* Add auth option to web app (S.P. Ong)
+* enhance webapp server w/gunicorn (D. Winston)
+* threshold parameter in introspect commmand
+* add license option to SLURM adapter
+* add fill mode to qlaunch for keeping jobs in the queue even when nothing in DB to run
+* fix njobs_queue bug
+* open compressed files in textmode to ensure py3k compatibility (K. Mathew)
+
 **v1.3.3**
 
 * Load default FWorker location when running launch commands from Python
