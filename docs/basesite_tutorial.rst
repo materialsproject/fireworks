@@ -32,3 +32,8 @@ The current web framework is limited but simple - just click the links you are i
     http://127.0.0.1:5000/fw/1/
 
 points to the data for Firework id #1 (for the default host and port). You can easily modify this URL to check up on a particular Firework.
+
+Authentication
+==============
+
+You can add authentication by setting the ``FWAPP_AUTH_USERNAME`` and ``FWAPP_AUTH_PASSWORD`` environment variables.

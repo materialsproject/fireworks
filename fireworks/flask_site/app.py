@@ -19,8 +19,8 @@ app.BASE_Q_WF = {}
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
 
-AUTH_USER = os.environ.get("FWDB_AUTH_USER", None)
-AUTH_PASSWD = os.environ.get("FWDB_AUTH_PASSWORD", None)
+AUTH_USER = os.environ.get("FWAPP_AUTH_USERNAME", None)
+AUTH_PASSWD = os.environ.get("FWAPP_AUTH_PASSWORD", None)
 
 
 def check_auth(username, password):
