@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
@@ -6,7 +6,8 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from pymongo import DESCENDING
 import os, json
 from fireworks.core.launchpad import LaunchPad
-from flask.ext.paginate import Pagination
+from flask_paginate import Pagination
+from functools import wraps
 
 app = Flask(__name__)
 app.use_reloader=True
@@ -17,6 +18,38 @@ app.BASE_Q_WF = {}
 
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
+
+AUTH_USER = os.environ.get("FWDB_AUTH_USER", None)
+AUTH_PASSWD = os.environ.get("FWDB_AUTH_PASSWORD", None)
+
+
+def check_auth(username, password):
+    """
+    This function is called to check if a username /
+    password combination is valid.
+    """
+    if AUTH_USER is None:
+        return True
+    return username == AUTH_USER and password == AUTH_PASSWD
+
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+        'Could not verify your access level for that URL. You have to login '
+        'with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if (AUTH_USER is not None) and (not auth or not check_auth(
+                auth.username, auth.password)):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 
 def _addq(base, q):
@@ -39,6 +72,7 @@ def pluralize(number, singular='', plural='s'):
 
 
 @app.route("/")
+@requires_auth
 def home():
     fw_nums = []
     wf_nums = []
@@ -65,6 +99,7 @@ def home():
     return render_template('home.html', **locals())
 
 @app.route('/fw/<int:fw_id>/details')
+@requires_auth
 def get_fw_details(fw_id):
     #just fill out whatever attributse you want to see per step, then edit the handlebars template in 
     #wf_details.html
@@ -76,6 +111,7 @@ def get_fw_details(fw_id):
     return jsonify(fw)
 
 @app.route('/fw/<int:fw_id>')
+@requires_auth
 def fw_details(fw_id):
     try:
         int(fw_id)
@@ -86,6 +122,7 @@ def fw_details(fw_id):
     return render_template('fw_details.html', **locals())
 
 @app.route('/wf/<int:wf_id>/json')
+@requires_auth
 def workflow_json(wf_id):
     try:
         int(wf_id)
@@ -124,6 +161,7 @@ def workflow_json(wf_id):
 
 
 @app.route('/wf/<int:wf_id>')
+@requires_auth
 def wf_details(wf_id):
     try:
         int(wf_id)
@@ -137,6 +175,7 @@ def wf_details(wf_id):
 
 @app.route('/fw/', defaults={"state": "total"})
 @app.route("/fw/<state>/")
+@requires_auth
 def fw_state(state):
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
@@ -155,6 +194,7 @@ def fw_state(state):
 
 @app.route('/wf/', defaults={"state": "total"})
 @app.route("/wf/<state>/")
+@requires_auth
 def wf_state(state):
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
@@ -173,6 +213,7 @@ def wf_state(state):
 
 @app.route("/wf/metadata/<key>/<value>/", defaults={"state": "total"})
 @app.route("/wf/metadata/<key>/<value>/<state>/")
+@requires_auth
 def wf_metadata_find(key, value, state):
     db = lp.workflows
     try:
@@ -208,6 +249,7 @@ def wf_metadata_find(key, value, state):
 @app.route('/report/', defaults={"interval": "months", "num_intervals": 6})
 @app.route('/report/<interval>/', defaults={"num_intervals": 6})
 @app.route("/report/<interval>/<num_intervals>/")
+@requires_auth
 def report(interval, num_intervals):
     num_intervals = int(num_intervals)
     fwr = FWReport(lp)
