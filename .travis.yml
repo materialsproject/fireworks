@@ -4,7 +4,7 @@ python:
   - "2.7"
   - "3.3"
 install:
-  - "pip install -r requirements.txt --use-mirrors"
+  - pip install -r requirements.txt
   - pip install coverage
   - pip install python-coveralls
 before_script:
