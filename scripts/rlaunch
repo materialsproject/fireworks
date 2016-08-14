@@ -1,6 +1,0 @@
-#!/usr/bin/env python
-
-from fireworks.scripts.rlaunch_run import rlaunch
-
-if __name__ == '__main__':
-    rlaunch()
