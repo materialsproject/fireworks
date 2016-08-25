@@ -7,5 +7,3 @@ recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-include fw_tutorials *
 recursive-exclude fw_tutorials *.pyc
-recursive-include scripts *
-recursive-exclude scripts *.pyc
