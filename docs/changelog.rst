@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.3.5**
+
+* forget about offline runs if a queue submission unsuccessful (thanks to D. Stansberry for pointing out the problem)
+* cleanups to project setup (S.P. Ong)
+
 **v1.3.4**
 
 * add launches mode query (query launches collection when performing lpad tasks)
