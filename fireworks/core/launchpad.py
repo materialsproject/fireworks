@@ -1176,8 +1176,9 @@ class LaunchPad(FWSerializable):
                 self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed":True}})
             return m_launch.fw_id
 
-    def forget_offline(self, fw_id):
-        self.offline_runs.update_one({"fw_id": fw_id}, {"$set": {"deprecated":True}})
+    def forget_offline(self, launchid_or_fwid, launch_mode=True):
+        q = {"launch_id": launchid_or_fwid} if launch_mode else {"fw_id": launchid_or_fwid}
+        self.offline_runs.update_many(q, {"$set": {"deprecated": True}})
 
     def get_tracker_data(self, fw_id):
         data = []

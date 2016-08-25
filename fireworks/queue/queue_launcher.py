@@ -138,6 +138,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 try:
                     l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(fw.fw_id, launch_id))
                     launchpad.cancel_reservation(launch_id)
+                    launchpad.forget_offline(launch_id)
                 except:
                     log_exception(l_logger, 'Error unreserving FW with fw_id {}'.format(fw.fw_id))
 

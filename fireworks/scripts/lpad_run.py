@@ -502,7 +502,7 @@ def forget_offline(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
-        lp.forget_offline(f)
+        lp.forget_offline(f, launch_mode=False)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
 
     lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
