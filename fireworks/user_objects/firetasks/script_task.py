@@ -2,19 +2,19 @@
 
 from __future__ import unicode_literals
 
-import shlex
-import subprocess
-import sys
-
-from fireworks.core.firework import FireTaskBase, FWAction
-from six.moves import builtins
-
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 18, 2013'
+
+import shlex
+import subprocess
+import sys
+
+from fireworks.core.firework import FireTaskBase, FWAction
+from six.moves import builtins
 
 # TODO: add maximum length of 10,000 chars for stored fields
 

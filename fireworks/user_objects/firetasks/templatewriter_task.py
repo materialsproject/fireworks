@@ -3,11 +3,14 @@
 from __future__ import unicode_literals
 
 """
-This module contains the TemplateWriterTask, which writes files based on a template file and a Context using Jinja2's templating engine.
+This module contains the TemplateWriterTask, which writes files based on a template file and a
+Context using Jinja2's templating engine.
 """
 
 import os
+
 from jinja2 import Template
+
 from fireworks.core.firework import FireTaskBase
 from fireworks.fw_config import TEMPLATE_DIR
 

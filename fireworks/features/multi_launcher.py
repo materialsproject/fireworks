@@ -176,8 +176,7 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
             log_multi(l_logger, "Remove the current node \"{}\" from compute node".format(host))
             total_node_list.remove(host)
         else:
-            log_multi(l_logger, "The current node is not in the node list, "
-                                "keep the node list as is")
+            log_multi(l_logger, "The current node is not in the node list, keep the node list as is")
     node_lists, sub_nproc_list = split_node_lists(num_jobs, total_node_list, ppn)
 
     # create shared dataserver

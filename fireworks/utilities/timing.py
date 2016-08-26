@@ -5,8 +5,7 @@ from __future__ import unicode_literals
 """
 Support for simple timers, with CSV output.
 
-The model is that timers have names, and within timers
-are multiple named "stages".
+The model is that timers have names, and within timers are multiple named "stages".
 """
 
 import fnmatch

@@ -98,8 +98,9 @@ WEBSERVER_HOST = "127.0.0.1"  # default host on which the Flask web server runs
 
 WEBSERVER_PORT = 5000  # default port on which the Flask web server runs
 
-MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000  # value of socketTimeoutMS when connection to mongoDB.  See pymongo official
-                                         # documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
+# value of socketTimeoutMS when connection to mongoDB.  See pymongo official
+# documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
+MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 
 
 def override_user_settings():

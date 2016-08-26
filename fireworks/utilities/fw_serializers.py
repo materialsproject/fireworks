@@ -1,13 +1,12 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from monty.json import MontyDecoder, MSONable
 
 __doc__ = """
 This module aids in serializing and deserializing objects.
 
-To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize an object,
-refer to the documentation for the FWSerializable class and load_object() method.
+To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize
+an object, refer to the documentation for the FWSerializable class and load_object() method.
     - you can de-serialize explicitly, e.g. FWObject.from_dict() to enforce a FWObject instance as the result
     - you can de-serialize implicitly, e.g. load_object() to search for the correct Class dynamically
 
@@ -16,15 +15,16 @@ serialization might point to. e.g. if you require some type of Quadrilateral, a 
 collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...
 
 Some advantages:
-    - Robust with regard to code refactorings even in implicit loading given certain reasonable guidelines on fw_name.
+    - Robust with regard to code refactorings even in implicit loading given certain reasonable
+        guidelines on fw_name.
     - Simple to allow a superclass to define all the serializations for its subclasses, removing code repetition
     (in particular, note that from_dict is a class method rather than a static method, allowing use of self)
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
     - Auto-detect and proper loading of JSON and YAML files
     - Proper JSON handling of datetime (both encoding and decoding) and UTF-8 strings
-    - In some cases, objects can be serialized/deserialized extremely concisely, by use of only their fw_name (if no
-    parameters are needed to describe the object)
+    - In some cases, objects can be serialized/deserialized extremely concisely, by use of only
+        their fw_name (if no parameters are needed to describe the object)
 
 """
 
@@ -44,6 +44,8 @@ try:
 except ImportError:
     from yaml import Loader as Loader, SafeDumper as Dumper
 import six
+
+from monty.json import MontyDecoder, MSONable
 
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
 

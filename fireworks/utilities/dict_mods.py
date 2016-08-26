@@ -3,7 +3,8 @@
 from __future__ import unicode_literals
 
 """
-This module allows you to modify a dict (a spec) using another dict (an instruction). The main method of interest is apply_dictmod().
+This module allows you to modify a dict (a spec) using another dict (an instruction).
+The main method of interest is apply_dictmod().
 
 This code is based heavily on the Ansible class of custodian <https://pypi.python.org/pypi/custodian>,
 but simplifies it considerably for the limited use cases required by FireWorks.

@@ -2,7 +2,7 @@
 
 import logging
 import datetime
-from multiprocessing.managers import BaseManager, DictProxy
+from multiprocessing.managers import BaseManager
 import string
 import sys
 import os
@@ -11,9 +11,7 @@ import socket
 import multiprocessing
 import errno
 
-from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, \
-    FW_LOGGING_FORMAT
-
+from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
 
 __author__ = 'Anubhav Jain, Xiaohui Qu'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -27,18 +25,18 @@ PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have alread
 DEFAULT_FORMATTER = logging.Formatter(FW_LOGGING_FORMAT)
 
 
-def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'),
-                  stream_level='DEBUG', formatter=DEFAULT_FORMATTER,
-                  clear_logs=False):
+def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG',
+                  formatter=DEFAULT_FORMATTER, clear_logs=False):
     """
     Convenience method to return a logger.
 
-    :param name: name of the logger that sets the groups, e.g. 'group1.set2'
-    :param l_dir: the directory to put the log file
-    :param file_levels: iterable describing level(s) to log to file(s). default: ('DEBUG', 'ERROR')
-    :param stream_level: level to log to standard output. default: 'DEBUG'
-    :param formatter: logging format. default: FW_LOGGING_FORMATTER
-    :param clear_logs: whether to clear the logger with the same name
+    Args:
+        name: name of the logger that sets the groups, e.g. 'group1.set2'
+        l_dir: the directory to put the log file
+        file_levels: iterable describing level(s) to log to file(s). default: ('DEBUG', 'ERROR')
+        stream_level: level to log to standard output. default: 'DEBUG'
+        formatter: logging format. default: FW_LOGGING_FORMATTER
+        clear_logs: whether to clear the logger with the same name
     """
 
     logger = logging.getLogger(name)
@@ -70,9 +68,10 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'),
 
 def log_multi(m_logger, msg, log_lvl='info'):
     """
-    :param m_logger: (logger) The logger object
-    :param msg: (str) a String to log
-    :param log_lvl: (str) The level to log at
+    Args:
+        m_logger (logger): The logger object
+        msg (str): a String to log
+        log_lvl (str): The level to log at
     """
     _log_fnc = getattr(m_logger, log_lvl.lower())
     if FWData().MULTIPROCESSING:
@@ -88,10 +87,11 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
     which enhances readability of log lines meant to be read
     as a unit.
 
-    :param m_logger: (logger) The logger object
-    :param log_lvl: (str) The level to log at
-    :param msgs: ([str]) a String or iterable of Strings
-    :param add_traceback: (bool) add traceback text, useful when logging exceptions (default False)
+    Args:
+        m_logger (logger): The logger object
+        log_lvl (str): The level to log at
+        msgs ([str]): a String or iterable of Strings
+        add_traceback (bool): add traceback text, useful when logging exceptions (default False)
     """
 
     if isinstance(msgs, basestring):
@@ -110,20 +110,22 @@ def log_exception(m_logger, msgs):
     """
     A shortcut wrapper around log_fancy for exceptions
 
-    :param m_logger: (logger) The logger object
-    :param msgs: ([str]) String or iterable of Strings, will be joined by newlines
+    Args:
+        m_logger (logger): The logger object
+        msgs ([str]): String or iterable of Strings, will be joined by newlines
     """
     return log_fancy(m_logger, msgs, 'error', add_traceback=True)
 
 
 def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
-    Internal method to create a new block or launcher directory. \
+    Internal method to create a new block or launcher directory.
     The dir name is based on the time and the FW_BLOCK_FORMAT
 
-    :param root_dir: directory to create the new dir in
-    :param l_logger: the logger to use
-    :param prefix: the prefix for the new dir, default="block_"
+    Args:
+        root_dir: directory to create the new dir in
+        l_logger: the logger to use
+        prefix: the prefix for the new dir, default="block_"
     """
 
     def get_path():
@@ -191,8 +193,11 @@ class DataServer(BaseManager):
     @classmethod
     def setup(cls, launchpad):
         """
-        :param launchpad: (LaunchPad) object
-        :return:
+        Args:
+            launchpad (LaunchPad)
+
+        Returns:
+            DataServer
         """
         DataServer.register('LaunchPad', callable=lambda: launchpad)
         m = DataServer(address=('127.0.0.1', 0), authkey=DS_PASSWORD)  # random port

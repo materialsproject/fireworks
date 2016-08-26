@@ -41,8 +41,10 @@ class Command(object):
 
     def __init__(self, command):
         """
-        initialize the object
-        :param command: command to run
+        initialize the object.
+
+        Args:
+            command: command to run
         """
         if isinstance(command, basestring):
             command = shlex.split(command)
@@ -50,10 +52,14 @@ class Command(object):
 
     def run(self, timeout=None, **kwargs):
         """
-        Run the command
-        :param timeout: (float) timeout
-        :param kwargs:
-        :return: (status, output, error)
+        Run the command.
+
+        Args:
+            timeout (float): timeout
+            kwargs (dict)
+
+        Returns:
+            (status, output, error)
         """
         def target(**kwargs):
             try:
@@ -105,11 +111,14 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
 
     def get_script_str(self, launch_dir):
         """
-        returns a (multi-line) String representing the queue script, e.g. PBS script. \
+        returns a (multi-line) String representing the queue script, e.g. PBS script.
         Uses the template_file along with internal parameters to create the script.
 
-        :param launch_dir: (str) The directory the job will be launched in
-        :return: (str) the queue script
+        Args:
+            launch_dir (str): The directory the job will be launched in
+
+        Returns:
+            (str) the queue script
         """
         with open(self.template_file) as f:
             a = QScriptTemplate(f.read())
@@ -137,20 +146,26 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     @abc.abstractmethod
     def submit_to_queue(self, script_file):
         """
-        submits the job to the queue and returns the job id
+        Submits the job to the queue and returns the job id.
 
-        :param script_file: (str) name of the script file to use (String)
-        :return: (int) job_id
+        Args:
+            script_file: (str) name of the script file to use (String)
+
+        Returns:
+            (int) job_id
         """
         pass
 
     @abc.abstractmethod
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs currently in the queue for the user
+        Returns the number of jobs currently in the queue for the user.
 
-        :param username: (str) the username of the jobs to count (default is to autodetect)
-        :return: (int) number of jobs in the queue
+        Args:
+            username (str): the username of the jobs to count (default is to autodetect)
+
+        Returns:
+            (int) number of jobs in the queue
         """
         pass
 
