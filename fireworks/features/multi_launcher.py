@@ -10,6 +10,7 @@ from multiprocessing import Process, Manager
 import os
 import threading
 import time
+
 from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD, RAPIDFIRE_SLEEP_SECS
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi, get_my_host
@@ -26,8 +27,9 @@ def ping_multilaunch(port, stop_event):
     """
     A single manager to ping all launches during multiprocess launches
 
-    :param port: (int) Listening port number of the DataServer
-    :param stop_event: (Thread.Event) stop event
+    Args:
+        port (int): Listening port number of the DataServer
+        stop_event (Thread.Event): stop event
     """
 
     ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
@@ -51,17 +53,18 @@ def ping_multilaunch(port, stop_event):
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout,
                       running_ids_dict):
     """
-    Initializes shared data with multiprocessing parameters and starts a rapidfire
+    Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
-    :param fworker: (FWorker) object
-    :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
-    :param sleep: (int) secs to sleep between rapidfire loop iterations
-    :param loglvl: (str) level at which to output logs to stdout
-    :param port: (int) Listening port number of the shared object manage
-    :param password: (str) security password to access the server
-    :param node_list: ([str]) computer node list
-    :param sub_nproc: (int) number of processors of the sub job
-    :param timeout: (int) # of seconds after which to stop the rapidfire process
+    Args:
+        fworker (FWorker): object
+        nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
+        sleep (int): secs to sleep between rapidfire loop iterations
+        loglvl (str): level at which to output logs to stdout
+        port (int): Listening port number of the shared object manage
+        password (str): security password to access the server
+        node_list ([str]): computer node list
+        sub_nproc (int): number of processors of the sub job
+        timeout (int): # of seconds after which to stop the rapidfire process
     """
     ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
     ds.connect()
@@ -97,16 +100,19 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
     """
     Create each sub job and start a rocket launch in each one
 
-    :param fworker: (FWorker) object
-    :param nlaunches: nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
-    :param sleep: (int) secs to sleep between rapidfire loop iterations
-    :param loglvl: (str) level at which to output logs to stdout
-    :param port: (int) Listening port number
-    :param node_lists: ([str]) computer node list
-    :param sub_nproc_list: ([int]) list of the number of the process of sub jobs
-    :param timeout: (int) # of seconds after which to stop the rapidfire process
-    :param running_ids_dict: Shared dict between process to record IDs
-    :return: ([multiprocessing.Process]) all the created processes
+    Args:
+        fworker (FWorker): object
+        nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
+        sleep (int): secs to sleep between rapidfire loop iterations
+        loglvl (str): level at which to output logs to stdout
+        port (int): Listening port number
+        node_lists ([str]): computer node list
+        sub_nproc_list ([int]): list of the number of the process of sub jobs
+        timeout (int): # of seconds after which to stop the rapidfire process
+        running_ids_dict (dict): Shared dict between process to record IDs
+
+    Returns:
+        ([multiprocessing.Process]) all the created processes
     """
 
     processes = [Process(target=rapidfire_process,
@@ -122,10 +128,13 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     """
     Parse node list and processor list from nodefile contents
 
-    :param num_jobs: (int) number of sub jobs
-    :param total_node_list: (list of str) the node list of the whole large job
-    :param ppn: (int) number of procesors per node
-    :return: (([int],[int])) the node list and processor list for each job
+    Args:
+        num_jobs (int): number of sub jobs
+        total_node_list (list of str): the node list of the whole large job
+        ppn (int): number of procesors per node
+
+    Returns:
+        (([int],[int])) the node list and processor list for each job
     """
     if total_node_list:
         orig_node_list = sorted(list(set(total_node_list)))
@@ -142,20 +151,21 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
 
 
 def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_time,
-                        total_node_list=None, ppn=1, timeout=None,
-                        exclude_current_node=False):
+                        total_node_list=None, ppn=1, timeout=None, exclude_current_node=False):
     """
     Launch the jobs in the job packing mode.
-    :param launchpad: (LaunchPad) object
-    :param fworker: (FWorker) object
-    :param loglvl: (str) level at which to output logs
-    :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop forever
-    :param num_jobs: (int) number of sub jobs
-    :param sleep_time: (int) secs to sleep between rapidfire loop iterations
-    :param total_node_list: ([str]) contents of NODEFILE (doesn't affect execution)
-    :param ppn: (int) processors per node (doesn't affect execution)
-    :param timeout: (int) # of seconds after which to stop the rapidfire process
-    :param exclude_current_node: Don't use the script launching node as a compute node
+
+    Args:
+        launchpad (LaunchPad)
+        fworker (FWorker)
+        loglvl (str): level at which to output logs
+        nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
+        num_jobs(int): number of sub jobs
+        sleep_time (int): secs to sleep between rapidfire loop iterations
+        total_node_list ([str]): contents of NODEFILE (doesn't affect execution)
+        ppn (int): processors per node (doesn't affect execution)
+        timeout (int): # of seconds after which to stop the rapidfire process
+        exclude_current_node: Don't use the script launching node as a compute node
     """
     # parse node file contents
     if exclude_current_node:

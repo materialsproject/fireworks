@@ -12,27 +12,35 @@ __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 # indices for parsing a datetime string in format 2015-09-28T12:00:07.772058
 DATE_KEYS = {"years": 4, "months": 7, "days": 10, "hours": 13, "minutes": 16}
 
-class FWReport():
+
+class FWReport:
     def __init__(self, lpad):
         """
-        :param lpad: (LaunchPad)
+        Args:
+        lpad (LaunchPad)
         """
         self.db = lpad.db
 
     def get_stats(self, coll="fireworks", interval="days", num_intervals=5, additional_query=None):
         """
-        Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>, e.g. past 5 days.
+        Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>,
+        e.g. past 5 days.
 
-        :param coll: collection, either "fireworks", "workflows", or "launches"
-        :param interval: one of "minutes", "hours", "days", "months", "years"
-        :param num_intervals: number of intervals to go back in time from present moment
-        :param additional_query: additional constraints on reporting
-        :return: list, with each item being a dictionary of statistics for a given interval
+        Args:
+            coll (str): collection, either "fireworks", "workflows", or "launches"
+            interval (str): one of "minutes", "hours", "days", "months", "years"
+            num_intervals (int): number of intervals to go back in time from present moment
+            additional_query (dict): additional constraints on reporting
+
+        Returns:
+            list, with each item being a dictionary of statistics for a given interval
         """
 
         # confirm interval
         if interval not in DATE_KEYS.keys():
-            raise ValueError("Specified interval ({}) is not in list of allowed intervals({})".format(interval, DATE_KEYS.keys()))
+            raise ValueError(
+                "Specified interval ({}) is not in list of allowed intervals({})".format(
+                    interval, DATE_KEYS.keys()))
         # used for querying later
         date_key_idx = DATE_KEYS[interval]
 
@@ -46,7 +54,8 @@ class FWReport():
         else:
             raise ValueError("Unrecognized collection!")
 
-        string_type_dates = True if coll in ["fireworks", "launches"] else False  # whether the collection uses String or Date time dates
+        # whether the collection uses String or Date time dates
+        string_type_dates = True if coll in ["fireworks", "launches"] else False
         time_field = "updated_on" if coll in ["fireworks", "workflows"] else "time_end"
 
         coll = self.db[coll]
@@ -60,9 +69,13 @@ class FWReport():
             match_q.update({time_field: date_q})
 
         pipeline.append({"$match": match_q})
-        pipeline.append({"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$"+time_field, 0, date_key_idx]}}})
-        pipeline.append({"$group": {"_id": {"state:": "$state", "date_key": "$date_key"}, "count": {"$sum": 1}, "state": {"$first": "$state"}}})
-        pipeline.append({"$group": {"_id": {"_id.date_key": "$_id.date_key"}, "date_key": {"$first": "$_id.date_key"}, "states": {"$push": {"count": "$count", "state": "$state"}}}})
+        pipeline.append({"$project": {"state": 1, "_id": 0,
+                                      "date_key": {"$substr": ["$"+time_field, 0, date_key_idx]}}})
+        pipeline.append({"$group": {"_id": {"state:": "$state", "date_key": "$date_key"},
+                                    "count": {"$sum": 1}, "state": {"$first": "$state"}}})
+        pipeline.append({"$group": {"_id": {"_id.date_key": "$_id.date_key"},
+                                    "date_key": {"$first": "$_id.date_key"},
+                                    "states": {"$push": {"count": "$count", "state": "$state"}}}})
         pipeline.append({"$sort": {"date_key": -1}})
 
         # add in missing states and more fields
@@ -87,16 +100,19 @@ class FWReport():
 
             completed_score = 0 if completed_cnt == 0 else (completed_cnt/(completed_cnt+fizzled_cnt))
             completed_score = round(completed_score, 3)*100
-            decorated_list.append({"date_key": x["date_key"], "states": new_states, "count": total_count, "completed_score": completed_score})
-
+            decorated_list.append({"date_key": x["date_key"], "states": new_states,
+                                   "count": total_count, "completed_score": completed_score})
         return decorated_list
 
     def get_stats_str(self, decorated_stat_list):
         """
         Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
 
-        :param decorated_stat_list:  list of dict
-        :return: String
+        Args:
+            decorated_stat_list ([dict])
+
+        Returns:
+             str
         """
 
         if not decorated_stat_list:
@@ -115,5 +131,4 @@ class FWReport():
             my_str += "total : {}\n".format(x['count'])
             my_str += "C/(C+F) : {}\n".format(x['completed_score'])
             my_str += "\n"
-
         return my_str

@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """
+
 import os
 import shlex
 import string
@@ -13,6 +14,7 @@ import threading
 import traceback
 import abc
 import collections
+
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 from fireworks.utilities.fw_utilities import get_fw_logger
 
@@ -84,16 +86,15 @@ class Command(object):
 
 class QueueAdapterBase(collections.defaultdict, FWSerializable):
     """
-    The QueueAdapter is responsible for all interactions with a specific \
-    queue management system. This includes handling all details of queue \
-    script format as well as queue submission and management.
+    The QueueAdapter is responsible for all interactions with a specific queue management system.
+    This includes handling all details of queue script format as well as queue submission and
+     management.
 
-    A user should extend this class with implementations that work on \
-    specific queue systems. Examples and implementations are in: \
-    fireworks/user_objects/queue_adapters.
+    A user should extend this class with implementations that work on specific queue systems.
+    Examples and implementations are in: fireworks/user_objects/queue_adapters.
 
-    Documentation on implementing queue adapters can be found on FireWorks \
-    home page, http://pythonhosted.org/FireWorks
+    Documentation on implementing queue adapters can be found on FireWorks home page,
+    http://pythonhosted.org/FireWorks
     """
 
     _fw_name = 'QueueAdapterBase'
