@@ -2,12 +2,12 @@
 
 from __future__ import unicode_literals
 
+from six.moves import builtins
 import shlex
 import subprocess
 import sys
 
 from fireworks.core.firework import FireTaskBase, FWAction
-from six.moves import builtins
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

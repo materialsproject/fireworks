@@ -3,11 +3,14 @@
 from __future__ import unicode_literals
 
 """
-This module contains the TemplateWriterTask, which writes files based on a template file and a Context using Jinja2's templating engine.
+This module contains the TemplateWriterTask, which writes files based on a template file and a
+Context using Jinja2's templating engine.
 """
 
 import os
+
 from jinja2 import Template
+
 from fireworks.core.firework import FireTaskBase
 from fireworks.fw_config import TEMPLATE_DIR
 
@@ -62,4 +65,5 @@ class TemplateWriterTask(FireTaskBase):
 
         self.template_file = os.path.join(self.template_dir, d['template_file'])
         if not os.path.exists(self.template_file):
-            raise ValueError("TemplateWriterTask could not find a template file at: {}".format(self.template_file))
+            raise ValueError("TemplateWriterTask could not find a template file at: {}".format(
+                self.template_file))

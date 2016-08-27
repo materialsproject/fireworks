@@ -2,15 +2,6 @@
 
 from __future__ import unicode_literals
 
-from fireworks import LaunchPad
-
-__author__ = 'Wei Chen'
-__copyright__ = 'Copyright 2014, The Material Project'
-__version__ = '0.5'
-__maintainer__ = 'Wei Chen'
-__email__ = 'weichen@lbl.gov'
-__date__ = 'Sep 8, 2014'
-
 """
 Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.
 """
@@ -20,15 +11,26 @@ from dateutil import parser
 from bson.son import SON
 from collections import defaultdict
 
-RUNTIME_STATS={"max_runtime(s)":{"$max":"$runtime_secs"},
-               "min_runtime(s)":{"$min":"$runtime_secs"},
-               "avg_runtime(s)":{"$avg":"$runtime_secs"}}
+from fireworks import LaunchPad
+
+__author__ = 'Wei Chen'
+__copyright__ = 'Copyright 2014, The Material Project'
+__version__ = '0.5'
+__maintainer__ = 'Wei Chen'
+__email__ = 'weichen@lbl.gov'
+__date__ = 'Sep 8, 2014'
+
+RUNTIME_STATS = {"max_runtime(s)": {"$max":"$runtime_secs"},
+                 "min_runtime(s)": {"$min":"$runtime_secs"},
+                 "avg_runtime(s)": {"$avg":"$runtime_secs"}}
 
 class FWStats:
     def __init__(self, lpad):
         """
-        Object to get Fireworks running stats from a LaunchPad
-        :param lpad: (LaunchPad) A LaunchPad object that manages the Fireworks database
+        Object to get Fireworks running stats from a LaunchPad.
+
+        Args:
+            lpad (LaunchPad): A LaunchPad object that manages the Fireworks database
         """
         if isinstance(lpad, LaunchPad):
             self._lpad = lpad
@@ -38,18 +40,24 @@ class FWStats:
         self._launches = lpad.db.launches
         self._workflows = lpad.db.workflows
 
-    def get_fireworks_summary(self, query_start=None, query_end=None, query=None, time_field="updated_on", **args):
+    def get_fireworks_summary(self, query_start=None, query_end=None, query=None,
+                              time_field="updated_on", **args):
         """
         Get fireworks summary for a specified time range.
-        :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
-        Default is 30 days before current time.
-        :param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
-        Default is current time.
-        :param query: (dict) Additional Pymongo queries to filter entries for process.
-        :param time_field: (str) The field to query time range. Default is "updated_on".
-        :param args: (dict) Time difference to calculate query_start from query_end. Accepts arguments in python
-        datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
-        :return: (list) A summary of fireworks stats for the specified time range.
+
+        Args:
+            query_start (str): The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+                Default is 30 days before current time.
+            query_end (str): The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+                Default is current time.
+            query (dict): Additional Pymongo queries to filter entries for process.
+            time_field (str): The field to query time range. Default is "updated_on".
+            args (dict): Time difference to calculate query_start from query_end.
+                Accepts arguments in python datetime.timedelta function. args and query_start can
+                not be given at the same time. Default is 30 days.
+
+        Returns:
+            (list) A summary of fireworks stats for the specified time range.
         """
         results = self._get_summary(coll=self._fireworks, query_start=query_start, query_end=query_end,
                                     query=query, time_field=time_field, **args)
@@ -59,23 +67,29 @@ class FWStats:
                            query=None, runtime_stats=False, include_ids=False, **args):
         """
         Get launch summary for a specified time range.
-        :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
-        Default is 30 days before current time.
-        :param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
-        Default is current time.
-        :param time_field: (str) The field to query time range. Default is "time_end".
-        :param query: (dict) Additional Pymongo queries to filter entries for process.
-        :param runtime_stats: (bool) If return runtime stats. Default is False.
-        :param include_ids: (bool) If return fw_ids. Default is False.
-        :param args: (dict) Time difference to calculate query_start from query_end. Accepts arguments in python
-        datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
-        :return: (list) A summary of launch stats for the specified time range.
+
+        Args:
+            query_start (str): The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+                Default is 30 days before current time.
+            query_end (str): The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+                Default is current time.
+            time_field (str): The field to query time range. Default is "time_end".
+            query (dict): Additional Pymongo queries to filter entries for process.
+            runtime_stats (bool): If return runtime stats. Default is False.
+            include_ids (bool): If return fw_ids. Default is False.
+            args (dict): Time difference to calculate query_start from query_end.
+                Accepts arguments in python datetime.timedelta function. args and query_start can
+                not be given at the same time. Default is 30 days.
+
+        Returns:
+            (list) A summary of launch stats for the specified time range.
         """
         launch_id = self._get_launch_id_from_fireworks(query=query)
         if launch_id:
             match_launch_id={"launch_id":{"$in":launch_id}}
-            results = self._get_summary(coll=self._launches, query_start=query_start, query_end=query_end,
-                                        time_field=time_field, query=match_launch_id, runtime_stats=runtime_stats,
+            results = self._get_summary(coll=self._launches, query_start=query_start,
+                                        query_end=query_end, time_field=time_field,
+                                        query=match_launch_id, runtime_stats=runtime_stats,
                                         include_ids=include_ids, **args)
         return results
 

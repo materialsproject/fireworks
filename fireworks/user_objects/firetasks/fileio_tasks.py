@@ -5,13 +5,12 @@ from __future__ import unicode_literals
 import os
 import shutil
 import traceback
-
 from os.path import expandvars, expanduser, abspath
-
 import time
 
-from fireworks.core.firework import FireTaskBase
 from monty.shutil import compress_dir, decompress_dir
+
+from fireworks.core.firework import FireTaskBase
 
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -24,8 +23,11 @@ __date__ = 'Jan 6, 2014'
 class FileWriteTask(FireTaskBase):
     """
     A FireTask to write files:
+
     Required params:
-        - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames and contents
+        - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames
+            and contents
+
     Optional params:
         - dest: (str) Shared path for files
     """
@@ -42,8 +44,10 @@ class FileWriteTask(FireTaskBase):
 class FileDeleteTask(FireTaskBase):
     """
     A FireTask to delete files:
+
     Required params:
         - files_to_delete: ([str]) Filenames to delete
+
     Optional params:
         - dest: (str) Shared path for files
         - ignore_errors (bool): Whether to ignore errors. Defaults to True.
@@ -66,10 +70,13 @@ class FileDeleteTask(FireTaskBase):
 class FileTransferTask(FireTaskBase):
     """
     A FireTask to Transfer files. Note that
+
     Required params:
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
-        - files: ([str]) or ([(str, str)]) - list of source files, or dictionary containing 'src' and 'dest' keys
+        - files: ([str]) or ([(str, str)]) - list of source files, or dictionary containing
+                'src' and 'dest' keys
         - dest: (str) destination directory, if not specified within files parameter
+
     Optional params:
         - server: (str) server host for remote transfer
         - user: (str) user to authenticate with on remote server
@@ -109,8 +116,7 @@ class FileTransferTask(FireTaskBase):
         for f in self["files"]:
             try:
                 if 'src' in f:
-                    src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret \
-                        else f['src']
+                    src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret else f['src']
                 else:
                     src = abspath(expanduser(expandvars(f))) if shell_interpret else f
 
@@ -131,11 +137,9 @@ class FileTransferTask(FireTaskBase):
 
                 else:
                     if 'dest' in f:
-                        dest = abspath(expanduser(expandvars(f['dest']))) if shell_interpret \
-                            else f['dest']
+                        dest = abspath(expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
                     else:
-                        dest = abspath(expanduser(expandvars(self['dest']))) if shell_interpret \
-                            else self['dest']
+                        dest = abspath(expanduser(expandvars(self['dest']))) if shell_interpret else self['dest']
                     FileTransferTask.fn_list[mode](src, dest)
 
             except:
@@ -177,8 +181,7 @@ class CompressDirTask(FireTaskBase):
     Args:
         dest (str): Optional. Path to compress.
         compression (str): Optional. Can only be gz or bz2. Defaults to gz.
-        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to
-            False.
+        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to False.
     """
 
     _fw_name = 'CompressDirTask'
@@ -192,9 +195,8 @@ class CompressDirTask(FireTaskBase):
             compress_dir(dest, compression=compression)
         except:
             if not ignore_errors:
-                raise ValueError(
-                    "There was an error performing compression {} in {}."
-                    .format(compression, dest))
+                raise ValueError("There was an error performing compression {} in {}.".format(
+                    compression, dest))
 
 
 class DecompressDirTask(FireTaskBase):
@@ -204,8 +206,7 @@ class DecompressDirTask(FireTaskBase):
 
     Args:
         dest (str): Optional. Path to decompress.
-        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to
-            False.
+        ignore_errors (bool): Optional. Whether to ignore errors. Defaults to False.
     """
 
     _fw_name = 'DecompressDirTask'
@@ -228,10 +229,8 @@ class ArchiveDirTask(FireTaskBase):
 
     Args:
         base_name (str): Name of the file to create, including the path,
-        minus any
-            format-specific extension.
-        format (str): Optional. one of "zip", "tar", "bztar" or "gztar".
-            Defaults to gztar.
+            minus any format-specific extension.
+        format (str): Optional. one of "zip", "tar", "bztar" or "gztar". Defaults to gztar.
     """
 
     _fw_name = 'ArchiveDirTask'
@@ -239,6 +238,4 @@ class ArchiveDirTask(FireTaskBase):
     optional_params = ["format"]
 
     def run_task(self, fw_spec):
-        shutil.make_archive(self["base_name"],
-                            format=self.get("format", "gztar"),
-                            root_dir=".")
+        shutil.make_archive(self["base_name"], format=self.get("format", "gztar"), root_dir=".")

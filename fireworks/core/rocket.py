@@ -3,8 +3,10 @@
 from __future__ import unicode_literals
 
 """
-A Rocket fetches a Firework from the database, runs the sequence of FireTasks inside, and then completes the Launch
+A Rocket fetches a Firework from the database, runs the sequence of FireTasks inside, and then
+completes the Launch
 """
+
 from datetime import datetime
 import json
 import logging
@@ -14,8 +16,10 @@ import traceback
 import threading
 import errno
 import distutils.dir_util
+
 from fireworks.core.firework import FWAction, Firework
-from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, PRINT_FW_YAML, STORE_PACKING_INFO
+from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, \
+    PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.core.launchpad import LockedWorkflowError
 
@@ -26,6 +30,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
+
 def do_ping(launchpad, launch_id):
     if launchpad:
             launchpad.ping_launch(launch_id)
@@ -33,10 +38,12 @@ def do_ping(launchpad, launch_id):
         with open('FW_ping.json', 'w') as f:
             f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
 
+
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
         do_ping(launchpad, launch_id)
         stop_event.wait(PING_TIME_SECS)
+
 
 def start_ping_launch(launchpad, launch_id):
     fd = FWData()
@@ -51,6 +58,7 @@ def start_ping_launch(launchpad, launch_id):
                                        args=(launchpad, launch_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
+
 
 def stop_backgrounds(ping_stop, btask_stops):
     fd = FWData()
@@ -70,7 +78,6 @@ def background_task(btask, spec, stop_event, master_thread):
             task.run_task(spec)
         if btask.sleep_time > 0:
             stop_event.wait(btask.sleep_time)
-
         num_launched += 1
         if num_launched == btask.num_launches:
             break
@@ -78,22 +85,24 @@ def background_task(btask, spec, stop_event, master_thread):
 
 def start_background_task(btask, spec):
     ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop, threading.currentThread()))
+    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop,
+                                                                 threading.currentThread()))
     ping_thread.start()
     return ping_stop
 
 
-class Rocket():
+class Rocket:
     """
     The Rocket fetches a workflow step from the FireWorks database and executes it.
     """
 
     def __init__(self, launchpad, fworker, fw_id):
         """
-
-        :param launchpad: (LaunchPad) A LaunchPad object for interacting with the FW database. If none, reads FireWorks from FW.json and writes to FWAction.json
-        :param fworker: (FWorker) A FWorker object describing the computing resource
-        :param fw_id: (int) id of a specific Firework to run (quit if it cannot be found)
+        Args:
+        launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
+            If none, reads FireWorks from FW.json and writes to FWAction.json
+        fworker (FWorker): A FWorker object describing the computing resource
+        fw_id (int): id of a specific Firework to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -221,7 +230,8 @@ class Rocket():
                         exception_details = None
                     except BaseException as e:
                         if lp:
-                            lp.log_message(logging.WARNING, "Exception couldn't be serialized: %s " % e)
+                            lp.log_message(logging.WARNING,
+                                           "Exception couldn't be serialized: %s " % e)
                         exception_details = None
 
                     try:
@@ -229,9 +239,12 @@ class Rocket():
                     except:
                         m_task = None
 
-                    m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': m_task,
-                                                     '_exception': {'_stacktrace': tb, '_details': exception_details,
-                                                                    '_failed_task_n': t_counter}}, exit=True)
+                    m_action = FWAction(stored_data={'_message': 'runtime error during task',
+                                                     '_task': m_task,
+                                                     '_exception': {'_stacktrace': tb,
+                                                                    '_details': exception_details,
+                                                                    '_failed_task_n': t_counter}},
+                                        exit=True)
                     m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
                     if lp:
@@ -249,7 +262,8 @@ class Rocket():
 
                     return True
 
-                # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
+                # read in a FWAction from a file, in case the task is not Python and cannot return
+                # it explicitly
                 if os.path.exists('FWAction.json'):
                     m_action = FWAction.from_file('FWAction.json')
                 elif os.path.exists('FWAction.yaml'):
@@ -258,7 +272,8 @@ class Rocket():
                 if not m_action:
                     m_action = FWAction()
 
-                # update the global stored data with the data to store and update from this particular Task
+                # update the global stored data with the data to store and update from this
+                # particular Task
                 all_stored_data.update(m_action.stored_data)
                 all_update_spec.update(m_action.update_spec)
                 all_mod_spec.extend(m_action.mod_spec)
@@ -311,9 +326,11 @@ class Rocket():
 
         except LockedWorkflowError as e:
             lp.log_message(logging.DEBUG, traceback.format_exc())
-            lp.log_message(logging.WARNING, "Firework {} reached final state {} but couldn't complete the update of the"
-                                            " database. Reason: {}\nRefresh the WF to recover the result (lpad admin "
-                                            "refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
+            lp.log_message(logging.WARNING,
+                           "Firework {} reached final state {} but couldn't complete the update of "
+                           "the database. Reason: {}\nRefresh the WF to recover the result "
+                           "(lpad admin refresh -i {}).".format(
+                               self.fw_id, final_state, e, self.fw_id))
             return True
 
         except:
@@ -328,7 +345,8 @@ class Rocket():
             # the action produced by the task is discarded
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
                                              '_exception': {'_stacktrace': traceback.format_exc(),
-                                             '_details': None}}, exit=True)
+                                                            '_details': None}},
+                                exit=True)
 
             try:
                 m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
@@ -340,9 +358,11 @@ class Rocket():
                     lp.complete_launch(launch_id, m_action, 'FIZZLED')
                 except LockedWorkflowError as e:
                     lp.log_message(logging.DEBUG, traceback.format_exc())
-                    lp.log_message(logging.WARNING, "Firework {} fizzled but couldn't complete the update of the database."
-                                                    " Reason: {}\nRefresh the WF to recover the result (lpad admin "
-                                                    "refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
+                    lp.log_message(logging.WARNING,
+                                   "Firework {} fizzled but couldn't complete the update of the database."
+                                   " Reason: {}\nRefresh the WF to recover the result "
+                                   "(lpad admin refresh -i {}).".format(
+                                       self.fw_id, final_state, e, self.fw_id))
                     return True
             else:
                 with open('FW_offline.json', 'r+') as f:
