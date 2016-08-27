@@ -85,7 +85,8 @@ def background_task(btask, spec, stop_event, master_thread):
 
 def start_background_task(btask, spec):
     ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop, threading.currentThread()))
+    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop,
+                                                                 threading.currentThread()))
     ping_thread.start()
     return ping_stop
 
@@ -261,7 +262,8 @@ class Rocket:
 
                     return True
 
-                # read in a FWAction from a file, in case the task is not Python and cannot return it explicitly
+                # read in a FWAction from a file, in case the task is not Python and cannot return
+                # it explicitly
                 if os.path.exists('FWAction.json'):
                     m_action = FWAction.from_file('FWAction.json')
                 elif os.path.exists('FWAction.yaml'):
@@ -270,7 +272,8 @@ class Rocket:
                 if not m_action:
                     m_action = FWAction()
 
-                # update the global stored data with the data to store and update from this particular Task
+                # update the global stored data with the data to store and update from this
+                # particular Task
                 all_stored_data.update(m_action.stored_data)
                 all_update_spec.update(m_action.update_spec)
                 all_mod_spec.extend(m_action.mod_spec)
@@ -326,7 +329,8 @@ class Rocket:
             lp.log_message(logging.WARNING,
                            "Firework {} reached final state {} but couldn't complete the update of "
                            "the database. Reason: {}\nRefresh the WF to recover the result "
-                           "(lpad admin refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
+                           "(lpad admin refresh -i {}).".format(
+                               self.fw_id, final_state, e, self.fw_id))
             return True
 
         except:
@@ -341,7 +345,8 @@ class Rocket:
             # the action produced by the task is discarded
             m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
                                              '_exception': {'_stacktrace': traceback.format_exc(),
-                                             '_details': None}}, exit=True)
+                                                            '_details': None}},
+                                exit=True)
 
             try:
                 m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
@@ -356,7 +361,8 @@ class Rocket:
                     lp.log_message(logging.WARNING,
                                    "Firework {} fizzled but couldn't complete the update of the database."
                                    " Reason: {}\nRefresh the WF to recover the result "
-                                   "(lpad admin refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id))
+                                   "(lpad admin refresh -i {}).".format(
+                                       self.fw_id, final_state, e, self.fw_id))
                     return True
             else:
                 with open('FW_offline.json', 'r+') as f:

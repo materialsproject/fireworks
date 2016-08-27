@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 """
-A set of global constants for FireWorks (Python code as a config file)
+A set of global constants for FireWorks (Python code as a config file).
 """
 
 import os
@@ -25,16 +25,14 @@ __date__ = 'Dec 12, 2012'
 NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
-
 USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
                  'fw_tutorials', 'fireworks.features']
 
+# if you update a _fw_name, you can use this to record the change and maintain deserialization
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
                    'Script Task': 'ScriptTask',
                    'Template Writer Task': 'TemplateWriterTask',
                    'Dupe Finder Exact': 'DupeFinderExact'}
-# if you update a _fw_name, you can use this to record the change and
-# maintain deserialization
 
 YAML_STYLE = False  # controls whether YAML documents will be nested as braces or blocks (False = blocks)
 
@@ -135,9 +133,7 @@ def override_user_settings():
             elif key == 'ECHO_TEST':
                 print(v)
             elif key not in globals():
-                raise ValueError(
-                    'Invalid FW_config file has unknown parameter: {}'.format(
-                        key))
+                raise ValueError('Invalid FW_config file has unknown parameter: {}'.format(key))
             else:
                 globals()[key] = v
 
@@ -173,8 +169,7 @@ def config_to_dict():
 
 
 def write_config(path=None):
-    path = os.path.join(os.path.expanduser('~'), ".fireworks",
-                        'FW_config.yaml') if path is None else path
+    path = os.path.join(os.path.expanduser('~'), ".fireworks", 'FW_config.yaml') if path is None else path
     dumpfn(config_to_dict(), path, Dumper=Dumper)
 
 

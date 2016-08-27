@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 """
-This module contains methods for launching Rockets, both singly and in rapid-fire mode
+This module contains methods for launching Rockets, both singly and in rapid-fire mode.
 """
 
 import os
@@ -30,7 +30,6 @@ def get_fworker(fworker):
         my_fwkr = FWorker.from_file(FWORKER_LOC)
     else:
         my_fwkr = FWorker()
-
     return my_fwkr
 
 
@@ -43,6 +42,9 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
         fworker (FWorker)
         fw_id (int): if set, a particular Firework to run
         strm_lvl (str): level at which to output logs to stdout
+
+    Returns:
+        bool
     """
     fworker = get_fworker(fworker)
     l_dir = launchpad.get_logdir() if launchpad else None
