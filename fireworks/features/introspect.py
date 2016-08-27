@@ -61,13 +61,11 @@ def collect_stats(list_keys, filter_truncated=True):
     for x in list_keys:
         if not filter_truncated or '<TRUNCATED_OBJECT>' not in x:
             d[x] += 1
-
     return d
 
 
 def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5):
     diff_dict = defaultdict(float)
-
     all_keys = statsdict1.keys()
     all_keys.extend(statsdict2.keys())
     all_keys = set(all_keys)
@@ -157,7 +155,8 @@ class Introspector:
 
         completed_d = collect_stats(completed_keys)
 
-        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled, threshold=threshold)
+        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled,
+                               threshold=threshold)
 
         table = []
         for w in sorted(diff_d, key=diff_d.get, reverse=True):

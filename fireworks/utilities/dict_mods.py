@@ -10,8 +10,9 @@ This code is based heavily on the Ansible class of custodian <https://pypi.pytho
 but simplifies it considerably for the limited use cases required by FireWorks.
 """
 
-from monty.design_patterns import singleton
+import re
 
+from monty.design_patterns import singleton
 
 __author__ = "Shyue Ping Ong"
 __credits__ = "Anubhav Jain"
@@ -20,8 +21,6 @@ __version__ = "0.1"
 __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyue@mit.edu"
 __date__ = "Jun 1, 2012"
-
-import re
 
 
 def get_nested_dict(input_dict, key):
@@ -162,7 +161,8 @@ def apply_mod(modification, obj):
 
     Args:
         modification:
-            Modification must be {action_keyword : settings}, where action_keyword is a supported DictMod
+            Modification must be {action_keyword : settings}, where action_keyword is a
+            supported DictMod
         obj:
             A dict to be modified
     """

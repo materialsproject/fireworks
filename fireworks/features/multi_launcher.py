@@ -31,7 +31,6 @@ def ping_multilaunch(port, stop_event):
         port (int): Listening port number of the DataServer
         stop_event (Thread.Event): stop event
     """
-
     ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
     ds.connect()
     fd = FWData()
@@ -114,9 +113,9 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
     Returns:
         ([multiprocessing.Process]) all the created processes
     """
-
     processes = [Process(target=rapidfire_process,
-                         args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict))
+                         args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout,
+                               running_ids_dict))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
@@ -140,7 +139,8 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
         orig_node_list = sorted(list(set(total_node_list)))
         nnodes = len(orig_node_list)
         if nnodes%num_jobs != 0:
-            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(nnodes, num_jobs))
+            raise ValueError("can't allocate nodes, {} can't be divided by {}".format(
+                nnodes, num_jobs))
         sub_nnodes = nnodes/num_jobs
         sub_nproc_list = [sub_nnodes * ppn] * num_jobs
         node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]

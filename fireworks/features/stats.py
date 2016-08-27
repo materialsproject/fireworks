@@ -6,6 +6,13 @@ from __future__ import unicode_literals
 Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.
 """
 
+from datetime import datetime, timedelta
+from dateutil import parser
+from bson.son import SON
+from collections import defaultdict
+
+from fireworks import LaunchPad
+
 __author__ = 'Wei Chen'
 __copyright__ = 'Copyright 2014, The Material Project'
 __version__ = '0.5'
@@ -13,16 +20,9 @@ __maintainer__ = 'Wei Chen'
 __email__ = 'weichen@lbl.gov'
 __date__ = 'Sep 8, 2014'
 
-from fireworks import LaunchPad
-
-from datetime import datetime, timedelta
-from dateutil import parser
-from bson.son import SON
-from collections import defaultdict
-
-RUNTIME_STATS={"max_runtime(s)": {"$max":"$runtime_secs"},
-               "min_runtime(s)": {"$min":"$runtime_secs"},
-               "avg_runtime(s)": {"$avg":"$runtime_secs"}}
+RUNTIME_STATS = {"max_runtime(s)": {"$max":"$runtime_secs"},
+                 "min_runtime(s)": {"$min":"$runtime_secs"},
+                 "avg_runtime(s)": {"$avg":"$runtime_secs"}}
 
 class FWStats:
     def __init__(self, lpad):
@@ -87,8 +87,9 @@ class FWStats:
         launch_id = self._get_launch_id_from_fireworks(query=query)
         if launch_id:
             match_launch_id={"launch_id":{"$in":launch_id}}
-            results = self._get_summary(coll=self._launches, query_start=query_start, query_end=query_end,
-                                        time_field=time_field, query=match_launch_id, runtime_stats=runtime_stats,
+            results = self._get_summary(coll=self._launches, query_start=query_start,
+                                        query_end=query_end, time_field=time_field,
+                                        query=match_launch_id, runtime_stats=runtime_stats,
                                         include_ids=include_ids, **args)
         return results
 

@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 
-__author__ = 'Shyue Ping Ong'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Shyue Ping Ong'
-__email__ = 'ongsp@ucsd.edu'
-__date__ = '1/6/14'
-
 import os
 import shutil
 import sys
@@ -17,6 +10,13 @@ from fireworks.core.firework import FireWork
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.core.launchpad import LaunchPad
+
+__author__ = 'Shyue Ping Ong'
+__copyright__ = 'Copyright 2013, The Materials Project'
+__version__ = '0.1'
+__maintainer__ = 'Shyue Ping Ong'
+__email__ = 'ongsp@ucsd.edu'
+__date__ = '1/6/14'
 
 
 def create_fw_single(args, fnames, yaml_fname):

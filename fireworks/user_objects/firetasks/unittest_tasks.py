@@ -2,6 +2,10 @@
 
 from __future__ import unicode_literals
 
+import datetime
+
+from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
+
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2014, The Materials Project'
 __version__ = '0.1'
@@ -9,11 +13,9 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 21, 2014'
 
-import datetime
-from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
-
 
 class TestSerializer(FWSerializable):
+
     _fw_name = 'TestSerializer Name'
 
     def __init__(self, a, m_date):
@@ -36,6 +38,7 @@ class TestSerializer(FWSerializable):
 
 
 class ExportTestSerializer(FWSerializable):
+
     _fw_name = 'TestSerializer Export Name'
 
     def __init__(self, a):

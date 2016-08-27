@@ -65,4 +65,5 @@ class TemplateWriterTask(FireTaskBase):
 
         self.template_file = os.path.join(self.template_dir, d['template_file'])
         if not os.path.exists(self.template_file):
-            raise ValueError("TemplateWriterTask could not find a template file at: {}".format(self.template_file))
+            raise ValueError("TemplateWriterTask could not find a template file at: {}".format(
+                self.template_file))

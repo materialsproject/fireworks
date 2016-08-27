@@ -2,15 +2,15 @@
 
 from __future__ import unicode_literals
 
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, serialize_fw, \
+    recursive_deserialize
+
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2014, The Materials Project'
 __version__ = '0.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 10, 2014'
-
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, serialize_fw, \
-    recursive_deserialize
 
 
 class BackgroundTask(FWSerializable, object):

@@ -137,7 +137,8 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             log_exception(l_logger, 'Error writing/submitting queue script!')
             if reserve and launch_id is not None:
                 try:
-                    l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(fw.fw_id, launch_id))
+                    l_logger.info('Un-reserving FW with fw_id, launch_id: {}, {}'.format(
+                        fw.fw_id, launch_id))
                     launchpad.cancel_reservation(launch_id)
                     launchpad.forget_offline(launch_id)
                 except:
@@ -150,8 +151,9 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         return False
 
 
-def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0, njobs_block=500,
-              sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None, fill_mode=False):
+def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0,
+              njobs_block=500, sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None,
+              fill_mode=False):
     """
     Submit many jobs to the queue.
 
@@ -167,7 +169,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         reserve (bool): Whether to queue in reservation mode
         strm_lvl (str): level at which to stream log messages
         timeout (int): # of seconds after which to stop the rapidfire process
-        fill_mode (bool): whether to submit jobs even when there is nothing to run (only in non-reservation mode)
+        fill_mode (bool): whether to submit jobs even when there is nothing to run (only in
+            non-reservation mode)
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS

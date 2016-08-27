@@ -2,6 +2,16 @@
 
 from __future__ import unicode_literals
 
+import os
+import shutil
+import traceback
+from os.path import expandvars, expanduser, abspath
+import time
+
+from monty.shutil import compress_dir, decompress_dir
+
+from fireworks.core.firework import FireTaskBase
+
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
@@ -9,24 +19,14 @@ __maintainer__ = 'Shyue Ping Ong'
 __email__ = 'ongsp@ucsd.edu'
 __date__ = 'Jan 6, 2014'
 
-import os
-import shutil
-import traceback
-
-from os.path import expandvars, expanduser, abspath
-
-import time
-
-from fireworks.core.firework import FireTaskBase
-from monty.shutil import compress_dir, decompress_dir
-
 
 class FileWriteTask(FireTaskBase):
     """
     A FireTask to write files:
 
     Required params:
-        - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames and contents
+        - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames
+            and contents
 
     Optional params:
         - dest: (str) Shared path for files
@@ -195,7 +195,8 @@ class CompressDirTask(FireTaskBase):
             compress_dir(dest, compression=compression)
         except:
             if not ignore_errors:
-                raise ValueError("There was an error performing compression {} in {}.".format(compression, dest))
+                raise ValueError("There was an error performing compression {} in {}.".format(
+                    compression, dest))
 
 
 class DecompressDirTask(FireTaskBase):
@@ -237,6 +238,4 @@ class ArchiveDirTask(FireTaskBase):
     optional_params = ["format"]
 
     def run_task(self, fw_spec):
-        shutil.make_archive(self["base_name"],
-                            format=self.get("format", "gztar"),
-                            root_dir=".")
+        shutil.make_archive(self["base_name"], format=self.get("format", "gztar"), root_dir=".")

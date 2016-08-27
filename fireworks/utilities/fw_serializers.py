@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-__doc__ = """
+"""
 This module aids in serializing and deserializing objects.
 
 To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize
@@ -10,15 +10,17 @@ an object, refer to the documentation for the FWSerializable class and load_obje
     - you can de-serialize explicitly, e.g. FWObject.from_dict() to enforce a FWObject instance as the result
     - you can de-serialize implicitly, e.g. load_object() to search for the correct Class dynamically
 
-The implicit method is especially useful if you don't know in advance which subclass of a base class your \
-serialization might point to. e.g. if you require some type of Quadrilateral, a serialization from your \
-collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which one in advance...
+The implicit method is especially useful if you don't know in advance which subclass of a base class
+your serialization might point to. e.g. if you require some type of Quadrilateral, a serialization
+from your collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which
+one in advance...
 
 Some advantages:
     - Robust with regard to code refactorings even in implicit loading given certain reasonable
         guidelines on fw_name.
-    - Simple to allow a superclass to define all the serializations for its subclasses, removing code repetition
-    (in particular, note that from_dict is a class method rather than a static method, allowing use of self)
+    - Simple to allow a superclass to define all the serializations for its subclasses, removing
+        code repetition(in particular, note that from_dict is a class method rather than a static
+        method, allowing use of self)
     - Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key
     - Both JSON and YAML file import/export are naturally and concisely supported within the framework.
     - Auto-detect and proper loading of JSON and YAML files
@@ -58,6 +60,7 @@ __date__ = 'Dec 13, 2012'
 
 SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+
 if sys.version_info > (3, 0, 0):
     ENCODING_PARAMS = {"encoding": "utf-8"}
 else:
@@ -75,7 +78,8 @@ def recursive_dict(obj, preserve_unicode=True):
         return recursive_dict(obj.to_dict(), preserve_unicode)
 
     if isinstance(obj, dict):
-        return {recursive_dict(k, preserve_unicode): recursive_dict(v, preserve_unicode) for k, v in obj.items()}
+        return {recursive_dict(k, preserve_unicode): recursive_dict(v, preserve_unicode)
+                for k, v in obj.items()}
 
     if isinstance(obj, (list, tuple)):
         return [recursive_dict(v, preserve_unicode) for v in obj]
@@ -129,7 +133,6 @@ def recursive_serialize(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
-
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict = recursive_dict(m_dict)
@@ -143,7 +146,6 @@ def recursive_deserialize(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
-
     def _decorator(self, *args, **kwargs):
         new_args = [a for a in args]
         new_args[0] = {k: _recursive_load(v) for k, v in args[0].items()}
@@ -158,7 +160,6 @@ def serialize_fw(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
-
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict['_fw_name'] = self.fw_name
@@ -202,7 +203,8 @@ class FWSerializable(object):
 
     def as_dict(self):
         # strictly for pseudo-compatibility with MSONable
-        # Note that FWSerializable is not MSONable, it uses _fw_name instead of __class__ and __module__
+        # Note that FWSerializable is not MSONable, it uses _fw_name instead of __class__ and
+        # __module__
         return self.to_dict()
 
     @classmethod
@@ -216,7 +218,9 @@ class FWSerializable(object):
     def to_format(self, f_format='json', **kwargs):
         """
         returns a String representation in the given format
-        :param f_format: the format to output to (default json)
+
+        Args:
+            f_format (str): the format to output to (default json)
         """
         if f_format == 'json':
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
@@ -230,9 +234,14 @@ class FWSerializable(object):
     @classmethod
     def from_format(cls, f_str, f_format='json'):
         """
-        convert from a String representation to its Object
-        :param f_str: the String representation
-        :param f_format: serialization format of the String (default json)
+        convert from a String representation to its Object.
+
+        Args:
+            f_str (str): the String representation
+            f_format (str): serialization format of the String (default json)
+
+        Returns:
+            FWSerializable
         """
         if f_format == 'json':
             return cls.from_dict(reconstitute_dates(json.loads(f_str)))
@@ -244,9 +253,11 @@ class FWSerializable(object):
 
     def to_file(self, filename, f_format=None, **kwargs):
         """
-        Write a serialization of this object to a file
-        :param filename: filename to write to
-        :param f_format: serialization format, default checks the filename extension
+        Write a serialization of this object to a file.
+
+        Args:
+            filename(str): filename to write to
+            f_format (str): serialization format, default checks the filename extension
         """
         if f_format is None:
             f_format = filename.split('.')[-1]
@@ -256,9 +267,14 @@ class FWSerializable(object):
     @classmethod
     def from_file(cls, filename, f_format=None):
         """
-        Load a serialization of this object from a file
-        :param filename: filename to read
-        :param f_format: serialization format, default checks the filename extension
+        Load a serialization of this object from a file.
+
+        Args:
+            filename (str): filename to read
+            f_format (str): serialization format, default checks the filename extension
+
+        Returns:
+            FWSerializable
         """
         if f_format is None:
             f_format = filename.split('.')[-1]
@@ -295,7 +311,8 @@ def load_object(obj_dict):
     i) If you want to change the fw_name of an object you can set the FW_NAME_UPDATES key
     ii) If you want to put a refactored module in a new place add an entry to USER_PACKAGES
 
-    :param obj_dict: the dict representation of the class
+    Args:
+        obj_dict (dict): the dict representation of the class
     """
 
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
@@ -353,11 +370,11 @@ def load_object_from_file(filename, f_format=None):
     Implicitly load an object from a file. just a friendly wrapper to
     load_object()
 
-    :param filename: the filename to load an object from
-    :param f_format: the serialization format (default is auto-detect based on
-        filename extension)
+    Args:
+        filename (str): the filename to load an object from
+        f_format (str): the serialization format (default is auto-detect based on
+            filename extension)
     """
-
     m_dict = {}
     if f_format is None:
         f_format = filename.split('.')[-1]
@@ -404,7 +421,6 @@ def reconstitute_dates(obj_dict):
                 return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S")
             except:
                 pass
-
     return obj_dict
 
 

@@ -114,7 +114,6 @@ class FWReport:
         Returns:
              str
         """
-
         if not decorated_stat_list:
             return "There are no stats to display for the chosen time period."
 

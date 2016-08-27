@@ -78,7 +78,8 @@ def rlaunch():
     if args.command == 'singleshot' and args.offline:
         launchpad = None
     else:
-        launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
+        launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(
+            strm_lvl=args.loglvl)
 
     if args.fworker_file:
         fworker = FWorker.from_file(args.fworker_file)

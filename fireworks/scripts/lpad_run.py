@@ -39,7 +39,6 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
-
 DEFAULT_LPAD_YAML = "my_launchpad.yaml"
 
 
@@ -69,7 +68,6 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     Returns:
         list of ids
     """
-
     if args.fw_id and sum([bool(x) for x in [args.name, args.state, args.query]]) >= 1:
         raise ValueError('Cannot specify both fw_id and name/state/query)')
 
@@ -95,7 +93,8 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     if wf_mode:
         return pw_check(lp.get_wf_ids(query, sort=sort, limit=max), args, skip_pw)
 
-    return pw_check(lp.get_fw_ids(query, sort=sort, limit=max, launches_mode=args.launches_mode), args, skip_pw)
+    return pw_check(lp.get_fw_ids(query, sort=sort, limit=max, launches_mode=args.launches_mode),
+                    args, skip_pw)
 
 
 def get_lp(args):
@@ -210,7 +209,8 @@ def get_fws(args):
             ids = lp.get_fw_ids(query, sort, args.max, launches_mode=args.launches_mode)
 
     else:
-        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count', launches_mode=args.launches_mode)
+        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count',
+                            launches_mode=args.launches_mode)
     fws = []
     if args.display_format == 'ids':
         fws = ids
@@ -315,15 +315,18 @@ def get_children(links, start, max_depth):
 
 def detect_lostruns(args):
     lp = get_lp(args)
-    fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun, max_runtime=args.max_runtime,
-                                min_runtime=args.min_runtime, refresh=args.refresh)
+    fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun,
+                                    max_runtime=args.max_runtime, min_runtime=args.min_runtime,
+                                    refresh=args.refresh)
     lp.m_logger.debug('Detected {} lost launches: {}'.format(len(fl), fl))
     lp.m_logger.info('Detected {} lost FWs: {}'.format(len(ff), ff))
     lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
     if len(ff) > 0 and not args.fizzle and not args.rerun:
-        print("You can fix lost FWs using the --rerun or --fizzle arguments to the detect_lostruns command")
+        print("You can fix lost FWs using the --rerun or --fizzle arguments to the "
+              "detect_lostruns command")
     if len(fi) > 0 and not args.refresh:
-        print("You can fix inconsistent FWs using the --refresh argument to the detect_lostruns command")
+        print("You can fix inconsistent FWs using the --refresh argument to the "
+              "detect_lostruns command")
 
 
 def detect_unreserved(args):
@@ -502,8 +505,10 @@ def recover_offline(args):
     failed_fws = []
     recovered_fws = []
 
-    for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id":1}):
-        if fworker_name and lp.launches.count({"launch_id": l["launch_id"], "fworker.name": fworker_name}) == 0:
+    for l in lp.offline_runs.find({"completed": False, "deprecated": False},
+                                  {"launch_id": 1, "fw_id":1}):
+        if fworker_name and lp.launches.count({"launch_id": l["launch_id"],
+                                               "fworker.name": fworker_name}) == 0:
             continue
         fw = lp.recover_offline(l['launch_id'], args.ignore_errors, args.print_errors)
         if fw:
@@ -530,8 +535,8 @@ def report(args):
     lp=get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
     fwr = FWReport(lp)
-    stats = fwr.get_stats(coll=args.collection, interval=args.interval, num_intervals=args.num_intervals,
-                          additional_query=query)
+    stats = fwr.get_stats(coll=args.collection, interval=args.interval,
+                          num_intervals=args.num_intervals, additional_query=query)
     title_str = "Stats on {}".format(args.collection)
     title_dec = "-" * len(title_str)
     print(title_dec)
@@ -590,7 +595,8 @@ def get_output_func(format):
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
     else:
-        return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+        return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False),
+                                   default_flow_style=False)
 
 
 def lpad():
@@ -788,7 +794,8 @@ def lpad():
     defuse_wf_parser.add_argument(*query_args, **query_kwargs)
     defuse_wf_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. "
                                                      "Password or positive response to input prompt "
-                                                     "required when modifying more than {} entries.".format(PW_CHECK_NUM))
+                                                     "required when modifying more than {} entries.".
+                                  format(PW_CHECK_NUM))
     defuse_wf_parser.set_defaults(func=defuse_wfs)
 
     reignite_wfs_parser = subparsers.add_parser('reignite_wflows',

@@ -38,7 +38,6 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
         formatter: logging format. default: FW_LOGGING_FORMATTER
         clear_logs: whether to clear the logger with the same name
     """
-
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
@@ -93,7 +92,6 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
         msgs ([str]): a String or iterable of Strings
         add_traceback (bool): add traceback text, useful when logging exceptions (default False)
     """
-
     if isinstance(msgs, basestring):
         msgs = [msgs]
 
@@ -127,7 +125,6 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
         l_logger: the logger to use
         prefix: the prefix for the new dir, default="block_"
     """
-
     def get_path():
         time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
         block_path = prefix + time_now
