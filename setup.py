@@ -38,7 +38,7 @@ if __name__ == "__main__":
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
                         'daemon_mode':['fabric>=1.8.1']},
-        classifiers=['Programming Language :: Python :: 2.7',
+        classifiers=['Programming Language :: Python',
                      'Development Status :: 5 - Production/Stable',
                      'Intended Audience :: Science/Research',
                      'Intended Audience :: System Administrators',
