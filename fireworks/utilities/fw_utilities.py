@@ -10,6 +10,7 @@ import traceback
 import socket
 import multiprocessing
 import errno
+import six
 
 from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
 
@@ -92,7 +93,7 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
         msgs ([str]): a String or iterable of Strings
         add_traceback (bool): add traceback text, useful when logging exceptions (default False)
     """
-    if isinstance(msgs, basestring):
+    if isinstance(msgs, six.string_types):
         msgs = [msgs]
 
     _log_fnc = getattr(m_logger, log_lvl.lower())

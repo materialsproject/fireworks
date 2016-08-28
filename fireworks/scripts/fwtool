@@ -4,9 +4,10 @@ import os
 import shutil
 import sys
 import yaml
+from six.moves import input
 from argparse import ArgumentParser
 
-from fireworks.core.firework import FireWork
+from fireworks.core.firework import Firework
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.core.launchpad import LaunchPad
@@ -34,7 +35,7 @@ def create_fw_single(args, fnames, yaml_fname):
         tasks.append(FileWriteTask({"files_to_write": files}))
     if args.command is not None:
         tasks.append(ScriptTask({"script": [args.command]}))
-    fw = FireWork(tasks, name=args.name)
+    fw = Firework(tasks, name=args.name)
     with open(yaml_fname, "w") as f:
         yaml.dump(fw.to_dict(), f, default_flow_style=False)
 
@@ -70,7 +71,7 @@ def do_cleanup(args):
     print("The following will be deleted:")
     for name, fwid, d, files in to_delete:
         print("{}-{} - {} - {}".format(name, fwid, d, ", ".join(files)))
-    ans = raw_input("Confirm? (Y/N)")
+    ans = input("Confirm? (Y/N)")
     if ans.startswith("Y"):
         for name, fwid, d, files in to_delete:
             try:

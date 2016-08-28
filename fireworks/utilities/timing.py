@@ -12,6 +12,7 @@ import fnmatch
 import os
 import sys
 import time
+import six
 
 #: Environment variable in which to list the enabled timers
 #: Use comma-separated strings, e.g.:
@@ -230,7 +231,7 @@ class Timer(object):
             rows.append("name,stage,count,time")
             _wrote_header = True
         ns = "{}.".format(self._ns) if self._ns else ""
-        for stage in self._stage_times.iterkeys():
+        for stage in six.iterkeys(self._stage_times):
             rows.append("{ns}{n},{s},{c:d},{t:.3f}"
                         .format(ns=ns, n=self.name, s=stage,
                                 c=self._stage_counts.get(stage, 0),

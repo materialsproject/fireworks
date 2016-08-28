@@ -13,7 +13,7 @@ import ast
 import json
 import datetime
 import traceback
-from six.moves import input
+from six.moves import input, zip
 
 from pymongo import DESCENDING, ASCENDING
 import yaml
@@ -619,7 +619,7 @@ def lpad():
 
     state_args = ['-s', '--state']
     state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
-                    "choices": Firework.STATE_RANKS.keys()}
+                    "choices": list(Firework.STATE_RANKS.keys())}
     disp_args = ['-d', '--display_format']
     disp_kwargs = {"type": lambda s: s.lower(), "help": "Display format.",
                    "default": "less",
