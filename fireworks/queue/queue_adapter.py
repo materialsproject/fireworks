@@ -14,6 +14,7 @@ import threading
 import traceback
 import abc
 import collections
+import six
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -46,7 +47,7 @@ class Command(object):
         Args:
             command: command to run
         """
-        if isinstance(command, basestring):
+        if isinstance(command, six.string_types):
             command = shlex.split(command)
         self.command = command
 
