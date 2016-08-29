@@ -1095,6 +1095,8 @@ class Workflow(FWSerializable):
     def _get_representative_launch(self, fw):
         """
         Returns a representative launch(one with the largest state rank) for the given firework.
+        If there are multiple COMPLETED launches, the one with the most recent update time is
+        returned.
 
         Args:
             fw (Firework)
@@ -1104,11 +1106,15 @@ class Workflow(FWSerializable):
         """
         max_score = Firework.STATE_RANKS['ARCHIVED']  # state rank must be greater than this
         m_launch = None
-        # TODO: if multiple COMPLETED launches, pick the first launch in terms of end date
+        completed_launches = []
         for l in fw.launches:
             if Firework.STATE_RANKS[l.state] > max_score:
                 max_score = Firework.STATE_RANKS[l.state]
                 m_launch = l
+                if l.state == 'COMPLETED':
+                    completed_launches.append([l, l.time_end])
+        if completed_launches:
+            return sorted(completed_launches, key=lambda v: v[1])[-1][0]
         return m_launch
 
     @classmethod
@@ -1171,7 +1177,7 @@ class Workflow(FWSerializable):
     @classmethod
     def from_Firework(cls, fw, name=None, metadata=None):
         """
-        Reuturn Workflow from the given Firework.
+        Return Workflow from the given Firework.
 
         Args:
             fw (Firework)
