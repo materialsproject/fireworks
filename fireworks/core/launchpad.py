@@ -680,7 +680,7 @@ class LaunchPad(FWSerializable):
 
     def archive_wf(self, fw_id):
         """
-         Archivethe workflow containing the given firework id.
+         Archive the workflow containing the given firework id.
 
          Args:
              fw_id (int): firework id
@@ -788,9 +788,79 @@ class LaunchPad(FWSerializable):
             all_launch_ids.extend(l['launches'])
         return all_launch_ids
 
+    def _get_next_fw(self, fworker, launch_dir, state, fw_id=None, host=None, ip=None):
+        """
+        Internal method to find a Firework that's ready, marks it with the given state(RESERVED or
+        RUNNING),and returns it to the caller. The caller is responsible for running the Firework.
+
+        Args:
+            fworker (FWorker): A FWorker instance
+            launch_dir (str): the dir the FW will be run in (for creating a Launch object)
+            state (str): RESERVED or RUNNING, the fetched firework's state will be set to this value.
+            fw_id (int): Firework id
+            host (str): the host making the request (for creating a Launch object)
+            ip (str): the ip making the request (for creating a Launch object)
+
+        Returns:
+            (Firework, int): firework and the new launch id
+        """
+        m_fw = self._get_a_fw_to_run(fworker.query, fw_id=fw_id)
+        if not m_fw:
+            return None, None
+
+        # If this Launch was previously reserved, overwrite that reservation with this Launch
+        # note that adding a new Launch is problematic from a duplicate run standpoint
+        prev_reservations = [l for l in m_fw.launches if l.state == 'RESERVED']
+        reserved_launch = None if not prev_reservations else prev_reservations[0]
+        state_history = reserved_launch.state_history if reserved_launch else None
+
+        # get new launch
+        launch_id = reserved_launch.launch_id if reserved_launch else self.get_new_launch_id()
+        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
+        m_launch = Launch(state, launch_dir, fworker, host, ip, trackers=trackers,
+                          state_history=state_history, launch_id=launch_id, fw_id=m_fw.fw_id)
+
+        # insert the launch
+        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
+                                           m_launch.to_db_dict(), upsert=True)
+
+        self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(launch_id))
+
+        # update the firework's launches
+        if not reserved_launch:
+            # we're appending a new Firework
+            m_fw.launches.append(m_launch)
+        else:
+            # we're updating an existing launch
+            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
+
+        # insert the firework and refresh the workflow
+        m_fw.state = state
+        self._upsert_fws([m_fw])
+        self._refresh_wf(m_fw.fw_id)
+
+        # update any duplicated runs
+        if state == "RUNNING":
+            for fw in self.fireworks.find(
+                    {'launches': launch_id,
+                     'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FIZZLED']}}, {'fw_id': 1}):
+                fw_id = fw['fw_id']
+                fw = self.get_fw_by_id(fw_id)
+                fw.state = state
+                self._upsert_fws([fw])
+                self._refresh_wf(fw.fw_id)
+
+        # Store backup copies of the initial data for retrieval in case of failure
+        self.backup_launch_data[m_launch.launch_id] = m_launch.to_db_dict()
+        self.backup_fw_data[fw_id] = m_fw.to_db_dict()
+
+        self.m_logger.debug('{} FW with id: {}'.format(m_fw.state, m_fw.fw_id))
+
+        return m_fw, launch_id
+
     def reserve_fw(self, fworker, launch_dir, host=None, ip=None):
         """
-        Get the next ready firework and mark the laucnh reserved.
+        Get the next ready firework and mark the launch reserved.
 
         Args:
             fworker (FWorker)
@@ -799,26 +869,9 @@ class LaunchPad(FWSerializable):
             ip (str): ip address
 
         Returns:
-            (Firework, int): tuple of firework and the launch id.
+            (Firework, int): firework and the new launch id
         """
-        m_fw = self._get_a_fw_to_run(fworker.query)
-        if not m_fw:
-            return None, None
-            # create a launch
-        # TODO: this code is duplicated with checkout_fw with minimal mods, should refactor this!!
-        launch_id = self.get_new_launch_id()
-        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
-        m_launch = Launch('RESERVED', launch_dir, fworker, host, ip, trackers=trackers,
-                          launch_id=launch_id, fw_id=m_fw.fw_id)
-        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                           m_launch.to_db_dict(), upsert=True)
-
-        # add launch to FW
-        m_fw.launches.append(m_launch)
-        m_fw.state = 'RESERVED'
-        self._upsert_fws([m_fw])
-        self.m_logger.debug('Reserved FW with id: {}'.format(m_fw.fw_id))
-        return m_fw, launch_id
+        return self._get_next_fw(fworker, launch_dir, "RESERVED", host=host, ip=ip)
 
     def get_fw_ids_from_reservation_id(self, reservation_id):
         """
@@ -1015,63 +1068,15 @@ class LaunchPad(FWSerializable):
 
         Args:
             fworker (FWorker): A FWorker instance
+            launch_dir (str): the dir the FW will be run in (for creating a Launch object)
+            fw_id (int): Firework id.
             host (str): the host making the request (for creating a Launch object)
             ip (str): the ip making the request (for creating a Launch object)
-            launch_dir (str): the dir the FW will be run in (for creating a Launch object)
 
         Returns:
-            (Firework, launch_id)
+            (Firework, int): firework and the new launch id
         """
-        # TODO: this method is confusing, says AJ of Xmas past. Clean it up, remove duplication, etc.
-
-        m_fw = self._get_a_fw_to_run(fworker.query, fw_id)
-        if not m_fw:
-            return None, None
-
-        # was this Launch previously reserved? If so, overwrite that reservation with this Launch
-        # note that adding a new Launch is problematic from a duplicate run standpoint
-        prev_reservations = [l for l in m_fw.launches if l.state == 'RESERVED']
-        reserved_launch = None if len(prev_reservations) == 0 else prev_reservations[0]
-
-        state_history = reserved_launch.state_history if reserved_launch else None
-        l_id = reserved_launch.launch_id if reserved_launch else self.get_new_launch_id()
-        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
-        m_launch = Launch('RUNNING', launch_dir, fworker, host, ip, trackers=trackers,
-                          state_history=state_history, launch_id=l_id, fw_id=m_fw.fw_id)
-
-        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                           m_launch.to_db_dict(), upsert=True)
-
-        self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(l_id))
-
-        if not reserved_launch:
-            # we're appending a new Firework
-            m_fw.launches.append(m_launch)
-        else:
-            # we're updating an existing launch
-            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
-
-        m_fw.state = 'RUNNING'
-        self._upsert_fws([m_fw])
-        self._refresh_wf(m_fw.fw_id)
-
-        # update any duplicated runs
-        for fw in self.fireworks.find(
-                {'launches': l_id, 'state': {'$in': ['WAITING', 'READY', 'RESERVED', 'FIZZLED']}},
-                {'fw_id': 1}):
-            fw_id = fw['fw_id']
-            fw = self.get_fw_by_id(fw_id)
-            fw.state = 'RUNNING'
-            self._upsert_fws([fw])
-            self._refresh_wf(fw.fw_id)
-
-        self.m_logger.debug('Checked out FW with id: {}'.format(m_fw.fw_id))
-
-        # Store backup copies of the initial data for retrieval in case of failure
-        self.backup_launch_data[m_launch.launch_id] = m_launch.to_db_dict()
-        self.backup_fw_data[fw_id] = m_fw.to_db_dict()
-        # use dict as return type, just to be compatible with multiprocessing
-        return m_fw, l_id
+        return self._get_next_fw(fworker, launch_dir, "RUNNING", fw_id=fw_id, host=host, ip=ip)
 
     def change_launch_dir(self, launch_id, launch_dir):
         """
