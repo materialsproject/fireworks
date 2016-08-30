@@ -1318,25 +1318,21 @@ class LaunchPad(FWSerializable):
         if thief_fw.state in ['READY', 'RESERVED'] and '_dupefinder' in thief_fw.spec:
             m_dupefinder = thief_fw.spec['_dupefinder']
             # get the query that will limit the number of results to check as duplicates
-            m_query = m_dupefinder.query(thief_fw.spec)
-            m_query['launches'] = {'$ne': []}
-            # iterate through all potential duplicates in the DB
+            m_query = m_dupefinder.query(thief_fw.to_dict()["spec"])
             self.m_logger.debug('Querying for duplicates, fw_id: {}'.format(thief_fw.fw_id))
+            # iterate through all potential duplicates in the DB
             for potential_match in self.fireworks.find(m_query):
                 self.m_logger.debug('Verifying for duplicates, fw_ids: {}, {}'.format(
                     thief_fw.fw_id, potential_match['fw_id']))
-                spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
-                spec2 = dict(potential_match['spec'])  # defensive copy
-                if m_dupefinder.verify(spec1, spec2):  # verify the match
-                    # steal the launches
-                    victim_fw = self.get_fw_by_id(potential_match['fw_id'])
-                    thief_launches = [l.launch_id for l in thief_fw.launches]
-                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
-                    for launch in valuable_launches:
-                        thief_fw.launches.append(launch)
-                        stolen = True
-                        self.m_logger.info('Duplicate found! fwids {} and {}'.
-                                           format(thief_fw.fw_id, potential_match['fw_id']))
+                # steal the launches
+                victim_fw = self.get_fw_by_id(potential_match['fw_id'])
+                thief_launches = [l.launch_id for l in thief_fw.launches]
+                valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
+                for launch in valuable_launches:
+                    thief_fw.launches.append(launch)
+                    stolen = True
+                    self.m_logger.info('Duplicate found! fwids {} and {}'.format(
+                        thief_fw.fw_id, potential_match['fw_id']))
         return stolen
 
     def set_priority(self, fw_id, priority):

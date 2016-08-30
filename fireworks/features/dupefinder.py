@@ -40,7 +40,7 @@ class DupeFinderBase(FWSerializable):
 
     def query(self, spec):
         """
-        Given a spec, returns a database query that gives potential candidates for duplicated FireWorks.
+        Given a spec, returns a database query that gives potential candidates for duplicated Fireworks.
 
         Args:
             spec (dict): spec to check for duplicates
