@@ -1112,9 +1112,9 @@ class Workflow(FWSerializable):
                 max_score = Firework.STATE_RANKS[l.state]
                 m_launch = l
                 if l.state == 'COMPLETED':
-                    completed_launches.append([l, l.time_end])
+                    completed_launches.append(l)
         if completed_launches:
-            return sorted(completed_launches, key=lambda v: v[1])[-1][0]
+            return sorted(completed_launches, key=lambda v: v.time_end)[-1]
         return m_launch
 
     @classmethod
