@@ -342,7 +342,7 @@ class Tracker(FWSerializable, object):
             launch_dir (str): directory where job was launched in case of relative filename
 
         Returns:
-            str: the content(las N lines)
+            str: the content(last N lines)
         """
         m_file = self.filename
         if launch_dir and not os.path.isabs(self.filename):
