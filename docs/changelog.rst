@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+##v1.3.6**
+
+* greatly improved docstring formatting and accuracy (K. Mathew)
+* Py3K fixes (K. Mathew)
+* code cleanups (K. Mathew)
+* better PEP conformance (K. Mathew)
+* representative launch returns most recent launch (K. Mathew)
+
+
 **v1.3.5**
 
 * forget about offline runs if a queue submission unsuccessful (thanks to D. Stansberry for pointing out the problem)
