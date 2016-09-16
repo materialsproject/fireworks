@@ -401,7 +401,7 @@ def rerun_fws(args):
             lp.m_logger.debug('Processed fw_id: {}'.format(f))
     else:
         for f in fw_ids:
-            lp.rerun_fw(int(f))
+            lp.rerun_fw(int(f), clear_recovery=args.clear_recovery)
             lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
@@ -716,6 +716,8 @@ def lpad():
     rerun_fws_parser.add_argument('--task-level', action='store_true', help='Enable task level recovery')
     rerun_fws_parser.add_argument('-lid', '--launch_id', nargs='+',
                                   help='Recover launch id. --task-level must be given', default=None, type=int)
+    rerun_fws_parser.add_argument('--clear-recovery', action='store_true', help="clear recovery data "
+                                                                                "to restart cleanly")
     recover_mode_group = rerun_fws_parser.add_mutually_exclusive_group()
     recover_mode_group.add_argument('-cp', '--copy-data', action='store_const', const='cp',
                                     dest='recover_mode',

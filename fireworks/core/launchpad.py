@@ -1171,7 +1171,7 @@ class LaunchPad(FWSerializable):
             self.fireworks.find_one_and_replace({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
         return old_new
 
-    def rerun_fw(self, fw_id, rerun_duplicates=True):
+    def rerun_fw(self, fw_id, rerun_duplicates=True, clear_recovery=False):
         """
         Rerun the firework corresponding to the given id.
 
@@ -1211,6 +1211,10 @@ class LaunchPad(FWSerializable):
             self.m_logger.info("Also rerunning duplicate fw_id: {}".format(f))
             r = self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
             reruns.extend(r)
+
+        if clear_recovery:
+            set_spec = {"$unset":{"spec._recover_launch":""}}
+            self.fireworks.find_one_and_update({"fw_id":fw_id}, set_spec)
 
         return reruns
 
