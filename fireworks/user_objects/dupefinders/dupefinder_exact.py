@@ -19,12 +19,14 @@ class DupeFinderExact(DupeFinderBase):
 
     _fw_name = 'DupeFinderExact'
 
-    # TODO: move the logic into query() instead of verify() for better performance
-
-    def verify(self, spec1, spec2):
-        return spec1 == spec2
-        # return True  # if it matches the query, it doesn't need to be verified; it's an exact match!
-
     def query(self, spec):
-        return {}
-        # return {'spec': {'$elemMatch': spec}}
+        """
+        Returns the query for matching fireworks with non-zero launches and with exact matching specs.
+
+        Args:
+            spec (dict): spec to check for duplicates
+
+        Returns:
+            dict: mongo query
+      """
+        return {"$and": [{"launches": {"$ne": []}}, {"spec": spec}]}
