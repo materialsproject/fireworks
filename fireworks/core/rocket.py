@@ -167,6 +167,10 @@ class Rocket:
             if m_fw.spec.get('_recover_launch', None):
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
                 starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
+                recovery = launch_to_recover.action.stored_data['_recovery']
+                all_stored_data.update(recovery['_all_stored_data'])
+                all_update_spec.update(recovery['_all_update_spec'])
+                all_mod_spec.extend(recovery['_all_mod_spec'])
                 recover_launch_dir = launch_to_recover.launch_dir
                 if lp:
                     lp.log_message(
@@ -243,7 +247,10 @@ class Rocket:
                                                      '_task': m_task,
                                                      '_exception': {'_stacktrace': tb,
                                                                     '_details': exception_details,
-                                                                    '_failed_task_n': t_counter}},
+                                                                    '_failed_task_n': t_counter},
+                                                     '_recovery': {'_all_stored_data': all_stored_data,
+                                                                   '_all_update_spec': all_update_spec,
+                                                                   '_all_mod_spec': all_mod_spec}},
                                         exit=True)
                     m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 

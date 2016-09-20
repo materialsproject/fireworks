@@ -40,7 +40,7 @@ A Firework might fail while running one of its intermediate or final FireTasks. 
 
     lpad rerun_fws -s FIZZLED  --task-level
 
-Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via ``--copy-data`` or attempt to rerun in the same directory (``--previous-dir``). Refer to the documentation (``lpad rerun_fws -h``) for more information.
+Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via ``--copy-data`` or attempt to rerun in the same directory (``--previous-dir``). Refer to the documentation (``lpad rerun_fws -h``) for more information.  Note also that task-level reruns will modify the spec of your firework such that future standard (i. e. non-task-level) reruns will retain the recovery and attempt to restart at the task level using that recovery.  If you want to clear the recovery information from the spec to ensure that fireworks starts from scratch, you can do so by using the ``--clear-recovery`` flag, e. g. ``lpad rerun_fws -i <FW_IDS> --clear-recovery``.
 
 Rerunning based on error message
 ================================
