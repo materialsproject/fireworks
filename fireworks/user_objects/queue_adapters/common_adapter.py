@@ -197,7 +197,7 @@ class CommonAdapter(QueueAdapterBase):
             # grab the returncode. PBS returns 0 if the job was successful
             if p.returncode == 0:
                 try:
-                    job_id = self._parse_jobid(p.stdout.read())
+                    job_id = self._parse_jobid(p.stdout.read().decode())
                     queue_logger.info(
                         'Job submission was successful and job_id is {}'.format(
                             job_id))
