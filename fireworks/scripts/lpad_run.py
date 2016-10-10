@@ -477,7 +477,7 @@ def webgui(args):
         except ImportError:
             import sys
             sys.exit("Gunicorn is required for server mode. "
-                     "Install using `pip install guncorn`.")
+                     "Install using `pip install gunicorn`.")
         options = {
             'bind': '%s:%s' % (args.host, args.port),
             'workers': number_of_workers(),
