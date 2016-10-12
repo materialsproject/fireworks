@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+##v1.3.7**
+
+* minor doc updates
+* add ability to clear the task-level recovery, which gets stuck (J. Montoya)
+* py3k fixes (K. Matthew)
+* minor bugfixes
+
 ##v1.3.6**
 
 * greatly improved docstring formatting and accuracy (K. Mathew)
