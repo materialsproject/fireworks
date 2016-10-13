@@ -1305,7 +1305,7 @@ class LaunchPad(FWSerializable):
         assert query_node is not None
         if not self.workflows.find_one({'nodes': query_node}):
             raise ValueError("BAD QUERY_NODE! {}".format(query_node))
-        # redo the links
+        # redo the links and fw_states
         wf = wf.to_db_dict()
         wf['locked'] = True  # preserve the lock!
         self.workflows.find_one_and_replace({'nodes': query_node}, wf)
