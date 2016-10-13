@@ -969,7 +969,7 @@ class Workflow(FWSerializable):
             m_action = m_launch.action if (m_launch and m_launch.state == "COMPLETED") else None
 
             # report any FIZZLED parents if allow_fizzed allows us to handle FIZZLED jobs
-            if fw.spec.get('_allow_fizzled_parents'):
+            if fw.spec.get('_allow_fizzled_parents') and "_fizzled_parents" not in fw.spec:
                 parent_fws = [self.id_fw[p].to_dict() for p in self.links.parent_links.get(fw_id, [])
                               if self.id_fw[p].state == 'FIZZLED']
                 if len(parent_fws) > 0:
