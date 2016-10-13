@@ -962,7 +962,7 @@ class Workflow(FWSerializable):
         if len(parent_states) != 0 and not all(s in completed_parent_states for s in parent_states):
             m_state = 'WAITING'
 
-        else:
+        else:  # not DEFUSED/ARCHIVED, and all parents are done running. Now the state depends on the launch status
             # my state depends on launch whose state has the highest 'score' in STATE_RANKS
             m_launch = self._get_representative_launch(fw)
             m_state = m_launch.state if m_launch else 'READY'
