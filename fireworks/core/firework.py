@@ -805,6 +805,7 @@ class Workflow(FWSerializable):
         if action.defuse_children:
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].state = 'DEFUSED'
+                self.fw_states[cfid] = 'DEFUSED'
                 updated_ids.append(cfid)
 
         # defuse workflow
@@ -812,6 +813,7 @@ class Workflow(FWSerializable):
             for fw_id in self.links.nodes:
                 if self.id_fw[fw_id].state not in ['FIZZLED', 'COMPLETED']:
                     self.id_fw[fw_id].state = 'DEFUSED'
+                    self.fw_states[fw_id] = 'DEFUSED'
                     updated_ids.append(fw_id)
 
         # add detour FireWorks. This should be done *before* additions
