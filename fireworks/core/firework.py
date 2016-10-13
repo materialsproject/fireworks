@@ -988,10 +988,11 @@ class Workflow(FWSerializable):
             if m_state == 'COMPLETED':
                 updated_ids = updated_ids.union(self.apply_action(m_action, fw.fw_id))
 
-            # refresh all the children and other updated ids (note that defuse_workflow option can
-            # affect other branches)
-            for child_id in updated_ids.union(self.links[fw_id]):
-                updated_ids = updated_ids.union(self.refresh(child_id, updated_ids))
+            # refresh all the children that could possibly now be READY to run
+            # note that "FIZZLED" is for _allow_fizzled_parents children
+            if m_state in ['COMPLETED', 'FIZZLED']:
+                for child_id in self.links[fw_id]:
+                    updated_ids = updated_ids.union(self.refresh(child_id, updated_ids))
 
         self.updated_on = datetime.utcnow()
 
