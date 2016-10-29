@@ -1,8 +1,3 @@
-dependencies:
-  override:
-    - pip install -r requirements.txt
-    - python setup.py develop
 test:
   override:
-    - nosetests
-    - source fireworks/tests/cmd_line_test.sh
+    - tox
