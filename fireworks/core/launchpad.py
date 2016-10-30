@@ -138,7 +138,7 @@ class LaunchPad(FWSerializable):
             self.connection = MongoClient(host, port, j=True, ssl_ca_certs=self.ssl_ca_file,
                                           socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
         else:
-            self.connection = MongoClient(host, port, j=True, socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
+            self.connection = MongoClient(host, port, socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
         self.db = self.connection[name]
         if username:
             self.db.authenticate(username, password)
