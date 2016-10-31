@@ -1,3 +1,9 @@
+dependencies:
+  override:
+    - pip install tox tox-pyenv
+    - pyenv local 2.7.12 3.5.2
 test:
   override:
+    - find . -name "*.pyc" -exec rm '{}' \;
+    - find . -name "test_*.py" -exec chmod -x '{}' \;
     - tox
