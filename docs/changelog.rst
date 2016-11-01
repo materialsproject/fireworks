@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+##v1.3.8**
+
+* don't enforce j=True for Mongo connections (S.P. Ong)
+* improve testing framework (S.P. Ong)
+* remove problems & inefficiencies in workflow refresh (thanks to G. Petretto)
+* properly update fw_states when you defuse a workflow
+* only enter _fizzled_parents into the database once - for efficiency, and to better track the provenance of what actually occurred during the run
+* minor bugfixes / comments
+
 ##v1.3.7**
 
 * minor doc updates
