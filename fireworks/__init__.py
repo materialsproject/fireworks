@@ -7,7 +7,7 @@ FW_INSTALL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # E.g., you can now do "from fireworks import Firework", instead of from
 # "fireworks.core.firework import Firework".
 from fireworks.core.firework import FireTaskBase, Firework, Launch, Workflow, \
-    FWAction
+    FWAction, Tracker
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.utilities.fw_utilities import explicit_serialize
