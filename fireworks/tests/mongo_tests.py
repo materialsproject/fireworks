@@ -16,7 +16,6 @@ from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
-from fireworks.fw_config import WFLOCK_EXPIRATION_KILL
 from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
@@ -26,7 +25,6 @@ from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
 from fireworks.tests.tasks import DummyFWEnvTask, DummyJobPassTask, DummyLPTask
 from fireworks.features.stats import FWStats
-import six
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

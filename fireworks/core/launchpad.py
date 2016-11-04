@@ -135,10 +135,11 @@ class LaunchPad(FWSerializable):
         #          (using ssl_ca_file = None), fireworks can't connect to the Mongo database. This
         #          is why there is the following if condition. DO NOT REMOVE THIS IF CONDITION!
         if self.ssl_ca_file is not None:
-            self.connection = MongoClient(host, port, j=True, ssl_ca_certs=self.ssl_ca_file,
-                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
+            self.connection = MongoClient(host, port, ssl_ca_certs=self.ssl_ca_file,
+                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, connect=False)
         else:
-            self.connection = MongoClient(host, port, j=True, socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS)
+            self.connection = MongoClient(host, port,
+                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, connect=False)
         self.db = self.connection[name]
         if username:
             self.db.authenticate(username, password)
