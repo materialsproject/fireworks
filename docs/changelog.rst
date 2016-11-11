@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+##v1.3.9**
+
+* import Tracker object more easily (J. Montoya)
+
 ##v1.3.8**
 
 * don't enforce j=True for Mongo connections (S.P. Ong)
