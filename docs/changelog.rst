@@ -2,6 +2,51 @@
 FireWorks Changelog
 ===================
 
+##v1.3.9**
+
+* import Tracker object more easily (J. Montoya)
+
+##v1.3.8**
+
+* don't enforce j=True for Mongo connections (S.P. Ong)
+* improve testing framework (S.P. Ong)
+* remove problems & inefficiencies in workflow refresh (thanks to G. Petretto)
+* properly update fw_states when you defuse a workflow
+* only enter _fizzled_parents into the database once - for efficiency, and to better track the provenance of what actually occurred during the run
+* minor bugfixes / comments
+
+##v1.3.7**
+
+* minor doc updates
+* add ability to clear the task-level recovery, which gets stuck (J. Montoya)
+* py3k fixes (K. Matthew)
+* minor bugfixes
+
+##v1.3.6**
+
+* greatly improved docstring formatting and accuracy (K. Mathew)
+* Py3K fixes (K. Mathew)
+* code cleanups (K. Mathew)
+* better PEP conformance (K. Mathew)
+* representative launch returns most recent launch (K. Mathew)
+
+
+**v1.3.5**
+
+* forget about offline runs if a queue submission unsuccessful (thanks to D. Stansberry for pointing out the problem)
+* cleanups to project setup (S.P. Ong)
+
+**v1.3.4**
+
+* add launches mode query (query launches collection when performing lpad tasks)
+* Add auth option to web app (S.P. Ong)
+* enhance webapp server w/gunicorn (D. Winston)
+* threshold parameter in introspect commmand
+* add license option to SLURM adapter
+* add fill mode to qlaunch for keeping jobs in the queue even when nothing in DB to run
+* fix njobs_queue bug
+* open compressed files in textmode to ensure py3k compatibility (K. Mathew)
+
 **v1.3.3**
 
 * Load default FWorker location when running launch commands from Python

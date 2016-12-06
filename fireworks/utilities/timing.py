@@ -5,14 +5,14 @@ from __future__ import unicode_literals
 """
 Support for simple timers, with CSV output.
 
-The model is that timers have names, and within timers
-are multiple named "stages".
+The model is that timers have names, and within timers are multiple named "stages".
 """
 
 import fnmatch
 import os
 import sys
 import time
+import six
 
 #: Environment variable in which to list the enabled timers
 #: Use comma-separated strings, e.g.:
@@ -36,7 +36,8 @@ _timers = set()
 
 
 def get_fw_timer(name):
-    """Get timer, possibly a NullTimer, for a section of code.
+    """G
+    et timer, possibly a NullTimer, for a section of code.
 
     If the user did not enable timers for this section, will
     return a NullTimer. Otherwise will return a Timer.
@@ -49,10 +50,11 @@ def get_fw_timer(name):
         ...
         print_fw_timers()  # prints results of all timers
 
-    :param name: Name of a given timer.
-    :type name: str
-    :return: A timer instance
-    :rtype: Timer
+    Args:
+        name (str): Name of a given timer.
+
+    Returns:
+        Timer: A timer instance
     """
     # Get enabled timer patterns from env., if this
     # hasn't already been done.
@@ -73,7 +75,8 @@ def get_fw_timer(name):
 
 
 def _set_env_timers():
-    """Parse enabled timers from env.
+    """
+    Parse enabled timers from env.
     These are glob-style patterns like "LaunchPad*", separated by commas.
     """
     global _env_timers
@@ -82,28 +85,35 @@ def _set_env_timers():
 
 
 def enable_fw_timer(name, is_enabled):
-    """Enable or disable a timer.
+    """
+    Enable or disable a timer.
 
-    :param name: Timer's name, or glob-style name pattern
-    :is_enabled: Whether to enable (True) or disable (False)
+    Args:
+        name (str): Timer's name, or glob-style name pattern
+        is_enabled (bool): Whether to enable (True) or disable (False)
     """
     _env_timers[name] = is_enabled
 
 
 def any_fw_timers():
-    """Whether any timers are enabled and non-empty
+    """
+    Whether any timers are enabled and non-empty
 
-    :return: True if so, False if not
+    Returns:
+        bool: True if so, False if not
     """
     return sum(map(len, _timers)) > 0
 
 
 def print_fw_timers(stream=sys.stdout):
-    """Print results of all timers to the provided stream.
+    """
+    Print results of all timers to the provided stream.
 
-    :param stream: Output stream, only needs to support 'write'
-    :return: number of items (data rows) printed
-    :rtype: int
+    Args:
+        stream: Output stream, only needs to support 'write'
+
+    Returns:
+        int: number of items (data rows) printed
     """
     n = 0
     for tm in _timers:
@@ -116,7 +126,8 @@ def print_fw_timers(stream=sys.stdout):
 # -------
 
 class Timer(object):
-    """Simple performance timer.
+    """
+    Simple performance timer.
 
     Usage:
         p = Timer("myname")
@@ -147,16 +158,18 @@ class Timer(object):
         self._stage_active = set()
 
     def __len__(self):
-        """Number of stages timed.
+        """
+        Number of stages timed.
 
-        :return: number of stages
-        :rtype: int
+        Returns:
+            int: number of stages
         """
         return len(self._stage_times)
 
     @classmethod
     def set_ns(cls, val):
-        """Set a namespace (prefix) for all timers.
+        """
+        Set a namespace (prefix) for all timers.
         In output, the namespace will be separated by the timer name by a "."
         """
         cls._ns = val
@@ -173,14 +186,16 @@ class Timer(object):
         return type_ is None  # not an exception
 
     def start(self, stage="null"):
-        """Begin timing.
+        """
+        Begin timing.
         """
         tm = self._stage_times.get(stage, 0)
         self._stage_times[stage] = tm - time.time()
         self._stage_active.add(stage)
 
     def stop(self, stage="null"):
-        """Stop timing.
+        """
+        Stop timing.
         """
         self._stage_times[stage] += time.time()
         count = self._stage_counts.get(stage, 0)
@@ -188,19 +203,22 @@ class Timer(object):
         self._stage_active.remove(stage)
 
     def stop_all(self):
-        """Stop all timers.
+        """
+        Stop all timers.
         Idempotent.
         """
         map(self.stop, list(self._stage_active))
         self._stage_active = set()
 
     def __str__(self):
-        """Return results as CSV.
+        """
+        Return results as CSV.
         """
         return self._csv()
 
     def write(self, stream=sys.stdout):
-        """Write results (CSV) to a stream.
+        """
+        Write results (CSV) to a stream.
         """
         stream.write(str(self))
         stream.write("\n")
@@ -213,7 +231,7 @@ class Timer(object):
             rows.append("name,stage,count,time")
             _wrote_header = True
         ns = "{}.".format(self._ns) if self._ns else ""
-        for stage in self._stage_times.iterkeys():
+        for stage in six.iterkeys(self._stage_times):
             rows.append("{ns}{n},{s},{c:d},{t:.3f}"
                         .format(ns=ns, n=self.name, s=stage,
                                 c=self._stage_counts.get(stage, 0),

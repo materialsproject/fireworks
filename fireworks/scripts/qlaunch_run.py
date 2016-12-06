@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 import os
 import sys
 import time
+
 from fireworks.fw_config import QUEUEADAPTER_LOC, CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -23,6 +24,7 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
 
+
 def do_launch(args):
     if not args.launchpad_file and os.path.exists(
             os.path.join(args.config_dir, 'my_launchpad.yaml')):
@@ -34,8 +36,7 @@ def do_launch(args):
 
     if not args.queueadapter_file and os.path.exists(
             os.path.join(args.config_dir, 'my_qadapter.yaml')):
-        args.queueadapter_file = os.path.join(args.config_dir,
-                                              'my_qadapter.yaml')
+        args.queueadapter_file = os.path.join(args.config_dir, 'my_qadapter.yaml')
 
     launchpad = LaunchPad.from_file(
         args.launchpad_file) if args.launchpad_file else LaunchPad(
@@ -56,11 +57,14 @@ def do_launch(args):
                                args.launch_dir, args.reserve, args.loglvl, False, args.fill_mode)
 
 def qlaunch():
-    m_description = 'This program is used to submit jobs to a queueing system. Details of the job and queue \
-    interaction are handled by the mandatory queue adapter file parameter. The "rapidfire" option can be used \
-    to maintain a certain number of jobs in the queue by specifying the n_loops parameter to a large number. \
-    If n_loops is set to 1 (default) the queue launcher will quit after submitting the desired number of jobs. \
-    For more help on rapid fire options, use qlauncher.py rapidfire -h'
+    m_description = 'This program is used to submit jobs to a queueing system. ' \
+                    'Details of the job and queue interaction are handled by the ' \
+                    'mandatory queue adapter file parameter. The "rapidfire" option ' \
+                    'can be used to maintain a certain number of jobs in the queue by ' \
+                    'specifying the n_loops parameter to a large number. If n_loops is ' \
+                    'set to 1 (default) the queue launcher will quit after submitting ' \
+                    'the desired number of jobs. For more help on rapid fire options, ' \
+                    'use qlauncher.py rapidfire -h'
 
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help='command', dest='command')
@@ -110,7 +114,8 @@ def qlaunch():
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=CONFIG_FILE_DIR)
-    parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run', action='store_true')
+    parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run',
+                        action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
                               help='maximum jobs to keep in queue for this user', default=0,
@@ -121,8 +126,11 @@ def qlaunch():
     rapid_parser.add_argument('-b', '--maxjobs_block',
                               help='maximum jobs to put in a block',
                               default=500, type=int)
-    rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
-    rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)', default=None, type=int)
+    rapid_parser.add_argument('--nlaunches',
+                              help='num_launches (int or "infinite"; default 0 is all jobs in DB)',
+                              default=0)
+    rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)',
+                              default=None, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
 
     args = parser.parse_args()

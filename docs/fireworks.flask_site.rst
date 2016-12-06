@@ -12,6 +12,14 @@ fireworks.flask_site.app module
     :undoc-members:
     :show-inheritance:
 
+fireworks.flask_site.gunicorn module
+------------------------------------
+
+.. automodule:: fireworks.flask_site.gunicorn
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks.flask_site.helpers module
 -----------------------------------
 
