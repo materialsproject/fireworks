@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from monty.dev import deprecated
+
 """
 This module contains some of the most central FireWorks classes:
 
@@ -1196,3 +1198,9 @@ class Workflow(FWSerializable):
 
     def __str__(self):
         return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)
+
+
+# old spelling
+@deprecated(FiretaskBase, "FireTaskBase has been renamed to FiretaskBase!")
+class FireTaskBase(FiretaskBase):
+    pass
