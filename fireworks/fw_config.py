@@ -176,7 +176,7 @@ def write_config(path=None):
 @singleton
 class FWData(object):
     """
-    This class stores data that a FireTask might want to access, e.g. to see the runtime params
+    This class stores data that a Firetask might want to access, e.g. to see the runtime params
     """
 
     def __init__(self):

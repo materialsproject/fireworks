@@ -15,10 +15,10 @@ Criteria for Inclusion
 
 Our criteria for inclusion of your code depends on the type of contribution you plan to submit.
 
-Adding new Queue Adapters, FireTasks, etc.
+Adding new Queue Adapters, Firetasks, etc.
 ------------------------------------------
 
-If you've written Queue Adapters, FireTasks, Duplicate Finders, or other "plug-in" type objects that do not modify existing code, we would be very happy to include them in the main repo. The main condition for inclusion is that they be useful to a broad section of the FireWorks community.
+If you've written Queue Adapters, Firetasks, Duplicate Finders, or other "plug-in" type objects that do not modify existing code, we would be very happy to include them in the main repo. The main condition for inclusion is that they be useful to a broad section of the FireWorks community.
 
 Adding new features or performance enhancements
 -----------------------------------------------

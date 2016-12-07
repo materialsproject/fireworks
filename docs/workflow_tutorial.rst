@@ -141,6 +141,6 @@ Here is a complete Python example that runs a Workflow::
 Next steps
 ==========
 
-Neither our *Hamlet* workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by :doc:`running multiple FireTasks within a single Firework <firetask_tutorial>`. Indeed, the single-Firework solution with multiple FireTasks is conceptually much simpler than defining workflows. The design choice of using FireTasks versus a Workflow in such scenarios is discussed another tutorial. For example, you might want to use a Workflow if each step requires a different type of computing resource.
+Neither our *Hamlet* workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by :doc:`running multiple Firetasks within a single Firework <firetask_tutorial>`. Indeed, the single-Firework solution with multiple Firetasks is conceptually much simpler than defining workflows. The design choice of using Firetasks versus a Workflow in such scenarios is discussed another tutorial. For example, you might want to use a Workflow if each step requires a different type of computing resource.
 
 Meanwhile, you can continue on to the last step of this tutorial series, which better illustrates the power of workflows: :doc:`Dynamic workflows <dynamic_wf_tutorial>`.

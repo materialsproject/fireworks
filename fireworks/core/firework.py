@@ -6,10 +6,10 @@ from __future__ import unicode_literals
 This module contains some of the most central FireWorks classes:
 
     - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
-    - A Firework defines a workflow step and contains one or more FireTasks along with its Launches.
+    - A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
     - A Launch describes the run of a Firework on a computing resource.
-    - A FireTaskBase defines the contract for tasks that run within a Firework (FireTasks).
-    - A FWAction encapsulates the output of a FireTask and tells FireWorks what to do next after
+    - A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
+    - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after
         a job completes.
 """
 
@@ -40,7 +40,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-class FireTaskMeta(abc.ABCMeta):
+class FiretaskMeta(abc.ABCMeta):
     def __call__(cls, *args, **kwargs):
         o = abc.ABCMeta.__call__(cls, *args, **kwargs)
         for k in cls.required_params:
@@ -49,13 +49,13 @@ class FireTaskMeta(abc.ABCMeta):
         return o
 
 
-@add_metaclass(FireTaskMeta)
-class FireTaskBase(defaultdict, FWSerializable):
+@add_metaclass(FiretaskMeta)
+class FiretaskBase(defaultdict, FWSerializable):
     """
-    FireTaskBase is used like an abstract class that defines a computing task
-    (FireTask). All FireTasks should inherit from FireTaskBase.
+    FiretaskBase is used like an abstract class that defines a computing task
+    (Firetask). All Firetasks should inherit from FiretaskBase.
 
-    You can set parameters of a FireTask like you'd use a dict.
+    You can set parameters of a Firetask like you'd use a dict.
     """
     # Specify required parameters with class variable. Consistency will be checked upon init.
     required_params = []
@@ -66,7 +66,7 @@ class FireTaskBase(defaultdict, FWSerializable):
     @abc.abstractmethod
     def run_task(self, fw_spec):
         """
-        This method gets called when the FireTask is run. It can take in a
+        This method gets called when the Firetask is run. It can take in a
         Firework spec, perform some task using that data, and then return an
         output in the form of a FWAction.
 
@@ -103,8 +103,8 @@ class FireTaskBase(defaultdict, FWSerializable):
 
 class FWAction(FWSerializable):
     """
-    A FWAction encapsulates the output of a FireTask (it is returned by a FireTask after the
-    FireTask completes). The FWAction allows a user to store rudimentary output data as well
+    A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
+    Firetask completes). The FWAction allows a user to store rudimentary output data as well
     as return commands that alter the workflow.
     """
 
@@ -113,7 +113,7 @@ class FWAction(FWSerializable):
         """
         Args:
             stored_data (dict): data to store from the run. Does not affect the operation of FireWorks.
-            exit (bool): if set to True, any remaining FireTasks within the same Firework are skipped.
+            exit (bool): if set to True, any remaining Firetasks within the same Firework are skipped.
             update_spec (dict): specifies how to update the child FW's spec
             mod_spec ([dict]): update the child FW's spec using the DictMod language (more flexible
                 than update_spec)
@@ -160,7 +160,7 @@ class FWAction(FWSerializable):
     @property
     def skip_remaining_tasks(self):
         """
-        If the FWAction gives any dynamic action, we skip the subsequent FireTasks
+        If the FWAction gives any dynamic action, we skip the subsequent Firetasks
 
         Returns:
             bool
@@ -173,7 +173,7 @@ class FWAction(FWSerializable):
 
 class Firework(FWSerializable):
     """
-    A Firework is a workflow step and might be contain several FireTasks.
+    A Firework is a workflow step and might be contain several Firetasks.
     """
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
@@ -184,8 +184,8 @@ class Firework(FWSerializable):
                  state='WAITING', created_on=None, fw_id=None, parents=None, updated_on=None):
         """
         Args:
-            tasks (Firetask or [FireTask]): a list of FireTasks to run in sequence.
-            spec (dict): specification of the job to run. Used by the FireTask.
+            tasks (Firetask or [Firetask]): a list of Firetasks to run in sequence.
+            spec (dict): specification of the job to run. Used by the Firetask.
             launches ([Launch]): a list of Launch objects of this Firework.
             archived_launches ([Launch]): a list of archived Launch objects of this Firework.
             state (str): the state of the FW (e.g. WAITING, RUNNING, COMPLETED, ARCHIVED)

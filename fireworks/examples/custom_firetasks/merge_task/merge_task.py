@@ -1,4 +1,4 @@
-from fireworks import LaunchPad, explicit_serialize, FireTaskBase, FWAction, Firework, Workflow
+from fireworks import LaunchPad, explicit_serialize, FiretaskBase, FWAction, Firework, Workflow
 from fireworks.core.rocket_launcher import rapidfire
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
@@ -8,7 +8,7 @@ A workflow where 2 parent Fireworks (A and B) merge into a common child C.
 """
 
 @explicit_serialize
-class TaskA(FireTaskBase):
+class TaskA(FiretaskBase):
 
     def run_task(self, fw_spec):
         print("This is task A")
@@ -16,14 +16,14 @@ class TaskA(FireTaskBase):
 
 
 @explicit_serialize
-class TaskB(FireTaskBase):
+class TaskB(FiretaskBase):
 
     def run_task(self, fw_spec):
         print("This is task B")
         return FWAction(update_spec={"param_B": 20})
 
 @explicit_serialize
-class TaskC(FireTaskBase):
+class TaskC(FiretaskBase):
 
     def run_task(self, fw_spec):
         print("This is task C.")
