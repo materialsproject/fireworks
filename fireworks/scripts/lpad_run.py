@@ -534,15 +534,25 @@ def forget_offline(args):
 def report(args):
     lp=get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
+    email = args.email if args.email else None
     fwr = FWReport(lp)
     stats = fwr.get_stats(coll=args.collection, interval=args.interval,
                           num_intervals=args.num_intervals, additional_query=query)
     title_str = "Stats on {}".format(args.collection)
     title_dec = "-" * len(title_str)
-    print(title_dec)
-    print(title_str)
-    print(title_dec)
-    print(fwr.get_stats_str(stats))
+    if email:
+        try:
+            os.system('echo "{}"| mail -s {} {}'.format([title_dec, title_str, title_dec,
+                                                         fwr.get_stats_str(stats)].join('\n'),
+                                                         "Fireworks Report", args.email))
+            print("Report sent to {}.".format(email))
+        except:
+            print("Error sending the email.")
+    else:
+        print(title_dec)
+        print(title_str)
+        print(title_dec)
+        print(fwr.get_stats_str(stats))
 
 
 def introspect(args):
@@ -966,6 +976,8 @@ def lpad():
                                                         "'days' (default), 'months', or 'years'.", default="days")
     report_parser.add_argument("-n", "--num_intervals", help="The number of intervals on which to "
                                                              "report (default=5)", type=int, default=5)
+    report_parser.add_argument("-e", "--email", help="Email the report"
+                                                     "Enter an email address must be provided", type=str, default=None)
     report_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries "
                                                      "before processing.")
     report_parser.set_defaults(func=report)
