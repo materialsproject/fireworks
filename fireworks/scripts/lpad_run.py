@@ -977,7 +977,7 @@ def lpad():
     report_parser.add_argument("-n", "--num_intervals", help="The number of intervals on which to "
                                                              "report (default=5)", type=int, default=5)
     report_parser.add_argument("-e", "--email", help="Email the report. "
-                                                     "An email address must be provided", type=str, default=None)
+                                                     "An email address must be provided.", type=str, default=None)
     report_parser.add_argument('-q', '--query', help="Additional Pymongo queries to filter entries "
                                                      "before processing.")
     report_parser.set_defaults(func=report)
