@@ -542,9 +542,9 @@ def report(args):
     title_dec = "-" * len(title_str)
     if email:
         try:
-            os.system('echo "{}"| mail -s {} {}'.format([title_dec, title_str, title_dec,
-                                                         fwr.get_stats_str(stats)].join('\n'),
-                                                         "Fireworks Report", args.email))
+            os.system('echo "{}"| mail -s {} {}'.format('\n'.join([title_dec, title_str, title_dec,
+                                                         fwr.get_stats_str(stats)]),
+                                                         '"Fireworks Report"', args.email))
             print("Report sent to {}.".format(email))
         except:
             print("Error sending the email.")
