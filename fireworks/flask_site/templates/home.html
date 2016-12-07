@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block title %}FireWorks Dashboard{% endblock %}
 
-{% block content %} 
-	
+{% block content %}
+
  <div class="row">
     <div class="span12">
         <h3 class="text-center">Workflow Dashboard</h3>
     </div>
+    <form>Query: <input name="query" /></form>
  </div>
 
 <div class="row pull-down">
@@ -22,11 +23,11 @@
                             </div>
                             <div class="span3">
                                 <span class="label {{wf.state}}">{{wf.state}}</span>
-                                <span class="pull-right">  
+                                <span class="pull-right">
                                     ID: <a href="/wf/{{ wf.id }}">{{ wf.id }}</a>
                                 </span>
                             </div>
-                           
+
                         </div>
                         <hr>
                         <div class="pull-up">
@@ -37,7 +38,7 @@
                             {% endfor %}
                         </div>
                     </td>
-                    
+
                 </tr>
             {% endfor %}
         </table>

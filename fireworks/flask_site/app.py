@@ -3,6 +3,7 @@ from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
+from fireworks.utilities.fw_utilities import get_fw_logger
 from pymongo import DESCENDING
 import os, json
 from fireworks.core.launchpad import LaunchPad
@@ -15,6 +16,8 @@ hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 app.BASE_Q = {}
 app.BASE_Q_WF = {}
+
+logger = get_fw_logger('app')
 
 PER_PAGE = 20
 STATES = Firework.STATE_RANKS.keys()
@@ -76,6 +79,14 @@ def pluralize(number, singular='', plural='s'):
 @app.route("/")
 @requires_auth
 def home():
+    querystr = request.args.get('query')
+    logger.debug("Query is {}".format(querystr))
+
+    try:
+        filt = parse_querystr(querystr)
+    except:
+        filt = {}
+
     fw_nums = []
     wf_nums = []
     for state in STATES:
@@ -295,6 +306,12 @@ def bootstrap_app(*args, **kwargs):
     fireworks.flask_site.app.lp = LaunchPad.from_dict(
         json.loads(os.environ["FWDB_CONFIG"]))
     return app(*args, **kwargs)
+
+
+def parse_querystr(querystr):
+    # try to parse using `json.loads`.
+    # validate as valid mongo filter dict
+    pass
 
 
 if __name__ == "__main__":
