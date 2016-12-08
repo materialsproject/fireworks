@@ -234,7 +234,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
 
             # Setup Zeus to run
-            self.lp.rerun_fw(self.zeus_fw_id)
+            self.lp.resume_fw(self.zeus_fw_id)
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
             # Check that Zeus and children are all completed now
@@ -298,6 +298,19 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
         self.assertIn(self.zeus_fw_id,completed_ids)
         self.assertTrue(self.zeus_child_fw_ids.issubset(completed_ids))
+
+    def test_pause_wf(self):
+        # pause Workflow containing Zeus
+        self.lp.pause_wf(self.zeus_fw_id)
+        paused_ids = self.lp.get_fw_ids({'state':'PAUSED'})
+        self.assertIn(self.zeus_fw_id,paused_ids)
+
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        # Check for the state of all fws in Zeus workflow in incomplete fwids
+        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
+        self.assertEqual(fws_no_run,self.all_ids)
 
     def test_defuse_wf(self):
         # defuse Workflow containing Zeus

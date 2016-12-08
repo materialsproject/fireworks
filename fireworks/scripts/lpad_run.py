@@ -350,6 +350,13 @@ def defuse_wfs(args):
         lp.m_logger.info('Note: FIZZLED and COMPLETED FWs were not defused. '
                          'Use the --defuse_all_states option to force this (or rerun FIZZLED FWs first).')
 
+def pause_wfs(args):
+    lp = get_lp(args)
+    fw_ids = parse_helper(lp, args, wf_mode=True)
+    for f in fw_ids:
+        lp.pause_wf(f)
+        lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    lp.m_logger.info('Finished defusing {} FWs.'.format(len(fw_ids)))
 
 def archive(args):
     lp = get_lp(args)
@@ -392,6 +399,15 @@ def reignite_fws(args):
         lp.reignite_fw(f)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished reigniting {} FWs'.format(len(fw_ids)))
+
+
+def resume_fws(args):
+    lp = get_lp(args)
+    fw_ids = parse_helper(lp, args)
+    for f in fw_ids:
+        lp.resume_fw(f)
+        lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    lp.m_logger.info('Finished resuming {} FWs'.format(len(fw_ids)))
 
 
 def rerun_fws(args):
@@ -755,7 +771,7 @@ def lpad():
     pause_fw_parser.set_defaults(func=pause_fws)
 
 
-    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single Firework')
+    reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a set of Fireworks')
     reignite_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     reignite_fw_parser.add_argument('-n', '--name', help='name')
     reignite_fw_parser.add_argument(*state_args, **state_kwargs)
@@ -767,6 +783,18 @@ def lpad():
                                                        "entries.".format(PW_CHECK_NUM))
     reignite_fw_parser.set_defaults(func=reignite_fws)
 
+    resume_fw_parser = subparsers.add_parser('resume_fws', help='resume (un-pause) a set of Fireworks')
+    resume_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    resume_fw_parser.add_argument('-n', '--name', help='name')
+    resume_fw_parser.add_argument(*state_args, **state_kwargs)
+    resume_fw_parser.add_argument(*query_args, **query_kwargs)
+    resume_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
+    resume_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. "
+                                                       "Password or positive response to input "
+                                                       "prompt required when modifying more than {} "
+                                                       "entries.".format(PW_CHECK_NUM))
+    resume_fw_parser.set_defaults(func=resume_fws)
+    
     update_fws_parser = subparsers.add_parser(
         'update_fws', help='Update a Firework spec.')
     update_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
@@ -814,7 +842,18 @@ def lpad():
                                                      "Password or positive response to input prompt "
                                                      "required when modifying more than {} entries.".
                                   format(PW_CHECK_NUM))
-    defuse_wf_parser.set_defaults(func=defuse_wfs)
+    defuse_wf_parser.set_defaults(func=pause_wfs)
+
+    pause_wf_parser = subparsers.add_parser('pause_wflows', help='pause an entire Workflow')
+    pause_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    pause_wf_parser.add_argument('-n', '--name', help='name')
+    pause_wf_parser.add_argument(*state_args, **state_kwargs)
+    pause_wf_parser.add_argument(*query_args, **query_kwargs)
+    pause_wf_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. "
+                                                     "Password or positive response to input prompt "
+                                                     "required when modifying more than {} entries.".
+                                  format(PW_CHECK_NUM))
+    pause_wf_parser.set_defaults(func=pause_wfs)
 
     reignite_wfs_parser = subparsers.add_parser('reignite_wflows',
                                                 help='reignite (un-cancel) an entire Workflow')

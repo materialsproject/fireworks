@@ -1204,6 +1204,5 @@ class Workflow(FWSerializable):
 
 
 # old spelling
-@deprecated(FiretaskBase, "FireTaskBase has been renamed to FiretaskBase!")
 class FireTaskBase(FiretaskBase):
     pass
