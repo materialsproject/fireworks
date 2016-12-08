@@ -79,8 +79,10 @@ def pluralize(number, singular='', plural='s'):
 @app.route("/")
 @requires_auth
 def home():
-    querystr = request.args.get('query')
-    logger.debug("Query is {}".format(querystr))
+    fw_querystr = request.args.get('fw_query')
+    wf_querystr = request.args.get('wf_query')
+
+    logger.debug("Query is {}".format(fw_querystr))
 
     try:
         filt = parse_querystr(querystr)
@@ -311,7 +313,9 @@ def bootstrap_app(*args, **kwargs):
 def parse_querystr(querystr):
     # try to parse using `json.loads`.
     # validate as valid mongo filter dict
-    pass
+    db = lp.fireworks
+    db.find_one(querystr)
+    return json.loads(querystr)
 
 
 if __name__ == "__main__":
