@@ -686,6 +686,19 @@ class LaunchPad(FWSerializable):
             if fw.state not in ["COMPLETED", "FIZZLED"] or defuse_all_states:
                 self.defuse_fw(fw.fw_id)
 
+    def pause_wf(self, fw_id):
+        """
+        Pause the workflow containing the given firework id.
+
+        Args:
+            fw_id (int): firework id
+            defuse_all_states (bool)
+        """
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+        for fw in wf.fws:
+            if fw.state not in ["COMPLETED", "FIZZLED", "DEFUSED"]:
+                self.pause_fw(fw.fw_id)
+
     def reignite_wf(self, fw_id):
         """
          Reignite the workflow containing the given firework id.
