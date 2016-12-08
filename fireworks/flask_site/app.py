@@ -3,7 +3,7 @@ from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
-from pymongo import DESCENDING
+from pymongo import DESCENDING, ASCENDING
 import os, json
 from fireworks.core.launchpad import LaunchPad
 from flask_paginate import Pagination
@@ -188,9 +188,18 @@ def wf_details(wf_id):
 
 
 @app.route('/fw/', defaults={"state": "total"})
-@app.route("/fw/<state>/")
+@app.route("/fw/<state>/", defaults={"sorting_key": "_id", "sorting_order": "DESCENDING"})
+@app.route("/fw/<state>/<sorting_key>/<sorting_order>/")
 @requires_auth
-def fw_state(state):
+def fw_state(state, sorting_key='_id', sorting_order="DESCENDING"):
+    if sorting_order == "ASCENDING":
+        sort_order = 1
+    elif sorting_order == "DESCENDING":
+        sort_order = -1
+    else:
+        raise RuntimeError()
+    current_sorting_key = sorting_key
+    current_sorting_order = sorting_order
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
     q = _addq(app.BASE_Q, q)
@@ -200,8 +209,8 @@ def fw_state(state):
     except ValueError:
         page = 1
 
-    rows = list(db.find(q, projection=["fw_id", "name", "created_on"]).sort(
-        [('_id', DESCENDING)]).skip(
+    rows = list(db.find(q, projection=["fw_id", "name", "created_on", "updated_on"]).sort(
+        [(sorting_key, sort_order)]).skip(
         (page - 1) * PER_PAGE).limit(PER_PAGE))
     pagination = Pagination(page=page, total=fw_count, record_name='fireworks',
                             per_page=PER_PAGE)
@@ -209,9 +218,18 @@ def fw_state(state):
 
 
 @app.route('/wf/', defaults={"state": "total"})
-@app.route("/wf/<state>/")
+@app.route("/wf/<state>/", defaults={"sorting_key": "_id", "sorting_order": "DESCENDING"})
+@app.route("/wf/<state>/<sorting_key>/<sorting_order>/")
 @requires_auth
-def wf_state(state):
+def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
+    if sorting_order == "ASCENDING":
+        sort_order = 1
+    elif sorting_order == "DESCENDING":
+        sort_order = -1
+    else:
+        raise RuntimeError()
+    current_sorting_key = sorting_key
+    current_sorting_order = sorting_order
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
     q = _addq(app.BASE_Q_WF, q)
@@ -220,7 +238,7 @@ def wf_state(state):
         page = int(request.args.get('page', 1))
     except ValueError:
         page = 1
-    rows = list(db.find(q).sort([('_id', DESCENDING)]).skip(
+    rows = list(db.find(q).sort([(sorting_key, sort_order)]).skip(
         (page - 1) * PER_PAGE).limit(PER_PAGE))
     for r in rows:
         r["fw_id"] = r["nodes"][0]
