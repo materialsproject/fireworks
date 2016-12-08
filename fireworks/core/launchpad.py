@@ -631,7 +631,7 @@ class LaunchPad(FWSerializable):
         if f:
             self._refresh_wf(fw_id)
         if not f:
-            raise ValueError('No pausable (WAITING,READY,RESERVED) Firework exists with fw_id: {}'.format(fw_id))
+            self.m_logger.error('No pausable (WAITING,READY,RESERVED) Firework exists with fw_id: {}'.format(fw_id))
         return f
 
 
