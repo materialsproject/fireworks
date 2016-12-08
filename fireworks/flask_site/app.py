@@ -105,9 +105,6 @@ def home():
     session['fw_filt'] = parse_querystr(fw_querystr, lp.fireworks) if fw_querystr else {}
     session['wf_filt'] = parse_querystr(wf_querystr, lp.workflows) if wf_querystr else {}
 
-    # logger.debug("FW Query is {}".format(fw_filt))
-    # logger.debug("WF Query is {}".format(wf_filt))
-
     fw_nums = []
     wf_nums = []
     for state in STATES:
@@ -355,12 +352,10 @@ def parse_querystr(querystr, db):
         d = json.loads(querystr)
     except:
         flash("{} is not a valid json query.".format(querystr))
-        logger.debug("Should flash because of {}".format(querystr))
         return {}
     try:
         assert isinstance(d, dict)
         h = db.find_one(d)
-        logger.debug("db returns {}".format(h))
     except:
         flash("{} is not a valid MongoDB query doc.".format(querystr))
         return {}
