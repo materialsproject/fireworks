@@ -1,0 +1,6 @@
+{
+    "database": "db_filepad",
+    "filepad": "fpad",
+    "host": "localhost",
+    "port": 27017
+}
