@@ -11,6 +11,8 @@ You can cancel (pause) Workflows using the *defuse_wflows* command of the Launch
 
 where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). This will defuse the **entire** Workflow.
 
+You can also pause Workflows using ``lpad pause_wflows``, which is equivelant to defusing them, but allows for better organization, e.g. pausing a workflow to run later vs defusing it because it is not functioning and needs to be adressed later.
+
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``) for the workflow. The full command is thus::
 
      lpad defuse_wflows [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
