@@ -81,6 +81,9 @@ def pluralize(number, singular='', plural='s'):
 def home():
     fw_querystr = request.args.get('fw_query')
     wf_querystr = request.args.get('wf_query')
+    fw_querystr = fw_querystr if fw_querystr else ''
+    wf_querystr = wf_querystr if wf_querystr else ''
+
     fw_filt = parse_querystr(fw_querystr, lp.fireworks) if fw_querystr else {}
     wf_filt = parse_querystr(wf_querystr, lp.workflows) if wf_querystr else {}
 
@@ -311,12 +314,12 @@ def bootstrap_app(*args, **kwargs):
 def parse_querystr(querystr, db):
     # try to parse using `json.loads`.
     # validate as valid mongo filter dict
-    try:
-        json.loads(querystr)
-        db.find_one(querystr)
-        return querystr
-    except:
-        return {}
+
+    d = json.loads(querystr)
+    h = db.find_one(d)
+    logger.debug("db returns {}".format(h))
+    return d
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
