@@ -1,8 +1,8 @@
 import unittest
 import os
+import datetime
 from fireworks import LaunchPad
 from update_links.update_dir_paths import update_path_in_collection
-import datetime
 
 __author__ = 'Alireza Faghaninia, Anubhav Jain'
 __email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
