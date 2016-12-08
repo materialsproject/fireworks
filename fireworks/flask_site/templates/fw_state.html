@@ -12,13 +12,27 @@
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Created On</th>
+        {% if current_sorting_key == "created_on" and current_sorting_order == "ASCENDING" %}
+        <th><a href="/fw/{{state}}/created_on/DESCENDING">Created On &#x25B2;</a></th>
+        {% elif current_sorting_key == "created_on" and current_sorting_order == "DESCENDING" %}
+        <th><a href="/fw/{{state}}/created_on/ASCENDING">Created On &#x25BC;</a></th>
+        {% else %}
+        <th><a href="/fw/{{state}}/created_on/DESCENDING">Created On</a></th>
+        {% endif %}
+        {% if current_sorting_key == "updated_on" and current_sorting_order == "ASCENDING" %}
+        <th><a href="/fw/{{state}}/updated_on/DESCENDING">Updated On &#x25B2;</a></th>
+        {% elif current_sorting_key == "updated_on" and current_sorting_order == "DESCENDING" %}
+        <th><a href="/fw/{{state}}/updated_on/ASCENDING">Updated On &#x25BC;</a></th>
+        {% else %}
+        <th><a href="/fw/{{state}}/updated_on/DESCENDING">Updated On</a></th>
+        {% endif %}
     </tr>
     {% for row in rows %}
         <tr>
             <td><center><a href="/fw/{{ row.fw_id }}">{{ row.fw_id }}</a></center></td>
             <td>{{ row.name }}</td>
-            <td>{{ row.created_on|datetime }}</td>
+            <td>{{ row.created_on }}</td>
+            <td>{{ row.updated_on }}</td>
         </tr>
     {% endfor %}
 </table>
