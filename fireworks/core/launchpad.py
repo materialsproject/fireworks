@@ -673,6 +673,20 @@ class LaunchPad(FWSerializable):
             self._refresh_wf(fw_id)
         return f
 
+    def resume_fw(self, fw_id):
+        """
+        Given the firework id, resume (set state=WAITING) the paused firework.
+
+        Args:
+            fw_id (int): firework id
+        """
+        f = self.fireworks.find_one_and_update({'fw_id': fw_id, 'state': 'PAUSED'},
+                                               {'$set': {'state': 'WAITING',
+                                                         'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self._refresh_wf(fw_id)
+        return f
+
     def defuse_wf(self, fw_id, defuse_all_states=True):
         """
         Defuse the workflow containing the given firework id.

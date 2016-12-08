@@ -234,7 +234,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
 
             # Setup Zeus to run
-            self.lp.rerun_fw(self.zeus_fw_id)
+            self.lp.resume_fw(self.zeus_fw_id)
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
             # Check that Zeus and children are all completed now
