@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, flash
 from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
@@ -12,6 +12,8 @@ from functools import wraps
 
 app = Flask(__name__)
 app.use_reloader = True
+app.secret_key = 'super secret key'
+
 hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 app.BASE_Q = {}
@@ -333,10 +335,18 @@ def bootstrap_app(*args, **kwargs):
 def parse_querystr(querystr, db):
     # try to parse using `json.loads`.
     # validate as valid mongo filter dict
-
-    d = json.loads(querystr)
-    h = db.find_one(d)
-    logger.debug("db returns {}".format(h))
+    try:
+        d = json.loads(querystr)
+    except:
+        flash("{} is not a valid json query.".format(querystr))
+        logger.debug("Should flash because of {}".format(querystr))
+        return {}
+    try:
+        h = db.find_one(d)
+        logger.debug("db returns {}".format(h))
+    except:
+        flash("{} is not a valid MongoDB query.".format(querystr))
+        return {}
     return d
 
 

@@ -1,7 +1,18 @@
 {% extends "base.html" %}
+
 {% block title %}FireWorks Dashboard{% endblock %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <p style="color:#FF0000"> Warning: {{ message }}</li> </p>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
  <div class="row">
     <div class="span12">
@@ -86,6 +97,8 @@
         <form>FW Query: <input name="fw_query" value="{{ fw_querystr }}" /> <br>
         WF Query: <input name="wf_query" value="{{ wf_querystr }}" />
         <input type="submit" value="Submit"></form>
+
+
     </div>
 </div>
 
