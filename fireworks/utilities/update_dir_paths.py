@@ -1,4 +1,3 @@
-from db_connections.get_db_connections import get_lp_aj_thermoelectrics
 from bson.json_util import dumps, loads
 from tqdm import tqdm
 import datetime
@@ -18,7 +17,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
         dry_run (bool): if True, only a new collection with new paths is created "collection" is not replaced
         force_clear (bool): careful! If True, the collection "{}_temp_refactor".format(collection) is removed!
     Returns:
-         None, but it may replace the updated collection (if dry_run==True)
+         None, but if dry_run==False it replaces the collection with the updated one
     """
 
     if force_clear:
@@ -48,12 +47,3 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
         # swap the collections
         db[collection_name].rename("{}_xiv_{}".format(collection_name, datetime.date.today()))
         db["{}_temp_refactor".format(collection_name)].rename(collection_name)
-
-replacements = {"/global/cscratch1/sd/alireza/MyQuota/prod_runs_scratch": \
-                "/global/project/projectdirs/m2439/aj_thermoelectrics/prod_runs"}
-
-if __name__=="__main__" and False:
-    lp = get_lp_aj_thermoelectrics(write=True)
-    for coll_name in ["fireworks", "launches", "boltztrap"]:
-        update_path_in_collection(lp.db, coll_name, replacements, query=None, dry_run=True, force_clear=False)
-
