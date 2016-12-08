@@ -181,7 +181,7 @@ class LaunchPad(FWSerializable):
                 collection.
         """
         mod_spec = {("spec." + k): v for k, v in spec_document.items()}
-        allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
+        allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED", "PAUSED"]
         self.fireworks.update_many({'fw_id': {"$in": fw_ids},
                                     'state': {"$in": allowed_states}}, {"$set": mod_spec})
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
@@ -617,6 +617,24 @@ class LaunchPad(FWSerializable):
             except:
                 self.m_logger.debug('Database compaction failed (not critical)')
 
+    def pause_fw(self,fw_id):
+        """
+        Given the firework id, pauses the firework and refresh the workflow
+
+        Args:
+            fw_id(int): firework id
+        """
+        allowed_states =  ['WAITING', 'READY', 'RESERVED']
+        f = self.fireworks.find_one_and_update(
+            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+            {'$set': {'state': 'PAUSED', 'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self._refresh_wf(fw_id)
+        if not f:
+            raise ValueError('No pausable (WAITING,READY,RESERVED) Firework exists with fw_id: {}'.format(fw_id))
+        return f
+
+
     def defuse_fw(self, fw_id, rerun_duplicates=True):
         """
         Given the firework id, defuse the firework and refresh the workflow.
@@ -626,7 +644,7 @@ class LaunchPad(FWSerializable):
             rerun_duplicates (bool): if True, duplicate fireworks(ones with the same launch) are
                 marked for rerun and then defused.
         """
-        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
+        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED', 'PAUSED']
         f = self.fireworks.find_one_and_update(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
