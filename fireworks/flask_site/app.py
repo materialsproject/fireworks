@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash
+from flask import Flask, render_template, request, jsonify, Response, flash, session
 from flask import redirect, url_for, abort
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
@@ -58,9 +58,11 @@ def requires_auth(f):
     return decorated
 
 
-def _addq(base, q):
-    return {"$and": [q, base]} if base else q
+def _addq_FW(q):
+    return {"$and": [q, app.BASE_Q, session['fw_filt']]}
 
+def _addq_WF(q):
+    return {"$and": [q, app.BASE_Q_WF, session['wf_filt']]}
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -86,19 +88,19 @@ def home():
     fw_querystr = fw_querystr if fw_querystr else ''
     wf_querystr = wf_querystr if wf_querystr else ''
 
-    fw_filt = parse_querystr(fw_querystr, lp.fireworks) if fw_querystr else {}
-    wf_filt = parse_querystr(wf_querystr, lp.workflows) if wf_querystr else {}
+    session['fw_filt'] = parse_querystr(fw_querystr, lp.fireworks) if fw_querystr else {}
+    session['wf_filt'] = parse_querystr(wf_querystr, lp.workflows) if wf_querystr else {}
 
-    logger.debug("FW Query is {}".format(fw_filt))
-    logger.debug("WF Query is {}".format(wf_filt))
+    # logger.debug("FW Query is {}".format(fw_filt))
+    # logger.debug("WF Query is {}".format(wf_filt))
 
     fw_nums = []
     wf_nums = []
     for state in STATES:
-        fw_nums.append(lp.get_fw_ids(query=_addq(app.BASE_Q, {'state': state}),
+        fw_nums.append(lp.get_fw_ids(query=_addq_FW({'state': state}),
                                      count_only=True))
         wf_nums.append(
-            lp.get_wf_ids(query=_addq(app.BASE_Q_WF, {'state': state}),
+            lp.get_wf_ids(query=_addq_WF({'state': state}),
                           count_only=True))
     state_nums = zip(STATES, fw_nums, wf_nums)
 
@@ -106,7 +108,7 @@ def home():
     tot_wfs = sum(wf_nums)
 
     # Newest Workflows table data
-    wfs_shown = lp.workflows.find(app.BASE_Q_WF, limit=PER_PAGE,
+    wfs_shown = lp.workflows.find(_addq_WF({}), limit=PER_PAGE,
                                   sort=[('_id', DESCENDING)])
     wf_info = []
     for item in wfs_shown:
@@ -218,7 +220,7 @@ def fw_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     current_sorting_order = sorting_order
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
-    q = _addq(app.BASE_Q, q)
+    q = _addq_FW(q)
     fw_count = lp.get_fw_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
@@ -248,7 +250,7 @@ def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     current_sorting_order = sorting_order
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
-    q = _addq(app.BASE_Q_WF, q)
+    q = _addq_WF(q)
     wf_count = lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
@@ -275,7 +277,7 @@ def wf_metadata_find(key, value, state):
     q = {'metadata.{}'.format(key): value}
     state_mixin = {} if state == "total" else {"state": state}
     q.update(state_mixin)
-    q = _addq(app.BASE_Q_WF, q)
+    q = _addq_WF(q)
     wf_count = lp.get_wf_ids(query=q, count_only=True)
     if wf_count == 0:
         abort(404)
