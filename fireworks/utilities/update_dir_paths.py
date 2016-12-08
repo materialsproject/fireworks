@@ -3,8 +3,8 @@ from bson.json_util import dumps, loads
 from tqdm import tqdm
 import datetime
 
-__author__ = 'Alireza Faghaninia'
-__email__ = 'alireza.faghaninia@gmail.com'
+__author__ = 'Alireza Faghaninia, Anubhav Jain'
+__email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
 __date__ = 'Dec 08, 2016'
 
 def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=True, force_clear=False):
