@@ -28,7 +28,7 @@ app.BASE_Q_WF = {}
 logger = get_fw_logger('app')
 
 PER_PAGE = 20
-STATES = Firework.STATE_RANKS.keys()
+STATES = sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.get)
 
 AUTH_USER = os.environ.get("FWAPP_AUTH_USERNAME", None)
 AUTH_PASSWD = os.environ.get("FWAPP_AUTH_PASSWORD", None)
