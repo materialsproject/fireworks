@@ -344,10 +344,11 @@ def parse_querystr(querystr, db):
         logger.debug("Should flash because of {}".format(querystr))
         return {}
     try:
+        assert isinstance(d, dict)
         h = db.find_one(d)
         logger.debug("db returns {}".format(h))
     except:
-        flash("{} is not a valid MongoDB query.".format(querystr))
+        flash("{} is not a valid MongoDB query doc.".format(querystr))
         return {}
     return d
 
