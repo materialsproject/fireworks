@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 """
-A Rocket fetches a Firework from the database, runs the sequence of FireTasks inside, and then
+A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
 completes the Launch
 """
 
@@ -209,7 +209,7 @@ class Rocket:
                 for bt in my_spec['_background_tasks']:
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
-            # execute the FireTasks!
+            # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
                 if lp:
                     lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)

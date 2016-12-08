@@ -11,7 +11,7 @@ import os
 
 from jinja2 import Template
 
-from fireworks.core.firework import FireTaskBase
+from fireworks.core.firework import FiretaskBase
 from fireworks.fw_config import TEMPLATE_DIR
 
 __author__ = 'Anubhav Jain'
@@ -22,7 +22,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Aug 08, 2013'
 
 
-class TemplateWriterTask(FireTaskBase):
+class TemplateWriterTask(FiretaskBase):
     """
     Task to write templated files via Jinja2 library
     Required parameters:

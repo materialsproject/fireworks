@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from fireworks.core.firework import FWAction, Firework, FireTaskBase
+from fireworks.core.firework import FWAction, Firework, FiretaskBase
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2015, The Materials Project'
@@ -10,7 +10,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Sept 8, 2015'
 
 
-class PrintJobTask(FireTaskBase):
+class PrintJobTask(FiretaskBase):
 
     _fw_name = "Print Job Task"
 

@@ -42,7 +42,7 @@ Reset/Initialize the FireServer
 Add a Firework to the FireServer database
 -----------------------------------------
 
-A Firework contains a list of computing tasks (FireTasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We'll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one FireTask thus looks like this:
+A Firework contains a list of computing tasks (Firetasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We'll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one Firetask thus looks like this:
 
 .. image:: _static/single_fw.png
    :width: 200px
@@ -262,4 +262,4 @@ At this point, you've successfully stored a simple job in a database and run it 
 
 However, we still haven't covered many important topics. For example, we have not executed complex workflows, run arbitrary Python code, or run jobs on different types of computing resources. Nor have we really looked into how to monitor and manage jobs and deploy FireWorks in production.
 
-We suggest that you continue by learning how to :doc:`define jobs using FireTasks </firetask_tutorial>`. Alternatively, you could return to the :doc:`home page </index>` and choose a tutorial topic that suits your application.
+We suggest that you continue by learning how to :doc:`define jobs using Firetasks </firetask_tutorial>`. Alternatively, you could return to the :doc:`home page </index>` and choose a tutorial topic that suits your application.

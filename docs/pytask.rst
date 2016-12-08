@@ -2,7 +2,7 @@
 PyTask
 ======
 
-The PyTask allows you to call any Python function. That function can (optionally) return a *FWAction* to perform dynamic actions (e.g., see the :doc:`Guide to Writing FireTasks </guide_to_writing_firetasks>`). Thus, with the PyTask you can basically do anything!
+The PyTask allows you to call any Python function. That function can (optionally) return a *FWAction* to perform dynamic actions (e.g., see the :doc:`Guide to Writing Firetasks </guide_to_writing_firetasks>`). Thus, with the PyTask you can basically do anything!
 
 Required parameters
 ===================

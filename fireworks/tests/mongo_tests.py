@@ -11,7 +11,7 @@ import glob
 import unittest
 import time
 from fireworks import explicit_serialize, FWAction
-from fireworks.core.firework import Firework, Workflow, FireTaskBase
+from fireworks.core.firework import Firework, Workflow, FiretaskBase
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
@@ -47,7 +47,7 @@ def throw_error(msg):
     raise ValueError(msg)
 
 @explicit_serialize
-class MultipleDetourTask(FireTaskBase):
+class MultipleDetourTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         print('Running the Multiple Detour Task')
@@ -57,14 +57,14 @@ class MultipleDetourTask(FireTaskBase):
         return FWAction(detours=[dt1, dt2, dt3])
 
 @explicit_serialize
-class UpdateSpecTask(FireTaskBase):
+class UpdateSpecTask(FiretaskBase):
     def run_task(self, fw_spec):
         print('Running the Update Spec Task')
         dt1 = Firework(ScriptTask.from_str('echo "this is dummy job 1"'))
         return FWAction(update_spec={"dummy1": 1}, additions=[dt1])
 
 @explicit_serialize
-class ModSpecTask(FireTaskBase):
+class ModSpecTask(FiretaskBase):
     def run_task(self, fw_spec):
         print('Running the Mod Spec Task')
         return FWAction(mod_spec=[{"_push": {"dummy2": True}}])

@@ -71,3 +71,7 @@ Example queries - Reporting
 #. Customize the reporting interval, e.g. see what happened the last 6 months::
 
     lpad report -i months -n 6
+
+#. You can easily e-mail the report by using the mail command on a unix system::
+
+    lpad report | mail -s "Fireworks report" you@example.com

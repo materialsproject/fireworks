@@ -10,7 +10,7 @@ import time
 
 from monty.shutil import compress_dir, decompress_dir
 
-from fireworks.core.firework import FireTaskBase
+from fireworks.core.firework import FiretaskBase
 
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -20,9 +20,9 @@ __email__ = 'ongsp@ucsd.edu'
 __date__ = 'Jan 6, 2014'
 
 
-class FileWriteTask(FireTaskBase):
+class FileWriteTask(FiretaskBase):
     """
-    A FireTask to write files:
+    A Firetask to write files:
 
     Required params:
         - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames
@@ -41,9 +41,9 @@ class FileWriteTask(FireTaskBase):
                 f.write(d["contents"])
 
 
-class FileDeleteTask(FireTaskBase):
+class FileDeleteTask(FiretaskBase):
     """
-    A FireTask to delete files:
+    A Firetask to delete files:
 
     Required params:
         - files_to_delete: ([str]) Filenames to delete
@@ -67,9 +67,9 @@ class FileDeleteTask(FireTaskBase):
                     raise OSError(str(ex))
 
 
-class FileTransferTask(FireTaskBase):
+class FileTransferTask(FiretaskBase):
     """
-    A FireTask to Transfer files. Note that
+    A Firetask to Transfer files. Note that
 
     Required params:
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
@@ -174,7 +174,7 @@ class FileTransferTask(FireTaskBase):
             return True
 
 
-class CompressDirTask(FireTaskBase):
+class CompressDirTask(FiretaskBase):
     """
     Compress all files in a directory.
 
@@ -199,7 +199,7 @@ class CompressDirTask(FireTaskBase):
                     compression, dest))
 
 
-class DecompressDirTask(FireTaskBase):
+class DecompressDirTask(FiretaskBase):
     """
     Decompress all files in a directory. Autodetects gz, bz2 and z file
     extensions.
@@ -223,7 +223,7 @@ class DecompressDirTask(FireTaskBase):
                     "There was an error performing decompression in %s." % dest)
 
 
-class ArchiveDirTask(FireTaskBase):
+class ArchiveDirTask(FiretaskBase):
     """
     Wrapper around shutil.make_archive to make tar archives.
 
