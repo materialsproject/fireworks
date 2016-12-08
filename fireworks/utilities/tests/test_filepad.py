@@ -15,29 +15,29 @@ class FilePadTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
-        cls.fs = FilePad.auto_load()
-        cls.label = "fe3o4"
+        cls.fp = FilePad.auto_load()
+        cls.label = "Fe3O4"
 
     def test_add_file(self):
-        file_id, file_label = self.fs.add_file(self.chgcar_file, label=self.label)
+        file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
         self.assertEqual(file_label, self.label)
         self.assertIsNotNone(file_id)
 
     def test_get_file(self):
-        file_id, file_label = self.fs.add_file(self.chgcar_file, label=self.label)
-        file_contents, doc = self.fs.get_file(self.label)
+        file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
+        file_contents, doc = self.fp.get_file(self.label)
         self.assertEqual(file_contents, open(self.chgcar_file,"r").read().encode())
         self.assertEqual(doc["label"], self.label)
 
     def test_delete_file(self):
-        file_id, file_label = self.fs.add_file(self.chgcar_file, label=self.label)
-        self.fs.delete_file(self.label)
-        x = self.fs.get_file(self.label)
+        file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
+        self.fp.delete_file(self.label)
+        x = self.fp.get_file(self.label)
         self.assertIsNone(x)
 
     def test_update_file_by_id(self):
-        file_id, file_label = self.fs.add_file(self.chgcar_file, label=self.label)
-        old, new = self.fs.update_file_by_id(file_id, self.chgcar_file, delete_old=False)
+        file_id, file_label = self.fp.add_file(self.chgcar_file, label="some label")
+        old, new = self.fp.update_file_by_id(file_id, self.chgcar_file, delete_old=False)
         self.assertEqual(old, file_id)
         self.assertNotEqual(new, file_id)
 

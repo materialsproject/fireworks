@@ -11,6 +11,7 @@ from pymongo import MongoClient
 import gridfs
 
 from monty.serialization import loadfn
+from monty.json import MSONable
 
 from fireworks.fw_config import LAUNCHPAD_LOC
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -20,23 +21,24 @@ __author__ = 'Kiran Mathew'
 __email__ = 'kmathew@lbl.gov'
 
 
-class FilePad(object):
+class FilePad(MSONable):
 
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
                  password=None, filepad="filepad", gridfs_collection="fpad_gfs", logdir=None,
-                 strm_lvl=None,):
+                 strm_lvl=None):
         self.host = host
-        self.user = username
-        self.password = password
         self.port = int(port)
+        self.database = database
+        self.username = username
+        self.password = password
         try:
             self.connection = MongoClient(self.host, self.port)
             self.db = self.connection[database]
         except:
             raise Exception("connection failed")
         try:
-            if self.user:
-                self.db.authenticate(self.user, self.password)
+            if self.username:
+                self.db.authenticate(self.username, self.password)
         except:
             raise ValueError("authentication failed")
 
@@ -47,11 +49,12 @@ class FilePad(object):
         # logging
         self.logdir = logdir
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
-        self.m_logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
+        self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
     def add_file(self, path, label=None, compress=True, metadata=None, additional_data=None):
         """
-        Insert the file specified by the path into gridfs and the id and label(if provided) returned
+        Insert the file specified by the path into gridfs and the id and label(if provided) returned.
+        Note: No insertion if the label already exists in the db.
 
         Args:
             path (str): path to the file
@@ -64,11 +67,18 @@ class FilePad(object):
         Returns:
             (str, str): the id returned by gridfs, label
         """
+        # skip if the label exists
+        if label is not None:
+            f = self.get_file(label)
+            if f is not None:
+                self.logger.warning("label: {} exists. Skipping insertion".format(label))
+                return f[1]["file_id"], f[1]["label"]
         metadata = metadata or {}
         metadata.update({"path": path})
-        contents = open(path, "r").read()
-        return self.insert_contents(contents, label=label, compress=compress, metadata=metadata,
-                                    additional_data=additional_data)
+        with open(path, "r") as f:
+            contents = f.read()
+            return self.insert_contents(contents, label=label, compress=compress, metadata=metadata,
+                                        additional_data=additional_data)
 
     def get_file(self, label):
         """

@@ -14,11 +14,14 @@ class AddFilesTask(FiretaskBase):
     A Firetask to write files to the filepad
 
     Required params:
-        - paths
-        - labels
+        - paths ([str]): list of paths to files to be added
+        - labels ([str]): list of labels, one for each file in the paths list
 
     Optional params:
-        - dest: (str) Shared path for files
+        - filepad_file (str): path to the filepad db config file
+        - compress (bool): whether or not to compress the file before inserting to gridfs
+        - metadata (dict): metadata to store along with the file, stored in 'metadata' key
+        - additional_data (dict): additional key: value pairs to be be added to the document
     """
     _fw_name = 'AddFilesTask'
     required_params = ["paths", "labels"]
@@ -30,7 +33,7 @@ class AddFilesTask(FiretaskBase):
         fpad = get_fpad(self.get("filepad_file", None))
         for p, l in zip(self["paths"], self["labels"]):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
-                          compress=self.get("compress", None),
+                          compress=self.get("compress", True),
                           additional_data=self.get("additional_data", None))
 
 
@@ -42,8 +45,7 @@ class DeleteFilesTask(FiretaskBase):
         - labels: ([str]) file labels to delete
 
     Optional params:
-        - dest: (str) Shared path for files
-        - ignore_errors (bool): Whether to ignore errors. Defaults to True.
+        - filepad_file (str): path to the filepad db config file
     """
     _fw_name = 'DeleteFilesTask'
     required_params = ["labels"]
