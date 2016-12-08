@@ -12,7 +12,9 @@ from functools import wraps
 
 app = Flask(__name__)
 app.use_reloader = True
-app.secret_key = 'super secret key'
+app.secret_key = os.environ.get(
+    "FWAPP_SECRET_KEY",
+    '0\x07)\x95\x96)\xb9\xdf1\xc0l4\x99\xc4\xf1\x88Jk\xb4lZ\xb2\x81X')
 
 hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
@@ -344,10 +346,11 @@ def parse_querystr(querystr, db):
         logger.debug("Should flash because of {}".format(querystr))
         return {}
     try:
+        assert isinstance(d, dict)
         h = db.find_one(d)
         logger.debug("db returns {}".format(h))
     except:
-        flash("{} is not a valid MongoDB query.".format(querystr))
+        flash("{} is not a valid MongoDB query doc.".format(querystr))
         return {}
     return d
 
