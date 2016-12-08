@@ -29,7 +29,7 @@ where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you
 Canceling and restarting individual FireWorks
 =============================================
 
-You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws`` and ``lpad rerun_fws`` commands. These commands will only pause/restart the current Firework (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
+You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws``, ``lpad pause_fws``, and ``lpad rerun_fws`` commands. These commands will only pause/restart the current Firework (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
 
 Archiving workflows
 ===================
