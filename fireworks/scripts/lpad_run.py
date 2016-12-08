@@ -377,6 +377,13 @@ def defuse_fws(args):
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
 
+def pause_fws(args):
+    lp = get_lp(args)
+    fw_ids = parse_helper(lp, args)
+    for f in fw_ids:
+        lp.pause_fw(f)
+        lp.m_logger.debug('Processed fw_id: {}'.format(f))
+    lp.m_logger.info('Finished pausing {} FWs'.format(len(fw_ids)))
 
 def reignite_fws(args):
     lp = get_lp(args)
@@ -738,6 +745,15 @@ def lpad():
                                                      "required when modifying more than {} "
                                                      "entries.".format(PW_CHECK_NUM))
     defuse_fw_parser.set_defaults(func=defuse_fws)
+
+    pause_fw_parser = subparsers.add_parser('pause_fws', help='pause a single Firework')
+    pause_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    pause_fw_parser.add_argument('-n', '--name', help='name')
+    pause_fw_parser.add_argument(*state_args, **state_kwargs)
+    pause_fw_parser.add_argument(*query_args, **query_kwargs)
+    pause_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
+    pause_fw_parser.set_defaults(func=pause_fws)
+
 
     reignite_fw_parser = subparsers.add_parser('reignite_fws', help='reignite (un-cancel) a single Firework')
     reignite_fw_parser.add_argument(*fw_id_args, **fw_id_kwargs)
