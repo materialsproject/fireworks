@@ -1,6 +1,6 @@
 from __future__ import unicode_literals, division
 
-from fireworks import FireTaskBase, FWAction, Firework
+from fireworks import FiretaskBase, FWAction, Firework
 from fireworks.utilities.fw_utilities import explicit_serialize
 import time
 from unittest import SkipTest
@@ -13,7 +13,7 @@ class SerializableException(Exception):
         return self.exc_details
 
 @explicit_serialize
-class ExceptionTestTask(FireTaskBase):
+class ExceptionTestTask(FiretaskBase):
     exec_counter = 0
 
     def run_task(self, fw_spec):
@@ -22,19 +22,19 @@ class ExceptionTestTask(FireTaskBase):
             raise SerializableException(self['exc_details'])
 
 @explicit_serialize
-class ExecutionCounterTask(FireTaskBase):
+class ExecutionCounterTask(FiretaskBase):
     exec_counter = 0
 
     def run_task(self, fw_spec):
         ExecutionCounterTask.exec_counter += 1
 
 @explicit_serialize
-class MalformedAdditionTask(FireTaskBase):
+class MalformedAdditionTask(FiretaskBase):
     def run_task(self, fw_spec):
         return FWAction(additions=TodictErrorTask())
 
 @explicit_serialize
-class TodictErrorTask(FireTaskBase):
+class TodictErrorTask(FiretaskBase):
     def to_dict(self):
         raise RuntimeError("to_dict error")
 
@@ -42,14 +42,14 @@ class TodictErrorTask(FireTaskBase):
         return FWAction()
 
 @explicit_serialize
-class SlowAdditionTask(FireTaskBase):
+class SlowAdditionTask(FiretaskBase):
     def run_task(self, fw_spec):
         time.sleep(5)
         return FWAction(additions=Firework(SlowTodictTask(seconds=fw_spec.get('seconds', 10))),
                         update_spec={'SlowAdditionTask': 1})
 
 @explicit_serialize
-class SlowTodictTask(FireTaskBase):
+class SlowTodictTask(FiretaskBase):
     def to_dict(self):
         time.sleep(self.get('seconds', 10))
         return super(SlowTodictTask, self).to_dict()
@@ -58,7 +58,7 @@ class SlowTodictTask(FireTaskBase):
         return FWAction()
 
 @explicit_serialize
-class WaitWFLockTask(FireTaskBase):
+class WaitWFLockTask(FiretaskBase):
     def run_task(self, fw_spec):
         if '_add_launchpad_and_fw_id' not in fw_spec:
             raise SkipTest("Couldn't load lunchpad")

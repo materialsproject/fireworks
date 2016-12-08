@@ -2,14 +2,14 @@
 Running Tasks in the Background
 ===============================
 
-When running a Firework, the FireTasks are run sequentially in the main thread. One way to run a background thread would be to write a FireTask that spawns a new Thread to perform some work. However, FireWorks also has a built-in method to run background tasks via BackgroundTasks. Each BackgroundTask is run in its own thread, in *parallel* to the main FireTasks, and can be repeated at stated intervals.
+When running a Firework, the Firetasks are run sequentially in the main thread. One way to run a background thread would be to write a Firetask that spawns a new Thread to perform some work. However, FireWorks also has a built-in method to run background tasks via BackgroundTasks. Each BackgroundTask is run in its own thread, in *parallel* to the main Firetasks, and can be repeated at stated intervals.
 
 BackgroundTasks parameters
 ==========================
 
 BackgroundTasks have the following properties:
 
-* **tasks** - a list of FireTasks to execute in sequence. The FireTasks can read the initial spec of the Firework. Any action returned by FireTasks within a BackgroundTask is *NOT* interpreted (including instructions to store data).
+* **tasks** - a list of Firetasks to execute in sequence. The Firetasks can read the initial spec of the Firework. Any action returned by Firetasks within a BackgroundTask is *NOT* interpreted (including instructions to store data).
 * **num_launches** - the total number of times to repeat the BackgroundTask. 0 or less indicates infinite repeats.
 * **sleep_time** - amount of time in seconds to sleep before repeating the BackgroundTask
 * **run_on_finish** - if True, the BackgroundTask will be run one last time at the end of the Firework

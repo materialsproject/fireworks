@@ -15,12 +15,12 @@ __email__ = "shyuep@gmail.com"
 __date__ = "3/6/14"
 
 
-from fireworks.core.firework import FireTaskBase, FWAction
+from fireworks.core.firework import FiretaskBase, FWAction
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 @explicit_serialize
-class DummyFWEnvTask(FireTaskBase):
+class DummyFWEnvTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         data = fw_spec["_fw_env"].get("hello", "hello")
@@ -28,13 +28,13 @@ class DummyFWEnvTask(FireTaskBase):
 
 
 @explicit_serialize
-class DummyJobPassTask(FireTaskBase):
+class DummyJobPassTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         return FWAction(stored_data={"data": fw_spec['_job_info']})
 
 @explicit_serialize
-class DummyLPTask(FireTaskBase):
+class DummyLPTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         return FWAction(stored_data={"fw_id": self.fw_id, "host": self.launchpad.host})

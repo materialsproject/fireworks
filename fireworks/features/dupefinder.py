@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 """
 This module contains the base class for implementing Duplicate Finders
 """
-import abc
 
 from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
 
@@ -27,17 +26,24 @@ class DupeFinderBase(FWSerializable):
 
     def verify(self, spec1, spec2):
         """
-        Method that checks whether two specs are identical enough to be considered duplicates. Return true if duplicated.
-        :param spec1: (dict)
-        :param spec2: (dict)
+        Method that checks whether two specs are identical enough to be considered duplicates.
+        Return true if duplicated.
+
+        Args:
+        spec1 (dict)
+        spec2 (dict)
+
+        Returns:
+            bool
         """
         raise NotImplementedError
 
     def query(self, spec):
         """
-        Given a spec, returns a database query that gives potential candidates for duplicated FireWorks.
+        Given a spec, returns a database query that gives potential candidates for duplicated Fireworks.
 
-        :param spec: spec to check for duplicates
+        Args:
+            spec (dict): spec to check for duplicates
         """
         raise NotImplementedError
 

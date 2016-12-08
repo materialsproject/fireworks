@@ -30,7 +30,7 @@ Potential alternatives to using ``_launch_dir`` are:
 
 #. If you are worried about finding your jobs on the filesystem, try :doc:`exploring all the features of LaunchPad queries <query_tutorial>`. In general, the database method of searching for jobs is much more powerful than browsing filesystems, especially if you set up your FireWorks *name* and *spec* to include things you care about in your search.
 #. Another solution is to have your Firework write an empty file in its directory that has a name like "JOB--Cadmium" or "JOB--Silicon". Then you can quickly see what kind of job is in a bunch of ``launcher`` directories using a command like ``ls launcher*/JOB*`` - you'll see a list of launcher directories and which one contains "Cadmium" or "Silicon".
-#. If you have a job that depends on knowing the location of other Firework runs, try writing your FireTasks to pass the location of execution to children using the *FWAction* object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.
+#. If you have a job that depends on knowing the location of other Firework runs, try writing your Firetasks to pass the location of execution to children using the *FWAction* object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.
 
 Of course, these are just suggestions. In the end, do what works!
 

@@ -2,7 +2,7 @@
 
 import logging
 import datetime
-from multiprocessing.managers import BaseManager, DictProxy
+from multiprocessing.managers import BaseManager
 import string
 import sys
 import os
@@ -10,10 +10,9 @@ import traceback
 import socket
 import multiprocessing
 import errno
+import six
 
-from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, \
-    FW_LOGGING_FORMAT
-
+from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
 
 __author__ = 'Anubhav Jain, Xiaohui Qu'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -27,20 +26,19 @@ PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have alread
 DEFAULT_FORMATTER = logging.Formatter(FW_LOGGING_FORMAT)
 
 
-def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'),
-                  stream_level='DEBUG', formatter=DEFAULT_FORMATTER,
-                  clear_logs=False):
+def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG',
+                  formatter=DEFAULT_FORMATTER, clear_logs=False):
     """
     Convenience method to return a logger.
 
-    :param name: name of the logger that sets the groups, e.g. 'group1.set2'
-    :param l_dir: the directory to put the log file
-    :param file_levels: iterable describing level(s) to log to file(s). default: ('DEBUG', 'ERROR')
-    :param stream_level: level to log to standard output. default: 'DEBUG'
-    :param formatter: logging format. default: FW_LOGGING_FORMATTER
-    :param clear_logs: whether to clear the logger with the same name
+    Args:
+        name: name of the logger that sets the groups, e.g. 'group1.set2'
+        l_dir: the directory to put the log file
+        file_levels: iterable describing level(s) to log to file(s). default: ('DEBUG', 'ERROR')
+        stream_level: level to log to standard output. default: 'DEBUG'
+        formatter: logging format. default: FW_LOGGING_FORMATTER
+        clear_logs: whether to clear the logger with the same name
     """
-
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
@@ -70,9 +68,10 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'),
 
 def log_multi(m_logger, msg, log_lvl='info'):
     """
-    :param m_logger: (logger) The logger object
-    :param msg: (str) a String to log
-    :param log_lvl: (str) The level to log at
+    Args:
+        m_logger (logger): The logger object
+        msg (str): a String to log
+        log_lvl (str): The level to log at
     """
     _log_fnc = getattr(m_logger, log_lvl.lower())
     if FWData().MULTIPROCESSING:
@@ -88,13 +87,13 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
     which enhances readability of log lines meant to be read
     as a unit.
 
-    :param m_logger: (logger) The logger object
-    :param log_lvl: (str) The level to log at
-    :param msgs: ([str]) a String or iterable of Strings
-    :param add_traceback: (bool) add traceback text, useful when logging exceptions (default False)
+    Args:
+        m_logger (logger): The logger object
+        log_lvl (str): The level to log at
+        msgs ([str]): a String or iterable of Strings
+        add_traceback (bool): add traceback text, useful when logging exceptions (default False)
     """
-
-    if isinstance(msgs, basestring):
+    if isinstance(msgs, six.string_types):
         msgs = [msgs]
 
     _log_fnc = getattr(m_logger, log_lvl.lower())
@@ -110,22 +109,23 @@ def log_exception(m_logger, msgs):
     """
     A shortcut wrapper around log_fancy for exceptions
 
-    :param m_logger: (logger) The logger object
-    :param msgs: ([str]) String or iterable of Strings, will be joined by newlines
+    Args:
+        m_logger (logger): The logger object
+        msgs ([str]): String or iterable of Strings, will be joined by newlines
     """
     return log_fancy(m_logger, msgs, 'error', add_traceback=True)
 
 
 def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
     """
-    Internal method to create a new block or launcher directory. \
+    Internal method to create a new block or launcher directory.
     The dir name is based on the time and the FW_BLOCK_FORMAT
 
-    :param root_dir: directory to create the new dir in
-    :param l_logger: the logger to use
-    :param prefix: the prefix for the new dir, default="block_"
+    Args:
+        root_dir: directory to create the new dir in
+        l_logger: the logger to use
+        prefix: the prefix for the new dir, default="block_"
     """
-
     def get_path():
         time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
         block_path = prefix + time_now
@@ -191,11 +191,13 @@ class DataServer(BaseManager):
     @classmethod
     def setup(cls, launchpad):
         """
-        :param launchpad: (LaunchPad) object
-        :return:
+        Args:
+            launchpad (LaunchPad)
+
+        Returns:
+            DataServer
         """
         DataServer.register('LaunchPad', callable=lambda: launchpad)
-        DataServer.register('Running_IDs', callable=lambda: {}, proxytype=DictProxy)
         m = DataServer(address=('127.0.0.1', 0), authkey=DS_PASSWORD)  # random port
         m.start()
         return m
@@ -223,3 +225,65 @@ def explicit_serialize(o):
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
     o._fw_name = '{{%s.%s}}' % (module_name, o.__name__)
     return o
+
+
+def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_label=False,
+            text_loc_factor=1.0, save_as=None, style='rD--', markersize=10, markerfacecolor='blue',
+            fontsize=12, ):
+    """
+    Generate a visual representation of the workflow. Useful for checking whether the firework
+    connections are in order before launching the workflow.
+
+    Args:
+        wf (Workflow): workflow object.
+        depth_factor (float): adjust this to stretch the plot in y direction.
+        breadth_factor (float): adjust this to stretch the plot in x direction.
+        labels_on (bool): whether to label the nodes or not. The default is to lable the nodes
+            using the firework names.
+        numerical_label (bool): set this to label the nodes using the firework ids.
+        text_loc_factor (float): adjust the label location.
+        save_as (str): save the figure to the given name.
+        style (str): marker style.
+        markersize (int): marker size.
+        markerfacecolor (str): marker face color.
+        fontsize (int): font size for the node label.
+    """
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("Install matplotlib. Exiting.")
+        sys.exit()
+
+    keys = sorted(wf.links.keys(), reverse=True)
+
+    # set (x,y) coordinates for each node in the workflow links
+    points_map = {}
+    points_map.update({keys[0]: (-0.5 * breadth_factor, (keys[0] + 1) * depth_factor)})
+    for k in keys:
+        if wf.links[k]:
+            for i, j in enumerate(wf.links[k]):
+                if not points_map.get(j, None):
+                    points_map[j] = (
+                    (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
+
+    # connect the dots
+    for k in keys:
+        for i in wf.links[k]:
+            plt.plot([points_map[k][0], points_map[i][0]], [points_map[k][1], points_map[i][1]],
+                     style, markersize=markersize, markerfacecolor=markerfacecolor)
+            if labels_on:
+                label1 = wf.id_fw[k].name
+                label2 = wf.id_fw[i].name
+                if numerical_label:
+                    label1 = str(k)
+                    label2 = str(i)
+                plt.text(points_map[k][0] * text_loc_factor, points_map[k][1] * text_loc_factor,
+                         label1, fontsize=fontsize)
+                plt.text(points_map[i][0] * text_loc_factor, points_map[i][1] * text_loc_factor,
+                         label2, fontsize=fontsize)
+
+    plt.axis('scaled')
+    plt.axis('off')
+
+    if save_as:
+        plt.savefig(save_as)

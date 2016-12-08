@@ -37,7 +37,7 @@ Optional parameters
 FileTransferTask
 ================
 
-The FileTransferTask is a built-in FireTask for moving and copying files, perhaps to a remote server. Its usage is straightforward:
+The FileTransferTask is a built-in Firetask for moving and copying files, perhaps to a remote server. Its usage is straightforward:
 
 * a ``files`` key that contains a list of files to move or copy
 * additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors
@@ -75,7 +75,7 @@ In Python code, this representation would be defined as::
 
     firetask1 = FileTransferTask({'files': ['file1.txt', 'file2.txt'], 'dest':'dest_dir', 'mode': 'copy'})
 
-An example of the FileTransferTask in action is given in the :doc:`FireTask tutorial <firetask_tutorial>`.
+An example of the FileTransferTask in action is given in the :doc:`Firetask tutorial <firetask_tutorial>`.
 
 FileTransferTask Options
 ------------------------

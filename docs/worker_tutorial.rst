@@ -107,7 +107,7 @@ Setting Machine-specific or worker-specific parameter via the *env* variable
 
 From v0.7.7, the FireWorker file now supports the *env* key. As its name
 implies, this key allows you to specify machine-specific (or more accurately, worker-specific) environment settings.
-For example, a particular command called in your FireTasks may be called
+For example, a particular command called in your Firetasks may be called
 "command" in machine 1 and "command_v1.2" in machine 2. You can then abstract
 out this command by specifying the differences in the FireWorker file::
 
@@ -119,14 +119,14 @@ out this command by specifying the differences in the FireWorker file::
     env:
         command: command_v1.2
 
-The env can then be accessed within your FireTasks as the "_fw_env" variable
-in the fw_spec. For example, the run_task method for your FireTask may be
+The env can then be accessed within your Firetasks as the "_fw_env" variable
+in the fw_spec. For example, the run_task method for your Firetask may be
 something like::
 
     def run_task(fw_spec):
         subprocess.call(fw_spec["_fw_env"]["command"])
 
-This provides a clean way to write machine-agnostic FireTasks with an
+This provides a clean way to write machine-agnostic Firetasks with an
 abstraction of machine-specific commands and settings. Note that you can also use dfferent fw_env settings on the same machine if you run multiple job launch scripts using different Workers on that machine.
 
 Next Steps

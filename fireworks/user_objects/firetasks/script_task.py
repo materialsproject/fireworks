@@ -2,12 +2,12 @@
 
 from __future__ import unicode_literals
 
+from six.moves import builtins
 import shlex
 import subprocess
 import sys
 
-from fireworks.core.firework import FireTaskBase, FWAction
-from six.moves import builtins
+from fireworks.core.firework import FiretaskBase, FWAction
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -19,7 +19,7 @@ __date__ = 'Feb 18, 2013'
 # TODO: add maximum length of 10,000 chars for stored fields
 
 
-class ScriptTask(FireTaskBase):
+class ScriptTask(FiretaskBase):
     required_params = ["script"]
     _fw_name = 'ScriptTask'
 
@@ -128,7 +128,7 @@ class ScriptTask(FireTaskBase):
         return cls(parameters)
 
 
-class PyTask(FireTaskBase):
+class PyTask(FiretaskBase):
     _fw_name = 'PyTask'
 
     __doc__ = """

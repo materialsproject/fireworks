@@ -33,7 +33,7 @@ One note about this method is that unlike the special ``mlaunch`` command, no at
 Parallelizing parallel jobs over several (interconnected) multicore machines
 ============================================================================
 
-Your workflow itself might involve executing a parallel code. This means that *somewhere* in your FireTask, an MPI executable like ``mpirun``, ``mpi_exec``, or ``aprun`` is being called. In this case, the basic command to type is::
+Your workflow itself might involve executing a parallel code. This means that *somewhere* in your Firetask, an MPI executable like ``mpirun``, ``mpi_exec``, or ``aprun`` is being called. In this case, the basic command to type is::
 
     mlaunch <NP/PPJOB>
 
@@ -44,11 +44,11 @@ where ``<NP/PPJOB>`` is the total number of processors *divided by* the number o
 Access to nodefile
 ------------------
 
-If you need to access the NODEFILE from within your FireTask, you should modify the command to be::
+If you need to access the NODEFILE from within your Firetask, you should modify the command to be::
 
     mlaunch <NP/PPJOB> --ppn <PPN> --nodefile <NODEFILE>
 
-Here, ``NODEFILE`` is the location of your NODEFILE (or alternatively the name of an environment variable that points to your NODEFILE), and ``PPN`` is the number of processors per node. Then, inside your FireTask you will be able to access the parameters ``FWData().NODE_LIST`` and ``FWData().SUB_NPROCS`` to design your parallel run.
+Here, ``NODEFILE`` is the location of your NODEFILE (or alternatively the name of an environment variable that points to your NODEFILE), and ``PPN`` is the number of processors per node. Then, inside your Firetask you will be able to access the parameters ``FWData().NODE_LIST`` and ``FWData().SUB_NPROCS`` to design your parallel run.
 
 Using multi job launching with a queue
 ======================================

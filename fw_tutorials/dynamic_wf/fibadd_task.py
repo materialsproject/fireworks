@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from fireworks.core.firework import FWAction, Firework, FireTaskBase
+from fireworks.core.firework import FWAction, Firework, FiretaskBase
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -10,7 +10,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 25, 2013'
 
 
-class FibonacciAdderTask(FireTaskBase):
+class FibonacciAdderTask(FiretaskBase):
 
     _fw_name = "Fibonacci Adder Task"
 

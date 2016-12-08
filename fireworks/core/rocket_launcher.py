@@ -1,15 +1,16 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from datetime import datetime
 
 """
-This module contains methods for launching Rockets, both singly and in rapid-fire mode
+This module contains methods for launching Rockets, both singly and in rapid-fire mode.
 """
 
 import os
 import time
-from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS
+from datetime import datetime
+
+from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS, FWORKER_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
 from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi
@@ -22,15 +23,30 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 22, 2013'
 
 
+def get_fworker(fworker):
+    if fworker:
+        my_fwkr = fworker
+    elif FWORKER_LOC:
+        my_fwkr = FWorker.from_file(FWORKER_LOC)
+    else:
+        my_fwkr = FWorker()
+    return my_fwkr
+
+
 def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     """
-    Run a single rocket in the current directory
-    :param launchpad: (LaunchPad)
-    :param fworker: (FWorker)
-    :param fw_id: (int) if set, a particular Firework to run
-    :param strm_lvl: (str) level at which to output logs to stdout
+    Run a single rocket in the current directory.
+
+    Args:
+        launchpad (LaunchPad)
+        fworker (FWorker)
+        fw_id (int): if set, a particular Firework to run
+        strm_lvl (str): level at which to output logs to stdout
+
+    Returns:
+        bool
     """
-    fworker = fworker if fworker else FWorker()
+    fworker = get_fworker(fworker)
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=strm_lvl)
 
@@ -41,27 +57,28 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
     return rocket_ran
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1,
-              sleep_time=None, strm_lvl='INFO', timeout=None):
+def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None,
+              strm_lvl='INFO', timeout=None):
     """
-    Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories for each Rocket.
-    Usually stops when we run out of FireWorks from the LaunchPad.
+    Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
+    for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.
 
-    :param launchpad: (LaunchPad)
-    :param fworker: (FWorker object)
-    :param m_dir: (str) the directory in which to loop Rocket running
-    :param nlaunches: (int) 0 means 'until completion', -1 or "infinite" means to loop until max_loops
-    :param max_loops: (int) maximum number of loops (default -1 is infinite)
-    :param sleep_time: (int) secs to sleep between rapidfire loop iterations
-    :param strm_lvl: (str) level at which to output logs to stdout
-    :param timeout: (int) # of seconds after which to stop the rapidfire process
+    Args:
+        launchpad (LaunchPad)
+        fworker (FWorker object)
+        m_dir (str): the directory in which to loop Rocket running
+        nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop until max_loops
+        max_loops (int): maximum number of loops (default -1 is infinite)
+        sleep_time (int): secs to sleep between rapidfire loop iterations
+        strm_lvl (str): level at which to output logs to stdout
+        timeout (int): of seconds after which to stop the rapidfire process
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
     l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
-    fworker = fworker if fworker else FWorker()
+    fworker = get_fworker(fworker)
 
     num_launched = 0
     start_time = datetime.now()
@@ -86,7 +103,8 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1,
             if launchpad.run_exists(fworker):
                 skip_check = True  # don't wait, pull the next FW right away
             else:
-                time.sleep(0.15)  # add a small amount of buffer breathing time for DB to refresh in case we have a dynamic WF
+                # add a small amount of buffer breathing time for DB to refresh in case we have a dynamic WF
+                time.sleep(0.15)
                 skip_check = False
         if num_launched == nlaunches or nlaunches == 0:
             break

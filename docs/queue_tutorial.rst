@@ -4,7 +4,7 @@ Launch Rockets through a queue
 
 If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won't be able to launch Rockets directly. Instead, you'll submit Rockets through an existing queueing system that allocates computer resources.
 
-The simplest way to execute jobs through a queue would be to write a templated queue file and then submit it as a two-task Firework, as in the :doc:`FireTask tutorial </firetask_tutorial>`. However, FireWorks then considers your "job" to only be queue submission, and will consider the job completed after the queue sumission is complete. FireWorks will not know when the actual payload starts running, or is finished, or if the job finishes successfully. Thus, many of the useful management and monitoring features of FireWorks will not be available to you.
+The simplest way to execute jobs through a queue would be to write a templated queue file and then submit it as a two-task Firework, as in the :doc:`Firetask tutorial </firetask_tutorial>`. However, FireWorks then considers your "job" to only be queue submission, and will consider the job completed after the queue submission is complete. FireWorks will not know when the actual payload starts running, or is finished, or if the job finishes successfully. Thus, many of the useful management and monitoring features of FireWorks will not be available to you.
 
 A more powerful way to execute jobs through a queue is presented in this tutorial. In this method, the queue file runs ``rlaunch`` instead of running your desired program. This method is just like typing ``rlaunch`` into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it's very low-tech!). In particular, FireWorks is *completely unaware* that you are running through a queue!
 
@@ -275,6 +275,6 @@ While this solution works for a few different job types, it is not practical if 
 Next step: reserving FireWorks to overcome limitations
 ------------------------------------------------------
 
-If you feel these limitations impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity.
+If you feel these limitations impact your workflow, you should forge on to the next tutorial: :doc:`Reserving FireWorks upon queue submission </queue_tutorial_pt2>`. We'll explain how *reserving* FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity and introducing some new limitations and considerations.
 
 .. note:: If you are planning to complete the next tutorial, you should save your working directory with the files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``. We'll use it in the next tutorial.

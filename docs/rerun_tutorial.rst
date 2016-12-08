@@ -36,8 +36,17 @@ A common use case is to rerun all FIZZLED fireworks. You can do this via::
 Task-level reruns
 =================
 
-A Firework might fail while running one of its intermediate or final FireTasks. In that case, sometimes it is desirable not to rerun the entire FireWork, but rather just the tasks that failed. In case of *clean* failures, FireWorks stores data about what step failed inside the database. This data can later be used to restart at the task level. The ``--task-level`` option to the ``rerun_fws`` command allows this type of recovery. For example::
+A Firework might fail while running one of its intermediate or final Firetasks. In that case, sometimes it is desirable not to rerun the entire FireWork, but rather just the tasks that failed. In case of *clean* failures, FireWorks stores data about what step failed inside the database. This data can later be used to restart at the task level. The ``--task-level`` option to the ``rerun_fws`` command allows this type of recovery. For example::
 
     lpad rerun_fws -s FIZZLED  --task-level
 
-Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via ``--copy-data`` or attempt to rerun in the same directory (``--previous-dir``). Refer to the documentation (``lpad rerun_fws -h``) for more information.
+Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via ``--copy-data`` or attempt to rerun in the same directory (``--previous-dir``). Refer to the documentation (``lpad rerun_fws -h``) for more information.  Note also that task-level reruns will modify the spec of your firework such that future standard (i. e. non-task-level) reruns will retain the recovery and attempt to restart at the task level using that recovery.  If you want to clear the recovery information from the spec to ensure that fireworks starts from scratch, you can do so by using the ``--clear-recovery`` flag, e. g. ``lpad rerun_fws -i <FW_IDS> --clear-recovery``.
+
+Rerunning based on error message
+================================
+
+The ``launches`` collection in the LaunchPad contains data on the stack trace of the error, which is located in the ``action.stored_data._exception._stacktrace`` key. You can rerun jobs that have a certain text in the error stack trace using something like the following::
+
+    lpad rerun_fws -q '{"action.stored_data._exception._stacktrace": {"$regex": "My custom error message"}}' -lm
+
+Here, the ``My custom error message`` will be searched as a regular expression inside the stack trace. Note the use of the ``lm`` argument - this stands for ``launch_mode`` and indicates that you want to query the ``launches`` collection data. Note the same arguments will work for other commands, e.g. the ``lpad get_fws`` command, in case you want to preview your results before rerunning.

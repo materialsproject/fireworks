@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+
+from setuptools import setup, find_packages
+import os
+import multiprocessing, logging  # AJ: for some reason this is needed to not have "python setup.py test" freak out
+
+
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
 __version__ = "0.1"
@@ -7,16 +13,12 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
-from setuptools import setup, find_packages
-import os
-import multiprocessing, logging  # AJ: for some reason this is needed to not have "python setup.py test" freak out
-
 module_dir = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == "__main__":
     setup(
         name='FireWorks',
-        version='1.3.1',
+        version='1.3.9',
         description='FireWorks workflow software',
         long_description=open(os.path.join(module_dir, 'README.rst')).read(),
         url='https://github.com/materialsproject/fireworks',
@@ -28,13 +30,15 @@ if __name__ == "__main__":
                       'fireworks.flask_site': ['static/images/*', 'static/css/*', 'static/js/*', 'templates/*'],
                       'fireworks.flask_site.static.font-awesome-4.0.3': ['css/*', 'fonts/*', 'less/*', 'scss/*']},
         zip_safe=False,
-        install_requires=['pyyaml>=3.1.0', 'pymongo>=3.0', 'Jinja2>=2.7.3',
-                          'six>=1.5.2', 'monty>=0.8.1', 'python-dateutil>=2.2',
-                          'tabulate>=0.7.5', 'flask>=0.10.1', 'flask-paginate>=0.2.8'],
+        install_requires=['pyyaml>=3.11.0', 'pymongo>=3.3.0', 'Jinja2>=2.8.0',
+                          'six>=1.10.0', 'monty>=0.8.1',
+                          'python-dateutil>=2.5.3',
+                          'tabulate>=0.7.5', 'flask>=0.11.1',
+                          'flask-paginate>=0.4.5', 'gunicorn>=19.6.0'],
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
                         'daemon_mode':['fabric>=1.8.1']},
-        classifiers=['Programming Language :: Python :: 2.7',
+        classifiers=['Programming Language :: Python',
                      'Development Status :: 5 - Production/Stable',
                      'Intended Audience :: Science/Research',
                      'Intended Audience :: System Administrators',
@@ -44,6 +48,12 @@ if __name__ == "__main__":
                      'Topic :: Scientific/Engineering'],
         test_suite='nose.collector',
         tests_require=['nose'],
-        scripts=[os.path.join('scripts', f) for f in
-                 os.listdir(os.path.join(module_dir, 'scripts'))]
+        entry_points={
+            'console_scripts': [
+                'lpad = fireworks.scripts.lpad_run:lpad',
+                'mlaunch = fireworks.scripts.mlaunch_run:mlaunch',
+                'qlaunch = fireworks.scripts.qlaunch_run:qlaunch',
+                'rlaunch = fireworks.scripts.rlaunch_run:rlaunch'
+            ]
+        }
     )

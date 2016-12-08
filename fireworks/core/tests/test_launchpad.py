@@ -101,7 +101,7 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         wf_id = self.lp.get_wf_ids()
-        self.assertEqual(len(wf_id), 1)  
+        self.assertEqual(len(wf_id), 1)
         for fw_id in self.lp.get_wf_ids():
             wf = self.lp.get_wf_by_fw_id_lzyfw(fw_id)
             self.assertEqual(len(wf.id_fw.keys()), 1)
@@ -212,6 +212,40 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             if os.path.exists(f):
                 os.remove(f)
 
+    def test_pause_fw(self):
+        self.lp.pause_fw(self.zeus_fw_id)
+
+        paused_ids = self.lp.get_fw_ids({'state':'PAUSED'})
+        self.assertIn(self.zeus_fw_id, paused_ids)
+        try:
+            # Launch remaining fireworks
+            rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+            # Ensure except for Zeus and his children, all other fw are launched
+            completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+            # Check that Lapetus and his descendants are subset of  completed fwids
+            self.assertTrue(self.lapetus_desc_fw_ids.issubset(completed_ids))
+            # Check that Zeus siblings are subset of completed fwids
+            self.assertTrue(self.zeus_sib_fw_ids.issubset(completed_ids))
+
+            # Check that Zeus and children are subset of incompleted fwids
+            fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
+            self.assertIn(self.zeus_fw_id,fws_no_run)
+            self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
+
+            # Setup Zeus to run
+            self.lp.resume_fw(self.zeus_fw_id)
+            # Launch remaining fireworks
+            rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+            # Check that Zeus and children are all completed now
+            completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+            self.assertIn(self.zeus_fw_id,completed_ids)
+            self.assertTrue(self.zeus_child_fw_ids.issubset(completed_ids))
+
+        except:
+            raise
+
+
     def test_defuse_fw(self):
         # defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
@@ -264,6 +298,19 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         completed_ids = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
         self.assertIn(self.zeus_fw_id,completed_ids)
         self.assertTrue(self.zeus_child_fw_ids.issubset(completed_ids))
+
+    def test_pause_wf(self):
+        # pause Workflow containing Zeus
+        self.lp.pause_wf(self.zeus_fw_id)
+        paused_ids = self.lp.get_fw_ids({'state':'PAUSED'})
+        self.assertIn(self.zeus_fw_id,paused_ids)
+
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        # Check for the state of all fws in Zeus workflow in incomplete fwids
+        fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
+        self.assertEqual(fws_no_run,self.all_ids)
 
     def test_defuse_wf(self):
         # defuse Workflow containing Zeus
@@ -333,7 +380,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # Query for provenance
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        self.assertEqual(fw.state,'ARCHIVED') 
+        self.assertEqual(fw.state,'ARCHIVED')
 
     def test_delete_wf(self):
         # Run a firework before deleting Zeus
@@ -636,7 +683,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         try:
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
-            # Ensure the states are sync after launching remaining fw 
+            # Ensure the states are sync after launching remaining fw
             wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
             fws = wf.id_fw
             for fw_id in wf.fw_states:
@@ -651,7 +698,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
         # defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -664,9 +711,9 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         self.lp.defuse_fw(self.zeus_fw_id)
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
-        # Reignite Zeus and his children's fireworks 
+        # Reignite Zeus and his children's fireworks
         self.lp.reignite_fw(self.zeus_fw_id)
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -697,7 +744,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         # Reignite Zeus and his children's fireworks and launch them
         self.lp.reignite_wf(self.zeus_fw_id)
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -708,9 +755,9 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
     def test_archive_wf(self):
         # Run a firework before archiving Zeus
         launch_rocket(self.lp, self.fworker)
-        # archive Workflow containing Zeus. 
+        # archive Workflow containing Zeus.
         self.lp.archive_wf(self.zeus_fw_id)
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -727,7 +774,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -749,7 +796,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         rp.start()
         time.sleep(1)   # Wait 1 sec  and kill the running fws
         rp.terminate()
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -759,7 +806,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         # Detect lost runs
         lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
-        # Ensure the states are sync 
+        # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -776,7 +823,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
             fws = wf.id_fw
             if fws[self.zeus_fw_id].state == 'READY':
-                time.sleep(0.5)   # Wait 1 sec  
+                time.sleep(0.5)   # Wait 1 sec
             else:
                 break
         else:
@@ -786,7 +833,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         time.sleep(1)
 
-        # Ensure the states are in sync 
+        # Ensure the states are in sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -1092,7 +1139,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(launch_id)
 
         self.assertEqual(fw.state, 'FIZZLED')
-                
+
 
 if __name__ == '__main__':
     unittest.main()

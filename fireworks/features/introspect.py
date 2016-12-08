@@ -1,4 +1,5 @@
 from __future__ import division
+
 from collections import defaultdict
 from pymongo import DESCENDING
 from tabulate import tabulate
@@ -7,15 +8,18 @@ __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
 separator_str = ":%%:"
 
-def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
+def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
     """
     Converts a dictionary into a list of keys, with string values "key1.key2:val"
 
-    :param curr_doc:
-    :param curr_recurs:
-    :param max_recurs:
-    :return: [<str>]
+    Args:
+        curr_doc
+        curr_recurs (int)
+        max_recurs (int)
+
+    Return:
+        str
     """
     if isinstance(curr_doc, dict):
         if curr_recurs > max_recurs:
@@ -40,23 +44,28 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
     return [separator_str+str(curr_doc)]
 
+
 def collect_stats(list_keys, filter_truncated=True):
     """
-    Turns a list of keys (from flatten_to_keys) into a dict of <str>:count, i.e. counts the number of times each key appears
-    :param list_keys:
-    :param filter_truncated:
-    :return:
+    Turns a list of keys (from flatten_to_keys) into a dict of <str>:count, i.e. counts the
+    number of times each key appears.
+
+    Args:
+        list_keys
+        filter_truncated (bool)
+
+    Returns:
+        dict
     """
     d = defaultdict(int)
     for x in list_keys:
         if not filter_truncated or '<TRUNCATED_OBJECT>' not in x:
             d[x] += 1
-
     return d
+
 
 def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5):
     diff_dict = defaultdict(float)
-
     all_keys = statsdict1.keys()
     all_keys.extend(statsdict2.keys())
     all_keys = set(all_keys)
@@ -73,15 +82,16 @@ def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5)
     return diff_dict
 
 
-class Introspector():
+class Introspector:
     def __init__(self, lpad):
-            """
-            :param lpad: (LaunchPad)
-            """
-            self.db = lpad.db
+        """
+        Args:
+            lpad (LaunchPad)
+        """
+        self.lpad = lpad
+        self.db = lpad.db
 
     def introspect_fizzled(self, coll="fws", rsort=True, threshold=10, limit=100):
-
         # initialize collection
         if coll.lower() in ["fws", "fireworks"]:
             coll = "fireworks"
@@ -112,7 +122,12 @@ class Introspector():
         fizzled_keys = []
         nsamples_fizzled = 0
 
-        for doc in self.db[coll].find({"state": "FIZZLED"}, {state_key: 1}, sort=sort_key).limit(limit):
+        q = {"state": "FIZZLED"}
+        if coll == "launches":
+            all_launch_ids = self.lpad._get_active_launch_ids()
+            q["launch_id"] = {"$in": all_launch_ids}
+
+        for doc in self.db[coll].find(q, {state_key: 1}, sort=sort_key).limit(limit):
             nsamples_fizzled += 1
             if state_key == "spec._tasks":
                 for t in doc['spec']['_tasks']:
@@ -140,11 +155,13 @@ class Introspector():
 
         completed_d = collect_stats(completed_keys)
 
-        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled, threshold=threshold)
+        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled,
+                               threshold=threshold)
 
         table = []
         for w in sorted(diff_d, key=diff_d.get, reverse=True):
-            table.append([w.split(separator_str)[0], w.split(separator_str)[1], completed_d.get(w, 0), fizzled_d.get(w, 0), diff_d[w]])
+            table.append([w.split(separator_str)[0], w.split(separator_str)[1], completed_d.get(w, 0),
+                          fizzled_d.get(w, 0), diff_d[w]])
 
         return table
 
@@ -171,5 +188,3 @@ class Introspector():
                 print('----{} Failures have the following stack trace--------------'.format(row[3]))
                 print(row[1])
                 print('')
-
-

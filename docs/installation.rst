@@ -49,6 +49,8 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 
 #. Separately, you can download the Firework tutorial files if you plan on going through the tutorials. You can download these from the `FireWorks Github page <https://github.com/materialsproject/fireworks>`_. All you need is the ``fw_tutorial`` directory, but it might be easiest to download the entire source and just copy the ``fw_tutorial`` directory somewhere else.
 
+#. If you want, you can test connection to a remote server (see instructions below)
+
 Installation Method 2: Use Git to install in developer mode
 ===========================================================
 
@@ -86,8 +88,32 @@ Run unit tests
 
 .. _remote_test-label:
 
+3. If you want, you can test connection to a remote server (see instructions below)
+
+Updating an existing FireWorks installation
+===========================================
+
+If you want to update an existing FireWorks installation and used the simple pip install (Method 1), just run::
+
+    pip install --upgrade FireWorks
+
+If you installed FireWorks in developer mode:
+
+#. Navigate inside your FireWorks source directory containing the file setup.py (you can type ``lpad version`` to tell you where this is).
+
+#. Run the following commands::
+
+    git pull
+
+    python setup.py develop
+
+    python setup.py test
+
+
+.. note:: You can use the command ``python setup.py develop --user`` if you want to only install FireWorks for the local user
+
 Testing connection to a remote server
--------------------------------------
+=====================================
 We've set up a test database to see if you can connect to it.
 
 1. Create a file called ``my_launchpad_testing.yaml`` and put the following contents inside::
@@ -122,25 +148,3 @@ We've set up a test database to see if you can connect to it.
 Note that this is a read-only testing database. You can't run, add, or modify workflows - you'll only be able to do that on your own MongoDB setup.
 
 .. _updating-label:
-
-Updating an existing FireWorks installation
-===========================================
-
-If you want to update an existing FireWorks installation and used the simple pip install (Method 1), just run::
-
-    pip install --upgrade FireWorks
-
-If you installed FireWorks in developer mode:
-
-#. Navigate inside your FireWorks source directory containing the file setup.py (you can type ``lpad version`` to tell you where this is).
-
-#. Run the following commands::
-
-    git pull
-    
-    python setup.py develop
-    
-    python setup.py test
-
-
-.. note:: You can use the command ``python setup.py develop --user`` if you want to only install FireWorks for the local user
