@@ -1,14 +1,18 @@
-from flask import Flask, render_template, request, jsonify, Response, flash, session
-from flask import redirect, url_for, abort
+import json
+import os
+from functools import wraps
+
+from flask import Flask, render_template, request, jsonify, Response
+from flask import redirect, url_for, abort, flash, session
+from flask_paginate import Pagination
+from pymongo import DESCENDING, ASCENDING
+
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
-from pymongo import DESCENDING, ASCENDING
 from fireworks.utilities.fw_utilities import get_fw_logger
-import os, json
 from fireworks.core.launchpad import LaunchPad
-from flask_paginate import Pagination
-from functools import wraps
+import fireworks.flask_site.helpers as fwapp_util
 
 app = Flask(__name__)
 app.use_reloader = True
@@ -61,10 +65,18 @@ def requires_auth(f):
 
 
 def _addq_FW(q):
-    return {"$and": [q, app.BASE_Q, session['fw_filt']]}
+    filt_from_wf = {}
+    if session.get('wf_filt'):
+        filt_from_wf = fwapp_util.fw_filt_given_wf_filt(
+            session.get('wf_filt'), lp)
+    return {"$and": [q, app.BASE_Q, session['fw_filt'], filt_from_wf]}
 
 def _addq_WF(q):
-    return {"$and": [q, app.BASE_Q_WF, session['wf_filt']]}
+    filt_from_fw = {}
+    if session.get('fw_filt'):
+        filt_from_fw = fwapp_util.wf_filt_given_fw_filt(
+            session.get('fw_filt'), lp)
+    return {"$and": [q, app.BASE_Q_WF, session['wf_filt'], filt_from_fw]}
 
 @app.template_filter('datetime')
 def datetime(value):
