@@ -110,3 +110,8 @@ form.query label {
     display: inline-block;
     vertical-align: super;
 }
+
+form.query button[type=submit] {
+    margin-left: 70px;
+    width: 256px;
+}
