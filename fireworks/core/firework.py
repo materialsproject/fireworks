@@ -178,8 +178,9 @@ class Firework(FWSerializable):
     A Firework is a workflow step and might be contain several Firetasks.
     """
 
-    STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'WAITING': 1, 'READY': 2,
-                   'RESERVED': 3, 'RUNNING': 4, 'COMPLETED': 5}
+    STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
+                   'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
+                   'COMPLETED': 5}
 
     # note: if you modify this signature, you must also modify LazyFirework
     def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
@@ -741,6 +742,8 @@ class Workflow(FWSerializable):
             m_state = 'ARCHIVED'
         elif any([s == 'DEFUSED' for s in states]):
             m_state = 'DEFUSED'
+        elif any([s == 'PAUSED' for s in states]):
+            m_state = 'PAUSED'
         elif any([s == 'FIZZLED' for s in states]):
             # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a
             # given fizzled firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
@@ -951,8 +954,8 @@ class Workflow(FWSerializable):
         fw = self.id_fw[fw_id]
         prev_state = fw.state
 
-        # if we're defused or archived, just skip altogether
-        if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED':
+        # if we're paused, defused or archived, just skip altogether
+        if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED' or fw.state == 'PAUSED':
             self.fw_states[fw_id] = fw.state
             return updated_ids
 

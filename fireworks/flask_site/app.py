@@ -148,7 +148,8 @@ def workflow_json(wf_id):
                       "COMPLETED": "#24C75A",
                       "RESERVED": "#BB8BC1",
                       "ARCHIVED": "#7F8287",
-                      "DEFUSED": "#B7BCC3"
+                      "DEFUSED": "#B7BCC3",
+                      "PAUSED": "#FFCFCA"
                       }
 
     wf = lp.workflows.find_one({'nodes': wf_id})
