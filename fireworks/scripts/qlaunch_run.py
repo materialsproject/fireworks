@@ -107,6 +107,7 @@ def qlaunch():
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
     parser.add_argument('-r', '--reserve', help='reserve a fw', action='store_true')
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
+    parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', default=None, type=int)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWORKER_LOC)
     parser.add_argument('-q', '--queueadapter_file', help='path to queueadapter file',
                         default=QUEUEADAPTER_LOC)
