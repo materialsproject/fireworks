@@ -51,6 +51,14 @@ fireworks.utilities.timing module
     :undoc-members:
     :show-inheritance:
 
+fireworks.utilities.update_collection module
+--------------------------------------------
+
+.. automodule:: fireworks.utilities.update_collection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

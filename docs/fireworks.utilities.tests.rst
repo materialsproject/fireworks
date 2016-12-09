@@ -20,6 +20,14 @@ fireworks.utilities.tests.test_fw_serializers module
     :undoc-members:
     :show-inheritance:
 
+fireworks.utilities.tests.test_update_collection module
+-------------------------------------------------------
+
+.. automodule:: fireworks.utilities.tests.test_update_collection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
