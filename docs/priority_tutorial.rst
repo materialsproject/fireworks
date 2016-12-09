@@ -7,6 +7,8 @@ You might want to control the order in which your FireWorks are run. Setting job
 * You can assign any numerical value to the priority, including negative numbers and decimals. Higher priorities are run first.
 
  * FireWorks with *any* value of priority will be run before jobs without a priority defined. If two FireWorks have the same priority, one of those jobs will be chosen randomly (you can also choose FIFO and FILO ordering for equal-priority FireWorks via the :doc:`FW config </config_tutorial>`).
+ 
+ * You can launch specific fireworks from the command line via `rlaunch singleshot -f FW_ID` or `qlaunch -r singleshot -f FW_ID`.
 
 Set job priority using the command line after adding FWs
 ========================================================
