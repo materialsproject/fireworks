@@ -24,11 +24,10 @@ class AddFilesTask(FiretaskBase):
         - filepad_file (str): path to the filepad db config file
         - compress (bool): whether or not to compress the file before inserting to gridfs
         - metadata (dict): metadata to store along with the file, stored in 'metadata' key
-        - additional_data (dict): additional key: value pairs to be be added to the document
     """
     _fw_name = 'AddFilesTask'
     required_params = ["paths", "labels"]
-    optional_params = ["filepad_file", "compress", "metadata", "additional_data"]
+    optional_params = ["filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec):
         if len(self["paths"]) != len(self["labels"]):
@@ -36,8 +35,7 @@ class AddFilesTask(FiretaskBase):
         fpad = get_fpad(self.get("filepad_file", None))
         for p, l in zip(self["paths"], self["labels"]):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
-                          compress=self.get("compress", True),
-                          additional_data=self.get("additional_data", None))
+                          compress=self.get("compress", True))
 
 class GetFilesTask(FiretaskBase):
     """

@@ -53,7 +53,7 @@ class FilePad(MSONable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-    def add_file(self, path, label=None, compress=True, metadata=None, additional_data=None):
+    def add_file(self, path, label=None, compress=True, metadata=None):
         """
         Insert the file specified by the path into gridfs and the id and label(if provided) returned.
         Note: No insertion if the label already exists in the db.
@@ -63,8 +63,6 @@ class FilePad(MSONable):
             label (str): file label
             compress (bool): compress or not
             metadata (dict): file metadata
-            additional_data (dict): dict of additional stuff to add to the file document
-                timestamp, metadata, creator, etc
 
         Returns:
             (str, str): the id returned by gridfs, label
@@ -75,15 +73,15 @@ class FilePad(MSONable):
             if f is not None:
                 self.logger.warning("label: {} exists. Skipping insertion".format(label))
                 return f[1]["file_id"], f[1]["label"]
-        metadata = metadata or {}
         path = os.path.abspath(path)
-        metadata.update({"path": path})
-        additional_data = additional_data or {}
-        additional_data.update({"original_file_name": os.path.basename(path)})
+        metadata.update({})
+        root_data = {"label": label,
+                     "original_file_name": os.path.basename(path),
+                     "original_file_path": path,
+                     "metadata": metadata}
         with open(path, "r") as f:
             contents = f.read()
-            return self.insert_contents(contents, label=label, compress=compress, metadata=metadata,
-                                        additional_data=additional_data)
+            return self._insert_contents(contents, label, root_data, compress)
 
     def get_file(self, label):
         """
@@ -123,26 +121,22 @@ class FilePad(MSONable):
         doc = self.filepad.find({"label": label})[-1]
         return self.update_file_by_id(doc["file_id"], path, delete_old=delete_old)
 
-    def insert_contents(self, contents, label=None, compress=True, metadata=None, additional_data=None):
+    def _insert_contents(self, contents, label, root_data, compress):
         """
+        Insert the file contents(string) to gridfs and store the file info doc in filepad
 
         Args:
             contents (str): file contents or any arbitrary string to be stored in gridfs
             label (str): file label
             compress (bool): compress or not
-            metadata (dict): file metadata
-            additional_data (dict): dict of additional stuff to add to the file document
+            root_data (dict): key:value pairs to be added to the document root
 
         Returns:
             (str, str): the id returned by gridfs, label
         """
         file_id = self._insert_to_gridfs(contents, compress=compress)
-        metadata = metadata or {}
-        additional_data = additional_data or {}
-        d = {"label": label, "metadata": metadata}
-        d.update(additional_data)
-        d["file_id"] = file_id
-        self.filepad.insert_one(d)
+        root_data["file_id"] = file_id
+        self.filepad.insert_one(root_data)
         return file_id, label
 
     def _insert_to_gridfs(self, contents, compress=True):
