@@ -30,8 +30,6 @@ logger = get_fw_logger('app')
 PER_PAGE = 20
 STATES = sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.get)
 
-PERF_WARNINGS = os.environ.get("FWAPP_PERF_WARNINGS", False)
-
 AUTH_USER = os.environ.get("FWAPP_AUTH_USERNAME", None)
 AUTH_PASSWD = os.environ.get("FWAPP_AUTH_PASSWORD", None)
 
@@ -363,7 +361,7 @@ def parse_querystr(querystr, coll):
     except:
         flash("`{}` is not a valid MongoDB query doc.".format(querystr))
         return {}
-    if PERF_WARNINGS and not fwapp_util.uses_index(d, coll):
+    if lp.perf_warnings and not fwapp_util.uses_index(d, coll):
         flash("`{}` does not use a mongo index. "
               "If you expect to use this query often, add an index "
               "to the database collection "
