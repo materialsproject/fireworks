@@ -1,27 +1,38 @@
-flask_site Package
-==================
+fireworks.flask_site package
+============================
 
-:mod:`app` Module
------------------
+Submodules
+----------
+
+fireworks.flask_site.app module
+-------------------------------
 
 .. automodule:: fireworks.flask_site.app
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`gunicorn` Module
-----------------------
+fireworks.flask_site.gunicorn module
+------------------------------------
 
 .. automodule:: fireworks.flask_site.gunicorn
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`helpers` Module
----------------------
+fireworks.flask_site.helpers module
+-----------------------------------
 
 .. automodule:: fireworks.flask_site.helpers
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: fireworks.flask_site
+    :members:
+    :undoc-members:
+    :show-inheritance:
