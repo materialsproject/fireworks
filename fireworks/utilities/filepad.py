@@ -74,7 +74,6 @@ class FilePad(MSONable):
                 self.logger.warning("label: {} exists. Skipping insertion".format(label))
                 return f[1]["file_id"], f[1]["label"]
         path = os.path.abspath(path)
-        metadata.update({})
         root_data = {"label": label,
                      "original_file_name": os.path.basename(path),
                      "original_file_path": path,
