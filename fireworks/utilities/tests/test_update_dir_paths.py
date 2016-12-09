@@ -29,7 +29,6 @@ class MongoTests(unittest.TestCase):
             cls.lp.connection.drop_database(TESTDB_NAME)
 
     def test_update_path(cls):
-        print "test"
         cls.lp.db.test_coll.insert({"foo": "bar", "foo_list": [{"foo1": "bar1"}, {"foo2": "foo/old/path/bar"}]})
         update_path_in_collection(cls.lp.db, collection_name="test_coll", replacements={"old/path": "new/path"},
                                               query=None, dry_run=False, force_clear=False)
