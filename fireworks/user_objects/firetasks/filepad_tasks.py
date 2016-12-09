@@ -9,6 +9,7 @@ from fireworks.utilities.filepad import FilePad
 
 __author__ = 'Kiran Mathew'
 __email__ = 'kmathew@lbl.gov'
+__credits__ = 'Anubhav Jain'
 
 
 class AddFilesTask(FiretaskBase):

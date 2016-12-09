@@ -20,6 +20,7 @@ from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Kiran Mathew'
 __email__ = 'kmathew@lbl.gov'
+__credits__ = 'Anubhav Jain'
 
 
 class FilePad(MSONable):
