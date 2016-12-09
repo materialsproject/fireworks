@@ -1,22 +1,19 @@
-fireworks.features.tests package
-================================
+tests Package
+=============
 
-Submodules
-----------
+:mod:`tests` Package
+--------------------
 
-fireworks.features.tests.test_introspect module
------------------------------------------------
+.. automodule:: fireworks.features.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_introspect` Module
+-----------------------------
 
 .. automodule:: fireworks.features.tests.test_introspect
     :members:
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: fireworks.features.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:

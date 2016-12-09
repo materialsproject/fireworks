@@ -1,5 +1,13 @@
-fireworks.examples package
-==========================
+examples Package
+================
+
+:mod:`examples` Package
+-----------------------
+
+.. automodule:: fireworks.examples
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Subpackages
 -----------
@@ -9,10 +17,3 @@ Subpackages
     fireworks.examples.custom_firetasks
     fireworks.examples.tutorial_examples
 
-Module contents
----------------
-
-.. automodule:: fireworks.examples
-    :members:
-    :undoc-members:
-    :show-inheritance:
