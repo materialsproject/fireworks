@@ -834,7 +834,7 @@ class LaunchPad(FWSerializable):
             all_launch_ids.extend(l['launches'])
         return all_launch_ids
 
-    def reserve_fw(self, fworker, launch_dir, host=None, ip=None):
+    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
         """
         Checkout the next ready firework and mark the launch reserved.
 
@@ -843,11 +843,12 @@ class LaunchPad(FWSerializable):
             launch_dir (str): path to the launch directory.
             host (str): hostname
             ip (str): ip address
+            fw_id (int): fw_id to be reserved, if desired
 
         Returns:
             (Firework, int): the checked out firework and the new launch id
         """
-        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, state="RESERVED")
+        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
     def get_fw_ids_from_reservation_id(self, reservation_id):
         """
