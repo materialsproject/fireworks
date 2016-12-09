@@ -6,6 +6,23 @@ __author__ = 'Alireza Faghaninia, Anubhav Jain'
 __email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
 __date__ = 'Dec 08, 2016'
 
+def update_launchpad_data(lp, replacements, **kwargs):
+    """
+    If you want to update a text string in your entire FireWorks database with a replacement, use this method.
+    For example, you might want to update a directory name preamble like "/scratch/user1" to "/project/user2".
+    The algorithm does a text replacement over the *entire* BSON document. The original collection is backed up within
+    the database with extension "_xiv_{Date}".
+
+    :param lp (LaunchPad): a FireWorks LaunchPad object
+    :param replacements (dict): e.g. {"old_path1": "new_path1", "scratch/":"project/"}
+    :param kwargs: Additional arguments accepted by the update_path_in_collection method
+    """
+    for coll_name in ["launches", "fireworks", "workflows"]:
+        print("Updating data inside collection: {}".format(coll_name))
+        update_path_in_collection(lp.db, coll_name, replacements, **kwargs)
+
+    print("Update launchpad data complete.")
+
 
 def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=True, force_clear=False):
     """
