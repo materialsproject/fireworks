@@ -39,7 +39,7 @@ The three-step Firework thus looks like this:
    :align: center
    :alt: Template Firework
 
-1. Navigate to the tasks tutorial directory on your FireServer::
+1. Navigate to the tasks tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/firetask
 

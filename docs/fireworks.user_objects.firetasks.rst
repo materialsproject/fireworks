@@ -19,6 +19,14 @@ fireworks.user_objects.firetasks.fileio_tasks module
     :undoc-members:
     :show-inheritance:
 
+fireworks.user_objects.firetasks.filepad_tasks module
+-----------------------------------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.filepad_tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks.user_objects.firetasks.script_task module
 ---------------------------------------------------
 

@@ -13,7 +13,7 @@ A simple template - variable substitutions
 
 We introduced a simple template in the :doc:`Firetask tutorial <firetask_tutorial>`. Let's explore this template in more detail.
 
-1. Navigate to the template writer tutorial directory on your FireServer::
+1. Navigate to the template writer tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/templatewritertask
 
