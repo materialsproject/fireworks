@@ -100,3 +100,18 @@ footer .navbar .nav {
     height : 500px;
     border: 1px solid grey;
 }
+
+form.query input {
+    margin-bottom: 10px;
+    width: 18em;
+}
+
+form.query label {
+    display: inline-block;
+    vertical-align: super;
+}
+
+form.query button[type=submit] {
+    margin-left: 70px;
+    width: 256px;
+}
