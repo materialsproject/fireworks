@@ -4,6 +4,14 @@ fireworks.utilities.tests package
 Submodules
 ----------
 
+fireworks.utilities.tests.test_filepad module
+---------------------------------------------
+
+.. automodule:: fireworks.utilities.tests.test_filepad
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks.utilities.tests.test_fw_serializers module
 ----------------------------------------------------
 

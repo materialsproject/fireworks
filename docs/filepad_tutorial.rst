@@ -3,10 +3,10 @@ Using FilePad for storing and retrieving files
 ===============================================
 
 
-FilePad utility provides the api to add and delete arbitrary files of arbitray sizes to MongoDB.
-The is achieved by inserting the entire file contents to GridFS and store the id returned by the
-GridFS insertion, the label and the metadata(if provided) in a document in the filepad. In the following
-documentation, ``file contents`` refers to the stuff stored in GridFS and ``document`` refers to the
+FilePad utility provides the api to add and delete arbitrary files of arbitray sizes to MongoDB(filepad).
+The is achieved by inserting the entire file contents to GridFS and storing the id returned by the
+GridFS insertion, the user provided label and the metadata in a document in the filepad. In the following
+documentation, ``file contents`` refers to the file contents stored in GridFS and ``document`` refers to the
 associated mongodb document that stores the ``file_id``, ``label`` and other miscellaneous information
 pertaining to the file.
 
@@ -22,13 +22,13 @@ To add a file::
     file_id, label = fp.add(<path>, <label>, compress=True/False, metadata=<metadata>, additional_data=<additional_data>)
 
 where ``<path>`` is a string path to the file to be inserted, ``<label>`` is some
-unique label that can be used to retrive the file, the 'compress' argument value tells whether or not to compress
+unique label that can be used to retrieve the file, the 'compress' argument value tells whether or not to compress
 the file contents before insertion, ``<metadata>`` is a python dictionary input that will stored in the key 'metadata' and
 ``<additional_data>`` is a python dictionary consisting of additional key/value pairs to be stored
-in the mongodb document. The bare minimum document in the filepad database consists of keys 'file_id'(used
-to store the string representation of the object id returned by GridFS) and the
-'label'(used to store the user assigned label for the file).
-On successful insertion the file_id and the label are returned.
+in the mongodb document. A bare minimum document in the filepad database consists of keys ``file_id``(used
+to store the string representation of the object id returned by GridFS) and the ``label``(used to
+store the user assigned label for the file).
+On successful insertion the ``file_id`` and the ``label`` are returned.
 
 Retrieving files
 =================
@@ -58,7 +58,7 @@ tuples that match the query.
 Deleting files
 =================
 
-To delete the file contents and the associated document by label::
+To delete the contents of the file and the associated document by label::
 
     fp.delete_file(<label>)
 

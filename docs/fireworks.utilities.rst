@@ -19,6 +19,14 @@ fireworks.utilities.dict_mods module
     :undoc-members:
     :show-inheritance:
 
+fireworks.utilities.filepad module
+----------------------------------
+
+.. automodule:: fireworks.utilities.filepad
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks.utilities.fw_serializers module
 -----------------------------------------
 
