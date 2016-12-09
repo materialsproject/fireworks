@@ -11,7 +11,7 @@ __date__ = 'Dec 08, 2016'
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-class MongoTests(unittest.TestCase):
+class UpdatePathTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
