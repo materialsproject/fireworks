@@ -33,6 +33,8 @@ The current web framework is limited but simple - just click the links you are i
 
 points to the data for Firework id #1 (for the default host and port). You can easily modify this URL to check up on a particular Firework.
 
+As a more advanced option, the framework now allows users to search fireworks and workflows using custom MongoDB-style queries.
+
 Authentication
 ==============
 

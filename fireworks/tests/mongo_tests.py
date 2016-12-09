@@ -415,10 +415,14 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
+        import time
+        time.sleep(2)
         launch_rocket(self.lp, self.fworker)
 
-        self.lp.delete_wf(2)
-        self.assertRaises(ValueError, self.lp.get_fw_by_id, 2)
+        run_id = self.lp.get_launch_by_id(1).fw_id
+        del_id = 1 if run_id == 2 else 2
+        self.lp.delete_wf(del_id)
+        self.assertRaises(ValueError, self.lp.get_fw_by_id, del_id)
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
             'stdout'], 'test1\n')
 
@@ -428,6 +432,8 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
+        import time
+        time.sleep(2)
         launch_rocket(self.lp, self.fworker)
 
         self.assertEqual(self.lp.launches.count(), 1)

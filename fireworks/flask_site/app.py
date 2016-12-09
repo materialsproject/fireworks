@@ -1,23 +1,34 @@
+import json
+import os
+from functools import wraps
+
 from flask import Flask, render_template, request, jsonify, Response
-from flask import redirect, url_for, abort
+from flask import redirect, url_for, abort, flash, session
+from flask_paginate import Pagination
+from pymongo import DESCENDING, ASCENDING
+
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
-from pymongo import DESCENDING, ASCENDING
-import os, json
+from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.core.launchpad import LaunchPad
-from flask_paginate import Pagination
-from functools import wraps
+import fireworks.flask_site.helpers as fwapp_util
 
 app = Flask(__name__)
 app.use_reloader = True
+app.secret_key = os.environ.get(
+    "FWAPP_SECRET_KEY",
+    '0\x07)\x95\x96)\xb9\xdf1\xc0l4\x99\xc4\xf1\x88Jk\xb4lZ\xb2\x81X')
+
 hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 app.BASE_Q = {}
 app.BASE_Q_WF = {}
 
+logger = get_fw_logger('app')
+
 PER_PAGE = 20
-STATES = Firework.STATE_RANKS.keys()
+STATES = sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.get)
 
 AUTH_USER = os.environ.get("FWAPP_AUTH_USERNAME", None)
 AUTH_PASSWD = os.environ.get("FWAPP_AUTH_PASSWORD", None)
@@ -53,9 +64,19 @@ def requires_auth(f):
     return decorated
 
 
-def _addq(base, q):
-    return {"$and": [q, base]} if base else q
+def _addq_FW(q):
+    filt_from_wf = {}
+    if session.get('wf_filt'):
+        filt_from_wf = fwapp_util.fw_filt_given_wf_filt(
+            session.get('wf_filt'), lp)
+    return {"$and": [q, app.BASE_Q, session['fw_filt'], filt_from_wf]}
 
+def _addq_WF(q):
+    filt_from_fw = {}
+    if session.get('fw_filt'):
+        filt_from_fw = fwapp_util.wf_filt_given_fw_filt(
+            session.get('fw_filt'), lp)
+    return {"$and": [q, app.BASE_Q_WF, session['wf_filt'], filt_from_fw]}
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -76,13 +97,21 @@ def pluralize(number, singular='', plural='s'):
 @app.route("/")
 @requires_auth
 def home():
+    fw_querystr = request.args.get('fw_query')
+    wf_querystr = request.args.get('wf_query')
+    fw_querystr = fw_querystr if fw_querystr else ''
+    wf_querystr = wf_querystr if wf_querystr else ''
+
+    session['fw_filt'] = parse_querystr(fw_querystr, lp.fireworks) if fw_querystr else {}
+    session['wf_filt'] = parse_querystr(wf_querystr, lp.workflows) if wf_querystr else {}
+
     fw_nums = []
     wf_nums = []
     for state in STATES:
-        fw_nums.append(lp.get_fw_ids(query=_addq(app.BASE_Q, {'state': state}),
+        fw_nums.append(lp.get_fw_ids(query=_addq_FW({'state': state}),
                                      count_only=True))
         wf_nums.append(
-            lp.get_wf_ids(query=_addq(app.BASE_Q_WF, {'state': state}),
+            lp.get_wf_ids(query=_addq_WF({'state': state}),
                           count_only=True))
     state_nums = zip(STATES, fw_nums, wf_nums)
 
@@ -90,7 +119,7 @@ def home():
     tot_wfs = sum(wf_nums)
 
     # Newest Workflows table data
-    wfs_shown = lp.workflows.find(app.BASE_Q_WF, limit=PER_PAGE,
+    wfs_shown = lp.workflows.find(_addq_WF({}), limit=PER_PAGE,
                                   sort=[('_id', DESCENDING)])
     wf_info = []
     for item in wfs_shown:
@@ -202,7 +231,7 @@ def fw_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     current_sorting_order = sorting_order
     db = lp.fireworks
     q = {} if state == "total" else {"state": state}
-    q = _addq(app.BASE_Q, q)
+    q = _addq_FW(q)
     fw_count = lp.get_fw_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
@@ -232,7 +261,7 @@ def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     current_sorting_order = sorting_order
     db = lp.workflows
     q = {} if state == "total" else {"state": state}
-    q = _addq(app.BASE_Q_WF, q)
+    q = _addq_WF(q)
     wf_count = lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
@@ -259,7 +288,7 @@ def wf_metadata_find(key, value, state):
     q = {'metadata.{}'.format(key): value}
     state_mixin = {} if state == "total" else {"state": state}
     q.update(state_mixin)
-    q = _addq(app.BASE_Q_WF, q)
+    q = _addq_WF(q)
     wf_count = lp.get_wf_ids(query=q, count_only=True)
     if wf_count == 0:
         abort(404)
@@ -314,6 +343,23 @@ def bootstrap_app(*args, **kwargs):
     fireworks.flask_site.app.lp = LaunchPad.from_dict(
         json.loads(os.environ["FWDB_CONFIG"]))
     return app(*args, **kwargs)
+
+
+def parse_querystr(querystr, db):
+    # try to parse using `json.loads`.
+    # validate as valid mongo filter dict
+    try:
+        d = json.loads(querystr)
+    except:
+        flash("{} is not a valid json query.".format(querystr))
+        return {}
+    try:
+        assert isinstance(d, dict)
+        h = db.find_one(d)
+    except:
+        flash("{} is not a valid MongoDB query doc.".format(querystr))
+        return {}
+    return d
 
 
 if __name__ == "__main__":
