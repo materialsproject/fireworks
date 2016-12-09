@@ -28,7 +28,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
     all_docs = db[collection_name].find(query)
     ndocs = db[collection_name].find(query).count()
     modified_docs = [0 for i in range(ndocs)]
-    print "updating new documents:"
+    print("updating new documents:")
     for idx, doc in enumerate(tqdm(all_docs, total=ndocs)):
         m_str = dumps(doc)
         for old_path, new_path in replacements.iteritems():
@@ -39,7 +39,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
 
     ndocs = db[collection_name].find({"_id": {"$nin": modified_docs}}).count()
     all_docs = db[collection_name].find({"_id": {"$nin": modified_docs}})
-    print "\ntransferring unaffected documents:"
+    print("\ntransferring unaffected documents:")
     for old_doc in tqdm(all_docs, total=ndocs):
         db["{}_temp_refactor".format(collection_name)].insert(old_doc)
 
