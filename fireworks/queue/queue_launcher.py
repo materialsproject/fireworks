@@ -31,7 +31,8 @@ __date__ = 'Dec 12, 2012'
 
 
 def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False,
-                           strm_lvl='INFO', create_launcher_dir=False, fill_mode=False):
+                           strm_lvl='INFO', create_launcher_dir=False, fill_mode=False,
+                           fw_id=None):
     """
     Submit a single job to the queue.
 
@@ -68,12 +69,16 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     if fill_mode and reserve:
         raise ValueError("Fill_mode cannot be used in conjunction with reserve mode!")
 
+    if fw_id and not reserve:
+        raise ValueError("qlaunch for specific fireworks may only be used in reservation mode.")
+
     if fill_mode or launchpad.run_exists(fworker):
         launch_id = None
         try:
             if reserve:
-                l_logger.debug('finding a FW to reserve...')
-                fw, launch_id = launchpad.reserve_fw(fworker, launcher_dir)
+                if fw_id:
+                    l_logger.debug('finding a FW to reserve...')
+                fw, launch_id = launchpad.reserve_fw(fworker, launcher_dir, fw_id=fw_id)
                 if not fw:
                     l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
                     return False
