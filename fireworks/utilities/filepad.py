@@ -6,6 +6,7 @@ from __future__ import division, print_function, unicode_literals, absolute_impo
 This module defines the core classes
 """
 import zlib
+import os
 
 from pymongo import MongoClient
 import gridfs
@@ -74,7 +75,10 @@ class FilePad(MSONable):
                 self.logger.warning("label: {} exists. Skipping insertion".format(label))
                 return f[1]["file_id"], f[1]["label"]
         metadata = metadata or {}
+        path = os.path.abspath(path)
         metadata.update({"path": path})
+        additional_data = additional_data or {}
+        additional_data.update({"original_file_name": os.path.basename(path)})
         with open(path, "r") as f:
             contents = f.read()
             return self.insert_contents(contents, label=label, compress=compress, metadata=metadata,

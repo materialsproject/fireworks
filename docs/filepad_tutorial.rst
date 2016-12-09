@@ -26,8 +26,8 @@ unique label that can be used to retrieve the file, the 'compress' argument valu
 the file contents before insertion, ``<metadata>`` is a python dictionary input that will stored in the key 'metadata' and
 ``<additional_data>`` is a python dictionary consisting of additional key/value pairs to be stored
 in the mongodb document. A bare minimum document in the filepad database consists of keys ``file_id``(used
-to store the string representation of the object id returned by GridFS) and the ``label``(used to
-store the user assigned label for the file).
+to store the string representation of the object id returned by GridFS), ``label``(used to store the
+user assigned label for the file), ``original_file_name`` and ``metadata.path``(the original path).
 On successful insertion the ``file_id`` and the ``label`` are returned.
 
 Retrieving files

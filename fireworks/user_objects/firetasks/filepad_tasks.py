@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import os
+
 from fireworks.core.firework import FiretaskBase
 from fireworks.utilities.filepad import FilePad
 
@@ -35,6 +37,34 @@ class AddFilesTask(FiretaskBase):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
                           compress=self.get("compress", True),
                           additional_data=self.get("additional_data", None))
+
+class GetFilesTask(FiretaskBase):
+    """
+    A Firetask to fetch files from the filepad and write it to specified directory(current working
+    directory if not specified)
+
+    Required params:
+        - labels: ([str]) file labels to delete
+
+    Optional params:
+        - filepad_file (str): path to the filepad db config file
+        - dest_dir (str): destination directory, default is the current working directory
+        - new_file_names ([str]): if provided, the retrieved files will be renamed
+    """
+    _fw_name = 'GetFilesTask'
+    required_params = ["labels"]
+    optional_params = ["filepad_file", "dest_dir", "new_file_names"]
+
+    def run_task(self, fw_spec):
+        fpad = get_fpad(self.get("filepad_file", None))
+        dest_dir = self.get("dest_dir", os.path.abspath("."))
+        new_file_names = self.get("new_file_names", [])
+        for i, l in enumerate(self["labels"]):
+            file_contents, doc = fpad.get_file(label=l)
+            file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
+            print("YY", os.path.join(dest_dir, file_name))
+            with open(os.path.join(dest_dir, file_name), "w") as f:
+                f.write(file_contents.decode())
 
 
 class DeleteFilesTask(FiretaskBase):

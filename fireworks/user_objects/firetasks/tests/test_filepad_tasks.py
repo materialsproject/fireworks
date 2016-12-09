@@ -7,7 +7,7 @@ __author__ = 'Kiran Mathew'
 import unittest
 import os
 
-from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask
+from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask
 from fireworks.utilities.filepad import FilePad
 
 
@@ -36,6 +36,19 @@ class FilePadTasksTest(unittest.TestCase):
         self.assertIsNone(w)
         d = self.fp.get_file("delete")
         self.assertIsNone(d)
+
+    def test_getfilestask_run(self):
+        t = AddFilesTask(paths=self.paths, labels=self.labels)
+        t.run_task({})
+        dest_dir = os.path.abspath(".")
+        labels = ["write"]
+        new_file_names = ["write_2.yaml"]
+        t = GetFilesTask(labels=labels, dest_dir=dest_dir, new_file_names=new_file_names)
+        t.run_task({})
+        write_file_contents, wdoc = self.fp.get_file("write")
+        self.assertEqual(write_file_contents,
+                         open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
+        os.remove(os.path.join(dest_dir, new_file_names[0]))
 
 
 if __name__ == '__main__':

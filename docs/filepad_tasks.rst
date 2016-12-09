@@ -23,6 +23,24 @@ Optional parameters
 * metadata (dict): metadata to store along with the file, stored in 'metadata' key
 * additional_data (dict): additional key: value pairs to be be added to the document
 
+GetFilesTask
+==============
+
+The *GetFilesTask* enables one to fetch one or more files into MongoDb/GridFS using FilePad and write
+them to the given destination directory.
+
+Required parameters
+-------------------
+
+* labels ([str]): list of labels, one for each file in the paths list.
+
+Optional parameters
+-------------------
+
+* filepad_file (str): path to the filepad db config file.
+* dest_dir (str): destination directory, default is the current working directory.
+* new_file_names ([str]): if provided, the retrieved files will be renamed.
+
 DeleteFilesTask
 ==============
 
