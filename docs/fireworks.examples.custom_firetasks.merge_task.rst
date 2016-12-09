@@ -1,22 +1,19 @@
-fireworks.examples.custom_firetasks.merge_task package
-======================================================
+merge_task Package
+==================
 
-Submodules
-----------
+:mod:`merge_task` Package
+-------------------------
 
-fireworks.examples.custom_firetasks.merge_task.merge_task module
-----------------------------------------------------------------
+.. automodule:: fireworks.examples.custom_firetasks.merge_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`merge_task` Module
+------------------------
 
 .. automodule:: fireworks.examples.custom_firetasks.merge_task.merge_task
     :members:
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: fireworks.examples.custom_firetasks.merge_task
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -7,7 +7,7 @@ Tips for designing Firetasks, FireWorks, and Workflows
 Designing Firework specs
 ========================
 
-Recall that the **spec** of a Firework completely bootstraps a job and determines what will run. One the major tasks as a FireWorks user is to decide how your **spec** is structured. We suggest you keep the following suggestions in mind:
+Recall that the **spec** of a Firework completely bootstraps a job and determines what will run. One of the major tasks as a FireWorks user is to decide how your **spec** is structured. We suggest you keep the following suggestions in mind:
 
 #. In general, put any flexible input data as root keys in your **spec**, *outside* the ``_tasks`` section. An example of this was the ``input_array`` parameter that defined the numbers to add in our ``Addition Task`` (see the :doc:`firetask tutorial <firetask_tutorial>`).
 #. Also put in the **spec** any metadata about your job that you want to query on later. You can perform rich MongoDB queries over the JSON document in the **spec**. Performance will be better for keys that are at the root of your **spec** versus nested within dicts.

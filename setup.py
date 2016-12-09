@@ -34,7 +34,7 @@ if __name__ == "__main__":
                           'six>=1.10.0', 'monty>=0.8.1',
                           'python-dateutil>=2.5.3',
                           'tabulate>=0.7.5', 'flask>=0.11.1',
-                          'flask-paginate>=0.4.5', 'gunicorn>=19.6.0'],
+                          'flask-paginate>=0.4.5', 'gunicorn>=19.6.0', 'tqdm>=4.8.4'],
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
                         'daemon_mode':['fabric>=1.8.1']},

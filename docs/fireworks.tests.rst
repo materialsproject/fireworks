@@ -1,54 +1,43 @@
-fireworks.tests package
-=======================
+tests Package
+=============
 
-Submodules
-----------
-
-fireworks.tests.master_tests module
------------------------------------
+:mod:`master_tests` Module
+--------------------------
 
 .. automodule:: fireworks.tests.master_tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.tests.mongo_tests module
-----------------------------------
+:mod:`mongo_tests` Module
+-------------------------
 
 .. automodule:: fireworks.tests.mongo_tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.tests.multiprocessing_tests module
---------------------------------------------
+:mod:`multiprocessing_tests` Module
+-----------------------------------
 
 .. automodule:: fireworks.tests.multiprocessing_tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.tests.tasks module
-----------------------------
+:mod:`tasks` Module
+-------------------
 
 .. automodule:: fireworks.tests.tasks
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.tests.test_fw_config module
--------------------------------------
+:mod:`test_fw_config` Module
+----------------------------
 
 .. automodule:: fireworks.tests.test_fw_config
     :members:
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: fireworks.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:

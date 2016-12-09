@@ -1,46 +1,43 @@
-fireworks.scripts package
-=========================
+scripts Package
+===============
 
-Submodules
-----------
+:mod:`scripts` Package
+----------------------
 
-fireworks.scripts.lpad_run module
----------------------------------
+.. automodule:: fireworks.scripts
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`lpad_run` Module
+----------------------
 
 .. automodule:: fireworks.scripts.lpad_run
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.scripts.mlaunch_run module
-------------------------------------
+:mod:`mlaunch_run` Module
+-------------------------
 
 .. automodule:: fireworks.scripts.mlaunch_run
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.scripts.qlaunch_run module
-------------------------------------
+:mod:`qlaunch_run` Module
+-------------------------
 
 .. automodule:: fireworks.scripts.qlaunch_run
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.scripts.rlaunch_run module
-------------------------------------
+:mod:`rlaunch_run` Module
+-------------------------
 
 .. automodule:: fireworks.scripts.rlaunch_run
     :members:
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: fireworks.scripts
-    :members:
-    :undoc-members:
-    :show-inheritance:
