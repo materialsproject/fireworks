@@ -25,7 +25,7 @@ __email__ = 'kmathew@lbl.gov'
 class FilePad(MSONable):
 
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
-                 password=None, filepad="filepad", gridfs_collection="fpad_gfs", logdir=None,
+                 password=None, filepad_coll="filepad", gridfs_collection="fpad_gfs", logdir=None,
                  strm_lvl=None):
         self.host = host
         self.port = int(port)
@@ -44,7 +44,7 @@ class FilePad(MSONable):
             raise ValueError("authentication failed")
 
         # set collections: filepad and gridfs
-        self.filepad = self.db[filepad]
+        self.filepad = self.db[filepad_coll]
         self.gridfs = gridfs.GridFS(self.db, gridfs_collection)
 
         # logging

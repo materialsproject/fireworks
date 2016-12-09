@@ -15,6 +15,8 @@ The purpose of this tutorial is to get you set up as quickly as possible; it isn
 Reset/Initialize the FireServer
 -------------------------------
 
+In this tutorial, we refer to the machine or infrastructure you use to host mongodb (and run mongod) as your **FireServer**.  You may set it up as follows:
+
 #. If not already running, start MongoDB::
 
     mongod --logpath <FILENAME_TO_LOG_TO> --fork
@@ -39,8 +41,8 @@ Reset/Initialize the FireServer
 
    .. note:: If you are already curious about the various options that the LaunchPad offers, you can type ``lpad -h`` or ``lpad reset -h``. The ``-h`` help option is available for all of the scripts and sub-commands (like ``reset``) in FireWorks. For example, if you ``lpad reset`` using the ``--password`` option set to today's date, e.g. 2012-02-01, you can bypass the prompt asking you to confirm the reset.
 
-Add a Firework to the FireServer database
------------------------------------------
+Add a Firework to the LaunchPad
+-------------------------------
 
 A Firework contains a list of computing tasks (Firetasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We'll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one Firetask thus looks like this:
 

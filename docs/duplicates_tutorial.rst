@@ -15,7 +15,7 @@ Preventing Trivial Duplicates
 
 A trivial duplicate might occur if two users submit the same workflow to the FireServer. Let's see how this plays out when we have duplicate checking enabled for our workflows.
 
-1. Move to the ``duplicates`` tutorial directory on your FireServer::
+1. Move to the ``duplicates`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/duplicates
 

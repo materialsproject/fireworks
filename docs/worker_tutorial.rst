@@ -13,7 +13,7 @@ Launch a Rocket on a worker machine (FireWorker)
 
 In the Introductory tutorial, we entered a Firework (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the Firework from the database and executed it, all within the same machine.
 
-A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). We'll next configure a worker machine.
+A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). For example, you may have one node on a supercomputing resource dedicated to running MongoDB, but want to run FireWorks you have set up on that machine on a different supercomputing resource (e.g. running fireworks on ORNL or ALCF using a NERSC Fireserver).  We'll next configure a worker machine.
 
 Install FireWorks on the FireWorker
 -----------------------------------
@@ -48,7 +48,7 @@ The FireWorker needs to know the login information for the FireServer. On the **
 
    .. note:: The name ``my_launchpad.yaml`` is a special filename that contains your database credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-l`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
-#. Confirm that you can query the FireServer from your FireWorker::
+#. Confirm that you can query the Launchpad hosted on the FireServer from your FireWorker::
 
     lpad get_fws -i 1 -d all
 
