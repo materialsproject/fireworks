@@ -31,7 +31,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
     print("updating new documents:")
     for idx, doc in enumerate(tqdm(all_docs, total=ndocs)):
         m_str = dumps(doc)
-        for old_path, new_path in replacements.iteritems():
+        for old_path, new_path in replacements.item():
             m_str = m_str.replace(old_path, new_path)
         m_bson=loads(m_str)
         modified_docs[idx] = doc["_id"]
