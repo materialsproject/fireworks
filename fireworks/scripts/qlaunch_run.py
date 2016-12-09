@@ -107,14 +107,13 @@ def qlaunch():
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
     parser.add_argument('-r', '--reserve', help='reserve a fw', action='store_true')
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
-    parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', default=None, type=int)
     parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWORKER_LOC)
     parser.add_argument('-q', '--queueadapter_file', help='path to queueadapter file',
                         default=QUEUEADAPTER_LOC)
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=CONFIG_FILE_DIR)
-    parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run',
+    parser.add_argument('-fm', '--fill_mode', help='launch queue submissions even when there is nothing to run',
                         action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
@@ -129,6 +128,9 @@ def qlaunch():
     rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)',
                               default=None, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
+    
+    single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', 
+                               default=None, type=int)
 
     args = parser.parse_args()
 
