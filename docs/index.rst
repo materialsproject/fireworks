@@ -204,6 +204,7 @@ Misc
     offline_tutorial
     python_tutorial
     qadapter_programming
+    update_text
 
 Reference
 =========
