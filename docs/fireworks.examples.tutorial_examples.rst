@@ -1,51 +1,54 @@
-tutorial_examples Package
-=========================
+fireworks.examples.tutorial_examples package
+============================================
 
-:mod:`tutorial_examples` Package
---------------------------------
+Submodules
+----------
 
-.. automodule:: fireworks.examples.tutorial_examples
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`dynamic_wf1` Module
--------------------------
+fireworks.examples.tutorial_examples.dynamic_wf1 module
+-------------------------------------------------------
 
 .. automodule:: fireworks.examples.tutorial_examples.dynamic_wf1
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`dynamic_wf2` Module
--------------------------
+fireworks.examples.tutorial_examples.dynamic_wf2 module
+-------------------------------------------------------
 
 .. automodule:: fireworks.examples.tutorial_examples.dynamic_wf2
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`firetasks` Module
------------------------
+fireworks.examples.tutorial_examples.firetasks module
+-----------------------------------------------------
 
 .. automodule:: fireworks.examples.tutorial_examples.firetasks
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`introduction` Module
---------------------------
+fireworks.examples.tutorial_examples.introduction module
+--------------------------------------------------------
 
 .. automodule:: fireworks.examples.tutorial_examples.introduction
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`workflows` Module
------------------------
+fireworks.examples.tutorial_examples.workflows module
+-----------------------------------------------------
 
 .. automodule:: fireworks.examples.tutorial_examples.workflows
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: fireworks.examples.tutorial_examples
+    :members:
+    :undoc-members:
+    :show-inheritance:

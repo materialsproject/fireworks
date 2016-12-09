@@ -1,21 +1,5 @@
-fireworks Package
+fireworks package
 =================
-
-:mod:`fireworks` Package
-------------------------
-
-.. automodule:: fireworks.__init__
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`fw_config` Module
------------------------
-
-.. automodule:: fireworks.fw_config
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -32,3 +16,22 @@ Subpackages
     fireworks.user_objects
     fireworks.utilities
 
+Submodules
+----------
+
+fireworks.fw_config module
+--------------------------
+
+.. automodule:: fireworks.fw_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: fireworks
+    :members:
+    :undoc-members:
+    :show-inheritance:

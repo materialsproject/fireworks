@@ -1,45 +1,5 @@
-utilities Package
-=================
-
-:mod:`dict_mods` Module
------------------------
-
-.. automodule:: fireworks.utilities.dict_mods
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`fw_serializers` Module
-----------------------------
-
-.. automodule:: fireworks.utilities.fw_serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`fw_utilities` Module
---------------------------
-
-.. automodule:: fireworks.utilities.fw_utilities
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`timing` Module
---------------------
-
-.. automodule:: fireworks.utilities.timing
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`update_collection` Module
--------------------------------
-
-.. automodule:: fireworks.utilities.update_collection
-    :members:
-    :undoc-members:
-    :show-inheritance:
+fireworks.utilities package
+===========================
 
 Subpackages
 -----------
@@ -48,3 +8,62 @@ Subpackages
 
     fireworks.utilities.tests
 
+Submodules
+----------
+
+fireworks.utilities.dict_mods module
+------------------------------------
+
+.. automodule:: fireworks.utilities.dict_mods
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fireworks.utilities.filepad module
+----------------------------------
+
+.. automodule:: fireworks.utilities.filepad
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fireworks.utilities.fw_serializers module
+-----------------------------------------
+
+.. automodule:: fireworks.utilities.fw_serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fireworks.utilities.fw_utilities module
+---------------------------------------
+
+.. automodule:: fireworks.utilities.fw_utilities
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fireworks.utilities.timing module
+---------------------------------
+
+.. automodule:: fireworks.utilities.timing
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fireworks.utilities.update_collection module
+--------------------------------------------
+
+.. automodule:: fireworks.utilities.update_collection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: fireworks.utilities
+    :members:
+    :undoc-members:
+    :show-inheritance:
