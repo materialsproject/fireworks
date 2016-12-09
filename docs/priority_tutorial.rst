@@ -40,7 +40,7 @@ Imagine we have two workflows, A and B, with two steps each (1 and 2). We want t
 
 Let's examine how we can set up such an execution model.
 
-#. Move to the ``A_then_B`` subdirectory of the ``priority`` tutorial directory on your FireServer::
+#. Move to the ``A_then_B`` subdirectory of the ``priority`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/priority/A_then_B
 
@@ -69,7 +69,7 @@ Let's now try another execution order: A-1, B-1, B-2, A-2.
    :align: center
    :alt: A then B
 
-#. Move to the ``breadthfirst`` subdirectory of the ``priority`` tutorial directory on your FireServer::
+#. Move to the ``breadthfirst`` subdirectory of the ``priority`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/priority/breadthfirst
 

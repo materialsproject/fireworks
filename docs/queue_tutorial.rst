@@ -86,7 +86,7 @@ Submit a job
 
 #. After your queue manager runs your job, you should see the file ``howdy.txt`` in the current directory.
 
-   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing your FireServer database. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try connecting to your FireServer database: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot connect to the FireServer database from your compute node, the first thing to do is contact a system administrator for assistance. If you are convinced that there is no way for the compute nodes to access a network, you might try :doc:`running FireWorks in offline mode </offline_tutorial>`.
+   .. note:: In some cases, firewall issues on shared resources prevent your compute node from accessing the LaunchPad hosted on your FireServer. You should confirm that your compute nodes can access external database servers. You might try to submit an *interactive job* to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try accessing your LaunchPad: ``lpad -l my_launchpad.yaml get_fw 1``. If you cannot access the LaunchPad from your compute node, the first thing to do is contact a system administrator for assistance. If you are convinced that there is no way for the compute nodes to access a network, you might try :doc:`running FireWorks in offline mode </offline_tutorial>`.
 
 If everything ran successfully, congratulations! You just executed a Firework through a queue!
 
@@ -119,7 +119,7 @@ You've now launched multiple Rockets with a single command, all through a queuei
 Continually submit jobs to the queue
 ====================================
 
-You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the FireServer. Let's set this up.
+You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the LaunchPad. Let's set this up.
 
 #. Clean your working directory of everything but four files: ``fw_test.yaml``, ``my_qadapter.yaml``, ``my_fworker.yaml``, and ``my_launchpad.yaml``.
 
