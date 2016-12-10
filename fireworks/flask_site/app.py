@@ -12,6 +12,7 @@ from fireworks.features.fw_report import FWReport
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.core.launchpad import LaunchPad
+from fireworks.fw_config import WEBSERVER_PERFWARNINGS
 import fireworks.flask_site.helpers as fwapp_util
 
 app = Flask(__name__)
@@ -102,8 +103,10 @@ def home():
     fw_querystr = fw_querystr if fw_querystr else ''
     wf_querystr = wf_querystr if wf_querystr else ''
 
-    session['fw_filt'] = parse_querystr(fw_querystr, lp.fireworks) if fw_querystr else {}
-    session['wf_filt'] = parse_querystr(wf_querystr, lp.workflows) if wf_querystr else {}
+    session['fw_filt'] = (parse_querystr(fw_querystr, lp.fireworks)
+                          if fw_querystr else {})
+    session['wf_filt'] = (parse_querystr(wf_querystr, lp.workflows)
+                          if wf_querystr else {})
 
     fw_nums = []
     wf_nums = []
@@ -345,20 +348,25 @@ def bootstrap_app(*args, **kwargs):
     return app(*args, **kwargs)
 
 
-def parse_querystr(querystr, db):
+def parse_querystr(querystr, coll):
     # try to parse using `json.loads`.
     # validate as valid mongo filter dict
     try:
         d = json.loads(querystr)
+        assert isinstance(d, dict)
     except:
-        flash("{} is not a valid json query.".format(querystr))
+        flash("`{}` is not a valid JSON object / Python dict.".format(querystr))
         return {}
     try:
-        assert isinstance(d, dict)
-        h = db.find_one(d)
+        h = coll.find_one(d)
     except:
-        flash("{} is not a valid MongoDB query doc.".format(querystr))
+        flash("`{}` is not a valid MongoDB query doc.".format(querystr))
         return {}
+    if WEBSERVER_PERFWARNINGS and not fwapp_util.uses_index(d, coll):
+        flash("`{}` does not use a mongo index. "
+              "If you expect to use this query often, add an index "
+              "to the database collection "
+              "to make it run faster.".format(querystr))
     return d
 
 
