@@ -99,10 +99,8 @@ class LaunchPad(FWSerializable):
     The LaunchPad manages the FireWorks database.
     """
 
-    def __init__(
-            self, host='localhost', port=27017, name='fireworks', username=None,
-            password=None, logdir=None, strm_lvl=None, user_indices=None,
-            wf_user_indices=None, perf_warnings=False, ssl_ca_file=None):
+    def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
+                 logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl_ca_file=None):
         """
         Args:
             host (str): hostname
@@ -114,7 +112,6 @@ class LaunchPad(FWSerializable):
             strm_lvl (str): the logger stream level
             user_indices (list): list of 'fireworks' collection indexes to be built
             wf_user_indices (list): list of 'workflows' collection indexes to be built
-            perf_warnings (bool): enable performance-related warnings
             ssl_ca_file (str): path to the SSL certificate to be used for mongodb connection.
         """
         self.host = host
@@ -131,7 +128,6 @@ class LaunchPad(FWSerializable):
 
         self.user_indices = user_indices if user_indices else []
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
-        self.perf_warnings = perf_warnings
 
         # get connection
         # WARNING: Note that there might be some problem with the ssl feature for some combination
@@ -171,7 +167,6 @@ class LaunchPad(FWSerializable):
             'strm_lvl': self.strm_lvl,
             'user_indices': self.user_indices,
             'wf_user_indices': self.wf_user_indices,
-            'perf_warnings': self.perf_warnings,
             'ssl_ca_file': self.ssl_ca_file}
 
     def update_spec(self, fw_ids, spec_document):
@@ -200,12 +195,9 @@ class LaunchPad(FWSerializable):
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
         wf_user_indices = d.get('wf_user_indices', [])
-        perf_warnings = d.get('perf_warnings', False)
         ssl_ca_file = d.get('ssl_ca_file', None)
-        return LaunchPad(
-            d['host'], d['port'], d['name'], d['username'], d['password'],
-            logdir, strm_lvl, user_indices, wf_user_indices, perf_warnings,
-            ssl_ca_file)
+        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'],
+                         logdir, strm_lvl, user_indices, wf_user_indices, ssl_ca_file)
 
     @classmethod
     def auto_load(cls):

@@ -29,10 +29,4 @@ If you are using a ``my_launchpad.yaml`` file, add the array in YAML format to a
 Further performance tweaks
 ==========================
 
-To enable performance-related warnings, set ``perf_warnings=True`` in Python or add::
-
-    perf_warnings: true
-
-to your ``my_launchpad.yaml``. This will, for example, warn you about data queries you perform using the webgui that do not use an index for any of the queried fields.
-
 A few other (very minor) performance tuning parameters are available via the :doc:`FW configuration <config_tutorial>`, although in most cases you shouldn't need to change these.
