@@ -21,7 +21,6 @@ Optional parameters
 * filepad_file (str): path to the filepad db config file
 * compress (bool): whether or not to compress the file before inserting to gridfs
 * metadata (dict): metadata to store along with the file, stored in 'metadata' key
-* additional_data (dict): additional key: value pairs to be be added to the document
 
 GetFilesTask
 ==============

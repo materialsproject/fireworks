@@ -30,14 +30,15 @@ class FilePadTest(unittest.TestCase):
         self.assertEqual(doc["label"], self.label)
         abspath = os.path.abspath(self.chgcar_file)
         self.assertEqual(doc["original_file_name"], os.path.basename(abspath))
-        self.assertEqual(doc["metadata"]["path"], abspath)
+        self.assertEqual(doc["original_file_path"], abspath)
 
 
     def test_delete_file(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
         self.fp.delete_file(self.label)
-        x = self.fp.get_file(self.label)
-        self.assertIsNone(x)
+        contents, doc = self.fp.get_file(self.label)
+        self.assertIsNone(contents)
+        self.assertIsNone(doc)
 
     def test_update_file_by_id(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file, label="some label")

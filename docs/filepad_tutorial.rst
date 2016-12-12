@@ -19,15 +19,14 @@ Create a FilePad object::
 
 To add a file::
 
-    file_id, label = fp.add(<path>, <label>, compress=True/False, metadata=<metadata>, additional_data=<additional_data>)
+    file_id, label = fp.add(<path>, <label>, compress=True/False, metadata=<metadata>)
 
 where ``<path>`` is a string path to the file to be inserted, ``<label>`` is some
 unique label that can be used to retrieve the file, the 'compress' argument value tells whether or not to compress
-the file contents before insertion, ``<metadata>`` is a python dictionary input that will stored in the key 'metadata' and
-``<additional_data>`` is a python dictionary consisting of additional key/value pairs to be stored
-in the mongodb document. A bare minimum document in the filepad database consists of keys ``file_id``(used
+the file contents before insertion, ``<metadata>`` is a python dictionary input that will stored in the key 'metadata'.
+A bare minimum document in the filepad database consists of keys ``file_id``(used
 to store the string representation of the object id returned by GridFS), ``label``(used to store the
-user assigned label for the file), ``original_file_name`` and ``metadata.path``(the original path).
+user assigned label for the file), ``original_file_name`` , ``original_file_path`` and ``metadata``.
 On successful insertion the ``file_id`` and the ``label`` are returned.
 
 Retrieving files
