@@ -3,8 +3,10 @@
 from __future__ import division, print_function, unicode_literals, absolute_import
 
 """
-This module defines the core classes
+This module defines the FilePad class. FilePad is a convenient api to mongodb/gridfs to
+add/delete/update any file of any size.
 """
+
 import zlib
 import os
 
@@ -28,6 +30,18 @@ class FilePad(MSONable):
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
                  password=None, filepad_coll="filepad", gridfs_collection="fpad_gfs", logdir=None,
                  strm_lvl=None):
+        """
+        Args:
+            host (str): hostname
+            port (int): port number
+            database (str): database name
+            username (str)
+            password (str)
+            filepad_coll (str): filepad collection name
+            gridfs_collection (str): gridfs collection name
+            logdir (str): path to the log directory
+            strm_lvl (str): the logger stream level
+        """
         self.host = host
         self.port = int(port)
         self.database = database
@@ -42,7 +56,7 @@ class FilePad(MSONable):
             if self.username:
                 self.db.authenticate(self.username, self.password)
         except:
-            raise ValueError("authentication failed")
+            raise Exception("authentication failed")
 
         # set collections: filepad and gridfs
         self.filepad = self.db[filepad_coll]
