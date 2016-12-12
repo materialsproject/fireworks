@@ -28,7 +28,7 @@ __credits__ = 'Anubhav Jain'
 class FilePad(MSONable):
 
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
-                 password=None, filepad_coll="filepad", gridfs_collection="fpad_gfs", logdir=None,
+                 password=None, filepad_coll="filepad", gridfs_collection="filepad_gfs", logdir=None,
                  strm_lvl=None):
         """
         Args:
@@ -278,7 +278,7 @@ class FilePad(MSONable):
 
         return cls(creds.get("host", "localhost"), int(creds.get("port", 27017)),
                    creds.get("name", "fireworks"), user, password, creds.get("filepad", "filepad"),
-                   creds.get("filepad_gridfs", "fpad_gfs"))
+                   creds.get("filepad_gridfs", "filepad_gfs"))
 
     @classmethod
     def auto_load(cls):
