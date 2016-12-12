@@ -111,7 +111,8 @@ class FilePad(MSONable):
 
     def delete_file(self, label):
         """
-        Delete all documents with matching label
+        Delete all documents with matching label. The contents in the gridfs as well as the
+        associated document in the filepad are deleted.
 
         Args:
             label (str): the file label
@@ -119,11 +120,10 @@ class FilePad(MSONable):
         docs = self.filepad.find({"label": label})
         for d in docs:
             self.delete_file_by_id(d["file_id"])
-        self.filepad.delete_many({"label": label})
 
     def update_file(self, label, path, delete_old=False):
         """
-        Update the file in the gridfs and retain the rest.
+        Update the filecontents in the gridfs and retain the rest.
 
         Args:
             file_id (str): the file id
@@ -131,7 +131,7 @@ class FilePad(MSONable):
         Returns:
             (str, str): old file id , new file id
         """
-        doc = self.filepad.find({"label": label})[-1]
+        doc = self.filepad.find_one({"label": label})
         return self.update_file_by_id(doc["file_id"], path, delete_old=delete_old)
 
     def _insert_contents(self, contents, label, root_data, compress):
