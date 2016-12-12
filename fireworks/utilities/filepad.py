@@ -98,7 +98,7 @@ class FilePad(MSONable):
 
     def get_file(self, label):
         """
-        Get file by label
+        Get file by label.
 
         Args:
             label (str): the file label
@@ -123,20 +123,22 @@ class FilePad(MSONable):
         else:
             self.delete_file_by_id(doc["file_id"])
 
-    def update_file(self, label, path, delete_old=False):
+    def update_file(self, label, path, delete_old=False, compress=True):
         """
-        Update the filecontents in the gridfs and retain the rest.
+        Update the filecontents in the gridfs, update the file_id in the document and retain the
+        rest.
 
         Args:
             label (str): the unique file label
             path (str): path to the new file whose contents will replace the existing one.
             delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
+            compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
         doc = self.filepad.find_one({"label": label})
-        return self._update_file_doc(doc, path, delete_old)
+        return self._update_file_contents(doc, path, delete_old, compress)
 
     def _insert_contents(self, contents, label, root_data, compress):
         """
@@ -151,12 +153,12 @@ class FilePad(MSONable):
         Returns:
             (str, str): the id returned by gridfs, label
         """
-        file_id = self._insert_to_gridfs(contents, compress=compress)
+        file_id = self._insert_to_gridfs(contents, compress)
         root_data["file_id"] = file_id
         self.filepad.insert_one(root_data)
         return file_id, label
 
-    def _insert_to_gridfs(self, contents, compress=True):
+    def _insert_to_gridfs(self, contents, compress):
         if compress:
             contents = zlib.compress(contents.encode(), compress)
         # insert to gridfs
@@ -164,7 +166,6 @@ class FilePad(MSONable):
 
     def get_file_by_id(self, file_id):
         """
-
         Args:
             file_id (str): the file id
 
@@ -175,6 +176,13 @@ class FilePad(MSONable):
         return self._get_file_contents(doc)
 
     def _get_file_contents(self, doc):
+        """
+        Args:
+            doc (dict)
+
+        Returns:
+            (str, dict): the file content as a string, document dictionary
+        """
         from bson.objectid import ObjectId
 
         if doc:
@@ -195,12 +203,11 @@ class FilePad(MSONable):
         """
         all_files = []
         for d in self.filepad.find(query):
-            all_files.append(self.get_file_by_id(d["file_id"]))
+            all_files.append(self._get_file_contents(d))
         return all_files
 
     def delete_file_by_id(self, file_id):
         """
-
         Args:
             file_id (str): the file id
         """
@@ -209,14 +216,13 @@ class FilePad(MSONable):
 
     def delete_file_by_query(self, query):
         """
-
         Args:
             query (dict): pymongo query dict
         """
         for d in self.filepad.find(query):
             self.delete_file_by_id(d["file_id"])
 
-    def update_file_by_id(self, file_id, path, delete_old=False):
+    def update_file_by_id(self, file_id, path, delete_old=False, compress=True):
         """
         Update the file in the gridfs with the given id and retain the rest of the document.
 
@@ -224,27 +230,37 @@ class FilePad(MSONable):
             file_id (str): the file id
             path (str): path to the new file whose contents will replace the existing one.
             delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
+            compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
         doc = self.filepad.find_one({"file_id": file_id})
-        return self._update_file_doc(doc, path, delete_old)
+        return self._update_file_contents(doc, path, delete_old, compress)
 
-    def _update_file_doc(self, doc, path, delete_old):
+    def _update_file_contents(self, doc, path, delete_old, compress):
+        """
+        Args:
+            doc (dict)
+            path (str): path to the new file whose contents will replace the existing one.
+            delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
+            compress (bool): whether or not to compress the contents before inserting to gridfs
+
+        Returns:
+            (str, str): old file id , new file id
+        """
         if doc is None:
             return None, None
         old_file_id = doc["file_id"]
         if delete_old:
             self.gridfs.delete(old_file_id)
-        file_id = self._insert_to_gridfs(open(path, "r").read())
+        file_id = self._insert_to_gridfs(open(path, "r").read(), compress)
         doc["file_id"] = file_id
         return old_file_id, file_id
 
     @classmethod
     def from_db_file(cls, db_file, admin=True):
         """
-
         Args:
             db_file (str): path to the filepad cred file
 
