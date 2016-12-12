@@ -83,10 +83,11 @@ class FilePad(MSONable):
         Returns:
             (str, str): the id returned by gridfs, label
         """
-        file_contents, doc = self.get_file(label)
-        if doc is not None:
-            self.logger.warning("label: {} exists. Skipping insertion".format(label))
-            return doc["file_id"], doc["label"]
+        if label is not None:
+            file_contents, doc = self.get_file(label)
+            if doc is not None:
+                self.logger.warning("label: {} exists. Skipping insertion".format(label))
+                return doc["file_id"], doc["label"]
 
         path = os.path.abspath(path)
         root_data = {"label": label,

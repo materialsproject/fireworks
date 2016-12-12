@@ -23,20 +23,25 @@ class FilePadTest(unittest.TestCase):
         self.assertEqual(file_label, self.label)
         self.assertIsNotNone(file_id)
 
+    def test_add_file_with_no_label(self):
+        file_id, file_label = self.fp.add_file(self.chgcar_file)
+        self.assertEqual(file_label, file_id)
+
     def test_get_file(self):
-        file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
-        file_contents, doc = self.fp.get_file(self.label)
-        self.assertEqual(file_contents, open(self.chgcar_file,"r").read().encode())
-        self.assertEqual(doc["label"], self.label)
+        file_id, file_label = self.fp.add_file(self.chgcar_file, label="xxx", metadata={"author": "Kiran Mathew"})
+        file_contents, doc = self.fp.get_file(file_label)
+        self.assertEqual(file_contents, open(self.chgcar_file, "r").read().encode())
+        self.assertEqual(doc["label"], file_label)
+        self.assertEqual(doc["metadata"]["author"], "Kiran Mathew")
         abspath = os.path.abspath(self.chgcar_file)
         self.assertEqual(doc["original_file_name"], os.path.basename(abspath))
         self.assertEqual(doc["original_file_path"], abspath)
-
+        self.assertEqual(doc["compressed"], True)
 
     def test_delete_file(self):
-        file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
-        self.fp.delete_file(self.label)
-        contents, doc = self.fp.get_file(self.label)
+        file_id, file_label = self.fp.add_file(self.chgcar_file)
+        self.fp.delete_file(file_label)
+        contents, doc = self.fp.get_file(file_label)
         self.assertIsNone(contents)
         self.assertIsNone(doc)
 
