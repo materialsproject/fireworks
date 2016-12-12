@@ -277,8 +277,8 @@ class FilePad(MSONable):
             password = creds.get("readonly_password")
 
         return cls(creds.get("host", "localhost"), int(creds.get("port", 27017)),
-                   creds.get("database", "fireworks"), user, password, creds.get("filepad", "filepad"),
-                   creds.get("gridfs_collection", "fpad_gfs"))
+                   creds.get("name", "fireworks"), user, password, creds.get("filepad", "filepad"),
+                   creds.get("filepad_gridfs", "fpad_gfs"))
 
     @classmethod
     def auto_load(cls):
