@@ -69,7 +69,7 @@ class FilePad(MSONable):
 
     def add_file(self, path, label=None, compress=True, metadata=None):
         """
-        Insert the file specified by the path into gridfs and the id and label(if provided) returned.
+        Insert the file specified by the path into gridfs. The id and label(if provided) are returned.
         Note: No insertion if the label already exists in the db.
 
         Args:
@@ -98,7 +98,7 @@ class FilePad(MSONable):
 
     def get_file(self, label):
         """
-        get file by label
+        Get file by label
 
         Args:
             label (str): the file label
