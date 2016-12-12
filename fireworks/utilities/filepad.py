@@ -83,10 +83,10 @@ class FilePad(MSONable):
         """
         # skip if the label exists
         if label is not None:
-            f = self.get_file(label)
-            if f is not None:
+            file_contents, doc = self.get_file(label)
+            if file_contents is not None and doc is not None:
                 self.logger.warning("label: {} exists. Skipping insertion".format(label))
-                return f[1]["file_id"], f[1]["label"]
+                return doc["file_id"], doc["label"]
         path = os.path.abspath(path)
         root_data = {"label": label,
                      "original_file_name": os.path.basename(path),
@@ -107,7 +107,7 @@ class FilePad(MSONable):
             (str, dict): the file content as a string, document dictionary
         """
         doc = self.filepad.find_one({"label": label})
-        return self.get_file_by_id(doc["file_id"]) if doc else None
+        return self._get_file_contents(doc)
 
     def delete_file(self, label):
         """
@@ -171,9 +171,12 @@ class FilePad(MSONable):
         Returns:
             (str, dict): the file content as a string, document dictionary
         """
+        doc = self.filepad.find_one({"file_id": file_id})
+        return self._get_file_contents(doc)
+
+    def _get_file_contents(self, doc):
         from bson.objectid import ObjectId
 
-        doc = self.filepad.find_one({"file_id": file_id})
         if doc:
             gfs_id = doc['file_id']
             file_contents = zlib.decompress(self.gridfs.get(ObjectId(gfs_id)).read())

@@ -32,10 +32,12 @@ class FilePadTasksTest(unittest.TestCase):
     def test_deletefilestask_run(self):
         t = DeleteFilesTask(labels=self.labels)
         t.run_task({})
-        w = self.fp.get_file("write")
-        self.assertIsNone(w)
-        d = self.fp.get_file("delete")
-        self.assertIsNone(d)
+        file_contents, doc = self.fp.get_file("write")
+        self.assertIsNone(file_contents)
+        self.assertIsNone(doc)
+        file_contents, doc = self.fp.get_file("delete")
+        self.assertIsNone(file_contents)
+        self.assertIsNone(doc)
 
     def test_getfilestask_run(self):
         t = AddFilesTask(paths=self.paths, labels=self.labels)

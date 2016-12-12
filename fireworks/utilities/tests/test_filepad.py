@@ -36,8 +36,9 @@ class FilePadTest(unittest.TestCase):
     def test_delete_file(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
         self.fp.delete_file(self.label)
-        x = self.fp.get_file(self.label)
-        self.assertIsNone(x)
+        contents, doc = self.fp.get_file(self.label)
+        self.assertIsNone(contents)
+        self.assertIsNone(doc)
 
     def test_update_file_by_id(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file, label="some label")
