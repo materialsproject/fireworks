@@ -43,7 +43,7 @@ class GetFilesTask(FiretaskBase):
     directory if not specified)
 
     Required params:
-        - labels: ([str]) file labels to delete
+        - labels: ([str]) file labels to fetch
 
     Optional params:
         - filepad_file (str): path to the filepad db config file
@@ -61,7 +61,6 @@ class GetFilesTask(FiretaskBase):
         for i, l in enumerate(self["labels"]):
             file_contents, doc = fpad.get_file(label=l)
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
-            print("YY", os.path.join(dest_dir, file_name))
             with open(os.path.join(dest_dir, file_name), "w") as f:
                 f.write(file_contents.decode())
 
