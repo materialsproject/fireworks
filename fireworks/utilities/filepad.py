@@ -67,10 +67,12 @@ class FilePad(MSONable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
+        # TODO: ensure_indexes: both "label" and "file_id" should be unique keys and indexed
+
     def add_file(self, path, label=None, compress=True, metadata=None):
         """
-        Insert the file specified by the path into gridfs. The id and label(if provided) are returned.
-        Note: label must be unique i.e no insertion if the label already exists in the db.
+        Insert the file specified by the path into gridfs. The id and label are returned.
+        Note: label must be unique, i.e, no insertion if the label already exists in the db.
 
         Args:
             path (str): path to the file
@@ -81,13 +83,14 @@ class FilePad(MSONable):
         Returns:
             (str, str): the id returned by gridfs, label
         """
-        # skip if the label exists
         if label is not None:
             file_contents, doc = self.get_file(label)
-            if file_contents is not None and doc is not None:
+            if doc is not None:
                 self.logger.warning("label: {} exists. Skipping insertion".format(label))
                 return doc["file_id"], doc["label"]
+
         path = os.path.abspath(path)
+        # TODO: DB should store whether the file was compressed by FilePad - used later to auto-decompress files
         root_data = {"label": label,
                      "original_file_name": os.path.basename(path),
                      "original_file_path": path,
@@ -108,6 +111,31 @@ class FilePad(MSONable):
         """
         doc = self.filepad.find_one({"label": label})
         return self._get_file_contents(doc)
+
+    def get_file_by_id(self, file_id):
+        """
+        Args:
+            file_id (str): the file id
+
+        Returns:
+            (str, dict): the file content as a string, document dictionary
+        """
+        doc = self.filepad.find_one({"file_id": file_id})
+        return self._get_file_contents(doc)
+
+    def get_file_by_query(self, query):
+        """
+
+        Args:
+            query (dict): pymongo query dict
+
+        Returns:
+            list: list of all (file content as a string, document dictionary)
+        """
+        all_files = []
+        for d in self.filepad.find(query):
+            all_files.append(self._get_file_contents(d))
+        return all_files
 
     def delete_file(self, label):
         """
@@ -131,80 +159,15 @@ class FilePad(MSONable):
         Args:
             label (str): the unique file label
             path (str): path to the new file whose contents will replace the existing one.
-            delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
+            delete_old (bool): if set to true, the old stuff from the gridfs will be deleted
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
+        # TODO: remove delete_old parameter and always have it be True, i.e. always delete old contents when updating
         doc = self.filepad.find_one({"label": label})
         return self._update_file_contents(doc, path, delete_old, compress)
-
-    def _insert_contents(self, contents, label, root_data, compress):
-        """
-        Insert the file contents(string) to gridfs and store the file info doc in filepad
-
-        Args:
-            contents (str): file contents or any arbitrary string to be stored in gridfs
-            label (str): file label
-            compress (bool): compress or not
-            root_data (dict): key:value pairs to be added to the document root
-
-        Returns:
-            (str, str): the id returned by gridfs, label
-        """
-        file_id = self._insert_to_gridfs(contents, compress)
-        root_data["file_id"] = file_id
-        self.filepad.insert_one(root_data)
-        return file_id, label
-
-    def _insert_to_gridfs(self, contents, compress):
-        if compress:
-            contents = zlib.compress(contents.encode(), compress)
-        # insert to gridfs
-        return str(self.gridfs.put(contents))
-
-    def get_file_by_id(self, file_id):
-        """
-        Args:
-            file_id (str): the file id
-
-        Returns:
-            (str, dict): the file content as a string, document dictionary
-        """
-        doc = self.filepad.find_one({"file_id": file_id})
-        return self._get_file_contents(doc)
-
-    def _get_file_contents(self, doc):
-        """
-        Args:
-            doc (dict)
-
-        Returns:
-            (str, dict): the file content as a string, document dictionary
-        """
-        from bson.objectid import ObjectId
-
-        if doc:
-            gfs_id = doc['file_id']
-            file_contents = zlib.decompress(self.gridfs.get(ObjectId(gfs_id)).read())
-            return file_contents, doc
-        else:
-            return None, None
-
-    def get_file_by_query(self, query):
-        """
-
-        Args:
-            query (dict): pymongo query dict
-
-        Returns:
-            list: list of all (file content as a string, document dictionary)
-        """
-        all_files = []
-        for d in self.filepad.find(query):
-            all_files.append(self._get_file_contents(d))
-        return all_files
 
     def delete_file_by_id(self, file_id):
         """
@@ -238,6 +201,49 @@ class FilePad(MSONable):
         doc = self.filepad.find_one({"file_id": file_id})
         return self._update_file_contents(doc, path, delete_old, compress)
 
+    def _insert_contents(self, contents, label, root_data, compress):
+        """
+        Insert the file contents(string) to gridfs and store the file info doc in filepad
+
+        Args:
+            contents (str): file contents or any arbitrary string to be stored in gridfs
+            label (str): file label
+            compress (bool): compress or not
+            root_data (dict): key:value pairs to be added to the document root
+
+        Returns:
+            (str, str): the id returned by gridfs, label
+        """
+        file_id = self._insert_to_gridfs(contents, compress)
+        # TODO: set the label=file_id if label == None
+        root_data["file_id"] = file_id
+        self.filepad.insert_one(root_data)
+        return file_id, label
+
+    def _insert_to_gridfs(self, contents, compress):
+        if compress:
+            contents = zlib.compress(contents.encode(), compress)
+        # insert to gridfs
+        return str(self.gridfs.put(contents))
+
+    def _get_file_contents(self, doc):
+        """
+        Args:
+            doc (dict)
+
+        Returns:
+            (str, dict): the file content as a string, document dictionary
+        """
+        from bson.objectid import ObjectId
+
+        if doc:
+            gfs_id = doc['file_id']
+            # TODO: decompress ONLY if compress=True (or compress="zlib") stored in the doc.
+            file_contents = zlib.decompress(self.gridfs.get(ObjectId(gfs_id)).read())
+            return file_contents, doc
+        else:
+            return None, None
+
     def _update_file_contents(self, doc, path, delete_old, compress):
         """
         Args:
@@ -256,6 +262,7 @@ class FilePad(MSONable):
             self.gridfs.delete(old_file_id)
         file_id = self._insert_to_gridfs(open(path, "r").read(), compress)
         doc["file_id"] = file_id
+        # TODO: store whether the file was compressed or not
         return old_file_id, file_id
 
     @classmethod
@@ -276,9 +283,12 @@ class FilePad(MSONable):
             user = creds.get("readonly_user")
             password = creds.get("readonly_password")
 
+        coll_name = creds.get("filepad", "filepad")
+        gfs_name = creds.get("filepad_gridfs", "filepad_gfs")
+
         return cls(creds.get("host", "localhost"), int(creds.get("port", 27017)),
-                   creds.get("name", "fireworks"), user, password, creds.get("filepad", "filepad"),
-                   creds.get("filepad_gridfs", "filepad_gfs"))
+                   creds.get("name", "fireworks"), user, password, coll_name,
+                   gfs_name)
 
     @classmethod
     def auto_load(cls):

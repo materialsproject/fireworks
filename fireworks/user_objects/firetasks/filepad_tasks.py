@@ -55,6 +55,7 @@ class GetFilesTask(FiretaskBase):
     optional_params = ["filepad_file", "dest_dir", "new_file_names"]
 
     def run_task(self, fw_spec):
+        # TODO: DB should store whether the file was compressed by FilePad, and decompress the file automatically if so
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
