@@ -70,7 +70,7 @@ class FilePad(MSONable):
     def add_file(self, path, label=None, compress=True, metadata=None):
         """
         Insert the file specified by the path into gridfs. The id and label(if provided) are returned.
-        Note: No insertion if the label already exists in the db.
+        Note: label must be unique i.e no insertion if the label already exists in the db.
 
         Args:
             path (str): path to the file
@@ -111,15 +111,17 @@ class FilePad(MSONable):
 
     def delete_file(self, label):
         """
-        Delete all documents with matching label. The contents in the gridfs as well as the
+        Delete the document with the matching label. The contents in the gridfs as well as the
         associated document in the filepad are deleted.
 
         Args:
             label (str): the file label
         """
-        docs = self.filepad.find({"label": label})
-        for d in docs:
-            self.delete_file_by_id(d["file_id"])
+        doc = self.filepad.find_one({"label": label})
+        if doc is None:
+            self.logger.warning("The file doesn't exist")
+        else:
+            self.delete_file_by_id(doc["file_id"])
 
     def update_file(self, label, path, delete_old=False):
         """
