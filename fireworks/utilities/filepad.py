@@ -83,18 +83,17 @@ class FilePad(MSONable):
         Returns:
             (str, str): the id returned by gridfs, label
         """
-        if label is not None:
-            file_contents, doc = self.get_file(label)
-            if doc is not None:
-                self.logger.warning("label: {} exists. Skipping insertion".format(label))
-                return doc["file_id"], doc["label"]
+        file_contents, doc = self.get_file(label)
+        if doc is not None:
+            self.logger.warning("label: {} exists. Skipping insertion".format(label))
+            return doc["file_id"], doc["label"]
 
         path = os.path.abspath(path)
-        # TODO: DB should store whether the file was compressed by FilePad - used later to auto-decompress files
         root_data = {"label": label,
                      "original_file_name": os.path.basename(path),
                      "original_file_path": path,
-                     "metadata": metadata}
+                     "metadata": metadata,
+                     "compressed": compress}
         with open(path, "r") as f:
             contents = f.read()
             return self._insert_contents(contents, label, root_data, compress)
@@ -215,7 +214,7 @@ class FilePad(MSONable):
             (str, str): the id returned by gridfs, label
         """
         file_id = self._insert_to_gridfs(contents, compress)
-        # TODO: set the label=file_id if label == None
+        label = label or file_id
         root_data["file_id"] = file_id
         self.filepad.insert_one(root_data)
         return file_id, label
@@ -238,8 +237,9 @@ class FilePad(MSONable):
 
         if doc:
             gfs_id = doc['file_id']
-            # TODO: decompress ONLY if compress=True (or compress="zlib") stored in the doc.
-            file_contents = zlib.decompress(self.gridfs.get(ObjectId(gfs_id)).read())
+            file_contents = self.gridfs.get(ObjectId(gfs_id)).read()
+            if doc["compressed"]:
+                file_contents = zlib.decompress(file_contents)
             return file_contents, doc
         else:
             return None, None
@@ -262,7 +262,7 @@ class FilePad(MSONable):
             self.gridfs.delete(old_file_id)
         file_id = self._insert_to_gridfs(open(path, "r").read(), compress)
         doc["file_id"] = file_id
-        # TODO: store whether the file was compressed or not
+        doc["compressed"] = compress
         return old_file_id, file_id
 
     @classmethod
