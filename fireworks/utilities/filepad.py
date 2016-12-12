@@ -128,13 +128,15 @@ class FilePad(MSONable):
         Update the filecontents in the gridfs and retain the rest.
 
         Args:
-            file_id (str): the file id
+            label (str): the unique file label
+            path (str): path to the new file whose contents will replace the existing one.
+            delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
 
         Returns:
             (str, str): old file id , new file id
         """
         doc = self.filepad.find_one({"label": label})
-        return self.update_file_by_id(doc["file_id"], path, delete_old=delete_old)
+        return self._update_file_doc(doc, path, delete_old)
 
     def _insert_contents(self, contents, label, root_data, compress):
         """
@@ -217,11 +219,18 @@ class FilePad(MSONable):
 
         Args:
             file_id (str): the file id
+            path (str): path to the new file whose contents will replace the existing one.
+            delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
 
         Returns:
             (str, str): old file id , new file id
         """
         doc = self.filepad.find_one({"file_id": file_id})
+        return self._update_file_doc(doc, path, delete_old)
+
+    def _update_file_doc(self, doc, path, delete_old):
+        if doc is None:
+            return None, None
         old_file_id = doc["file_id"]
         if delete_old:
             self.gridfs.delete(old_file_id)
