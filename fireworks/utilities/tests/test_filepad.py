@@ -15,7 +15,6 @@ class FilePadTest(unittest.TestCase):
     def setUp(self):
         self.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
         self.fp = FilePad.auto_load()
-        self.fp.reset()
         self.label = "Fe3O4"
 
     def test_add_file(self):
@@ -58,6 +57,9 @@ class FilePadTest(unittest.TestCase):
         old, new = self.fp.update_file_by_id(file_id, self.chgcar_file)
         self.assertEqual(old, file_id)
         self.assertNotEqual(new, file_id)
+
+    def tearDown(self):
+        self.fp.reset()
 
 
 if __name__ == "__main__":
