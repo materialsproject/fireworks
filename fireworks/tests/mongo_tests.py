@@ -415,8 +415,8 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
-        import time
-        time.sleep(2)
+        # TODO: if test keeps failing on Travis, add an explicit check of nlaunches>0 in the database here
+        # this will ensure the first Rocket is actually in the DB
         launch_rocket(self.lp, self.fworker)
 
         run_id = self.lp.get_launch_by_id(1).fw_id
@@ -432,10 +432,16 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
-        import time
-        time.sleep(2)
+        # TODO: if test keeps failing on Travis, add an explicit check of nlaunches>0 in the database here
+        # this will ensure the first Rocket is actually in the DB
         launch_rocket(self.lp, self.fworker)
 
+        if self.lp.launches.count() > 1:
+            print("TOO MANY LAUNCHES FOUND!")
+            print("--------")
+            for d in self.lp.launches.find():
+                print(d)
+            print("--------")
         self.assertEqual(self.lp.launches.count(), 1)
 
     def test_append_wf(self):
