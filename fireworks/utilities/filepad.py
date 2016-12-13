@@ -28,7 +28,7 @@ __credits__ = 'Anubhav Jain'
 class FilePad(MSONable):
 
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
-                 password=None, filepad_coll="filepad", gridfs_collection="filepad_gfs", logdir=None,
+                 password=None, filepad_coll_name="filepad", gridfs_coll_name="filepad_gfs", logdir=None,
                  strm_lvl=None):
         """
         Args:
@@ -37,8 +37,8 @@ class FilePad(MSONable):
             database (str): database name
             username (str)
             password (str)
-            filepad_coll (str): filepad collection name
-            gridfs_collection (str): gridfs collection name
+            filepad_coll_name (str): filepad collection name
+            gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
             strm_lvl (str): the logger stream level
         """
@@ -47,6 +47,7 @@ class FilePad(MSONable):
         self.database = database
         self.username = username
         self.password = password
+        self.gridfs_coll_name = gridfs_coll_name
         try:
             self.connection = MongoClient(self.host, self.port)
             self.db = self.connection[database]
@@ -59,8 +60,8 @@ class FilePad(MSONable):
             raise Exception("authentication failed")
 
         # set collections: filepad and gridfs
-        self.filepad = self.db[filepad_coll]
-        self.gridfs = gridfs.GridFS(self.db, gridfs_collection)
+        self.filepad = self.db[filepad_coll_name]
+        self.gridfs = gridfs.GridFS(self.db, gridfs_coll_name)
 
         # logging
         self.logdir = logdir
@@ -77,7 +78,7 @@ class FilePad(MSONable):
         """
         indexes = indexes if indexes else ["label", "file_id"]
         for i in indexes:
-            self.file.create_index(i, unique=True, background=background)
+            self.filepad.create_index(i, unique=True, background=background)
 
     def add_file(self, path, label=None, compress=True, metadata=None):
         """
@@ -307,6 +308,6 @@ class FilePad(MSONable):
 
     def reset(self):
         self.filepad.delete_many({})
-        self.gridfs.files.delete_many({})
-        self.gridfs.chunks.delete_many({})
+        self.db[self.gridfs_coll_name].files.delete_many({})
+        self.db[self.gridfs_coll_name].chunks.delete_many({})
         self.build_indexes()
