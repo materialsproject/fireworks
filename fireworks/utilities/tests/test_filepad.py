@@ -12,11 +12,10 @@ module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 class FilePadTest(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
-        cls.fp = FilePad.auto_load()
-        cls.label = "Fe3O4"
+    def setUp(self):
+        self.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
+        self.fp = FilePad.auto_load()
+        self.label = "Fe3O4"
 
     def test_add_file(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file, label=self.label)
