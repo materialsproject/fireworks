@@ -45,9 +45,16 @@ class FilePadTest(unittest.TestCase):
         self.assertIsNone(contents)
         self.assertIsNone(doc)
 
+    def test_update_file(self):
+        file_id, file_label = self.fp.add_file(self.chgcar_file, label="test_update_file")
+        old_id, new_id = self.fp.update_file("test_update_file", self.chgcar_file)
+        self.assertEqual(old_id, file_id)
+        self.assertNotEqual(new_id, file_id)
+        self.assertFalse(self.fp.gridfs.exists(old_id))
+
     def test_update_file_by_id(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file, label="some label")
-        old, new = self.fp.update_file_by_id(file_id, self.chgcar_file, delete_old=False)
+        old, new = self.fp.update_file_by_id(file_id, self.chgcar_file)
         self.assertEqual(old, file_id)
         self.assertNotEqual(new, file_id)
 
