@@ -68,11 +68,6 @@ class FilePad(MSONable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        # if empty, reset
-        if self.filepad.count({}) == 0:
-            self.logger.warning("Filepad empty, resetting")
-            self.reset()
-
         # build indexes
         self.build_indexes()
 
