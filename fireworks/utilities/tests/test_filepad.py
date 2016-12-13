@@ -15,6 +15,7 @@ class FilePadTest(unittest.TestCase):
     def setUp(self):
         self.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
         self.fp = FilePad.auto_load()
+        self.fp.reset()
         self.label = "Fe3O4"
 
     def test_add_file(self):
@@ -24,6 +25,7 @@ class FilePadTest(unittest.TestCase):
 
     def test_add_file_with_no_label(self):
         file_id, file_label = self.fp.add_file(self.chgcar_file)
+        self.assertIsNotNone(file_id)
         self.assertEqual(file_label, file_id)
 
     def test_get_file(self):

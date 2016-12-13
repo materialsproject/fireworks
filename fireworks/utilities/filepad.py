@@ -68,6 +68,14 @@ class FilePad(MSONable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
+        # if empty, reset
+        if self.filepad.count({}) == 0:
+            self.logger.warning("Filepad empty, resetting")
+            self.reset()
+
+        # build indexes
+        self.build_indexes()
+
     def build_indexes(self, indexes=None, background=True):
         """
         Build the indexes.
@@ -307,6 +315,9 @@ class FilePad(MSONable):
         return FilePad()
 
     def reset(self):
+        """
+        Reset filepad and the gridfs collections
+        """
         self.filepad.delete_many({})
         self.db[self.gridfs_coll_name].files.delete_many({})
         self.db[self.gridfs_coll_name].chunks.delete_many({})
