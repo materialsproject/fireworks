@@ -67,7 +67,17 @@ class FilePad(MSONable):
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        # TODO: ensure_indexes: both "label" and "file_id" should be unique keys and indexed
+    def build_indexes(self, indexes=None, background=True):
+        """
+        Build the indexes.
+
+        Args:
+            indexes (list): list of single field indexes to be built.
+            background (bool): Run in the background or not.
+        """
+        indexes = indexes if indexes else ["label", "file_id"]
+        for i in indexes:
+            self.file.create_index(i, unique=True, background=background)
 
     def add_file(self, path, label=None, compress=True, metadata=None):
         """
@@ -294,3 +304,9 @@ class FilePad(MSONable):
         if LAUNCHPAD_LOC:
             return FilePad.from_db_file(LAUNCHPAD_LOC)
         return FilePad()
+
+    def reset(self):
+        self.filepad.delete_many({})
+        self.gridfs.files.delete_many({})
+        self.gridfs.chunks.delete_many({})
+        self.build_indexes()
