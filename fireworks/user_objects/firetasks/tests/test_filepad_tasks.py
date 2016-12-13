@@ -52,6 +52,9 @@ class FilePadTasksTest(unittest.TestCase):
                          open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
+    def tearDown(self):
+        self.fp.reset()
+
 
 if __name__ == '__main__':
     unittest.main()

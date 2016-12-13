@@ -28,7 +28,7 @@ __credits__ = 'Anubhav Jain'
 class FilePad(MSONable):
 
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
-                 password=None, filepad_coll="filepad", gridfs_collection="filepad_gfs", logdir=None,
+                 password=None, filepad_coll_name="filepad", gridfs_coll_name="filepad_gfs", logdir=None,
                  strm_lvl=None):
         """
         Args:
@@ -37,8 +37,8 @@ class FilePad(MSONable):
             database (str): database name
             username (str)
             password (str)
-            filepad_coll (str): filepad collection name
-            gridfs_collection (str): gridfs collection name
+            filepad_coll_name (str): filepad collection name
+            gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
             strm_lvl (str): the logger stream level
         """
@@ -47,6 +47,7 @@ class FilePad(MSONable):
         self.database = database
         self.username = username
         self.password = password
+        self.gridfs_coll_name = gridfs_coll_name
         try:
             self.connection = MongoClient(self.host, self.port)
             self.db = self.connection[database]
@@ -59,15 +60,28 @@ class FilePad(MSONable):
             raise Exception("authentication failed")
 
         # set collections: filepad and gridfs
-        self.filepad = self.db[filepad_coll]
-        self.gridfs = gridfs.GridFS(self.db, gridfs_collection)
+        self.filepad = self.db[filepad_coll_name]
+        self.gridfs = gridfs.GridFS(self.db, gridfs_coll_name)
 
         # logging
         self.logdir = logdir
         self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
         self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        # TODO: ensure_indexes: both "label" and "file_id" should be unique keys and indexed
+        # build indexes
+        self.build_indexes()
+
+    def build_indexes(self, indexes=None, background=True):
+        """
+        Build the indexes.
+
+        Args:
+            indexes (list): list of single field indexes to be built.
+            background (bool): Run in the background or not.
+        """
+        indexes = indexes if indexes else ["label", "file_id"]
+        for i in indexes:
+            self.filepad.create_index(i, unique=True, background=background)
 
     def add_file(self, path, label=None, compress=True, metadata=None):
         """
@@ -90,11 +104,11 @@ class FilePad(MSONable):
                 return doc["file_id"], doc["label"]
 
         path = os.path.abspath(path)
-        # TODO: DB should store whether the file was compressed by FilePad - used later to auto-decompress files
         root_data = {"label": label,
                      "original_file_name": os.path.basename(path),
                      "original_file_path": path,
-                     "metadata": metadata}
+                     "metadata": metadata,
+                     "compressed": compress}
         with open(path, "r") as f:
             contents = f.read()
             return self._insert_contents(contents, label, root_data, compress)
@@ -151,7 +165,7 @@ class FilePad(MSONable):
         else:
             self.delete_file_by_id(doc["file_id"])
 
-    def update_file(self, label, path, delete_old=False, compress=True):
+    def update_file(self, label, path, compress=True):
         """
         Update the filecontents in the gridfs, update the file_id in the document and retain the
         rest.
@@ -159,15 +173,13 @@ class FilePad(MSONable):
         Args:
             label (str): the unique file label
             path (str): path to the new file whose contents will replace the existing one.
-            delete_old (bool): if set to true, the old stuff from the gridfs will be deleted
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
-        # TODO: remove delete_old parameter and always have it be True, i.e. always delete old contents when updating
         doc = self.filepad.find_one({"label": label})
-        return self._update_file_contents(doc, path, delete_old, compress)
+        return self._update_file_contents(doc, path, compress)
 
     def delete_file_by_id(self, file_id):
         """
@@ -185,21 +197,20 @@ class FilePad(MSONable):
         for d in self.filepad.find(query):
             self.delete_file_by_id(d["file_id"])
 
-    def update_file_by_id(self, file_id, path, delete_old=False, compress=True):
+    def update_file_by_id(self, file_id, path, compress=True):
         """
         Update the file in the gridfs with the given id and retain the rest of the document.
 
         Args:
             file_id (str): the file id
             path (str): path to the new file whose contents will replace the existing one.
-            delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
         doc = self.filepad.find_one({"file_id": file_id})
-        return self._update_file_contents(doc, path, delete_old, compress)
+        return self._update_file_contents(doc, path, compress)
 
     def _insert_contents(self, contents, label, root_data, compress):
         """
@@ -215,7 +226,7 @@ class FilePad(MSONable):
             (str, str): the id returned by gridfs, label
         """
         file_id = self._insert_to_gridfs(contents, compress)
-        # TODO: set the label=file_id if label == None
+        label = label or file_id
         root_data["file_id"] = file_id
         self.filepad.insert_one(root_data)
         return file_id, label
@@ -238,18 +249,18 @@ class FilePad(MSONable):
 
         if doc:
             gfs_id = doc['file_id']
-            # TODO: decompress ONLY if compress=True (or compress="zlib") stored in the doc.
-            file_contents = zlib.decompress(self.gridfs.get(ObjectId(gfs_id)).read())
+            file_contents = self.gridfs.get(ObjectId(gfs_id)).read()
+            if doc["compressed"]:
+                file_contents = zlib.decompress(file_contents)
             return file_contents, doc
         else:
             return None, None
 
-    def _update_file_contents(self, doc, path, delete_old, compress):
+    def _update_file_contents(self, doc, path, compress):
         """
         Args:
             doc (dict)
             path (str): path to the new file whose contents will replace the existing one.
-            delete_old (bool): if set to true, the old stufff from the gridfs will be deleted
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
@@ -258,11 +269,10 @@ class FilePad(MSONable):
         if doc is None:
             return None, None
         old_file_id = doc["file_id"]
-        if delete_old:
-            self.gridfs.delete(old_file_id)
+        self.gridfs.delete(old_file_id)
         file_id = self._insert_to_gridfs(open(path, "r").read(), compress)
         doc["file_id"] = file_id
-        # TODO: store whether the file was compressed or not
+        doc["compressed"] = compress
         return old_file_id, file_id
 
     @classmethod
@@ -298,3 +308,12 @@ class FilePad(MSONable):
         if LAUNCHPAD_LOC:
             return FilePad.from_db_file(LAUNCHPAD_LOC)
         return FilePad()
+
+    def reset(self):
+        """
+        Reset filepad and the gridfs collections
+        """
+        self.filepad.delete_many({})
+        self.db[self.gridfs_coll_name].files.delete_many({})
+        self.db[self.gridfs_coll_name].chunks.delete_many({})
+        self.build_indexes()
