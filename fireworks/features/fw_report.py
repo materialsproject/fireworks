@@ -73,7 +73,7 @@ class FWReport:
                                       "date_key": {"$substr": ["$"+time_field, 0, date_key_idx]}}})
         pipeline.append({"$group": {"_id": {"state:": "$state", "date_key": "$date_key"},
                                     "count": {"$sum": 1}, "state": {"$first": "$state"}}})
-        pipeline.append({"$group": {"_id": {"_id.date_key": "$_id.date_key"},
+        pipeline.append({"$group": {"_id": {"_id_date_key": "$_id.date_key"},
                                     "date_key": {"$first": "$_id.date_key"},
                                     "states": {"$push": {"count": "$count", "state": "$state"}}}})
         pipeline.append({"$sort": {"date_key": -1}})
