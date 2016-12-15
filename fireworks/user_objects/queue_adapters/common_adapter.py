@@ -70,9 +70,8 @@ class CommonAdapter(QueueAdapterBase):
 
     def _parse_jobid(self, output_str):
         if self.q_type == "SLURM":
-            if sys.version_info[0] > 2:
-                if isinstance(output_str, bytes):
-                    output_str = output_str.decode('utf-8')
+            # For Py3 compatibility, ensure output_str is not a byte string
+            output_str = output_str.decode('utf-8')
             for l in output_str.split("\n"):
                 if l.startswith("Submitted batch job"):
                     return int(l.split()[-1])
