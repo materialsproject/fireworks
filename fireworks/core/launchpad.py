@@ -248,10 +248,13 @@ class LaunchPad(FWSerializable):
         while True:
             self.m_logger.info('Performing maintenance on Launchpad...')
             self.m_logger.debug('Tracking down FIZZLED jobs...')
-            fl, ff = self.detect_lostruns(fizzle=True)
+            fl, ff, inconsistent_fw_ids = self.detect_lostruns(fizzle=True)
             if fl:
                 self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
                 self.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
+            if inconsistent_fw_ids:
+                self.m_logger.info('Detected {} FIZZLED inconsistent fireworks: {}'.format(len(inconsistent_fw_ids),
+                                                                                           inconsistent_fw_ids))
 
             self.m_logger.debug('Tracking down stuck RESERVED jobs...')
             ur = self.detect_unreserved(rerun=True)
