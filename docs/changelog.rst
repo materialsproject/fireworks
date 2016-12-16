@@ -2,11 +2,26 @@
 FireWorks Changelog
 ===================
 
-##v1.3.9**
+**v1.4.0**
+* mlaunch is now "rlaunch multi". See docs (S. Dwarnakath)
+* For FireTask, we now suggest you use Firetask (more consistent naming) - (A. Jain)
+* Adds the FilePad, a way to store files in GridFS. See docs for more details (K. Mathew, A. Jain)
+* Add query ability to frontend (M. Aykol, D. Winston)
+* Add ability to "pause/resume" fireworks in addition to existing "defuse/reignite". See docs (S. Dwarnakath)
+* Add sort ability in frontend (D. Waroquiers)
+* Misc frontend improvements (D. Winston, M. Aykol, A. Jain)
+* Add ability to move run dirs, i.e. update the database with location of runs after they are moved (A. Faghaninia, A. Jain)
+* Add ability to qlaunch a particular fw_id (J. Montoya)
+* Py3 compatibility (X. Qu, A. Faghaninia)
+* Fix lpad admin maintain (shenjh)
+* Fix to _pass_job_info (D. Waroquiers)
+* improved docs (J. Montoya, M. Aykol, A. Jain)
+
+**v1.3.9**
 
 * import Tracker object more easily (J. Montoya)
 
-##v1.3.8**
+**v1.3.8**
 
 * don't enforce j=True for Mongo connections (S.P. Ong)
 * improve testing framework (S.P. Ong)
@@ -15,14 +30,14 @@ FireWorks Changelog
 * only enter _fizzled_parents into the database once - for efficiency, and to better track the provenance of what actually occurred during the run
 * minor bugfixes / comments
 
-##v1.3.7**
+**v1.3.7**
 
 * minor doc updates
 * add ability to clear the task-level recovery, which gets stuck (J. Montoya)
 * py3k fixes (K. Matthew)
 * minor bugfixes
 
-##v1.3.6**
+**v1.3.6**
 
 * greatly improved docstring formatting and accuracy (K. Mathew)
 * Py3K fixes (K. Mathew)
