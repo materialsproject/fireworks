@@ -190,6 +190,7 @@ The built-in Firetasks
     templatewritertask
     fileiotasks
     pytask
+    filepad_tasks
 
 Misc
 ----
@@ -205,6 +206,7 @@ Misc
     python_tutorial
     qadapter_programming
     update_text
+    filepad_tutorial
 
 Reference
 =========
