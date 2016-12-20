@@ -3,6 +3,7 @@ FireWorks Changelog
 ===================
 
 **v1.4.0**
+
 * mlaunch is now "rlaunch multi". See docs (S. Dwarnakath)
 * For FireTask, we now suggest you use Firetask (more consistent naming) - (A. Jain)
 * Adds the FilePad, a way to store files in GridFS. See docs for more details (K. Mathew, A. Jain)
