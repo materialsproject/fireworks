@@ -24,7 +24,7 @@ def update_launchpad_data(lp, replacements, **kwargs):
     print("Update launchpad data complete.")
 
 
-def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=True, force_clear=False):
+def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=False, force_clear=False):
     """
     updates the text specified in replacements for the documents in a MongoDB collection.
     This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
