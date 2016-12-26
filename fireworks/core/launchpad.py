@@ -248,10 +248,13 @@ class LaunchPad(FWSerializable):
         while True:
             self.m_logger.info('Performing maintenance on Launchpad...')
             self.m_logger.debug('Tracking down FIZZLED jobs...')
-            fl, ff = self.detect_lostruns(fizzle=True)
+            fl, ff, inconsistent_fw_ids = self.detect_lostruns(fizzle=True)
             if fl:
                 self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
                 self.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
+            if inconsistent_fw_ids:
+                self.m_logger.info('Detected {} FIZZLED inconsistent fireworks: {}'.format(len(inconsistent_fw_ids),
+                                                                                           inconsistent_fw_ids))
 
             self.m_logger.debug('Tracking down stuck RESERVED jobs...')
             ur = self.detect_unreserved(rerun=True)
@@ -834,7 +837,7 @@ class LaunchPad(FWSerializable):
             all_launch_ids.extend(l['launches'])
         return all_launch_ids
 
-    def reserve_fw(self, fworker, launch_dir, host=None, ip=None):
+    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
         """
         Checkout the next ready firework and mark the launch reserved.
 
@@ -843,11 +846,12 @@ class LaunchPad(FWSerializable):
             launch_dir (str): path to the launch directory.
             host (str): hostname
             ip (str): ip address
+            fw_id (int): fw_id to be reserved, if desired
 
         Returns:
             (Firework, int): the checked out firework and the new launch id
         """
-        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, state="RESERVED")
+        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
     def get_fw_ids_from_reservation_id(self, reservation_id):
         """
@@ -1264,6 +1268,7 @@ class LaunchPad(FWSerializable):
 
         return reruns
 
+    # TODO: why is this a separate function from rerun_fws???
     def rerun_fws_task_level(self, fw_id, rerun_duplicates=True, launch_id=None, recover_mode=None):
         """
         Rerun a fw at the task level.

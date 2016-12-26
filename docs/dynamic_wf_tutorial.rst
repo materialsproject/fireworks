@@ -14,7 +14,7 @@ A workflow that passes job information
 
 The first thing we will examine is a workflow that passes job information - namely the ``name``, ``fw_id``, and ``launch_dir`` (run directory) of a parent Firework to its child. Often, the run directory of the parent is needed by the child (e.g., to copy files from the parent job to the child job). Although FireWorks has a powerful framework for passing arbitrary information between jobs through the ``FWAction`` object (which we will begin to cover in the next example), passing basic job information can be done more simply by simply setting the ``_pass_job_info`` reserved keyword spec to True. Let's look at this in more detail.
 
-1. Move to the ``dynamic_wf`` tutorial directory on your FireServer::
+1. Move to the ``dynamic_wf`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
@@ -90,7 +90,7 @@ Apart from job info, other information can also be passed between Fireworks in a
 
 The text in blue lettering is not known in advance and can only be determined after running the first workflow step. Let's examine how we can set up such a workflow.
 
-1. Move to the ``dynamic_wf`` tutorial directory on your FireServer::
+1. Move to the ``dynamic_wf`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
@@ -166,7 +166,7 @@ Our single Firework will contain a custom Firetask that does the following:
 
 Let's see how this is achieved:
 
-1. Stay in the ``dynamic_wf`` tutorial directory on your FireServer and clear it::
+1. Stay in the ``dynamic_wf`` tutorial directory in your installation directory and clear it::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
     rm FW.json

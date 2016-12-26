@@ -12,6 +12,14 @@ fireworks.user_objects.firetasks.tests.test_fileio_tasks module
     :undoc-members:
     :show-inheritance:
 
+fireworks.user_objects.firetasks.tests.test_filepad_tasks module
+----------------------------------------------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.tests.test_filepad_tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks.user_objects.firetasks.tests.test_script_task module
 --------------------------------------------------------------
 

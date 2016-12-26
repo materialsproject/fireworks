@@ -7,6 +7,8 @@ You might want to control the order in which your FireWorks are run. Setting job
 * You can assign any numerical value to the priority, including negative numbers and decimals. Higher priorities are run first.
 
  * FireWorks with *any* value of priority will be run before jobs without a priority defined. If two FireWorks have the same priority, one of those jobs will be chosen randomly (you can also choose FIFO and FILO ordering for equal-priority FireWorks via the :doc:`FW config </config_tutorial>`).
+ 
+ * You can launch specific fireworks from the command line via `rlaunch singleshot -f FW_ID` or `qlaunch -r singleshot -f FW_ID`.
 
 Set job priority using the command line after adding FWs
 ========================================================
@@ -40,7 +42,7 @@ Imagine we have two workflows, A and B, with two steps each (1 and 2). We want t
 
 Let's examine how we can set up such an execution model.
 
-#. Move to the ``A_then_B`` subdirectory of the ``priority`` tutorial directory on your FireServer::
+#. Move to the ``A_then_B`` subdirectory of the ``priority`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/priority/A_then_B
 
@@ -69,7 +71,7 @@ Let's now try another execution order: A-1, B-1, B-2, A-2.
    :align: center
    :alt: A then B
 
-#. Move to the ``breadthfirst`` subdirectory of the ``priority`` tutorial directory on your FireServer::
+#. Move to the ``breadthfirst`` subdirectory of the ``priority`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/priority/breadthfirst
 

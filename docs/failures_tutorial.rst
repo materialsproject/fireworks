@@ -11,7 +11,7 @@ Normal operation
 
 Let's first introduce normal operation of a Firework that prints ``starting``, sleeps for 10 seconds, and then prints ``ending``. The Firework is completed successfully only if ``ending`` gets printed.
 
-#. Move to the ``failures`` tutorial directory on your FireServer::
+#. Move to the ``failures`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/failures
 

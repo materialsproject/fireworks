@@ -23,7 +23,7 @@ For example, we might want print the first two lines of Hamlet's soliloquy to th
 
 Basically, we just want to ensure that *"To be, or not to be,"* is printed out before *"that is the question:"*. Let's define and execute this workflow.
 
-1. Move to the ``workflow`` tutorial directory on your FireServer::
+1. Move to the ``workflow`` tutorial directory in your fireworks repository::
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
 
@@ -86,7 +86,7 @@ Let's continue with a very similar example, but make the workflow a little more 
 
 Let's quickly define and execute this workflow.
 
-1. Stay in the same ``workflow`` tutorial directory on your FireServer and clean it up::
+1. Stay in the same ``workflow`` tutorial directory in your fireworks repository and clean it up::
 
     cd <INSTALL_DIR>/fw_tutorials/workflow
     rm FW.json

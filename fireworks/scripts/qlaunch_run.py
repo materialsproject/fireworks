@@ -113,7 +113,7 @@ def qlaunch():
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=CONFIG_FILE_DIR)
-    parser.add_argument('-f', '--fill_mode', help='launch queue submissions even when there is nothing to run',
+    parser.add_argument('-fm', '--fill_mode', help='launch queue submissions even when there is nothing to run',
                         action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
@@ -128,6 +128,9 @@ def qlaunch():
     rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)',
                               default=None, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
+    
+    single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', 
+                               default=None, type=int)
 
     args = parser.parse_args()
 
