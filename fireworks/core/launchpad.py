@@ -169,7 +169,7 @@ class LaunchPad(FWSerializable):
             'wf_user_indices': self.wf_user_indices,
             'ssl_ca_file': self.ssl_ca_file}
 
-    def update_spec(self, fw_ids, spec_document):
+    def update_spec(self, fw_ids, spec_document, mongo=False):
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -179,11 +179,16 @@ class LaunchPad(FWSerializable):
                 the spec key are allowed. So if you supply {"_tasks.1.parameter": "hello"},
                 you are effectively modifying spec._tasks.1.parameter in the actual fireworks
                 collection.
+            mongo (bool): spec_document uses mongo syntax to directly update the spec
         """
-        mod_spec = {("spec." + k): v for k, v in spec_document.items()}
+        if mongo:
+            mod_spec = spec_document
+        else:
+            mod_spec = {"$set": {("spec." + k): v for k, v in spec_document.items()} }
+
         allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED", "PAUSED"]
         self.fireworks.update_many({'fw_id': {"$in": fw_ids},
-                                    'state': {"$in": allowed_states}}, {"$set": mod_spec})
+                                    'state': {"$in": allowed_states}}, mod_spec)
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
             self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "

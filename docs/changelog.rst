@@ -4,11 +4,11 @@ FireWorks Changelog
 
 **v1.4.0**
 
-* mlaunch is now "rlaunch multi". See docs (S. Dwarnakath)
+* mlaunch is now "rlaunch multi". See docs (S. Dwaraknath)
 * For FireTask, we now suggest you use Firetask (more consistent naming) - (A. Jain)
 * Adds the FilePad, a way to store files in GridFS. See docs for more details (K. Mathew, A. Jain)
 * Add query ability to frontend (M. Aykol, D. Winston)
-* Add ability to "pause/resume" fireworks in addition to existing "defuse/reignite". See docs (S. Dwarnakath)
+* Add ability to "pause/resume" fireworks in addition to existing "defuse/reignite". See docs (S. Dwaraknath)
 * Add sort ability in frontend (D. Waroquiers)
 * Misc frontend improvements (D. Winston, M. Aykol, A. Jain)
 * Add ability to move run dirs, i.e. update the database with location of runs after they are moved (A. Faghaninia, A. Jain)

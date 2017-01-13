@@ -238,7 +238,7 @@ def get_fws(args):
 def update_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
-    lp.update_spec(fw_ids, json.loads(args.update))
+    lp.update_spec(fw_ids, json.loads(args.update),args.mongo)
 
 
 def get_wfs(args):
@@ -806,6 +806,9 @@ def lpad():
                                    help='Doc update (enclose pymongo-style dict '
                                         'in single-quotes, e.g. \'{'
                                         '"_tasks.1.hello": "world"}\')')
+    update_fws_parser.add_argument("--mongo",default=False, action='store_true',
+                                   help="Use full pymongo style dict to modify spec. "
+                                        "Be very careful as you can break your spec")
     update_fws_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. "
                                                       "Password or positive response to input "
                                                       "prompt required when modifying more than {} "
