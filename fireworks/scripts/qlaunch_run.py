@@ -132,6 +132,16 @@ def qlaunch():
     single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', 
                                default=None, type=int)
 
+    try:
+        import argcomplete
+        argcomplete.autocomplete(parser)
+        # This supports bash autocompletion. To enable this, pip install
+        # argcomplete, activate global completion, or add
+        #      eval "$(register-python-argcomplete qlaunch)"
+        # into your .bash_profile or .bashrc
+    except ImportError:
+        pass
+
     args = parser.parse_args()
 
     if args.remote_host:

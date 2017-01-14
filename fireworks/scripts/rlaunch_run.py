@@ -88,6 +88,15 @@ def rlaunch():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
 
+    try:
+        import argcomplete
+        argcomplete.autocomplete(parser)
+        # This supports bash autocompletion. To enable this, pip install
+        # argcomplete, activate global completion, or add
+        #      eval "$(register-python-argcomplete rlaunch)"
+        # into your .bash_profile or .bashrc
+    except ImportError:
+        pass
 
     args = parser.parse_args()
 
