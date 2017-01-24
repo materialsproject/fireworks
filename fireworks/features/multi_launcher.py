@@ -141,7 +141,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
         if nnodes%num_jobs != 0:
             raise ValueError("can't allocate nodes, {} can't be divided by {}".format(
                 nnodes, num_jobs))
-        sub_nnodes = nnodes/num_jobs
+        sub_nnodes = nnodes//num_jobs
         sub_nproc_list = [sub_nnodes * ppn] * num_jobs
         node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
     else:
