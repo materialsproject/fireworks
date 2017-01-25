@@ -54,6 +54,7 @@ A simple method to direct FireWorks to FireWorks is by assigning the name of the
 Once you've set these values, job execution occurs as follows:
 
 * FireWorks with a ``_fworker`` variable set will only run on a FireWorker with the exactly matching ``name`` variable.
+* Note that this does not set any restriction on the jobs the FireWorker can pull, i.e. your FireWorker can pull matching FireWorks as well as any other FireWork. To restrict jobs pulled by the FireWorker, use the methods below (perhaps in addition to this method).
 
 Method 2: Using categories
 --------------------------
