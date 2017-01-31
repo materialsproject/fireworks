@@ -5,7 +5,7 @@ Rerunning a Firework or Workflow
 In some instances, you may want to rerun a Firework or Workflow. For example, your computing resource may have crashed or been configured incorrectly during the first run, leading to your first launch being *FIZZLED*. When you rerun a Firework:
 
 * All the Firework's previous launches are *archived* into a special section of the Firework called *archived_launches*. This process also occurs for all the children of the Firework (but not the parents).
-* The Firework's state is reset back *READY*. The state of all children is reset back to *WAITING* for the Firework to complete. The archived launches be read by the user but do not affect the operation of the Firework.
+* The Firework's state is reset back *READY*. The state of all children is reset back to *WAITING* for the Firework to complete. The archived launches can be read by the user but do not affect the operation of the Firework.
 
 One issue with rerunning FireWorks is that the procedure does not reset any previous actions taken by your Firework. For example, if your Firework executed an instruction to create a new Workflow step within its FWAction, or modified the inputs of the child Firework, these actions will **not** be reset when you rerun the Firework. The point is important enough that we'll repeat it in a warning:
 
