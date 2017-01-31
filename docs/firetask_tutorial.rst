@@ -109,7 +109,7 @@ Creating a custom Firetask
 
 The ``TemplateWriterTask``, ``ScriptTask``, ``FileTransferTask`` are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the ``ScriptTask`` can run arbitrary shell scripts, it can in theory run any type of computation and is an 'all-encompassing' Firetask. ScriptTask also has many additional features that are covered in the :doc:`ScriptTask tutorial <scripttask>`.
 
-However, if you are comfortable with some basic Python, you can define your own custom Firetasks for the codes you run. A custom Firetask gives you more control over your jbos, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
+However, if you are comfortable with some basic Python, you can define your own custom Firetasks for the codes you run. A custom Firetask gives you more control over your jobs, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.
 
 Even if you plan to only use the built-in tasks, we suggest that you still read through the next portion before continuing with the tutorial. We'll be creating a custom Firetask that adds one or more numbers using Python's ``sum()`` function, and later building workflows using this (and similar) Firetasks.
 
