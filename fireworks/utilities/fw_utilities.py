@@ -262,7 +262,7 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
 
     # root nodes
     for i, k in enumerate(wf.root_fw_ids):
-        points_map.update({k: ((-0.5 * n_root_nodes + i) * breadth_factor, depth_factor)})
+        points_map.update({k: ((-0.5 * n_root_nodes + i) * breadth_factor, (keys[0] + 1) * depth_factor)})
 
     # the rest
     for k in keys:
