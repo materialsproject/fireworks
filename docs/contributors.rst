@@ -33,6 +33,7 @@ Additional contributions from:
 - Murat Aykol
 - Felix Zapata
 - Dale Stansberry
+- Ketan Bhatt
 - Github user: kpoman
 - Github user: jakirkham
 - Github user: shenjh
