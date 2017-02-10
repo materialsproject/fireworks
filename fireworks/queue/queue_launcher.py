@@ -46,6 +46,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         create_launcher_dir (bool): Whether to create a subfolder launcher+timestamp, if needed
         fill_mode (bool): whether to submit jobs even when there is nothing to run
             (only in non-reservation mode)
+        fw_id (int): specific fw_id to reserve (reservation mode only)
     """
     fworker = fworker if fworker else FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
@@ -153,7 +154,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
     else:
         l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
-        return False
+        return None  # note: this is a hack (rather than False) to indicate a soft failure to rapidfire()
 
 
 def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0,
@@ -216,8 +217,12 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     block_dir = create_datestamp_dir(launch_dir, l_logger)
 
                 # launch a single job
-                if not launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve,
-                                              strm_lvl, True, fill_mode):
+                return_code = launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve,
+                                              strm_lvl, True, fill_mode)
+                if return_code is None:
+                    l_logger.info('No READY jobs detected...')
+                    break
+                elif not return_code:
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if num_launched == nlaunches:
