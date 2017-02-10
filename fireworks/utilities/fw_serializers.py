@@ -72,7 +72,7 @@ try:
     import numpy as np
     NUMPY_INSTALLED = True
 except:
-    pass
+    NUMPY_INSTALLED = False
 
 
 def recursive_dict(obj, preserve_unicode=True):
