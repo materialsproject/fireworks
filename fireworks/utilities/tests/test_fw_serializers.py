@@ -4,7 +4,7 @@
 
 import sys
 from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
-from fireworks.utilities.fw_serializers import load_object, FWSerializable
+from fireworks.utilities.fw_serializers import load_object, FWSerializable, recursive_dict
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 
@@ -131,6 +131,16 @@ class SerializationTest(unittest.TestCase):
 
     def test_as_dict(self):
         self.assertEqual(self.obj_1.as_dict(), self.obj_1.to_dict())
+
+    def test_numpy_array(self):
+        try:
+            import numpy as np
+        except:
+            raise unittest.SkipTest("Skipping numpy serialization testing...")
+
+        x = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        x = recursive_dict(x)
+        self.assertEqual(x, [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
 
 class ExplicitSerializationTest(unittest.TestCase):
