@@ -58,6 +58,8 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 13, 2012'
 
+# TODO: consider *somehow* switching FireWorks to monty serialization. e.g., numpy serialization is better handled.
+
 SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
@@ -65,6 +67,12 @@ if sys.version_info > (3, 0, 0):
     ENCODING_PARAMS = {"encoding": "utf-8"}
 else:
     ENCODING_PARAMS = {}
+
+try:
+    import numpy as np
+    NUMPY_INSTALLED = True
+except:
+    NUMPY_INSTALLED = False
 
 
 def recursive_dict(obj, preserve_unicode=True):
@@ -92,6 +100,9 @@ def recursive_dict(obj, preserve_unicode=True):
 
     if preserve_unicode and isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
         return obj
+
+    if NUMPY_INSTALLED and isinstance(obj, np.ndarray):
+        return [recursive_dict(v, preserve_unicode) for v in obj.tolist()]
 
     return str(obj)
 

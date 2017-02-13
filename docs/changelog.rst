@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.4.1**
+
+* optional support for argcomplete (requires installing argcomplete)
+* more powerful update_spec command (S. Dwaraknath)
+* Py3 fix for multi_launch (X. Qu)
+* numpy serializes to lists (thanks to J. Kuck)
+* fix for qlaunch rapidfire that caused unintended stopping (thanks to J. Kuck)
+* multiple doc updates (A. Jain / K. Bhatt)
+
 **v1.4.0**
 
 * mlaunch is now "rlaunch multi". See docs (S. Dwaraknath)
