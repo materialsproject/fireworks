@@ -142,17 +142,17 @@ Let's explore custom Firetasks with an example: a custom Python script for addin
 
 #. Let's first look at what a custom Firetask looks like in Python. Look inside the file ``addition_task.py`` which defines the ``Addition Task``::
 
-    class AdditionTask(FiretaskBase, FWSerializable):
+    class AdditionTask(FiretaskBase):
 
-        _fw_name = "Addition Task"
+       _fw_name = "Addition Task"
 
-        def run_task(self, fw_spec):
-            input_array = fw_spec['input_array']
-            m_sum = sum(input_array)
+       def run_task(self, fw_spec):
+           input_array = fw_spec['input_array']
+           m_sum = sum(input_array)
 
-            print("The sum of {} is: {}".format(input_array, m_sum))
+           print("The sum of {} is: {}".format(input_array, m_sum))
 
-            return FWAction(stored_data={'sum': m_sum})
+           return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])
 
 #. A few notes about what's going on (things will be clearer after the next step):
 
@@ -160,7 +160,7 @@ Let's explore custom Firetasks with an example: a custom Python script for addin
    * A special parameter named *_fw_name* is set to ``Addition Task``. This parameter sets what this Firetask will be called by the outside world and is used to bootstrap the object, as described in the previous section. If we did not set this ourselves, the default would have been ``fireworks:AdditionTask`` (the root module name plus the class name separated by a colon).
    * The ``run_task()`` method is a special method name that gets called when the task is run. It can take in a Firework specification (**spec**) in order to modify its behavior.
    * When executing ``run_task()``, the AdditionTask we defined first reads the **input_array** parameter of the Firework's **spec**. It then sums all the values it finds in the **input_array** parameter of the Firework's **spec** using Python's ``sum()`` function. Next, the Firetask prints the inputs and the sum to the standard out. Finally, the task returns a *FWAction* object.
-   * We'll discuss the FWAction object in greater detail in future tutorials. For now, it is sufficient to know that this is an instruction that says we should store the sum we computed in the database (inside the Firework's ``stored_data`` section).
+   * We'll discuss the FWAction object in greater detail in future tutorials. For now, it is sufficient to know that this is giving two instructions. The first says we should store the sum we computed in the database (inside the Firework's ``stored_data`` section). The second will pass the results on to any downstream FireTask or FireWork in the workflow as part of the *spec* inside a key called ``input_array``.
 
 #. Now let's define a Firework that runs this Firetask to add the numbers ``1`` and ``2``. Look inside the file ``fw_adder.yaml`` for this new Firework definition::
 
