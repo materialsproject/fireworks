@@ -317,3 +317,17 @@ class FilePad(MSONable):
         self.db[self.gridfs_coll_name].files.delete_many({})
         self.db[self.gridfs_coll_name].chunks.delete_many({})
         self.build_indexes()
+
+    def count(self, filter=None, **kwargs):
+        """
+        Get the number of documents in filepad.
+
+        Args:
+            filter (dict)
+            kwargs (dict): see pymongo.Collection.count for the supported
+                keyword arguments.
+
+        Returns:
+            int: the count
+        """
+        self.filepad.count(filter, **kwargs)
