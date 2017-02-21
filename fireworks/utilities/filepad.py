@@ -330,4 +330,4 @@ class FilePad(MSONable):
         Returns:
             int: the count
         """
-        self.filepad.count(filter, **kwargs)
+        return self.filepad.count(filter, **kwargs)
