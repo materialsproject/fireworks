@@ -30,7 +30,7 @@ class AddFilesTask(FiretaskBase):
     optional_params = ["filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec):
-        assert len(self["paths"]) != len(self["labels"])
+        assert len(self["paths"]) == len(self["labels"])
         fpad = get_fpad(self.get("filepad_file", None))
         for p, l in zip(self["paths"], self["labels"]):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
