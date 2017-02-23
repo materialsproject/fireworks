@@ -30,8 +30,7 @@ class AddFilesTask(FiretaskBase):
     optional_params = ["filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec):
-        if len(self["paths"]) != len(self["labels"]):
-            raise ValueError("number of paths not equal to number of labels")
+        assert len(self["paths"]) != len(self["labels"])
         fpad = get_fpad(self.get("filepad_file", None))
         for p, l in zip(self["paths"], self["labels"]):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
@@ -47,25 +46,26 @@ class AddFilesFromPatternTask(FiretaskBase):
 
     Optional params:
         - directory (str): path to directory where the pattern matching is to be done.
+        - labels (list): list of labels
         - filepad_file (str): path to the filepad db config file
         - compress (bool): whether or not to compress the file before inserting to gridfs
         - metadata (dict): metadata to store along with the file, stored in 'metadata' key
     """
     _fw_name = 'AddFilesFromPatternTask'
     required_params = ["pattern"]
-    optional_params = ["directory", "filepad_file", "compress", "metadata"]
+    optional_params = ["directory", "labels", "filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec):
-        directory = self.get("directory", ".")
         try:
             import pathlib as plib
         except ImportError:
             import pathlib2 as plib
-        paths = []
-        labels = []  # filenames are used as labels
-        for p in plib.Path(directory).glob(self["pattern"]):
-            paths.append(p.absolute().as_posix())
-            labels.append(p.name)
+
+        directory = self.get("directory", ".")
+        paths = [p.absolute().as_posix() for p in plib.Path(directory).glob(self["pattern"])]
+        # if not given, filenames are used as labels
+        labels = self.get("labels", None) or [p.name for p in plib.Path(directory).glob(self["pattern"])]
+        assert len(labels) == len(paths)
         fpad = get_fpad(self.get("filepad_file", None))
         for p, l in zip(paths, labels):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
