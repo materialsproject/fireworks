@@ -7,7 +7,7 @@ __author__ = 'Kiran Mathew'
 import unittest
 import os
 
-from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask
+from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask, AddFilesFromPatternTask
 from fireworks.utilities.filepad import FilePad
 
 
@@ -51,6 +51,14 @@ class FilePadTasksTest(unittest.TestCase):
         self.assertEqual(write_file_contents,
                          open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
         os.remove(os.path.join(dest_dir, new_file_names[0]))
+
+    def test_addfilesfrompatterntask_run(self):
+        t = AddFilesFromPatternTask(pattern="*.yaml", directory=module_dir)
+        t.run_task({})
+        write_file_contents, wdoc = self.fp.get_file("write.yaml")
+        self.assertEqual(write_file_contents, open(self.paths[0], "r").read().encode())
+        del_file_contents, wdoc = self.fp.get_file("delete.yaml")
+        self.assertEqual(del_file_contents, open(self.paths[1], "r").read().encode())
 
     def tearDown(self):
         self.fp.reset()

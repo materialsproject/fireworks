@@ -14,7 +14,7 @@ __credits__ = 'Anubhav Jain'
 
 class AddFilesTask(FiretaskBase):
     """
-    A Firetask to write files to the filepad
+    A Firetask to add files to the filepad.
 
     Required params:
         - paths ([str]): list of paths to files to be added
@@ -36,6 +36,41 @@ class AddFilesTask(FiretaskBase):
         for p, l in zip(self["paths"], self["labels"]):
             fpad.add_file(p, label=l, metadata=self.get("metadata", None),
                           compress=self.get("compress", True))
+
+
+class AddFilesFromPatternTask(FiretaskBase):
+    """
+    A Firetask to add files matching the given pattern to filepad.
+
+    Required params:
+        - pattern ([str]): glob pattern
+
+    Optional params:
+        - directory (str): path to directory where the pattern matching is to be done.
+        - filepad_file (str): path to the filepad db config file
+        - compress (bool): whether or not to compress the file before inserting to gridfs
+        - metadata (dict): metadata to store along with the file, stored in 'metadata' key
+    """
+    _fw_name = 'AddFilesFromPatternTask'
+    required_params = ["pattern"]
+    optional_params = ["directory", "filepad_file", "compress", "metadata"]
+
+    def run_task(self, fw_spec):
+        directory = self.get("directory", ".")
+        try:
+            import pathlib as plib
+        except ImportError:
+            import pathlib2 as plib
+        paths = []
+        labels = []  # filenames are used as labels
+        for p in plib.Path(directory).glob(self["pattern"]):
+            paths.append(p.absolute().as_posix())
+            labels.append(p.name)
+        fpad = get_fpad(self.get("filepad_file", None))
+        for p, l in zip(paths, labels):
+            fpad.add_file(p, label=l, metadata=self.get("metadata", None),
+                          compress=self.get("compress", True))
+
 
 class GetFilesTask(FiretaskBase):
     """
