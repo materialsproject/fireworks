@@ -90,7 +90,8 @@ class FilePad(MSONable):
 
         Args:
             path (str): path to the file
-            label (str): file label
+            label (str): file label. If label = None then the label is set to the object id
+                returned by gridfs insertion.
             compress (bool): compress or not
             metadata (dict): file metadata
 
