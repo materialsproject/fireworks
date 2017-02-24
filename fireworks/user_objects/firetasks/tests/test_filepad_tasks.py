@@ -7,7 +7,7 @@ __author__ = 'Kiran Mathew'
 import unittest
 import os
 
-from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask, AddFilesFromPatternTask
+from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask
 from fireworks.utilities.filepad import FilePad
 
 
@@ -18,11 +18,11 @@ class FilePadTasksTest(unittest.TestCase):
 
     def setUp(self):
         self.paths = [os.path.join(module_dir, "write.yaml"), os.path.join(module_dir, "delete.yaml")]
-        self.labels = ["write", "delete"]
+        self.identifiers = ["write", "delete"]
         self.fp = FilePad.auto_load()
 
     def test_addfilestask_run(self):
-        t = AddFilesTask(paths=self.paths, labels=self.labels)
+        t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
         write_file_contents, wdoc = self.fp.get_file("write")
         self.assertEqual(write_file_contents, open(self.paths[0], "r").read().encode())
@@ -30,7 +30,7 @@ class FilePadTasksTest(unittest.TestCase):
         self.assertEqual(del_file_contents, open(self.paths[1], "r").read().encode())
 
     def test_deletefilestask_run(self):
-        t = DeleteFilesTask(labels=self.labels)
+        t = DeleteFilesTask(identifiers=self.identifiers)
         t.run_task({})
         file_contents, doc = self.fp.get_file("write")
         self.assertIsNone(file_contents)
@@ -40,12 +40,12 @@ class FilePadTasksTest(unittest.TestCase):
         self.assertIsNone(doc)
 
     def test_getfilestask_run(self):
-        t = AddFilesTask(paths=self.paths, labels=self.labels)
+        t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
         dest_dir = os.path.abspath(".")
-        labels = ["write"]
+        identifiers = ["write"]
         new_file_names = ["write_2.yaml"]
-        t = GetFilesTask(labels=labels, dest_dir=dest_dir, new_file_names=new_file_names)
+        t = GetFilesTask(identifiers=identifiers, dest_dir=dest_dir, new_file_names=new_file_names)
         t.run_task({})
         write_file_contents, wdoc = self.fp.get_file("write")
         self.assertEqual(write_file_contents,
@@ -53,11 +53,11 @@ class FilePadTasksTest(unittest.TestCase):
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
     def test_addfilesfrompatterntask_run(self):
-        t = AddFilesFromPatternTask(pattern="*.yaml", directory=module_dir)
+        t = AddFilesTask(paths="*.yaml", directory=module_dir)
         t.run_task({})
-        write_file_contents, wdoc = self.fp.get_file("write.yaml")
+        write_file_contents, wdoc = self.fp.get_file(self.paths[0])
         self.assertEqual(write_file_contents, open(self.paths[0], "r").read().encode())
-        del_file_contents, wdoc = self.fp.get_file("delete.yaml")
+        del_file_contents, wdoc = self.fp.get_file(self.paths[1])
         self.assertEqual(del_file_contents, open(self.paths[1], "r").read().encode())
 
     def tearDown(self):
