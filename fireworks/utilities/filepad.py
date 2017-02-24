@@ -79,63 +79,63 @@ class FilePad(MSONable):
             indexes (list): list of single field indexes to be built.
             background (bool): Run in the background or not.
         """
-        indexes = indexes if indexes else ["label", "file_id"]
+        indexes = indexes if indexes else ["identifier", "gfs_id"]
         for i in indexes:
             self.filepad.create_index(i, unique=True, background=background)
 
-    def add_file(self, path, label=None, compress=True, metadata=None):
+    def add_file(self, path, identifier=None, compress=True, metadata=None):
         """
-        Insert the file specified by the path into gridfs. The id and label are returned.
-        Note: label must be unique, i.e, no insertion if the label already exists in the db.
+        Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
+        Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.
 
         Args:
             path (str): path to the file
-            label (str): file label. If label = None then the label is set to the object id
+            identifier (str): file identifier. If identifier = None then the identifier is set to the object id
                 returned by gridfs insertion.
             compress (bool): compress or not
             metadata (dict): file metadata
 
         Returns:
-            (str, str): the id returned by gridfs, label
+            (str, str): the id returned by gridfs, identifier
         """
-        if label is not None:
-            file_contents, doc = self.get_file(label)
+        if identifier is not None:
+            file_contents, doc = self.get_file(identifier)
             if doc is not None:
-                self.logger.warning("label: {} exists. Skipping insertion".format(label))
-                return doc["file_id"], doc["label"]
+                self.logger.warning("identifier: {} exists. Skipping insertion".format(identifier))
+                return doc["gfs_id"], doc["identifier"]
 
         path = os.path.abspath(path)
-        root_data = {"label": label,
+        root_data = {"identifier": identifier,
                      "original_file_name": os.path.basename(path),
                      "original_file_path": path,
                      "metadata": metadata,
                      "compressed": compress}
         with open(path, "r") as f:
             contents = f.read()
-            return self._insert_contents(contents, label, root_data, compress)
+            return self._insert_contents(contents, identifier, root_data, compress)
 
-    def get_file(self, label):
+    def get_file(self, identifier):
         """
-        Get file by label.
+        Get file by identifier
 
         Args:
-            label (str): the file label
+            identifier (str): the file identifier
 
         Returns:
             (str, dict): the file content as a string, document dictionary
         """
-        doc = self.filepad.find_one({"label": label})
+        doc = self.filepad.find_one({"identifier": identifier})
         return self._get_file_contents(doc)
 
-    def get_file_by_id(self, file_id):
+    def get_file_by_id(self, gfs_id):
         """
         Args:
-            file_id (str): the file id
+            gfs_id (str): the gridfs id for the file.
 
         Returns:
             (str, dict): the file content as a string, document dictionary
         """
-        doc = self.filepad.find_one({"file_id": file_id})
+        doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._get_file_contents(doc)
 
     def get_file_by_query(self, query):
@@ -152,43 +152,43 @@ class FilePad(MSONable):
             all_files.append(self._get_file_contents(d))
         return all_files
 
-    def delete_file(self, label):
+    def delete_file(self, identifier):
         """
-        Delete the document with the matching label. The contents in the gridfs as well as the
+        Delete the document with the matching identifier. The contents in the gridfs as well as the
         associated document in the filepad are deleted.
 
         Args:
-            label (str): the file label
+            identifier (str): the file identifier
         """
-        doc = self.filepad.find_one({"label": label})
+        doc = self.filepad.find_one({"identifier": identifier})
         if doc is None:
             self.logger.warning("The file doesn't exist")
         else:
-            self.delete_file_by_id(doc["file_id"])
+            self.delete_file_by_id(doc["gfs_id"])
 
-    def update_file(self, label, path, compress=True):
+    def update_file(self, identifier, path, compress=True):
         """
-        Update the filecontents in the gridfs, update the file_id in the document and retain the
+        Update the filecontents in the gridfs, update the gfs_id in the document and retain the
         rest.
 
         Args:
-            label (str): the unique file label
+            identifier (str): the unique file identifier
             path (str): path to the new file whose contents will replace the existing one.
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
-        doc = self.filepad.find_one({"label": label})
+        doc = self.filepad.find_one({"identifier": identifier})
         return self._update_file_contents(doc, path, compress)
 
-    def delete_file_by_id(self, file_id):
+    def delete_file_by_id(self, gfs_id):
         """
         Args:
-            file_id (str): the file id
+            gfs_id (str): the file id
         """
-        self.gridfs.delete(file_id)
-        self.filepad.delete_one({"file_id": file_id})
+        self.gridfs.delete(gfs_id)
+        self.filepad.delete_one({"gfs_id": gfs_id})
 
     def delete_file_by_query(self, query):
         """
@@ -196,41 +196,41 @@ class FilePad(MSONable):
             query (dict): pymongo query dict
         """
         for d in self.filepad.find(query):
-            self.delete_file_by_id(d["file_id"])
+            self.delete_file_by_id(d["gfs_id"])
 
-    def update_file_by_id(self, file_id, path, compress=True):
+    def update_file_by_id(self, gfs_id, path, compress=True):
         """
         Update the file in the gridfs with the given id and retain the rest of the document.
 
         Args:
-            file_id (str): the file id
+            gfs_id (str): the gridfs id for the file.
             path (str): path to the new file whose contents will replace the existing one.
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
             (str, str): old file id , new file id
         """
-        doc = self.filepad.find_one({"file_id": file_id})
+        doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._update_file_contents(doc, path, compress)
 
-    def _insert_contents(self, contents, label, root_data, compress):
+    def _insert_contents(self, contents, identifier, root_data, compress):
         """
         Insert the file contents(string) to gridfs and store the file info doc in filepad
 
         Args:
             contents (str): file contents or any arbitrary string to be stored in gridfs
-            label (str): file label
+            identifier (str): file identifier
             compress (bool): compress or not
             root_data (dict): key:value pairs to be added to the document root
 
         Returns:
-            (str, str): the id returned by gridfs, label
+            (str, str): the id returned by gridfs, identifier
         """
-        file_id = self._insert_to_gridfs(contents, compress)
-        label = label or file_id
-        root_data["file_id"] = file_id
+        gfs_id = self._insert_to_gridfs(contents, compress)
+        identifier = identifier or gfs_id
+        root_data["gfs_id"] = gfs_id
         self.filepad.insert_one(root_data)
-        return file_id, label
+        return gfs_id, identifier
 
     def _insert_to_gridfs(self, contents, compress):
         if compress:
@@ -249,7 +249,7 @@ class FilePad(MSONable):
         from bson.objectid import ObjectId
 
         if doc:
-            gfs_id = doc['file_id']
+            gfs_id = doc['gfs_id']
             file_contents = self.gridfs.get(ObjectId(gfs_id)).read()
             if doc["compressed"]:
                 file_contents = zlib.decompress(file_contents)
@@ -269,12 +269,12 @@ class FilePad(MSONable):
         """
         if doc is None:
             return None, None
-        old_file_id = doc["file_id"]
-        self.gridfs.delete(old_file_id)
-        file_id = self._insert_to_gridfs(open(path, "r").read(), compress)
-        doc["file_id"] = file_id
+        old_gfs_id = doc["gfs_id"]
+        self.gridfs.delete(old_gfs_id)
+        gfs_id = self._insert_to_gridfs(open(path, "r").read(), compress)
+        doc["gfs_id"] = gfs_id
         doc["compressed"] = compress
-        return old_file_id, file_id
+        return old_gfs_id, gfs_id
 
     @classmethod
     def from_db_file(cls, db_file, admin=True):

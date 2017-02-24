@@ -52,7 +52,7 @@ class AddFilesTask(FiretaskBase):
         fpad = get_fpad(self.get("filepad_file", None))
 
         for p, l in zip(paths, identifiers):
-            fpad.add_file(p, label=l, metadata=self.get("metadata", None),
+            fpad.add_file(p, identifier=l, metadata=self.get("metadata", None),
                           compress=self.get("compress", True))
 
 
@@ -78,7 +78,7 @@ class GetFilesTask(FiretaskBase):
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
         for i, l in enumerate(self["identifiers"]):
-            file_contents, doc = fpad.get_file(label=l)
+            file_contents, doc = fpad.get_file(identifier=l)
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             with open(os.path.join(dest_dir, file_name), "w") as f:
                 f.write(file_contents.decode())
