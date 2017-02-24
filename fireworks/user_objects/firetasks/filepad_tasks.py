@@ -32,17 +32,14 @@ class AddFilesTask(FiretaskBase):
 
     def run_task(self, fw_spec):
 
-        try:
-            import pathlib as plib
-        except ImportError:
-            import pathlib2 as plib
+        from glob import glob
 
-        directory = self.get("directory", ".")
+        directory = os.path.abspath(self.get("directory", "."))
 
         if isinstance(self["paths"], list):
-            paths = [plib.Path(p).absolute().as_posix() for p in self["paths"]]
+            paths = [os.path.abspath(p) for p in self["paths"]]
         else:
-            paths = [p.absolute().as_posix() for p in plib.Path(directory).glob(self["paths"])]
+            paths = [os.path.abspath(p) for p in glob("{}/{}".format(directory, self["paths"]))]
 
         # if not given, use the full paths as identifiers
         identifiers = self.get("identifiers", paths)
