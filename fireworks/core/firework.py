@@ -735,21 +735,21 @@ class Workflow(FWSerializable):
         m_state = 'READY'
         #states = [fw.state for fw in self.fws]
         states = self.fw_states.values()
-        leaf_states = [self.fw_states[fw_id] for fw_id in self.leaf_fw_ids]
-        if all([s == 'COMPLETED' for s in leaf_states]):
+        leaf_states = (self.fw_states[fw_id] for fw_id in self.leaf_fw_ids)
+        if all(s == 'COMPLETED' for s in leaf_states):
             m_state = 'COMPLETED'
-        elif all([s == 'ARCHIVED' for s in states]):
+        elif all(s == 'ARCHIVED' for s in states):
             m_state = 'ARCHIVED'
-        elif any([s == 'DEFUSED' for s in states]):
+        elif any(s == 'DEFUSED' for s in states):
             m_state = 'DEFUSED'
-        elif any([s == 'PAUSED' for s in states]):
+        elif any(s == 'PAUSED' for s in states):
             m_state = 'PAUSED'
-        elif any([s == 'FIZZLED' for s in states]):
+        elif any(s == 'FIZZLED' for s in states):
             # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a
             # given fizzled firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
             # For each fizzled fw, we thus have to check the states of their children
-            fizzled_ids = [fw_id for fw_id, state in self.fw_states.items()
-                           if state not in ['READY', 'RUNNING', 'COMPLETED', 'RESERVED']]
+            fizzled_ids = (fw_id for fw_id, state in self.fw_states.items()
+                           if state not in ['READY', 'RUNNING', 'COMPLETED', 'RESERVED'])
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
                 if fizzled_id in self.leaf_fw_ids:
@@ -774,9 +774,9 @@ class Workflow(FWSerializable):
                     break
             else:
                 m_state = 'RUNNING'
-        elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
+        elif any(s == 'COMPLETED' for s in states) or any(s == 'RUNNING' for s in states):
             m_state = 'RUNNING'
-        elif any([s == 'RESERVED' for s in states]):
+        elif any(s == 'RESERVED' for s in states):
             m_state = 'RESERVED'
         return m_state
 
@@ -1122,7 +1122,7 @@ class Workflow(FWSerializable):
                 if l.state == 'COMPLETED':
                     completed_launches.append(l)
         if completed_launches:
-            return sorted(completed_launches, key=lambda v: v.time_end)[-1]
+            return max(completed_launches, key=lambda v: v.time_end)
         return m_launch
 
     @classmethod
