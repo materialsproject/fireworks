@@ -11,6 +11,7 @@ import socket
 import multiprocessing
 import errno
 import six
+import contextlib
 
 from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
 
@@ -287,3 +288,29 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
 
     if save_as:
         plt.savefig(save_as)
+
+@contextlib.contextmanager
+def redirect_local():
+    """
+    temporarily redirect stdout or stderr to fws.error and fws.out
+
+    """
+
+    try:
+        old_err = os.dup(sys.stderr.fileno())
+        old_out = os.dup(sys.stdout.fileno())
+
+        new_err = open('fws.error', 'w')
+        new_out = open('fws.out', 'w')
+
+        os.dup2(new_err.fileno(), sys.stderr.fileno())
+        os.dup2(new_out.fileno(), sys.stdout.fileno())
+        yield
+
+    finally:
+
+        os.dup2(old_err, sys.stderr.fileno())
+        os.dup2(old_out, sys.stdout.fileno())
+
+        new_err.close()
+        new_out.close()
