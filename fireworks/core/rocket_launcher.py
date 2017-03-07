@@ -13,7 +13,7 @@ from datetime import datetime
 from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS, FWORKER_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi
+from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi, redirect_local
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -58,7 +58,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
 
 
 def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None,
-              strm_lvl='INFO', timeout=None):
+              strm_lvl='INFO', timeout=None, local_redirect=False):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
     for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.
@@ -72,6 +72,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
         sleep_time (int): secs to sleep between rapidfire loop iterations
         strm_lvl (str): level at which to output logs to stdout
         timeout (int): of seconds after which to stop the rapidfire process
+        local_redirect (bool): redirect standard input and output to local file
     """
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
@@ -91,7 +92,12 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
-            rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+            if local_redirect:
+                with redirect_local():
+                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+            else:
+                rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+
             if rocket_ran:
                 num_launched += 1
             elif not os.listdir(launcher_dir):
