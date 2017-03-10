@@ -119,7 +119,8 @@ class Rocket:
 
         lp = self.launchpad
         launch_dir = os.path.abspath(os.getcwd())
-        l_logger = get_fw_logger('rocket.launcher', l_dir=lp.get_logdir(),stream_level='INFO')
+        logdir = lp.get_logdir() if lp else None
+        l_logger = get_fw_logger('rocket.launcher', l_dir=logdir,stream_level='INFO')
 
         # check a FW job out of the launchpad
         if lp:
