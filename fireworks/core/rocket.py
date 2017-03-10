@@ -176,13 +176,15 @@ class Rocket:
                 recover_launch_dir = launch_to_recover.launch_dir
                 if lp:
                     l_logger.log(
-                        logging.INFO,
-                        'Recovering from task number {} in folder {}.'.format(starting_task, recover_launch_dir))
+                                logging.INFO,
+                                'Recovering from task number {} in folder {}.'.format(starting_task,
+                                                                                      recover_launch_dir))
                 if m_fw.spec['_recover_launch']['_recover_mode'] == 'cp' and launch_dir != recover_launch_dir:
                     if lp:
                         l_logger.log(
-                            logging.INFO,
-                            'Copying data from recovery folder {} to folder {}.'.format(recover_launch_dir, launch_dir))
+                                    logging.INFO,
+                                    'Copying data from recovery folder {} to folder {}.'.format(recover_launch_dir,
+                                                                                                launch_dir))
                     distutils.dir_util.copy_tree(recover_launch_dir, launch_dir, update=1)
 
             else:
@@ -237,7 +239,7 @@ class Rocket:
                     except BaseException as e:
                         if lp:
                             l_logger.log(logging.WARNING,
-                                           "Exception couldn't be serialized: %s " % e)
+                                        "Exception couldn't be serialized: %s " % e)
                         exception_details = None
 
                     try:
