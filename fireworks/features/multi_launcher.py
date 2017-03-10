@@ -50,7 +50,7 @@ def ping_multilaunch(port, stop_event):
 
 
 def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout,
-                      running_ids_dict):
+                      running_ids_dict, local_redirect):
     """
     Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
@@ -64,6 +64,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
         node_list ([str]): computer node list
         sub_nproc (int): number of processors of the sub job
         timeout (int): # of seconds after which to stop the rapidfire process
+        local_redirect (bool): redirect standard input and output to local file
     """
     ds = DataServer(address=('127.0.0.1', port), authkey=DS_PASSWORD)
     ds.connect()
@@ -77,7 +78,8 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
     rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
-              max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
+              max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout,
+              local_redirect=local_redirect)
     while nlaunches == 0:
         time.sleep(1.5) # wait for LaunchPad to be initialized
         launch_ids = FWData().Running_IDs.values()
@@ -88,14 +90,15 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
             time.sleep(sleep_time)
             log_multi(l_logger, 'Resubmit sub job'.format(sleep_time))
             rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
-                      max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout)
+                      max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout,
+                      local_redirect=local_redirect)
         else:
             break
     log_multi(l_logger, 'Sub job finished')
 
 
 def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, timeout=None,
-                  running_ids_dict=None):
+                  running_ids_dict=None, local_redirect=False):
     """
     Create each sub job and start a rocket launch in each one
 
@@ -109,13 +112,13 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
         sub_nproc_list ([int]): list of the number of the process of sub jobs
         timeout (int): # of seconds after which to stop the rapidfire process
         running_ids_dict (dict): Shared dict between process to record IDs
-
+        local_redirect (bool): redirect standard input and output to local file
     Returns:
         ([multiprocessing.Process]) all the created processes
     """
     processes = [Process(target=rapidfire_process,
                          args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout,
-                               running_ids_dict))
+                               running_ids_dict, local_redirect))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
         p.start()
@@ -151,7 +154,8 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
 
 
 def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_time,
-                        total_node_list=None, ppn=1, timeout=None, exclude_current_node=False):
+                        total_node_list=None, ppn=1, timeout=None, exclude_current_node=False,
+                        local_redirect=False):
     """
     Launch the jobs in the job packing mode.
 
@@ -166,6 +170,7 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
         ppn (int): processors per node (doesn't affect execution)
         timeout (int): # of seconds after which to stop the rapidfire process
         exclude_current_node: Don't use the script launching node as a compute node
+        local_redirect (bool): redirect standard input and output to local file
     """
     # parse node file contents
     if exclude_current_node:
@@ -185,10 +190,10 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
 
     manager = Manager()
     running_ids_dict = manager.dict()
-
     # launch rapidfire processes
     processes = start_rockets(fworker, nlaunches, sleep_time, loglvl, port, node_lists,
-                              sub_nproc_list, timeout=timeout, running_ids_dict=running_ids_dict)
+                              sub_nproc_list, timeout=timeout, running_ids_dict=running_ids_dict,
+                              local_redirect=local_redirect)
     FWData().Running_IDs = running_ids_dict
 
     # start pinging service

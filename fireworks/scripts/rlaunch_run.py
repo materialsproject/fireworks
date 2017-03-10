@@ -58,6 +58,8 @@ def rlaunch():
                               default=-1, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops (secs)', default=None,
                               type=int)
+    rapid_parser.add_argument('--local_redirect', help="Redirect stdout and stderr to the launch directory",
+                              action="store_true")
 
     multi_parser.add_argument('num_jobs', help='the number of jobs to run in parallel', type=int)
     multi_parser.add_argument('--nlaunches', help='number of FireWorks to run in series per '
@@ -77,6 +79,8 @@ def rlaunch():
                               default=1, type=int)
     multi_parser.add_argument('--exclude_current_node', help="Don't use the script launching node"
                                                              "as compute node",
+                              action="store_true")
+    multi_parser.add_argument('--local_redirect', help="Redirect stdout and stderr to the launch directory",
                               action="store_true")
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
@@ -130,7 +134,7 @@ def rlaunch():
     if args.command == 'rapidfire':
         rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=args.nlaunches,
                   max_loops=args.max_loops, sleep_time=args.sleep, strm_lvl=args.loglvl,
-                  timeout=args.timeout)
+                  timeout=args.timeout,local_redirect=args.local_redirect)
     elif args.command == 'multi':
         total_node_list = None
         if args.nodefile:
@@ -138,10 +142,10 @@ def rlaunch():
                 args.nodefile = os.environ[args.nodefile]
             with open(args.nodefile, 'r') as f:
                 total_node_list = [line.strip() for line in f.readlines()]
-
         launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,
                             args.sleep, total_node_list, args.ppn, timeout=args.timeout,
-                            exclude_current_node=args.exclude_current_node)
+                            exclude_current_node=args.exclude_current_node,
+                            local_redirect=args.local_redirect)
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl)
 
