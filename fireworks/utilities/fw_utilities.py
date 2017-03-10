@@ -255,16 +255,21 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
         sys.exit()
 
     keys = sorted(wf.links.keys(), reverse=True)
+    n_root_nodes = len(wf.root_fw_ids)
 
     # set (x,y) coordinates for each node in the workflow links
     points_map = {}
-    points_map.update({keys[0]: (-0.5 * breadth_factor, (keys[0] + 1) * depth_factor)})
+
+    # root nodes
+    for i, k in enumerate(wf.root_fw_ids):
+        points_map.update({k: ((-0.5 * n_root_nodes + i) * breadth_factor, (keys[0] + 1) * depth_factor)})
+
+    # the rest
     for k in keys:
-        if wf.links[k]:
-            for i, j in enumerate(wf.links[k]):
-                if not points_map.get(j, None):
-                    points_map[j] = (
-                    (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
+        for i, j in enumerate(wf.links[k]):
+            if not points_map.get(j, None):
+                points_map[j] = (
+                (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
     for k in keys:
