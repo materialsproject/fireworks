@@ -3,7 +3,7 @@ __email__ = 'ivan.kondov@kit.edu'
 __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
 from igraph import Graph
-
+import sys, json
 
 def translate_keys(d, key, tr):
     new = {}
@@ -25,6 +25,31 @@ def translate_keys(d, key, tr):
             new[k] = newv
     return new
 
+def _byteify(data, ignore_dicts = False):
+    """ Translates unicode to byte strings, only for python 2 """
+    if isinstance(data, unicode):
+        return data.encode('utf-8')
+    if isinstance(data, list):
+        return [ _byteify(item, ignore_dicts=True) for item in data ]
+    if isinstance(data, dict) and not ignore_dicts:
+        return {
+            _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
+            for key, value in data.iteritems()
+        }
+    return data
+
+def json_load_byteified(file_handle):
+    """ Loads from JSON and translates unicode to byte strings, for python 2 """
+    return _byteify(
+        json.load(file_handle, object_hook=_byteify),
+        ignore_dicts=True
+    )
+
+if sys.version_info < (3,0):
+    json_load_method = json_load_byteified
+else:
+    json_load_method = json.load
+
 
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and 
@@ -39,7 +64,7 @@ class DAGFlow(Graph):
             for step in steps:
                 self.set_io_fields(step)
                 self.add_vertex(**step)
-            assert len(steps)==1 or links or nlinks, (
+            assert len(steps) < 2 or links or nlinks, (
                 'steps must be defined with links'
             )
             if nlinks:
@@ -58,9 +83,8 @@ class DAGFlow(Graph):
     @classmethod
     def from_file(cls, filename):
         """ Loads a DAGFlow dictionary and returns a new DAGFlow object """
-        import json
         with open(filename, 'r') as infile:
-            dct = json.load(infile)
+            dct = json_load_method(infile)
         return cls(**dct)
 
 
