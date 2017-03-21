@@ -70,14 +70,16 @@ def _addq_FW(q):
     if session.get('wf_filt'):
         filt_from_wf = fwapp_util.fw_filt_given_wf_filt(
             session.get('wf_filt'), lp)
-    return {"$and": [q, app.BASE_Q, session['fw_filt'], filt_from_wf]}
+    return {
+        "$and": [q, app.BASE_Q, session.get('fw_filt', {}), filt_from_wf]}
 
 def _addq_WF(q):
     filt_from_fw = {}
     if session.get('fw_filt'):
         filt_from_fw = fwapp_util.wf_filt_given_fw_filt(
             session.get('fw_filt'), lp)
-    return {"$and": [q, app.BASE_Q_WF, session['wf_filt'], filt_from_fw]}
+    return {
+        "$and": [q, app.BASE_Q_WF, session.get('wf_filt', {}), filt_from_fw]}
 
 @app.template_filter('datetime')
 def datetime(value):
