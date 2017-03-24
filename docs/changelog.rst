@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.4.2**
+
+* improvements to FilePad (K. Mathew)
+* Better logging for rapidfire rlaunch (S. Dwaraknath)
+* improve performance w/generator expressions (R. Gowers)
+* bugfix to webgui search (D. Winston)
+
 **v1.4.1**
 
 * optional support for argcomplete (requires installing argcomplete)

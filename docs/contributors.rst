@@ -34,6 +34,7 @@ Additional contributions from:
 - Felix Zapata
 - Dale Stansberry
 - Ketan Bhatt
+- Richard Gowers
 - Github user: kpoman
 - Github user: jakirkham
 - Github user: shenjh
