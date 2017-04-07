@@ -166,3 +166,39 @@ class JoinListTask(FireTaskBase):
         return FWAction(update_spec={self['outputs']: outputs})
 
 
+class ImportDataTask(FireTaskBase):
+    __doc__ = """
+    Update the spec with data from file in a nested dictionary at a position 
+    specified by a mapstring = maplist[0]/maplist[1]/...
+    i.e. dct[maplist[0]][maplist[1]]... = data
+    """
+
+    _fw_name = 'ImportDataTask'
+    required_params = ['filename', 'mapstring']
+    optional_params = []
+
+    def run_task(self, fw_spec):
+        from functools import reduce
+        import operator
+        import json
+
+        filename = self['filename']
+        mapstring = self['mapstring']
+        assert isinstance(filename, str) or isinstance(filename, unicode)
+        assert isinstance(mapstring, str) or isinstance(mapstring, unicode)
+        maplist = mapstring.split('/')
+
+        with open(filename, 'r') as inp:
+            data = json.load(inp)
+
+        leaf = reduce(operator.getitem, maplist[:-1], fw_spec)
+        if isinstance(data, dict):
+            if maplist[-1] not in list(leaf.keys()):
+                leaf[maplist[-1]] = data
+            else:
+                leaf[maplist[-1]].update(data)
+        else:
+            leaf[maplist[-1]] = data
+
+        return FWAction(update_spec={maplist[0]: fw_spec[maplist[0]]})
+
