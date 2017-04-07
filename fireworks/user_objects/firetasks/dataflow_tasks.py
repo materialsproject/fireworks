@@ -138,9 +138,7 @@ class JoinDictTask(FireTaskBase):
             else:
                 outputs[item] = fw_spec[item]
 
-        return FWAction(
-            stored_data={self['outputs']: outputs},
-            update_spec={self['outputs']: outputs})
+        return FWAction(update_spec={self['outputs']: outputs})
 
 
 class JoinListTask(FireTaskBase):
@@ -165,8 +163,6 @@ class JoinListTask(FireTaskBase):
         for item in self['inputs']:
             outputs.append(fw_spec[item])
 
-        return FWAction(
-            stored_data={self['outputs']: outputs},
-            update_spec={self['outputs']: outputs})
+        return FWAction(update_spec={self['outputs']: outputs})
 
 
