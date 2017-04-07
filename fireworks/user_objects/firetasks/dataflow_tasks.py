@@ -44,26 +44,27 @@ class SingleTask(FireTaskBase):
                     output_dict[item] = outputs[index]
             else:
                 output_dict = {node_output: outputs}
-            return FWAction(stored_data=output_dict, update_spec=output_dict)
-        else: # list, dict, str, int, float, ...
+            return FWAction(update_spec=output_dict)
+        else:
             if self.get('current') is not None:
-                return FWAction(
-                    stored_data={node_output: outputs},
-                    mod_spec=[{'_push': {node_output: outputs}}])
+                if isinstance (outputs, list):
+                    mod_spec = [{'_push': {node_output: item}} for item in outputs]
+                else:
+                    mod_spec = [{'_push': {node_output: outputs}}]
+                return FWAction(mod_spec=mod_spec)
             else:
-                return FWAction(
-                    stored_data={node_output: outputs},
-                    update_spec={node_output: outputs})
+                return FWAction(update_spec={node_output: outputs})
 
 
 class ForeachTask(FireTaskBase):
     __doc__ = """
         This firetask branches the workflow creating parallel fireworks 
-        using FWAction: one firework for each element in 'split' list.
+        using FWAction: one firework for each element or each chunk from the 
+        'split' list.
     """
     _fw_name = 'ForeachTask'
     required_params = ['function', 'split', 'inputs']
-    optional_params = ['outputs']
+    optional_params = ['outputs', 'number of chunks']
 
     def run_task(self, fw_spec):
         split_input = self['split']
@@ -79,15 +80,23 @@ class ForeachTask(FireTaskBase):
             if split_input != node_input:
                 raise ValueError('the "split" argument must be in argument list')
 
-        number = len(fw_spec[split_input])
-        if number < 1:
+        split_field = fw_spec[split_input]
+        lensplit = len(split_field)
+        if lensplit < 1:
             print(self._fw_name, 'error: input to split is empty:', split_input)
             return FWAction(defuse_workflow=True)
 
+        nchunks = self.get('number of chunks')
+        if not nchunks: nchunks = lensplit
+        chunklen = lensplit / nchunks
+        if lensplit % nchunks > 0:
+            chunklen = chunklen + 1
+        chunks = [split_field[i:i+chunklen] for i in xrange(0, lensplit, chunklen)]
+
         fireworks = []
-        for index in range(number):
+        for index in range(len(chunks)):
             spec = fw_spec.copy()
-            spec[split_input] = spec[split_input][index]
+            spec[split_input] = chunks[index]
             fireworks.append(
                 Firework(
                     SingleTask(
@@ -97,14 +106,14 @@ class ForeachTask(FireTaskBase):
                         current = index
                     ),
                     spec = spec,
-                    name=self._fw_name + ' ' + str(index)
+                    name = self._fw_name + ' ' + str(index)
                 )
             )
-        return FWAction(detours = fireworks)
+        return FWAction(detours=fireworks)
 
 
 class JoinDictTask(FireTaskBase):
-    """
+    __doc__ = """
         This firetask combines specified spec fields into a new dictionary
     """
     _fw_name = 'JoinDictTask'
@@ -135,7 +144,7 @@ class JoinDictTask(FireTaskBase):
 
 
 class JoinListTask(FireTaskBase):
-    """
+    __doc__ = """
         This firetask combines specified spec fields into a new list
     """
     _fw_name = 'JoinListTask'
