@@ -19,7 +19,7 @@ class BackgroundTask(FWSerializable, object):
     def __init__(self, tasks, num_launches=0, sleep_time=60, run_on_finish=False):
         """
         Args:
-            tasks [FireTask]: a list of FireTasks to perform
+            tasks [Firetask]: a list of Firetasks to perform
             num_launches (int): the total number of times to run the process (0=infinite)
             sleep_time (int): sleep time in seconds between background runs
             run_on_finish (bool): always run this task upon completion of Firework

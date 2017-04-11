@@ -5,7 +5,7 @@ Modifying the FW Config
 Many parameters used by FireWorks can be changed to suit your needs. Some examples include:
 
 * specifying the default locations of your configuration files. This will save you **a lot** of typing when running FireWorks scripts, e.g. ``lpad -l my_launchpad.yaml get_fws`` becomes ``lpad get_fws`` once you've set your default LaunchPad location.
-* enabling FireTasks for which the code is located outside of the FireWorks package
+* enabling Firetasks for which the code is located outside of the FireWorks package
 * smaller adjustments, e.g. whether to print a ``FW.json`` file in your run directory
 * performance tweaks (not recommended!)
 
@@ -47,17 +47,17 @@ Specifying default locations for the config files (alternate)
 
 An alternate strategy is to set a single parameter in FWConfig called ``CONFIG_FILE_DIR``. This should be the full path to a directory containing files named ``my_launchpad.yaml``, ``my_fworker.yaml``, and ``my_qadapter.yaml``. FireWorks looks for these files in the ``CONFIG_FILE_DIR`` if it cannot find them elsewhere. If unset in the FWConfig, the ``CONFIG_FILE_DIR`` is automatically set to the directory you are running your FW script in.
 
-Linking to FireTasks in external packages
+Linking to Firetasks in external packages
 -----------------------------------------
 
-If you've placed Python code for some of your own custom FireTasks in an external Python package named *my_package.firetasks*, you can notify FireWorks of the FireTasks in this directory by adding the packages to your config::
+If you've placed Python code for some of your own custom Firetasks in an external Python package named *my_package.firetasks*, you can notify FireWorks of the Firetasks in this directory by adding the packages to your config::
 
     ADD_USER_PACKAGES:
       - my_package.firetasks
 
 .. note:: Make sure your package is in your PYTHONPATH! For example, typing ``from my_package import firetasks`` in an interactive Python terminal should succeed.
 
-An alternative is to give your FireTasks a _fw_name such as ``{{package.subpackage.module.Class}}``. When enclosed in double braces, FireWorks will not search USER_PACKAGES and instead directly load the class. The disadvantage of this method is that you *must* update the *FW_NAME_UPDATES* key of the FWConfig if you refactor or move the class.
+An alternative is to give your Firetasks a _fw_name such as ``{{package.subpackage.module.Class}}``. When enclosed in double braces, FireWorks will not search USER_PACKAGES and instead directly load the class. The disadvantage of this method is that you *must* update the *FW_NAME_UPDATES* key of the FWConfig if you refactor or move the class.
 
 Parameters you might want to change
 -----------------------------------

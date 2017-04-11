@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 """
-A Rocket fetches a Firework from the database, runs the sequence of FireTasks inside, and then
+A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
 completes the Launch
 """
 
@@ -22,6 +22,7 @@ from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRI
     PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.core.launchpad import LockedWorkflowError
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -118,6 +119,8 @@ class Rocket:
 
         lp = self.launchpad
         launch_dir = os.path.abspath(os.getcwd())
+        logdir = lp.get_logdir() if lp else None
+        l_logger = get_fw_logger('rocket.launcher', l_dir=logdir,stream_level='INFO')
 
         # check a FW job out of the launchpad
         if lp:
@@ -173,14 +176,16 @@ class Rocket:
                 all_mod_spec.extend(recovery['_all_mod_spec'])
                 recover_launch_dir = launch_to_recover.launch_dir
                 if lp:
-                    lp.log_message(
-                        logging.INFO,
-                        'Recovering from task number {} in folder {}.'.format(starting_task, recover_launch_dir))
+                    l_logger.log(
+                                logging.INFO,
+                                'Recovering from task number {} in folder {}.'.format(starting_task,
+                                                                                      recover_launch_dir))
                 if m_fw.spec['_recover_launch']['_recover_mode'] == 'cp' and launch_dir != recover_launch_dir:
                     if lp:
-                        lp.log_message(
-                            logging.INFO,
-                            'Copying data from recovery folder {} to folder {}.'.format(recover_launch_dir, launch_dir))
+                        l_logger.log(
+                                    logging.INFO,
+                                    'Copying data from recovery folder {} to folder {}.'.format(recover_launch_dir,
+                                                                                                launch_dir))
                     distutils.dir_util.copy_tree(recover_launch_dir, launch_dir, update=1)
 
             else:
@@ -189,7 +194,7 @@ class Rocket:
             if lp:
                 message = 'RUNNING fw_id: {} in directory: {}'.\
                     format(m_fw.fw_id, os.getcwd())
-                lp.log_message(logging.INFO, message)
+                l_logger.log(logging.INFO, message)
 
             # write FW.json and/or FW.yaml to the directory
             if PRINT_FW_JSON:
@@ -209,10 +214,10 @@ class Rocket:
                 for bt in my_spec['_background_tasks']:
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
-            # execute the FireTasks!
+            # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
                 if lp:
-                    lp.log_message(logging.INFO, "Task started: %s." % t.fw_name)
+                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
                     t.launchpad = self.launchpad
@@ -234,8 +239,8 @@ class Rocket:
                         exception_details = None
                     except BaseException as e:
                         if lp:
-                            lp.log_message(logging.WARNING,
-                                           "Exception couldn't be serialized: %s " % e)
+                            l_logger.log(logging.WARNING,
+                                        "Exception couldn't be serialized: %s " % e)
                         exception_details = None
 
                     try:
@@ -290,7 +295,7 @@ class Rocket:
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
                 if lp:
-                    lp.log_message(logging.INFO, "Task completed: %s " % t.fw_name)
+                    l_logger.log(logging.INFO, "Task completed: %s " % t.fw_name)
                 if m_action.skip_remaining_tasks:
                     break
 
@@ -332,8 +337,8 @@ class Rocket:
             return True
 
         except LockedWorkflowError as e:
-            lp.log_message(logging.DEBUG, traceback.format_exc())
-            lp.log_message(logging.WARNING,
+            l_logger.log(logging.DEBUG, traceback.format_exc())
+            l_logger.log(logging.WARNING,
                            "Firework {} reached final state {} but couldn't complete the update of "
                            "the database. Reason: {}\nRefresh the WF to recover the result "
                            "(lpad admin refresh -i {}).".format(
@@ -364,8 +369,8 @@ class Rocket:
                 try:
                     lp.complete_launch(launch_id, m_action, 'FIZZLED')
                 except LockedWorkflowError as e:
-                    lp.log_message(logging.DEBUG, traceback.format_exc())
-                    lp.log_message(logging.WARNING,
+                    l_logger.log(logging.DEBUG, traceback.format_exc())
+                    l_logger.log(logging.WARNING,
                                    "Firework {} fizzled but couldn't complete the update of the database."
                                    " Reason: {}\nRefresh the WF to recover the result "
                                    "(lpad admin refresh -i {}).".format(
@@ -387,7 +392,9 @@ class Rocket:
 
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
-            job_info.append({"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir})
+            this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir}
+            if this_job_info not in job_info:
+                job_info.append(this_job_info)
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
 
         if my_spec.get("_preserve_fworker"):

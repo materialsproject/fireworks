@@ -11,6 +11,7 @@ import socket
 import multiprocessing
 import errno
 import six
+import contextlib
 
 from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
 
@@ -255,16 +256,21 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
         sys.exit()
 
     keys = sorted(wf.links.keys(), reverse=True)
+    n_root_nodes = len(wf.root_fw_ids)
 
     # set (x,y) coordinates for each node in the workflow links
     points_map = {}
-    points_map.update({keys[0]: (-0.5 * breadth_factor, (keys[0] + 1) * depth_factor)})
+
+    # root nodes
+    for i, k in enumerate(wf.root_fw_ids):
+        points_map.update({k: ((-0.5 * n_root_nodes + i) * breadth_factor, (keys[0] + 1) * depth_factor)})
+
+    # the rest
     for k in keys:
-        if wf.links[k]:
-            for i, j in enumerate(wf.links[k]):
-                if not points_map.get(j, None):
-                    points_map[j] = (
-                    (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
+        for i, j in enumerate(wf.links[k]):
+            if not points_map.get(j, None):
+                points_map[j] = (
+                (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
     for k in keys:
@@ -287,3 +293,29 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
 
     if save_as:
         plt.savefig(save_as)
+
+@contextlib.contextmanager
+def redirect_local():
+    """
+    temporarily redirect stdout or stderr to fws.error and fws.out
+
+    """
+
+    try:
+        old_err = os.dup(sys.stderr.fileno())
+        old_out = os.dup(sys.stdout.fileno())
+
+        new_err = open('FW_job.out', 'w')
+        new_out = open('FW_job.error', 'w')
+
+        os.dup2(new_err.fileno(), sys.stderr.fileno())
+        os.dup2(new_out.fileno(), sys.stdout.fileno())
+        yield
+
+    finally:
+
+        os.dup2(old_err, sys.stderr.fileno())
+        os.dup2(old_out, sys.stdout.fileno())
+
+        new_err.close()
+        new_out.close()

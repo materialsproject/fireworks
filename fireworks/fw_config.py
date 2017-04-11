@@ -96,6 +96,8 @@ WEBSERVER_HOST = "127.0.0.1"  # default host on which the Flask web server runs
 
 WEBSERVER_PORT = 5000  # default port on which the Flask web server runs
 
+WEBSERVER_PERFWARNINGS = False # enable performance-related warnings
+
 # value of socketTimeoutMS when connection to mongoDB.  See pymongo official
 # documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
 MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
@@ -176,7 +178,7 @@ def write_config(path=None):
 @singleton
 class FWData(object):
     """
-    This class stores data that a FireTask might want to access, e.g. to see the runtime params
+    This class stores data that a Firetask might want to access, e.g. to see the runtime params
     """
 
     def __init__(self):

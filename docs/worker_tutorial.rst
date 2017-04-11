@@ -13,7 +13,7 @@ Launch a Rocket on a worker machine (FireWorker)
 
 In the Introductory tutorial, we entered a Firework (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the Firework from the database and executed it, all within the same machine.
 
-A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). We'll next configure a worker machine.
+A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside 'worker' machine (FireWorkers). For example, you may have one node on a supercomputing resource dedicated to running MongoDB, but want to run FireWorks you have set up on that machine on a different supercomputing resource (e.g. running fireworks on ORNL or ALCF using a NERSC Fireserver).  We'll next configure a worker machine.
 
 Install FireWorks on the FireWorker
 -----------------------------------
@@ -48,7 +48,7 @@ The FireWorker needs to know the login information for the FireServer. On the **
 
    .. note:: The name ``my_launchpad.yaml`` is a special filename that contains your database credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the ``-l`` parameter of ``lpad``, or you can :doc:`set up your configuration <config_tutorial>` to set the location of this file once and for all.
 
-#. Confirm that you can query the FireServer from your FireWorker::
+#. Confirm that you can query the Launchpad hosted on the FireServer from your FireWorker::
 
     lpad get_fws -i 1 -d all
 
@@ -107,7 +107,7 @@ Setting Machine-specific or worker-specific parameter via the *env* variable
 
 From v0.7.7, the FireWorker file now supports the *env* key. As its name
 implies, this key allows you to specify machine-specific (or more accurately, worker-specific) environment settings.
-For example, a particular command called in your FireTasks may be called
+For example, a particular command called in your Firetasks may be called
 "command" in machine 1 and "command_v1.2" in machine 2. You can then abstract
 out this command by specifying the differences in the FireWorker file::
 
@@ -119,14 +119,14 @@ out this command by specifying the differences in the FireWorker file::
     env:
         command: command_v1.2
 
-The env can then be accessed within your FireTasks as the "_fw_env" variable
-in the fw_spec. For example, the run_task method for your FireTask may be
+The env can then be accessed within your Firetasks as the "_fw_env" variable
+in the fw_spec. For example, the run_task method for your Firetask may be
 something like::
 
     def run_task(fw_spec):
         subprocess.call(fw_spec["_fw_env"]["command"])
 
-This provides a clean way to write machine-agnostic FireTasks with an
+This provides a clean way to write machine-agnostic Firetasks with an
 abstraction of machine-specific commands and settings. Note that you can also use dfferent fw_env settings on the same machine if you run multiple job launch scripts using different Workers on that machine.
 
 Next Steps

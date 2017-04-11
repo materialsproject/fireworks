@@ -5,31 +5,60 @@ Canceling (pausing), restarting, and deleting Workflows
 Canceling/pausing/restarting entire workflows
 =============================================
 
-You can cancel (pause) Workflows using the *defuse_wflows* command of the LaunchPad::
+You can pause Workflows in one of two ways: *pausing* them and *defusing* them. Both method do essentially the same thing,
+except that defusing Fireworks can be done programmatically via a *FWAction* and is often associated with something going "wrong".
+
+To pause a Workflow::
+
+    lpad pause_wflows -i <FW_IDS>
+
+To defuse a Workflow::
 
     lpad defuse_wflows -i <FW_IDS>
 
-where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). This will defuse the **entire** Workflow.
-
-Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``) for the workflow. The full command is thus::
+where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``) for the workflow. The full command is thus::
 
      lpad defuse_wflows [-i FW_ID] [-n NAME] [-s STATE] [-q QUERY]
 
-Refer to the documentation (``lpad defuse_wflows -h``) for more information.
+Refer to the documentation (``lpad pause_wflows -h`` and ``lpad defuse_wflows -h``) for more information.
 
 Restarting workflows
 --------------------
 
-If you later decide you want to run a defused workflow (resume), you can use the command::
+If you *paused* a Workflow, you can resume the entire workflow using::
+
+    lpad rerun_fws -i <FW_IDS>
+
+Note that this will rerun any existing run data in the Firework.
+
+The equivalent command if you *defused* a Workflow is::
 
     lpad reignite_wflows -i <FW_IDS>
 
-where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to reignite (or a list of space-separated ids). This will **reignite** the entire Workflow. Note that the *reignite* command will not re-run FireWorks in a workflow that have already been run. Only FireWorks that were never run before will be run upon reignition. To re-run a Firework, please see the :doc:`rerun tutorial </rerun_tutorial>`.
+where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to reignite (or a list of space-separated ids). This will **reignite** the entire Workflow. Note that the *reignite* command will not re-run FireWorks in a workflow that have already been run. Only FireWorks that were never run before will be run upon reignition. You can also rerun a defused Firework, please see the :doc:`rerun tutorial </rerun_tutorial>`.
 
 Canceling and restarting individual FireWorks
 =============================================
 
-You can cancel and restart individual FireWorks instead of entire sub-Workflows using the ``lpad defuse_fws`` and ``lpad rerun_fws`` commands. These commands will only pause/restart the current Firework (and by extension, any dependent children), but not any parents or siblings. See above and use the built-in help (e.g., ``lpad rerun_fws -h``) for more information.
+You can cancel and restart individual FireWorks instead of entire sub-Workflows.
+
+To pause an individual Firework, use::
+
+    lpad pause_fws -i <FW_IDS>
+
+To resume/restart an individual Firework that was previously *paused*, use::
+
+    lpad resume_fws -i <FW_IDS>
+
+To defuse an individual Firework, use::
+
+    lpad defuse_fws -i <FW_IDS>
+
+To resume/restart an individual Firework that was previous *defused*, use::
+
+    lpad reignite_fws -i <FW_IDS>
+
+where ``<FW_IDS>`` is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``) for the Firework.
 
 Archiving workflows
 ===================

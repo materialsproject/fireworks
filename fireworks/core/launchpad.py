@@ -169,7 +169,7 @@ class LaunchPad(FWSerializable):
             'wf_user_indices': self.wf_user_indices,
             'ssl_ca_file': self.ssl_ca_file}
 
-    def update_spec(self, fw_ids, spec_document):
+    def update_spec(self, fw_ids, spec_document, mongo=False):
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -179,11 +179,16 @@ class LaunchPad(FWSerializable):
                 the spec key are allowed. So if you supply {"_tasks.1.parameter": "hello"},
                 you are effectively modifying spec._tasks.1.parameter in the actual fireworks
                 collection.
+            mongo (bool): spec_document uses mongo syntax to directly update the spec
         """
-        mod_spec = {("spec." + k): v for k, v in spec_document.items()}
-        allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED"]
+        if mongo:
+            mod_spec = spec_document
+        else:
+            mod_spec = {"$set": {("spec." + k): v for k, v in spec_document.items()} }
+
+        allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED", "PAUSED"]
         self.fireworks.update_many({'fw_id': {"$in": fw_ids},
-                                    'state': {"$in": allowed_states}}, {"$set": mod_spec})
+                                    'state': {"$in": allowed_states}}, mod_spec)
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
             self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "
@@ -248,10 +253,13 @@ class LaunchPad(FWSerializable):
         while True:
             self.m_logger.info('Performing maintenance on Launchpad...')
             self.m_logger.debug('Tracking down FIZZLED jobs...')
-            fl, ff = self.detect_lostruns(fizzle=True)
+            fl, ff, inconsistent_fw_ids = self.detect_lostruns(fizzle=True)
             if fl:
                 self.m_logger.info('Detected {} FIZZLED launches: {}'.format(len(fl), fl))
                 self.m_logger.info('Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
+            if inconsistent_fw_ids:
+                self.m_logger.info('Detected {} FIZZLED inconsistent fireworks: {}'.format(len(inconsistent_fw_ids),
+                                                                                           inconsistent_fw_ids))
 
             self.m_logger.debug('Tracking down stuck RESERVED jobs...')
             ur = self.detect_unreserved(rerun=True)
@@ -617,6 +625,24 @@ class LaunchPad(FWSerializable):
             except:
                 self.m_logger.debug('Database compaction failed (not critical)')
 
+    def pause_fw(self,fw_id):
+        """
+        Given the firework id, pauses the firework and refresh the workflow
+
+        Args:
+            fw_id(int): firework id
+        """
+        allowed_states =  ['WAITING', 'READY', 'RESERVED']
+        f = self.fireworks.find_one_and_update(
+            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+            {'$set': {'state': 'PAUSED', 'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self._refresh_wf(fw_id)
+        if not f:
+            self.m_logger.error('No pausable (WAITING,READY,RESERVED) Firework exists with fw_id: {}'.format(fw_id))
+        return f
+
+
     def defuse_fw(self, fw_id, rerun_duplicates=True):
         """
         Given the firework id, defuse the firework and refresh the workflow.
@@ -626,7 +652,7 @@ class LaunchPad(FWSerializable):
             rerun_duplicates (bool): if True, duplicate fireworks(ones with the same launch) are
                 marked for rerun and then defused.
         """
-        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED']
+        allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED', 'PAUSED']
         f = self.fireworks.find_one_and_update(
             {'fw_id': fw_id, 'state': {'$in': allowed_states}},
             {'$set': {'state': 'DEFUSED', 'updated_on': datetime.datetime.utcnow()}})
@@ -655,6 +681,20 @@ class LaunchPad(FWSerializable):
             self._refresh_wf(fw_id)
         return f
 
+    def resume_fw(self, fw_id):
+        """
+        Given the firework id, resume (set state=WAITING) the paused firework.
+
+        Args:
+            fw_id (int): firework id
+        """
+        f = self.fireworks.find_one_and_update({'fw_id': fw_id, 'state': 'PAUSED'},
+                                               {'$set': {'state': 'WAITING',
+                                                         'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self._refresh_wf(fw_id)
+        return f
+
     def defuse_wf(self, fw_id, defuse_all_states=True):
         """
         Defuse the workflow containing the given firework id.
@@ -667,6 +707,19 @@ class LaunchPad(FWSerializable):
         for fw in wf.fws:
             if fw.state not in ["COMPLETED", "FIZZLED"] or defuse_all_states:
                 self.defuse_fw(fw.fw_id)
+
+    def pause_wf(self, fw_id):
+        """
+        Pause the workflow containing the given firework id.
+
+        Args:
+            fw_id (int): firework id
+            defuse_all_states (bool)
+        """
+        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+        for fw in wf.fws:
+            if fw.state not in ["COMPLETED", "FIZZLED", "DEFUSED"]:
+                self.pause_fw(fw.fw_id)
 
     def reignite_wf(self, fw_id):
         """
@@ -789,7 +842,7 @@ class LaunchPad(FWSerializable):
             all_launch_ids.extend(l['launches'])
         return all_launch_ids
 
-    def reserve_fw(self, fworker, launch_dir, host=None, ip=None):
+    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
         """
         Checkout the next ready firework and mark the launch reserved.
 
@@ -798,11 +851,12 @@ class LaunchPad(FWSerializable):
             launch_dir (str): path to the launch directory.
             host (str): hostname
             ip (str): ip address
+            fw_id (int): fw_id to be reserved, if desired
 
         Returns:
             (Firework, int): the checked out firework and the new launch id
         """
-        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, state="RESERVED")
+        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
     def get_fw_ids_from_reservation_id(self, reservation_id):
         """
@@ -1219,6 +1273,7 @@ class LaunchPad(FWSerializable):
 
         return reruns
 
+    # TODO: why is this a separate function from rerun_fws???
     def rerun_fws_task_level(self, fw_id, rerun_duplicates=True, launch_id=None, recover_mode=None):
         """
         Rerun a fw at the task level.

@@ -55,6 +55,16 @@ def mlaunch():
     parser.add_argument('--exclude_current_node', help="Don't use the script launching node as compute node",
                         action="store_true")
 
+    try:
+        import argcomplete
+        argcomplete.autocomplete(parser)
+        # This supports bash autocompletion. To enable this, pip install
+        # argcomplete, activate global completion, or add
+        #      eval "$(register-python-argcomplete mlaunch)"
+        # into your .bash_profile or .bashrc
+    except ImportError:
+        pass
+
     args = parser.parse_args()
 
     if not args.launchpad_file and args.config_dir and os.path.exists(os.path.join(args.config_dir,

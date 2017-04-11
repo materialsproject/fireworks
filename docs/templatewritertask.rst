@@ -4,16 +4,16 @@ Using the TemplateWriterTask to write files
 
 A common task in scientific workflows is to write an input file in a format that can be read by a program, and then execute that program. When automating the same program for different inputs (like different molecules or sections of a galaxy), slight modifications to the input file are needed. This tutorial introduces the built-in *TemplateWriterTask* as a method for writing input files (or any other type of templated file).
 
-We presented an example of using the *TemplateWriterTask* and subsequently running a program in the :doc:`FireTask tutorial <firetask_tutorial>`. If you didn't already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the *TemplateWriterTask* works.
+We presented an example of using the *TemplateWriterTask* and subsequently running a program in the :doc:`Firetask tutorial <firetask_tutorial>`. If you didn't already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the *TemplateWriterTask* works.
 
 .. note:: The *TemplateWriterTask* is uses the Jinja2 templating engine, which provides a simple, extensible templating language.
 
 A simple template - variable substitutions
 ==========================================
 
-We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutorial>`. Let's explore this template in more detail.
+We introduced a simple template in the :doc:`Firetask tutorial <firetask_tutorial>`. Let's explore this template in more detail.
 
-1. Navigate to the template writer tutorial directory on your FireServer::
+1. Navigate to the template writer tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/templatewritertask
 
@@ -59,7 +59,7 @@ We introduced a simple template in the :doc:`FireTask tutorial <firetask_tutoria
 	lpad add fw_template2.yaml
 	rlaunch --silencer rapidfire
 
-#. If all went well, you should have two ``launcher_`` subdirectories. Each directory contains a file called ``inputs.txt`` that uses the same template file but different Contexts to create unique input files. Recall from the :doc:`FireTask tutorial <firetask_tutorial>` that you could use a multi-task Firework to subsequently run a code that processes the input file to produce useful outputs.
+#. If all went well, you should have two ``launcher_`` subdirectories. Each directory contains a file called ``inputs.txt`` that uses the same template file but different Contexts to create unique input files. Recall from the :doc:`Firetask tutorial <firetask_tutorial>` that you could use a multi-task Firework to subsequently run a code that processes the input file to produce useful outputs.
 
 A more advanced template - *if/then* and *for*
 ==============================================
@@ -144,5 +144,5 @@ By default, the parameters for the TemplateWriterTask should be defined within t
 Python example
 ==============
 
-A runnable Python example illustrating the use of templates was given in the :doc:`FireTask tutorial <firetask_tutorial>`.
+A runnable Python example illustrating the use of templates was given in the :doc:`Firetask tutorial <firetask_tutorial>`.
 

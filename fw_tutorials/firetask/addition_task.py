@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from fireworks.core.firework import FWAction, FireTaskBase
+from fireworks.core.firework import FWAction, FiretaskBase
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -10,7 +10,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 17, 2013'
 
 
-class AdditionTask(FireTaskBase):
+class AdditionTask(FiretaskBase):
     
     _fw_name = "Addition Task"
     

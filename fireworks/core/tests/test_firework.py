@@ -16,14 +16,14 @@ __date__ = "2/26/14"
 
 import unittest
 
-from fireworks.core.firework import Firework, Workflow, FireTaskBase
+from fireworks.core.firework import Firework, Workflow, FiretaskBase
 from fireworks.user_objects.firetasks.script_task import PyTask
 
 
-class FireTaskBaseTest(unittest.TestCase):
+class FiretaskBaseTest(unittest.TestCase):
 
     def test_init(self):
-        class DummyTask(FireTaskBase):
+        class DummyTask(FiretaskBase):
 
             required_params = ["hello"]
 
@@ -36,7 +36,7 @@ class FireTaskBaseTest(unittest.TestCase):
         d = DummyTask({"hello": "world2"})
         self.assertEqual(d.run_task({}), "world2")
 
-        class DummyTask2(FireTaskBase):
+        class DummyTask2(FiretaskBase):
 
             pass
 

@@ -5,7 +5,7 @@ Dynamic Workflows
 In this tutorial, we'll explore how to:
 
 * pass information between FireWorks in a Workflow
-* define FireTasks that automatically create more FireWorks that depend on the output of the task
+* define Firetasks that automatically create more FireWorks that depend on the output of the task
 
 This tutorial can be completed from the command line, but basic knowledge of Python is suggested. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you've set one up.
 
@@ -14,14 +14,14 @@ A workflow that passes job information
 
 The first thing we will examine is a workflow that passes job information - namely the ``name``, ``fw_id``, and ``launch_dir`` (run directory) of a parent Firework to its child. Often, the run directory of the parent is needed by the child (e.g., to copy files from the parent job to the child job). Although FireWorks has a powerful framework for passing arbitrary information between jobs through the ``FWAction`` object (which we will begin to cover in the next example), passing basic job information can be done more simply by simply setting the ``_pass_job_info`` reserved keyword spec to True. Let's look at this in more detail.
 
-1. Move to the ``dynamic_wf`` tutorial directory on your FireServer::
+1. Move to the ``dynamic_wf`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
 2. The workflow is encapsulated in the ``printjob_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of Firework objects:
 
- * ``fw_id`` #1 looks a lot like the FireWorks we've seen before. It is a ``ScriptTask`` FireTask that prints out a message (*This is the first Firework*) to the terminal. The one thing to notice, however, is that there is now a ``_pass_job_info`` key which is set to True. So the ``ScriptTask`` has been instructed to pass job information. **Important note**: The ``_pass_job_info`` key can be set for *any* FireTask; there is nothing special about ``ScriptTask`` in this regard.
- * ``fw_id`` #2 is unfamiliar - it references a ``Print Job Task`` custom FireTask. There is nothing special about this FireTask, except that we will be using it to print out the information that was passed by FW #1.
+ * ``fw_id`` #1 looks a lot like the FireWorks we've seen before. It is a ``ScriptTask`` Firetask that prints out a message (*This is the first Firework*) to the terminal. The one thing to notice, however, is that there is now a ``_pass_job_info`` key which is set to True. So the ``ScriptTask`` has been instructed to pass job information. **Important note**: The ``_pass_job_info`` key can be set for *any* Firetask; there is nothing special about ``ScriptTask`` in this regard.
+ * ``fw_id`` #2 is unfamiliar - it references a ``Print Job Task`` custom Firetask. There is nothing special about this Firetask, except that we will be using it to print out the information that was passed by FW #1.
  * The section labeled ``links`` connects these FireWorks into a workflow in the same manner as in the :doc:`first workflow tutorial <workflow_tutorial>`.
 
 3. Let's try adding this workflow to our database. We'll go over the details of how everything is working as we run the Workflow::
@@ -67,7 +67,7 @@ The first thing we will examine is a workflow that passes job information - name
 
     rlaunch -s rapidfire --nlaunches 1
 
-9. Examining the output, it seems the second job (the ``Print Job Task``) was able to print out information about the first job. You can examine the custom FireTask by looking in the file ``printjob_task.py``. Remember that the code that gets executed is the ``run_task()`` method::
+9. Examining the output, it seems the second job (the ``Print Job Task``) was able to print out information about the first job. You can examine the custom Firetask by looking in the file ``printjob_task.py``. Remember that the code that gets executed is the ``run_task()`` method::
 
     def run_task(self, fw_spec):
         job_info_array = fw_spec['_job_info']
@@ -90,19 +90,19 @@ Apart from job info, other information can also be passed between Fireworks in a
 
 The text in blue lettering is not known in advance and can only be determined after running the first workflow step. Let's examine how we can set up such a workflow.
 
-1. Move to the ``dynamic_wf`` tutorial directory on your FireServer::
+1. Move to the ``dynamic_wf`` tutorial directory in your installation directory::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
 
 2. The workflow is encapsulated in the ``addmod_wf.yaml`` file. Look inside this file. Like last time, the ``fws`` section contains a list of Firework objects:
 
- * ``fw_id`` #1 looks like it adds the numbers 1 and 1 (defined in the **input_array**) within an ``Add and Modify`` FireTask. This is clearly the first step of our desired workflow. Although we don't yet know what the ``Add and Modify`` FireTask is, we can guess that it at least adds the numbers in the **input_array**.
- * ``fw_id`` #2 only adds the number 10 thus far. Without knowing the details of the ``Add and Modify`` FireTask, it is unclear how this Firework will obtain the output of the previous Firework.  We'll explain that in the next step.
+ * ``fw_id`` #1 looks like it adds the numbers 1 and 1 (defined in the **input_array**) within an ``Add and Modify`` Firetask. This is clearly the first step of our desired workflow. Although we don't yet know what the ``Add and Modify`` Firetask is, we can guess that it at least adds the numbers in the **input_array**.
+ * ``fw_id`` #2 only adds the number 10 thus far. Without knowing the details of the ``Add and Modify`` Firetask, it is unclear how this Firework will obtain the output of the previous Firework.  We'll explain that in the next step.
  * The second section, labeled ``links``, connects these FireWorks into a workflow in the same manner as in the :doc:`first workflow tutorial <workflow_tutorial>`.
 
-3. We pass information by defining a custom FireTask that returns an instruction to modify the workflow. To see how this happens, we need to look inside the definition of our custom ``Add and Modify`` FireTask. Look inside the file ``addmod_task.py``:
+3. We pass information by defining a custom Firetask that returns an instruction to modify the workflow. To see how this happens, we need to look inside the definition of our custom ``Add and Modify`` Firetask. Look inside the file ``addmod_task.py``:
 
- * Most of this FireTask should now be familiar to you; it is very similar to the ``Addition Task`` we investigated when :ref:`customtask-label`.
+ * Most of this Firetask should now be familiar to you; it is very similar to the ``Addition Task`` we investigated when :ref:`customtask-label`.
  * The last line of this file, however, is different. It reads::
 
         return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])
@@ -111,7 +111,7 @@ The text in blue lettering is not known in advance and can only be determined af
  * The second argument, *mod_spec=[{'_push': {'input_array': m_sum}}]*, is more complex. This argument describes a list of modifications to make to the next Firework's **spec** using a special language.
  * The instruction *{'_push': {'input_array': m_sum}}* means that the *input_array* key of the next Firework(s) will have another item *pushed* to the end of it. In our case, we will be pushing the sum of (1 + 1) to the ``input_array`` of the next Firework.
 
-4. The previous step can be summarized as follows: when our FireTask completes, it will push the sum of its inputs to the inputs of the next Firework. Let's see how this operates in practice by inserting the workflow in our database::
+4. The previous step can be summarized as follows: when our Firetask completes, it will push the sum of its inputs to the inputs of the next Firework. Let's see how this operates in practice by inserting the workflow in our database::
 
     lpad reset
     lpad add addmod_wf.yaml
@@ -130,7 +130,7 @@ The text in blue lettering is not known in advance and can only be determined af
     lpad get_fws -i 1 -d all
     lpad get_fws -i 2 -d all
 
-8. You should notice that the Firework that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first FireTask has pushed its sum onto the ``input_array`` of the second Firework!
+8. You should notice that the Firework that is ``READY`` - the one that only had a single input of ``10`` - now has *two* inputs: ``10`` and ``2``. Our first Firetask has pushed its sum onto the ``input_array`` of the second Firework!
 
 9. Finally, let's run the second step to ensure we successfully passed information between FireWorks::
 
@@ -154,7 +154,7 @@ A diagram of our the first two steps of operation of our Firework looks like thi
    :align: center
    :alt: Fibonacci Number Workflow
 
-Our single Firework will contain a custom FireTask that does the following:
+Our single Firework will contain a custom Firetask that does the following:
 
 * Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).
 * If this next Fibonacci number is less than 100 (the **stop_point**):
@@ -166,7 +166,7 @@ Our single Firework will contain a custom FireTask that does the following:
 
 Let's see how this is achieved:
 
-1. Stay in the ``dynamic_wf`` tutorial directory on your FireServer and clear it::
+1. Stay in the ``dynamic_wf`` tutorial directory in your installation directory and clear it::
 
     cd <INSTALL_DIR>/fw_tutorials/dynamic_wf
     rm FW.json
@@ -184,7 +184,7 @@ Let's see how this is achieved:
  * The *{'next_fibnum': m_sum}* portion is just data to store inside the database, it does not affect the Firework's operation.
  * The *additions* argument contains our dynamicism. Here, you can add a Firework to the workflow (as shown), or even add lists of FireWorks or entire lists of Workflows!
 
-#. Now that we see how our FireTask will create a new Firework dynamically, let's run the example::
+#. Now that we see how our Firetask will create a new Firework dynamically, let's run the example::
 
     lpad reset
     lpad add fw_fibnum.yaml
@@ -202,7 +202,7 @@ Let's see how this is achieved:
 
     rlaunch -s singleshot
 
-#. This should print out the next Fibonacci number (2). You can repeat this until our FireTask detects we have gone above our limit of 100::
+#. This should print out the next Fibonacci number (2). You can repeat this until our Firetask detects we have gone above our limit of 100::
 
     $ rlaunch -s singleshot
     The next Fibonacci number is: 3
@@ -286,4 +286,4 @@ Here is complete Python code for running a dynamic workflow. Note that this code
 Next step: Learning to design workflows
 =======================================
 
-You've now explored examples of designing many types of workflows, ranging from very simple and deterministic to quite flexible and dynamic. In the :doc:`final workflow tutorial </design_tips>`, we'll provide some tips on mapping your computing workload into FireTasks, FireWorks, and Workflows.
+You've now explored examples of designing many types of workflows, ranging from very simple and deterministic to quite flexible and dynamic. In the :doc:`final workflow tutorial </design_tips>`, we'll provide some tips on mapping your computing workload into Firetasks, FireWorks, and Workflows.
