@@ -841,13 +841,14 @@ class Workflow(FWSerializable):
 
         return list(set(updated_ids))
 
-    def rerun_fw(self, fw_id, updated_ids=None):
+    def rerun_fw(self, fw_id, updated_ids=None,update_children=True):
         """
         Archives the launches of a Firework so that it can be re-run.
 
         Args:
             fw_id (int): id of firework to tbe rerun
             updated_ids (set(int)): set of fireworks id to rerun
+            update_children (bool): update the child fireworks
 
         Returns:
             [int]: list of Firework ids that were updated
@@ -859,8 +860,9 @@ class Workflow(FWSerializable):
         updated_ids.add(fw_id)
 
         # re-run all the children
-        for child_id in self.links[fw_id]:
-            updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
+        if update_children:
+            for child_id in self.links[fw_id]:
+                updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
 
         # refresh the WF to get the states updated
         return self.refresh(fw_id, updated_ids)
