@@ -90,6 +90,9 @@ def qlaunch():
                         help="Password for remote host (if necessary). For "
                              "best operation, it is recommended that you do "
                              "passwordless ssh.")
+    parser.add_argument("-rsh", "--remote_shell",
+                        help="Shell command to use on remote host for running submission.",
+                        default='/bin/bash -l -c')
 
     parser.add_argument("-rs", "--remote_setup",
                         help="Setup the remote config dir using files in "
@@ -184,7 +187,7 @@ def qlaunch():
         if args.remote_host:
             for h in args.remote_host:
                 with settings(host_string=h, user=args.remote_user,
-                              password=args.remote_password):
+                              password=args.remote_password, shell=args.remote_shell):
                     for r in args.remote_config_dir:
                         r = os.path.expanduser(r)
                         with cd(r):
