@@ -1226,13 +1226,14 @@ class LaunchPad(FWSerializable):
             self.fireworks.find_one_and_replace({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
         return old_new
 
-    def rerun_fw(self, fw_id, rerun_duplicates=True, clear_recovery=False):
+    def rerun_fw(self, fw_id, rerun_duplicates=True, clear_recovery=False, update_children=True):
         """
         Rerun the firework corresponding to the given id.
 
         Args:
             fw_id (int): firework id
             rerun_duplicates (bool)
+            update_children (bool)
 
         Returns:
             [int]: list of firework ids that were rerun
@@ -1257,7 +1258,7 @@ class LaunchPad(FWSerializable):
         else:
             with WFLock(self, fw_id):
                 wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-                updated_ids = wf.rerun_fw(fw_id)
+                updated_ids = wf.rerun_fw(fw_id,update_children=update_children)
                 self._update_wf(wf, updated_ids)
                 reruns.append(fw_id)
 
