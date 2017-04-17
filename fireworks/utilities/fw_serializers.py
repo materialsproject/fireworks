@@ -115,7 +115,7 @@ def _recursive_load(obj):
     if hasattr(obj, '_fw_name') or isinstance(obj, MSONable):
         return obj
 
-    if isinstance(obj, dict):
+    if type(obj) is dict:
         if '_fw_name' in obj:
             return load_object(obj)
 
@@ -124,7 +124,7 @@ def _recursive_load(obj):
 
         return {k: _recursive_load(v) for k, v in obj.items()}
 
-    if isinstance(obj, (list, tuple)):
+    if type(obj) in (list,tuple):
         return [_recursive_load(v) for v in obj]
 
     if isinstance(obj, six.string_types):
