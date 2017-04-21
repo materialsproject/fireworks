@@ -65,7 +65,7 @@ def stop_backgrounds(ping_stop, btask_stops):
     fd = FWData()
     if fd.MULTIPROCESSING:
         fd.Running_IDs[os.getpid()] = None
-    else:
+    elif ping_stop:
         ping_stop.set()
 
     for b in btask_stops:
@@ -143,6 +143,8 @@ class Rocket:
             return False
 
         final_state = None
+        ping_stop = None
+        btask_stops = []
 
         try:
             if '_launch_dir' in m_fw.spec and lp:
@@ -209,7 +211,6 @@ class Rocket:
             ping_stop = start_ping_launch(lp, launch_id)
 
             # start background tasks
-            btask_stops = []
             if '_background_tasks' in my_spec:
                 for bt in my_spec['_background_tasks']:
                     btask_stops.append(start_background_task(bt, m_fw.spec))
