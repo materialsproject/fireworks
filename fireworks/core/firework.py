@@ -708,6 +708,9 @@ class Workflow(FWSerializable):
         if set(self.links.nodes) != set(map(int, self.id_fw.keys())):
             raise ValueError("Specified links don't match given FW")
 
+        if len(self.links.nodes) == 0:
+            raise ValueError("Workflow cannot be empty (must contain at least 1 FW)")
+
         self.metadata = metadata if metadata else {}
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
