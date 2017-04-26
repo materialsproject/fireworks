@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.4.3**
+
+* only put tasks inside FW spec upon serialization! (see announcement on dev list)
+* add qlauncher support for remote shell (D. Dotson)
+* don't allow creating an empty workflow
+* rare bugfix for rocket (G. Petretto)
+* add gres support for Slurm (KeLiu)
+
+
 **v1.4.2**
 
 * improvements to FilePad (K. Mathew)
