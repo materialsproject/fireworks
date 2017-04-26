@@ -202,8 +202,6 @@ class Firework(FWSerializable):
 
         self.tasks = tasks
         self.spec = spec.copy() if spec else {}
-        # put tasks in a special location of the spec
-        self.spec['_tasks'] = [t.to_dict() for t in tasks]
 
         self.name = name or 'Unnamed FW'  # do it this way to prevent None
         # names
@@ -245,7 +243,10 @@ class Firework(FWSerializable):
 
     @recursive_serialize
     def to_dict(self):
-        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
+        # put tasks in a special location of the spec
+        spec = self.spec
+        spec['_tasks'] = [t.to_dict() for t in self.tasks]
+        m_dict = {'spec': spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
                   'updated_on': self.updated_on}
 
         # only serialize these fields if non-empty
