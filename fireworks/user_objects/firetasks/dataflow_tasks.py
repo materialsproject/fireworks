@@ -15,7 +15,7 @@ class SingleTask(FireTaskBase):
     """
     _fw_name = 'SingleTask'
     required_params = ['function']
-    optional_params = ['inputs', 'outputs', 'current']
+    optional_params = ['inputs', 'outputs', 'chunk_number']
 
     def run_task(self, fw_spec):
         node_input = self.get('inputs')
@@ -46,7 +46,7 @@ class SingleTask(FireTaskBase):
                 output_dict = {node_output: outputs}
             return FWAction(update_spec=output_dict)
         else:
-            if self.get('current') is not None:
+            if self.get('chunk_number') is not None:
                 if isinstance (outputs, list):
                     mod_spec = [{'_push': {node_output: item}} for item in outputs]
                 else:
@@ -103,7 +103,7 @@ class ForeachTask(FireTaskBase):
                         function = self['function'],
                         inputs = node_input,
                         outputs = self.get('outputs'), 
-                        current = index
+                        chunk_number = index
                     ),
                     spec = spec,
                     name = self._fw_name + ' ' + str(index)
