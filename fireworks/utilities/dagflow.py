@@ -317,15 +317,33 @@ class DAGFlow(Graph):
 
     def validate(self):
         """ Validate the workflow """
-        assert self.is_dag(), (
-            'the workflow graph must be a DAG'
-        )
+        try:
+            assert self.is_dag(), 'the workflow graph must be a DAG'
+        except AssertionError as err:
+            err.args = (err.args[0] 
+                        + ': found cycles: ' 
+                        + repr(self.get_cycles()),)
+            raise err
         assert self.is_connected(mode='weak'), (
             'the workflow graph must be connected'
         )
         assert len(self.vs['id']) == len(set(self.vs['id'])), (
             'workflow steps must have unique IDs'
         )
+
+
+    def get_cycles(self):
+        """ Returns a list of the shortest cycles """
+        if self.is_dag():
+            return []
+        for deg in range(2, len(self.vs)):
+            lst = self.get_subisomorphisms_vf2(Graph.Ring(deg, directed=True))
+            flatten = lambda l: [item for sublist in l for item in sublist]
+            if len(flatten(lst)) > 0:
+                break
+        cycs = [list(x) for x in set([tuple(sorted(l)) for l in lst])]
+        cycs = [[self.vs[ind]['id'] for ind in cycle] for cycle in cycs]
+        return cycs
 
 
     def show_steps(self, step_ids):
