@@ -1337,6 +1337,18 @@ class LaunchPad(FWSerializable):
                 self._update_wf(wf, updated_ids)
         except LockedWorkflowError:
             self.m_logger.info("fw_id {} locked. Can't refresh!".format(fw_id))
+        except:
+            # some kind of internal error - an example is that fws serialization changed due to
+            # code updates and thus the Firework object can no longer be loaded from db description
+            # Action: *manually* mark the fw and workflow as FIZZLED
+            self.fireworks.find_one_and_update({"fw_id": fw_id}, {"$set": {"state": "FIZZLED"}})
+            self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED"}})
+            self.workflows.find_one_and_update({"nodes": fw_id},
+                                               {"$set": {"fw_states.{}".format(fw_id): "FIZZLED"}})
+            import traceback
+            err_message = "Error refreshing workflow. The full stack trace is: {}".format(
+                traceback.format_exc())
+            raise RuntimeError(err_message)
 
     def _update_wf(self, wf, updated_ids):
         """
