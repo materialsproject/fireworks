@@ -47,7 +47,7 @@ class FiretaskMeta(abc.ABCMeta):
         o = abc.ABCMeta.__call__(cls, *args, **kwargs)
         for k in cls.required_params:
             if k not in o:
-                raise ValueError("Required parameter {} not specified!".format(k))
+                raise ValueError("{}: Required parameter {} not specified!".format(cls, k))
         return o
 
 
