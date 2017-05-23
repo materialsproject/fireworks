@@ -181,10 +181,17 @@ class CommandLineTask(FireTaskBase):
                     if os.path.isdir(path):
                         path = os.path.join(path, str(uuid.uuid4()))
                         arg['target']['value'] = path
-                    if arg['source']['type'] == 'stdout':
-                        stdout = open(path, 'w')
-                    elif arg['source']['type'] == 'stderr':
-                        stderr = open(path, 'w')
+                    if 'source' in arg.keys():
+                        assert arg['source'] is not None 
+                        assert 'type' in arg['source'].keys()
+                        if arg['source']['type'] == 'stdout':
+                            stdout = open(path, 'w')
+                        elif arg['source']['type'] == 'stderr':
+                            stderr = open(path, 'w')
+                        elif arg['source']['type'] == 'path':
+                            pass
+                        else:
+                            argstr += path
                     else:
                         argstr += path
                 elif arg['target']['type'] == 'string':
@@ -201,7 +208,8 @@ class CommandLineTask(FireTaskBase):
         retlist = []
         if outputs is not None:
             for output in outputs:
-                if output['source']['type'] == 'path':
+                if ('source' in output.keys() 
+                    and output['source']['type'] == 'path'):
                     copyfile(
                         output['source']['value'],
                         output['target']['value']
