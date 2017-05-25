@@ -4,7 +4,7 @@ __copyright__ = 'Copyright 2016, Karlsruhe Institute of Technology'
 
 from fireworks import Firework
 from fireworks.core.firework import FWAction, FireTaskBase
-from fireworks.utilities.fw_utilities import explicit_serialize
+from fireworks.utilities.fw_serializers import load_object
 
 
 class CommandLineTask(FireTaskBase):
@@ -61,23 +61,36 @@ class CommandLineTask(FireTaskBase):
         olabels = self.get('outputs')
         if ilabels is None:
             ilables = []
+        else:
+            assert isinstance(ilabels, list), '"inputs" must be a list'
         if olabels is None:
             olables = []
+        else:
+            assert isinstance(olabels, list), '"outputs" must be a list'
+
         inputs = []
         outputs = []
         for ios, labels in zip([inputs, outputs], [ilabels, olabels]):
             # cmd_spec: {label: {{binding: {}}, {source: {}}, {target: {}}}}
             for l in labels:
-                inp = {}
-                for key in ['binding', 'source', 'target']:
-                    if key in cmd_spec[l].keys():
-                        item = cmd_spec[l][key]
-                        if isinstance(item, str): # replace with basestring
-                            inp[key] = fw_spec[item]
-                        elif isinstance(item, dict):
-                            inp[key] = item
+                if isinstance(cmd_spec[l], str): # replace with basestring
+                    inp = []
+                    for item in fw_spec[cmd_spec[l]]:
+                        if 'source' in item:
+                            inp.append(item)
                         else:
-                            raise ValueError
+                            inp.append({'source': item})
+                else:
+                    inp = {}
+                    for key in ['binding', 'source', 'target']:
+                        if key in cmd_spec[l].keys():
+                            item = cmd_spec[l][key]
+                            if isinstance(item, str): # replace with basestring
+                                inp[key] = fw_spec[item]
+                            elif isinstance(item, dict):
+                                inp[key] = item
+                            else:
+                                raise ValueError
                 ios.append(inp)
         command = cmd_spec['command']
 
@@ -105,7 +118,7 @@ class CommandLineTask(FireTaskBase):
 
     def command_line_tool(self, command, inputs=None, outputs=None):
         """
-        This function composes and executes a command line from provided
+        This function composes and executes a command from provided
         specifications.
 
         Required parameters:
@@ -144,35 +157,39 @@ class CommandLineTask(FireTaskBase):
         stderr = PIPE
         stdininp = None
         if inputs is not None:
-            for arg in inputs:
-                argstr = set_binding(arg)
-                assert 'source' in arg.keys()
-                assert (arg['source']['type'] is not None
-                        and arg['source']['value'] is not None)
-                if 'target' in arg.keys():
-                    assert arg['target'] is not None
-                    assert arg['target']['type'] == 'stdin'
-                    if arg['source']['type'] == 'path':
-                        stdin = open(arg['source']['value'], 'r')
-                    elif arg['source']['type'] == 'data':
-                        stdin = PIPE
-                        stdininp = str(arg['source']['value']).encode()
+            for inp in inputs:
+                argl = inp if isinstance(inp, list) else [inp]
+                for arg in argl:
+                    argstr = set_binding(arg)
+                    assert 'source' in arg.keys(), 'input has no key "source"'
+                    assert (arg['source']['type'] is not None
+                            and arg['source']['value'] is not None)
+                    if 'target' in arg.keys():
+                        assert arg['target'] is not None
+                        assert arg['target']['type'] == 'stdin'
+                        if arg['source']['type'] == 'path':
+                            stdin = open(arg['source']['value'], 'r')
+                        elif arg['source']['type'] == 'data':
+                            stdin = PIPE
+                            stdininp = str(arg['source']['value']).encode()
+                        else:
+                            # filepad
+                            raise NotImplementedError()
                     else:
-                        # filepad
-                        raise NotImplementedError()
-                else:
-                    if arg['source']['type'] == 'path':
-                        argstr += arg['source']['value']
-                    elif arg['source']['type'] == 'data':
-                        argstr += str(arg['source']['value'])
-                    else:
-                        # filepad
-                        raise NotImplementedError()
-                if len(argstr) > 0:
-                    arglist.append(argstr)
+                        if arg['source']['type'] == 'path':
+                            argstr += arg['source']['value']
+                        elif arg['source']['type'] == 'data':
+                            argstr += str(arg['source']['value'])
+                        else:
+                            # filepad
+                            raise NotImplementedError()
+                    if len(argstr) > 0:
+                        arglist.append(argstr)
 
         if outputs is not None:
             for arg in outputs:
+                if isinstance(arg, list):
+                    arg = arg[0]
                 argstr = set_binding(arg)
                 assert 'target' in arg.keys()
                 assert arg['target'] is not None
@@ -226,6 +243,48 @@ class CommandLineTask(FireTaskBase):
         return retlist
 
 
+class ForeachTaskGeneral(FireTaskBase):
+    """
+    """
+    _fw_name = 'ForeachTaskGeneral'
+    required_params = ['task', 'split']
+    optional_params = ['number of chunks']
+
+    def run_task(self, fw_spec):
+        assert isinstance(self['split'], str), self['split'] # basestring
+        assert isinstance(fw_spec[self['split']], list)
+        if isinstance(self['task']['inputs'], list):
+            assert self['split'] in self['task']['inputs']
+        else:
+            assert self['split'] == self['task']['inputs']
+
+        split_field = fw_spec[self['split']]
+        lensplit = len(split_field)
+        assert lensplit != 0, ('input to split is empty:', self['split'])
+
+        nchunks = self.get('number of chunks')
+        if not nchunks: nchunks = lensplit
+        chunklen = lensplit // nchunks
+        if lensplit % nchunks > 0:
+            chunklen = chunklen + 1
+        chunks = [split_field[i:i+chunklen] for i in range(0, lensplit, chunklen)]
+
+        fireworks = []
+        for index in range(len(chunks)):
+            spec = fw_spec.copy()
+            spec[self['split']] = chunks[index]
+            task = load_object(self['task'])
+            task['chunk_number'] = index
+            fireworks.append(
+                Firework(
+                    task,
+                    spec = spec,
+                    name = self._fw_name + ' ' + str(index)
+                )
+            )
+        return FWAction(detours=fireworks)
+
+
 class SingleTask(FireTaskBase):
     __doc__ = """
         This firetask passes 'inputs' to a specified python function and
@@ -241,23 +300,23 @@ class SingleTask(FireTaskBase):
         node_output = self.get('outputs')
 
         inputs = []
-        if type(node_input) in [str, unicode]:
+        if isinstance(node_input, str): # basestring
             inputs.append(fw_spec[node_input])
-        elif type(node_input) is list:
+        elif isinstance(node_input, list):
             for item in node_input:
                 inputs.append(fw_spec[item])
         elif node_input is not None:
             raise TypeError('input must be a string or a list')
 
-        foo, bar = self['function'].split('.',2)
-        func = getattr(__import__(foo), bar)
+        prefix, suffix = self['function'].split('.',2)
+        func = getattr(__import__(prefix), suffix)
         outputs = func(*inputs)
 
         if node_output is None:
             return FWAction()
 
-        if type(outputs) == tuple:
-            if type(node_output) == list:
+        if isinstance(outputs, tuple):
+            if isinstance(node_output, list):
                 output_dict = {}
                 for (index, item) in enumerate(node_output):
                     output_dict[item] = outputs[index]
@@ -266,7 +325,7 @@ class SingleTask(FireTaskBase):
             return FWAction(update_spec=output_dict)
         else:
             if self.get('chunk_number') is not None:
-                if isinstance (outputs, list):
+                if isinstance(outputs, list):
                     mod_spec = [{'_push': {node_output: item}} for item in outputs]
                 else:
                     mod_spec = [{'_push': {node_output: outputs}}]
