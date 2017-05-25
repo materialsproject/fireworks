@@ -37,16 +37,18 @@ class CommandLineTask(FireTaskBase):
             separator: str or None
         }
         'source': {
-            'type': 'path' or 'string' or 'identifier'
+            'type': 'path' or 'data' or 'identifier'
                      or 'stdin' or 'stdout' or 'stderr' or None
-            'value': str
+            'value': str or int or float
         }
         'target': {
-            'type': 'path' or 'string' or 'identifier'
+            'type': 'path' or 'data' or 'identifier'
                      or 'stdin' or 'stdout' or 'stderr' or None
             'value': str
         }
     }
+    If the type in the source field is 'data' the 'value' can be of types
+    'str', 'int' and 'float'.
     """
 
     _fw_name = 'CommandLineTask'
@@ -116,7 +118,7 @@ class CommandLineTask(FireTaskBase):
         Returns:
             - list of target dictionaries for each output:
                 'target': {
-                    'type': 'path' or 'string' or 'identifier'
+                    'type': 'path' or 'data' or 'identifier'
                              or 'stdin' or 'stdout' or 'stderr' or None
                     'value': str
                 }
@@ -139,30 +141,30 @@ class CommandLineTask(FireTaskBase):
         arglist = command
         stdin = None
         stdout = None
-        stderr = None
+        stderr = PIPE
         stdininp = None
         if inputs is not None:
             for arg in inputs:
                 argstr = set_binding(arg)
                 assert 'source' in arg.keys()
                 assert (arg['source']['type'] is not None
-                        and len(arg['source']['value']) > 0)
+                        and arg['source']['value'] is not None)
                 if 'target' in arg.keys():
-                    assert arg['target'] is not None 
+                    assert arg['target'] is not None
                     assert arg['target']['type'] == 'stdin'
                     if arg['source']['type'] == 'path':
                         stdin = open(arg['source']['value'], 'r')
-                    elif arg['source']['type'] == 'string':
+                    elif arg['source']['type'] == 'data':
                         stdin = PIPE
-                        stdininp = arg['source']['value'].encode()
+                        stdininp = str(arg['source']['value']).encode()
                     else:
                         # filepad
                         raise NotImplementedError()
                 else:
                     if arg['source']['type'] == 'path':
                         argstr += arg['source']['value']
-                    elif arg['source']['type'] == 'string':
-                        argstr += arg['source']['value']
+                    elif arg['source']['type'] == 'data':
+                        argstr += str(arg['source']['value'])
                     else:
                         # filepad
                         raise NotImplementedError()
@@ -182,7 +184,7 @@ class CommandLineTask(FireTaskBase):
                         path = os.path.join(path, str(uuid.uuid4()))
                         arg['target']['value'] = path
                     if 'source' in arg.keys():
-                        assert arg['source'] is not None 
+                        assert arg['source'] is not None
                         assert 'type' in arg['source'].keys()
                         if arg['source']['type'] == 'stdout':
                             stdout = open(path, 'w')
@@ -194,7 +196,7 @@ class CommandLineTask(FireTaskBase):
                             argstr += path
                     else:
                         argstr += path
-                elif arg['target']['type'] == 'string':
+                elif arg['target']['type'] == 'data':
                     stdout = PIPE
                 else:
                     # filepad
@@ -204,6 +206,9 @@ class CommandLineTask(FireTaskBase):
 
         p = Popen(arglist, stdin=stdin, stderr=stderr, stdout=stdout)
         res = p.communicate(input=stdininp)
+        if p.returncode != 0:
+            err = res[1] if len(res) > 1 else ''
+            raise RuntimeError(err)
 
         retlist = []
         if outputs is not None:
@@ -214,7 +219,7 @@ class CommandLineTask(FireTaskBase):
                         output['source']['value'],
                         output['target']['value']
                     )
-                if output['target']['type'] == 'string':
+                if output['target']['type'] == 'data':
                     output['target']['value'] = res[0].decode().strip()
                 retlist.append(output['target'])
 
