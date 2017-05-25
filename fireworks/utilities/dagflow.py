@@ -120,6 +120,16 @@ class DAGFlow(Graph):
                 for task in tasks:
                     if 'inputs' in task.keys() and key in task['inputs']:
                         step['data'].append(key)
+
+            for task in tasks:
+                if 'inputs' in task and 'command_spec' in task:
+                    for inp in task['inputs']:
+                        assert inp in task['command_spec'], (idx, inp)
+                        assert 'source' in task['command_spec'][inp]
+                        src = task['command_spec'][inp]['source']
+                        if isinstance(src, dict) or src in spec:
+                            step['data'].append(inp)
+
         return cls(steps=steps, links=links, name=name)
 
 
