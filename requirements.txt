@@ -5,7 +5,7 @@ six==1.10.0
 monty==0.9.8
 python-dateutil==2.6.0
 tabulate==0.7.7
-flask==0.12.1
+flask==0.12.2
 flask-paginate==0.4.5
 gunicorn==19.6.0
 tqdm==4.11.2
