@@ -425,6 +425,34 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             fw_start_t =  fw.launches[0].time_start
             self.assertFalse(fw_start_t > ts)
 
+    def test_rerun_fws3(self):
+        # Launch all fireworks
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        launches = fw.launches
+        first_ldir = launches[0].launch_dir
+        ts = datetime.datetime.utcnow()
+
+        # Rerun Zeus
+        self.lp.rerun_fw(self.zeus_fw_id,update_children=False)
+        rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
+
+        fw = self.lp.get_fw_by_id(self.zeus_fw_id)
+        launches = fw.launches
+        fw_start_t =  launches[0].time_start
+        second_ldir = launches[0].launch_dir
+
+        self.assertNotEqual(first_ldir,second_ldir)
+
+        self.assertTrue(fw_start_t > ts)
+        for fw_id in self.zeus_child_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            fw_start_t =  fw.launches[0].time_start
+            self.assertFalse(fw_start_t > ts)
+        for fw_id in self.zeus_sib_fw_ids:
+            fw = self.lp.get_fw_by_id(fw_id)
+            fw_start_t =  fw.launches[0].time_start
+            self.assertFalse(fw_start_t > ts)
 
 class LaunchPadLostRunsDetectTest(unittest.TestCase):
 

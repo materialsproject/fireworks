@@ -424,7 +424,7 @@ def rerun_fws(args):
             lp.m_logger.debug('Processed fw_id: {}'.format(f))
     else:
         for f in fw_ids:
-            lp.rerun_fw(int(f), clear_recovery=args.clear_recovery)
+            lp.rerun_fw(int(f), clear_recovery=args.clear_recovery,update_children=args.only)
             lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
@@ -736,6 +736,8 @@ def lpad():
                                                      "Password or positive response to input prompt "
                                                      "required when modifying more than {} "
                                                      "entries.".format(PW_CHECK_NUM))
+    rerun_fws_parser.add_argument('--only',help="Don't rerun child fireworks",
+                                  action='store_false',default=False)
     rerun_fws_parser.add_argument('--task-level', action='store_true', help='Enable task level recovery')
     rerun_fws_parser.add_argument('-lid', '--launch_id', nargs='+',
                                   help='Recover launch id. --task-level must be given', default=None, type=int)
