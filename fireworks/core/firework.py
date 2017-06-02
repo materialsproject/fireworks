@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from copy import deepcopy
+
 from monty.dev import deprecated
 
 """
@@ -1205,6 +1207,47 @@ class Workflow(FWSerializable):
 
     def __str__(self):
         return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)
+
+    def remove_fws(self, fw_ids):
+        """
+        Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
+        parents of the removed fireworks become the parents of the children fireworks (only if the
+        children dont have any other parents).
+
+        Args:
+            fw_ids (list): list of fw ids to remove.
+
+        """
+        # not working with the copies, causes spurious behavior
+        wf_dict = deepcopy(self.as_dict())
+        orig_parent_links = deepcopy(self.links.parent_links)
+        fws = wf_dict["fws"]
+
+        # update the links dict: remove fw_ids and link their parents to their children (if they don't
+        # have any other parents).
+        for fid in fw_ids:
+            children = wf_dict["links"].pop(str(fid))
+            # root node --> no parents
+            try:
+                parents = orig_parent_links[int(fid)]
+            except KeyError:
+                parents = []
+            # remove the firework from their parent links and re-link their parents to the children.
+            for p in parents:
+                wf_dict["links"][str(p)].remove(fid)
+                # adopt the children
+                for c in children:
+                    # adopt only if the child doesn't have any other parents.
+                    if len(orig_parent_links[int(c)]) == 1:
+                        wf_dict["links"][str(p)].append(c)
+
+        # update the list of fireworks.
+        wf_dict["fws"] = [f for f in fws if f["fw_id"] not in fw_ids]
+
+        new_wf = Workflow.from_dict(wf_dict)
+        self.fw_states = new_wf.fw_states
+        self.id_fw = new_wf.id_fw
+        self.links = new_wf.links
 
 
 # old spelling
