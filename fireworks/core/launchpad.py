@@ -1238,6 +1238,10 @@ class LaunchPad(FWSerializable):
             [int]: list of firework ids that were rerun
         """
         m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
+
+        if not m_fw:
+            raise ValueError("FW with id: {} not found!".format(fw_id))
+
         # detect FWs that share the same launch. Must do this before rerun
         duplicates = []
         reruns = []
