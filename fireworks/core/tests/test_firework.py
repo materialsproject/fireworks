@@ -127,7 +127,7 @@ class WorkflowTest(unittest.TestCase):
         children = []
         for i in root_ids:
             children.extend(wflow.links[i])
-        wflow.remove_fws(wflow.leaf_fw_ids)
+        wflow.remove_fws(wflow.root_fw_ids)
         self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
 
 
