@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.4.4**
+
+* better error message on FireTaskMeta required param missing
+* better error handling on refresh_wf error; such workflows should now show up as FIZZLED immediately
+* add remove_fws method to Workflow (K. Mathew)
+* minor doc updates
+
 **v1.4.3**
 
 * only put tasks inside FW spec upon serialization! (see announcement on dev list)
