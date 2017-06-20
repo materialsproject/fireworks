@@ -75,7 +75,7 @@ class FileTransferTask(FiretaskBase):
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
         - files: ([str]) or ([(str, str)]) - list of source files, or dictionary containing
                 'src' and 'dest' keys
-        - dest: (str) destination directory, if not specified within files parameter
+        - dest: (str) destination directory, if not specified within files parameter (else optional)
 
     Optional params:
         - server: (str) server host for remote transfer
@@ -86,6 +86,7 @@ class FileTransferTask(FiretaskBase):
     """
     _fw_name = 'FileTransferTask'
     required_params = ["mode", "files"]
+    optional_params = ["server", "user", "key_filename", "max_retry", "retry_delay"]
 
     fn_list = {
             "move": shutil.move,
