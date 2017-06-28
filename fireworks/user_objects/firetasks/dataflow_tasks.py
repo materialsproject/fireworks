@@ -354,23 +354,24 @@ class PythonFunctionTask(FireTaskBase):
         if node_output is None:
             return FWAction()
 
-        if isinstance(outputs, tuple):
-            if isinstance(node_output, list):
-                output_dict = {}
-                for (index, item) in enumerate(node_output):
-                    output_dict[item] = outputs[index]
+        if not isinstance(node_output, list):
+            node_output = [node_output]
+
+        if len(node_output) == 0:
+            return FWAction()
+        elif len(node_output) == 1:
+            if self.get('chunk_number') is None:
+                return FWAction(update_spec={node_output[0]: outputs})
             else:
-                output_dict = {node_output: outputs}
-            return FWAction(update_spec=output_dict)
-        else:
-            if self.get('chunk_number') is not None:
-                if isinstance(outputs, list):
-                    mod_spec = [{'_push': {node_output: item}} for item in outputs]
+                if isinstance(outputs, (list, tuple, set)):
+                    mod_spec = [{'_push': {node_output[0]: i}} for i in outputs]
                 else:
-                    mod_spec = [{'_push': {node_output: outputs}}]
+                    mod_spec = [{'_push': {node_output[0]: outputs}}]
                 return FWAction(mod_spec=mod_spec)
-            else:
-                return FWAction(update_spec={node_output: outputs})
+        else:
+            assert isinstance(outputs, (list, tuple, set))
+            assert len(outputs) == len(node_output)
+            return FWAction(update_spec=dict(zip(node_output, outputs)))
 
 
 class ForeachPythonFunctionTask(FireTaskBase):
