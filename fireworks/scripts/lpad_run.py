@@ -190,7 +190,7 @@ def check_wf(args):
     if args.data_flow or args.control_flow:
         dagf.add_step_labels()
         view = 'data flow' if args.data_flow else 'control flow'
-        dagf.to_dot('workflow.dot', view=view)
+        dagf.to_dot(args.dot_file, view=view)
 
 
 def add_wf_dir(args):
@@ -729,8 +729,9 @@ def lpad():
 
     check_wf_parser = subparsers.add_parser('check_wflow', help='validate and view a workflow from launchpad')
     check_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
-    check_wf_parser.add_argument('--view_control_flow', help='view the control flow', dest='control_flow', action='store_true')
-    check_wf_parser.add_argument('--view_data_flow', help='view the data flow', dest='data_flow', action='store_true')
+    check_wf_parser.add_argument('--view_control_flow', help='view the control flow graph in DOT format', dest='control_flow', action='store_true')
+    check_wf_parser.add_argument('--view_data_flow', help='view the data flow graph in DOT format', dest='data_flow', action='store_true')
+    check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot', default='workflow.dot')
     check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
 
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script '
