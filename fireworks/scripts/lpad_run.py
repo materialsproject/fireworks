@@ -719,7 +719,7 @@ def lpad():
     append_wf_parser.add_argument('-i', '--fw_id', type=int, nargs='+', help='parent firework ids')
     append_wf_parser.add_argument('-f', '--wf_file', help='path to a firework or workflow file')
     append_wf_parser.add_argument('-d', '--detour', help='append workflow as a detour', dest='detour', action='store_true')
-    append_wf_parser.add_argument('--no_pull_spec_mods', help='do not to pull spec_mods from parent', dest='pull_spec_mods', action='store_false')
+    append_wf_parser.add_argument('--no_pull_spec_mods', help='do not to pull spec mods from parent', dest='pull_spec_mods', action='store_false')
     append_wf_parser.set_defaults(func=append_wf, detour=False, pull_spec_mods=True)
 
     dump_wf_parser = subparsers.add_parser('dump_wflow', help='dump a workflow from launchpad to a file')
