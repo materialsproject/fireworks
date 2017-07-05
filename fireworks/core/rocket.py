@@ -21,7 +21,7 @@ from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, \
     PRINT_FW_YAML, STORE_PACKING_INFO
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.core.launchpad import LockedWorkflowError
+from fireworks.core.launchpad import LockedWorkflowError, LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
@@ -221,8 +221,13 @@ class Rocket:
                     l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
-                    t.launchpad = self.launchpad
                     t.fw_id = m_fw.fw_id
+                    if FWData().MULTIPROCESSING:
+                        # hack because AutoProxy manager can't access attributes
+                        t.launchpad = LaunchPad.from_dict(self.launchpad.to_dict())
+                    else:
+                        t.launchpad = self.launchpad
+
                 if my_spec.get("_add_fworker"):
                     t.fworker = self.fworker
 
