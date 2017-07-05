@@ -153,7 +153,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     return node_lists, sub_nproc_list
 
 
-#  TODO: why is loglvl a required parameter???
+# TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??
 def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_time,
                         total_node_list=None, ppn=1, timeout=None, exclude_current_node=False,
                         local_redirect=False):
