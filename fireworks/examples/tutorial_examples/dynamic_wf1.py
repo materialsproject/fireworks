@@ -1,5 +1,5 @@
 """
-This code is described in the Dynamic Workflow tutorial, http://pythonhosted.org/FireWorks/dynamic_wf_tutorial.html
+This code is described in the Dynamic Workflow tutorial, http://fireworks.readthedocs.io/en/latest/dynamic_wf_tutorial.html
 """
 
 from fireworks import ScriptTask

@@ -1,5 +1,5 @@
 """
-This code is described in the Introductory tutorial, http://pythonhosted.org/FireWorks/introduction.html
+This code is described in the Introductory tutorial, http://fireworks.readthedocs.io/en/latest/introduction.html
 """
 
 from fireworks import Firework, LaunchPad, ScriptTask
