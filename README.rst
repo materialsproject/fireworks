@@ -8,5 +8,5 @@ For more about FireWorks, please visit the official documentation_.
 
 The best place to get help is the Google group (here_).
 
-.. _documentation: http://packages.python.org/FireWorks/
+.. _documentation: http://fireworks.readthedocs.io/en/latest/
 .. _here: https://groups.google.com/forum/#!forum/fireworkflows
