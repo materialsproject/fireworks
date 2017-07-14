@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.4.6**
+
+* doc link update
+
 **v1.4.5**
 
 * hack to allow "_add_launchpad_and_fw_id" reserved spec to work in rlaunch multi mode
