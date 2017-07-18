@@ -16,6 +16,7 @@ import traceback
 import threading
 import errno
 import distutils.dir_util
+from monty.io import zopen
 
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, \
@@ -169,12 +170,12 @@ class Rocket:
                     except:
                         pass
 
-            if "_input_files" in m_fw.spec:
-                import shutil
-                if "_output_files" in m_fw.spec:
-                    for f in m_fw.spec["_input_files"]:
-                        if f in m_fw.spec["_output_files"]:
-                            shutil.copy(m_fw.spec["_output_files"][f], f)
+            for f in set(m_fw.spec.get("_files_in", [])).intersection(m_fw.spec.get("_prev_files", {}).keys()):
+                prev_file = m_fw.spec["_prev_files"][f]
+                with zopen(prev_file, "rb") as fin:
+                    with zopen(f, "wb") as fout:
+                        fout.write(fin.read())
+                #shutil.copy(m_fw.spec["_prev_files"][f], f)
 
             if m_fw.spec.get('_recover_launch', None):
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
@@ -413,13 +414,15 @@ class Rocket:
         if my_spec.get("_preserve_fworker"):
             fwaction.update_spec['_fworker'] = self.fworker.name
 
-        if my_spec.get("_output_files"):
+        if my_spec.get("_files_out"):
             filepaths = {
                 k: os.path.join(launch_dir, v)
-                for k, v in my_spec.get("_output_files").items()
+                for k, v in my_spec.get("_files_out").items()
                 if os.path.exists(os.path.join(launch_dir, v))
             }
-            fwaction.mod_spec.append(
-                {"_push_all": {"_output_files": filepaths}})
+            fwaction.update_spec["_prev_files"] = filepaths
+        else:
+
+            fwaction.update_spec["_prev_files"] = {}
 
         return fwaction
