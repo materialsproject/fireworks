@@ -197,8 +197,9 @@ class Rocket:
                 starting_task = 0
                 for f in set(m_fw.spec.get("_files_in", [])).intersection(
                         m_fw.spec.get("_prev_files", {}).keys()):
-                    # We use zopen in binary mode to simulate a copy, but with
-                    # transparent unzipping!
+                    # We use zopen for the file objects for transparent handling
+                    # of zipped files. shutil.copyfileobj does the actual copy
+                    # in chunks that avoid memory issues.
                     with zopen(m_fw.spec["_prev_files"][f], "rb") as fin, zopen(f, "wb") as fout:
                         shutil.copyfileobj(fin, fout)
 
