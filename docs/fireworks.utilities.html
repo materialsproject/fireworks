@@ -1,0 +1,1039 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fireworks.utilities package &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fireworks-utilities-package">
+<h1>fireworks.utilities package<a class="headerlink" href="#fireworks-utilities-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fireworks.utilities.tests.html">fireworks.utilities.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_filepad">fireworks.utilities.tests.test_filepad module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_fw_serializers">fireworks.utilities.tests.test_fw_serializers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_update_collection">fireworks.utilities.tests.test_update_collection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fireworks.utilities.dict_mods">
+<span id="fireworks-utilities-dict-mods-module"></span><h2>fireworks.utilities.dict_mods module<a class="headerlink" href="#module-fireworks.utilities.dict_mods" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fireworks.utilities.dict_mods.apply_mod">
+<code class="descclassname">fireworks.utilities.dict_mods.</code><code class="descname">apply_mod</code><span class="sig-paren">(</span><em>modification</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.apply_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note that modify makes actual in-place modifications. It does not
+return a copy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>modification</strong> &#8211; Modification must be {action_keyword : settings}, where action_keyword is a
+supported DictMod</li>
+<li><strong>obj</strong> &#8211; A dict to be modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.dict_mods.get_nested_dict">
+<code class="descclassname">fireworks.utilities.dict_mods.</code><code class="descname">get_nested_dict</code><span class="sig-paren">(</span><em>input_dict</em>, <em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.get_nested_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.utilities.filepad">
+<span id="fireworks-utilities-filepad-module"></span><h2>fireworks.utilities.filepad module<a class="headerlink" href="#module-fireworks.utilities.filepad" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.utilities.filepad.FilePad">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.filepad.</code><code class="descname">FilePad</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>database='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>filepad_coll_name='filepad'</em>, <em>gridfs_coll_name='filepad_gfs'</em>, <em>logdir=None</em>, <em>strm_lvl=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">monty.json.MSONable</span></code></p>
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.add_file">
+<code class="descname">add_file</code><span class="sig-paren">(</span><em>path</em>, <em>label=None</em>, <em>compress=True</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert the file specified by the path into gridfs. The id and label are returned.
+Note: label must be unique, i.e, no insertion if the label already exists in the db.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the file</li>
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; file label</li>
+<li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; compress or not</li>
+<li><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; file metadata</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the id returned by gridfs, label</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.utilities.filepad.FilePad.auto_load">
+<em class="property">classmethod </em><code class="descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.auto_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns FilePad object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.build_indexes">
+<code class="descname">build_indexes</code><span class="sig-paren">(</span><em>indexes=None</em>, <em>background=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.build_indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the indexes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>indexes</strong> (<em>list</em>) &#8211; list of single field indexes to be built.</li>
+<li><strong>background</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Run in the background or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.delete_file">
+<code class="descname">delete_file</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the document with the matching label. The contents in the gridfs as well as the
+associated document in the filepad are deleted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file label</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.delete_file_by_id">
+<code class="descname">delete_file_by_id</code><span class="sig-paren">(</span><em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.delete_file_by_query">
+<code class="descname">delete_file_by_query</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_query" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; pymongo query dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.utilities.filepad.FilePad.from_db_file">
+<em class="property">classmethod </em><code class="descname">from_db_file</code><span class="sig-paren">(</span><em>db_file</em>, <em>admin=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.from_db_file" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>db_file</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the filepad cred file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">FilePad object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.get_file">
+<code class="descname">get_file</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get file by label.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file label</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the file content as a string, document dictionary</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>, <a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.get_file_by_id">
+<code class="descname">get_file_by_id</code><span class="sig-paren">(</span><em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the file content as a string, document dictionary</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>, <a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.get_file_by_query">
+<code class="descname">get_file_by_query</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_query" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; pymongo query dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of all (file content as a string, document dictionary)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset filepad and the gridfs collections</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.update_file">
+<code class="descname">update_file</code><span class="sig-paren">(</span><em>label</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the filecontents in the gridfs, update the file_id in the document and retain the
+rest.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the unique file label</li>
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the new file whose contents will replace the existing one.</li>
+<li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether or not to compress the contents before inserting to gridfs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">old file id , new file id</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.update_file_by_id">
+<code class="descname">update_file_by_id</code><span class="sig-paren">(</span><em>file_id</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the file in the gridfs with the given id and retain the rest of the document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</li>
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the new file whose contents will replace the existing one.</li>
+<li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether or not to compress the contents before inserting to gridfs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">old file id , new file id</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.utilities.fw_serializers">
+<span id="fireworks-utilities-fw-serializers-module"></span><h2>fireworks.utilities.fw_serializers module<a class="headerlink" href="#module-fireworks.utilities.fw_serializers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.DATETIME_HANDLER">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">DATETIME_HANDLER</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.DATETIME_HANDLER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">FWSerializable</code><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>To create a serializable object within FireWorks, you should subclass this
+class and implement the to_dict() and from_dict() methods.</p>
+<p>If you want the load_object() implicit de-serialization to work, you must
+also:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Use the &#64;serialize_fw decorator on to_dict()</li>
+<li>Override the _fw_name parameter with a unique key.</li>
+</ul>
+</div></blockquote>
+<p>See documentation of load_object() for more details.</p>
+<p>The use of &#64;classmethod for from_dict allows you to define a superclass
+that implements the to_dict() and from_dict() for all its subclasses.</p>
+<p>For an example of serialization, see the class QueueAdapterBase.</p>
+<dl class="method">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.from_file">
+<em class="property">classmethod </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>filename</em>, <em>f_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a serialization of this object from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; filename to read</li>
+<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; serialization format, default checks the filename extension</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">FWSerializable</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.from_format">
+<em class="property">classmethod </em><code class="descname">from_format</code><span class="sig-paren">(</span><em>f_str</em>, <em>f_format='json'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert from a String representation to its Object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f_str</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the String representation</li>
+<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; serialization format of the String (default json)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">FWSerializable</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.fw_name">
+<code class="descname">fw_name</code><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.fw_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.to_db_dict">
+<code class="descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.to_file">
+<code class="descname">to_file</code><span class="sig-paren">(</span><em>filename</em>, <em>f_format=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a serialization of this object to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; filename to write to</li>
+<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; serialization format, default checks the filename extension</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.fw_serializers.FWSerializable.to_format">
+<code class="descname">to_format</code><span class="sig-paren">(</span><em>f_format='json'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a String representation in the given format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the format to output to (default json)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.get_default_serialization">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">get_default_serialization</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.get_default_serialization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.load_object">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">load_object</code><span class="sig-paren">(</span><em>obj_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.load_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instantiation of a class based on a dictionary representation. We implicitly
+determine the Class through introspection along with information in the dictionary.</p>
+<p>We search for a class with the _fw_name property equal to obj_dict[&#8216;_fw_name&#8217;]
+If the &#64;module key is set, that module is checked first for a matching class
+to improve speed of lookup.
+Afterwards, the modules in the USER_PACKAGES global parameter are checked.</p>
+<p>Refactoring class names, module names, etc. will not break object loading
+as long as:</p>
+<ol class="lowerroman simple">
+<li>the _fw_name property is maintained the same AND</li>
+<li>the refactored module is kept within USER_PACKAGES</li>
+</ol>
+<p>You can get around these limitations if you really want:
+i) If you want to change the fw_name of an object you can set the FW_NAME_UPDATES key
+ii) If you want to put a refactored module in a new place add an entry to USER_PACKAGES</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj_dict</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; the dict representation of the class</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.load_object_from_file">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">load_object_from_file</code><span class="sig-paren">(</span><em>filename</em>, <em>f_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.load_object_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implicitly load an object from a file. just a friendly wrapper to
+load_object()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the filename to load an object from</li>
+<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the serialization format (default is auto-detect based on
+filename extension)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.reconstitute_dates">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">reconstitute_dates</code><span class="sig-paren">(</span><em>obj_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.reconstitute_dates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.recursive_deserialize">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">recursive_deserialize</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>a decorator to add FW serializations keys
+see documentation of FWSerializable for more details</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.recursive_dict">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">recursive_dict</code><span class="sig-paren">(</span><em>obj</em>, <em>preserve_unicode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.recursive_serialize">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">recursive_serialize</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>a decorator to add FW serializations keys
+see documentation of FWSerializable for more details</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_serializers.serialize_fw">
+<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">serialize_fw</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.serialize_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>a decorator to add FW serializations keys
+see documentation of FWSerializable for more details</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.utilities.fw_utilities">
+<span id="fireworks-utilities-fw-utilities-module"></span><h2>fireworks.utilities.fw_utilities module<a class="headerlink" href="#module-fireworks.utilities.fw_utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.utilities.fw_utilities.DataServer">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">DataServer</code><span class="sig-paren">(</span><em>address=None</em>, <em>authkey=None</em>, <em>serializer='pickle'</em>, <em>ctx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/multiprocessing.html#multiprocessing.managers.BaseManager" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.managers.BaseManager</span></code></a></p>
+<p>Provide a server that can host shared objects between multiprocessing
+Processes (that normally can&#8217;t share data). For example, a common LaunchPad is
+shared between processes and pinging launches is coordinated to limit DB hits.</p>
+<dl class="classmethod">
+<dt id="fireworks.utilities.fw_utilities.DataServer.setup">
+<em class="property">classmethod </em><code class="descname">setup</code><span class="sig-paren">(</span><em>launchpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer.setup" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">DataServer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.utilities.fw_utilities.NestedClassGetter">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">NestedClassGetter</code><a class="headerlink" href="#fireworks.utilities.fw_utilities.NestedClassGetter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Used to help pickle inner classes, e.g. see Workflow.Links
+When called with the containing class as the first argument,
+and the name of the nested class as the second argument,
+returns an instance of the nested class.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.create_datestamp_dir">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">create_datestamp_dir</code><span class="sig-paren">(</span><em>root_dir</em>, <em>l_logger</em>, <em>prefix='block_'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.create_datestamp_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal method to create a new block or launcher directory.
+The dir name is based on the time and the FW_BLOCK_FORMAT</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>root_dir</strong> &#8211; directory to create the new dir in</li>
+<li><strong>l_logger</strong> &#8211; the logger to use</li>
+<li><strong>prefix</strong> &#8211; the prefix for the new dir, default=&#8221;<a href="#id1"><span class="problematic" id="id2">block_</span></a>&#8220;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.explicit_serialize">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">explicit_serialize</code><span class="sig-paren">(</span><em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.explicit_serialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.get_fw_logger">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_fw_logger</code><span class="sig-paren">(</span><em>name</em>, <em>l_dir=None</em>, <em>file_levels=('DEBUG'</em>, <em>'ERROR')</em>, <em>stream_level='DEBUG'</em>, <em>formatter=&lt;logging.Formatter object&gt;</em>, <em>clear_logs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_fw_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method to return a logger.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; name of the logger that sets the groups, e.g. &#8216;group1.set2&#8217;</li>
+<li><strong>l_dir</strong> &#8211; the directory to put the log file</li>
+<li><strong>file_levels</strong> &#8211; iterable describing level(s) to log to file(s). default: (&#8216;DEBUG&#8217;, &#8216;ERROR&#8217;)</li>
+<li><strong>stream_level</strong> &#8211; level to log to standard output. default: &#8216;DEBUG&#8217;</li>
+<li><strong>formatter</strong> &#8211; logging format. default: FW_LOGGING_FORMATTER</li>
+<li><strong>clear_logs</strong> &#8211; whether to clear the logger with the same name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.get_my_host">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_my_host</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_my_host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.get_my_ip">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_my_ip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_my_ip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.get_slug">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_slug</code><span class="sig-paren">(</span><em>m_str</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_slug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.log_exception">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">log_exception</code><span class="sig-paren">(</span><em>m_logger</em>, <em>msgs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>A shortcut wrapper around log_fancy for exceptions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m_logger</strong> (<em>logger</em>) &#8211; The logger object</li>
+<li><strong>msgs</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>]</em><em></em>) &#8211; String or iterable of Strings, will be joined by newlines</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.log_fancy">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">log_fancy</code><span class="sig-paren">(</span><em>m_logger</em>, <em>msgs</em>, <em>log_lvl='info'</em>, <em>add_traceback=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_fancy" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper around the logger messages useful for multi-line logs.
+Helps to group log messages by adding a fancy border around it,
+which enhances readability of log lines meant to be read
+as a unit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m_logger</strong> (<em>logger</em>) &#8211; The logger object</li>
+<li><strong>log_lvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The level to log at</li>
+<li><strong>msgs</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>]</em><em></em>) &#8211; a String or iterable of Strings</li>
+<li><strong>add_traceback</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; add traceback text, useful when logging exceptions (default False)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.log_multi">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">log_multi</code><span class="sig-paren">(</span><em>m_logger</em>, <em>msg</em>, <em>log_lvl='info'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_multi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m_logger</strong> (<em>logger</em>) &#8211; The logger object</li>
+<li><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; a String to log</li>
+<li><strong>log_lvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The level to log at</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.plot_wf">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">plot_wf</code><span class="sig-paren">(</span><em>wf</em>, <em>depth_factor=1.0</em>, <em>breadth_factor=2.0</em>, <em>labels_on=True</em>, <em>numerical_label=False</em>, <em>text_loc_factor=1.0</em>, <em>save_as=None</em>, <em>style='rD--'</em>, <em>markersize=10</em>, <em>markerfacecolor='blue'</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.plot_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a visual representation of the workflow. Useful for checking whether the firework
+connections are in order before launching the workflow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>wf</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) &#8211; workflow object.</li>
+<li><strong>depth_factor</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; adjust this to stretch the plot in y direction.</li>
+<li><strong>breadth_factor</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; adjust this to stretch the plot in x direction.</li>
+<li><strong>labels_on</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether to label the nodes or not. The default is to lable the nodes
+using the firework names.</li>
+<li><strong>numerical_label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; set this to label the nodes using the firework ids.</li>
+<li><strong>text_loc_factor</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; adjust the label location.</li>
+<li><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; save the figure to the given name.</li>
+<li><strong>style</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; marker style.</li>
+<li><strong>markersize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; marker size.</li>
+<li><strong>markerfacecolor</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; marker face color.</li>
+<li><strong>fontsize</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; font size for the node label.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.utilities.timing">
+<span id="fireworks-utilities-timing-module"></span><h2>fireworks.utilities.timing module<a class="headerlink" href="#module-fireworks.utilities.timing" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.utilities.timing.NullTimer">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.timing.</code><code class="descname">NullTimer</code><a class="headerlink" href="#fireworks.utilities.timing.NullTimer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.utilities.timing.Timer" title="fireworks.utilities.timing.Timer"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.timing.Timer</span></code></a></p>
+<p>Support performance timer interface, but do absolutely nothing.
+This is useful to avoid many tiresome if/else blocks.</p>
+<dl class="method">
+<dt id="fireworks.utilities.timing.NullTimer.block">
+<code class="descname">block</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.NullTimer.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.NullTimer.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.NullTimer.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.utilities.timing.Timer">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.timing.</code><code class="descname">Timer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Simple performance timer.</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><p class="first">p = Timer(&#8220;myname&#8221;)
+for thing in all_things:</p>
+<blockquote class="last">
+<div><p>p.start(&#8220;stage1&#8221;)
+do_stage_1()
+p.stop(&#8220;stage1&#8221;)
+# alt. &#8216;with&#8217; interface
+with p.block(&#8220;stage2&#8221;):</p>
+<blockquote>
+<div>do_something_else()</div></blockquote>
+</div></blockquote>
+</dd>
+</dl>
+<p>Limitations:
+- Instances are not thread-safe.
+- The set_ns() class method is not thread-safe.
+- The &#8216;with&#8217; block() cannot be nested,</p>
+<blockquote>
+<div>instead use different stages with begin()/end() pairs.</div></blockquote>
+<ul class="simple">
+<li>The only output format is CSV.</li>
+<li>There is no (easy) programmatic way to get the results.</li>
+</ul>
+<dl class="method">
+<dt id="fireworks.utilities.timing.Timer.block">
+<code class="descname">block</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.utilities.timing.Timer.set_ns">
+<em class="property">classmethod </em><code class="descname">set_ns</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.set_ns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a namespace (prefix) for all timers.
+In output, the namespace will be separated by the timer name by a &#8221;.&#8221;</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.Timer.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>stage='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin timing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.Timer.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><em>stage='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop timing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.Timer.stop_all">
+<code class="descname">stop_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.stop_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop all timers.
+Idempotent.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.timing.Timer.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>stream=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write results (CSV) to a stream.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.timing.any_fw_timers">
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">any_fw_timers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.any_fw_timers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether any timers are enabled and non-empty</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if so, False if not</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.timing.enable_fw_timer">
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">enable_fw_timer</code><span class="sig-paren">(</span><em>name</em>, <em>is_enabled</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.enable_fw_timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable or disable a timer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Timer&#8217;s name, or glob-style name pattern</li>
+<li><strong>is_enabled</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether to enable (True) or disable (False)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.timing.get_fw_timer">
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">get_fw_timer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.get_fw_timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>G
+et timer, possibly a NullTimer, for a section of code.</p>
+<p>If the user did not enable timers for this section, will
+return a NullTimer. Otherwise will return a Timer.</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>timer = get_fw_timer(&#8220;StarWars&#8221;)
+timer.start(&#8220;jumpToLightSpeed&#8221;)
+jumpToLightSpeed()
+timer.stop(&#8220;jumpToLightSpeed&#8221;)
+...
+print_fw_timers()  # prints results of all timers</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of a given timer.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A timer instance</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#fireworks.utilities.timing.Timer" title="fireworks.utilities.timing.Timer">Timer</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.timing.print_fw_timers">
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">print_fw_timers</code><span class="sig-paren">(</span><em>stream=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.print_fw_timers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print results of all timers to the provided stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stream</strong> &#8211; Output stream, only needs to support &#8216;write&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number of items (data rows) printed</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="fireworks.utilities.timing.timer_env_var">
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">timer_env_var</code><em class="property"> = 'FW_TIMERS'</em><a class="headerlink" href="#fireworks.utilities.timing.timer_env_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Environment variable in which to list the enabled timers
+Use comma-separated strings, e.g.:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.utilities.update_collection">
+<span id="fireworks-utilities-update-collection-module"></span><h2>fireworks.utilities.update_collection module<a class="headerlink" href="#module-fireworks.utilities.update_collection" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fireworks.utilities.update_collection.update_launchpad_data">
+<code class="descclassname">fireworks.utilities.update_collection.</code><code class="descname">update_launchpad_data</code><span class="sig-paren">(</span><em>lp</em>, <em>replacements</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_launchpad_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you want to update a text string in your entire FireWorks database with a replacement, use this method.
+For example, you might want to update a directory name preamble like &#8220;/scratch/user1&#8221; to &#8220;/project/user2&#8221;.
+The algorithm does a text replacement over the <em>entire</em> BSON document. The original collection is backed up within
+the database with extension &#8220;_xiv_{Date}&#8221;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong></strong><strong>(</strong><strong>LaunchPad</strong><strong>)</strong><strong></strong> (<a class="reference internal" href="fireworks.tests.html#fireworks.tests.multiprocessing_tests.TestCheckoutFW.lp" title="fireworks.tests.multiprocessing_tests.TestCheckoutFW.lp"><em>lp</em></a>) &#8211; a FireWorks LaunchPad object</li>
+<li><strong></strong><strong>(</strong><strong>dict</strong><strong>)</strong><strong></strong> (<em>replacements</em>) &#8211; e.g. {&#8220;old_path1&#8221;: &#8220;new_path1&#8221;, &#8220;scratch/&#8221;:&#8221;project/&#8221;}</li>
+<li><strong>kwargs</strong> &#8211; Additional arguments accepted by the update_path_in_collection method</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.utilities.update_collection.update_path_in_collection">
+<code class="descclassname">fireworks.utilities.update_collection.</code><code class="descname">update_path_in_collection</code><span class="sig-paren">(</span><em>db</em>, <em>collection_name</em>, <em>replacements</em>, <em>query=None</em>, <em>dry_run=True</em>, <em>force_clear=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_path_in_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates the text specified in replacements for the documents in a MongoDB collection.
+This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
+The algorithm does a text replacement over the <em>entire</em> BSON document. The original collection is backed up within
+the database with extension &#8220;_xiv_{Date}&#8221;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>db</strong> (<em>Database</em>) &#8211; MongoDB db object</li>
+<li><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; name of a MongoDB collection to update</li>
+<li><strong>replacements</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; e.g. {&#8220;old_path1&#8221;: &#8220;new_path1&#8221;, &#8220;scratch/&#8221;:&#8221;project/&#8221;}</li>
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; criteria for query, default None if you want all documents to be updated</li>
+<li><strong>dry_run</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, only a new collection with new paths is created and original &#8220;collection&#8221; is not replaced</li>
+<li><strong>force_clear</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; careful! If True, the collection &#8220;{}_temp_refactor&#8221;.format(collection) is removed!</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None, but if dry_run==False it replaces the collection with the updated one</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.utilities">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.utilities" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fireworks.utilities package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.dict_mods">fireworks.utilities.dict_mods module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.filepad">fireworks.utilities.filepad module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.fw_serializers">fireworks.utilities.fw_serializers module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.fw_utilities">fireworks.utilities.fw_utilities module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.timing">fireworks.utilities.timing module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.update_collection">fireworks.utilities.update_collection module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fireworks.utilities.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

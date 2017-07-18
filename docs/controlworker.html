@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Controlling the directory and Worker of execution &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="“Packing” small jobs into larger ones with multi job launcher" href="multi_job.html" />
+    <link rel="prev" title="Using the built-in FilePad Tasks" href="filepad_tasks.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="controlling-the-directory-and-worker-of-execution">
+<h1>Controlling the directory and Worker of execution<a class="headerlink" href="#controlling-the-directory-and-worker-of-execution" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="controlling-the-directory-in-which-a-firework-is-executed">
+<h2>Controlling the directory in which a Firework is executed<a class="headerlink" href="#controlling-the-directory-in-which-a-firework-is-executed" title="Permalink to this headline">¶</a></h2>
+<p>By default, FireWorks automatically creates a datestamped directory containing each job. This directory structure can be difficult to browse through manually, or you might need your runs in a particular directory format for another reason (e.g., to be compatible with a post-processing script).</p>
+<p>To set the directory where a Firework will execute:</p>
+<ol class="arabic simple">
+<li>set the <code class="docutils literal"><span class="pre">_launch_dir</span></code> key in your Firework <em>spec</em> to the <em>full path</em> of the directory you want to execute the Firework in.</li>
+</ol>
+<p><em>(that&#8217;s it!)</em></p>
+<div class="section" id="potential-pitfalls">
+<h3>Potential pitfalls<a class="headerlink" href="#potential-pitfalls" title="Permalink to this headline">¶</a></h3>
+<p>While setting execution directory is simple enough, we suggest that you avoid this feature of FireWorks unless absolutely necessary. Here are a few pitfalls to consider when using this feature:</p>
+<ol class="arabic simple">
+<li>If you have multiple Workers, make sure that the <code class="docutils literal"><span class="pre">_launch_dir</span></code> you set is accessible from all Workers. Or, set things up so that only the correct Worker will pull your job (see next section).</li>
+<li>If you direct multiple FireWorks into the same <code class="docutils literal"><span class="pre">_launch_dir</span></code>, you might overwrite output files (like <code class="docutils literal"><span class="pre">FW.json</span></code>).</li>
+<li>If your code depends on having a particular directory structure in order to function, it&#8217;s perhaps a sign that your code could be strengthened. For example, if you direct a job to a critical directory and it <em>fails</em> (e.g., due to a node crash), a rerun of that job might overwrite your original run because it&#8217;s being directed to the same directory. This might not be your intended behavior.</li>
+<li>Note that by default, FireWorks tries to clean (delete) the default FireWorks launch directory. If you find this is causing problems (it shouldn&#8217;t), you can set <code class="docutils literal"><span class="pre">REMOVE_USELESS_DIRS</span></code> to False in the <a class="reference internal" href="config_tutorial.html"><span class="doc">FireWorks config</span></a>.</li>
+</ol>
+</div>
+<div class="section" id="alternatives-to-using-launch-dir">
+<h3>Alternatives to using _launch_dir<a class="headerlink" href="#alternatives-to-using-launch-dir" title="Permalink to this headline">¶</a></h3>
+<p>Potential alternatives to using <code class="docutils literal"><span class="pre">_launch_dir</span></code> are:</p>
+<ol class="arabic simple">
+<li>If you are worried about finding your jobs on the filesystem, try <a class="reference internal" href="query_tutorial.html"><span class="doc">exploring all the features of LaunchPad queries</span></a>. In general, the database method of searching for jobs is much more powerful than browsing filesystems, especially if you set up your FireWorks <em>name</em> and <em>spec</em> to include things you care about in your search.</li>
+<li>Another solution is to have your Firework write an empty file in its directory that has a name like &#8220;JOB&#8211;Cadmium&#8221; or &#8220;JOB&#8211;Silicon&#8221;. Then you can quickly see what kind of job is in a bunch of <code class="docutils literal"><span class="pre">launcher</span></code> directories using a command like <code class="docutils literal"><span class="pre">ls</span> <span class="pre">launcher*/JOB*</span></code> - you&#8217;ll see a list of launcher directories and which one contains &#8220;Cadmium&#8221; or &#8220;Silicon&#8221;.</li>
+<li>If you have a job that depends on knowing the location of other Firework runs, try writing your Firetasks to pass the location of execution to children using the <em>FWAction</em> object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.</li>
+</ol>
+<p>Of course, these are just suggestions. In the end, do what works!</p>
+</div>
+</div>
+<div class="section" id="controlling-the-worker-that-executes-a-firework">
+<h2>Controlling the Worker that executes a Firework<a class="headerlink" href="#controlling-the-worker-that-executes-a-firework" title="Permalink to this headline">¶</a></h2>
+<p>By default, any FireWorker can pull and run any Firework. However, in some cases you might want to control which computing resources should run a Firework. For example, if some of your FireWorks require a lot of memory and fast processors, you might want to direct those jobs to only a subset of FireWorkers that have sufficiently high computing specifications.</p>
+<p>There are four methods to control where FireWorks are executed.</p>
+<div class="section" id="method-1-using-name">
+<h3>Method 1: Using name<a class="headerlink" href="#method-1-using-name" title="Permalink to this headline">¶</a></h3>
+<p>A simple method to direct FireWorks to FireWorks is by assigning the name of the resource where you want the job to run. You can do this by:</p>
+<ol class="arabic simple">
+<li>setting a <code class="docutils literal"><span class="pre">_fworker</span></code> key in your Firework spec <strong>AND</strong></li>
+<li>setting the <code class="docutils literal"><span class="pre">name</span></code> variable in your FireWorker to match that value</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Recall the <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> file from the <a class="reference internal" href="worker_tutorial.html"><span class="doc">FireWorker tutorial</span></a>. To set the FireWorker name, modify the <code class="docutils literal"><span class="pre">name</span></code> key.</p>
+</div>
+<p>Once you&#8217;ve set these values, job execution occurs as follows:</p>
+<ul class="simple">
+<li>FireWorks with a <code class="docutils literal"><span class="pre">_fworker</span></code> variable set will only run on a FireWorker with the exactly matching <code class="docutils literal"><span class="pre">name</span></code> variable.</li>
+<li>Note that this does not set any restriction on the jobs the FireWorker can pull, i.e. your FireWorker can pull matching FireWorks as well as any other FireWork. To restrict jobs pulled by the FireWorker, use the methods below (perhaps in addition to this method).</li>
+</ul>
+</div>
+<div class="section" id="method-2-using-categories">
+<h3>Method 2: Using categories<a class="headerlink" href="#method-2-using-categories" title="Permalink to this headline">¶</a></h3>
+<p>Another simple method to direct FireWorks to FireWorks is by assigning <em>categories</em>. You can do this by:</p>
+<ol class="arabic simple">
+<li>setting a <code class="docutils literal"><span class="pre">_category</span></code> key in your Firework spec <strong>AND</strong></li>
+<li>setting the <code class="docutils literal"><span class="pre">category</span></code> variable in your FireWorker to match that value</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Recall the <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> file from the <a class="reference internal" href="worker_tutorial.html"><span class="doc">FireWorker tutorial</span></a>. To set the FireWorker category, modify this file so that the <code class="docutils literal"><span class="pre">category</span></code> key is non-empty.</p>
+</div>
+<p>Once you&#8217;ve set these values, job execution occurs as follows:</p>
+<ul class="simple">
+<li>FireWorkers with no <code class="docutils literal"><span class="pre">category</span></code> variable set will be able to run <strong>any</strong> Firework (even FireWorks with a <code class="docutils literal"><span class="pre">_category</span></code> key in the spec).</li>
+<li>FireWorkers with a <code class="docutils literal"><span class="pre">category</span></code> set will only run the FireWorks with an exactly matching <code class="docutils literal"><span class="pre">_category</span></code> variable in the Firework spec.</li>
+</ul>
+<p>And finally, a few final notes and limitations about this method:</p>
+<ul class="simple">
+<li>The same <code class="docutils literal"><span class="pre">category</span></code> can be shared by multiple FireWorkers (if desired).</li>
+<li>Each FireWorker can only have a single String category</li>
+<li>A Firework can have an array of Strings for the <code class="docutils literal"><span class="pre">_category</span></code> variable, but we suggest you stick to a simple String where possible.</li>
+</ul>
+</div>
+<div class="section" id="method-3-using-raw-queries">
+<h3>Method 3: Using raw queries<a class="headerlink" href="#method-3-using-raw-queries" title="Permalink to this headline">¶</a></h3>
+<p>A more flexible, but less intuitive method to restrict the FireWorks that a FireWorker through a raw MongoDB query. The query will restrict the FireWorker to only running FireWorks matching the query. For example, your query might specify that the <code class="docutils literal"><span class="pre">spec.parameter1</span></code> is under 100. In this case, FireWorks with <code class="docutils literal"><span class="pre">spec.parameter1</span></code> greater than 100 must be run elsewhere.</p>
+<p>To set up a raw query:</p>
+<ol class="arabic simple">
+<li>set the <code class="docutils literal"><span class="pre">query</span></code> variable in your FireWorker to be a JSON String that can be interpreted by Pymongo.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Recall the <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> file from the <a class="reference internal" href="worker_tutorial.html"><span class="doc">FireWorker tutorial</span></a>. To set the FireWorker query, modify this file so that the <code class="docutils literal"><span class="pre">query</span></code> key is non-empty. An example of a query string in YAML format would be <code class="docutils literal"><span class="pre">'{&quot;spec.parameter1&quot;:</span> <span class="pre">{&quot;$lte&quot;:100}}'</span></code></p>
+</div>
+<p>Note that if you set both a category and a query for a FireWorker, both constraints will be used.</p>
+</div>
+<div class="section" id="method-4-running-child-fireworks-on-the-same-resource-as-the-parent">
+<h3>Method 4: Running child Fireworks on the same resource as the parent<a class="headerlink" href="#method-4-running-child-fireworks-on-the-same-resource-as-the-parent" title="Permalink to this headline">¶</a></h3>
+<p>If you want the a child Firework to run on the same FireWorker as the parent, set the <code class="docutils literal"><span class="pre">_preserve_fworker</span></code> key in the Firework spec of the <em>parent</em> to True. This will automatically pass the <code class="docutils literal"><span class="pre">_fworker</span></code> of the child to be the FWorker of the parent. See <a class="reference internal" href="reference.html"><span class="doc">reference</span></a> for more details.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Controlling the directory and Worker of execution</a><ul>
+<li><a class="reference internal" href="#controlling-the-directory-in-which-a-firework-is-executed">Controlling the directory in which a Firework is executed</a><ul>
+<li><a class="reference internal" href="#potential-pitfalls">Potential pitfalls</a></li>
+<li><a class="reference internal" href="#alternatives-to-using-launch-dir">Alternatives to using _launch_dir</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#controlling-the-worker-that-executes-a-firework">Controlling the Worker that executes a Firework</a><ul>
+<li><a class="reference internal" href="#method-1-using-name">Method 1: Using name</a></li>
+<li><a class="reference internal" href="#method-2-using-categories">Method 2: Using categories</a></li>
+<li><a class="reference internal" href="#method-3-using-raw-queries">Method 3: Using raw queries</a></li>
+<li><a class="reference internal" href="#method-4-running-child-fireworks-on-the-same-resource-as-the-parent">Method 4: Running child Fireworks on the same resource as the parent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filepad_tasks.html"
+                        title="previous chapter">Using the built-in FilePad Tasks</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="multi_job.html"
+                        title="next chapter">&#8220;Packing&#8221; small jobs into larger ones with multi job launcher</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/controlworker.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

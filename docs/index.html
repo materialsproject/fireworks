@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to FireWorks (workflow software) &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installing FireWorks" href="installation.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installing FireWorks"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <a class="reference internal image-reference" href="_images/FireWorks_logo.png"><img alt="FireWorks workflow software" src="_images/FireWorks_logo.png" style="width: 300px;" /></a>
+<blockquote class="pull-quote">
+<div><div class="line-block">
+<div class="line">&#8220;Give me six hours to chop down a tree and I will spend the first four sharpening the axe.&#8221;</div>
+<div class="line-block">
+<div class="line">- Abraham Lincoln</div>
+</div>
+</div>
+</div></blockquote>
+<p>FireWorks is a free, <a class="reference external" href="https://github.com/materialsproject/fireworks">open-source</a> code for defining, managing, and executing workflows. Complex workflows can be defined using Python, JSON, or YAML, are stored using MongoDB, and can be monitored through a built-in web interface. Workflow execution can be automated over arbitrary computing resources, including those that have a queueing system. FireWorks has been used to run millions of workflows encompassing tens of millions of CPU-hours across diverse application areas and in long-term production projects over the span of multiple years.</p>
+<p>Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers.</p>
+<p><strong>New!</strong> An academic paper on FireWorks is now available. For details, see <a class="reference internal" href="#citing-label"><span class="std std-ref">Citing FireWorks</span></a>.</p>
+<div class="section" id="is-fireworks-for-me">
+<h1>Is FireWorks for me?<a class="headerlink" href="#is-fireworks-for-me" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks is intended to be a friendly workflow software that is easy to get started with, but flexible enough to handle complicated use cases.</p>
+<p>Some (but not all) of its features include:</p>
+<ul class="simple">
+<li>A clean and flexible Python API, a powerful command-line interface, and a <em>built-in</em> web service for monitoring workflows.</li>
+<li>A database backend (MongoDB) lets you add, remove, and search the status of workflows.</li>
+<li>Detect failed jobs (both soft and hard failures), and rerun them as needed.</li>
+<li>Multiple execution modes - directly on a multicore machines or through a queue, on a single machine or multiple machines. Assign priorities and where jobs run.</li>
+<li>Support for <em>dynamic</em> workflows - workflows that modify themselves or create new ones based on what happens during execution.</li>
+<li>Automatic duplicate handling at the sub-workflow level - skip duplicated portions between two workflows while still running unique sections</li>
+<li>Built-in tasks for creating templated inputs, running scripts, and copying files to remote machines</li>
+<li>Remotely track the status of output files during execution.</li>
+<li>Package many small jobs into a single large job (e.g., <em>automatically</em> run 100 serial workflows in parallel over 100 cores)</li>
+<li>Support for several queueing systems such as PBS/Torque, Sun Grid Engine, SLURM, and IBM LoadLeveler.</li>
+</ul>
+</div>
+<div class="section" id="a-bird-s-eye-view-of-fireworks">
+<h1>A bird&#8217;s eye view of FireWorks<a class="headerlink" href="#a-bird-s-eye-view-of-fireworks" title="Permalink to this headline">¶</a></h1>
+<p>While FireWorks provides many features, its basic operation is simple. You can run FireWorks on a single laptop or at a supercomputing center.</p>
+<div class="section" id="centralized-server-and-worker-model">
+<h2>Centralized Server and Worker Model<a class="headerlink" href="#centralized-server-and-worker-model" title="Permalink to this headline">¶</a></h2>
+<p>There are essentially just two components of a FireWorks installation:</p>
+<ul class="simple">
+<li>A <strong>server</strong> (&#8220;LaunchPad&#8221;) that manages workflows. You can add workflows (a DAG of &#8220;FireWorks&#8221;) to the LaunchPad, query for the state of your workflows, or rerun workflows. The workflows can be a straightforward series of scripts or dynamically adapt depending on the results obtained.</li>
+<li>One or more <strong>workers</strong> (&#8220;FireWorkers&#8221;) that run your jobs. The FireWorkers request workflows from the LaunchPad, execute them, and send back information. The FireWorker can be as simple as the same workstation used to host the LaunchPad, or complicated like a national supercomputing center with a queueing system.</li>
+</ul>
+<p>The basic infrastructure looks like this:</p>
+<a class="reference internal image-reference" href="_images/fw_model.png"><img alt="FireWorks Model" class="align-center" src="_images/fw_model.png" style="width: 400px;" /></a>
+<p>The components are largely decoupled, which makes FireWorks easier to use. End users can add new workflows to the LaunchPad without worrying about the details of how and where the workflows will be run (unless they really want to tailor the details of job execution). This keeps the workflow specifications lightweight, tidy, and easy to learn and use (if you&#8217;ve ever seen lengthy XML-based specifications in other workflow software, you&#8217;ll notice the difference in FireWorks right away).</p>
+<p>On the opposite end, administrators can configure worker computers without worrying about where workflows are coming from or what they look like (although you can assign jobs to certain resources if desired). Running on a heterogeneous set of worker computers is simple because essentially the same code is used internally by FireWorks for running on simple workstations or a large supercomputing center, submitting to a traditional or web-based queue system, or packing together many jobs into a single queue submission.</p>
+</div>
+<div class="section" id="workflow-model">
+<span id="wfmodel-label"></span><h2>Workflow Model<a class="headerlink" href="#workflow-model" title="Permalink to this headline">¶</a></h2>
+<p>Workflows in FireWorks are made up of three main components:</p>
+<ul class="simple">
+<li>A <strong>Firetask</strong> is an atomic computing job. It can call a single shell script or execute a single Python function that you define (either within FireWorks, or in an external package).</li>
+<li>A <strong>Firework</strong> contains the JSON <em>spec</em> that includes all the information needed to bootstrap your job. For example, the spec contains an array of Firetasks to execute in sequence. The spec also includes any input parameters to pass to your Firetasks. You can easily perform the same function over different input data by creating Fireworks with identical Firetasks but different input parameters in the spec. You can design your spec however you&#8217;d like, as long as it&#8217;s valid JSON. The JSON format used for Firework specs is extremely flexible, very easy to learn (Python users familiar with <em>dicts</em> and <em>arrays</em> essentially already know JSON), and immediately makes rich searches over the input data available to end users through MongoDB&#8217;s JSON document search capabilities.</li>
+<li>A <strong>Workflow</strong> is a set of FireWorks with dependencies between them. For example, you might need a parent Firework to finish and generate some output files before running two child FireWorks.</li>
+</ul>
+<p>Between FireWorks, you can return a <strong>FWAction</strong> that can store data or modify the Workflow depending on the output (e.g., pass data to the next step, cancel the remaining parts of the Workflow, or even add new FireWorks that are defined within the object).</p>
+<a class="reference internal image-reference" href="_images/multiple_fw.png"><img alt="FireWorks Workflow" class="align-center" src="_images/multiple_fw.png" style="width: 400px;" /></a>
+<p>The FireWorks tutorials and <a class="reference internal" href="design_tips.html"><span class="doc">FW design tips</span></a> explain how to connect these components to achieve the desired behavior.</p>
+</div>
+</div>
+<div class="section" id="quickstart-and-tutorials">
+<h1>Quickstart and Tutorials<a class="headerlink" href="#quickstart-and-tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="quickstart-wiggle-your-big-toe">
+<h2>Quickstart (&#8220;Wiggle your big toe&#8221;)<a class="headerlink" href="#quickstart-wiggle-your-big-toe" title="Permalink to this headline">¶</a></h2>
+<p>To get a first glimpse of FireWorks, we suggest that you follow our installation and quickstart tutorials.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing FireWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Five-minute quickstart</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>After completing the quickstart, we suggest that you follow our core tutorials that cover the primary features of FireWorks. Depending on your application, you may not need to complete all the tutorials.</p>
+<div class="section" id="designing-workflows">
+<h3>Designing workflows<a class="headerlink" href="#designing-workflows" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introductory Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firetask_tutorial.html">Defining Jobs using Firetasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_tutorial.html">Creating Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_wf_tutorial.html">Dynamic Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_tips.html">Tips for designing Firetasks, FireWorks, and Workflows</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="executing-workflows-on-different-types-of-computing-resources">
+<h3>Executing workflows on different types of computing resources<a class="headerlink" href="#executing-workflows-on-different-types-of-computing-resources" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="worker_tutorial.html">Worker Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="queue_tutorial.html">Launch Rockets through a queue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="queue_tutorial_pt2.html">Advanced queue submission (reservation mode)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation_notes.html">Installation Notes on various clusters / supercomputing centers</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="managing-jobs-and-deployment">
+<h2>Managing jobs and deployment<a class="headerlink" href="#managing-jobs-and-deployment" title="Permalink to this headline">¶</a></h2>
+<p>This series of tutorials cover how to manage your jobs and deploy FireWorks in a production environment.</p>
+<div class="section" id="job-priority-cancellation-restart-and-failure">
+<h3>Job priority, cancellation, restart, and failure<a class="headerlink" href="#job-priority-cancellation-restart-and-failure" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="priority_tutorial.html">Assigning job priority</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defuse_tutorial.html">Canceling (pausing), restarting, and deleting Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rerun_tutorial.html">Rerunning a Firework or Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="failures_tutorial.html">Dealing with Failures and Crashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maintain_tutorial.html">Database administration commands</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="monitoring-fireworks">
+<h3>Monitoring FireWorks<a class="headerlink" href="#monitoring-fireworks" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="query_tutorial.html">Querying FireWorks and Workflows / Generating Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basesite_tutorial.html">Using the Web GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tracker_tutorial.html">Tracking an output file during execution</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="deploying-fireworks-in-production">
+<h3>Deploying FireWorks in production<a class="headerlink" href="#deploying-fireworks-in-production" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="security_tutorial.html">Configuring Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_tutorial.html">Modifying the FW Config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance_tutorial.html">Improving FireWorks performance</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="additional-features-and-topics">
+<h2>Additional features and topics<a class="headerlink" href="#additional-features-and-topics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-built-in-firetasks">
+<h3>The built-in Firetasks<a class="headerlink" href="#the-built-in-firetasks" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scripttask.html">Using the ScriptTask to execute commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="templatewritertask.html">Using the TemplateWriterTask to write files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fileiotasks.html">Using the built-in FileIO Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytask.html">PyTask</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filepad_tasks.html">Using the built-in FilePad Tasks</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="misc">
+<h3>Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="controlworker.html">Controlling the directory and Worker of execution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multi_job.html">&#8220;Packing&#8221; small jobs into larger ones with multi job launcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="duplicates_tutorial.html">Handling Duplicates Automatically</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backgroundtask.html">Running Tasks in the Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="offline_tutorial.html">Running FireWorks in &#8220;offline&#8221; mode on firewalled systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_tutorial.html">Using Python to command FireWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qadapter_programming.html">Writing Queue Adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="update_text.html">Updating values (e.g., directory paths) in the database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filepad_tutorial.html">Using FilePad for storing and retrieving files</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference material</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#interpretation-of-state-of-fws-and-wfs">Interpretation of &#8216;state&#8217; of FWs and WFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#reserved-keywords-in-fw-spec">Reserved keywords in FW spec</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide_to_writing_firetasks.html">The Comprehensive Guide to Writing Firetasks with Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide_to_writing_firetasks.html#a-hello-world-example">A &#8220;Hello World Example&#8221;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide_to_writing_firetasks.html#writing-a-basic-firetask">Writing a Basic Firetask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide_to_writing_firetasks.html#dynamic-and-message-passing-workflows">Dynamic and message-passing Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide_to_writing_firetasks.html#the-fwaction-object">The FWAction object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide_to_writing_firetasks.html#appendix-1-accessing-the-launchpad-within-the-firetask">Appendix 1: accessing the LaunchPad within the Firetask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide_to_writing_firetasks.html#appendix-2-alternate-ways-to-identify-the-firetask-and-changing-the-identification">Appendix 2: alternate ways to identify the Firetask and changing the identification</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="citing-fireworks">
+<span id="citing-label"></span><h1>Citing FireWorks<a class="headerlink" href="#citing-fireworks" title="Permalink to this headline">¶</a></h1>
+<p>Citation helps support our development! Please cite your usage of FireWorks through the <a class="reference external" href="http://dx.doi.org/10.1002/cpe.3505">following manuscript</a>, which provides details on the design and features of the FireWorks software:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>Jain, A., Ong, S. P., Chen, W., Medasani, B., Qu, X., Kocher, M., Brafman, M., Petretto, G., Rignanese, G.-M., Hautier, G., Gunter, D., and Persson, K. A. (2015) FireWorks: a dynamic workflow system designed for high-throughput applications. Concurrency Computat.: Pract. Exper., 27: 5037–5059. doi: 10.1002/cpe.3505.
+
+@article {CPE:CPE3505,
+author = {Jain, Anubhav and Ong, Shyue Ping and Chen, Wei and Medasani, Bharat and Qu, Xiaohui and Kocher, Michael and Brafman, Miriam and Petretto, Guido and Rignanese, Gian-Marco and Hautier, Geoffroy and Gunter, Daniel and Persson, Kristin A.},
+title = {FireWorks: a dynamic workflow system designed for high-throughput applications},
+journal = {Concurrency and Computation: Practice and Experience},
+volume = {27},
+number = {17},
+issn = {1532-0634},
+url = {http://dx.doi.org/10.1002/cpe.3505},
+doi = {10.1002/cpe.3505},
+pages = {5037--5059},
+keywords = {scientific workflows, high-throughput computing, fault-tolerant computing},
+year = {2015},
+note = {CPE-14-0307.R2},
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="contributing-contact-bug-reports">
+<span id="contributing-label"></span><h1>Contributing / Contact / Bug Reports<a class="headerlink" href="#contributing-contact-bug-reports" title="Permalink to this headline">¶</a></h1>
+<p>Want to see something added or changed? There are many ways to make that a reality! Some ways to get involved are:</p>
+<ul class="simple">
+<li>Help us improve the documentation - tell us where you got &#8216;stuck&#8217; and improve the install process for everyone.</li>
+<li>Let us know if you need support for a queueing system or certain features.</li>
+<li>Point us to areas of the code that are difficult to understand or use.</li>
+<li>Contribute code! If you are interested in this option, please see our <a class="reference internal" href="contributing.html"><span class="doc">contribution guidelines</span></a>.</li>
+</ul>
+<p>Please submit questions, issues / bug reports, and all other communication through the <a class="reference external" href="https://groups.google.com/forum/#!forum/fireworkflows">FireWorks Google Groups</a>.</p>
+<p>The list of contributors to FireWorks can be found <a class="reference internal" href="contributors.html"><span class="doc">here</span></a>.</p>
+</div>
+<div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">FireWorks Changelog</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks is released under a modified BSD license; the full text can be found <a class="reference internal" href="license.html"><span class="doc">here</span></a>.</p>
+</div>
+<div class="section" id="comprehensive-documentation">
+<h1>Comprehensive Documentation<a class="headerlink" href="#comprehensive-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Some comprehensive documentation is listed below (only for the brave!)</p>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Is FireWorks for me?</a></li>
+<li><a class="reference internal" href="#a-bird-s-eye-view-of-fireworks">A bird&#8217;s eye view of FireWorks</a><ul>
+<li><a class="reference internal" href="#centralized-server-and-worker-model">Centralized Server and Worker Model</a></li>
+<li><a class="reference internal" href="#workflow-model">Workflow Model</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quickstart-and-tutorials">Quickstart and Tutorials</a><ul>
+<li><a class="reference internal" href="#quickstart-wiggle-your-big-toe">Quickstart (&#8220;Wiggle your big toe&#8221;)</a></li>
+<li><a class="reference internal" href="#basic-usage">Basic usage</a><ul>
+<li><a class="reference internal" href="#designing-workflows">Designing workflows</a></li>
+<li><a class="reference internal" href="#executing-workflows-on-different-types-of-computing-resources">Executing workflows on different types of computing resources</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#managing-jobs-and-deployment">Managing jobs and deployment</a><ul>
+<li><a class="reference internal" href="#job-priority-cancellation-restart-and-failure">Job priority, cancellation, restart, and failure</a></li>
+<li><a class="reference internal" href="#monitoring-fireworks">Monitoring FireWorks</a></li>
+<li><a class="reference internal" href="#deploying-fireworks-in-production">Deploying FireWorks in production</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-features-and-topics">Additional features and topics</a><ul>
+<li><a class="reference internal" href="#the-built-in-firetasks">The built-in Firetasks</a></li>
+<li><a class="reference internal" href="#misc">Misc</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#citing-fireworks">Citing FireWorks</a></li>
+<li><a class="reference internal" href="#contributing-contact-bug-reports">Contributing / Contact / Bug Reports</a></li>
+<li><a class="reference internal" href="#changelog">Changelog</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#comprehensive-documentation">Comprehensive Documentation</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">Installing FireWorks</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installing FireWorks"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

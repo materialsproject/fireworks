@@ -1,0 +1,1822 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fireworks.core package &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fireworks-core-package">
+<h1>fireworks.core package<a class="headerlink" href="#fireworks-core-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fireworks.core.tests.html">fireworks.core.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#module-fireworks.core.tests.tasks">fireworks.core.tests.tasks module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#module-fireworks.core.tests.test_firework">fireworks.core.tests.test_firework module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#module-fireworks.core.tests.test_launchpad">fireworks.core.tests.test_launchpad module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#module-fireworks.core.tests.test_rocket">fireworks.core.tests.test_rocket module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#module-fireworks.core.tests.test_tracker">fireworks.core.tests.test_tracker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.core.tests.html#module-fireworks.core.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fireworks.core.firework">
+<span id="fireworks-core-firework-module"></span><h2>fireworks.core.firework module<a class="headerlink" href="#module-fireworks.core.firework" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.core.firework.FWAction">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FWAction</code><span class="sig-paren">(</span><em>stored_data=None</em>, <em>exit=False</em>, <em>update_spec=None</em>, <em>mod_spec=None</em>, <em>additions=None</em>, <em>detours=None</em>, <em>defuse_children=False</em>, <em>defuse_workflow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
+Firetask completes). The FWAction allows a user to store rudimentary output data as well
+as return commands that alter the workflow.</p>
+<dl class="classmethod">
+<dt id="fireworks.core.firework.FWAction.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.FWAction.skip_remaining_tasks">
+<code class="descname">skip_remaining_tasks</code><a class="headerlink" href="#fireworks.core.firework.FWAction.skip_remaining_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the FWAction gives any dynamic action, we skip the subsequent Firetasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.FWAction.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.FireTaskBase">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FireTaskBase</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FireTaskBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.FiretaskBase">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FiretaskBase</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/collections.html#collections.defaultdict" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>FiretaskBase is used like an abstract class that defines a computing task
+(Firetask). All Firetasks should inherit from FiretaskBase.</p>
+<p>You can set parameters of a Firetask like you&#8217;d use a dict.</p>
+<dl class="classmethod">
+<dt id="fireworks.core.firework.FiretaskBase.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.FiretaskBase.required_params">
+<code class="descname">required_params</code><em class="property"> = []</em><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.required_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.FiretaskBase.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.run_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; A Firework spec. This comes from the master spec.
+In addition, this spec contains a special &#8220;_fw_env&#8221; key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, &#8220;foo&#8221; may be named &#8220;foo1&#8221; in resource
+1 and &#8220;foo2&#8221; in resource 2. The FWorker env can specify {
+&#8220;foo&#8221;: &#8220;foo1&#8221;}, which maps an abstract variable &#8220;foo&#8221; to the
+relevant &#8220;foo1&#8221; or &#8220;foo2&#8221;. You can then write a task that
+uses fw_spec[&#8220;_fw_env&#8221;][&#8220;foo&#8221;] that will work across all
+these multiple resources.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.FiretaskBase.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.FiretaskMeta">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FiretaskMeta</code><a class="headerlink" href="#fireworks.core.firework.FiretaskMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/abc.html#abc.ABCMeta" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">abc.ABCMeta</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.Firework">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Firework</code><span class="sig-paren">(</span><em>tasks</em>, <em>spec=None</em>, <em>name=None</em>, <em>launches=None</em>, <em>archived_launches=None</em>, <em>state='WAITING'</em>, <em>created_on=None</em>, <em>fw_id=None</em>, <em>parents=None</em>, <em>updated_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>A Firework is a workflow step and might be contain several Firetasks.</p>
+<dl class="attribute">
+<dt id="fireworks.core.firework.Firework.STATE_RANKS">
+<code class="descname">STATE_RANKS</code><em class="property"> = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED': 0, 'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4, 'COMPLETED': 5}</em><a class="headerlink" href="#fireworks.core.firework.Firework.STATE_RANKS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Firework.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Firework.state">
+<code class="descname">state</code><a class="headerlink" href="#fireworks.core.firework.Firework.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Returns* &#8211; str* &#8211; The current state of the Firework</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Firework.to_db_dict">
+<code class="descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return firework dict with updated launches and state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Firework.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.Launch">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Launch</code><span class="sig-paren">(</span><em>state</em>, <em>launch_dir</em>, <em>fworker=None</em>, <em>host=None</em>, <em>ip=None</em>, <em>trackers=None</em>, <em>action=None</em>, <em>state_history=None</em>, <em>launch_id=None</em>, <em>fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A Launch encapsulates data about a specific run of a Firework on a computing resource.</p>
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Launch.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.last_pinged">
+<code class="descname">last_pinged</code><a class="headerlink" href="#fireworks.core.firework.Launch.last_pinged" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id3"><span class="problematic" id="id4">**</span></a>Returns* &#8211; datetime* &#8211; the time the Launch last pinged a heartbeat that it was still running</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.reservedtime_secs">
+<code class="descname">reservedtime_secs</code><a class="headerlink" href="#fireworks.core.firework.Launch.reservedtime_secs" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id5"><span class="problematic" id="id6">**</span></a>Returns* &#8211; int* &#8211; number of seconds the Launch was stuck as RESERVED in a queue.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.runtime_secs">
+<code class="descname">runtime_secs</code><a class="headerlink" href="#fireworks.core.firework.Launch.runtime_secs" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id7"><span class="problematic" id="id8">**</span></a>Returns* &#8211; int* &#8211; the number of seconds that the Launch ran for.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Launch.set_reservation_id">
+<code class="descname">set_reservation_id</code><span class="sig-paren">(</span><em>reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.set_reservation_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the job_id to the reservation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the id of the reservation (e.g., queue reservation)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.state">
+<code class="descname">state</code><a class="headerlink" href="#fireworks.core.firework.Launch.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id9"><span class="problematic" id="id10">**</span></a>Returns* &#8211; str* &#8211; The current state of the Launch.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.time_end">
+<code class="descname">time_end</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_end" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id11"><span class="problematic" id="id12">**</span></a>Returns* &#8211; datetime* &#8211; the time the Launch was COMPLETED or FIZZLED</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.time_reserved">
+<code class="descname">time_reserved</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_reserved" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id13"><span class="problematic" id="id14">**</span></a>Returns* &#8211; datetime* &#8211; the time the Launch was RESERVED in the queue</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Launch.time_start">
+<code class="descname">time_start</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_start" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id15"><span class="problematic" id="id16">**</span></a>Returns* &#8211; datetime* &#8211; the time the Launch started RUNNING</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Launch.to_db_dict">
+<code class="descname">to_db_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Launch.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Launch.touch_history">
+<code class="descname">touch_history</code><span class="sig-paren">(</span><em>update_time=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.touch_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the update_on field of the state history of a Launch. Used to ping that a Launch
+is still alive.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_time</strong> (<a class="reference external" href="https://docs.python.org/2/library/datetime.html#module-datetime" title="(in Python v2.7)"><em>datetime</em></a>) &#8211; </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.Tracker">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Tracker</code><span class="sig-paren">(</span><em>filename</em>, <em>nlines=25</em>, <em>content=''</em>, <em>allow_zipped=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A Tracker monitors a file and returns the last N lines for updating the Launch object.</p>
+<dl class="attribute">
+<dt id="fireworks.core.firework.Tracker.MAX_TRACKER_LINES">
+<code class="descname">MAX_TRACKER_LINES</code><em class="property"> = 1000</em><a class="headerlink" href="#fireworks.core.firework.Tracker.MAX_TRACKER_LINES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Tracker.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Tracker.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Tracker.track_file">
+<code class="descname">track_file</code><span class="sig-paren">(</span><em>launch_dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.track_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the monitored file and returns back the last N lines</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; directory where job was launched in case of relative filename</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the content(last N lines)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.firework.Workflow">
+<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Workflow</code><span class="sig-paren">(</span><em>fireworks</em>, <em>links_dict=None</em>, <em>name=None</em>, <em>metadata=None</em>, <em>created_on=None</em>, <em>updated_on=None</em>, <em>fw_states=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>A Workflow connects a group of FireWorks in an execution order.</p>
+<dl class="class">
+<dt id="fireworks.core.firework.Workflow.Links">
+<em class="property">class </em><code class="descname">Links</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>An inner class for storing the DAG links between FireWorks</p>
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Workflow.Links.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Workflow.Links.nodes">
+<code class="descname">nodes</code><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of all nodes</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Workflow.Links.parent_links">
+<code class="descname">parent_links</code><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.parent_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict of child and its parents.</p>
+<p>Note: if performance of parent_links becomes an issue, override delitem/setitem to
+update parent_links</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.Links.to_db_dict">
+<code class="descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to str form for Mongo, which cannot have int keys .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.Links.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to str form for Mongo, which cannot have int keys.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.append_wf">
+<code class="descclassname">Workflow.</code><code class="descname">append_wf</code><span class="sig-paren">(</span><em>new_wf</em>, <em>fw_ids</em>, <em>detour=False</em>, <em>pull_spec_mods=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.append_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to add a workflow as a child to a Firework
+Note: detours must have children that have STATE_RANK that is WAITING or below</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>new_wf</strong> (<a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) &#8211; New Workflow to add.</li>
+<li><strong>fw_ids</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>]</em><em></em>) &#8211; ids of the parent Fireworks on which to add the Workflow.</li>
+<li><strong>detour</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; add children of the current Firework to the Workflow&#8217;s leaves.</li>
+<li><strong>pull_spec_mods</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; pull spec mods of COMPLETED parents, refreshes the WF states.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of Firework ids that were updated or new</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.apply_action">
+<code class="descclassname">Workflow.</code><code class="descname">apply_action</code><span class="sig-paren">(</span><em>action</em>, <em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.apply_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a FWAction on a Firework in the Workflow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>action</strong> (<a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction"><em>FWAction</em></a>) &#8211; action to apply</li>
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; id of Firework on which to apply the action</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of Firework ids that were updated or new</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Workflow.from_Firework">
+<em class="property">classmethod </em><code class="descclassname">Workflow.</code><code class="descname">from_Firework</code><span class="sig-paren">(</span><em>fw</em>, <em>name=None</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_Firework" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Workflow from the given Firework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fw</strong> (<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a>) &#8211; </li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; New workflow&#8217;s name. if not provided, the firework name is used</li>
+<li><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; New workflow&#8217;s metadata.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Workflow</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Workflow.from_dict">
+<em class="property">classmethod </em><code class="descclassname">Workflow.</code><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Workflow from its dict representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>m_dict</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; either a Workflow dict or a Firework dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Workflow</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.firework.Workflow.from_wflow">
+<em class="property">classmethod </em><code class="descclassname">Workflow.</code><code class="descname">from_wflow</code><span class="sig-paren">(</span><em>wflow</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_wflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a fresh Workflow from an existing one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wflow</strong> (<a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Workflow</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Workflow.fws">
+<code class="descclassname">Workflow.</code><code class="descname">fws</code><a class="headerlink" href="#fireworks.core.firework.Workflow.fws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of all fireworks</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Workflow.leaf_fw_ids">
+<code class="descclassname">Workflow.</code><code class="descname">leaf_fw_ids</code><a class="headerlink" href="#fireworks.core.firework.Workflow.leaf_fw_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets leaf FireWorks of this workflow (those with no children).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Firework ids of leaf FWs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.refresh">
+<code class="descclassname">Workflow.</code><code class="descname">refresh</code><span class="sig-paren">(</span><em>fw_id</em>, <em>updated_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the state of a Firework and any affected children.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; id of the Firework on which to perform the refresh</li>
+<li><strong>updated_ids</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>]</em><em></em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of Firework ids that were updated</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#set" title="(in Python v2.7)">set</a>(<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.rerun_fw">
+<code class="descclassname">Workflow.</code><code class="descname">rerun_fw</code><span class="sig-paren">(</span><em>fw_id</em>, <em>updated_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.rerun_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Archives the launches of a Firework so that it can be re-run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; id of firework to tbe rerun</li>
+<li><strong>updated_ids</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#set" title="(in Python v2.7)"><em>set</em></a><em>(</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>)</em><em></em>) &#8211; set of fireworks id to rerun</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of Firework ids that were updated</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.reset">
+<code class="descclassname">Workflow.</code><code class="descname">reset</code><span class="sig-paren">(</span><em>reset_ids=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the states of all Fireworks in this workflow to &#8216;WAITING&#8217;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reset_ids</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if <code class="docutils literal"><span class="pre">True</span></code>, give each Firework a new id.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Workflow.root_fw_ids">
+<code class="descclassname">Workflow.</code><code class="descname">root_fw_ids</code><a class="headerlink" href="#fireworks.core.firework.Workflow.root_fw_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets root FireWorks of this workflow (those with no parents).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Firework ids of root FWs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.firework.Workflow.state">
+<code class="descclassname">Workflow.</code><code class="descname">state</code><a class="headerlink" href="#fireworks.core.firework.Workflow.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><a href="#id17"><span class="problematic" id="id18">**</span></a>Returns* &#8211; state (str)* &#8211; state of workflow</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.to_db_dict">
+<code class="descclassname">Workflow.</code><code class="descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.to_dict">
+<code class="descclassname">Workflow.</code><code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.to_display_dict">
+<code class="descclassname">Workflow.</code><code class="descname">to_display_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_display_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.core.fworker">
+<span id="fireworks-core-fworker-module"></span><h2>fireworks.core.fworker module<a class="headerlink" href="#module-fireworks.core.fworker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.core.fworker.FWorker">
+<em class="property">class </em><code class="descclassname">fireworks.core.fworker.</code><code class="descname">FWorker</code><span class="sig-paren">(</span><em>name='Automatically generated Worker'</em>, <em>category=''</em>, <em>query=None</em>, <em>env=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dl class="classmethod">
+<dt id="fireworks.core.fworker.FWorker.auto_load">
+<em class="property">classmethod </em><code class="descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.auto_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns FWorker object from settings file(my_fworker.yaml).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.fworker.FWorker.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.fworker.FWorker.query">
+<code class="descname">query</code><a class="headerlink" href="#fireworks.core.fworker.FWorker.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns updated query dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.fworker.FWorker.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.core.launchpad">
+<span id="fireworks-core-launchpad-module"></span><h2>fireworks.core.launchpad module<a class="headerlink" href="#module-fireworks.core.launchpad" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.core.launchpad.LaunchPad">
+<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LaunchPad</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>name='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl_ca_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>The LaunchPad manages the FireWorks database.</p>
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.add_offline_run">
+<code class="descname">add_offline_run</code><span class="sig-paren">(</span><em>launch_id</em>, <em>fw_id</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.add_offline_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the launch and firework to the offline_run collection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id</li>
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#id" title="(in Python v2.7)"><em>id</em></a>) &#8211; firework id</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.add_wf">
+<code class="descname">add_wf</code><span class="sig-paren">(</span><em>wf</em>, <em>reassign_all=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.add_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add workflow(or firework) to the launchpad. The firework ids will be reassigned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wf</strong> (<em>Workflow/Firework</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">mapping between old and new Firework ids</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.append_wf">
+<code class="descname">append_wf</code><span class="sig-paren">(</span><em>new_wf</em>, <em>fw_ids</em>, <em>detour=False</em>, <em>pull_spec_mods=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.append_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append a new workflow on top of an existing workflow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>new_wf</strong> (<a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) &#8211; The new workflow to append</li>
+<li><strong>fw_ids</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>]</em><em></em>) &#8211; The parent fw_ids at which to append the workflow</li>
+<li><strong>detour</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether to connect the new Workflow in a &#8220;detour&#8221; style, i.e., move</li>
+<li><strong>children of the parent fw_ids to the new_wf</strong> (<em>original</em>) &#8211; </li>
+<li><strong>pull_spec_mods</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether the new Workflow should pull the FWActions of the parent
+fw_ids</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.archive_wf">
+<code class="descname">archive_wf</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.archive_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Archive the workflow containing the given firework id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.launchpad.LaunchPad.auto_load">
+<em class="property">classmethod </em><code class="descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.auto_load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.cancel_reservation">
+<code class="descname">cancel_reservation</code><span class="sig-paren">(</span><em>launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.cancel_reservation" title="Permalink to this definition">¶</a></dt>
+<dd><p>given the launch id, cancel the reservation and rerun the fireworks</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.cancel_reservation_by_reservation_id">
+<code class="descname">cancel_reservation_by_reservation_id</code><span class="sig-paren">(</span><em>reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.cancel_reservation_by_reservation_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the reservation id, cancel the reservation and rerun the corresponding fireworks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.change_launch_dir">
+<code class="descname">change_launch_dir</code><span class="sig-paren">(</span><em>launch_id</em>, <em>launch_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.change_launch_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the launch directory corresponding to the given launch id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+<li><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the new launch directory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.checkout_fw">
+<code class="descname">checkout_fw</code><span class="sig-paren">(</span><em>fworker</em>, <em>launch_dir</em>, <em>fw_id=None</em>, <em>host=None</em>, <em>ip=None</em>, <em>state='RUNNING'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.checkout_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checkout the next ready firework, mark it with the given state(RESERVED or RUNNING) and
+return it to the caller. The caller is responsible for running the Firework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) &#8211; A FWorker instance</li>
+<li><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the dir the FW will be run in (for creating a Launch object)</li>
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Firework id</li>
+<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the host making the request (for creating a Launch object)</li>
+<li><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the ip making the request (for creating a Launch object)</li>
+<li><strong>state</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; RESERVED or RUNNING, the fetched firework&#8217;s state will be set to this value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">firework and the new launch id</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">Firework</a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.complete_launch">
+<code class="descname">complete_launch</code><span class="sig-paren">(</span><em>launch_id</em>, <em>action=None</em>, <em>state='COMPLETED'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.complete_launch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal method used to mark a Firework&#8217;s Launch as completed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+<li><strong>action</strong> (<a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction"><em>FWAction</em></a>) &#8211; the FWAction of what to do next</li>
+<li><strong>state</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; COMPLETED or FIZZLED</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">updated launch</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.defuse_fw">
+<code class="descname">defuse_fw</code><span class="sig-paren">(</span><em>fw_id</em>, <em>rerun_duplicates=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.defuse_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the firework id, defuse the firework and refresh the workflow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</li>
+<li><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, duplicate fireworks(ones with the same launch) are
+marked for rerun and then defused.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.defuse_wf">
+<code class="descname">defuse_wf</code><span class="sig-paren">(</span><em>fw_id</em>, <em>defuse_all_states=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.defuse_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defuse the workflow containing the given firework id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</li>
+<li><strong>defuse_all_states</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.delete_wf">
+<code class="descname">delete_wf</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.delete_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the workflow containing firework with the given id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Firework id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.detect_lostruns">
+<code class="descname">detect_lostruns</code><span class="sig-paren">(</span><em>expiration_secs=14400</em>, <em>fizzle=False</em>, <em>rerun=False</em>, <em>max_runtime=None</em>, <em>min_runtime=None</em>, <em>refresh=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_lostruns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect lost runs i.e running fireworks that haven&#8217;t been updated within the specified
+time limit or running firework whose launch has been marked fizzed or completed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>expiration_secs</strong> (<em>seconds</em>) &#8211; expiration time in seconds</li>
+<li><strong>fizzle</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, mark the lost runs fizzed</li>
+<li><strong>rerun</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, mark the lost runs fizzed and rerun</li>
+<li><strong>max_runtime</strong> (<em>seconds</em>) &#8211; maximum run time</li>
+<li><strong>min_runtime</strong> (<em>seconds</em>) &#8211; minimum run time</li>
+<li><strong>refresh</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, refresh the workflow with inconsistent fireworks.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>tuple of list of lost launch ids, lost firework ids and</dt>
+<dd><p class="first last">inconsistent firework ids.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">([<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>], [<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>], [<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>])</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.detect_unreserved">
+<code class="descname">detect_unreserved</code><span class="sig-paren">(</span><em>expiration_secs=1209600</em>, <em>rerun=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_unreserved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the reserved launch ids that have not been updated for a while.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>expiration_secs</strong> (<em>seconds</em>) &#8211; time limit</li>
+<li><strong>rerun</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True, the expired reservations are cancelled and the fireworks rerun.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of expired lacunh ids</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.forget_offline">
+<code class="descname">forget_offline</code><span class="sig-paren">(</span><em>launchid_or_fwid</em>, <em>launch_mode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.forget_offline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unmark the offline run for the given launch or firework id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launchid_or_fwid</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch od or firework id</li>
+<li><strong>launch_mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; if True then launch id is given.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.core.launchpad.LaunchPad.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_fw_by_id">
+<code class="descname">get_fw_by_id</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a Firework id, give back a Firework object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Firework id.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Firework object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_fw_dict_by_id">
+<code class="descname">get_fw_dict_by_id</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_dict_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given firework id, return firework dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_fw_ids">
+<code class="descname">get_fw_ids</code><span class="sig-paren">(</span><em>query=None</em>, <em>sort=None</em>, <em>limit=0</em>, <em>count_only=False</em>, <em>launches_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the fw ids that match a query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; representing a Mongo query</li>
+<li><strong></strong><strong>[</strong><strong></strong> (<em>sort</em>) &#8211; sort argument in Pymongo format</li>
+<li><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; limit the results</li>
+<li><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; only return the count rather than explicit ids</li>
+<li><strong>launches_mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; query the launches collection instead of fireworks</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of firework ids matching the query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_fw_ids_from_reservation_id">
+<code class="descname">get_fw_ids_from_reservation_id</code><span class="sig-paren">(</span><em>reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_ids_from_reservation_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the reservation id, return the list of firework ids.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of firework ids.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_launch_by_id">
+<code class="descname">get_launch_by_id</code><span class="sig-paren">(</span><em>launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_launch_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a Launch id, return details of the Launch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Launch object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_logdir">
+<code class="descname">get_logdir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the log directory.</p>
+<p>AJ: This is needed for job packing due to Proxy objects not being fully featured...</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_new_fw_id">
+<code class="descname">get_new_fw_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_new_fw_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checkout the next Firework id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_new_launch_id">
+<code class="descname">get_new_launch_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_new_launch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checkout the next Launch id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id">
+<code class="descname">get_reservation_id_from_fw_id</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the firework id, return the reservation id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_tracker_data">
+<code class="descname">get_tracker_data</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_tracker_data" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#id" title="(in Python v2.7)"><em>id</em></a>) &#8211; firework id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list tracker dicts</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id">
+<code class="descname">get_wf_by_fw_id</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a Firework id, give back the Workflow containing that Firework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Workflow object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id_lzyfw">
+<code class="descname">get_wf_by_fw_id_lzyfw</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id_lzyfw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a FireWork id, give back the Workflow containing that FireWork.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Workflow object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_wf_ids">
+<code class="descname">get_wf_ids</code><span class="sig-paren">(</span><em>query=None</em>, <em>sort=None</em>, <em>limit=0</em>, <em>count_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one fw id for all workflows that match a query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; representing a Mongo query</li>
+<li><strong></strong><strong>[</strong><strong></strong> (<em>sort</em>) &#8211; sort argument in Pymongo format</li>
+<li><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; limit the results</li>
+<li><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; only return the count rather than explicit ids</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of firework ids</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_wf_summary_dict">
+<code class="descname">get_wf_summary_dict</code><span class="sig-paren">(</span><em>fw_id</em>, <em>mode='more'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_summary_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A much faster way to get summary information about a Workflow by querying only for
+needed information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; A Firework id.</li>
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Choose between &#8220;more&#8221;, &#8220;less&#8221; and &#8220;all&#8221; in terms of quantity of information.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">information about Workflow.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.log_message">
+<code class="descname">log_message</code><span class="sig-paren">(</span><em>level</em>, <em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Support for job packing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>level</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; </li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.maintain">
+<code class="descname">maintain</code><span class="sig-paren">(</span><em>infinite=True</em>, <em>maintain_interval=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.maintain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform launchpad maintenance: detect lost runs and unreserved RESERVE launches.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>infinite</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+<li><strong>maintain_interval</strong> (<em>seconds</em>) &#8211; sleep time</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.mark_fizzled">
+<code class="descname">mark_fizzled</code><span class="sig-paren">(</span><em>launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.mark_fizzled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark the launch corresponding to the given id as FIZZLED.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">updated launch</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.pause_fw">
+<code class="descname">pause_fw</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.pause_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the firework id, pauses the firework and refresh the workflow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.pause_wf">
+<code class="descname">pause_wf</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.pause_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pause the workflow containing the given firework id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</li>
+<li><strong>defuse_all_states</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.ping_launch">
+<code class="descname">ping_launch</code><span class="sig-paren">(</span><em>launch_id</em>, <em>ptime=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.ping_launch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ping that a Launch is still alive: updates the &#8216;update_on &#8216;field of the state history of a
+Launch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+<li><strong>ptime</strong> (<a class="reference external" href="https://docs.python.org/2/library/datetime.html#module-datetime" title="(in Python v2.7)"><em>datetime</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.recover_offline">
+<code class="descname">recover_offline</code><span class="sig-paren">(</span><em>launch_id</em>, <em>ignore_errors=False</em>, <em>print_errors=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.recover_offline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the launch state using the offline data in FW_offline.json file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id</li>
+<li><strong>ignore_errors</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+<li><strong>print_errors</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">firework id if the recovering fails otherwise None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.reignite_fw">
+<code class="descname">reignite_fw</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reignite_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the firework id, re-ignite(set state=WAITING) the defused firework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.reignite_wf">
+<code class="descname">reignite_wf</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reignite_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reignite the workflow containing the given firework id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.rerun_fw">
+<code class="descname">rerun_fw</code><span class="sig-paren">(</span><em>fw_id</em>, <em>rerun_duplicates=True</em>, <em>clear_recovery=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rerun the firework corresponding to the given id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</li>
+<li><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of firework ids that were rerun</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.rerun_fws_task_level">
+<code class="descname">rerun_fws_task_level</code><span class="sig-paren">(</span><em>fw_id</em>, <em>rerun_duplicates=True</em>, <em>launch_id=None</em>, <em>recover_mode=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fws_task_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rerun a fw at the task level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; fw_id to rerun</li>
+<li><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; also rerun duplicate FWs</li>
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id to rerun, if known. otherwise the last launch_id will be used</li>
+<li><strong>recover_mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; use &#8220;prev_dir&#8221; to run again in previous dir, &#8220;cp&#8221; to try to copy
+data to new dir, or None to start from scratch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of rerun firework ids.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.reserve_fw">
+<code class="descname">reserve_fw</code><span class="sig-paren">(</span><em>fworker</em>, <em>launch_dir</em>, <em>host=None</em>, <em>ip=None</em>, <em>fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reserve_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checkout the next ready firework and mark the launch reserved.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) &#8211; </li>
+<li><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the launch directory.</li>
+<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; hostname</li>
+<li><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; ip address</li>
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; fw_id to be reserved, if desired</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the checked out firework and the new launch id</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">Firework</a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><em>password</em>, <em>require_password=True</em>, <em>max_reset_wo_password=25</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new FireWorks database. This will overwrite the existing FireWorks database! To
+safeguard against accidentally erasing an existing database, a password must be entered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>password</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A String representing today&#8217;s date, e.g. &#8216;2012-12-31&#8217;</li>
+<li><strong>require_password</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether a password is required to reset the DB. Setting to
+false is dangerous because running code unintentionally could clear your DB - use
+max_reset_wo_password to minimize risk.</li>
+<li><strong>max_reset_wo_password</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; A failsafe; when require_password is set to False,
+FWS will not clear DBs that contain more workflows than this parameter</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.restore_backup_data">
+<code class="descname">restore_backup_data</code><span class="sig-paren">(</span><em>launch_id</em>, <em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.restore_backup_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the given launch id and firework id, restore the back up data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.resume_fw">
+<code class="descname">resume_fw</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.resume_fw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the firework id, resume (set state=WAITING) the paused firework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.run_exists">
+<code class="descname">run_exists</code><span class="sig-paren">(</span><em>fworker=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.run_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the database contains any FireWorks that are ready to run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the database contains any FireWorks that are ready to run.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.set_priority">
+<code class="descname">set_priority</code><span class="sig-paren">(</span><em>fw_id</em>, <em>priority</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.set_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set priority to the firework with the given id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</li>
+<li><strong>priority</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.set_reservation_id">
+<code class="descname">set_reservation_id</code><span class="sig-paren">(</span><em>launch_id</em>, <em>reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.set_reservation_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set reservation id to the launch corresponding to the given launch id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+<li><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note: usernames/passwords are exported as unencrypted Strings!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.tuneup">
+<code class="descname">tuneup</code><span class="sig-paren">(</span><em>bkground=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.tuneup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database tuneup: build indexes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.update_spec">
+<code class="descname">update_spec</code><span class="sig-paren">(</span><em>fw_ids</em>, <em>spec_document</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.update_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update fireworks with a spec. Sometimes you need to modify a firework in progress.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong></strong><strong>[</strong><strong>int</strong><strong>]</strong><strong></strong> (<em>fw_ids</em>) &#8211; All fw_ids to modify.</li>
+<li><strong>spec_document</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; The spec document. Note that only modifications to
+the spec key are allowed. So if you supply {&#8220;_tasks.1.parameter&#8221;: &#8220;hello&#8221;},
+you are effectively modifying spec._tasks.1.parameter in the actual fireworks
+collection.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.launchpad.LazyFirework">
+<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LazyFirework</code><span class="sig-paren">(</span><em>fw_id</em>, <em>fw_coll</em>, <em>launch_coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A LazyFirework only has the fw_id, and grabs other data just-in-time.
+This representation can speed up Workflow loading as only &#8220;important&#8221; FWs need to be
+fully loaded.</p>
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.archived_launches">
+<code class="descname">archived_launches</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.archived_launches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.created_on">
+<code class="descname">created_on</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.created_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.db_fields">
+<code class="descname">db_fields</code><em class="property"> = ('name', 'fw_id', 'spec', 'created_on', 'state')</em><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.db_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.db_launch_fields">
+<code class="descname">db_launch_fields</code><em class="property"> = ('launches', 'archived_launches')</em><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.db_launch_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.full_fw">
+<code class="descname">full_fw</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.full_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.launches">
+<code class="descname">launches</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.launches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.name">
+<code class="descname">name</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.parents">
+<code class="descname">parents</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.parents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.partial_fw">
+<code class="descname">partial_fw</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.partial_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.spec">
+<code class="descname">spec</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.state">
+<code class="descname">state</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.tasks">
+<code class="descname">tasks</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.tasks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LazyFirework.to_db_dict">
+<code class="descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.launchpad.LazyFirework.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.core.launchpad.LazyFirework.updated_on">
+<code class="descname">updated_on</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.updated_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="fireworks.core.launchpad.LockedWorkflowError">
+<em class="property">exception </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LockedWorkflowError</code><a class="headerlink" href="#fireworks.core.launchpad.LockedWorkflowError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ValueError</span></code></p>
+<p>Error raised if the context manager WFLock can&#8217;t acquire the lock on the WF within the selected
+time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (WFLOCK_EXPIRATION_KILL)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.core.launchpad.WFLock">
+<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">WFLock</code><span class="sig-paren">(</span><em>lp</em>, <em>fw_id</em>, <em>expire_secs=300</em>, <em>kill=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Lock a Workflow, i.e. for performing update operations
+Raises a LockedWorkflowError if the lock couldn&#8217;t be acquired withing expire_secs and kill==False.
+Calling functions are responsible for handling the error in order to avoid database inconsistencies.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.core.rocket">
+<span id="fireworks-core-rocket-module"></span><h2>fireworks.core.rocket module<a class="headerlink" href="#module-fireworks.core.rocket" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.core.rocket.Rocket">
+<em class="property">class </em><code class="descclassname">fireworks.core.rocket.</code><code class="descname">Rocket</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>The Rocket fetches a workflow step from the FireWorks database and executes it.</p>
+<dl class="method">
+<dt id="fireworks.core.rocket.Rocket.decorate_fwaction">
+<code class="descname">decorate_fwaction</code><span class="sig-paren">(</span><em>fwaction</em>, <em>my_spec</em>, <em>m_fw</em>, <em>launch_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.decorate_fwaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.rocket.Rocket.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the rocket (check out a job from the database and execute it)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket.background_task">
+<code class="descclassname">fireworks.core.rocket.</code><code class="descname">background_task</code><span class="sig-paren">(</span><em>btask</em>, <em>spec</em>, <em>stop_event</em>, <em>master_thread</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.background_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket.do_ping">
+<code class="descclassname">fireworks.core.rocket.</code><code class="descname">do_ping</code><span class="sig-paren">(</span><em>launchpad</em>, <em>launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.do_ping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket.ping_launch">
+<code class="descclassname">fireworks.core.rocket.</code><code class="descname">ping_launch</code><span class="sig-paren">(</span><em>launchpad</em>, <em>launch_id</em>, <em>stop_event</em>, <em>master_thread</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.ping_launch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket.start_background_task">
+<code class="descclassname">fireworks.core.rocket.</code><code class="descname">start_background_task</code><span class="sig-paren">(</span><em>btask</em>, <em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_background_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket.start_ping_launch">
+<code class="descclassname">fireworks.core.rocket.</code><code class="descname">start_ping_launch</code><span class="sig-paren">(</span><em>launchpad</em>, <em>launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_ping_launch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket.stop_backgrounds">
+<code class="descclassname">fireworks.core.rocket.</code><code class="descname">stop_backgrounds</code><span class="sig-paren">(</span><em>ping_stop</em>, <em>btask_stops</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.stop_backgrounds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.core.rocket_launcher">
+<span id="fireworks-core-rocket-launcher-module"></span><h2>fireworks.core.rocket_launcher module<a class="headerlink" href="#module-fireworks.core.rocket_launcher" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fireworks.core.rocket_launcher.get_fworker">
+<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">get_fworker</code><span class="sig-paren">(</span><em>fworker</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.get_fworker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket_launcher.launch_rocket">
+<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">launch_rocket</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>fw_id=None</em>, <em>strm_lvl='INFO'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a single rocket in the current directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) &#8211; </li>
+<li><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) &#8211; </li>
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; if set, a particular Firework to run</li>
+<li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; level at which to output logs to stdout</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.core.rocket_launcher.rapidfire">
+<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">rapidfire</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>m_dir=None</em>, <em>nlaunches=0</em>, <em>max_loops=-1</em>, <em>sleep_time=None</em>, <em>strm_lvl='INFO'</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
+for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) &#8211; </li>
+<li><strong>fworker</strong> (<em>FWorker object</em>) &#8211; </li>
+<li><strong>m_dir</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the directory in which to loop Rocket running</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; 0 means &#8216;until completion&#8217;, -1 or &#8220;infinite&#8221; means to loop until max_loops</li>
+<li><strong>max_loops</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; maximum number of loops (default -1 is infinite)</li>
+<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; secs to sleep between rapidfire loop iterations</li>
+<li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; level at which to output logs to stdout</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; of seconds after which to stop the rapidfire process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.core">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.core" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fireworks.core package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.firework">fireworks.core.firework module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.fworker">fireworks.core.fworker module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.launchpad">fireworks.core.launchpad module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.rocket">fireworks.core.rocket module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.rocket_launcher">fireworks.core.rocket_launcher module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fireworks.core.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

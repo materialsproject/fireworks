@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fireworks.features package &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fireworks-features-package">
+<h1>fireworks.features package<a class="headerlink" href="#fireworks-features-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fireworks.features.tests.html">fireworks.features.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.features.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.features.tests.html#module-fireworks.features.tests.test_introspect">fireworks.features.tests.test_introspect module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.features.tests.html#module-fireworks.features.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fireworks.features.background_task">
+<span id="fireworks-features-background-task-module"></span><h2>fireworks.features.background_task module<a class="headerlink" href="#module-fireworks.features.background_task" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.features.background_task.BackgroundTask">
+<em class="property">class </em><code class="descclassname">fireworks.features.background_task.</code><code class="descname">BackgroundTask</code><span class="sig-paren">(</span><em>tasks</em>, <em>num_launches=0</em>, <em>sleep_time=60</em>, <em>run_on_finish=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="classmethod">
+<dt id="fireworks.features.background_task.BackgroundTask.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.background_task.BackgroundTask.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.features.dupefinder">
+<span id="fireworks-features-dupefinder-module"></span><h2>fireworks.features.dupefinder module<a class="headerlink" href="#module-fireworks.features.dupefinder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.features.dupefinder.DupeFinderBase">
+<em class="property">class </em><code class="descclassname">fireworks.features.dupefinder.</code><code class="descname">DupeFinderBase</code><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<p>This serves an Abstract class for implementing Duplicate Finders</p>
+<dl class="classmethod">
+<dt id="fireworks.features.dupefinder.DupeFinderBase.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.dupefinder.DupeFinderBase.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a spec, returns a database query that gives potential candidates for duplicated Fireworks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spec</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; spec to check for duplicates</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.dupefinder.DupeFinderBase.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.dupefinder.DupeFinderBase.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><em>spec1</em>, <em>spec2</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that checks whether two specs are identical enough to be considered duplicates.
+Return true if duplicated.</p>
+<p>Args:
+spec1 (dict)
+spec2 (dict)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.features.fw_report">
+<span id="fireworks-features-fw-report-module"></span><h2>fireworks.features.fw_report module<a class="headerlink" href="#module-fireworks.features.fw_report" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.features.fw_report.FWReport">
+<em class="property">class </em><code class="descclassname">fireworks.features.fw_report.</code><code class="descname">FWReport</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.features.fw_report.FWReport.get_stats">
+<code class="descname">get_stats</code><span class="sig-paren">(</span><em>coll='fireworks'</em>, <em>interval='days'</em>, <em>num_intervals=5</em>, <em>additional_query=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile statistics of completed Fireworks/Workflows for past &lt;num_intervals&gt; &lt;interval&gt;,
+e.g. past 5 days.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coll</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; collection, either &#8220;fireworks&#8221;, &#8220;workflows&#8221;, or &#8220;launches&#8221;</li>
+<li><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; one of &#8220;minutes&#8221;, &#8220;hours&#8221;, &#8220;days&#8221;, &#8220;months&#8221;, &#8220;years&#8221;</li>
+<li><strong>num_intervals</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; number of intervals to go back in time from present moment</li>
+<li><strong>additional_query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; additional constraints on reporting</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list, with each item being a dictionary of statistics for a given interval</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.fw_report.FWReport.get_stats_str">
+<code class="descname">get_stats_str</code><span class="sig-paren">(</span><em>decorated_stat_list</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of stats from FWReport.get_stats() to a string representation for viewing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>decorated_stat_list</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a><em>]</em><em></em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.features.introspect">
+<span id="fireworks-features-introspect-module"></span><h2>fireworks.features.introspect module<a class="headerlink" href="#module-fireworks.features.introspect" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.features.introspect.Introspector">
+<em class="property">class </em><code class="descclassname">fireworks.features.introspect.</code><code class="descname">Introspector</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.features.introspect.Introspector.introspect_fizzled">
+<code class="descname">introspect_fizzled</code><span class="sig-paren">(</span><em>coll='fws'</em>, <em>rsort=True</em>, <em>threshold=10</em>, <em>limit=100</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.introspect_fizzled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.introspect.Introspector.print_report">
+<code class="descname">print_report</code><span class="sig-paren">(</span><em>table</em>, <em>coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.print_report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.introspect.collect_stats">
+<code class="descclassname">fireworks.features.introspect.</code><code class="descname">collect_stats</code><span class="sig-paren">(</span><em>list_keys</em>, <em>filter_truncated=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.collect_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns a list of keys (from flatten_to_keys) into a dict of &lt;str&gt;:count, i.e. counts the
+number of times each key appears.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list_keys</strong> &#8211; </li>
+<li><strong>filter_truncated</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.introspect.compare_stats">
+<code class="descclassname">fireworks.features.introspect.</code><code class="descname">compare_stats</code><span class="sig-paren">(</span><em>statsdict1</em>, <em>numsamples1</em>, <em>statsdict2</em>, <em>numsamples2</em>, <em>threshold=5</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.compare_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.introspect.flatten_to_keys">
+<code class="descclassname">fireworks.features.introspect.</code><code class="descname">flatten_to_keys</code><span class="sig-paren">(</span><em>curr_doc</em>, <em>curr_recurs=1</em>, <em>max_recurs=2</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.flatten_to_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a dictionary into a list of keys, with string values &#8220;key1.key2:val&#8221;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>curr_doc</strong> &#8211; </li>
+<li><strong>curr_recurs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+<li><strong>max_recurs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.features.multi_launcher">
+<span id="fireworks-features-multi-launcher-module"></span><h2>fireworks.features.multi_launcher module<a class="headerlink" href="#module-fireworks.features.multi_launcher" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="fireworks.features.multi_launcher.launch_multiprocess">
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">launch_multiprocess</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>loglvl</em>, <em>nlaunches</em>, <em>num_jobs</em>, <em>sleep_time</em>, <em>total_node_list=None</em>, <em>ppn=1</em>, <em>timeout=None</em>, <em>exclude_current_node=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.launch_multiprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Launch the jobs in the job packing mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) &#8211; </li>
+<li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) &#8211; </li>
+<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; level at which to output logs</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; 0 means &#8216;until completion&#8217;, -1 or &#8220;infinite&#8221; means to loop forever</li>
+<li><strong>num_jobs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; number of sub jobs</li>
+<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; secs to sleep between rapidfire loop iterations</li>
+<li><strong>total_node_list</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>]</em><em></em>) &#8211; contents of NODEFILE (doesn&#8217;t affect execution)</li>
+<li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; processors per node (doesn&#8217;t affect execution)</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; # of seconds after which to stop the rapidfire process</li>
+<li><strong>exclude_current_node</strong> &#8211; Don&#8217;t use the script launching node as a compute node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.multi_launcher.ping_multilaunch">
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">ping_multilaunch</code><span class="sig-paren">(</span><em>port</em>, <em>stop_event</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.ping_multilaunch" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single manager to ping all launches during multiprocess launches</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Listening port number of the DataServer</li>
+<li><strong>stop_event</strong> (<em>Thread.Event</em>) &#8211; stop event</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.multi_launcher.rapidfire_process">
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">rapidfire_process</code><span class="sig-paren">(</span><em>fworker</em>, <em>nlaunches</em>, <em>sleep</em>, <em>loglvl</em>, <em>port</em>, <em>node_list</em>, <em>sub_nproc</em>, <em>timeout</em>, <em>running_ids_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.rapidfire_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes shared data with multiprocessing parameters and starts a rapidfire.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) &#8211; object</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; 0 means &#8216;until completion&#8217;, -1 or &#8220;infinite&#8221; means to loop forever</li>
+<li><strong>sleep</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; secs to sleep between rapidfire loop iterations</li>
+<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; level at which to output logs to stdout</li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Listening port number of the shared object manage</li>
+<li><strong>password</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; security password to access the server</li>
+<li><strong>node_list</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>]</em><em></em>) &#8211; computer node list</li>
+<li><strong>sub_nproc</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; number of processors of the sub job</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; # of seconds after which to stop the rapidfire process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.multi_launcher.split_node_lists">
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">split_node_lists</code><span class="sig-paren">(</span><em>num_jobs</em>, <em>total_node_list=None</em>, <em>ppn=24</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.split_node_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse node list and processor list from nodefile contents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>num_jobs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; number of sub jobs</li>
+<li><strong>total_node_list</strong> (<em>list of str</em>) &#8211; the node list of the whole large job</li>
+<li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; number of procesors per node</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(([int],[int])) the node list and processor list for each job</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.features.multi_launcher.start_rockets">
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">start_rockets</code><span class="sig-paren">(</span><em>fworker</em>, <em>nlaunches</em>, <em>sleep</em>, <em>loglvl</em>, <em>port</em>, <em>node_lists</em>, <em>sub_nproc_list</em>, <em>timeout=None</em>, <em>running_ids_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.start_rockets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create each sub job and start a rocket launch in each one</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) &#8211; object</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; 0 means &#8216;until completion&#8217;, -1 or &#8220;infinite&#8221; means to loop forever</li>
+<li><strong>sleep</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; secs to sleep between rapidfire loop iterations</li>
+<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; level at which to output logs to stdout</li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Listening port number</li>
+<li><strong>node_lists</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>]</em><em></em>) &#8211; computer node list</li>
+<li><strong>sub_nproc_list</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>]</em><em></em>) &#8211; list of the number of the process of sub jobs</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; # of seconds after which to stop the rapidfire process</li>
+<li><strong>running_ids_dict</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Shared dict between process to record IDs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">([multiprocessing.Process]) all the created processes</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.features.stats">
+<span id="fireworks-features-stats-module"></span><h2>fireworks.features.stats module<a class="headerlink" href="#module-fireworks.features.stats" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.features.stats.FWStats">
+<em class="property">class </em><code class="descclassname">fireworks.features.stats.</code><code class="descname">FWStats</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.features.stats.FWStats.get_daily_completion_summary">
+<code class="descname">get_daily_completion_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='time_end'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_daily_completion_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get daily summary of fireworks for a specified time range
+:param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is 30 days before current time.
+:param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is current time.
+:param query: (dict) Additional Pymongo queries to filter entries for process.
+:param time_field: (str) The field to query time range. Default is &#8220;time_end&#8221;.
+:param args: (dict) Time difference to calculate query_start from query_end. Accepts arguments in python
+datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
+:return: (list) A summary of daily fireworks stats for the specified time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.stats.FWStats.get_fireworks_summary">
+<code class="descname">get_fireworks_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='updated_on'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_fireworks_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get fireworks summary for a specified time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query_start</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is 30 days before current time.</li>
+<li><strong>query_end</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is current time.</li>
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Additional Pymongo queries to filter entries for process.</li>
+<li><strong>time_field</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The field to query time range. Default is &#8220;updated_on&#8221;.</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Time difference to calculate query_start from query_end.
+Accepts arguments in python datetime.timedelta function. args and query_start can
+not be given at the same time. Default is 30 days.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(list) A summary of fireworks stats for the specified time range.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.stats.FWStats.get_launch_summary">
+<code class="descname">get_launch_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>time_field='time_end'</em>, <em>query=None</em>, <em>runtime_stats=False</em>, <em>include_ids=False</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_launch_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get launch summary for a specified time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query_start</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is 30 days before current time.</li>
+<li><strong>query_end</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is current time.</li>
+<li><strong>time_field</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The field to query time range. Default is &#8220;time_end&#8221;.</li>
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Additional Pymongo queries to filter entries for process.</li>
+<li><strong>runtime_stats</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; If return runtime stats. Default is False.</li>
+<li><strong>include_ids</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; If return fw_ids. Default is False.</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Time difference to calculate query_start from query_end.
+Accepts arguments in python datetime.timedelta function. args and query_start can
+not be given at the same time. Default is 30 days.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(list) A summary of launch stats for the specified time range.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.stats.FWStats.get_workflow_summary">
+<code class="descname">get_workflow_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='updated_on'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_workflow_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get workflow summary for a specified time range.
+:param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is 30 days before current time.
+:param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is current time.
+:param query: (dict) Additional Pymongo queries to filter entries for process.
+:param time_field: (str) The field to query time range. Default is &#8220;updated_on&#8221;.
+:param args: (dict) Time difference to calculate query_start from query_end. Accepts arguments in python
+datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
+:return: (list) A summary of workflow stats for the specified time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.stats.FWStats.group_fizzled_fireworks">
+<code class="descname">group_fizzled_fireworks</code><span class="sig-paren">(</span><em>group_by</em>, <em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>include_ids=False</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.group_fizzled_fireworks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group fizzled fireworks for a specified time range by a specified key.
+:param group_by: (str) Database field used to group fireworks items.
+:param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is 30 days before current time.
+:param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is current time.
+:param query: (dict) Additional Pymongo queries to filter entries for process.
+:param include_ids: (bool) If return fw_ids. Default is False.
+:param args: (dict) Time difference to calculate query_start from query_end. Accepts arguments in python
+datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
+:return: (list) A summary of fizzled fireworks for group by the specified key.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.features.stats.FWStats.identify_catastrophes">
+<code class="descname">identify_catastrophes</code><span class="sig-paren">(</span><em>error_ratio=0.01</em>, <em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='time_end'</em>, <em>include_ids=True</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.identify_catastrophes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get days with higher failure ratio
+:param error_ratio: (float) Threshold of error ratio to define as a catastrophic day
+:param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is 30 days before current time.
+:param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+Default is current time.
+:param query: (dict) Additional Pymongo queries to filter entries for process.
+:param time_field: (str) The field to query time range. Default is &#8220;time_end&#8221;.
+:param include_ids: (bool) If return fw_ids. Default is False.
+:param args: (dict) Time difference to calculate query_start from query_end. Accepts arguments in python
+datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
+:return: (list) Dates with higher failure ratio with optional failed fw_ids.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.features">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.features" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fireworks.features package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fireworks.features.background_task">fireworks.features.background_task module</a></li>
+<li><a class="reference internal" href="#module-fireworks.features.dupefinder">fireworks.features.dupefinder module</a></li>
+<li><a class="reference internal" href="#module-fireworks.features.fw_report">fireworks.features.fw_report module</a></li>
+<li><a class="reference internal" href="#module-fireworks.features.introspect">fireworks.features.introspect module</a></li>
+<li><a class="reference internal" href="#module-fireworks.features.multi_launcher">fireworks.features.multi_launcher module</a></li>
+<li><a class="reference internal" href="#module-fireworks.features.stats">fireworks.features.stats module</a></li>
+<li><a class="reference internal" href="#module-fireworks.features">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fireworks.features.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

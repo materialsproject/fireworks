@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using the ScriptTask to execute commands &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using the TemplateWriterTask to write files" href="templatewritertask.html" />
+    <link rel="prev" title="Improving FireWorks performance" href="performance_tutorial.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="performance_tutorial.html" title="Improving FireWorks performance"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-the-scripttask-to-execute-commands">
+<h1>Using the ScriptTask to execute commands<a class="headerlink" href="#using-the-scripttask-to-execute-commands" title="Permalink to this headline">¶</a></h1>
+<p>The ScriptTask is a Firetask built-in to FireWorks to help run non-Python programs through the command line. For example, you could use the ScriptTask to execute a Java &#8220;JAR&#8221; file or a C++ code. Internally,ScriptTask runs your script through a thin Python wrapper (the ScriptTask is really just another Firetask and doesn&#8217;t have any special privileges).</p>
+<p>The advantage of the built-in ScriptTask is that a lot of features and options have already been implemented. Let&#8217;s examine these now.</p>
+<div class="section" id="required-parameter">
+<h2>Required parameter<a class="headerlink" href="#required-parameter" title="Permalink to this headline">¶</a></h2>
+<p>The ScriptTask parameter requires setting the <em>script</em> parameter:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">script</span></code> - <em>(str)</em> or <em>[(str)]</em> - a String script to run, or an array of scripts to run in sequence</li>
+</ul>
+</div>
+<div class="section" id="scripttask-options">
+<h2>ScriptTask options<a class="headerlink" href="#scripttask-options" title="Permalink to this headline">¶</a></h2>
+<p>The ScriptTask can take in many parameters. We already examined the <code class="docutils literal"><span class="pre">script</span></code> parameter of ScriptTask in the <a class="reference internal" href="introduction.html"><span class="doc">Introductory tutorial</span></a>; this parameter sets the script to run. It is the only required parameter. Other optional parameters are:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">defuse_bad_rc</span></code> - <em>(default:False)</em> - if set True, a non-zero returncode from the Script (indicating error) will cause FireWorks to defuse the child FireWorks rather than continuing.</li>
+<li><code class="docutils literal"><span class="pre">fizzle_bad_rc</span></code> - <em>(default:False)</em> - if set True, a non-zero returncode from the Script (indicating error) will cause the Firework to raise an error and FIZZLE.</li>
+<li><code class="docutils literal"><span class="pre">use_shell</span></code> - <em>(default:True)</em> - whether to execute the command through the current shell (e.g., BASH or CSH). If true, you will be able to use environment variables and shell operators; but, this method can be less secure.</li>
+<li><code class="docutils literal"><span class="pre">shell_exe</span></code> - <em>(default:None)</em> - path to shell executable, e.g. <em>/bin/bash</em>. Generally you do not need to set this unless you want to run through a non-default shell.</li>
+<li><code class="docutils literal"><span class="pre">stdin_file</span></code> - <em>(default:None)</em> - feed this filepath as standard input to the script</li>
+<li><code class="docutils literal"><span class="pre">stdin_key</span></code> - <em>(default:None)</em> - feed this String as standard input to the script</li>
+<li><code class="docutils literal"><span class="pre">store_stdout</span></code> <em>(default:False)</em> - store the entire standard output in the Firework Launch object&#8217;s <em>stored_data</em></li>
+<li><code class="docutils literal"><span class="pre">stdout_file</span></code> - <em>(default:None)</em> - store the entire standard output in this filepath. If None, the standard out will be streamed to <em>sys.stdout</em></li>
+<li><code class="docutils literal"><span class="pre">store_stderr</span></code> - <em>(default:False)</em> - store the entire standard error in the Firework Launch object&#8217;s <em>stored_data</em></li>
+<li><code class="docutils literal"><span class="pre">stderr_file</span></code> - <em>(default:None)</em> - store the entire standard error in this filepath. If None, the standard error will be streamed to  <em>sys.stderr</em></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These parameters do not go in the root of the FW <strong>spec</strong>. Rather, they go as parameters to the <code class="docutils literal"><span class="pre">ScriptTask</span></code> in the <code class="docutils literal"><span class="pre">_tasks</span></code> section of the <strong>spec</strong> (in the same section as the <code class="docutils literal"><span class="pre">script</span></code> parameter in the <a class="reference internal" href="introduction.html"><span class="doc">Introductory tutorial</span></a>).</p>
+</div>
+</div>
+<div class="section" id="manually-setting-the-scripttask-fwaction">
+<h2>Manually setting the ScriptTask FWAction<a class="headerlink" href="#manually-setting-the-scripttask-fwaction" title="Permalink to this headline">¶</a></h2>
+<p>The built-in ScriptTask options might not be flexible enough to handle all your needs. For example, you might want to return a complex <em>FWAction</em> that stores custom data from your job and modifies the Workflow in a complex way (within, for example your Java or C++ code).</p>
+<p>To accomplish this, your script can write a file called <code class="docutils literal"><span class="pre">FWAction.json</span></code> or <code class="docutils literal"><span class="pre">FWAction.yaml</span></code> in the launch directory, and that contains a serialization of the <em>FWAction</em> object. FireWorks will read this file and replace the simple <em>FWAction</em> returned by ScriptTask with the one you specify in this file.</p>
+</div>
+<div class="section" id="the-use-global-spec-option">
+<h2>The _use_global_spec option<a class="headerlink" href="#the-use-global-spec-option" title="Permalink to this headline">¶</a></h2>
+<p>By default, the parameters for the ScriptTask should be defined within the <code class="docutils literal"><span class="pre">_task</span></code> section of the <strong>spec</strong> corresponding to the ScriptTask, not as a root key of the <strong>spec</strong>. If you&#8217;d like to instead specify the parameters in the root of the <strong>spec</strong>, you can set <code class="docutils literal"><span class="pre">_use_global_spec</span></code> to True within the <code class="docutils literal"><span class="pre">_task</span></code> section. Note that <code class="docutils literal"><span class="pre">_use_global_spec</span></code> can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple ScriptTasks within the same Firework.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using the ScriptTask to execute commands</a><ul>
+<li><a class="reference internal" href="#required-parameter">Required parameter</a></li>
+<li><a class="reference internal" href="#scripttask-options">ScriptTask options</a></li>
+<li><a class="reference internal" href="#manually-setting-the-scripttask-fwaction">Manually setting the ScriptTask FWAction</a></li>
+<li><a class="reference internal" href="#the-use-global-spec-option">The _use_global_spec option</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="performance_tutorial.html"
+                        title="previous chapter">Improving FireWorks performance</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="templatewritertask.html"
+                        title="next chapter">Using the TemplateWriterTask to write files</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/scripttask.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="performance_tutorial.html" title="Improving FireWorks performance"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

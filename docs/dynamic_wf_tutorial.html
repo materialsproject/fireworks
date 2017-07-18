@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dynamic Workflows &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tips for designing Firetasks, FireWorks, and Workflows" href="design_tips.html" />
+    <link rel="prev" title="Creating Workflows" href="workflow_tutorial.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="design_tips.html" title="Tips for designing Firetasks, FireWorks, and Workflows"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="workflow_tutorial.html" title="Creating Workflows"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dynamic-workflows">
+<h1>Dynamic Workflows<a class="headerlink" href="#dynamic-workflows" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial, we&#8217;ll explore how to:</p>
+<ul class="simple">
+<li>pass information between FireWorks in a Workflow</li>
+<li>define Firetasks that automatically create more FireWorks that depend on the output of the task</li>
+</ul>
+<p>This tutorial can be completed from the command line, but basic knowledge of Python is suggested. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you&#8217;ve set one up.</p>
+<div class="section" id="a-workflow-that-passes-job-information">
+<h2>A workflow that passes job information<a class="headerlink" href="#a-workflow-that-passes-job-information" title="Permalink to this headline">¶</a></h2>
+<p>The first thing we will examine is a workflow that passes job information - namely the <code class="docutils literal"><span class="pre">name</span></code>, <code class="docutils literal"><span class="pre">fw_id</span></code>, and <code class="docutils literal"><span class="pre">launch_dir</span></code> (run directory) of a parent Firework to its child. Often, the run directory of the parent is needed by the child (e.g., to copy files from the parent job to the child job). Although FireWorks has a powerful framework for passing arbitrary information between jobs through the <code class="docutils literal"><span class="pre">FWAction</span></code> object (which we will begin to cover in the next example), passing basic job information can be done more simply by simply setting the <code class="docutils literal"><span class="pre">_pass_job_info</span></code> reserved keyword spec to True. Let&#8217;s look at this in more detail.</p>
+<ol class="arabic">
+<li><p class="first">Move to the <code class="docutils literal"><span class="pre">dynamic_wf</span></code> tutorial directory in your installation directory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">dynamic_wf</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The workflow is encapsulated in the <code class="docutils literal"><span class="pre">printjob_wf.yaml</span></code> file. Look inside this file. Like last time, the <code class="docutils literal"><span class="pre">fws</span></code> section contains a list of Firework objects:</p>
+</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">fw_id</span></code> #1 looks a lot like the FireWorks we&#8217;ve seen before. It is a <code class="docutils literal"><span class="pre">ScriptTask</span></code> Firetask that prints out a message (<em>This is the first Firework</em>) to the terminal. The one thing to notice, however, is that there is now a <code class="docutils literal"><span class="pre">_pass_job_info</span></code> key which is set to True. So the <code class="docutils literal"><span class="pre">ScriptTask</span></code> has been instructed to pass job information. <strong>Important note</strong>: The <code class="docutils literal"><span class="pre">_pass_job_info</span></code> key can be set for <em>any</em> Firetask; there is nothing special about <code class="docutils literal"><span class="pre">ScriptTask</span></code> in this regard.</li>
+<li><code class="docutils literal"><span class="pre">fw_id</span></code> #2 is unfamiliar - it references a <code class="docutils literal"><span class="pre">Print</span> <span class="pre">Job</span> <span class="pre">Task</span></code> custom Firetask. There is nothing special about this Firetask, except that we will be using it to print out the information that was passed by FW #1.</li>
+<li>The section labeled <code class="docutils literal"><span class="pre">links</span></code> connects these FireWorks into a workflow in the same manner as in the <a class="reference internal" href="workflow_tutorial.html"><span class="doc">first workflow tutorial</span></a>.</li>
+</ul>
+</div></blockquote>
+<ol class="arabic" start="3">
+<li><p class="first">Let&#8217;s try adding this workflow to our database. We&#8217;ll go over the details of how everything is working as we run the Workflow:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
+<span class="n">lpad</span> <span class="n">add</span> <span class="n">printjob_wf</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Next, let&#8217;s use the rapidfire mode with <code class="docutils literal"><span class="pre">--nlaunches</span></code> set to 1 to run just the <em>first</em> Firework in this Workflow (the ScriptTask):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span> <span class="o">--</span><span class="n">nlaunches</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Up until now, things should be pretty familiar. However, remember that this first FireWork had set <code class="docutils literal"><span class="pre">_pass_job_info</span></code> to True. This is an instruction to update the <code class="docutils literal"><span class="pre">spec</span></code> of all children jobs with some runtime information of this job. Let&#8217;s examine our child job to see if anything is different:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">2</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The output should look something like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Unnamed FW&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fw_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;READY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;created_on&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-09-08T23:23:11.913700&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;updated_on&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-09-08T23:23:30.607863&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;_tasks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;_fw_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Print Job Task&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;_job_info&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;fw_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;launch_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;fireworks/fw_tutorials/dynamic_wf/launcher_2015-09-08-23-56-27-593424&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Unnamed FW&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The key thing to notice in the output above is the presence of a <code class="docutils literal"><span class="pre">_job_info</span></code> key. We didn&#8217;t put that there in our Workflow; it was added automatically by FireWorks after the first job ran! Thus, the child job now has access to information about the previous job in its <code class="docutils literal"><span class="pre">spec._job_info</span></code>. Note that this key is an <em>array</em>, and if there were several steps in the Workflow we could chain together information from the entire history of jobs.</p>
+</li>
+<li><p class="first">Let&#8217;s now run the second job and see what happens:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span> <span class="o">--</span><span class="n">nlaunches</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Examining the output, it seems the second job (the <code class="docutils literal"><span class="pre">Print</span> <span class="pre">Job</span> <span class="pre">Task</span></code>) was able to print out information about the first job. You can examine the custom Firetask by looking in the file <code class="docutils literal"><span class="pre">printjob_task.py</span></code>. Remember that the code that gets executed is the <code class="docutils literal"><span class="pre">run_task()</span></code> method:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fw_spec</span><span class="p">):</span>
+    <span class="n">job_info_array</span> <span class="o">=</span> <span class="n">fw_spec</span><span class="p">[</span><span class="s1">&#39;_job_info&#39;</span><span class="p">]</span>
+    <span class="n">prev_job_info</span> <span class="o">=</span> <span class="n">job_info_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The name of the previous job was: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prev_job_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The id of the previous job was: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prev_job_info</span><span class="p">[</span><span class="s1">&#39;fw_id&#39;</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The location of the previous job was: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prev_job_info</span><span class="p">[</span><span class="s1">&#39;launch_dir&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">It should be clear from examination how this code is working. First, it is inspecting the <code class="docutils literal"><span class="pre">_job_info</span></code> key (remember, even though we did not set the value of this key it was created and populated automatically because the previous job had set the <code class="docutils literal"><span class="pre">_pass_job_info</span></code> key to True in the <code class="docutils literal"><span class="pre">_fw_spec</span></code>). Next, we are taking the last item in this array since there could be information about multiple previous jobs in this key. Finally, we are printing out the information about the job. We could similarly use the information about <code class="docutils literal"><span class="pre">launch_dir</span></code> to copy files or perform other tasks.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="a-workflow-that-passes-data">
+<h2>A workflow that passes data<a class="headerlink" href="#a-workflow-that-passes-data" title="Permalink to this headline">¶</a></h2>
+<p>Apart from job info, other information can also be passed between Fireworks in a Workflow. Let&#8217;s imagine a workflow in which the first step adds the numbers 1 + 1, and the second step adds the number 10 to the result of the first step. The second step doesn&#8217;t know in advance what the result of the first step will be; the first step must pass its output to the second step after it completes. The final result should be 10 + (1 + 1) = 12. Visually, the workflow looks like:</p>
+<a class="reference internal image-reference" href="_images/addmod_wf.png"><img alt="Add and Modify WF" class="align-center" src="_images/addmod_wf.png" style="width: 200px;" /></a>
+<p>The text in blue lettering is not known in advance and can only be determined after running the first workflow step. Let&#8217;s examine how we can set up such a workflow.</p>
+<ol class="arabic">
+<li><p class="first">Move to the <code class="docutils literal"><span class="pre">dynamic_wf</span></code> tutorial directory in your installation directory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">dynamic_wf</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The workflow is encapsulated in the <code class="docutils literal"><span class="pre">addmod_wf.yaml</span></code> file. Look inside this file. Like last time, the <code class="docutils literal"><span class="pre">fws</span></code> section contains a list of Firework objects:</p>
+</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">fw_id</span></code> #1 looks like it adds the numbers 1 and 1 (defined in the <strong>input_array</strong>) within an <code class="docutils literal"><span class="pre">Add</span> <span class="pre">and</span> <span class="pre">Modify</span></code> Firetask. This is clearly the first step of our desired workflow. Although we don&#8217;t yet know what the <code class="docutils literal"><span class="pre">Add</span> <span class="pre">and</span> <span class="pre">Modify</span></code> Firetask is, we can guess that it at least adds the numbers in the <strong>input_array</strong>.</li>
+<li><code class="docutils literal"><span class="pre">fw_id</span></code> #2 only adds the number 10 thus far. Without knowing the details of the <code class="docutils literal"><span class="pre">Add</span> <span class="pre">and</span> <span class="pre">Modify</span></code> Firetask, it is unclear how this Firework will obtain the output of the previous Firework.  We&#8217;ll explain that in the next step.</li>
+<li>The second section, labeled <code class="docutils literal"><span class="pre">links</span></code>, connects these FireWorks into a workflow in the same manner as in the <a class="reference internal" href="workflow_tutorial.html"><span class="doc">first workflow tutorial</span></a>.</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>We pass information by defining a custom Firetask that returns an instruction to modify the workflow. To see how this happens, we need to look inside the definition of our custom <code class="docutils literal"><span class="pre">Add</span> <span class="pre">and</span> <span class="pre">Modify</span></code> Firetask. Look inside the file <code class="docutils literal"><span class="pre">addmod_task.py</span></code>:</li>
+</ol>
+<blockquote>
+<div><ul>
+<li><p class="first">Most of this Firetask should now be familiar to you; it is very similar to the <code class="docutils literal"><span class="pre">Addition</span> <span class="pre">Task</span></code> we investigated when <a class="reference internal" href="firetask_tutorial.html#customtask-label"><span class="std std-ref">Creating a custom Firetask</span></a>.</p>
+</li>
+<li><p class="first">The last line of this file, however, is different. It reads:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="n">FWAction</span><span class="p">(</span><span class="n">stored_data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">},</span> <span class="n">mod_spec</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;_push&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;input_array&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">}}])</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The first argument, <em>{&#8216;sum&#8217;: m_sum}</em>, is the data we want to store in our database for future reference. (We&#8217;ve explored this before when <a class="reference internal" href="firetask_tutorial.html#customtask-label"><span class="std std-ref">Creating a custom Firetask</span></a>). It does not affect this Firework&#8217;s operation.</p>
+</li>
+<li><p class="first">The second argument, <em>mod_spec=[{&#8216;_push&#8217;: {&#8216;input_array&#8217;: m_sum}}]</em>, is more complex. This argument describes a list of modifications to make to the next Firework&#8217;s <strong>spec</strong> using a special language.</p>
+</li>
+<li><p class="first">The instruction <em>{&#8216;_push&#8217;: {&#8216;input_array&#8217;: m_sum}}</em> means that the <em>input_array</em> key of the next Firework(s) will have another item <em>pushed</em> to the end of it. In our case, we will be pushing the sum of (1 + 1) to the <code class="docutils literal"><span class="pre">input_array</span></code> of the next Firework.</p>
+</li>
+</ul>
+</div></blockquote>
+<ol class="arabic" start="4">
+<li><p class="first">The previous step can be summarized as follows: when our Firetask completes, it will push the sum of its inputs to the inputs of the next Firework. Let&#8217;s see how this operates in practice by inserting the workflow in our database:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
+<span class="n">lpad</span> <span class="n">add</span> <span class="n">addmod_wf</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">If we examined our two FireWorks at this stage, nothing would be out of the ordinary. In particular, one of the FireWorks has only a single input, <code class="docutils literal"><span class="pre">10</span></code>, and does not yet know what number to add to <code class="docutils literal"><span class="pre">10</span></code>. To confirm:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+<span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">2</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Let&#8217;s now run the first step of the workflow:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">singleshot</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">This prints out <code class="docutils literal"><span class="pre">The</span> <span class="pre">sum</span> <span class="pre">of</span> <span class="pre">[1,</span> <span class="pre">1]</span> <span class="pre">is:</span> <span class="pre">2</span></code> - no surprise there. But let&#8217;s look what happens when we look at our FireWorks again:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+<span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">2</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You should notice that the Firework that is <code class="docutils literal"><span class="pre">READY</span></code> - the one that only had a single input of <code class="docutils literal"><span class="pre">10</span></code> - now has <em>two</em> inputs: <code class="docutils literal"><span class="pre">10</span></code> and <code class="docutils literal"><span class="pre">2</span></code>. Our first Firetask has pushed its sum onto the <code class="docutils literal"><span class="pre">input_array</span></code> of the second Firework!</p>
+</li>
+<li><p class="first">Finally, let&#8217;s run the second step to ensure we successfully passed information between FireWorks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">singleshot</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">This prints out <code class="docutils literal"><span class="pre">The</span> <span class="pre">sum</span> <span class="pre">of</span> <span class="pre">[10,</span> <span class="pre">2]</span> <span class="pre">is:</span> <span class="pre">12</span></code> - just as we desired!</p>
+</li>
+</ol>
+<p>You&#8217;ve now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including some that involve a simpler (but less flexible) language than what we just demonstrated. We will present details in a different document. For now, we will continue by demonstrating another type of dynamic workflow.</p>
+</div>
+<div class="section" id="a-fibonacci-adder">
+<h2>A Fibonacci Adder<a class="headerlink" href="#a-fibonacci-adder" title="Permalink to this headline">¶</a></h2>
+<p>You may not know in advance how many workflow steps you require to achieve a result. For example, let&#8217;s generate all the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci numbers</a> less than 100, but only using a single addition in each Firework. It&#8217;s unclear how many additions we&#8217;ll need, so we can&#8217;t set up this workflow explicitly.</p>
+<p>Instead, we will start with a single Firework that contains the start of the sequence (0, 1). This Firework will generate the next Fibonacci number in the sequence by addition, and then <em>generate its own child Firework</em> to carry out the next addition operation. That child will in turn generate its own children. Starting from a single Firework, we will end up with as many FireWorks as are needed to generate all the Fibonacci numbers less than 100.</p>
+<p>A diagram of our the first two steps of operation of our Firework looks like this:</p>
+<a class="reference internal image-reference" href="_images/fibnum_wf.png"><img alt="Fibonacci Number Workflow" class="align-center" src="_images/fibnum_wf.png" style="width: 200px;" /></a>
+<p>Our single Firework will contain a custom Firetask that does the following:</p>
+<ul class="simple">
+<li>Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).</li>
+<li><dl class="first docutils">
+<dt>If this next Fibonacci number is less than 100 (the <strong>stop_point</strong>):</dt>
+<dd><ul class="first last">
+<li>Print it</li>
+<li>Create its own child Firework that will sum the new Fibonacci number we just found with the larger of the current inputs. In our example, this would mean to create a new Firework with inputs 1 and 1.</li>
+<li>This new Firework will output the next Fibonacci number (2), and then create its own child Firework to continue the sequence (not shown)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>When the next Fibonacci number is greater than 100, print a message that we have exceeded our limit and stop the workflow rather than generate more FireWorks.</li>
+</ul>
+<p>Let&#8217;s see how this is achieved:</p>
+<ol class="arabic">
+<li><p class="first">Stay in the <code class="docutils literal"><span class="pre">dynamic_wf</span></code> tutorial directory in your installation directory and clear it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">dynamic_wf</span>
+<span class="n">rm</span> <span class="n">FW</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The initial Firework is in the file <code class="docutils literal"><span class="pre">fw_fibnum.yaml</span></code>. Look inside it. However, there is nothing special here. We are just defining the first two numbers, 0 and 1, along with the <strong>stop_point</strong> of 100, and asking to run the <code class="docutils literal"><span class="pre">Fibonacci</span> <span class="pre">Adder</span> <span class="pre">Task</span></code>.</p>
+</li>
+<li><p class="first">The dynamicism is in the <code class="docutils literal"><span class="pre">Fibonacci</span> <span class="pre">Adder</span> <span class="pre">Task</span></code>, which is defined in the file <code class="docutils literal"><span class="pre">fibadd_task.py</span></code>. Look inside this file.</p>
+</li>
+</ol>
+<blockquote>
+<div><ul>
+<li><p class="first">The most important part of the code are the lines:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">new_fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">FibonacciAdderTask</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;smaller&#39;</span><span class="p">:</span> <span class="n">larger</span><span class="p">,</span> <span class="s1">&#39;larger&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">,</span> <span class="s1">&#39;stop_point&#39;</span><span class="p">:</span> <span class="n">stop_point</span><span class="p">})</span>
+<span class="k">return</span> <span class="n">FWAction</span><span class="p">(</span><span class="n">stored_data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;next_fibnum&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">},</span> <span class="n">additions</span><span class="o">=</span><span class="n">new_fw</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The first line defines a new Firework that is also a <code class="docutils literal"><span class="pre">Fibonacci</span> <span class="pre">Adder</span> <span class="pre">Task</span></code>. However, the inputs are slightly changed: the <strong>smaller</strong> number of the new Firework is the larger number of the current Firework, and the <strong>larger</strong> number of the new Firework is the sum of the two numbers of the current Firework (just like in our diagram). The <strong>stop_point</strong> is kept the same.</p>
+</li>
+<li><p class="first">The <em>{&#8216;next_fibnum&#8217;: m_sum}</em> portion is just data to store inside the database, it does not affect the Firework&#8217;s operation.</p>
+</li>
+<li><p class="first">The <em>additions</em> argument contains our dynamicism. Here, you can add a Firework to the workflow (as shown), or even add lists of FireWorks or entire lists of Workflows!</p>
+</li>
+</ul>
+</div></blockquote>
+<ol class="arabic">
+<li><p class="first">Now that we see how our Firetask will create a new Firework dynamically, let&#8217;s run the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
+<span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_fibnum</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">lpad</span> <span class="n">get_fws</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">That last command should prove that there is only one Firework in the database. Let&#8217;s run it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">singleshot</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You should see the text <code class="docutils literal"><span class="pre">The</span> <span class="pre">next</span> <span class="pre">Fibonacci</span> <span class="pre">number</span> <span class="pre">is:</span> <span class="pre">1</span></code>. Normally this would be the end of the story - one Firework, one Rocket. But let&#8217;s try to again to get all the FireWorks in the database:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now there are <em>two</em> FireWorks in the database! The previous Firework created a new Firework dynamically. We can now run this new Firework:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">singleshot</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">This should print out the next Fibonacci number (2). You can repeat this until our Firetask detects we have gone above our limit of 100:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ rlaunch -s singleshot
+The next Fibonacci number is: 3
+$ rlaunch -s singleshot
+The next Fibonacci number is: 5
+$ rlaunch -s singleshot
+The next Fibonacci number is: 8
+$ rlaunch -s singleshot
+The next Fibonacci number is: 13
+$ rlaunch -s singleshot
+The next Fibonacci number is: 21
+$ rlaunch -s singleshot
+The next Fibonacci number is: 34
+$ rlaunch -s singleshot
+The next Fibonacci number is: 55
+$ rlaunch -s singleshot
+The next Fibonacci number is: 89
+$ rlaunch -s singleshot
+We have now exceeded our limit; (the next Fibonacci number would have been: 144)
+</pre></div>
+</div>
+</li>
+<li><p class="first">If we try to run another Rocket, we would get an error that no FireWorks are left in the database (you can try it if you want). We&#8217;ll instead look at all the different FireWorks created dynamically by our program:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>There are 11 FireWorks in all, and 10 of them were created automatically by other FireWorks!</p>
+</div>
+<div class="section" id="a-fibonacci-adder-the-quick-way">
+<h2>A Fibonacci Adder: The Quick Way<a class="headerlink" href="#a-fibonacci-adder-the-quick-way" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s see how quickly we can add and run our entire workflow consisting of 11 steps:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_fibnum</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span>
+</pre></div>
+</div>
+<p>That was quick! You might even try again with the <strong>stop_point</strong> in fw_fibnum.yaml raised to a higher value.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The rapidfire option creates a new directory for each launch. At the end of the last script you will have many directories starting with <code class="docutils literal"><span class="pre">launcher_</span></code>. You might want to clean these up after running.</p>
+</div>
+<div class="section" id="python-example-optional">
+<h3>Python example (optional)<a class="headerlink" href="#python-example-optional" title="Permalink to this headline">¶</a></h3>
+<p>Here is complete Python code for running a Workflow that passes job info:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span> <span class="nn">fireworks.core.firework</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">Workflow</span>
+<span class="kn">from</span> <span class="nn">fireworks.core.launchpad</span> <span class="k">import</span> <span class="n">LaunchPad</span>
+<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="k">import</span> <span class="n">rapidfire</span>
+
+<span class="kn">from</span> <span class="nn">fw_tutorials.dynamic_wf.printjob_task</span> <span class="k">import</span> <span class="n">PrintJobTask</span>
+
+<span class="c1"># set up the LaunchPad and reset it</span>
+<span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
+<span class="n">launchpad</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">require_password</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># create the Workflow that passes job info</span>
+<span class="n">fw1</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;This is the first FireWork&quot;&#39;</span><span class="p">)],</span> <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;_pass_job_info&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">fw_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fw2</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">PrintJobTask</span><span class="p">()],</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">fw1</span><span class="p">],</span> <span class="n">fw_id</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">([</span><span class="n">fw1</span><span class="p">,</span> <span class="n">fw2</span><span class="p">])</span>
+
+<span class="c1"># store workflow and launch it locally</span>
+<span class="n">launchpad</span><span class="o">.</span><span class="n">add_wf</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+<span class="n">rapidfire</span><span class="p">(</span><span class="n">launchpad</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is complete Python code for running a dynamic workflow. Note that this code is no different than running any other custom Firework - it is almost identical to the code we used to run the AdditionTask() two tutorials ago:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span>
+<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="k">import</span> <span class="n">rapidfire</span>
+<span class="kn">from</span> <span class="nn">fw_tutorials.dynamic_wf.fibadd_task</span> <span class="k">import</span> <span class="n">FibonacciAdderTask</span>
+
+<span class="c1"># set up the LaunchPad and reset it</span>
+<span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
+<span class="n">launchpad</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">require_password</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># create the Firework consisting of a custom &quot;Fibonacci&quot; task</span>
+<span class="n">firework</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">FibonacciAdderTask</span><span class="p">(),</span> <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;smaller&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;larger&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;stop_point&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">})</span>
+
+<span class="c1"># store workflow and launch it locally</span>
+<span class="n">launchpad</span><span class="o">.</span><span class="n">add_wf</span><span class="p">(</span><span class="n">firework</span><span class="p">)</span>
+<span class="n">rapidfire</span><span class="p">(</span><span class="n">launchpad</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="next-step-learning-to-design-workflows">
+<h2>Next step: Learning to design workflows<a class="headerlink" href="#next-step-learning-to-design-workflows" title="Permalink to this headline">¶</a></h2>
+<p>You&#8217;ve now explored examples of designing many types of workflows, ranging from very simple and deterministic to quite flexible and dynamic. In the <a class="reference internal" href="design_tips.html"><span class="doc">final workflow tutorial</span></a>, we&#8217;ll provide some tips on mapping your computing workload into Firetasks, FireWorks, and Workflows.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Dynamic Workflows</a><ul>
+<li><a class="reference internal" href="#a-workflow-that-passes-job-information">A workflow that passes job information</a></li>
+<li><a class="reference internal" href="#a-workflow-that-passes-data">A workflow that passes data</a></li>
+<li><a class="reference internal" href="#a-fibonacci-adder">A Fibonacci Adder</a></li>
+<li><a class="reference internal" href="#a-fibonacci-adder-the-quick-way">A Fibonacci Adder: The Quick Way</a><ul>
+<li><a class="reference internal" href="#python-example-optional">Python example (optional)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#next-step-learning-to-design-workflows">Next step: Learning to design workflows</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="workflow_tutorial.html"
+                        title="previous chapter">Creating Workflows</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="design_tips.html"
+                        title="next chapter">Tips for designing Firetasks, FireWorks, and Workflows</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/dynamic_wf_tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="design_tips.html" title="Tips for designing Firetasks, FireWorks, and Workflows"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="workflow_tutorial.html" title="Creating Workflows"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

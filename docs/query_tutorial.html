@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Querying FireWorks and Workflows / Generating Reports &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using the Web GUI" href="basesite_tutorial.html" />
+    <link rel="prev" title="Database administration commands" href="maintain_tutorial.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="basesite_tutorial.html" title="Using the Web GUI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="maintain_tutorial.html" title="Database administration commands"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="querying-fireworks-and-workflows-generating-reports">
+<h1>Querying FireWorks and Workflows / Generating Reports<a class="headerlink" href="#querying-fireworks-and-workflows-generating-reports" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks provides two functions for getting information about your Workflows. The <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_fws</span></code> command queries individual FireWorks (steps in a Workflow), whereas the <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_wflows</span></code> command queries entire Workflows. The reporting features allows you to generate detailed reports about runtime statistics.</p>
+<p>Full usage of these commands can be found through the built-in help:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">--</span><span class="n">help</span>
+<span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">--</span><span class="n">help</span>
+<span class="n">lpad</span> <span class="n">report</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<div class="section" id="example-queries-fireworks">
+<h2>Example queries - FireWorks<a class="headerlink" href="#example-queries-fireworks" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Count the number of completed FireWorks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">s</span> <span class="n">COMPLETED</span> <span class="o">-</span><span class="n">d</span> <span class="n">count</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show all information for the 3 most recently updated FIZZLED FireWorks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">s</span> <span class="n">FIZZLED</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span> <span class="o">-</span><span class="n">m</span> <span class="mi">3</span> <span class="o">--</span><span class="n">rsort</span> <span class="n">updated_on</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show all information of the Firework with <em>name</em> set to <code class="docutils literal"><span class="pre">my_fw</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">n</span> <span class="n">my_fw</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show a summary of the Firework with <em>fw_id</em> of 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show a summary of all FireWorks where the <strong>spec</strong> contains a value of <em>my_parameter</em> equal to 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">q</span> <span class="s1">&#39;{&quot;spec.my_parameter&quot;:3}&#39;</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="example-queries-workflows">
+<h2>Example queries - Workflows<a class="headerlink" href="#example-queries-workflows" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Count the number of completed Workflows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">s</span> <span class="n">COMPLETED</span> <span class="o">-</span><span class="n">d</span> <span class="n">count</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show all information for the 3 most recently updated FIZZLED Workflows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">s</span> <span class="n">FIZZLED</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span> <span class="o">-</span><span class="n">m</span> <span class="mi">3</span> <span class="o">--</span><span class="n">rsort</span> <span class="n">updated_on</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show all information of the Workflow with <em>name</em> set to <code class="docutils literal"><span class="pre">my_wf</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">n</span> <span class="n">my_wf</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show a summary of the Workflow containing a Firework with <em>fw_id</em> of 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Show a summary of all Workflows where the <strong>metadata</strong> contains a value of <em>my_parameter</em> equal to 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">q</span> <span class="s1">&#39;{&quot;metadata.my_parameter&quot;:3}&#39;</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="example-queries-reporting">
+<h2>Example queries - Reporting<a class="headerlink" href="#example-queries-reporting" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Get a report of what happened to recently updated Fireworks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">report</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Get report about workflows or jobs:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">report</span> <span class="o">-</span><span class="n">c</span> <span class="n">wflows</span>
+<span class="n">lpad</span> <span class="n">report</span> <span class="o">-</span><span class="n">c</span> <span class="n">launches</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Customize the reporting interval, e.g. see what happened the last 6 months:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">report</span> <span class="o">-</span><span class="n">i</span> <span class="n">months</span> <span class="o">-</span><span class="n">n</span> <span class="mi">6</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You can easily e-mail the report by using the mail command on a unix system:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">report</span> <span class="o">|</span> <span class="n">mail</span> <span class="o">-</span><span class="n">s</span> <span class="s2">&quot;Fireworks report&quot;</span> <span class="n">you</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Querying FireWorks and Workflows / Generating Reports</a><ul>
+<li><a class="reference internal" href="#example-queries-fireworks">Example queries - FireWorks</a></li>
+<li><a class="reference internal" href="#example-queries-workflows">Example queries - Workflows</a></li>
+<li><a class="reference internal" href="#example-queries-reporting">Example queries - Reporting</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="maintain_tutorial.html"
+                        title="previous chapter">Database administration commands</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="basesite_tutorial.html"
+                        title="next chapter">Using the Web GUI</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/query_tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="basesite_tutorial.html" title="Using the Web GUI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="maintain_tutorial.html" title="Database administration commands"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>
