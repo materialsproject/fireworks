@@ -169,6 +169,13 @@ class Rocket:
                     except:
                         pass
 
+            if "_input_files" in m_fw.spec:
+                import shutil
+                if "_output_files" in m_fw.spec:
+                    for f in m_fw.spec["_input_files"]:
+                        if f in m_fw.spec["_output_files"]:
+                            shutil.copy(m_fw.spec["_output_files"][f], f)
+
             if m_fw.spec.get('_recover_launch', None):
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
                 starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
@@ -405,5 +412,14 @@ class Rocket:
 
         if my_spec.get("_preserve_fworker"):
             fwaction.update_spec['_fworker'] = self.fworker.name
+
+        if my_spec.get("_output_files"):
+            filepaths = {
+                k: os.path.join(launch_dir, v)
+                for k, v in my_spec.get("_output_files").items()
+                if os.path.exists(os.path.join(launch_dir, v))
+            }
+            fwaction.mod_spec.append(
+                {"_push_all": {"_output_files": filepaths}})
 
         return fwaction
