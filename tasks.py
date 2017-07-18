@@ -54,46 +54,6 @@ def publish(ctx):
 
 
 @task
-def set_ver(ctx):
-    lines = []
-    with open("pymatgen/__init__.py", "rt") as f:
-        for l in f:
-            if "__version__" in l:
-                lines.append('__version__ = "%s"' % NEW_VER)
-            else:
-                lines.append(l.rstrip())
-    with open("pymatgen/__init__.py", "wt") as f:
-        f.write("\n".join(lines))
-
-    lines = []
-    with open("setup.py", "rt") as f:
-        for l in f:
-            lines.append(re.sub(r'version=([^,]+),', 'version="%s",' % NEW_VER,
-                                l.rstrip()))
-    with open("setup.py", "wt") as f:
-        f.write("\n".join(lines))
-
-
-@task
-def update_coverage(ctx):
-    with cd("docs/_build/html/"):
-        ctx.run("git pull")
-    ctx.run("nosetests --config=nose.cfg --cover-html --cover-html-dir=docs/_build/html/coverage")
-    update_doc()
-
-
-@task
-def merge_stable(ctx):
-    ctx.run("git commit -a -m \"v%s release\"" % NEW_VER)
-    ctx.run("git push")
-    ctx.run("git checkout stable")
-    ctx.run("git pull")
-    ctx.run("git merge master")
-    ctx.run("git push")
-    ctx.run("git checkout master")
-
-
-@task
 def release_github(ctx):
     with open("CHANGES.rst") as f:
         contents = f.read()
@@ -133,20 +93,10 @@ def update_changelog(ctx):
 
 
 @task
-def log_ver(ctx):
-    filepath = os.path.join(os.environ["HOME"], "Dropbox", "Public",
-                            "pymatgen", NEW_VER)
-    with open(filepath, "w") as f:
-        f.write("Release")
-
-
-@task
 def release(ctx, notest=False):
-    set_ver(ctx)
     if not notest:
         ctx.run("nosetests")
     publish(ctx)
-    log_ver(ctx)
     update_doc(ctx)
     merge_stable(ctx)
     release_github(ctx)
@@ -154,5 +104,5 @@ def release(ctx, notest=False):
 
 @task
 def open_doc(ctx):
-    pth = os.path.abspath("docs/_build/html/index.html")
+    pth = os.path.abspath("docs/index.html")
     webbrowser.open("file://" + pth)
