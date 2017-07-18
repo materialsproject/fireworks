@@ -170,14 +170,6 @@ class Rocket:
                     except:
                         pass
 
-            for f in set(m_fw.spec.get("_files_in", [])).intersection(m_fw.spec.get("_prev_files", {}).keys()):
-                # We use zopen in binary mode to simulate a copy, but with
-                # transparent unzipping!
-                with zopen(m_fw.spec["_prev_files"][f], "rb") as fin:
-                    with zopen(f, "wb") as fout:
-                        fout.write(fin.read())
-                #shutil.copy(m_fw.spec["_files_in"][f], f)
-
             if m_fw.spec.get('_recover_launch', None):
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
                 starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
@@ -201,6 +193,14 @@ class Rocket:
 
             else:
                 starting_task = 0
+                for f in set(m_fw.spec.get("_files_in", [])).intersection(
+                        m_fw.spec.get("_prev_files", {}).keys()):
+                    # We use zopen in binary mode to simulate a copy, but with
+                    # transparent unzipping!
+                    with zopen(m_fw.spec["_prev_files"][f], "rb") as fin:
+                        with zopen(f, "wb") as fout:
+                            fout.write(fin.read())
+                            # shutil.copy(m_fw.spec["_files_in"][f], f)
 
             if lp:
                 message = 'RUNNING fw_id: {} in directory: {}'.\
