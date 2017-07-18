@@ -16,6 +16,7 @@ import traceback
 import threading
 import errno
 import glob
+import shutil
 import distutils.dir_util
 from monty.io import zopen
 
@@ -198,10 +199,8 @@ class Rocket:
                         m_fw.spec.get("_prev_files", {}).keys()):
                     # We use zopen in binary mode to simulate a copy, but with
                     # transparent unzipping!
-                    with zopen(m_fw.spec["_prev_files"][f], "rb") as fin:
-                        with zopen(f, "wb") as fout:
-                            fout.write(fin.read())
-                            # shutil.copy(m_fw.spec["_files_in"][f], f)
+                    with zopen(m_fw.spec["_prev_files"][f], "rb") as fin, zopen(f, "wb") as fout:
+                        shutil.copyfileobj(fin, fout)
 
             if lp:
                 message = 'RUNNING fw_id: {} in directory: {}'.\
