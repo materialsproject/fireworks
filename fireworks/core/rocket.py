@@ -15,6 +15,7 @@ import os
 import traceback
 import threading
 import errno
+import glob
 import distutils.dir_util
 from monty.io import zopen
 
@@ -420,11 +421,11 @@ class Rocket:
             # and both fws generate the exact same file. That can lead to
             # overriding. But as far as I know, this is an illogical use
             # of a workflow, so I can't see it happening in normal use.
-            filepaths = {
-                k: os.path.join(launch_dir, v)
-                for k, v in my_spec.get("_files_out").items()
-                if os.path.exists(os.path.join(launch_dir, v))
-            }
+            filepaths = {}
+            for k, v in my_spec.get("_files_out").items():
+                files = glob.glob(os.path.join(launch_dir, v))
+                if files:
+                    filepaths[k] = sorted(files)[-1]
             fwaction.update_spec["_prev_files"] = filepaths
         else:
             # This ensures that prev_files are not passed from Firework to
