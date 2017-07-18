@@ -428,7 +428,7 @@ class Rocket:
                     filepaths[k] = sorted(files)[-1]
             fwaction.update_spec["_files_prev"] = filepaths
         elif "_files_prev" in my_spec:
-            # This ensures that prev_files are not passed from Firework to
+            # This ensures that _files_prev are not passed from Firework to
             # Firework. We do not want output files from fw1 to be used by fw3
             # in the sequence of fw1->fw2->fw3
             fwaction.update_spec["_files_prev"] = {}

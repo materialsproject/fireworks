@@ -439,7 +439,6 @@ class MongoTests(unittest.TestCase):
         self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
         self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
 
-
     def test_duplicate_delete_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()})
