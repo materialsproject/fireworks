@@ -196,11 +196,11 @@ class Rocket:
             else:
                 starting_task = 0
                 for f in set(m_fw.spec.get("_files_in", [])).intersection(
-                        m_fw.spec.get("_prev_files", {}).keys()):
+                        m_fw.spec.get("_files_prev", {}).keys()):
                     # We use zopen for the file objects for transparent handling
                     # of zipped files. shutil.copyfileobj does the actual copy
                     # in chunks that avoid memory issues.
-                    with zopen(m_fw.spec["_prev_files"][f], "rb") as fin, zopen(f, "wb") as fout:
+                    with zopen(m_fw.spec["_files_prev"][f], "rb") as fin, zopen(f, "wb") as fout:
                         shutil.copyfileobj(fin, fout)
 
             if lp:
@@ -426,11 +426,11 @@ class Rocket:
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
                     filepaths[k] = sorted(files)[-1]
-            fwaction.update_spec["_prev_files"] = filepaths
-        elif "_prev_files" in my_spec:
+            fwaction.update_spec["_files_prev"] = filepaths
+        elif "_files_prev" in my_spec:
             # This ensures that prev_files are not passed from Firework to
             # Firework. We do not want output files from fw1 to be used by fw3
             # in the sequence of fw1->fw2->fw3
-            fwaction.update_spec["_prev_files"] = {}
+            fwaction.update_spec["_files_prev"] = {}
 
         return fwaction
