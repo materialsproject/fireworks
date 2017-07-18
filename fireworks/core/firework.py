@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from copy import deepcopy
 
-from monty.dev import deprecated
 
 """
 This module contains some of the most central FireWorks classes:

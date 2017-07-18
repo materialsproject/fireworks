@@ -15,7 +15,10 @@ import os
 import traceback
 import threading
 import errno
+import glob
+import shutil
 import distutils.dir_util
+from monty.io import zopen
 
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, \
@@ -192,6 +195,13 @@ class Rocket:
 
             else:
                 starting_task = 0
+                for f in set(m_fw.spec.get("_files_in", [])).intersection(
+                        m_fw.spec.get("_files_prev", {}).keys()):
+                    # We use zopen for the file objects for transparent handling
+                    # of zipped files. shutil.copyfileobj does the actual copy
+                    # in chunks that avoid memory issues.
+                    with zopen(m_fw.spec["_files_prev"][f], "rb") as fin, zopen(f, "wb") as fout:
+                        shutil.copyfileobj(fin, fout)
 
             if lp:
                 message = 'RUNNING fw_id: {} in directory: {}'.\
@@ -405,5 +415,22 @@ class Rocket:
 
         if my_spec.get("_preserve_fworker"):
             fwaction.update_spec['_fworker'] = self.fworker.name
+
+        if my_spec.get("_files_out"):
+            # One potential area of conflict is if a fw depends on two fws
+            # and both fws generate the exact same file. That can lead to
+            # overriding. But as far as I know, this is an illogical use
+            # of a workflow, so I can't see it happening in normal use.
+            filepaths = {}
+            for k, v in my_spec.get("_files_out").items():
+                files = glob.glob(os.path.join(launch_dir, v))
+                if files:
+                    filepaths[k] = sorted(files)[-1]
+            fwaction.update_spec["_files_prev"] = filepaths
+        elif "_files_prev" in my_spec:
+            # This ensures that _files_prev are not passed from Firework to
+            # Firework. We do not want output files from fw1 to be used by fw3
+            # in the sequence of fw1->fw2->fw3
+            fwaction.update_spec["_files_prev"] = {}
 
         return fwaction

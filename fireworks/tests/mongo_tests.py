@@ -355,6 +355,37 @@ class MongoTests(unittest.TestCase):
 
         self.assertEqual(len(modified_spec['_job_info']), 2)
 
+    def test_files_in_out(self):
+        # create the Workflow that passes files_in and files_out
+        fw1 = Firework(
+            [ScriptTask.from_str('echo "This is the first FireWork" > test1')],
+            spec={"_pass_job_info": True, "_files_out": {"fwtest1": "test1"}},
+            fw_id=1)
+        fw2 = Firework([ScriptTask.from_str('gzip fwtest1')], fw_id=2,
+                       parents=[fw1],
+                       spec={"_files_in": ["fwtest1"],
+                             "_files_out": {"fwtest2": "fwtest1.gz"}})
+        fw3 = Firework([ScriptTask.from_str('cat fwtest2')], fw_id=3,
+                       parents=[fw2],
+                       spec={"_files_in": ["fwtest2"]})
+        fw4 = Firework([ScriptTask.from_str('echo "hew"')], fw_id=4,
+                       parents=[fw3],
+                       spec={"_files_in": ["fwtest2"]})
+        wf = Workflow([fw1, fw2, fw3, fw4],
+                      {fw1: [fw2], fw2: [fw3], fw3: [fw4]})
+
+        # store workflow and launch it locally
+        self.lp.add_wf(wf)
+        launch_rocket(self.lp, self.fworker)
+        self.assertTrue(os.path.exists("test1"))
+        launch_rocket(self.lp, self.fworker)
+        self.assertTrue(os.path.exists("fwtest1.gz"))
+        launch_rocket(self.lp, self.fworker)
+        self.assertTrue(os.path.exists("fwtest2"))
+        launch_rocket(self.lp, self.fworker)
+        for f in ["test1", "fwtest1.gz", "fwtest2"]:
+            os.remove(f)
+
     def test_preserve_fworker(self):
         fw1 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker"')], spec={"_preserve_fworker": True}, fw_id=1)
         fw2 = Firework([ScriptTask.from_str('echo "Testing preserve FWorker pt 2"')], spec={"target": 1}, parents=[fw1], fw_id=2)
@@ -407,7 +438,6 @@ class MongoTests(unittest.TestCase):
         self.lp.delete_wf(fw.fw_id)
         self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
         self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
-
 
     def test_duplicate_delete_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
