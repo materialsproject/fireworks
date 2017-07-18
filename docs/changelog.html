@@ -1,0 +1,936 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FireWorks Changelog &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="The Comprehensive Guide to Writing Firetasks with Python" href="guide_to_writing_firetasks.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fireworks-changelog">
+<h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.4.6</strong></p>
+<ul class="simple">
+<li>doc link update</li>
+</ul>
+<p><strong>v1.4.5</strong></p>
+<ul class="simple">
+<li>hack to allow &#8220;_add_launchpad_and_fw_id&#8221; reserved spec to work in rlaunch multi mode</li>
+</ul>
+<p><strong>v1.4.4</strong></p>
+<ul class="simple">
+<li>better error message on FireTaskMeta required param missing</li>
+<li>better error handling on refresh_wf error; such workflows should now show up as FIZZLED immediately</li>
+<li>add remove_fws method to Workflow (K. Mathew)</li>
+<li>minor doc updates</li>
+</ul>
+<p><strong>v1.4.3</strong></p>
+<ul class="simple">
+<li>only put tasks inside FW spec upon serialization! (see announcement on dev list)</li>
+<li>add qlauncher support for remote shell (D. Dotson)</li>
+<li>don&#8217;t allow creating an empty workflow</li>
+<li>rare bugfix for rocket (G. Petretto)</li>
+<li>add gres support for Slurm (KeLiu)</li>
+</ul>
+<p><strong>v1.4.2</strong></p>
+<ul class="simple">
+<li>improvements to FilePad (K. Mathew)</li>
+<li>Better logging for rapidfire rlaunch (S. Dwaraknath)</li>
+<li>improve performance w/generator expressions (R. Gowers)</li>
+<li>bugfix to webgui search (D. Winston)</li>
+</ul>
+<p><strong>v1.4.1</strong></p>
+<ul class="simple">
+<li>optional support for argcomplete (requires installing argcomplete)</li>
+<li>more powerful update_spec command (S. Dwaraknath)</li>
+<li>Py3 fix for multi_launch (X. Qu)</li>
+<li>numpy serializes to lists (thanks to J. Kuck)</li>
+<li>fix for qlaunch rapidfire that caused unintended stopping (thanks to J. Kuck)</li>
+<li>multiple doc updates (A. Jain / K. Bhatt)</li>
+</ul>
+<p><strong>v1.4.0</strong></p>
+<ul class="simple">
+<li>mlaunch is now &#8220;rlaunch multi&#8221;. See docs (S. Dwaraknath)</li>
+<li>For FireTask, we now suggest you use Firetask (more consistent naming) - (A. Jain)</li>
+<li>Adds the FilePad, a way to store files in GridFS. See docs for more details (K. Mathew, A. Jain)</li>
+<li>Add query ability to frontend (M. Aykol, D. Winston)</li>
+<li>Add ability to &#8220;pause/resume&#8221; fireworks in addition to existing &#8220;defuse/reignite&#8221;. See docs (S. Dwaraknath)</li>
+<li>Add sort ability in frontend (D. Waroquiers)</li>
+<li>Misc frontend improvements (D. Winston, M. Aykol, A. Jain)</li>
+<li>Add ability to move run dirs, i.e. update the database with location of runs after they are moved (A. Faghaninia, A. Jain)</li>
+<li>Add ability to qlaunch a particular fw_id (J. Montoya)</li>
+<li>Py3 compatibility (X. Qu, A. Faghaninia)</li>
+<li>Fix lpad admin maintain (shenjh)</li>
+<li>Fix to _pass_job_info (D. Waroquiers)</li>
+<li>improved docs (J. Montoya, M. Aykol, A. Jain)</li>
+</ul>
+<p><strong>v1.3.9</strong></p>
+<ul class="simple">
+<li>import Tracker object more easily (J. Montoya)</li>
+</ul>
+<p><strong>v1.3.8</strong></p>
+<ul class="simple">
+<li>don&#8217;t enforce j=True for Mongo connections (S.P. Ong)</li>
+<li>improve testing framework (S.P. Ong)</li>
+<li>remove problems &amp; inefficiencies in workflow refresh (thanks to G. Petretto)</li>
+<li>properly update fw_states when you defuse a workflow</li>
+<li>only enter _fizzled_parents into the database once - for efficiency, and to better track the provenance of what actually occurred during the run</li>
+<li>minor bugfixes / comments</li>
+</ul>
+<p><strong>v1.3.7</strong></p>
+<ul class="simple">
+<li>minor doc updates</li>
+<li>add ability to clear the task-level recovery, which gets stuck (J. Montoya)</li>
+<li>py3k fixes (K. Matthew)</li>
+<li>minor bugfixes</li>
+</ul>
+<p><strong>v1.3.6</strong></p>
+<ul class="simple">
+<li>greatly improved docstring formatting and accuracy (K. Mathew)</li>
+<li>Py3K fixes (K. Mathew)</li>
+<li>code cleanups (K. Mathew)</li>
+<li>better PEP conformance (K. Mathew)</li>
+<li>representative launch returns most recent launch (K. Mathew)</li>
+</ul>
+<p><strong>v1.3.5</strong></p>
+<ul class="simple">
+<li>forget about offline runs if a queue submission unsuccessful (thanks to D. Stansberry for pointing out the problem)</li>
+<li>cleanups to project setup (S.P. Ong)</li>
+</ul>
+<p><strong>v1.3.4</strong></p>
+<ul class="simple">
+<li>add launches mode query (query launches collection when performing lpad tasks)</li>
+<li>Add auth option to web app (S.P. Ong)</li>
+<li>enhance webapp server w/gunicorn (D. Winston)</li>
+<li>threshold parameter in introspect commmand</li>
+<li>add license option to SLURM adapter</li>
+<li>add fill mode to qlaunch for keeping jobs in the queue even when nothing in DB to run</li>
+<li>fix njobs_queue bug</li>
+<li>open compressed files in textmode to ensure py3k compatibility (K. Mathew)</li>
+</ul>
+<p><strong>v1.3.3</strong></p>
+<ul class="simple">
+<li>Load default FWorker location when running launch commands from Python</li>
+<li>qlaunch: default maxjobs_queue is zero, meaning don&#8217;t automatically restrict to 10 jobs in queue</li>
+<li>Add &#8211;wfquery and &#8211;fwquery options to <code class="docutils literal"><span class="pre">lpad_webgui</span></code> for advanced users (alpha version)</li>
+</ul>
+<p><strong>v1.3.2</strong></p>
+<ul class="simple">
+<li>update pymongo commands (X. Qu &amp; A. Jain)</li>
+<li>minor qadapter updates (D. Dotson &amp; X. Qu)</li>
+<li>very minor doc updates (S. Bajaj &amp; A. Faghaninia)</li>
+</ul>
+<p><strong>v1.3.1</strong></p>
+<ul class="simple">
+<li>FileTransferTask has max_retry parameter (D. Dotson)</li>
+<li>Allow copying workflows but w/reset ids (D. Dotson)</li>
+<li>add <code class="docutils literal"><span class="pre">max_loops</span></code> option to rlaunch; this allows you to limit infinite mode to a few cycles</li>
+</ul>
+<p><strong>v1.3.0</strong></p>
+<ul class="simple">
+<li>fix datetime import (fixes broken queue_launcher) - (D. Winston)</li>
+<li>fix datetime handler in __repr__</li>
+<li>always unreserve if queue submission goes wrong (G. Petretto)</li>
+</ul>
+<p><strong>v1.2.9</strong></p>
+<ul class="simple">
+<li>add <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">unlock</span></code> command to force unlock of workflows</li>
+<li>add <code class="docutils literal"><span class="pre">--timeout</span></code> option for rapidfire launches</li>
+<li>add <code class="docutils literal"><span class="pre">user</span></code> parameter for FileTransferTask (D. Dotson)</li>
+<li>fix bug in FileTransferTask (D. Dotson)</li>
+</ul>
+<p><strong>v1.2.8</strong></p>
+<ul class="simple">
+<li>fix spelling of <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> (thanks to specter119)</li>
+</ul>
+<p><strong>v1.2.7</strong></p>
+<ul class="simple">
+<li>fix errant print statement</li>
+</ul>
+<p><strong>v1.2.6</strong></p>
+<ul class="simple">
+<li>add FWorker auto_load</li>
+<li>add SSL cert support to LaunchPad (D. Cossey)</li>
+<li>improve offline recovery (G. Petretto)</li>
+<li>Add allow_gzipped option to Trackers</li>
+</ul>
+<p><strong>v1.2.5</strong></p>
+<ul class="simple">
+<li>add defuse_workflow to FWAction (thanks to H. Rusche)</li>
+<li>New _add_fworker option in spec (D. Waroquiers)</li>
+<li>fix workflow state when allow_fizzled_parents option used (D. Waroquiers)</li>
+<li>doc updates and example workflows</li>
+<li>fix minor frontend coloring issues</li>
+</ul>
+<p><strong>v1.2.4</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The deprecated <code class="docutils literal"><span class="pre">FireWork</span></code> class has been removed. Be sure to use <code class="docutils literal"><span class="pre">Firework</span></code> (see capitalization). Also, use <code class="docutils literal"><span class="pre">Workflow.from_Firework()</span></code>.</p>
+</div>
+<ul class="simple">
+<li>remove deprecated capitalization of FireWork</li>
+<li>better display of workflow info and reporting in frontend</li>
+</ul>
+<p><strong>v1.2.3</strong></p>
+<ul class="simple">
+<li>Greatly improve refresh performance of large workflows (G. Petretto)</li>
+<li>FW Reporting now available on frontend</li>
+<li>Fix bug in Python 3 queue adapter (thanks to F. Zapata)</li>
+<li>Fix small bug in offline mode (G. Petretto)</li>
+<li>Fix bug in frontend pagination (G. Petretto)</li>
+<li>Improvements to wf.append (H. Rusche)</li>
+</ul>
+<p><strong>v1.2.2</strong></p>
+<ul class="simple">
+<li>Flask and webgui are installed by default (no additional pip install needed)</li>
+<li>Fix small bug in squeue (thanks to M. Cahn for pointing it out)</li>
+<li>webgui improvements, including view for workflow metadata queries (D. Winston)</li>
+<li>remove display_wflows command and associated docs. It is unmaintained and the web GUI now plots WFs</li>
+</ul>
+<p><strong>v1.2.1</strong></p>
+<ul class="simple">
+<li>attempt to fix further pip install issues in v1.2.0</li>
+</ul>
+<p><strong>v1.2.0</strong></p>
+<ul class="simple">
+<li>attempt to fix pip install issues in v1.1.9</li>
+</ul>
+<p><strong>v1.1.9</strong></p>
+<ul class="simple">
+<li>Workflow graph displayed visually in &#8220;lpad webgui&#8221; (C. Harris)</li>
+<li>Add ability to override queue commands (thanks to D. Waroquiers)</li>
+<li>detect_unreserved should only detect reserved fws (G. Petretto)</li>
+</ul>
+<p><strong>v1.1.8</strong></p>
+<ul class="simple">
+<li>Some mods to adding a workflow to another workflow (thanks to H. Rusche &amp; J. Montoya)</li>
+<li>LaunchPad handles LockedWorkflowException (P. Huck)</li>
+<li>prevent MSONable objects from being deserialized twice (thanks to J. Montoya)</li>
+</ul>
+<p><strong>v1.1.7</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">FWS now properly handles workflow states for <code class="docutils literal"><span class="pre">allow_fizzled_parents</span></code>. Run <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">refresh</span> <span class="pre">-s</span> <span class="pre">FIZZLED</span></code> to update your DB.</p>
+</div>
+<ul class="simple">
+<li>fix WFLock causing inconsistent states in workflows; detect such cases in detect_lostruns; add &#8211;refresh as fix (G. Petretto)</li>
+<li>add ability to introspect launches</li>
+<li>fix for COMPLETED workflow state when <cite>_allow_fizzled_parents</cite> is True (D. Waroquiers, G. Petretto)</li>
+<li>allow FWS users to use as_dict() instead of to_dict() if they prefer (psuedo-compatibility with MSONable)</li>
+<li>add commas to counts in lpad GUI</li>
+</ul>
+<p><strong>v1.1.6</strong></p>
+<ul class="simple">
+<li>add beta of <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">introspect</span></code> (no docs yet)</li>
+<li>fix <code class="docutils literal"><span class="pre">-q</span></code> option of <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">report</span></code> (D. Winston)</li>
+</ul>
+<p><strong>v1.1.5</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">FWS now decodes monty-style objects, e.g. pymatgen. If you encounter decoding issues, set DECODE_MONTY=False in your fw_config.</p>
+</div>
+<ul class="simple">
+<li>completely reimplemented reporting (type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">report</span></code> for an example)</li>
+<li>both encode and decode for monty-style objects</li>
+<li>safer require_password=False option</li>
+<li>fix njobs for SLURM (P. Huck)</li>
+<li>fix bug in remove_useless_dirs (G. Petretto)</li>
+<li>fix bug in detect_lostruns (thanks to G. Petretto)</li>
+<li>add QUEUE_JOBNAME_MAXLEN config parameter, i.e. maximum char length for job names sent to queueing systems (D. Waroquiers)</li>
+</ul>
+<p><strong>v1.1.4</strong></p>
+<ul class="simple">
+<li>added JS folder to pip install (should fix JSONview issues)</li>
+<li>optional max param for track_fws command</li>
+<li>performance updates</li>
+<li>doc updates</li>
+</ul>
+<p><strong>v1.1.3</strong></p>
+<ul class="simple">
+<li>fix bug that caused FWorker queries to chain on themselves</li>
+<li>fix issue of Python runners that override sys.stdout, causing problems in ScriptTask</li>
+<li>fix unit tests</li>
+</ul>
+<p><strong>v1.1.2</strong></p>
+<ul class="simple">
+<li>new special keyword _add_launchpad_and_fw_id allows accessing the LaunchPad in the FireTask</li>
+<li>new special keyword _pass_job_info makes it easy to pass run locations between jobs in a Workflow</li>
+<li>new special keyword _preserve_fworker makes it easy to run multiple jobs on the same FWorker</li>
+<li>default __repr__ for FWSerializable</li>
+<li>fix Hopper qstat bug</li>
+<li>Cobalt queue fixes (W. Scullin)</li>
+<li>SLURM template update (P. Huck)</li>
+</ul>
+<p><strong>v1.1.1</strong></p>
+<ul class="simple">
+<li>greatly improve webgui: stability, clarity, functionality, and speed</li>
+</ul>
+<p><strong>v1.1.0</strong></p>
+<ul class="simple">
+<li>fix bug in created_on for workflows (thanks to W. Zhao for pointing it out)</li>
+<li>fix bug in FWorker query for certain situations (P. Huck)</li>
+<li>Updates for Cobalt, Py3 (W. Scullin)</li>
+<li>Updates for IBM Loadsharing facility (Z. Ulissi)</li>
+</ul>
+<p><strong>v1.08</strong>
+.. note:: v1.08 is not in pip due to version number issues, use Github to get this legacy version</p>
+<ul class="simple">
+<li>allow PyTask to return FWAction</li>
+<li>allow FWConfig to set web host and port for GUI</li>
+<li>make detect_lostruns more robust to failure halfway through</li>
+<li>minor fixes and typo corrections (jakirkham)</li>
+</ul>
+<p><strong>v1.07</strong>
+.. note:: v1.07 is not in pip due to version number issues, use Github to get this legacy version</p>
+<ul class="simple">
+<li>fix bug in offline mode</li>
+</ul>
+<p><strong>v1.06</strong>
+.. note:: v1.06 is not in pip due to version number issues, use Github to get this legacy version
+.. caution:: Offline mode unusable in this release</p>
+<ul class="simple">
+<li>Pymongo3 compatibility</li>
+<li>fix double tab open on lpad webgui (G. Pettreto)</li>
+<li>show FW WAITING state</li>
+<li>unit test offline mode</li>
+</ul>
+<p><strong>v1.05</strong>
+.. note:: v1.05 is not in pip due to version number issues, use Github to get this legacy version</p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the &#8220;auto_kwargs&#8221; option to True in your FireTasks.</p>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">Offline mode unusable in this release</p>
+</div>
+<ul class="simple">
+<li>Update PyTask kwargs handling (J. Kirkham)</li>
+<li>Fix writing of FW.json files with _launch_dir param (G. Petretto)</li>
+<li>update PBS template (K. Matthew)</li>
+<li>minor fixes (J. Kirkham)</li>
+</ul>
+<p><strong>v1.04</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">v1.00-v1.03 are skipped due to problems in pip installation</p>
+</div>
+<ul class="simple">
+<li>fix non-default host/port on Flask site</li>
+<li>remove base site (old frontend)</li>
+<li>address installation issues (MANIFEST.in, package_data)</li>
+<li>improve unit tests</li>
+</ul>
+<p><strong>v0.99</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">v0.98 is skipped, as it has a faulty dependency.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Users of the frontend will need to install Flask, <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">flask;</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">flask-paginate</span></code>. Django is no longer required for the frontend.</p>
+</div>
+<ul class="simple">
+<li>Ability to add FireWorks to existing workflow (launchpad.add_wf_to_fwids)</li>
+<li>Better unit tests for task-level reruns (G. Petretto)</li>
+<li>Redesigned web site using Flask (M. Brafman)</li>
+</ul>
+<p><strong>v0.97</strong></p>
+<ul class="simple">
+<li>Fix bug in adding multiple detours</li>
+<li>Task-level reruns (G. Petretto)</li>
+<li>Better Fworker default restrictions (G. Petretto)</li>
+<li>Make _launch_dir if doesn&#8217;t exist (G. Petretto)</li>
+<li>Bug fixes (G. Petretto)</li>
+</ul>
+<p><strong>v0.96</strong></p>
+<ul class="simple">
+<li>Address some installation issues (thanks to kpoman)</li>
+<li>fix minor issues and docs</li>
+</ul>
+<p><strong>v0.95</strong></p>
+<ul class="simple">
+<li>Add decompressdir task (S.P. Ong)</li>
+<li>Fix bugs in offline launch (G. Petretto)</li>
+<li>Improve failure handling in case of FW system failure (G. Petretto)</li>
+<li>Allow embedding error message on FW rerun (G. Petretto)</li>
+<li>Minor testing improvements</li>
+</ul>
+<p><strong>v0.94</strong></p>
+<ul class="simple">
+<li>Improve performance of get_wflows (S.P. Ong)</li>
+<li>Fix another bug due to performance improvements (B. Medasani)</li>
+<li>Fix bug in de-serialization of non dict-like FireTasks and other serialization issues</li>
+</ul>
+<p><strong>v0.93</strong></p>
+<ul class="simple">
+<li>Fix bug in performance improvement cached state + unit tests (B. Medasani)</li>
+<li>minor bug fixes, installation changes</li>
+</ul>
+<p>lpad
+<strong>v0.92</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">This version has a minor bug affecting defusing of FWs and cached states for performance, fixed in v0.94</p>
+</div>
+<ul class="simple">
+<li>Improve large workflow performance using a LazyFirework (B. Medasani, D. Gunter)</li>
+<li>some code cleanups and minor (rare) bugfix to datetime</li>
+<li>Add email option to PBS adapter (S.P. Ong)</li>
+<li>Support for pymatgen as_dict formulation (X. Qu)</li>
+</ul>
+<p><strong>v0.91</strong></p>
+<ul class="simple">
+<li>Major: Rename FireWork to Firework. Should be fully backward-compatible for the moment, but users must switch by ~v1.0.</li>
+<li>Unicode compatibility for Py3k (S.P. Ong)</li>
+</ul>
+<p><strong>v0.90</strong></p>
+<ul class="simple">
+<li>Introduce reporting tools via lpad report (W. Chen)</li>
+<li>Fix bug in locking</li>
+<li>Greatly speed up rlaunch rapidfire by removing artificial sleep</li>
+<li>Use monty CLoader (S.P. Ong)</li>
+</ul>
+<p><strong>v0.89</strong></p>
+<ul class="simple">
+<li>Fix small FireTaskMeta issue (G. Petretto w/S.P. Ong)</li>
+<li>simplify some imports</li>
+<li>Add reservation display mode (S.P. Ong)</li>
+<li>add updated_on to FW which updates whenever FW changes state</li>
+<li>improve docs</li>
+</ul>
+<p><strong>v0.88</strong></p>
+<ul class="simple">
+<li>Add many more unit tests (B. Medasani)</li>
+<li>Fix tracking when FireTask crashes (B. Medasani)</li>
+<li>Clean up some logging</li>
+<li>Don&#8217;t rerun DEFUSED FWs - they must be reignited</li>
+<li>Allow defuse of COMPLETED FWs</li>
+<li>minor internal fixes</li>
+</ul>
+<p><strong>v0.87</strong></p>
+<ul class="simple">
+<li>Fix major bug causing FIZZLED FWs to rerun spontaneously</li>
+<li>Make WFLock more nimble</li>
+<li>Forcibly remove WFLock after some time in case of catastrophe (tunable in FW_config)</li>
+<li>improve unit tests</li>
+</ul>
+<p><strong>v0.86</strong></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This version has a major bug that causes FIZZLED FWs to rerun, patched in v0.87</p>
+</div>
+<ul class="simple">
+<li>add delete_wfs command (w/S.P. Ong)</li>
+<li>add update_fws command (S.P. Ong)</li>
+<li>add ignore_errors option in some default FireTasks (S.P. Ong)</li>
+<li>fix bug in Windows $HOME var (thanks to A. Berg)</li>
+<li>fig bug in reporting of lost FWs; rerun option should be OK in prev. versions</li>
+<li>change FIZZLED to have lower STATE_RANK than READY/RESERVED/RUNNING/etc</li>
+</ul>
+<p><strong>v0.85</strong></p>
+<ul class="simple">
+<li>fix bug in running daemon mode locally with qlaunch rapidfire (B. Foster)</li>
+<li>better handling of duplicate path detection (S.P. Ong)</li>
+<li>add support for nodes keyword in SLURM adapter (S.P. Ong)</li>
+</ul>
+<p><strong>v0.84</strong></p>
+<ul class="simple">
+<li>ability to define links when defining FireWorks rather than all at the Workflow level (based on conversation with H. Rusche)</li>
+<li>better handling of config files and better reporting on config file conflicts</li>
+</ul>
+<p><strong>v0.83</strong></p>
+<ul class="simple">
+<li>misc multiprocessing improvements (X. Qu)</li>
+<li>better handling of dir creation conflicts (X. Qu)</li>
+</ul>
+<p><strong>v0.82</strong></p>
+<ul class="simple">
+<li>add ability to define links via {fw1:fw2} objects rather than explicit IDs (based on conversation with H. Rusche)</li>
+<li>un-reserve a FW if queue submission goes badly and clean up queue launcher code</li>
+<li>internal cleanups (don&#8217;t rerun ARCHIVED jobs, skip reruns of WAITING jobs)</li>
+<li>stop rapidfire upon error in queue launch</li>
+<li>rerun fw on unreserve</li>
+<li>add methods to work with queue ids (<code class="docutils literal"><span class="pre">cancel_qid</span></code>, <code class="docutils literal"><span class="pre">--qid</span></code> option in <code class="docutils literal"><span class="pre">get_fws</span></code>, and <code class="docutils literal"><span class="pre">get_qid</span></code>)</li>
+</ul>
+<p><strong>v0.81</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A major bugfix to dynamic and branching workflows was added in this release</p>
+</div>
+<ul class="simple">
+<li>fix race condition bug in which two FW belonging to same WF simultaneously try to update the WF, and only one succeeds</li>
+</ul>
+<p><strong>v0.80</strong></p>
+<ul class="simple">
+<li>rerun duplicated FWs on a rerun command (enabled by default), and return back all fw_ids that were rerun</li>
+<li>change default QUEUE_UPDATE_INTERVAL from 15 secs down to 5 secs</li>
+<li>add background tuneup option, and make it the default</li>
+<li>misc. cleanup (S.P. Ong)</li>
+</ul>
+<p><strong>v0.79</strong></p>
+<ul class="simple">
+<li>Add support for IBM LoadLeveler Queue (F. Brockherde)</li>
+</ul>
+<p><strong>v0.78</strong></p>
+<ul class="simple">
+<li>Fix spec copy bug as reported by Github user (F. Brockherde)</li>
+<li>Misc fixes (archiving FWs, tuple support)</li>
+</ul>
+<p><strong>v0.77</strong></p>
+<ul class="simple">
+<li>Support/fix serialization of tuples as list instead of String (S.P. Ong)</li>
+<li>Introduce fw_env variables (S.P. Ong)</li>
+</ul>
+<p><strong>v0.76</strong></p>
+<ul class="simple">
+<li>Better test for invalid WFs (S.P. Ong)</li>
+<li>Minor internal code cleanup (S.P. Ong)</li>
+<li>add internal profiling tools (D. Gunter)</li>
+</ul>
+<p><strong>v0.75</strong></p>
+<ul class="simple">
+<li>Fix bug that randomly affected some dynamic workflows</li>
+<li>Add CompressDir and ArchiveDir tasks (S.P. Ong)</li>
+<li>Initial commit of PyTask (S.P. Ong)</li>
+<li>Initial networkx graphing of workflows via lpad (S.P. Ong)</li>
+</ul>
+<p><strong>v0.72</strong></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This version has a bug that can affect some dynamic workflows, patched in v0.75</p>
+</div>
+<ul class="simple">
+<li>Include default base site files in pip install</li>
+<li>Optimizations for when WFs contains 1000s of root node FWs</li>
+<li>zopen tracker files</li>
+</ul>
+<p><strong>v0.71</strong></p>
+<ul class="simple">
+<li>Include default templates in pip install</li>
+<li>Change default formatting in get_wfs (S.P. Ong)</li>
+</ul>
+<div class="section" id="v0-7">
+<h2>v0.7<a class="headerlink" href="#v0-7" title="Permalink to this headline">¶</a></h2>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The default behavior is now that mod_spec and update_spec push updates to next Firework AND the next FireTask</p>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The FWConfig parameters are no longer called via a FWConfig() class instantiation; you can import these parameters directly now.</p>
+</div>
+<ul class="simple">
+<li>Python 3 support! via &#8216;six&#8217; library (S.P. Ong)</li>
+<li>BackgroundTasks introduced</li>
+<li>Performance improvements to get_wf command (S.P. Ong)</li>
+<li>Deserialization warnings and added stability (S.P. Ong)</li>
+<li>Reservation mode and silencer works in remote launch (S.P. Ong)</li>
+<li>Restore old FileTransferTask behavior</li>
+<li>Tutorial updates</li>
+<li>Various internal improvements, e.g. to FWConfig (S.P. Ong)</li>
+<li>Bug fixes (A. Jain, S.P. Ong)</li>
+</ul>
+<p><strong>v0.66</strong></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This version changes the default serialization for custom FireWorks without _fw_name to &lt;project&gt;::&lt;Class&gt; instead of &lt;Class&gt;. If you have custom FireTasks from v0.62-v0.65 that did not specify _fw_name explicitly, this introduces a backward incompatibility. Contact the support list if this affects you - an easy fix is available.</p>
+</div>
+<ul class="simple">
+<li>Fix major bug in dynamic workflows with multiple additions/detours</li>
+<li>Fixed lpad reset that became broken in recent release</li>
+<li>Change default _fw_name for FireTasks to &lt;project&gt;::&lt;Class&gt;, e.g. fireworks::MyTask</li>
+</ul>
+<p><strong>v0.65</strong></p>
+<ul class="simple">
+<li>Fix bug in qlaunch singleshot introduced in previous release (S.P. Ong)</li>
+<li>Add qlaunch cleanup (S.P. Ong)</li>
+<li>Setup different default config dirs (S.P. Ong)</li>
+</ul>
+<p><strong>v0.64</strong></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This version introduced a major bug in <code class="docutils literal"><span class="pre">qlaunch</span> <span class="pre">singleshot</span></code> via the command line (fixed in v0.65)</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This version introduced a bug in <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">reset</span></code> via the command line (fixed in v0.66)</p>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The <code class="docutils literal"><span class="pre">add_dir</span></code> command is incorporated into the <code class="docutils literal"><span class="pre">add</span></code> command. e.g. <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">add</span> <span class="pre">my_dir/*.yaml</span></code>. Many command line options that allowed comma-separated lists are now space-separated lists to better employ argparse (see updated docs).</p>
+</div>
+<ul class="simple">
+<li>clean up argument parsing (S.P. Ong)</li>
+<li>remote qlaunch handles multiple configs (S.P. Ong)</li>
+</ul>
+<p><strong>v0.63</strong></p>
+<ul class="simple">
+<li>fix bug in rtransfer mode of FileTransferTask (S.P. Ong)</li>
+<li>improvements to remote qlaunch (S.P. Ong)</li>
+</ul>
+<p><strong>v0.62</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The TransferTask is renamed to FileTransferTask (however, existing FireWorks databases should be backwards-compatibile). The names of the default FireTasks no longer have spaces; however, existing FireWorks databases and code should be backwards-compatible.</p>
+</div>
+<ul class="simple">
+<li>Add FIFO and FILO sort options for equal priority FireWorks</li>
+<li>Remove database locks in multiprocessing mode</li>
+<li>Allow multiple scripts in ScriptTask (S.P. Ong)</li>
+<li>Add additional File I/O FireTasks (S.P. Ong)</li>
+<li>Changes to FireTask base implementation (S.P. Ong)</li>
+<li>Allow config file in $HOME/.fireworks (S.P. Ong)</li>
+<li>Add remote options to qlaunch via fabric library (S.P. Ong)</li>
+<li>_fw_name automatically set to class name if unspecified (S.P. Ong)</li>
+<li>Remove ValueError upon not finding a Firework to run and handle this situation better</li>
+</ul>
+<p><strong>v0.61</strong></p>
+<ul class="simple">
+<li>Include text files needed for queue adapters in distribution (D. Gunter)</li>
+</ul>
+</div>
+<div class="section" id="v0-6">
+<h2>v0.6<a class="headerlink" href="#v0-6" title="Permalink to this headline">¶</a></h2>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The QueueAdapter code has been refactored in a way that is not fully backward compatible. Chances are, you will have to modify any <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> files you have so that the <code class="docutils literal"><span class="pre">_fw_name</span></code> is set to <em>CommonAdapter</em> and a new <code class="docutils literal"><span class="pre">_fw_q_type</span></code> parameter is set to <em>PBS</em>, <em>SGE</em>, or <em>SLURM</em>.</p>
+</div>
+<ul class="simple">
+<li>Major refactor of QueueAdapters so it is easy to change template files without adding new code (S.P. Ong)</li>
+<li>restore lpad.maintain()</li>
+<li>minor doc updates</li>
+</ul>
+<p><strong>v0.54</strong></p>
+<ul class="simple">
+<li>Add <code class="docutils literal"><span class="pre">--exclude</span></code> and <code class="docutils literal"><span class="pre">--include</span></code> options to Trackers + minor formatting changes</li>
+<li>use config file in current dir if possible</li>
+</ul>
+<p><strong>v0.53</strong></p>
+<ul class="simple">
+<li>Display name in trackers</li>
+<li>Fix some bugs relating to multiprocessing &amp; offline mode (Xiaohui Qu)</li>
+<li>Don&#8217;t require password when tracking many FWs</li>
+<li>Default 25 lines in trackers</li>
+</ul>
+<p><strong>v0.52</strong></p>
+<ul class="simple">
+<li>add <em>trackers</em>, or the ability to monitor output files</li>
+</ul>
+<p><strong>v0.51</strong></p>
+<ul class="simple">
+<li>make set_priority work as intended through command line</li>
+<li>invert the -b option on webgui (new -s option skips opening browser)</li>
+</ul>
+</div>
+<div class="section" id="v0-5">
+<h2>v0.5<a class="headerlink" href="#v0-5" title="Permalink to this headline">¶</a></h2>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The command/function <code class="docutils literal"><span class="pre">detect_fizzled</span></code> has changed to <code class="docutils literal"><span class="pre">detect_lostruns</span></code>, changed old arguments and added additional ones</p>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The command/function <code class="docutils literal"><span class="pre">detect_unreserved</span></code> has changed - refactored &#8220;mark&#8221; to &#8220;fizzle&#8221;</p>
+</div>
+<ul class="simple">
+<li>add option to &#8220;rerun&#8221; when detecting lost runs</li>
+<li>add option to only detect short-lived lost jobs (useful for job packing type failures)</li>
+<li>refactored argument names and method names for clarity</li>
+</ul>
+<p><strong>v0.46</strong></p>
+<ul class="simple">
+<li>add NEWT queue adapter</li>
+</ul>
+<p><strong>v0.45</strong></p>
+<ul class="simple">
+<li>allow user to confirm database reset and multi-FW changes via an input prompt rather than password parameter</li>
+</ul>
+<p><strong>v0.44</strong></p>
+<ul class="simple">
+<li>make it easier to define new queueadapters, and add documentation</li>
+</ul>
+<p><strong>v0.43</strong></p>
+<ul class="simple">
+<li>fix bug introduced in v0.4 that caused rlaunch rapidfire to stop working</li>
+</ul>
+<p><strong>v0.42</strong></p>
+<ul class="simple">
+<li>fix bug introduced in v0.4 that caused update_time to be NULL for launches</li>
+</ul>
+<p><strong>v0.41</strong></p>
+<ul class="simple">
+<li>add <code class="docutils literal"><span class="pre">set_priority</span></code> function to LaunchPad</li>
+<li>minor bug fixes related to multi-launcher and default queue params</li>
+</ul>
+</div>
+<div class="section" id="v0-4">
+<h2>v0.4<a class="headerlink" href="#v0-4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>add offline mode</li>
+</ul>
+<p><strong>v0.37</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The default behavior in ScriptTask is now <code class="docutils literal"><span class="pre">fizzle_bad_rc</span></code>.</p>
+</div>
+<ul class="simple">
+<li>add <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">add_scripts</span></code></li>
+<li><code class="docutils literal"><span class="pre">fizzle_bad_rc</span></code> by default in ScriptTask</li>
+<li>add FWorker() by default in rlaunch</li>
+</ul>
+<p><strong>v0.36</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The <code class="docutils literal"><span class="pre">rerun_fw</span></code>, <code class="docutils literal"><span class="pre">defuse_fw</span></code>, and <code class="docutils literal"><span class="pre">reignite_fw</span></code> commands are now pluralized, <code class="docutils literal"><span class="pre">refresh_wf</span></code> is simply <code class="docutils literal"><span class="pre">refresh</span></code>, and <code class="docutils literal"><span class="pre">rerun_fizzled</span></code> has been incorporated into <code class="docutils literal"><span class="pre">rerun_fws</span></code>.</p>
+</div>
+<ul class="simple">
+<li>much more powerful control for <code class="docutils literal"><span class="pre">rerun_fws</span></code>, <code class="docutils literal"><span class="pre">defuse</span></code>, <code class="docutils literal"><span class="pre">archive</span></code>, <code class="docutils literal"><span class="pre">reignite</span></code>, <code class="docutils literal"><span class="pre">defuse_fws</span></code>, <code class="docutils literal"><span class="pre">reignite_fws</span></code>, <code class="docutils literal"><span class="pre">refresh</span></code>.</li>
+</ul>
+<p><strong>v0.35</strong></p>
+<ul class="simple">
+<li>restore behavior back to v0.33</li>
+</ul>
+<p><strong>v0.34</strong></p>
+<ul class="simple">
+<li><em>deprecated</em> - rename FIZZLED to FAILED</li>
+</ul>
+<p><strong>v0.33</strong></p>
+<ul class="simple">
+<li>concatenate the update_spec and mod_spec of all FireTasks, instead of exiting as soon as a FireTask updates a spec.</li>
+</ul>
+<p><strong>v0.32</strong></p>
+<ul class="simple">
+<li>change templating language to Jinja2 (and remove heavyweight dependency to Django)</li>
+<li>add ability to manually refresh workflows</li>
+</ul>
+<p><strong>v0.31</strong></p>
+<ul class="simple">
+<li>fix bug related to interaction between multi job packer and job checkout optimization</li>
+</ul>
+</div>
+<div class="section" id="v0-3">
+<h2>v0.3<a class="headerlink" href="#v0-3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>multi job launcher to &#8216;pack&#8217; jobs (Xiaohui Qu)</li>
+</ul>
+<p><strong>v0.25</strong></p>
+<ul class="simple">
+<li>make paramiko optional as it can cause install problems</li>
+</ul>
+<p><strong>v0.24</strong></p>
+<ul class="simple">
+<li>TransferTask added</li>
+<li>fix <code class="docutils literal"><span class="pre">_use_global_spec</span></code></li>
+</ul>
+<p><strong>v0.23</strong></p>
+<ul class="simple">
+<li>delete useless dirs when setting <code class="docutils literal"><span class="pre">_launch_dir</span></code></li>
+<li>ScriptTask and TemplateWriterTask have <code class="docutils literal"><span class="pre">_use_global_spec</span></code> option</li>
+</ul>
+<p><strong>v0.22</strong></p>
+<ul class="simple">
+<li>allow user to control where a FW gets executed using <code class="docutils literal"><span class="pre">_launch_dir</span></code></li>
+</ul>
+<p><strong>v0.21</strong></p>
+<ul class="simple">
+<li>add TemplateWriterTask plus documentation</li>
+<li>check for duplicate serialized objects</li>
+</ul>
+</div>
+<div class="section" id="v0-2">
+<h2>v0.2<a class="headerlink" href="#v0-2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>initial (alpha) release of Web GUI from Morgan Hargrove</li>
+</ul>
+<p><strong>v0.196</strong></p>
+<ul class="simple">
+<li>bugfix to detect_unreserved script</li>
+<li>fixes to pip installation and instructions</li>
+</ul>
+<p><strong>v0.18</strong></p>
+<ul class="simple">
+<li>add fizzle_bad_rc option to ScriptTask</li>
+<li>major doc additions and updates</li>
+</ul>
+<p><strong>v0.17</strong></p>
+<ul class="simple">
+<li>minor update to ping()</li>
+<li>major docs reorganization and updates</li>
+<li>document and better support &#8216;pip&#8217; installation</li>
+</ul>
+<p><strong>v0.16</strong></p>
+<ul class="simple">
+<li>refactor AVOID_MANY_STATS into more tunable QSTAT_FREQUENCY</li>
+<li>speed up counting operations</li>
+<li>add more indices</li>
+<li>better log queue submission errors</li>
+<li>auto_load() function for LaunchPad</li>
+<li>queue launcher fills in previous block if not full (modifiable in FWConfig)</li>
+<li>many doc updates</li>
+</ul>
+<p><strong>v0.15</strong></p>
+<ul class="simple">
+<li>add ability to <em>ARCHIVE</em> FireWorks</li>
+<li>update docs regarding enhancements to querying FireWorks and Workflows</li>
+<li>option to avoid overloading the queue management system with status requests</li>
+<li>more robust PBS adapter implementation</li>
+</ul>
+<p><strong>v0.14</strong></p>
+<ul class="simple">
+<li>pin down and fix known issue of launches sometimes not being updated</li>
+<li>further refine display options and enhancements for <code class="docutils literal"><span class="pre">get_fws</span></code> and <code class="docutils literal"><span class="pre">get_wfs</span></code>.</li>
+<li>minor enhancements to queue launcher and PBS adapter</li>
+<li>support user indices for workflows</li>
+<li>minor bugfixes and internal code cleanup</li>
+</ul>
+<p><strong>v0.13</strong></p>
+<ul class="simple">
+<li>multiple query and output display options and enhancements added for <code class="docutils literal"><span class="pre">get_fws</span></code> and <code class="docutils literal"><span class="pre">get_wfs</span></code>.</li>
+<li>use FW&#8217;s name to set more informative PBS job names</li>
+<li>make sure ping_launch only writes on running jobs (prevent race condition)</li>
+<li>minor bugfixes</li>
+</ul>
+<p><strong>v0.12</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">The <code class="docutils literal"><span class="pre">get_fw_id</span></code> and <code class="docutils literal"><span class="pre">get_fw</span></code> LaunchPad commands were merged into <code class="docutils literal"><span class="pre">get_fws</span></code>.</p>
+</div>
+<ul class="simple">
+<li>better support for getting states of FireWorks and Workflows</li>
+<li>minor bugfix for dynamic FireWorks</li>
+</ul>
+<p><strong>v0.11</strong></p>
+<ul class="simple">
+<li>rerunning FireWorks</li>
+<li>misc fixes for categories</li>
+</ul>
+</div>
+<div class="section" id="v0-1">
+<h2>v0.1<a class="headerlink" href="#v0-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>initial Release</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FireWorks Changelog</a><ul>
+<li><a class="reference internal" href="#v0-7">v0.7</a></li>
+<li><a class="reference internal" href="#v0-6">v0.6</a></li>
+<li><a class="reference internal" href="#v0-5">v0.5</a></li>
+<li><a class="reference internal" href="#v0-4">v0.4</a></li>
+<li><a class="reference internal" href="#v0-3">v0.3</a></li>
+<li><a class="reference internal" href="#v0-2">v0.2</a></li>
+<li><a class="reference internal" href="#v0-1">v0.1</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="guide_to_writing_firetasks.html"
+                        title="previous chapter">The Comprehensive Guide to Writing Firetasks with Python</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/changelog.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

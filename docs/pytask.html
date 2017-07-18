@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PyTask &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using the built-in FilePad Tasks" href="filepad_tasks.html" />
+    <link rel="prev" title="Using the built-in FileIO Tasks" href="fileiotasks.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fileiotasks.html" title="Using the built-in FileIO Tasks"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pytask">
+<h1>PyTask<a class="headerlink" href="#pytask" title="Permalink to this headline">¶</a></h1>
+<p>The PyTask allows you to call any Python function. That function can (optionally) return a <em>FWAction</em> to perform dynamic actions (e.g., see the <a class="reference internal" href="guide_to_writing_firetasks.html"><span class="doc">Guide to Writing Firetasks</span></a>). Thus, with the PyTask you can basically do anything!</p>
+<div class="section" id="required-parameters">
+<h2>Required parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>func</strong>: <em>(str)</em> - Fully qualified python method. e.g., json.dump, or shutil.copy, or a user function!</li>
+</ul>
+</div>
+<div class="section" id="optional-parameters">
+<h2>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>args</strong>: <em>(list)</em> - a list of args to feed into the function</li>
+<li><strong>kwargs</strong>: <em>(dict)</em> - Dictionary of keyword args. Default is empty.</li>
+<li><strong>auto_kwargs</strong>: <em>(bool)</em> - If True, all other params not starting with &#8220;_&#8221; are automatically supplied as keyword args</li>
+<li><strong>stored_data_varname</strong>: <em>(str)</em> If this is a string that does not evaluate to False, the output of the function will be stored as FWAction(stored_data={stored_data_varname: output}). The name is deliberately long to avoid potential name conflicts.</li>
+</ul>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Here is an example of defining a PyTask that sleeps for 5 seconds:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fw_timer</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">PyTask</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="s1">&#39;time.sleep&#39;</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Note that you can call any Python function this way!</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PyTask</a><ul>
+<li><a class="reference internal" href="#required-parameters">Required parameters</a></li>
+<li><a class="reference internal" href="#optional-parameters">Optional parameters</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fileiotasks.html"
+                        title="previous chapter">Using the built-in FileIO Tasks</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filepad_tasks.html"
+                        title="next chapter">Using the built-in FilePad Tasks</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pytask.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fileiotasks.html" title="Using the built-in FileIO Tasks"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

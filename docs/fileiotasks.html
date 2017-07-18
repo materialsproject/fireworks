@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using the built-in FileIO Tasks &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PyTask" href="pytask.html" />
+    <link rel="prev" title="Using the TemplateWriterTask to write files" href="templatewritertask.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pytask.html" title="PyTask"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-the-built-in-fileio-tasks">
+<h1>Using the built-in FileIO Tasks<a class="headerlink" href="#using-the-built-in-fileio-tasks" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks comes with several built-in tasks for performing file I/O (writing, moving, and deleting files).</p>
+<div class="section" id="filewritetask">
+<h2>FileWriteTask<a class="headerlink" href="#filewritetask" title="Permalink to this headline">¶</a></h2>
+<p>The <em>FileWriteTask</em> is a simple way to write files (a more powerful version based on templating is the <a class="reference internal" href="templatewritertask.html"><span class="doc">TemplateWriterTask</span></a>).</p>
+<div class="section" id="required-parameters">
+<h3>Required parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>files_to_write: ([{filename:(str), contents:(str)}]) - this is a list of dictionaries. each dictionary must have a filename (string) and contents (str). The contents are written to the corresponding filename.</li>
+</ul>
+</div>
+<div class="section" id="optional-parameters">
+<h3>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>dest: (str) - the directory in which to write all the files (default is current working directory)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="filedeletetask">
+<h2>FileDeleteTask<a class="headerlink" href="#filedeletetask" title="Permalink to this headline">¶</a></h2>
+<p>The <em>FileDeleteTask</em> lets you delete one or more files.</p>
+<div class="section" id="id1">
+<h3>Required parameters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>files_to_delete: ([(str)]) - a list of Strings corresponding to the filenames to delete</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>Optional parameters<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>dest: (str) - the directory in which to delete all the files (default is current working directory)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="filetransfertask">
+<h2>FileTransferTask<a class="headerlink" href="#filetransfertask" title="Permalink to this headline">¶</a></h2>
+<p>The FileTransferTask is a built-in Firetask for moving and copying files, perhaps to a remote server. Its usage is straightforward:</p>
+<ul class="simple">
+<li>a <code class="docutils literal"><span class="pre">files</span></code> key that contains a list of files to move or copy</li>
+<li>additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors</li>
+</ul>
+<p>An example of a Firework that copies two files, <code class="docutils literal"><span class="pre">file1.txt</span></code> and <code class="docutils literal"><span class="pre">file2.txt</span></code>, to the home directory looks as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
+  <span class="n">_tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">FileTransferTask</span>
+    <span class="n">files</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">src</span><span class="p">:</span> <span class="n">file1</span><span class="o">.</span><span class="n">txt</span>
+      <span class="n">dest</span><span class="p">:</span> <span class="o">~/</span><span class="n">file1</span><span class="o">.</span><span class="n">txt</span>
+    <span class="o">-</span> <span class="n">src</span><span class="p">:</span> <span class="n">file2</span><span class="o">.</span><span class="n">txt</span>
+      <span class="n">dest</span><span class="p">:</span> <span class="o">~/</span><span class="n">file2</span><span class="o">.</span><span class="n">txt</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">copy</span>
+</pre></div>
+</div>
+<p>In Python code, the same task would be defined as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">firetask1</span> <span class="o">=</span> <span class="n">FileTransferTask</span><span class="p">({</span><span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="s1">&#39;file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span> <span class="s1">&#39;~/file1.txt&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span> <span class="s1">&#39;~/file2.txt&#39;</span><span class="p">}],</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">files</span></code> parameter <em>must</em> be specified, and is an array of dictionaries with <code class="docutils literal"><span class="pre">src</span></code> and <code class="docutils literal"><span class="pre">dest</span></code> keys. The default mode of operation is to move files from the source to destination; by changing the <code class="docutils literal"><span class="pre">mode</span></code> to copy, we will copy the files instead. Note that you can put as many files (or directories) in the <code class="docutils literal"><span class="pre">files</span></code> list as you want; the same <code class="docutils literal"><span class="pre">mode</span></code> will be applied to all of them. If you want to move some files and copy others, you&#8217;d need to include two different <a href="#id3"><span class="problematic" id="id4">``</span></a>FileTransferTask``s in your Firework.</p>
+<p>A more compact representation for File Transfers can be given if several files are being moved/copied to the same directory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
+  <span class="n">_tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">FileTransferTask</span>
+    <span class="n">dest</span><span class="p">:</span> <span class="n">dest_dir</span>
+    <span class="n">files</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">file1</span><span class="o">.</span><span class="n">txt</span>
+    <span class="o">-</span> <span class="n">file2</span><span class="o">.</span><span class="n">txt</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">copy</span>
+</pre></div>
+</div>
+<p>In Python code, this representation would be defined as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">firetask1</span> <span class="o">=</span> <span class="n">FileTransferTask</span><span class="p">({</span><span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">],</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span><span class="s1">&#39;dest_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>An example of the FileTransferTask in action is given in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>.</p>
+<div class="section" id="filetransfertask-options">
+<h3>FileTransferTask Options<a class="headerlink" href="#filetransfertask-options" title="Permalink to this headline">¶</a></h3>
+<p>Below are the various options that can be set for the FileTransferTask.</p>
+<p><strong>mode</strong></p>
+<p>The potential values are:</p>
+<ul class="simple">
+<li><em>move</em> - move a file or directory</li>
+<li><em>copy</em> - copy a file/dir (including permissions) but do not include metadata</li>
+<li><em>copy2</em> - copy a file/dir (including permissions); also include metadata</li>
+<li><em>copytree</em> - recursively copy an entire directory copy</li>
+<li><em>copyfile</em> - copy the contents of a file into another file (no metadata)</li>
+<li><em>rtransfer</em> - do a remote transfer (this is covered later in this doc)</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">With the exception of <strong>rtransfer</strong>, <code class="docutils literal"><span class="pre">FileTransferTask</span></code> is using Python&#8217;s <em>shutil</em> module to do the move/copy. You can read more about these modes in <a href="#id9"><span class="problematic" id="id10">`Python&#8217;s *shutil* docs &lt;http://docs.python.org/2/library/shutil.html`_</span></a>.</p>
+</div>
+<p><strong>ignore_errors</strong></p>
+<p>Either <em>True</em> or <em>False</em> (default=*False*). If True, a failed move/copy will just cause <code class="docutils literal"><span class="pre">FileTransferTask</span></code> to move to the next file in the <code class="docutils literal"><span class="pre">files</span></code> list. If False, a failed move/copy will raise an error.</p>
+<p><strong>shell_interpret</strong></p>
+<p>Either <em>True</em> or <em>False</em> (default=*True*). If False, the <em>src</em> and <em>dest</em> of files are taken literally. If <em>True</em>, the <em>src</em> and <em>dest</em> interpret environment variables and shortcuts like <code class="docutils literal"><span class="pre">~</span></code> and <code class="docutils literal"><span class="pre">.</span></code></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In remote transfer mode, some shortcuts like <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">~</span></code> are not interpreted for the destination. However, environment variables will still be interpreted if <code class="docutils literal"><span class="pre">shell_interpret</span></code> is True.</p>
+</div>
+</div>
+<div class="section" id="remote-transfers">
+<h3>Remote Transfers<a class="headerlink" href="#remote-transfers" title="Permalink to this headline">¶</a></h3>
+<p>Remote transfers are handled via SFTP using the <em>paramiko</em> Python library (make sure you&#8217;ve installed it via <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">paramiko</span></code>). To do a remote transfer, you set <code class="docutils literal"><span class="pre">files</span></code> as before but:</p>
+<ul class="simple">
+<li>You&#8217;ll first need to configure passwordless login via ssh between the two machines that are transferring files</li>
+<li>Set the <strong>mode</strong> of transfer to <em>rtransfer</em> (see previous section)</li>
+<li>You <em>must</em> set an additional option called <strong>server</strong> to the remote server hostname or IP</li>
+<li>Make sure the <em>dest</em> doesn&#8217;t contain symbols that can&#8217;t properly be interpreted on the local machine, like <code class="docutils literal"><span class="pre">~</span></code> or <code class="docutils literal"><span class="pre">.</span></code></li>
+<li>If you are using a non-standard keyfile location (e.g., not something like <code class="docutils literal"><span class="pre">~/.ssh/id_dsa.pub</span></code>), you need to set the <strong>key_filename</strong> option to the location of your key filename.</li>
+</ul>
+<p>If all this is configured properly, you should be able to transfer files to a remote machine via <code class="docutils literal"><span class="pre">FileTransferTask</span></code>. Some potential hiccups:</p>
+<ul class="simple">
+<li>You require a password to SSH between machines and haven&#8217;t configured passwordless SSH.</li>
+<li>You are using a non-standard SSH port</li>
+<li>Your <code class="docutils literal"><span class="pre">known_hosts</span></code> file is not located in <code class="docutils literal"><span class="pre">~/.ssh/known_hosts</span></code></li>
+</ul>
+</div>
+<div class="section" id="the-use-global-spec-option">
+<h3>The _use_global_spec option<a class="headerlink" href="#the-use-global-spec-option" title="Permalink to this headline">¶</a></h3>
+<p>By default, the parameters for the FileTransferTask should be defined within the <code class="docutils literal"><span class="pre">_task</span></code> section of the <strong>spec</strong> corresponding to the FileTransferTask, not as a root key of the <strong>spec</strong>. If you&#8217;d like to instead specify the parameters in the root of the <strong>spec</strong>, you can set <code class="docutils literal"><span class="pre">_use_global_spec</span></code> to True within the <code class="docutils literal"><span class="pre">_task</span></code> section. Note that <code class="docutils literal"><span class="pre">_use_global_spec</span></code> can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same Firework.</p>
+</div>
+</div>
+<div class="section" id="compressdirtask">
+<h2>CompressDirTask<a class="headerlink" href="#compressdirtask" title="Permalink to this headline">¶</a></h2>
+<p>The <em>CompressDir</em> task allows you to compress each file in the current directory (e.g., via gzip).</p>
+<div class="section" id="id5">
+<h3>Required parameters<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>(none)</p>
+</div>
+<div class="section" id="id6">
+<h3>Optional parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>compression: (str) - choose between &#8220;gz&#8221; (default) and &#8220;bz2&#8221; compression modes</li>
+<li>dest: (str) - destination location</li>
+<li>ignore_errors: (bool) - whether to ignore errors</li>
+</ul>
+</div>
+</div>
+<div class="section" id="archivedirtask">
+<h2>ArchiveDirTask<a class="headerlink" href="#archivedirtask" title="Permalink to this headline">¶</a></h2>
+<p>The <em>ArchiveDir</em> task allows you to archive the current working directory into a single file.</p>
+<div class="section" id="id7">
+<h3>Required parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>base_name: (str) the full file path of the output archive file</li>
+<li>format: (str) &#8220;zip&#8221;, &#8220;tar&#8221;, &#8220;bztar&#8221; or &#8220;gztar&#8221;</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h3>Optional parameters<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>format: (str) - choose between &#8220;zip&#8221;, &#8220;tar&#8221;, &#8220;bztar&#8221; or &#8220;gztar&#8221; (default).</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using the built-in FileIO Tasks</a><ul>
+<li><a class="reference internal" href="#filewritetask">FileWriteTask</a><ul>
+<li><a class="reference internal" href="#required-parameters">Required parameters</a></li>
+<li><a class="reference internal" href="#optional-parameters">Optional parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filedeletetask">FileDeleteTask</a><ul>
+<li><a class="reference internal" href="#id1">Required parameters</a></li>
+<li><a class="reference internal" href="#id2">Optional parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filetransfertask">FileTransferTask</a><ul>
+<li><a class="reference internal" href="#filetransfertask-options">FileTransferTask Options</a></li>
+<li><a class="reference internal" href="#remote-transfers">Remote Transfers</a></li>
+<li><a class="reference internal" href="#the-use-global-spec-option">The _use_global_spec option</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compressdirtask">CompressDirTask</a><ul>
+<li><a class="reference internal" href="#id5">Required parameters</a></li>
+<li><a class="reference internal" href="#id6">Optional parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#archivedirtask">ArchiveDirTask</a><ul>
+<li><a class="reference internal" href="#id7">Required parameters</a></li>
+<li><a class="reference internal" href="#id8">Optional parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="templatewritertask.html"
+                        title="previous chapter">Using the TemplateWriterTask to write files</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pytask.html"
+                        title="next chapter">PyTask</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fileiotasks.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pytask.html" title="PyTask"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

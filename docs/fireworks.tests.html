@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fireworks.tests package &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fireworks-tests-package">
+<h1>fireworks.tests package<a class="headerlink" href="#fireworks-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fireworks.tests.master_tests">
+<span id="fireworks-tests-master-tests-module"></span><h2>fireworks.tests.master_tests module<a class="headerlink" href="#module-fireworks.tests.master_tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.tests.master_tests.BasicTests">
+<em class="property">class </em><code class="descclassname">fireworks.tests.master_tests.</code><code class="descname">BasicTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.BasicTests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Make sure that required external libraries can be imported</p>
+<dl class="method">
+<dt id="fireworks.tests.master_tests.BasicTests.test_fwconnector">
+<code class="descname">test_fwconnector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.BasicTests.test_fwconnector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.master_tests.BasicTests.test_parentconnector">
+<code class="descname">test_parentconnector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.BasicTests.test_parentconnector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.master_tests.SerializationTests">
+<em class="property">class </em><code class="descclassname">fireworks.tests.master_tests.</code><code class="descname">SerializationTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="fireworks.tests.master_tests.SerializationTests.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><em>obj_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.master_tests.SerializationTests.test_recursive_deserialize">
+<code class="descname">test_recursive_deserialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests.test_recursive_deserialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.master_tests.SerializationTests.test_serialization_details">
+<code class="descname">test_serialization_details</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests.test_serialization_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.master_tests.TestImports">
+<em class="property">class </em><code class="descclassname">fireworks.tests.master_tests.</code><code class="descname">TestImports</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.TestImports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Make sure that required external libraries can be imported</p>
+<dl class="method">
+<dt id="fireworks.tests.master_tests.TestImports.test_imports">
+<code class="descname">test_imports</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.TestImports.test_imports" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.tests.mongo_tests">
+<span id="fireworks-tests-mongo-tests-module"></span><h2>fireworks.tests.mongo_tests module<a class="headerlink" href="#module-fireworks.tests.mongo_tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.tests.mongo_tests.ModSpecTask">
+<em class="property">class </em><code class="descclassname">fireworks.tests.mongo_tests.</code><code class="descname">ModSpecTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.ModSpecTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.ModSpecTask.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.ModSpecTask.run_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.mongo_tests.MongoTests">
+<em class="property">class </em><code class="descclassname">fireworks.tests.mongo_tests.</code><code class="descname">MongoTests</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.tests.mongo_tests.MongoTests.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.tests.mongo_tests.MongoTests.tearDownClass">
+<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_add_fw">
+<code class="descname">test_add_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_add_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_add_lp_and_fw_id">
+<code class="descname">test_add_lp_and_fw_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_add_lp_and_fw_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_append_wf">
+<code class="descname">test_append_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour">
+<code class="descname">test_append_wf_detour</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_archive">
+<code class="descname">test_archive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_archive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_backgroundtask">
+<code class="descname">test_backgroundtask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_backgroundtask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_basic_fw">
+<code class="descname">test_basic_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_basic_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_basic_fw_offline">
+<code class="descname">test_basic_fw_offline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_basic_fw_offline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_defuse">
+<code class="descname">test_defuse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_defuse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_delete_fw">
+<code class="descname">test_delete_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_delete_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_dupefinder">
+<code class="descname">test_dupefinder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_dupefinder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_duplicate_delete_fw">
+<code class="descname">test_duplicate_delete_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_duplicate_delete_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_fibadder">
+<code class="descname">test_fibadder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_fibadder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_fizzle">
+<code class="descname">test_fizzle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_fizzle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_force_lock_removal">
+<code class="descname">test_force_lock_removal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_force_lock_removal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_fw_env">
+<code class="descname">test_fw_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_fw_env" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_job_info">
+<code class="descname">test_job_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_job_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_multi_detour">
+<code class="descname">test_multi_detour</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_detour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_multi_fw">
+<code class="descname">test_multi_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_multi_fw_complex">
+<code class="descname">test_multi_fw_complex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_fw_complex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_offline_fw_passinfo">
+<code class="descname">test_offline_fw_passinfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_offline_fw_passinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_org_wf">
+<code class="descname">test_org_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_org_wf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_parallel_fibadder">
+<code class="descname">test_parallel_fibadder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_parallel_fibadder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_preserve_fworker">
+<code class="descname">test_preserve_fworker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_preserve_fworker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_spec_copy">
+<code class="descname">test_spec_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_spec_copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MongoTests.test_stats">
+<code class="descname">test_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.mongo_tests.MultipleDetourTask">
+<em class="property">class </em><code class="descclassname">fireworks.tests.mongo_tests.</code><code class="descname">MultipleDetourTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MultipleDetourTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.MultipleDetourTask.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MultipleDetourTask.run_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.mongo_tests.UpdateSpecTask">
+<em class="property">class </em><code class="descclassname">fireworks.tests.mongo_tests.</code><code class="descname">UpdateSpecTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.UpdateSpecTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.tests.mongo_tests.UpdateSpecTask.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.UpdateSpecTask.run_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.tests.mongo_tests.random_launch">
+<code class="descclassname">fireworks.tests.mongo_tests.</code><code class="descname">random_launch</code><span class="sig-paren">(</span><em>lp_creds</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.random_launch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="fireworks.tests.mongo_tests.throw_error">
+<code class="descclassname">fireworks.tests.mongo_tests.</code><code class="descname">throw_error</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.throw_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.tests.multiprocessing_tests">
+<span id="fireworks-tests-multiprocessing-tests-module"></span><h2>fireworks.tests.multiprocessing_tests module<a class="headerlink" href="#module-fireworks.tests.multiprocessing_tests" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW">
+<em class="property">class </em><code class="descclassname">fireworks.tests.multiprocessing_tests.</code><code class="descname">TestCheckoutFW</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW.lp">
+<code class="descname">lp</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.lp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW.tearDownClass">
+<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestCheckoutFW.test_checkout_fw">
+<code class="descname">test_checkout_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.test_checkout_fw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit">
+<em class="property">class </em><code class="descclassname">fireworks.tests.multiprocessing_tests.</code><code class="descname">TestEarlyExit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit.lp">
+<code class="descname">lp</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit.lp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit.setUpClass">
+<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit.tearDownClass">
+<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestEarlyExit.test_early_exit">
+<code class="descname">test_early_exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestEarlyExit.test_early_exit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.multiprocessing_tests.TestLinks">
+<em class="property">class </em><code class="descclassname">fireworks.tests.multiprocessing_tests.</code><code class="descname">TestLinks</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestLinks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="fireworks.tests.multiprocessing_tests.TestLinks.test_pickle">
+<code class="descname">test_pickle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.multiprocessing_tests.TestLinks.test_pickle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.tests.tasks">
+<span id="fireworks-tests-tasks-module"></span><h2>fireworks.tests.tasks module<a class="headerlink" href="#module-fireworks.tests.tasks" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.tests.tasks.DummyFWEnvTask">
+<em class="property">class </em><code class="descclassname">fireworks.tests.tasks.</code><code class="descname">DummyFWEnvTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.tasks.DummyFWEnvTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.tests.tasks.DummyFWEnvTask.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.tasks.DummyFWEnvTask.run_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.tasks.DummyJobPassTask">
+<em class="property">class </em><code class="descclassname">fireworks.tests.tasks.</code><code class="descname">DummyJobPassTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.tasks.DummyJobPassTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.tests.tasks.DummyJobPassTask.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.tasks.DummyJobPassTask.run_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.tests.tasks.DummyLPTask">
+<em class="property">class </em><code class="descclassname">fireworks.tests.tasks.</code><code class="descname">DummyLPTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.tasks.DummyLPTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dl class="method">
+<dt id="fireworks.tests.tasks.DummyLPTask.run_task">
+<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.tasks.DummyLPTask.run_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.tests.test_fw_config">
+<span id="fireworks-tests-test-fw-config-module"></span><h2>fireworks.tests.test_fw_config module<a class="headerlink" href="#module-fireworks.tests.test_fw_config" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fireworks.tests.test_fw_config.ConfigTest">
+<em class="property">class </em><code class="descclassname">fireworks.tests.test_fw_config.</code><code class="descname">ConfigTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.test_fw_config.ConfigTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="fireworks.tests.test_fw_config.ConfigTest.test_config">
+<code class="descname">test_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.test_fw_config.ConfigTest.test_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fireworks.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fireworks.tests package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests.master_tests">fireworks.tests.master_tests module</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests.mongo_tests">fireworks.tests.mongo_tests module</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests.multiprocessing_tests">fireworks.tests.multiprocessing_tests module</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests.tasks">fireworks.tests.tasks module</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests.test_fw_config">fireworks.tests.test_fw_config module</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fireworks.tests.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

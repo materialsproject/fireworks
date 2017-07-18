@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Canceling (pausing), restarting, and deleting Workflows &#8212; FireWorks 1.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Rerunning a Firework or Workflow" href="rerun_tutorial.html" />
+    <link rel="prev" title="Assigning job priority" href="priority_tutorial.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="priority_tutorial.html" title="Assigning job priority"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="canceling-pausing-restarting-and-deleting-workflows">
+<h1>Canceling (pausing), restarting, and deleting Workflows<a class="headerlink" href="#canceling-pausing-restarting-and-deleting-workflows" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="canceling-pausing-restarting-entire-workflows">
+<h2>Canceling/pausing/restarting entire workflows<a class="headerlink" href="#canceling-pausing-restarting-entire-workflows" title="Permalink to this headline">¶</a></h2>
+<p>You can pause Workflows in one of two ways: <em>pausing</em> them and <em>defusing</em> them. Both method do essentially the same thing,
+except that defusing Fireworks can be done programmatically via a <em>FWAction</em> and is often associated with something going &#8220;wrong&#8221;.</p>
+<p>To pause a Workflow:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">pause_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>To defuse a Workflow:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">defuse_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;FW_IDS&gt;</span></code> is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). Instead of specifying ids, you can also specify a name (<code class="docutils literal"><span class="pre">-n</span></code>), a state (<code class="docutils literal"><span class="pre">-s</span></code>), or a custom query (<code class="docutils literal"><span class="pre">-q</span></code>) for the workflow. The full command is thus:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">defuse_wflows</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">FW_ID</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NAME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">STATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span> <span class="n">QUERY</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Refer to the documentation (<code class="docutils literal"><span class="pre">lpad</span> <span class="pre">pause_wflows</span> <span class="pre">-h</span></code> and <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">defuse_wflows</span> <span class="pre">-h</span></code>) for more information.</p>
+<div class="section" id="restarting-workflows">
+<h3>Restarting workflows<a class="headerlink" href="#restarting-workflows" title="Permalink to this headline">¶</a></h3>
+<p>If you <em>paused</em> a Workflow, you can resume the entire workflow using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">rerun_fws</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Note that this will rerun any existing run data in the Firework.</p>
+<p>The equivalent command if you <em>defused</em> a Workflow is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reignite_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;FW_IDS&gt;</span></code> is a numerical id of one of the FireWorks in the workflow you want to reignite (or a list of space-separated ids). This will <strong>reignite</strong> the entire Workflow. Note that the <em>reignite</em> command will not re-run FireWorks in a workflow that have already been run. Only FireWorks that were never run before will be run upon reignition. You can also rerun a defused Firework, please see the <a class="reference internal" href="rerun_tutorial.html"><span class="doc">rerun tutorial</span></a>.</p>
+</div>
+</div>
+<div class="section" id="canceling-and-restarting-individual-fireworks">
+<h2>Canceling and restarting individual FireWorks<a class="headerlink" href="#canceling-and-restarting-individual-fireworks" title="Permalink to this headline">¶</a></h2>
+<p>You can cancel and restart individual FireWorks instead of entire sub-Workflows.</p>
+<p>To pause an individual Firework, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">pause_fws</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>To resume/restart an individual Firework that was previously <em>paused</em>, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">resume_fws</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>To defuse an individual Firework, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">defuse_fws</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>To resume/restart an individual Firework that was previous <em>defused</em>, use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reignite_fws</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;FW_IDS&gt;</span></code> is a numerical id of one of the FireWorks in the workflow you want to defuse (or a list of space-separated ids). Instead of specifying ids, you can also specify a name (<code class="docutils literal"><span class="pre">-n</span></code>), a state (<code class="docutils literal"><span class="pre">-s</span></code>), or a custom query (<code class="docutils literal"><span class="pre">-q</span></code>) for the Firework.</p>
+</div>
+<div class="section" id="archiving-workflows">
+<h2>Archiving workflows<a class="headerlink" href="#archiving-workflows" title="Permalink to this headline">¶</a></h2>
+<p>There are both &#8220;hard&#8221; and &#8220;soft&#8221; deletes of jobs from the FireWorks database. The <strong>archive</strong> command is a soft delete that prevents all steps in a Workflow from running. It also archives any FireWorks in the Workflow that already ran, in effect simulating that they never existed. Therefore, the Workflow is for practical purposes erased. However, archived Workflows still exist in the database, and you can <em>query</em> them down the road for job provenance, but you cannot rerun them.</p>
+<p>To archive Workflows, use the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">archive_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;FW_IDS&gt;</span></code> is the numerical id of the Firework you want to defuse (or a list of space-separated ids). Note that all FireWorks in the Workflow will be archived, regardless of which <strong>fw_id</strong> you chose.</p>
+<p>Instead of specifying ids, you can also specify a name (<code class="docutils literal"><span class="pre">-n</span></code>), a state (<code class="docutils literal"><span class="pre">-s</span></code>), or a custom query (<code class="docutils literal"><span class="pre">-q</span></code>). The full command is thus:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">archive_wflows</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">FW_ID</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NAME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">STATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span> <span class="n">QUERY</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Refer to the documentation (<code class="docutils literal"><span class="pre">lpad</span> <span class="pre">archive_wflows</span> <span class="pre">-h</span></code>) for more information.</p>
+</div>
+<div class="section" id="deleting-workflows">
+<h2>Deleting workflows<a class="headerlink" href="#deleting-workflows" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>delete</strong> command is a hard delete that <em>removes all data</em> about a Workflow from the database.</p>
+<p>To delete Workflows, use the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">delete_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Instead of specifying ids, you can also specify a name (<code class="docutils literal"><span class="pre">-n</span></code>), a state (<code class="docutils literal"><span class="pre">-s</span></code>), or a custom query (<code class="docutils literal"><span class="pre">-q</span></code>). The full command is thus:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">delete_wflows</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">FW_ID</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NAME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">STATE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span> <span class="n">QUERY</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Refer to the documentation (<code class="docutils literal"><span class="pre">lpad</span> <span class="pre">delete_wflows</span> <span class="pre">-h</span></code>) for more information.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Canceling (pausing), restarting, and deleting Workflows</a><ul>
+<li><a class="reference internal" href="#canceling-pausing-restarting-entire-workflows">Canceling/pausing/restarting entire workflows</a><ul>
+<li><a class="reference internal" href="#restarting-workflows">Restarting workflows</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#canceling-and-restarting-individual-fireworks">Canceling and restarting individual FireWorks</a></li>
+<li><a class="reference internal" href="#archiving-workflows">Archiving workflows</a></li>
+<li><a class="reference internal" href="#deleting-workflows">Deleting workflows</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="priority_tutorial.html"
+                        title="previous chapter">Assigning job priority</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rerun_tutorial.html"
+                        title="next chapter">Rerunning a Firework or Workflow</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/defuse_tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="priority_tutorial.html" title="Assigning job priority"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>
