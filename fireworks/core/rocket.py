@@ -171,11 +171,12 @@ class Rocket:
                         pass
 
             for f in set(m_fw.spec.get("_files_in", [])).intersection(m_fw.spec.get("_prev_files", {}).keys()):
-                prev_file = m_fw.spec["_prev_files"][f]
-                with zopen(prev_file, "rb") as fin:
+                # We use zopen in binary mode to simulate a copy, but with
+                # transparent unzipping!
+                with zopen(m_fw.spec["_prev_files"][f], "rb") as fin:
                     with zopen(f, "wb") as fout:
                         fout.write(fin.read())
-                #shutil.copy(m_fw.spec["_prev_files"][f], f)
+                #shutil.copy(m_fw.spec["_files_in"][f], f)
 
             if m_fw.spec.get('_recover_launch', None):
                 launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
@@ -415,6 +416,10 @@ class Rocket:
             fwaction.update_spec['_fworker'] = self.fworker.name
 
         if my_spec.get("_files_out"):
+            # One potential area of conflict is if a fw depends on two fws
+            # and both fws generate the exact same file. That can lead to
+            # overriding. But as far as I know, this is an illogical use
+            # of a workflow, so I can't see it happening in normal use.
             filepaths = {
                 k: os.path.join(launch_dir, v)
                 for k, v in my_spec.get("_files_out").items()
@@ -422,7 +427,9 @@ class Rocket:
             }
             fwaction.update_spec["_prev_files"] = filepaths
         else:
-
+            # This ensures that prev_files are not passed from Firework to
+            # Firework. We do not want output files from fw1 to be used by fw3
+            # in the sequence of fw1->fw2->fw3
             fwaction.update_spec["_prev_files"] = {}
 
         return fwaction
