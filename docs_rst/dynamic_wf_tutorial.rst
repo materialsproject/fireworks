@@ -140,6 +140,11 @@ The text in blue lettering is not known in advance and can only be determined af
 
 You've now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including some that involve a simpler (but less flexible) language than what we just demonstrated. We will present details in a different document. For now, we will continue by demonstrating another type of dynamic workflow.
 
+Workflows that pass files
+=========================
+
+You can also pass files between Fireworks, either manually (using the job information or data passing methods above combined with a Firetask to copy files) or using the built-in keywords ``_files_in`` and ``_files_out``. More details are presented :doc:`here <guide_to_writing_firetasks>`.
+
 A Fibonacci Adder
 =================
 
