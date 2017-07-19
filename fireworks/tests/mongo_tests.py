@@ -359,15 +359,14 @@ class MongoTests(unittest.TestCase):
         # create the Workflow that passes files_in and files_out
         fw1 = Firework(
             [ScriptTask.from_str('echo "This is the first FireWork" > test1')],
-            spec={"_pass_job_info": True, "_files_out": [["fwtest1", "test1"]]},
-            fw_id=1)
-        fw2 = Firework([ScriptTask.from_str('gzip fwtest1')], fw_id=2,
+            spec={"_files_out": {"fwtest1": "test1"}}, fw_id=1)
+        fw2 = Firework([ScriptTask.from_str('gzip hello')], fw_id=2,
                        parents=[fw1],
-                       spec={"_files_in": ["fwtest1"],
-                             "_files_out": [["fwtest.2", "fwtest1.gz"]]})
+                       spec={"_files_in": {"fwtest1": "hello"},
+                             "_files_out": {"fw2": "hello.gz"}})
         fw3 = Firework([ScriptTask.from_str('cat fwtest.2')], fw_id=3,
                        parents=[fw2],
-                       spec={"_files_in": ["fwtest.2"]})
+                       spec={"_files_in": {"fw2": "fwtest.2"}})
         wf = Workflow([fw1, fw2, fw3],
                       {fw1: [fw2], fw2: [fw3]})
 
@@ -376,10 +375,10 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         self.assertTrue(os.path.exists("test1"))
         launch_rocket(self.lp, self.fworker)
-        self.assertTrue(os.path.exists("fwtest1.gz"))
+        self.assertTrue(os.path.exists("hello.gz"))
         launch_rocket(self.lp, self.fworker)
         self.assertTrue(os.path.exists("fwtest.2"))
-        for f in ["test1", "fwtest1.gz", "fwtest.2"]:
+        for f in ["test1", "hello.gz", "fwtest.2"]:
             os.remove(f)
 
     def test_preserve_fworker(self):

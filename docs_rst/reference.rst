@@ -70,7 +70,7 @@ _fizzled_parents          Reserved for automatically putting information about F
 _trackers                 Reserved for specifying Trackers.
 _background_tasks         Reserved for specifying BackgroundTasks
 _fw_env                   Reserved for setting worker-specifc environment variables. More information :doc:`here </worker_tutorial>`.
-_files_in                 Reserved for specifying a *list* input files to be copied from preceding FW.
-_files_out                Reserved for specifying a list of [name, output file name] that can be copied by a child FW.
+_files_in                 Reserved for specifying a dict of {name: filename} for input files to be copied from preceding FW.
+_files_out                Reserved for specifying a dict of {name, output file name} that can be copied by a child FW.
 _files_prev               Reserved for storing the actual full filepaths if _files_out is specified.
 ========================  ==============

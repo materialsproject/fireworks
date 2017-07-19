@@ -195,13 +195,13 @@ class Rocket:
 
             else:
                 starting_task = 0
-                prev_files = dict(m_fw.spec.get("_files_prev", {}))
-                for f in set(m_fw.spec.get("_files_in", [])).intersection(
-                        prev_files.keys()):
+                files_in = m_fw.spec.get("_files_in", {})
+                prev_files = m_fw.spec.get("_files_prev", {})
+                for f in set(files_in.keys()).intersection(prev_files.keys()):
                     # We use zopen for the file objects for transparent handling
                     # of zipped files. shutil.copyfileobj does the actual copy
                     # in chunks that avoid memory issues.
-                    with zopen(prev_files[f], "rb") as fin, zopen(f, "wb") as fout:
+                    with zopen(prev_files[f], "rb") as fin, zopen(files_in[f], "wb") as fout:
                         shutil.copyfileobj(fin, fout)
 
             if lp:
@@ -423,11 +423,11 @@ class Rocket:
             # overriding. But as far as I know, this is an illogical use
             # of a workflow, so I can't see it happening in normal use.
             filepaths = {}
-            for k, v in my_spec.get("_files_out"):
+            for k, v in my_spec.get("_files_out").items():
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
                     filepaths[k] = sorted(files)[-1]
-            fwaction.update_spec["_files_prev"] = list(filepaths.items())
+            fwaction.update_spec["_files_prev"] = filepaths
         elif "_files_prev" in my_spec:
             # This ensures that _files_prev are not passed from Firework to
             # Firework. We do not want output files from fw1 to be used by fw3
