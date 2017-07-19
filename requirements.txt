@@ -8,4 +8,4 @@ tabulate==0.7.7
 flask==0.12.2
 flask-paginate==0.4.5
 gunicorn==19.6.0
-tqdm==4.11.2
+tqdm==4.14.0
