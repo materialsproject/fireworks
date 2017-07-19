@@ -200,10 +200,10 @@
 <td>Reserved for setting worker-specifc environment variables. More information <a class="reference internal" href="worker_tutorial.html"><span class="doc">here</span></a>.</td>
 </tr>
 <tr class="row-odd"><td>_files_in</td>
-<td>Reserved for specifying a <em>list</em> input files to be copied from preceding FW.</td>
+<td>Reserved for specifying a dict of {name: filename} for input files to be copied from preceding FW.</td>
 </tr>
 <tr class="row-even"><td>_files_out</td>
-<td>Reserved for specifying a list of [name, output file name] that can be copied by a child FW.</td>
+<td>Reserved for specifying a dict of {name, output file name} that can be copied by a child FW.</td>
 </tr>
 <tr class="row-odd"><td>_files_prev</td>
 <td>Reserved for storing the actual full filepaths if _files_out is specified.</td>
