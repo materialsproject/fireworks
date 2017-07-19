@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.utilities package &#8212; FireWorks 1.4.0 documentation</title>
+    <title>fireworks.utilities package &#8212; FireWorks 1.4.6 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.0',
+        VERSION:     '1.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -102,22 +102,23 @@ supported DictMod</li>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">monty.json.MSONable</span></code></p>
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.add_file">
-<code class="descname">add_file</code><span class="sig-paren">(</span><em>path</em>, <em>label=None</em>, <em>compress=True</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert the file specified by the path into gridfs. The id and label are returned.
-Note: label must be unique, i.e, no insertion if the label already exists in the db.</p>
+<code class="descname">add_file</code><span class="sig-paren">(</span><em>path</em>, <em>identifier=None</em>, <em>compress=True</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
+Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the file</li>
-<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; file label</li>
+<li><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; file identifier. If identifier = None then the identifier is set to the object id
+returned by gridfs insertion.</li>
 <li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; compress or not</li>
 <li><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; file metadata</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the id returned by gridfs, label</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the id returned by gridfs, identifier</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>, <a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a>)</p>
@@ -152,15 +153,40 @@ Note: label must be unique, i.e, no insertion if the label already exists in the
 </dd></dl>
 
 <dl class="method">
+<dt id="fireworks.utilities.filepad.FilePad.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>filter=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of documents in filepad.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; </li>
+<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; see pymongo.Collection.count for the supported
+keyword arguments.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the count</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.delete_file">
-<code class="descname">delete_file</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete the document with the matching label. The contents in the gridfs as well as the
+<code class="descname">delete_file</code><span class="sig-paren">(</span><em>identifier</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the document with the matching identifier. The contents in the gridfs as well as the
 associated document in the filepad are deleted.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file label</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file identifier</td>
 </tr>
 </tbody>
 </table>
@@ -168,12 +194,12 @@ associated document in the filepad are deleted.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.delete_file_by_id">
-<code class="descname">delete_file_by_id</code><span class="sig-paren">(</span><em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_file_by_id</code><span class="sig-paren">(</span><em>gfs_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</td>
 </tr>
 </tbody>
 </table>
@@ -209,13 +235,13 @@ associated document in the filepad are deleted.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.get_file">
-<code class="descname">get_file</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get file by label.</p>
+<code class="descname">get_file</code><span class="sig-paren">(</span><em>identifier</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get file by identifier</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file label</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file identifier</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the file content as a string, document dictionary</td>
 </tr>
@@ -227,12 +253,12 @@ associated document in the filepad are deleted.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.get_file_by_id">
-<code class="descname">get_file_by_id</code><span class="sig-paren">(</span><em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_file_by_id</code><span class="sig-paren">(</span><em>gfs_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the gridfs id for the file.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the file content as a string, document dictionary</td>
 </tr>
@@ -267,15 +293,15 @@ associated document in the filepad are deleted.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.update_file">
-<code class="descname">update_file</code><span class="sig-paren">(</span><em>label</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the filecontents in the gridfs, update the file_id in the document and retain the
+<code class="descname">update_file</code><span class="sig-paren">(</span><em>identifier</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the filecontents in the gridfs, update the gfs_id in the document and retain the
 rest.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the unique file label</li>
+<li><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the unique file identifier</li>
 <li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the new file whose contents will replace the existing one.</li>
 <li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether or not to compress the contents before inserting to gridfs</li>
 </ul>
@@ -293,14 +319,14 @@ rest.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.update_file_by_id">
-<code class="descname">update_file_by_id</code><span class="sig-paren">(</span><em>file_id</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_file_by_id</code><span class="sig-paren">(</span><em>gfs_id</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the file in the gridfs with the given id and retain the rest of the document.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the file id</li>
+<li><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the gridfs id for the file.</li>
 <li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; path to the new file whose contents will replace the existing one.</li>
 <li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether or not to compress the contents before inserting to gridfs</li>
 </ul>
@@ -716,6 +742,12 @@ using the firework names.</li>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="fireworks.utilities.fw_utilities.redirect_local">
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">redirect_local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>temporarily redirect stdout or stderr to fws.error and fws.out</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-fireworks.utilities.timing">
 <span id="fireworks-utilities-timing-module"></span><h2>fireworks.utilities.timing module<a class="headerlink" href="#module-fireworks.utilities.timing" title="Permalink to this headline">¶</a></h2>
@@ -932,7 +964,7 @@ the database with extension &#8220;_xiv_{Date}&#8221;.</p>
 
 <dl class="function">
 <dt id="fireworks.utilities.update_collection.update_path_in_collection">
-<code class="descclassname">fireworks.utilities.update_collection.</code><code class="descname">update_path_in_collection</code><span class="sig-paren">(</span><em>db</em>, <em>collection_name</em>, <em>replacements</em>, <em>query=None</em>, <em>dry_run=True</em>, <em>force_clear=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_path_in_collection" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.utilities.update_collection.</code><code class="descname">update_path_in_collection</code><span class="sig-paren">(</span><em>db</em>, <em>collection_name</em>, <em>replacements</em>, <em>query=None</em>, <em>dry_run=False</em>, <em>force_clear=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_path_in_collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>updates the text specified in replacements for the documents in a MongoDB collection.
 This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
 The algorithm does a text replacement over the <em>entire</em> BSON document. The original collection is backed up within
@@ -1016,7 +1048,7 @@ the database with extension &#8220;_xiv_{Date}&#8221;.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>
 

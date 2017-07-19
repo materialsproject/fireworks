@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.features package &#8212; FireWorks 1.4.0 documentation</title>
+    <title>fireworks.features package &#8212; FireWorks 1.4.6 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.0',
+        VERSION:     '1.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -256,7 +256,7 @@ number of times each key appears.</p>
 <span id="fireworks-features-multi-launcher-module"></span><h2>fireworks.features.multi_launcher module<a class="headerlink" href="#module-fireworks.features.multi_launcher" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="fireworks.features.multi_launcher.launch_multiprocess">
-<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">launch_multiprocess</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>loglvl</em>, <em>nlaunches</em>, <em>num_jobs</em>, <em>sleep_time</em>, <em>total_node_list=None</em>, <em>ppn=1</em>, <em>timeout=None</em>, <em>exclude_current_node=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.launch_multiprocess" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">launch_multiprocess</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>loglvl</em>, <em>nlaunches</em>, <em>num_jobs</em>, <em>sleep_time</em>, <em>total_node_list=None</em>, <em>ppn=1</em>, <em>timeout=None</em>, <em>exclude_current_node=False</em>, <em>local_redirect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.launch_multiprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Launch the jobs in the job packing mode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -273,6 +273,7 @@ number of times each key appears.</p>
 <li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; processors per node (doesn&#8217;t affect execution)</li>
 <li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; # of seconds after which to stop the rapidfire process</li>
 <li><strong>exclude_current_node</strong> &#8211; Don&#8217;t use the script launching node as a compute node</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -300,7 +301,7 @@ number of times each key appears.</p>
 
 <dl class="function">
 <dt id="fireworks.features.multi_launcher.rapidfire_process">
-<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">rapidfire_process</code><span class="sig-paren">(</span><em>fworker</em>, <em>nlaunches</em>, <em>sleep</em>, <em>loglvl</em>, <em>port</em>, <em>node_list</em>, <em>sub_nproc</em>, <em>timeout</em>, <em>running_ids_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.rapidfire_process" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">rapidfire_process</code><span class="sig-paren">(</span><em>fworker</em>, <em>nlaunches</em>, <em>sleep</em>, <em>loglvl</em>, <em>port</em>, <em>node_list</em>, <em>sub_nproc</em>, <em>timeout</em>, <em>running_ids_dict</em>, <em>local_redirect</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.rapidfire_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes shared data with multiprocessing parameters and starts a rapidfire.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -316,6 +317,7 @@ number of times each key appears.</p>
 <li><strong>node_list</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>]</em><em></em>) &#8211; computer node list</li>
 <li><strong>sub_nproc</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; number of processors of the sub job</li>
 <li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; # of seconds after which to stop the rapidfire process</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -347,7 +349,7 @@ number of times each key appears.</p>
 
 <dl class="function">
 <dt id="fireworks.features.multi_launcher.start_rockets">
-<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">start_rockets</code><span class="sig-paren">(</span><em>fworker</em>, <em>nlaunches</em>, <em>sleep</em>, <em>loglvl</em>, <em>port</em>, <em>node_lists</em>, <em>sub_nproc_list</em>, <em>timeout=None</em>, <em>running_ids_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.start_rockets" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.features.multi_launcher.</code><code class="descname">start_rockets</code><span class="sig-paren">(</span><em>fworker</em>, <em>nlaunches</em>, <em>sleep</em>, <em>loglvl</em>, <em>port</em>, <em>node_lists</em>, <em>sub_nproc_list</em>, <em>timeout=None</em>, <em>running_ids_dict=None</em>, <em>local_redirect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.multi_launcher.start_rockets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create each sub job and start a rocket launch in each one</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -363,6 +365,7 @@ number of times each key appears.</p>
 <li><strong>sub_nproc_list</strong> (<em></em><em>[</em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>]</em><em></em>) &#8211; list of the number of the process of sub jobs</li>
 <li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; # of seconds after which to stop the rapidfire process</li>
 <li><strong>running_ids_dict</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Shared dict between process to record IDs</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -561,7 +564,7 @@ datetime.timedelta function. args and query_start can not be given at the same t
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>
 

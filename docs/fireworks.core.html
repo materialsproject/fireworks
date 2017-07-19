@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.core package &#8212; FireWorks 1.4.0 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.4.6 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.0',
+        VERSION:     '1.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -538,6 +538,22 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#set" title="(in Python v2.7)">set</a>(<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>)</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.core.firework.Workflow.remove_fws">
+<code class="descclassname">Workflow.</code><code class="descname">remove_fws</code><span class="sig-paren">(</span><em>fw_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.remove_fws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
+parents of the removed fireworks become the parents of the children fireworks (only if the
+children dont have any other parents).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_ids</strong> (<em>list</em>) &#8211; list of fw ids to remove.</td>
 </tr>
 </tbody>
 </table>
@@ -1513,7 +1529,7 @@ FWS will not clear DBs that contain more workflows than this parameter</li>
 
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.update_spec">
-<code class="descname">update_spec</code><span class="sig-paren">(</span><em>fw_ids</em>, <em>spec_document</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.update_spec" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_spec</code><span class="sig-paren">(</span><em>fw_ids</em>, <em>spec_document</em>, <em>mongo=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.update_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update fireworks with a spec. Sometimes you need to modify a firework in progress.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1525,6 +1541,7 @@ FWS will not clear DBs that contain more workflows than this parameter</li>
 the spec key are allowed. So if you supply {&#8220;_tasks.1.parameter&#8221;: &#8220;hello&#8221;},
 you are effectively modifying spec._tasks.1.parameter in the actual fireworks
 collection.</li>
+<li><strong>mongo</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; spec_document uses mongo syntax to directly update the spec</li>
 </ul>
 </td>
 </tr>
@@ -1719,7 +1736,7 @@ Calling functions are responsible for handling the error in order to avoid datab
 
 <dl class="function">
 <dt id="fireworks.core.rocket_launcher.rapidfire">
-<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">rapidfire</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>m_dir=None</em>, <em>nlaunches=0</em>, <em>max_loops=-1</em>, <em>sleep_time=None</em>, <em>strm_lvl='INFO'</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">rapidfire</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>m_dir=None</em>, <em>nlaunches=0</em>, <em>max_loops=-1</em>, <em>sleep_time=None</em>, <em>strm_lvl='INFO'</em>, <em>timeout=None</em>, <em>local_redirect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
 for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1735,6 +1752,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
 <li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; secs to sleep between rapidfire loop iterations</li>
 <li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; level at which to output logs to stdout</li>
 <li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; of seconds after which to stop the rapidfire process</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -1799,7 +1817,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.queue package &#8212; FireWorks 1.4.0 documentation</title>
+    <title>fireworks.queue package &#8212; FireWorks 1.4.6 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.0',
+        VERSION:     '1.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -136,7 +136,7 @@ This includes handling all details of queue script format as well as queue submi
 <p>A user should extend this class with implementations that work on specific queue systems.
 Examples and implementations are in: fireworks/user_objects/queue_adapters.</p>
 <p>Documentation on implementing queue adapters can be found on FireWorks home page,
-<a class="reference external" href="http://pythonhosted.org/FireWorks">http://pythonhosted.org/FireWorks</a></p>
+<a class="reference external" href="https://hackingmaterials.lbl.gov/fireworks">https://hackingmaterials.lbl.gov/fireworks</a></p>
 <dl class="attribute">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.defaults">
 <code class="descname">defaults</code><em class="property"> = {}</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.defaults" title="Permalink to this definition">¶</a></dt>
@@ -244,6 +244,7 @@ Uses the template_file along with internal parameters to create the script.</p>
 <li><strong>create_launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Whether to create a subfolder launcher+timestamp, if needed</li>
 <li><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; whether to submit jobs even when there is nothing to run
 (only in non-reservation mode)</li>
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; specific fw_id to reserve (reservation mode only)</li>
 </ul>
 </td>
 </tr>
@@ -338,7 +339,7 @@ non-reservation mode)</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>
 

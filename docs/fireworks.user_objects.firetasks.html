@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.user_objects.firetasks package &#8212; FireWorks 1.4.0 documentation</title>
+    <title>fireworks.user_objects.firetasks package &#8212; FireWorks 1.4.6 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.0',
+        VERSION:     '1.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -208,7 +208,7 @@ extensions.</p>
 <dd>&#8216;src&#8217; and &#8216;dest&#8217; keys</dd>
 </dl>
 </li>
-<li>dest: (str) destination directory, if not specified within files parameter</li>
+<li>dest: (str) destination directory, if not specified within files parameter (else optional)</li>
 </ul>
 </dd>
 <dt>Optional params:</dt>
@@ -224,6 +224,11 @@ extensions.</p>
 <dl class="attribute">
 <dt id="fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.fn_list">
 <code class="descname">fn_list</code><em class="property"> = {'move': &lt;function move&gt;, 'mv': &lt;function move&gt;, 'copy': &lt;function copy&gt;, 'cp': &lt;function copy&gt;, 'copy2': &lt;function copy2&gt;, 'copytree': &lt;function copytree&gt;, 'copyfile': &lt;function copyfile&gt;}</em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.fn_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.optional_params">
+<code class="descname">optional_params</code><em class="property"> = ['server', 'user', 'key_filename', 'max_retry', 'retry_delay']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.optional_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -278,16 +283,17 @@ extensions.</p>
 <dt id="fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask">
 <em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.filepad_tasks.</code><code class="descname">AddFilesTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
-<p>A Firetask to write files to the filepad</p>
+<p>A Firetask to add files to the filepad.</p>
 <dl class="docutils">
 <dt>Required params:</dt>
 <dd><ul class="first last simple">
-<li>paths ([str]): list of paths to files to be added</li>
-<li>labels ([str]): list of labels, one for each file in the paths list</li>
+<li>paths (list/str): either list of paths or a glob pattern string.</li>
 </ul>
 </dd>
 <dt>Optional params:</dt>
 <dd><ul class="first last simple">
+<li>identifiers ([str]): list of identifiers, one for each file in the paths list</li>
+<li>directory (str): path to directory where the pattern matching is to be done.</li>
 <li>filepad_file (str): path to the filepad db config file</li>
 <li>compress (bool): whether or not to compress the file before inserting to gridfs</li>
 <li>metadata (dict): metadata to store along with the file, stored in &#8216;metadata&#8217; key</li>
@@ -296,12 +302,12 @@ extensions.</p>
 </dl>
 <dl class="attribute">
 <dt id="fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.optional_params">
-<code class="descname">optional_params</code><em class="property"> = ['filepad_file', 'compress', 'metadata']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.optional_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">optional_params</code><em class="property"> = ['identifiers', 'directory', 'filepad_file', 'compress', 'metadata']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.optional_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.required_params">
-<code class="descname">required_params</code><em class="property"> = ['paths', 'labels']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.required_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">required_params</code><em class="property"> = ['paths']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.required_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -319,7 +325,7 @@ extensions.</p>
 <dl class="docutils">
 <dt>Required params:</dt>
 <dd><ul class="first last simple">
-<li>labels: ([str]) file labels to delete</li>
+<li>identifiers ([str]): identifiers of files to delete</li>
 </ul>
 </dd>
 <dt>Optional params:</dt>
@@ -335,7 +341,7 @@ extensions.</p>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.required_params">
-<code class="descname">required_params</code><em class="property"> = ['labels']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.required_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">required_params</code><em class="property"> = ['identifiers']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.required_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -354,7 +360,7 @@ directory if not specified)</p>
 <dl class="docutils">
 <dt>Required params:</dt>
 <dd><ul class="first last simple">
-<li>labels: ([str]) file labels to fetch</li>
+<li>identifiers ([str]): identifiers of files to fetch</li>
 </ul>
 </dd>
 <dt>Optional params:</dt>
@@ -372,7 +378,7 @@ directory if not specified)</p>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.required_params">
-<code class="descname">required_params</code><em class="property"> = ['labels']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.required_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">required_params</code><em class="property"> = ['identifiers']</em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.required_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -579,7 +585,7 @@ Required parameters:</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Dynamic Workflows &#8212; FireWorks 1.4.0 documentation</title>
+    <title>Dynamic Workflows &#8212; FireWorks 1.4.6 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.0',
+        VERSION:     '1.4.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="workflow_tutorial.html" title="Creating Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -222,6 +222,10 @@
 </ol>
 <p>You&#8217;ve now successfully completed an example of passing information between workflows! You should now have a rough sense of how one step of a workflow can modify the inputs of future steps. There are many types of workflow modifications that are possible, including some that involve a simpler (but less flexible) language than what we just demonstrated. We will present details in a different document. For now, we will continue by demonstrating another type of dynamic workflow.</p>
 </div>
+<div class="section" id="workflows-that-pass-files">
+<h2>Workflows that pass files<a class="headerlink" href="#workflows-that-pass-files" title="Permalink to this headline">¶</a></h2>
+<p>You can also pass files between Fireworks, either manually (using the job information or data passing methods above combined with a Firetask to copy files) or using the built-in keywords <code class="docutils literal"><span class="pre">_files_in</span></code> and <code class="docutils literal"><span class="pre">_files_out</span></code>. More details are presented <a class="reference internal" href="guide_to_writing_firetasks.html"><span class="doc">here</span></a>.</p>
+</div>
 <div class="section" id="a-fibonacci-adder">
 <h2>A Fibonacci Adder<a class="headerlink" href="#a-fibonacci-adder" title="Permalink to this headline">¶</a></h2>
 <p>You may not know in advance how many workflow steps you require to achieve a result. For example, let&#8217;s generate all the <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci numbers</a> less than 100, but only using a single addition in each Firework. It&#8217;s unclear how many additions we&#8217;ll need, so we can&#8217;t set up this workflow explicitly.</p>
@@ -397,6 +401,7 @@ We have now exceeded our limit; (the next Fibonacci number would have been: 144)
 <li><a class="reference internal" href="#">Dynamic Workflows</a><ul>
 <li><a class="reference internal" href="#a-workflow-that-passes-job-information">A workflow that passes job information</a></li>
 <li><a class="reference internal" href="#a-workflow-that-passes-data">A workflow that passes data</a></li>
+<li><a class="reference internal" href="#workflows-that-pass-files">Workflows that pass files</a></li>
 <li><a class="reference internal" href="#a-fibonacci-adder">A Fibonacci Adder</a></li>
 <li><a class="reference internal" href="#a-fibonacci-adder-the-quick-way">A Fibonacci Adder: The Quick Way</a><ul>
 <li><a class="reference internal" href="#python-example-optional">Python example (optional)</a></li>
@@ -449,7 +454,7 @@ We have now exceeded our limit; (the next Fibonacci number would have been: 144)
         <li class="right" >
           <a href="workflow_tutorial.html" title="Creating Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
       </ul>
     </div>
 
