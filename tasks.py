@@ -29,6 +29,7 @@ __date__ = "Sep 1, 2014"
 @task
 def make_doc(ctx):
     with cd("docs_rst"):
+        ctx.run("sphinx-apidoc -o . -f ../fireworks")
         ctx.run("make html")
 
     with cd("docs"):
