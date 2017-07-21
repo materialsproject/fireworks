@@ -2,7 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.4.8**
+
+* Fix pip requirements
+
 **v1.4.7**
+
+.. caution:: pip may require manual dependency installation in this distribution
 
 * Add new protocol for file transfer using ``_files_in`` and ``_files_out`` spec params (S.P. Ong)
 * update docs location to https://materialsproject.github.io/fireworks

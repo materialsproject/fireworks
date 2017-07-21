@@ -3,7 +3,6 @@
 
 from setuptools import setup, find_packages
 import os
-from fireworks import __version__
 import multiprocessing, logging  # AJ: for some reason this is needed to not have "python setup.py test" freak out
 
 
@@ -18,7 +17,7 @@ module_dir = os.path.dirname(os.path.abspath(__file__))
 if __name__ == "__main__":
     setup(
         name='FireWorks',
-        version=__version__,
+        version="1.4.8",
         description='FireWorks workflow software',
         long_description=open(os.path.join(module_dir, 'README.rst')).read(),
         url='https://github.com/materialsproject/fireworks',
@@ -31,7 +30,7 @@ if __name__ == "__main__":
                       'fireworks.flask_site.static.font-awesome-4.0.3': ['css/*', 'fonts/*', 'less/*', 'scss/*']},
         zip_safe=False,
         install_requires=['pyyaml>=3.11.0', 'pymongo>=3.3.0', 'Jinja2>=2.8.0',
-                          'six>=1.10.0', 'monty>=0.8.1',
+                          'six>=1.10.0', 'monty>=1.0.1',
                           'python-dateutil>=2.5.3',
                           'tabulate>=0.7.5', 'flask>=0.11.1',
                           'flask-paginate>=0.4.5', 'gunicorn>=19.6.0', 'tqdm>=4.8.4'],
