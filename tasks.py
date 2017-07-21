@@ -66,8 +66,8 @@ def release_github(ctx):
 
 
 @task
-def release(ctx, notest=False):
-    if not notest:
+def release(ctx, nosetest=False):
+    if nosetest:
         ctx.run("nosetests")
     publish(ctx)
     update_doc(ctx)
