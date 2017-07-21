@@ -58,6 +58,9 @@ def release_github(ctx):
         "draft": False,
         "prerelease": False
     }
+    # For this to work properly, you need to go ti your Github profile, generate 
+    # a "Personal access token". Then do export GITHUB_RELEASES_TOKEN="xyz1234"
+    # (or add it to your bash_profile).
     response = requests.post(
         "https://api.github.com/repos/materialsproject/fireworks/releases",
         data=json.dumps(payload),
