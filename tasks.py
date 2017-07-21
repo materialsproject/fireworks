@@ -40,7 +40,7 @@ def update_doc(ctx):
     make_doc(ctx)
     with cd("docs"):
         ctx.run("git add .")
-        ctx.run("git commit -a -m \"Update dev docs\"")
+        ctx.run("git commit -a -m \"Update to v{}\"".format(__version__))
         ctx.run("git push")
 
 @task
