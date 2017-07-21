@@ -101,7 +101,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     Examples and implementations are in: fireworks/user_objects/queue_adapters.
 
     Documentation on implementing queue adapters can be found on FireWorks home page,
-    https://hackingmaterials.lbl.gov/fireworks
+    https://materialsproject.github.io/fireworks
     """
 
     _fw_name = 'QueueAdapterBase'

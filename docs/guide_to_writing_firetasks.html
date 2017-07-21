@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.4.6 documentation</title>
+    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.4.7 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.6',
+        VERSION:     '1.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="reference.html" title="Reference material"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -96,10 +96,10 @@
 </pre></div>
 </div>
 <p>You can copy this code to a new place and make the following modifications in order to write your Firetask:</p>
-<ul class="simple">
+<ul>
 <li><dl class="first docutils">
 <dt>In the first line, the name of the class (<em>ArchiveDirTask</em>) can be anything - it does not affect the operation of the code if you follow the structure above.</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li><em>Change the class name to anything you desire.</em></li>
 </ul>
 </dd>
@@ -107,7 +107,7 @@
 </li>
 <li><dl class="first docutils">
 <dt>The class extends the <em>FiretaskBase</em> abstract class. This abstract class does some work under the covers and also requires that you define a <code class="docutils literal"><span class="pre">run_task(self,</span> <span class="pre">fw_spec)</span></code> method.</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li><em>Keep this intact.</em></li>
 </ul>
 </dd>
@@ -115,7 +115,7 @@
 </li>
 <li><dl class="first docutils">
 <dt>The <code class="docutils literal"><span class="pre">_fw_name</span></code> is how this Firetask is identified. It must be a unique name that is always retained. See the Appendix section for working around this and an alternate formulations for identifying the Firetask.</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li><em>Change the ``fw_name`` value to a desired identifier for your Firetask, e.g. MyFavoriteTask.</em></li>
 </ul>
 </dd>
@@ -123,7 +123,7 @@
 </li>
 <li><dl class="first docutils">
 <dt>The <code class="docutils literal"><span class="pre">required_params</span></code> and <code class="docutils literal"><span class="pre">optional_params</span></code> relate to how the Firetask is constructed. In the example above, an <em>ArchiveTask</em> could be instantiated using something like <code class="docutils literal"><span class="pre">my_task</span> <span class="pre">=</span> <span class="pre">ArchiveTask(base_name=&quot;my_filename&quot;,</span> <span class="pre">format=&quot;bztar&quot;)</span></code>. Because <code class="docutils literal"><span class="pre">base_name</span></code> is in <code class="docutils literal"><span class="pre">required_params</span></code>, it <strong>must</strong> be specified (<code class="docutils literal"><span class="pre">optional_params</span></code> does not actually <em>do</em> anything).</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li><em>Add your required and optional parameters as desired.</em></li>
 </ul>
 </dd>
@@ -131,7 +131,8 @@
 </li>
 <li><dl class="first docutils">
 <dt>The meat of the Firetask is the <code class="docutils literal"><span class="pre">run_task(self,</span> <span class="pre">fw_spec)</span></code> method. It has two sources of information: the keys in <code class="docutils literal"><span class="pre">fw_spec</span></code> and a dictionary of <code class="docutils literal"><span class="pre">self</span></code> (which includes parameters like <code class="docutils literal"><span class="pre">base_name</span></code> used to construct the object). In this case, it&#8217;s tarring and gzipping some files according to the parameters the dictionary of itself, and ignoring anything in the <code class="docutils literal"><span class="pre">fw_spec</span></code>.</dt>
-<dd><em>Keep the run_task method header intact, but change the definition to your custom operation. Remember you can access dict keys of &#8220;fw_spec&#8221; as well as dict keys of &#8220;self&#8221;</em></dd>
+<dd><p class="first last"><em>Keep the run_task method header intact, but change the definition to your custom operation. Remember you can access dict keys of &#8220;fw_spec&#8221; as well as dict keys of &#8220;self&#8221;</em></p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -324,13 +325,13 @@ complete definition of expected input and output files, a very common use case i
         <li class="right" >
           <a href="reference.html" title="Reference material"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

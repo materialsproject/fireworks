@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Dynamic Workflows &#8212; FireWorks 1.4.6 documentation</title>
+    <title>Dynamic Workflows &#8212; FireWorks 1.4.7 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.6',
+        VERSION:     '1.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="workflow_tutorial.html" title="Creating Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -233,11 +233,12 @@
 <p>A diagram of our the first two steps of operation of our Firework looks like this:</p>
 <a class="reference internal image-reference" href="_images/fibnum_wf.png"><img alt="Fibonacci Number Workflow" class="align-center" src="_images/fibnum_wf.png" style="width: 200px;" /></a>
 <p>Our single Firework will contain a custom Firetask that does the following:</p>
-<ul class="simple">
-<li>Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).</li>
+<ul>
+<li><p class="first">Given two input Fibonacci numbers (e.g., 0 and 1), find the next Fibonacci number (which is equal to their sum, in this case 1).</p>
+</li>
 <li><dl class="first docutils">
 <dt>If this next Fibonacci number is less than 100 (the <strong>stop_point</strong>):</dt>
-<dd><ul class="first last">
+<dd><ul class="first last simple">
 <li>Print it</li>
 <li>Create its own child Firework that will sum the new Fibonacci number we just found with the larger of the current inputs. In our example, this would mean to create a new Firework with inputs 1 and 1.</li>
 <li>This new Firework will output the next Fibonacci number (2), and then create its own child Firework to continue the sequence (not shown)</li>
@@ -245,7 +246,8 @@
 </dd>
 </dl>
 </li>
-<li>When the next Fibonacci number is greater than 100, print a message that we have exceeded our limit and stop the workflow rather than generate more FireWorks.</li>
+<li><p class="first">When the next Fibonacci number is greater than 100, print a message that we have exceeded our limit and stop the workflow rather than generate more FireWorks.</p>
+</li>
 </ul>
 <p>Let&#8217;s see how this is achieved:</p>
 <ol class="arabic">
@@ -454,13 +456,13 @@ We have now exceeded our limit; (the next Fibonacci number would have been: 144)
         <li class="right" >
           <a href="workflow_tutorial.html" title="Creating Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

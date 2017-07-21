@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.features package &#8212; FireWorks 1.4.6 documentation</title>
+    <title>fireworks.features package &#8212; FireWorks 1.4.7 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.6',
+        VERSION:     '1.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -140,8 +140,7 @@ spec2 (dict)</p>
 <dl class="class">
 <dt id="fireworks.features.fw_report.FWReport">
 <em class="property">class </em><code class="descclassname">fireworks.features.fw_report.</code><code class="descname">FWReport</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
+<dd><dl class="method">
 <dt id="fireworks.features.fw_report.FWReport.get_stats">
 <code class="descname">get_stats</code><span class="sig-paren">(</span><em>coll='fireworks'</em>, <em>interval='days'</em>, <em>num_intervals=5</em>, <em>additional_query=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compile statistics of completed Fireworks/Workflows for past &lt;num_intervals&gt; &lt;interval&gt;,
@@ -189,8 +188,7 @@ e.g. past 5 days.</p>
 <dl class="class">
 <dt id="fireworks.features.introspect.Introspector">
 <em class="property">class </em><code class="descclassname">fireworks.features.introspect.</code><code class="descname">Introspector</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
+<dd><dl class="method">
 <dt id="fireworks.features.introspect.Introspector.introspect_fizzled">
 <code class="descname">introspect_fizzled</code><span class="sig-paren">(</span><em>coll='fws'</em>, <em>rsort=True</em>, <em>threshold=10</em>, <em>limit=100</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.introspect_fizzled" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -382,10 +380,9 @@ number of times each key appears.</p>
 <dl class="class">
 <dt id="fireworks.features.stats.FWStats">
 <em class="property">class </em><code class="descclassname">fireworks.features.stats.</code><code class="descname">FWStats</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<dl class="method">
+<dd><dl class="method">
 <dt id="fireworks.features.stats.FWStats.get_daily_completion_summary">
-<code class="descname">get_daily_completion_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='time_end'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_daily_completion_summary" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_daily_completion_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field=u'time_end'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_daily_completion_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get daily summary of fireworks for a specified time range
 :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
 Default is 30 days before current time.
@@ -400,7 +397,7 @@ datetime.timedelta function. args and query_start can not be given at the same t
 
 <dl class="method">
 <dt id="fireworks.features.stats.FWStats.get_fireworks_summary">
-<code class="descname">get_fireworks_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='updated_on'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_fireworks_summary" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_fireworks_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field=u'updated_on'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_fireworks_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get fireworks summary for a specified time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -428,7 +425,7 @@ not be given at the same time. Default is 30 days.</li>
 
 <dl class="method">
 <dt id="fireworks.features.stats.FWStats.get_launch_summary">
-<code class="descname">get_launch_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>time_field='time_end'</em>, <em>query=None</em>, <em>runtime_stats=False</em>, <em>include_ids=False</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_launch_summary" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_launch_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>time_field=u'time_end'</em>, <em>query=None</em>, <em>runtime_stats=False</em>, <em>include_ids=False</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_launch_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get launch summary for a specified time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -458,7 +455,7 @@ not be given at the same time. Default is 30 days.</li>
 
 <dl class="method">
 <dt id="fireworks.features.stats.FWStats.get_workflow_summary">
-<code class="descname">get_workflow_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='updated_on'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_workflow_summary" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_workflow_summary</code><span class="sig-paren">(</span><em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field=u'updated_on'</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.get_workflow_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get workflow summary for a specified time range.
 :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
 Default is 30 days before current time.
@@ -489,7 +486,7 @@ datetime.timedelta function. args and query_start can not be given at the same t
 
 <dl class="method">
 <dt id="fireworks.features.stats.FWStats.identify_catastrophes">
-<code class="descname">identify_catastrophes</code><span class="sig-paren">(</span><em>error_ratio=0.01</em>, <em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field='time_end'</em>, <em>include_ids=True</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.identify_catastrophes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">identify_catastrophes</code><span class="sig-paren">(</span><em>error_ratio=0.01</em>, <em>query_start=None</em>, <em>query_end=None</em>, <em>query=None</em>, <em>time_field=u'time_end'</em>, <em>include_ids=True</em>, <em>**args</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.identify_catastrophes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get days with higher failure ratio
 :param error_ratio: (float) Threshold of error ratio to define as a catastrophic day
 :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
@@ -564,13 +561,13 @@ datetime.timedelta function. args and query_start can not be given at the same t
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

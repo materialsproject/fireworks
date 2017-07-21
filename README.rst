@@ -8,5 +8,5 @@ For more about FireWorks, please visit the official documentation_.
 
 The best place to get help is the Google group (here_).
 
-.. _documentation: https://hackingmaterials.lbl.gov/fireworks/
+.. _documentation: https://materialsproject.github.io/fireworks/
 .. _here: https://groups.google.com/forum/#!forum/fireworkflows

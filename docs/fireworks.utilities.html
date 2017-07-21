@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.utilities package &#8212; FireWorks 1.4.6 documentation</title>
+    <title>fireworks.utilities package &#8212; FireWorks 1.4.7 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.6',
+        VERSION:     '1.4.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -98,7 +98,7 @@ supported DictMod</li>
 <span id="fireworks-utilities-filepad-module"></span><h2>fireworks.utilities.filepad module<a class="headerlink" href="#module-fireworks.utilities.filepad" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.utilities.filepad.FilePad">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.filepad.</code><code class="descname">FilePad</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>database='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>filepad_coll_name='filepad'</em>, <em>gridfs_coll_name='filepad_gfs'</em>, <em>logdir=None</em>, <em>strm_lvl=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">fireworks.utilities.filepad.</code><code class="descname">FilePad</code><span class="sig-paren">(</span><em>host=u'localhost'</em>, <em>port=27017</em>, <em>database=u'fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>filepad_coll_name=u'filepad'</em>, <em>gridfs_coll_name=u'filepad_gfs'</em>, <em>logdir=None</em>, <em>strm_lvl=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">monty.json.MSONable</span></code></p>
 <dl class="method">
 <dt id="fireworks.utilities.filepad.FilePad.add_file">
@@ -403,7 +403,7 @@ that implements the to_dict() and from_dict() for all its subclasses.</p>
 
 <dl class="classmethod">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.from_format">
-<em class="property">classmethod </em><code class="descname">from_format</code><span class="sig-paren">(</span><em>f_str</em>, <em>f_format='json'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_format" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_format</code><span class="sig-paren">(</span><em>f_str</em>, <em>f_format=u'json'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert from a String representation to its Object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -457,7 +457,7 @@ that implements the to_dict() and from_dict() for all its subclasses.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.to_format">
-<code class="descname">to_format</code><span class="sig-paren">(</span><em>f_format='json'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_format" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_format</code><span class="sig-paren">(</span><em>f_format=u'json'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a String representation in the given format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -560,7 +560,7 @@ see documentation of FWSerializable for more details</p>
 <span id="fireworks-utilities-fw-utilities-module"></span><h2>fireworks.utilities.fw_utilities module<a class="headerlink" href="#module-fireworks.utilities.fw_utilities" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.utilities.fw_utilities.DataServer">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">DataServer</code><span class="sig-paren">(</span><em>address=None</em>, <em>authkey=None</em>, <em>serializer='pickle'</em>, <em>ctx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">DataServer</code><span class="sig-paren">(</span><em>address=None</em>, <em>authkey=None</em>, <em>serializer='pickle'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/multiprocessing.html#multiprocessing.managers.BaseManager" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.managers.BaseManager</span></code></a></p>
 <p>Provide a server that can host shared objects between multiprocessing
 Processes (that normally can&#8217;t share data). For example, a common LaunchPad is
@@ -744,7 +744,7 @@ using the firework names.</li>
 
 <dl class="function">
 <dt id="fireworks.utilities.fw_utilities.redirect_local">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">redirect_local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">redirect_local</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>temporarily redirect stdout or stderr to fws.error and fws.out</p>
 </dd></dl>
 
@@ -823,13 +823,13 @@ In output, the namespace will be separated by the timer name by a &#8221;.&#8221
 
 <dl class="method">
 <dt id="fireworks.utilities.timing.Timer.start">
-<code class="descname">start</code><span class="sig-paren">(</span><em>stage='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.start" title="Permalink to this definition">¶</a></dt>
+<code class="descname">start</code><span class="sig-paren">(</span><em>stage=u'null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Begin timing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.utilities.timing.Timer.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><em>stage='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.stop" title="Permalink to this definition">¶</a></dt>
+<code class="descname">stop</code><span class="sig-paren">(</span><em>stage=u'null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop timing.</p>
 </dd></dl>
 
@@ -842,7 +842,7 @@ Idempotent.</p>
 
 <dl class="method">
 <dt id="fireworks.utilities.timing.Timer.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>stream=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>stream=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write results (CSV) to a stream.</p>
 </dd></dl>
 
@@ -914,7 +914,7 @@ print_fw_timers()  # prints results of all timers</dd>
 
 <dl class="function">
 <dt id="fireworks.utilities.timing.print_fw_timers">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">print_fw_timers</code><span class="sig-paren">(</span><em>stream=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.print_fw_timers" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">print_fw_timers</code><span class="sig-paren">(</span><em>stream=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.print_fw_timers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print results of all timers to the provided stream.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -932,7 +932,7 @@ print_fw_timers()  # prints results of all timers</dd>
 
 <dl class="data">
 <dt id="fireworks.utilities.timing.timer_env_var">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">timer_env_var</code><em class="property"> = 'FW_TIMERS'</em><a class="headerlink" href="#fireworks.utilities.timing.timer_env_var" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">timer_env_var</code><em class="property"> = u'FW_TIMERS'</em><a class="headerlink" href="#fireworks.utilities.timing.timer_env_var" title="Permalink to this definition">¶</a></dt>
 <dd><p>Environment variable in which to list the enabled timers
 Use comma-separated strings, e.g.:</p>
 </dd></dl>
@@ -1048,13 +1048,13 @@ the database with extension &#8220;_xiv_{Date}&#8221;.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.7 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

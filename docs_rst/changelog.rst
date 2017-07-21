@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.4.7**
+
+* Add new protocol for file transfer using ``_files_in`` and ``_files_out`` spec params (S.P. Ong)
+* update docs location to https://materialsproject.github.io/fireworks
+
 **v1.4.6**
 
 * doc link update
