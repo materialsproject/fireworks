@@ -2,26 +2,20 @@
 # Copyright (c) Pymatgen Development Team.
 # Distributed under the terms of the MIT License.
 
-import glob
 import os
 import json
 import webbrowser
 import requests
-import re
-import subprocess
-import datetime
 from invoke import task
-
+from fireworks import __version__
 from monty.os import cd
 
 
 """
-Deployment file to facilitate releases of pymatgen.
-Note that this file is meant to be run from the root directory of the pymatgen
-repo.
+Deployment file to facilitate releases.
 """
 
-__author__ = "Shyue Ping Ong"
+__author__ = "Shyue Ping Ong, Anubhav Jain"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "Sep 1, 2014"
 
@@ -37,7 +31,7 @@ def make_doc(ctx):
         ctx.run("rm -r html")
         ctx.run("rm -r doctrees")
 
-        # Avoid ths use of jekyll so that _dir works as intended.
+        # Avoid the use of jekyll so that _dir works as intended.
         ctx.run("touch .nojekyll")
 
 
@@ -56,17 +50,11 @@ def publish(ctx):
 
 @task
 def release_github(ctx):
-    with open("CHANGES.rst") as f:
-        contents = f.read()
-    toks = re.split("\-+", contents)
-    desc = toks[1].strip()
-    toks = desc.split("\n")
-    desc = "\n".join(toks[:-1]).strip()
     payload = {
-        "tag_name": "v" + NEW_VER,
+        "tag_name": "v" + __version__,
         "target_commitish": "master",
-        "name": "v" + NEW_VER,
-        "body": desc,
+        "name": "v" + __version__,
+        "body": "",
         "draft": False,
         "prerelease": False
     }
@@ -78,28 +66,11 @@ def release_github(ctx):
 
 
 @task
-def update_changelog(ctx):
-
-    output = subprocess.check_output(["git", "log", "--pretty=format:%s",
-                                      "v%s..HEAD" % CURRENT_VER])
-    lines = ["* " + l for l in output.decode("utf-8").strip().split("\n")]
-    with open("CHANGES.rst") as f:
-        contents = f.read()
-    l = "=========="
-    toks = contents.split(l)
-    head = "\n\nv%s\n" % NEW_VER + "-" * (len(NEW_VER) + 1) + "\n"
-    toks.insert(-1, head + "\n".join(lines))
-    with open("CHANGES.rst", "w") as f:
-        f.write(toks[0] + l + "".join(toks[1:]))
-
-
-@task
 def release(ctx, notest=False):
     if not notest:
         ctx.run("nosetests")
     publish(ctx)
     update_doc(ctx)
-    merge_stable(ctx)
     release_github(ctx)
 
 
