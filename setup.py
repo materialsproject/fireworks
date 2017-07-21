@@ -3,6 +3,7 @@
 
 from setuptools import setup, find_packages
 import os
+from fireworks import __version__
 import multiprocessing, logging  # AJ: for some reason this is needed to not have "python setup.py test" freak out
 
 
@@ -17,7 +18,7 @@ module_dir = os.path.dirname(os.path.abspath(__file__))
 if __name__ == "__main__":
     setup(
         name='FireWorks',
-        version='1.4.6',
+        version=__version__,
         description='FireWorks workflow software',
         long_description=open(os.path.join(module_dir, 'README.rst')).read(),
         url='https://github.com/materialsproject/fireworks',
