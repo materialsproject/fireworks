@@ -1166,7 +1166,7 @@ class LaunchPad(FWSerializable):
         # change return type to dict to make return type serializable to support job packing
         return m_launch.to_dict()
 
-    def ping_launch(self, launch_id, ptime=None):
+    def ping_launch(self, launch_id, ptime=None, checkpoint=None):
         """
         Ping that a Launch is still alive: updates the 'update_on 'field of the state history of a
         Launch.
@@ -1178,7 +1178,7 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         for tracker in m_launch.trackers:
             tracker.track_file(m_launch.launch_dir)
-        m_launch.touch_history(ptime)
+        m_launch.touch_history(ptime, checkpoint=checkpoint)
         self.launches.update_one({'launch_id': launch_id, 'state': 'RUNNING'},
                                  {'$set': {'state_history': m_launch.to_db_dict()['state_history'],
                                            'trackers': [t.to_dict() for t in m_launch.trackers]}})
@@ -1466,9 +1466,9 @@ class LaunchPad(FWSerializable):
             # look for ping file - update the Firework if this is the case
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
-                with open(ping_loc) as f:
-                    ping_time = reconstitute_dates(json.loads(f.read())['ping_time'])
-                    self.ping_launch(launch_id, ping_time)
+                ping_dict = loadfn(ping_loc)
+                ping_dict['ptime'] = reconstitute_dates(ping_dict.pop('ping_time'))
+                self.ping_launch(launch_id, **ping_dict)
 
             # look for action in FW_offline.json
             offline_loc = os.path.join(m_launch.launch_dir, "FW_offline.json")

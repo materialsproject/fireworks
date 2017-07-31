@@ -35,17 +35,24 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def do_ping(launchpad, launch_id):
+def do_ping(launchpad, launch_id, checkpoint=None):
     if launchpad:
-            launchpad.ping_launch(launch_id)
+            launchpad.ping_launch(launch_id, checkpoint)
     else:
-        with open('FW_ping.json', 'w') as f:
-            f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
+        if os.path.exists("FW_ping.json"):
+            ping_dict = loadfn("FW_ping.json")
+        else:
+            ping_dict = {}
+        ping_dict.update({"ping_time": datetime.utcnow().isoformat()})
+        if checkpoint:
+            ping_dict.update({"checkpoint": checkpoint})
+        dumpfn(ping_dict, "FW_ping.json")
 
 
-def ping_launch(launchpad, launch_id, stop_event, master_thread):
+def ping_launch(launchpad, launch_id, stop_event,
+                master_thread, checkpoint=None):
     while not stop_event.is_set() and master_thread.isAlive():
-        do_ping(launchpad, launch_id)
+        do_ping(launchpad, launch_id, checkpoint)
         stop_event.wait(PING_TIME_SECS)
 
 
@@ -229,6 +236,11 @@ class Rocket:
             # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
                 if lp:
+                    checkpoint = {'_task_n': t_counter,
+                                  '_all_stored_data': all_stored_data,
+                                  '_all_update_spec': all_update_spec,
+                                  '_all_mod_spec': all_mod_spec}
+                    do_ping(lp, launch_id, checkpoint=checkpoint)
                     l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
@@ -268,11 +280,7 @@ class Rocket:
                     m_action = FWAction(stored_data={'_message': 'runtime error during task',
                                                      '_task': m_task,
                                                      '_exception': {'_stacktrace': tb,
-                                                                    '_details': exception_details,
-                                                                    '_failed_task_n': t_counter},
-                                                     '_recovery': {'_all_stored_data': all_stored_data,
-                                                                   '_all_update_spec': all_update_spec,
-                                                                   '_all_mod_spec': all_mod_spec}},
+                                                                    '_details': exception_details}},
                                         exit=True)
                     m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
