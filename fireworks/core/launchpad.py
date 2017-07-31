@@ -1226,13 +1226,18 @@ class LaunchPad(FWSerializable):
             self.fireworks.find_one_and_replace({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
         return old_new
 
-    def rerun_fw(self, fw_id, rerun_duplicates=True, clear_recovery=False):
+    def rerun_fw(self, fw_id, rerun_duplicates=True, recover_launch=None, recover_mode=None):
         """
         Rerun the firework corresponding to the given id.
 
         Args:
             fw_id (int): firework id
-            rerun_duplicates (bool)
+            rerun_duplicates (bool): flag for whether duplicates should be rerun
+            recover_launch ('last' or int): launch_id for last recovery, if set to
+                'last' (default), recovery will find the last available launch.
+                If it is an int, will recover that specific launch
+            recover_mode ('prev_dir' or 'copy'): flag to indicate whether to copy
+                or run recovery fw in previous directory
 
         Returns:
             [int]: list of firework ids that were rerun
@@ -1253,10 +1258,26 @@ class LaunchPad(FWSerializable):
                                               "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
+        
+        # Launch recovery
+        if recover_launch is not None:
+            recovery = self.get_recovery(fw_id, recover_launch)
+            recovery.update({'mode': recover_mode})
+            set_spec = {'$set': {'spec._recovery': recovery}}
+            if recover_mode == 'prev_dir':
+                set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
+            self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
+            
+        # If no launch recovery specified, unset the firework recovery spec
+        else:
+            set_spec = {"$unset":{"spec._recover_launch":""}}
+            self.fireworks.find_one_and_update({"fw_id":fw_id}, set_spec)
+
+
         # rerun this FW
         if m_fw['state'] in ['ARCHIVED', 'DEFUSED'] :
             self.m_logger.info("Cannot rerun fw_id: {}: it is {}.".format(fw_id, m_fw['state']))
-        elif m_fw['state'] == 'WAITING':
+        elif m_fw['state'] == 'WAITING' and not recover_launch:
             self.m_logger.debug("Skipping rerun fw_id: {}: it is already WAITING.".format(fw_id))
         else:
             with WFLock(self, fw_id):
@@ -1268,62 +1289,29 @@ class LaunchPad(FWSerializable):
         # rerun duplicated FWs
         for f in duplicates:
             self.m_logger.info("Also rerunning duplicate fw_id: {}".format(f))
-            r = self.rerun_fw(f, rerun_duplicates=False)  # False for speed, True shouldn't be needed
+            # False for speed, True shouldn't be needed
+            r = self.rerun_fw(f, rerun_duplicates=False, recover_launch=recover_launch,
+                              recover_mode=recover_mode)
             reruns.extend(r)
-
-        if clear_recovery:
-            set_spec = {"$unset":{"spec._recover_launch":""}}
-            self.fireworks.find_one_and_update({"fw_id":fw_id}, set_spec)
-
+        
         return reruns
 
-    # TODO: why is this a separate function from rerun_fws???
-    def rerun_fws_task_level(self, fw_id, rerun_duplicates=True, launch_id=None, recover_mode=None):
+    def get_recovery(self, fw_id, launch_id='last'):
         """
-        Rerun a fw at the task level.
-
+        function to get recovery data for a given fw and launch
         Args:
-            fw_id (int): fw_id to rerun
-            rerun_duplicates (bool): also rerun duplicate FWs
-            launch_id (int): launch id to rerun, if known. otherwise the last launch_id will be used
-            recover_mode (str): use "prev_dir" to run again in previous dir, "cp" to try to copy
-                data to new dir, or None to start from scratch
-
-        Returns:
-            [int]: list of rerun firework ids.
+            fw_id (int): fw id to get recovery data for
+            launch_id (int): launch_id to get recovery data for, if not
+                an int, recovery data is generated from last launch
         """
         m_fw = self.get_fw_by_id(fw_id)
-
-        # check if task_level parameters are properly defined
-        if not launch_id:
-            try:
-                launch_id = m_fw.launches[-1].launch_id
-            except:
-                traceback.print_exc()
-                self.m_logger.info("Can't find a launch to recover fw_id {}. Skipping...".format(fw_id))
-                return None
-        elif launch_id not in [l.launch_id for l in m_fw.launches+m_fw.archived_launches]:
-            self.m_logger.info("Launch id {} not existent for m_fw {}. Skipping...".format(launch_id, fw_id))
-            return None
-        # check if the failed task information is available, can't recover otherwise
-        if self.get_launch_by_id(launch_id).action.stored_data.get('_exception', {}).get('_failed_task_n', None) is None:
-            self.m_logger.info("No information to recover launch id {} for m_fw {}. Skipping..."
-                               .format(launch_id, fw_id))
-            return None
-
-        #rerun jobs and duplicates
-        reruns = self.rerun_fw(fw_id, rerun_duplicates)
-
-        # if rerun was fine, set the task_level parameters
-        if reruns:
-            set_spec = {'$set': {'spec._recover_launch._launch_id': launch_id,
-                                 'spec._recover_launch._recover_mode': recover_mode}}
-            if recover_mode == 'prev_dir':
-                set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
-
-            self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
-
-        return reruns
+        if isinstance(launch_id, int):
+            launch = self.get_launch_by_id(launch_id)
+        else:
+            launch = m_fw.launches[-1]
+        recovery = launch.state_history[-1].get("checkpoint") 
+        recovery.update({'launch_id': launch.launch_id})
+        return recovery
 
     def _refresh_wf(self, fw_id):
         """
