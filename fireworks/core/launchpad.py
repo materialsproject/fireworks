@@ -1303,14 +1303,14 @@ class LaunchPad(FWSerializable):
         function to get recovery data for a given fw and launch
         Args:
             fw_id (int): fw id to get recovery data for
-            launch_id (int): launch_id to get recovery data for, if not
-                an int, recovery data is generated from last launch
+            launch_id (int or 'last'): launch_id to get recovery data for, if 'last'
+                recovery data is generated from last launch
         """
         m_fw = self.get_fw_by_id(fw_id)
-        if isinstance(launch_id, int):
-            launch = self.get_launch_by_id(launch_id)
-        else:
+        if launch_id == 'last':
             launch = m_fw.launches[-1]
+        else:
+            launch = self.get_launch_by_id(launch_id)
         recovery = launch.state_history[-1].get("checkpoint")
         recovery.update({'_prev_dir': launch.launch_dir,
                          '_launch_id': launch.launch_id})
