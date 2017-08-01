@@ -37,8 +37,9 @@ __date__ = 'Feb 7, 2013'
 
 
 def do_ping(launchpad, launch_id, checkpoint=None):
+    # TODO: REVERT THIS
     if launchpad:
-            launchpad.ping_launch(launch_id, checkpoint=checkpoint)
+        launchpad.ping_launch(launch_id, checkpoint=checkpoint)
     else:
         if os.path.exists("FW_ping.json"):
             ping_dict = loadfn("FW_ping.json")
@@ -50,10 +51,9 @@ def do_ping(launchpad, launch_id, checkpoint=None):
         dumpfn(ping_dict, "FW_ping.json")
 
 
-def ping_launch(launchpad, launch_id, stop_event,
-                master_thread, checkpoint=None):
+def ping_launch(launchpad, launch_id, stop_event, master_thread):
     while not stop_event.is_set() and master_thread.isAlive():
-        do_ping(launchpad, launch_id, checkpoint)
+        do_ping(launchpad, launch_id)
         stop_event.wait(PING_TIME_SECS)
 
 
@@ -240,7 +240,7 @@ class Rocket:
                               '_all_stored_data': all_stored_data,
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
-                do_ping(lp, launch_id, checkpoint=checkpoint)
+                self.update_checkpoint(lp, launch_id, checkpoint)
  
                 if lp:
                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
@@ -414,6 +414,20 @@ class Rocket:
                     f.truncate()
 
             return True
+    
+    def update_checkpoint(self, launchpad, launch_id, checkpoint):
+        """
+        Helper function to update checkpoint
+
+        Args:
+            launchpad (LaunchPad): LaunchPad to ping with checkpoint data
+            launch_id (int): launch id to update
+            checkpoint (dict): checkpoint data
+        """
+        if launchpad:
+            launchpad.ping_launch(launch_id, checkpoint=checkpoint)
+        else:
+            dumpfn(checkpoint, "FW_checkpoint.json")
 
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
