@@ -1458,13 +1458,12 @@ class LaunchPad(FWSerializable):
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
                 ping_dict = loadfn(ping_loc)
-                ping_dict['ptime'] = reconstitute_dates(ping_dict.pop('ping_time'))
-                self.ping_launch(launch_id, **ping_dict)
+                self.ping_launch(launch_id, ptime=ping_dict['ping_time'])
 
             # look for action in FW_offline.json
             offline_loc = os.path.join(m_launch.launch_dir, "FW_offline.json")
             with open(offline_loc) as f:
-                offline_data = json.loads(f.read())
+                offline_data = loadfn(offline_loc)
                 if 'started_on' in offline_data:
                     m_launch.state = 'RUNNING'
                     for s in m_launch.state_history:
@@ -1481,6 +1480,11 @@ class LaunchPad(FWSerializable):
                                                             })
                     if f:
                         self._refresh_wf(fw_id)
+                
+                if 'checkpoint' in offline_data:
+                    m_launch.touch_history(checkpoint=offline_data['checkpoint'])
+                    self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
+                                                       m_launch.to_db_dict(), upsert=True)
 
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])

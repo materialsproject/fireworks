@@ -36,19 +36,12 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def do_ping(launchpad, launch_id, checkpoint=None):
-    # TODO: REVERT THIS
+def do_ping(launchpad, launch_id):
     if launchpad:
-        launchpad.ping_launch(launch_id, checkpoint=checkpoint)
+        launchpad.ping_launch(launch_id)
     else:
-        if os.path.exists("FW_ping.json"):
-            ping_dict = loadfn("FW_ping.json")
-        else:
-            ping_dict = {}
-        ping_dict.update({"ping_time": datetime.utcnow().isoformat()})
-        if checkpoint:
-            ping_dict.update({"checkpoint": checkpoint})
-        dumpfn(ping_dict, "FW_ping.json")
+        with open('FW_ping.json', 'w') as f:
+            f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
 
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
@@ -427,7 +420,9 @@ class Rocket:
         if launchpad:
             launchpad.ping_launch(launch_id, checkpoint=checkpoint)
         else:
-            dumpfn(checkpoint, "FW_checkpoint.json")
+            offline_info = loadfn("FW_offline.json")
+            offline_info.update({"checkpoint": checkpoint})
+            dumpfn(offline_info, "FW_offline.json")
 
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
