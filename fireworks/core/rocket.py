@@ -236,13 +236,14 @@ class Rocket:
 
             # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
+                checkpoint = {'_task_n': t_counter,
+                              '_all_stored_data': all_stored_data,
+                              '_all_update_spec': all_update_spec,
+                              '_all_mod_spec': all_mod_spec}
+                do_ping(lp, launch_id, checkpoint=checkpoint)
+ 
                 if lp:
-                    checkpoint = {'_task_n': t_counter,
-                                  '_all_stored_data': all_stored_data,
-                                  '_all_update_spec': all_update_spec,
-                                  '_all_mod_spec': all_mod_spec}
-                    do_ping(lp, launch_id, checkpoint=checkpoint)
-                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
+                   l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
                     t.fw_id = m_fw.fw_id
