@@ -19,6 +19,7 @@ import glob
 import shutil
 import distutils.dir_util
 from monty.io import zopen
+from monty.serialization import loadfn, dumpfn
 
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, \
@@ -37,7 +38,7 @@ __date__ = 'Feb 7, 2013'
 
 def do_ping(launchpad, launch_id, checkpoint=None):
     if launchpad:
-            launchpad.ping_launch(launch_id, checkpoint)
+            launchpad.ping_launch(launch_id, checkpoint=checkpoint)
     else:
         if os.path.exists("FW_ping.json"):
             ping_dict = loadfn("FW_ping.json")
@@ -179,26 +180,26 @@ class Rocket:
                     except:
                         pass
 
-            if m_fw.spec.get('_recover_launch', None):
-                launch_to_recover = lp.get_launch_by_id(m_fw.spec['_recover_launch']['_launch_id'])
-                starting_task = launch_to_recover.action.stored_data.get('_exception', {}).get('_failed_task_n', 0)
-                recovery = launch_to_recover.action.stored_data['_recovery']
-                all_stored_data.update(recovery['_all_stored_data'])
-                all_update_spec.update(recovery['_all_update_spec'])
-                all_mod_spec.extend(recovery['_all_mod_spec'])
-                recover_launch_dir = launch_to_recover.launch_dir
+            recovery = m_fw.spec.get('_recovery', None)
+            if recovery:
+                recovery_dir = recovery.get('_prev_dir')
+                recovery_mode = recovery.get('_mode')
+                starting_task = recovery.get('_task_n')
+                all_stored_data.update(recovery.get('_all_stored_data'))
+                all_update_spec.update(recovery.get('_all_update_spec'))
+                all_mod_spec.extend(recovery.get('_all_mod_spec'))
                 if lp:
                     l_logger.log(
                                 logging.INFO,
                                 'Recovering from task number {} in folder {}.'.format(starting_task,
-                                                                                      recover_launch_dir))
-                if m_fw.spec['_recover_launch']['_recover_mode'] == 'cp' and launch_dir != recover_launch_dir:
+                                                                                      recovery_dir))
+                if recovery_mode == 'cp' and launch_dir != recovery_dir:
                     if lp:
                         l_logger.log(
                                     logging.INFO,
-                                    'Copying data from recovery folder {} to folder {}.'.format(recover_launch_dir,
+                                    'Copying data from recovery folder {} to folder {}.'.format(recovery_dir,
                                                                                                 launch_dir))
-                    distutils.dir_util.copy_tree(recover_launch_dir, launch_dir, update=1)
+                    distutils.dir_util.copy_tree(recovery_dir, launch_dir, update=1)
 
             else:
                 starting_task = 0

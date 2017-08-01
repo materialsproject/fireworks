@@ -16,6 +16,7 @@ from collections import OrderedDict, defaultdict
 
 from pymongo import MongoClient
 from pymongo import DESCENDING, ASCENDING
+from monty.serialization import loadfn
 
 from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, WFLOCK_EXPIRATION_KILL, \
@@ -1262,10 +1263,11 @@ class LaunchPad(FWSerializable):
         # Launch recovery
         if recover_launch is not None:
             recovery = self.get_recovery(fw_id, recover_launch)
-            recovery.update({'mode': recover_mode})
+            recovery.update({'_mode': recover_mode})
             set_spec = {'$set': {'spec._recovery': recovery}}
             if recover_mode == 'prev_dir':
-                set_spec['$set']['spec._launch_dir'] = self.get_launch_by_id(launch_id).launch_dir
+                prev_dir = self.get_launch_by_id(recovery.get('_launch_id')).launch_dir
+                set_spec['$set']['spec._launch_dir'] = prev_dir 
             self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
             
         # If no launch recovery specified, unset the firework recovery spec
@@ -1309,8 +1311,9 @@ class LaunchPad(FWSerializable):
             launch = self.get_launch_by_id(launch_id)
         else:
             launch = m_fw.launches[-1]
-        recovery = launch.state_history[-1].get("checkpoint") 
-        recovery.update({'launch_id': launch.launch_id})
+        recovery = launch.state_history[-1].get("checkpoint")
+        recovery.update({'_prev_dir': launch.launch_dir,
+                         '_launch_id': launch.launch_id})
         return recovery
 
     def _refresh_wf(self, fw_id):
