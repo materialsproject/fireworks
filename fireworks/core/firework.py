@@ -412,7 +412,7 @@ class Launch(FWSerializable, object):
         self.launch_id = launch_id
         self.fw_id = fw_id
 
-    def touch_history(self, update_time=None):
+    def touch_history(self, update_time=None, checkpoint=None):
         """
         Updates the update_on field of the state history of a Launch. Used to ping that a Launch
         is still alive.
@@ -421,6 +421,8 @@ class Launch(FWSerializable, object):
             update_time (datetime)
         """
         update_time = update_time or datetime.utcnow()
+        if checkpoint:
+            self.state_history[-1]['checkpoint'] = checkpoint
         self.state_history[-1]['updated_on'] = update_time
 
     def set_reservation_id(self, reservation_id):
@@ -548,10 +550,17 @@ class Launch(FWSerializable, object):
         Args:
             state (str)
         """
-        last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
+        if len(self.state_history) > 0:
+            last_state = self.state_history[-1]['state']
+            last_checkpoint = self.state_history[-1].get('checkpoint', None)
+        else:
+            last_state, last_checkpoint = None, None
         if state != last_state:
             now_time = datetime.utcnow()
-            self.state_history.append({'state': state, 'created_on': now_time})
+            new_history_entry = {'state': state, 'created_on': now_time}
+            if state != "COMPLETED" and last_checkpoint:
+                new_history_entry.update({'checkpoint': last_checkpoint})
+            self.state_history.append(new_history_entry)
             if state in ['RUNNING', 'RESERVED']:
                 self.touch_history()  # add updated_on key
 
