@@ -7,7 +7,12 @@ from dateutil.relativedelta import relativedelta
 from fireworks import Firework
 
 # TODO: maybe should be optional
+#import matplotlib
+#matplotlib.use('Agg')
+
 from matplotlib import pyplot as plt
+
+import numpy as np
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
@@ -107,9 +112,17 @@ class FWReport:
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
 
-    def plot_stats(self, states=None, **kwargs):
+    def plot_stats(self, states=None, style='bar', **kwargs):
         """
-        Makes a bar chart with the summary data
+        Makes a chart with the summary data
+
+        Args:
+            states ([str]): states to include in plot, defaults to 'COMPLETED' and 'FIZZLED',
+                note this also specifies the order of stacking
+            style (str): style of plot to generate, can either be 'bar' or 'fill'
+
+        Returns:
+            matplotlib plot module
         """
         results = self.get_stats(**kwargs)
         states = ['COMPLETED', 'FIZZLED']
@@ -123,14 +136,20 @@ class FWReport:
                       "DEFUSED": "#B7BCC3",
                       "PAUSED": "#FFCFCA"
                       }
-
-        for n, result in enumerate(results):
-            bottom = 0
-            for state in states:
-                plt.bar(n, result['states'][state], bottom=bottom, color=state_to_color[state])
-                bottom += result['states'][state]
-        #plt.savefig('out.png')
-        return plt
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        data = {state: np.array([result['states'][state] for result in results])
+                for state in states}
+        
+        bottom = np.zeros(len(results))
+        for state in states:
+            if style is 'bar':
+                ax.bar(range(len(bottom)), data[state], bottom=bottom,
+                        color=state_to_color[state])
+            elif style is 'fill':
+                ax.fill_between(range(len(bottom)), bottom, data[state], color=state_to_color[state])
+            bottom += data[state]
+        return fig
 
     def get_stats_str(self, decorated_stat_list):
         """
