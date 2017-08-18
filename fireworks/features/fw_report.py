@@ -6,12 +6,6 @@ from dateutil.relativedelta import relativedelta
 
 from fireworks import Firework
 
-# TODO: maybe should be optional
-#import matplotlib
-#matplotlib.use('Agg')
-
-from matplotlib import pyplot as plt
-
 import numpy as np
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
@@ -136,7 +130,9 @@ class FWReport:
                       "DEFUSED": "#B7BCC3",
                       "PAUSED": "#FFCFCA"
                       }
-        fig = plt.figure()
+
+        from matplotlib.figure import Figure
+        fig = Figure()
         ax = fig.add_subplot(111)
         data = {state: np.array([result['states'][state] for result in results])
                 for state in states}
