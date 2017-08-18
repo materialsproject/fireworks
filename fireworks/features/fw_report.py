@@ -6,6 +6,9 @@ from dateutil.relativedelta import relativedelta
 
 from fireworks import Firework
 
+# TODO: maybe should be optional
+from matplotlib import pyplot as plt
+
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
 
@@ -103,6 +106,31 @@ class FWReport:
             decorated_list.append({"date_key": x["date_key"], "states": new_states,
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
+
+    def plot_stats(self, states=None, **kwargs):
+        """
+        Makes a bar chart with the summary data
+        """
+        results = self.get_stats(**kwargs)
+        states = ['COMPLETED', 'FIZZLED']
+        state_to_color = {"RUNNING": "#F4B90B",
+                      "WAITING": "#1F62A2",
+                      "FIZZLED": "#DB0051",
+                      "READY": "#2E92F2",
+                      "COMPLETED": "#24C75A",
+                      "RESERVED": "#BB8BC1",
+                      "ARCHIVED": "#7F8287",
+                      "DEFUSED": "#B7BCC3",
+                      "PAUSED": "#FFCFCA"
+                      }
+
+        for n, result in enumerate(results):
+            bottom = 0
+            for state in states:
+                plt.bar(n, result['states'][state], bottom=bottom, color=state_to_color[state])
+                bottom += result['states'][state]
+        #plt.savefig('out.png')
+        return plt
 
     def get_stats_str(self, decorated_stat_list):
         """
