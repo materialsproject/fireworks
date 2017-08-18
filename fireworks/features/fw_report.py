@@ -8,6 +8,8 @@ from fireworks import Firework
 
 import numpy as np
 
+from matplotlib.figure import Figure
+
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
 
@@ -130,8 +132,6 @@ class FWReport:
                       "DEFUSED": "#B7BCC3",
                       "PAUSED": "#FFCFCA"
                       }
-
-        from matplotlib.figure import Figure
         fig = Figure()
         ax = fig.add_subplot(111)
         data = {state: np.array([result['states'][state] for result in results])
@@ -143,7 +143,8 @@ class FWReport:
                 ax.bar(range(len(bottom)), data[state], bottom=bottom,
                         color=state_to_color[state])
             elif style is 'fill':
-                ax.fill_between(range(len(bottom)), bottom, data[state], color=state_to_color[state])
+                ax.fill_between(range(len(bottom)), bottom, bottom + data[state],
+                                color=state_to_color[state])
             bottom += data[state]
         return fig
 
