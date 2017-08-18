@@ -1,5 +1,5 @@
 PyYAML==3.12
-pymongo==3.4.0
+pymongo==3.5.0
 Jinja2==2.9.6
 six==1.10.0
 monty==1.0.1
