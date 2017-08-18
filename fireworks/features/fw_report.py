@@ -121,7 +121,6 @@ class FWReport:
             matplotlib plot module
         """
         results = self.get_stats(**kwargs)
-        states = ['COMPLETED', 'FIZZLED']
         state_to_color = {"RUNNING": "#F4B90B",
                       "WAITING": "#1F62A2",
                       "FIZZLED": "#DB0051",
@@ -132,6 +131,8 @@ class FWReport:
                       "DEFUSED": "#B7BCC3",
                       "PAUSED": "#FFCFCA"
                       }
+        states = states or state_to_color.keys()
+        from matplotlib.figure import Figure
         fig = Figure()
         ax = fig.add_subplot(111)
         data = {state: np.array([result['states'][state] for result in results])

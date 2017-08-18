@@ -371,14 +371,14 @@ def parse_querystr(querystr, coll):
               "to make it run faster.".format(querystr))
     return d
 
-@app.route("/reports/<interval>/<num_intervals>/fig.png")
-def simple(interval, num_intervals):
+@app.route("/reports/<coll>/<interval>/<num_intervals>/fig.png")
+def simple(coll, interval, num_intervals):
     import StringIO
 
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
     fwr = FWReport(lp)
-    fig = fwr.plot_stats(interval=interval, num_intervals=int(num_intervals))
+    fig = fwr.plot_stats(coll=coll, interval=interval, num_intervals=int(num_intervals))
 
     canvas=FigureCanvas(fig)
     png_output = StringIO.StringIO()
