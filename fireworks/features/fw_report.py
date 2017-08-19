@@ -6,8 +6,6 @@ from dateutil.relativedelta import relativedelta
 
 from fireworks import Firework
 
-import numpy as np
-
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
 
@@ -130,7 +128,10 @@ class FWReport:
                       "PAUSED": "#FFCFCA"
                       }
         states = states or state_to_color.keys()
+
         from matplotlib.figure import Figure
+        import numpy as np
+
         fig = Figure()
         ax = fig.add_subplot(111)
         data = {state: np.array([result['states'][state] for result in results])

@@ -5,7 +5,7 @@ from functools import wraps
 from flask import Flask, render_template, request, jsonify, Response, make_response
 from flask import redirect, url_for, abort, flash, session
 from flask_paginate import Pagination
-from pymongo import DESCENDING, ASCENDING
+from pymongo import DESCENDING
 
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
@@ -380,7 +380,7 @@ def simple(coll, interval, num_intervals):
     fwr = FWReport(lp)
     fig = fwr.plot_stats(coll=coll, interval=interval, num_intervals=int(num_intervals))
 
-    canvas=FigureCanvas(fig)
+    canvas = FigureCanvas(fig)
     png_output = StringIO.StringIO()
     canvas.print_png(png_output)
     response=make_response(png_output.getvalue())
