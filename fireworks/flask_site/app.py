@@ -334,6 +334,13 @@ def report(interval, num_intervals):
                                    additional_query=app.BASE_Q_WF)
     wf_report_text = fwr.get_stats_str(wf_report_data)
 
+    MATPLOTLIB = False
+    try:
+        import matplotlib as mpl
+        MATPLOTLIB=True
+    except:
+        pass
+
     return render_template('report.html', **locals())
 
 

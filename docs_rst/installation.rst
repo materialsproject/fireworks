@@ -40,6 +40,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 #. To install, simply type::
 
     pip install FireWorks
+    pip install matplotlib  # (only needed for seeing visual report plots in web gui!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
