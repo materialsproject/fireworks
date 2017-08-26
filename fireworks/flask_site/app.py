@@ -141,7 +141,6 @@ def home():
     PLOTTING = False
     try:
         import matplotlib as mpl
-        import numpy as np
         PLOTTING=True
     except:
         pass
@@ -346,7 +345,6 @@ def report(interval, num_intervals):
     PLOTTING = False
     try:
         import matplotlib as mpl
-        import numpy as np
         PLOTTING = True
     except:
         pass
