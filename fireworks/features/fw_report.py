@@ -130,21 +130,20 @@ class FWReport:
         states = states or state_to_color.keys()
 
         from matplotlib.figure import Figure
-        import numpy as np
 
         fig = Figure()
         ax = fig.add_subplot(111)
-        data = {state: np.array([result['states'][state] for result in results])
+        data = {state: [result['states'][state] for result in results]
                 for state in states}
         
-        bottom = np.zeros(len(results))
+        bottom = [0] * len(results)
         for state in states:
             if style is 'bar':
                 ax.bar(range(len(bottom)), data[state], bottom=bottom,
                         color=state_to_color[state])
             elif style is 'fill':
                 ax.fill_between(range(len(bottom)), bottom, data[state], color=state_to_color[state])
-            bottom += data[state]
+            bottom = [x + y for x, y in zip(bottom, data[state])]
         return fig
 
     def get_stats_str(self, decorated_stat_list):
