@@ -138,9 +138,11 @@ def home():
                                   projection=["state", "name", "fw_id"]))
         })
 
+    PLOTTING = False
     try:
         import matplotlib as mpl
-        MATPLOTLIB=True
+        import numpy as np
+        PLOTTING=True
     except:
         pass
 
@@ -341,10 +343,11 @@ def report(interval, num_intervals):
                                    additional_query=app.BASE_Q_WF)
     wf_report_text = fwr.get_stats_str(wf_report_data)
 
-    MATPLOTLIB = False
+    PLOTTING = False
     try:
         import matplotlib as mpl
-        MATPLOTLIB=True
+        import numpy as np
+        PLOTTING = True
     except:
         pass
 
@@ -397,7 +400,7 @@ def simple(coll, interval, num_intervals):
     canvas = FigureCanvas(fig)
     png_output = BytesIO()
     canvas.print_png(png_output)
-    response=make_response(png_output.getvalue())
+    response = make_response(png_output.getvalue())
     response.headers['Content-Type'] = 'image/png'
     return response
 

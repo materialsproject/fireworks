@@ -37,7 +37,7 @@ if __name__ == "__main__":
         extras_require={'rtransfer': ['paramiko>=1.11'],
                         'newt': ['requests>=2.01'],
                         'daemon_mode':['fabric>=1.8.1'],
-                        'flask-plotting': ['matplotlib>=2.0.1']},
+                        'flask-plotting': ['matplotlib>=2.0.1', "numpy>=1.13.1"]},
         classifiers=['Programming Language :: Python',
                      'Development Status :: 5 - Production/Stable',
                      'Intended Audience :: Science/Research',
