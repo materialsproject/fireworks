@@ -373,7 +373,7 @@ def parse_querystr(querystr, coll):
 
 @app.route("/reports/<coll>/<interval>/<num_intervals>/fig.png")
 def simple(coll, interval, num_intervals):
-    import StringIO
+    from io import BytesIO
 
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
@@ -381,7 +381,7 @@ def simple(coll, interval, num_intervals):
     fig = fwr.plot_stats(coll=coll, interval=interval, num_intervals=int(num_intervals))
 
     canvas = FigureCanvas(fig)
-    png_output = StringIO.StringIO()
+    png_output = BytesIO()
     canvas.print_png(png_output)
     response=make_response(png_output.getvalue())
     response.headers['Content-Type'] = 'image/png'
