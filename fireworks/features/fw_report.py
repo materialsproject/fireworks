@@ -134,6 +134,7 @@ class FWReport:
         states = states or state_to_color.keys()
 
         from matplotlib.figure import Figure
+        from matplotlib.ticker import MaxNLocator
 
         fig = Figure()
         ax = fig.add_subplot(111)
@@ -153,10 +154,15 @@ class FWReport:
                                     color=state_to_color[state], label=state)
                 bottom = [x + y for x, y in zip(bottom, data[state])]
 
-        ax.set_xlabel("{} ago".format(interval))
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+        ax.set_xlabel("{} ago".format(interval), fontsize=18)
         ax.set_xlim([-0.5, num_intervals-0.5])
-        ax.set_ylabel("number of {}".format(coll))
-        ax.legend()
+        ax.set_ylabel("number of {}".format(coll), fontsize=18)
+        ax.tick_params(labelsize=14)
+        ax.legend(fontsize=13)
+        fig.tight_layout()
         return fig
 
     def get_stats_str(self, decorated_stat_list):
