@@ -142,7 +142,7 @@ class FWReport:
                 ax.bar(range(len(bottom)), data[state], bottom=bottom,
                         color=state_to_color[state])
             elif style is 'fill':
-                ax.fill_between(range(len(bottom)), bottom, data[state], color=state_to_color[state])
+                ax.fill_between(range(len(bottom)), bottom, [x + y for x, y in zip(bottom, data[state])], color=state_to_color[state])
             bottom = [x + y for x, y in zip(bottom, data[state])]
         return fig
 
