@@ -13,10 +13,10 @@
 <body>
     <div class="container">
         <a href="/" >
-            <img  class="brand" src="{{ url_for('static', filename='images/fw-logo.png') }}"></img>
+            <img class="brand" src="{{ url_for('static', filename='images/fw-logo.png') }}"></img>
         </a>
     </div>
-    <hr>
+    <hr class="myhrline">
     <div class="container">
         {% block content %}{% endblock %}
     </div>
