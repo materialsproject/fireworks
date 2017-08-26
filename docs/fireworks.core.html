@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.core package &#8212; FireWorks 1.4.8 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -278,7 +278,7 @@ these multiple resources.</td>
 
 <dl class="method">
 <dt id="fireworks.core.firework.Launch.touch_history">
-<code class="descname">touch_history</code><span class="sig-paren">(</span><em>update_time=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.touch_history" title="Permalink to this definition">¶</a></dt>
+<code class="descname">touch_history</code><span class="sig-paren">(</span><em>update_time=None</em>, <em>checkpoint=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.touch_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the update_on field of the state history of a Launch. Used to ping that a Launch
 is still alive.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1082,6 +1082,23 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dd></dl>
 
 <dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.get_recovery">
+<code class="descname">get_recovery</code><span class="sig-paren">(</span><em>fw_id</em>, <em>launch_id=u'last'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_recovery" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to get recovery data for a given fw and launch
+:param fw_id: fw id to get recovery data for
+:type fw_id: int
+:param launch_id: launch_id to get recovery data for, if &#8216;last&#8217;</p>
+<blockquote>
+<div>recovery data is generated from last launch</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id">
 <code class="descname">get_reservation_id_from_fw_id</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the firework id, return the reservation id</p>
@@ -1275,7 +1292,7 @@ needed information.</p>
 
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.ping_launch">
-<code class="descname">ping_launch</code><span class="sig-paren">(</span><em>launch_id</em>, <em>ptime=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.ping_launch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ping_launch</code><span class="sig-paren">(</span><em>launch_id</em>, <em>ptime=None</em>, <em>checkpoint=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.ping_launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ping that a Launch is still alive: updates the &#8216;update_on &#8216;field of the state history of a
 Launch.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1344,7 +1361,7 @@ Launch.</p>
 
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.rerun_fw">
-<code class="descname">rerun_fw</code><span class="sig-paren">(</span><em>fw_id</em>, <em>rerun_duplicates=True</em>, <em>clear_recovery=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fw" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rerun_fw</code><span class="sig-paren">(</span><em>fw_id</em>, <em>rerun_duplicates=True</em>, <em>recover_launch=None</em>, <em>recover_mode=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rerun the firework corresponding to the given id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1352,38 +1369,16 @@ Launch.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; firework id</li>
-<li><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; </li>
+<li><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; flag for whether duplicates should be rerun</li>
+<li><strong>recover_launch</strong> (<em>'last'</em><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch_id for last recovery, if set to
+&#8216;last&#8217; (default), recovery will find the last available launch.
+If it is an int, will recover that specific launch</li>
+<li><strong>recover_mode</strong> (<em>'prev_dir'</em><em> or </em><em>'copy'</em>) &#8211; flag to indicate whether to copy
+or run recovery fw in previous directory</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of firework ids that were rerun</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="fireworks.core.launchpad.LaunchPad.rerun_fws_task_level">
-<code class="descname">rerun_fws_task_level</code><span class="sig-paren">(</span><em>fw_id</em>, <em>rerun_duplicates=True</em>, <em>launch_id=None</em>, <em>recover_mode=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fws_task_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rerun a fw at the task level.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; fw_id to rerun</li>
-<li><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; also rerun duplicate FWs</li>
-<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id to rerun, if known. otherwise the last launch_id will be used</li>
-<li><strong>recover_mode</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; use &#8220;prev_dir&#8221; to run again in previous dir, &#8220;cp&#8221; to try to copy
-data to new dir, or None to start from scratch</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of rerun firework ids.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a>]</p>
@@ -1670,6 +1665,25 @@ Calling functions are responsible for handling the error in order to avoid datab
 <dd><p>Run the rocket (check out a job from the database and execute it)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="fireworks.core.rocket.Rocket.update_checkpoint">
+<code class="descname">update_checkpoint</code><span class="sig-paren">(</span><em>launchpad</em>, <em>launch_id</em>, <em>checkpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to update checkpoint</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) &#8211; LaunchPad to ping with checkpoint data</li>
+<li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; launch id to update</li>
+<li><strong>checkpoint</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; checkpoint data</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">
@@ -1816,7 +1830,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 

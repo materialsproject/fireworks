@@ -46,7 +46,5 @@ Thanks for helpful discussions:
 - Stephen Bailey
 - Deborah Bard
 
-We thank JetBrains for providing PyCharm IDE licenses for FireWorks developers.
-
 .. _pymatgen: http://packages.python.org/pymatgen/
 .. _custodian: https://pypi.python.org/pypi/custodian

@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.5.0**
+
+* redesigned web gui with visual plots (J. Montoya, A. Jain)
+* improved task-level recovery, including in offline mode (J. Montoya)
+
 **v1.4.8**
 
 * Fix pip requirements
