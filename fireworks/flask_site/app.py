@@ -393,7 +393,7 @@ def simple(coll, interval, num_intervals):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
     fwr = FWReport(lp)
-    fig = fwr.plot_stats(coll=coll, interval=interval, num_intervals=int(num_intervals))
+    fig = fwr.plot_stats(coll, interval, int(num_intervals))
 
     canvas = FigureCanvas(fig)
     png_output = BytesIO()

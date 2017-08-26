@@ -104,19 +104,23 @@ class FWReport:
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
 
-    def plot_stats(self, states=None, style='bar', **kwargs):
+    def plot_stats(self, coll="fireworks", interval="days", num_intervals=5,
+                   states=None, style='bar', **kwargs):
         """
         Makes a chart with the summary data
 
         Args:
-            states ([str]): states to include in plot, defaults to 'COMPLETED' and 'FIZZLED',
+            coll (str): collection, either "fireworks", "workflows", or "launches"
+            interval (str): one of "minutes", "hours", "days", "months", "years"
+            num_intervals (int): number of intervals to go back in time from present moment
+            states ([str]): states to include in plot, defaults to all states,
                 note this also specifies the order of stacking
             style (str): style of plot to generate, can either be 'bar' or 'fill'
 
         Returns:
             matplotlib plot module
         """
-        results = self.get_stats(**kwargs)
+        results = self.get_stats(coll, interval, num_intervals, **kwargs)
         state_to_color = {"RUNNING": "#F4B90B",
                       "WAITING": "#1F62A2",
                       "FIZZLED": "#DB0051",
@@ -138,12 +142,21 @@ class FWReport:
         
         bottom = [0] * len(results)
         for state in states:
-            if style is 'bar':
-                ax.bar(range(len(bottom)), data[state], bottom=bottom,
-                        color=state_to_color[state])
-            elif style is 'fill':
-                ax.fill_between(range(len(bottom)), bottom, [x + y for x, y in zip(bottom, data[state])], color=state_to_color[state])
-            bottom = [x + y for x, y in zip(bottom, data[state])]
+            if any(data[state]):
+                if style is 'bar':
+                    ax.bar(range(len(bottom)), data[state], bottom=bottom,
+                            color=state_to_color[state], label=state)
+                elif style is 'fill':
+                    ax.fill_between(range(len(bottom)),
+                                    bottom, [x + y for x, y in
+                                             zip(bottom, data[state])],
+                                    color=state_to_color[state], label=state)
+                bottom = [x + y for x, y in zip(bottom, data[state])]
+
+        ax.set_xlabel("{} ago".format(interval))
+        ax.set_xlim([-0.5, num_intervals-0.5])
+        ax.set_ylabel("number of {}".format(coll))
+        ax.legend()
         return fig
 
     def get_stats_str(self, decorated_stat_list):
