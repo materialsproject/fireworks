@@ -137,6 +137,13 @@ def home():
                                   limit=PER_PAGE, sort=[('fw_id', DESCENDING)],
                                   projection=["state", "name", "fw_id"]))
         })
+
+    try:
+        import matplotlib as mpl
+        MATPLOTLIB=True
+    except:
+        pass
+
     return render_template('home.html', **locals())
 
 

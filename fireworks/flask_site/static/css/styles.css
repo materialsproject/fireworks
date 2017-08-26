@@ -115,3 +115,7 @@ form.query button[type=submit] {
     margin-left: 70px;
     width: 256px;
 }
+
+.imgContainer{
+    float:left;
+}

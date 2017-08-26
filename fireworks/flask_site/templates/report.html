@@ -4,8 +4,14 @@
 {% block content %}
 
 {% if MATPLOTLIB %}
-<img src="/reports/fireworks/{{ interval }}/{{ num_intervals }}/fig.png" width="50%">
-<img src="/reports/workflows/{{ interval }}/{{ num_intervals }}/fig.png" width="50%">
+<div class="report_images">
+    <div class="imgContainer">
+        <img src="/reports/fireworks/{{ interval }}/{{ num_intervals }}/fig.png" width="450px">
+    </div>
+    <div class="imgContainer">
+        <img src="/reports/workflows/{{ interval }}/{{ num_intervals }}/fig.png" width="450px">
+    </div>
+</div>
 {% else %}
 <p>
     <em>Please install matplotlib to see plots.</em>
