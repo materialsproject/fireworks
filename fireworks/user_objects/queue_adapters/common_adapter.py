@@ -115,7 +115,7 @@ class CommonAdapter(QueueAdapterBase):
         elif self.q_type == 'SGE':
             status_cmd.extend(['-u', username])
             if 'queue' in self and self['queue']:
-                status_cmd.extend(['-p', self['queue']])
+                status_cmd.extend(['-q', self['queue']])
         else:
             status_cmd.extend(['-u', username])
 
