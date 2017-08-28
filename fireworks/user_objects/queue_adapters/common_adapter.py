@@ -113,7 +113,9 @@ class CommonAdapter(QueueAdapterBase):
             header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
             status_cmd.extend(['--header', header, '-u', username])
         elif self.q_type == 'SGE':
-            status_cmd.extend(['-q', self['queue'], '-u', username])
+            status_cmd.extend(['-u', username])
+            if 'queue' in self and self['queue']:
+                status_cmd.extend(['-p', self['queue']])
         else:
             status_cmd.extend(['-u', username])
 
