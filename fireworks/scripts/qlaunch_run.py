@@ -49,6 +49,7 @@ def do_launch(args):
     if args.command == 'rapidfire':
         rapidfire(launchpad, fworker=fworker, qadapter=queueadapter, launch_dir=args.launch_dir,
                   nlaunches=args.nlaunches, njobs_queue=args.maxjobs_queue,
+                  njobs_waiting=args.maxjobs_waiting,
                   njobs_block=args.maxjobs_block, sleep_time=args.sleep,
                   reserve=args.reserve, strm_lvl=args.loglvl, timeout=args.timeout, fill_mode=args.fill_mode)
     else:
@@ -122,6 +123,9 @@ def qlaunch():
     rapid_parser.add_argument('-m', '--maxjobs_queue',
                               help='maximum jobs to keep in queue for this user', default=0,
                               type=int)
+    rapid_parser.add_argument('-p', '--maxjobs_waiting',
+                              help='maximum jobs to have waiting in queue for this user; -1 implies no limit', default=-1,
+                              type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
                               help='maximum jobs to put in a block',
                               default=500, type=int)
@@ -169,7 +173,7 @@ def qlaunch():
                             if os.path.isfile(f):
                                 put(f, os.path.join(r, f))
     non_default = []
-    for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
+    for k in ["maxjobs_queue", "maxjobs_waiting", "maxjobs_block", "nlaunches", "sleep"]:
         v = getattr(args, k, None)
         if v != rapid_parser.get_default(k):
             non_default.append("--{} {}".format(k, v))

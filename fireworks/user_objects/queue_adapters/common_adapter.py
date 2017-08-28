@@ -103,7 +103,7 @@ class CommonAdapter(QueueAdapterBase):
             # -p: filter queue (partition)
             # -h: no header line
             # -o: reduce output to user only (shorter string to parse)
-            status_cmd.extend(['-o "%u"', '-u', username, '-h'])
+            status_cmd.extend(['-u', username, '-h'])
             if 'queue' in self and self['queue']:
                 status_cmd.extend(['-p', self['queue']])
         elif self.q_type == "LoadSharingFacility":
@@ -169,6 +169,34 @@ class CommonAdapter(QueueAdapterBase):
                         count += 1
 
         return count
+
+    def _parse_njobs_waiting(self, output_str, username):
+        # TODO: what if username is too long for the output and is cut off?
+
+        # WRS: I may come back to this after confirming that Cobalt
+        #      strictly follows the PBS standard and replace the spliting
+        #      with a regex that would solve length issues
+
+        if self.q_type == 'SLURM':
+            # subtract one due to trailing '\n' and split behavior
+            count = 0
+            for line in output_str.split('\n'):
+                if (username in line):
+                    ll = line.split()
+                    if ll[ll.index(username)+1] == 'PD':
+                        count += 1
+            return count
+
+        if self.q_type == "SGE":
+            count = 0
+            for line in output_str.split('\n'):
+                # want only lines that include username;
+                # this will exclude e.g. header lines
+                if (username in line):
+                    ll = line.split()
+                    if ll[ll.index(username)+1] == 'qw':
+                        count += 1
+            return count
 
     def submit_to_queue(self, script_file):
         """
@@ -249,6 +277,37 @@ class CommonAdapter(QueueAdapterBase):
             njobs = self._parse_njobs(p[1], username)
             queue_logger.info(
                 'The number of jobs currently in the queue is: {}'.format(
+                    njobs))
+            return njobs
+
+        # there's a problem talking to qstat server?
+        msgs = ['Error trying to get the number of jobs in the queue',
+                'The error response reads: {}'.format(p[2])]
+        log_fancy(queue_logger, msgs, 'error')
+        return None
+
+    def get_njobs_waiting(self, username=None):
+        """
+        returns the number of jobs currently waiting in the queue for the user
+
+        :param username: (str) the username of the jobs to count (default is to autodetect)
+        :return: (int) number of jobs waiting in the queue
+        """
+        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+
+        # initialize username
+        if username is None:
+            username = getpass.getuser()
+
+        # run qstat
+        qstat = Command(self._get_status_cmd(username))
+        p = qstat.run(timeout=5)
+
+        # parse the result
+        if p[0] == 0:
+            njobs = self._parse_njobs_waiting(p[1], username)
+            queue_logger.info(
+                'The number of jobs currently waiting in the queue is: {}'.format(
                     njobs))
             return njobs
 

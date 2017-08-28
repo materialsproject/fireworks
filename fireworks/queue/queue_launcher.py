@@ -158,8 +158,8 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
 
 def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0,
-              njobs_block=500, sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None,
-              fill_mode=False):
+              njobs_block=500, njobs_waiting=-1, sleep_time=None, reserve=False, strm_lvl='INFO',
+              timeout=None, fill_mode=False):
     """
     Submit many jobs to the queue.
 
@@ -170,6 +170,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         launch_dir (str): directory where we want to write the blocks
         nlaunches (int): total number of launches desired; "infinite" for loop, 0 for one round
         njobs_queue (int): stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit
+        njobs_waiting (int): stops submitting jobs when njobs_waiting are waiting in the queue; can be
+            combined with njobs_queue; -1 disables this behavior
         njobs_block (int): automatically write a new block when njobs_block jobs are in a single block
         sleep_time (int): secs to sleep between rapidfire loop iterations
         reserve (bool): Whether to queue in reservation mode
@@ -206,9 +208,14 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while (not njobs_queue or jobs_in_queue < njobs_queue) and \
-                    (launchpad.run_exists(fworker) or (fill_mode and not reserve)) \
+            # get number of jobs waiting
+            jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
+
+            while (not njobs_queue or jobs_in_queue < njobs_queue) \
+                    and ((njobs_waiting == -1) or (jobs_waiting < njobs_waiting)) \
+                    and (launchpad.run_exists(fworker)  or (fill_mode and not reserve)) \
                     and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
+
                 l_logger.info('Launching a rocket!')
 
                 # switch to new block dir if it got too big
@@ -231,10 +238,12 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue += 1
+                jobs_waiting += 1
                 job_counter += 1
                 if job_counter % QSTAT_FREQUENCY == 0:
                     job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
+                    jobs_waiting = _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger)
 
             if num_launched == nlaunches or nlaunches == 0 or \
                     (timeout and (datetime.now() - start_time).total_seconds() >= timeout):
@@ -291,6 +300,31 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
     raise RuntimeError('Unable to determine number of jobs in queue, '
                        'check queue adapter and queue server status!')
 
+
+def _get_number_of_jobs_waiting(qadapter, njobs_waiting, l_logger):
+    """
+    Internal method to get the number of jobs *waiting* in the queue using the given job params.
+    In case of failure, automatically retries at certain intervals...
+    
+    :param qadapter: (QueueAdapter)
+    :param njobs_waiting: (int) The desired maximum number of jobs to be waiting in the queue
+    :param l_logger: (logger) A logger to put errors/info/warnings/etc.
+    """
+
+    RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
+
+    for i in range(QUEUE_RETRY_ATTEMPTS):
+        try:
+            jobs_in_queue = qadapter.get_njobs_waiting()
+            if jobs_in_queue is not None:
+                l_logger.info('{} jobs waiting. Maximum allowed by user: {}'.format(jobs_in_queue, njobs_waiting))
+                return jobs_in_queue
+        except:
+            log_exception(l_logger, 'Could not get number of jobs in queue! Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
+        time.sleep(RETRY_INTERVAL)
+        RETRY_INTERVAL *= 2
+
+    raise RuntimeError('Unable to determine number of jobs in queue, check queue adapter and queue server status!')
 
 def setup_offline_job(launchpad, fw, launch_id):
     # separate this function out for reuse in unit testing
