@@ -104,7 +104,7 @@ class CommonAdapter(QueueAdapterBase):
             # -h: no header line
             # -o: reduce output to user only (shorter string to parse)
             status_cmd.extend(['-o "%u"', '-u', username, '-h'])
-            if 'queue' in self and self['queue']:
+            if self.get('queue'):
                 status_cmd.extend(['-p', self['queue']])
         elif self.q_type == "LoadSharingFacility":
             #use no header and the wide format so that there is one line per job, and display only running and pending jobs
@@ -114,7 +114,7 @@ class CommonAdapter(QueueAdapterBase):
             status_cmd.extend(['--header', header, '-u', username])
         elif self.q_type == 'SGE':
             status_cmd.extend(['-u', username])
-            if 'queue' in self and self['queue']:
+            if self.get('queue'):
                 status_cmd.extend(['-q', self['queue']])
         else:
             status_cmd.extend(['-u', username])
