@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.5.1**
+
+* add visual dashboard feature to web gui (all graphics)
+* Fixes to SGE queue adapter (A. Ganose)
+
 **v1.5.0**
 
 * redesigned web gui with visual plots (J. Montoya, A. Jain)

@@ -35,6 +35,7 @@ Additional contributions from:
 - Dale Stansberry
 - Ketan Bhatt
 - Richard Gowers
+- Alex Ganose
 - Github user: kpoman
 - Github user: jakirkham
 - Github user: shenjh
