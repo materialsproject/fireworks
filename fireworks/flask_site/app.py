@@ -351,6 +351,18 @@ def report(interval, num_intervals):
 
     return render_template('report.html', **locals())
 
+@app.route('/dashboard/')
+@requires_auth
+def dashboard():
+    PLOTTING = False
+    try:
+        import matplotlib as mpl
+        PLOTTING = True
+    except:
+        pass
+
+    return render_template('dashboard.html', **locals())
+
 
 def bootstrap_app(*args, **kwargs):
     """Pass instead of `app` to a forking process.
