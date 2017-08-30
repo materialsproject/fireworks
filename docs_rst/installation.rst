@@ -15,7 +15,7 @@ To access via a *cloud provider*, you might try `mLab <http://mlab.com/>`_ or se
 
     * Set up an account via the mLab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
     * mLab will ask you to create a database; any name is fine, but make sure you write down what it is.
-    * After creating a database, note that you'll need to create at least one admin user in order to access the database.
+    * After creating a database, note that you'll need to create at least one database user in order to access the database.
     * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
 
 Preparing to Install FireWorks (Python and pip)
