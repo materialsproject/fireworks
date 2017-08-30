@@ -10,6 +10,8 @@ Full usage of these commands can be found through the built-in help::
     lpad get_wflows --help
     lpad report --help
 
+Note that there is also a visual web interface to job status, see :doc:`web interface guide </basesite_tutorial>`.
+
 Example queries - FireWorks
 ===========================
 

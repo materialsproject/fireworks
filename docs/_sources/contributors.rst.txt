@@ -36,6 +36,7 @@ Additional contributions from:
 - Ketan Bhatt
 - Richard Gowers
 - Alex Ganose
+- Remi Lahe
 - Github user: kpoman
 - Github user: jakirkham
 - Github user: shenjh

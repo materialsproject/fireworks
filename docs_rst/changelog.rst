@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.5.2**
+
+* minor web gui improvements
+* installation doc updates (R. Lahe)
+
 **v1.5.1**
 
 * add visual dashboard feature to web gui (all graphics)
