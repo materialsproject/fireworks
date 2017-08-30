@@ -11,10 +11,10 @@ FireWorks requires a single MongoDB instance to store and access your workflows.
 
 To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
 
-To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one. If you are using Mongolab, here are a few notes:
+To access via a *cloud provider*, you might try `mLab <http://mlab.com/>`_ or search for a different one. If you are using mLab, here are a few notes:
 
-    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
-    * Mongolab will ask you to create a database; any name is fine, but make sure you write down what it is.
+    * Set up an account via the mLab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
+    * mLab will ask you to create a database; any name is fine, but make sure you write down what it is.
     * After creating a database, note that you'll need to create at least one admin user in order to access the database.
     * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
 
@@ -80,13 +80,13 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
     # follow instructions to install argcomplete library if you want auto-complete of FWS commands
-    
+
 Run unit tests
 --------------
 1. Staying in the directory containing setup.py, run the following command::
 
     python setup.py test
-    
+
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
 
 .. _remote_test-label:
