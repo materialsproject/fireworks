@@ -116,8 +116,11 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 # add a small amount of buffer breathing time for DB to refresh in case we have a dynamic WF
                 time.sleep(0.15)
                 skip_check = False
-        if nlaunches == 0 and not launchpad.future_run_exists():
-            break
+        if nlaunches == 0:
+            # if we're doing all launches
+            # break if launchpad contains no future work for us to do
+            if not launchpad.future_run_exists():
+                break
         elif num_launched == nlaunches:
             break
         log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
