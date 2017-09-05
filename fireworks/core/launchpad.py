@@ -603,10 +603,10 @@ class LaunchPad(FWSerializable):
                 if any(self.get_fw_dict_by_id(i)['state'] == 'WAITING'
                        for i in children):
                     return True
-            else:
-                # if we loop over all active and none have WAITING children
-                # there is no future work to do
-                return False
+
+            # if we loop over all active and none have WAITING children
+            # there is no future work to do
+            return False
 
     def tuneup(self, bkground=True):
         """
