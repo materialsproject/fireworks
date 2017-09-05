@@ -583,6 +583,31 @@ class LaunchPad(FWSerializable):
         q = fworker.query if fworker else {}
         return bool(self._get_a_fw_to_run(query=q, checkout=False))
 
+    def future_run_exists(self, fworker=None):
+        """Check if database has any current OR future Fireworks available
+
+        Returns:
+            bool: True if database has any ready or waiting Fireworks.
+        """
+        if self.run_exists(fworker):
+            # check first to see if any are READY
+            return True
+        else:
+            # grab all [RUNNING/RESERVED] fireworks
+            q = fworker.query if fworker else {}
+            q.update({'state': {'$in': ['RUNNING', 'RESERVED']}})
+            active = self.get_fw_ids(q)
+            # then check if they have WAITING children
+            for fw_id in active:
+                children = self.get_wf_by_fw_id_lzyfw(fw_id).links[fw_id]
+                if any(self.get_fw_dict_by_id(i)['state'] == 'WAITING'
+                       for i in children):
+                    return True
+            else:
+                # if we loop over all active and none have WAITING children
+                # there is no future work to do
+                return False
+
     def tuneup(self, bkground=True):
         """
         Database tuneup: build indexes
