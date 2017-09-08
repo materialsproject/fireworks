@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>fireworks.core package &#8212; FireWorks 1.5.2 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.5.3 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.5.2',
+        VERSION:     '1.5.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -970,6 +970,22 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="fireworks.core.launchpad.LaunchPad.future_run_exists">
+<code class="descname">future_run_exists</code><span class="sig-paren">(</span><em>fworker=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.future_run_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if database has any current OR future Fireworks available</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if database has any ready or waiting Fireworks.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_fw_by_id">
 <code class="descname">get_fw_by_id</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a Firework id, give back a Firework object.</p>
@@ -1830,7 +1846,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.3 documentation</a> &#187;</li> 
       </ul>
     </div>
 
