@@ -101,7 +101,8 @@ class LaunchPad(FWSerializable):
     """
 
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
-                 logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl_ca_file=None):
+                 logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl=False,
+                 ssl_ca_certs=None, ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None):
         """
         Args:
             host (str): hostname
@@ -113,14 +114,22 @@ class LaunchPad(FWSerializable):
             strm_lvl (str): the logger stream level
             user_indices (list): list of 'fireworks' collection indexes to be built
             wf_user_indices (list): list of 'workflows' collection indexes to be built
-            ssl_ca_file (str): path to the SSL certificate to be used for mongodb connection.
+            ssl (bool): use TLS/SSL for mongodb connection
+            ssl_ca_certs (str): path to the CA certificate to be used for mongodb connection
+            ssl_certfile (str): path to the client certificate to be used for mongodb connection
+            ssl_keyfile (str): path to the client private key
+            ssl_pem_passphrase (str): passphrase for the client private key
         """
         self.host = host
         self.port = port
         self.name = name
         self.username = username
         self.password = password
-        self.ssl_ca_file = ssl_ca_file
+        self.ssl = ssl
+        self.ssl_ca_certs = ssl_ca_certs
+        self.ssl_certfile = ssl_certfile
+        self.ssl_keyfile = ssl_keyfile
+        self.ssl_pem_passphrase = ssl_pem_passphrase
 
         # set up logger
         self.logdir = logdir
@@ -131,16 +140,10 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        # WARNING: Note that there might be some problem with the ssl feature for some combination
-        #          versions of MongoDB and pymongo such that if you do not use ssl
-        #          (using ssl_ca_file = None), fireworks can't connect to the Mongo database. This
-        #          is why there is the following if condition. DO NOT REMOVE THIS IF CONDITION!
-        if self.ssl_ca_file is not None:
-            self.connection = MongoClient(host, port, ssl_ca_certs=self.ssl_ca_file,
-                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, connect=False)
-        else:
-            self.connection = MongoClient(host, port,
-                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, connect=False)
+        self.connection = MongoClient(host, port, ssl=self.ssl,
+            ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
+            ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
+            socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, connect=False)
         self.db = self.connection[name]
         if username:
             self.db.authenticate(username, password)
@@ -168,7 +171,11 @@ class LaunchPad(FWSerializable):
             'strm_lvl': self.strm_lvl,
             'user_indices': self.user_indices,
             'wf_user_indices': self.wf_user_indices,
-            'ssl_ca_file': self.ssl_ca_file}
+            'ssl': self.ssl,
+            'ssl_ca_certs': self.ssl_ca_certs,
+            'ssl_certfile': self.ssl_certfile,
+            'ssl_keyfile': self.ssl_keyfile,
+            'ssl_pem_passphrase': self.ssl_pem_passphrase}
 
     def update_spec(self, fw_ids, spec_document, mongo=False):
         """
@@ -201,9 +208,14 @@ class LaunchPad(FWSerializable):
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
         wf_user_indices = d.get('wf_user_indices', [])
-        ssl_ca_file = d.get('ssl_ca_file', None)
+        ssl = d.get('ssl', False)
+        ssl_ca_certs = d.get('ssl_ca_certs', None)
+        ssl_certfile = d.get('ssl_certfile', None)
+        ssl_keyfile = d.get('ssl_keyfile', None)
+        ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
         return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'],
-                         logdir, strm_lvl, user_indices, wf_user_indices, ssl_ca_file)
+                         logdir, strm_lvl, user_indices, wf_user_indices, ssl,
+                         ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase)
 
     @classmethod
     def auto_load(cls):
