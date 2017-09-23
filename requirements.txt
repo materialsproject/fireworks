@@ -1,7 +1,7 @@
 PyYAML==3.12
 pymongo==3.5.1
 Jinja2==2.9.6
-six==1.10.0
+six==1.11.0
 monty==1.0.1
 python-dateutil==2.6.1
 tabulate==0.7.7
