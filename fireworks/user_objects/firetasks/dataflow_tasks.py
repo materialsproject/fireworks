@@ -265,7 +265,7 @@ class ForeachTask(FireTaskBase):
     using FWAction: one firework for each element or each chunk from the
     *split* list. Each firework in this generated list contains the Firetask
     specified in the *task* dictionary. If the number of chunks is specified
-    the the *split* list will be divided into this number of chunks and each
+    the *split* list will be divided into this number of chunks and each
     chunk will be processed by one of the generated child Fireworks.
 
     Required params:
@@ -451,28 +451,28 @@ class JoinDictTask(FireTaskBase):
     This firetask combines specified spec fields into a new dictionary.
     """
     _fw_name = 'JoinDictTask'
-    required_params = ['inputs', 'outputs']
+    required_params = ['inputs', 'output']
     optional_params = ['rename']
 
     def run_task(self, fw_spec):
 
-        if not isinstance(self['outputs'], basestring):
-            raise TypeError('"outputs" must be a single string item')
+        if not isinstance(self['output'], basestring):
+            raise TypeError('"output" must be a single string item')
 
-        if self['outputs'] not in fw_spec.keys():
-            outputs = {}
-        elif isinstance(fw_spec[self['outputs']], dict):
-            outputs = fw_spec[self['outputs']]
+        if self['output'] not in fw_spec.keys():
+            output = {}
+        elif isinstance(fw_spec[self['output']], dict):
+            output = fw_spec[self['output']]
         else:
-            raise TypeError('"outputs" exists but is not a dictionary')
+            raise TypeError('"output" exists but is not a dictionary')
 
         for item in self['inputs']:
             if self.get('rename') and item in self['rename']:
-                outputs[self['rename'][item]] = fw_spec[item]
+                output[self['rename'][item]] = fw_spec[item]
             else:
-                outputs[item] = fw_spec[item]
+                output[item] = fw_spec[item]
 
-        return FWAction(update_spec={self['outputs']: outputs})
+        return FWAction(update_spec={self['output']: output})
 
 
 class JoinListTask(FireTaskBase):
@@ -480,30 +480,30 @@ class JoinListTask(FireTaskBase):
     This firetask combines specified **spec*** fields into a new list.
     """
     _fw_name = 'JoinListTask'
-    required_params = ['inputs', 'outputs']
+    required_params = ['inputs', 'output']
 
     def run_task(self, fw_spec):
 
-        if not isinstance(self['outputs'], basestring):
-            raise TypeError('"outputs" must be a single string item')
-        if self['outputs'] not in fw_spec.keys():
-            outputs = []
-        elif isinstance(fw_spec[self['outputs']], list):
-            outputs = fw_spec[self['outputs']]
+        if not isinstance(self['output'], basestring):
+            raise TypeError('"output" must be a single string item')
+        if self['output'] not in fw_spec.keys():
+            output = []
+        elif isinstance(fw_spec[self['output']], list):
+            output = fw_spec[self['output']]
         else:
-            raise TypeError('"outputs" exists but is not a list')
+            raise TypeError('"output" exists but is not a list')
 
         for item in self['inputs']:
-            outputs.append(fw_spec[item])
+            output.append(fw_spec[item])
 
-        return FWAction(update_spec={self['outputs']: outputs})
+        return FWAction(update_spec={self['output']: output})
 
 
 class ImportDataTask(FireTaskBase):
     """
     Update the spec with data from file in a nested dictionary at a position
     specified by a mapstring = maplist[0]/maplist[1]/...
-    i.e. dct[maplist[0]][maplist[1]]... = data
+    i.e. spec[maplist[0]][maplist[1]]... = data
     """
 
     _fw_name = 'ImportDataTask'
