@@ -6,8 +6,6 @@ from dateutil.relativedelta import relativedelta
 
 from fireworks import Firework
 
-import numpy as np
-
 from matplotlib.figure import Figure
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
@@ -108,7 +106,7 @@ class FWReport:
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
 
-    def plot_stats(self, states=None, style='bar', **kwargs):
+    def plot_stats(self, coll='fireworks', states=None, style='bar', **kwargs):
         """
         Makes a chart with the summary data
 
@@ -135,10 +133,10 @@ class FWReport:
         from matplotlib.figure import Figure
         fig = Figure()
         ax = fig.add_subplot(111)
-        data = {state: np.array([result['states'][state] for result in results])
+        data = {state: [result['states'][state] for result in results]
                 for state in states}
         
-        bottom = np.zeros(len(results))
+        bottom = [0.] * len(results)
         for state in states:
             if style is 'bar':
                 ax.bar(range(len(bottom)), data[state], bottom=bottom,
@@ -146,7 +144,10 @@ class FWReport:
             elif style is 'fill':
                 ax.fill_between(range(len(bottom)), bottom, bottom + data[state],
                                 color=state_to_color[state])
-            bottom += data[state]
+            bottom = [b + d for b, d in zip(bottom, data[state])]
+        ax.set_ylabel(coll)
+        ax.set_xticks(range(len(bottom)))
+        ax.set_xticklabels([r['date_key'] for r in results], rotation=60)
         return fig
 
     def get_stats_str(self, decorated_stat_list):

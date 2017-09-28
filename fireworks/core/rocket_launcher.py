@@ -33,7 +33,8 @@ def get_fworker(fworker):
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO',
+                  pdb_on_exception=False):
     """
     Run a single rocket in the current directory.
 
@@ -52,13 +53,13 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO'):
 
     log_multi(l_logger, 'Launching Rocket')
     rocket = Rocket(launchpad, fworker, fw_id)
-    rocket_ran = rocket.run()
+    rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception)
     log_multi(l_logger, 'Rocket finished')
     return rocket_ran
 
 
 def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None,
-              strm_lvl='INFO', timeout=None, local_redirect=False):
+              strm_lvl='INFO', timeout=None, local_redirect=False, pdb_on_exception=False):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
     for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.
@@ -94,9 +95,11 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
             os.chdir(launcher_dir)
             if local_redirect:
                 with redirect_local():
-                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
+                                               pdb_on_exception=pdb_on_exception)
             else:
-                rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl)
+                rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
+                                           pdb_on_exception=pdb_on_exception)
 
             if rocket_ran:
                 num_launched += 1
