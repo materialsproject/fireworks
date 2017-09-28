@@ -91,6 +91,7 @@ def rlaunch():
 
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
+    parser.add_argument('--pdb', help='shortcut to invoke debugger on error', action='store_true')
 
     try:
         import argcomplete
