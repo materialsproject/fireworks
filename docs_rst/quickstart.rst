@@ -33,7 +33,7 @@ Start FireWorks
 Add a Workflow
 ==============
 
-#. There are many ways to add Workflows to the database. You can do it directly from the command line as::
+#. There are many ways to add Workflows to the database, including a Python API. Let's start with an extremely simple example that can be added via the command line::
 
     lpad add_scripts 'echo "hello"' 'echo "goodbye"' -n hello goodbye -w test_workflow
 
@@ -114,7 +114,7 @@ Launch the web GUI
 
     lpad webgui
 
-Note that there are options to run the web site in a server mode.
+Note that there are options to run the web site in a server mode, try ``lpad webgui -h`` to see all the options.
 
 Python code
 ===========
