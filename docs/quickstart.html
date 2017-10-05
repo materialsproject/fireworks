@@ -67,7 +67,7 @@
 <div class="section" id="start-fireworks">
 <h2>Start FireWorks<a class="headerlink" href="#start-fireworks" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">If not already running, start MongoDB:</p>
+<li><p class="first">If not already running, start MongoDB (if your MongoDB is hosted and maintained externally, follow the note below regarding <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">init</span></code>):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mongod</span> <span class="o">--</span><span class="n">logpath</span> <span class="o">&lt;</span><span class="n">FILENAME_TO_LOG_TO</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">fork</span>
 </pre></div>
 </div>
@@ -81,7 +81,7 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">init</span></code>. This will set up a file that points to your remote database. You can now run <code class="docutils literal"><span class="pre">lpad</span></code> commands from within this directory. Alternatively, use the <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-l</span></code> option to point to this file or set up this file as your default db location using the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>.</p>
+<p class="last">If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">init</span></code>. This will set up a <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code> file that points to your remote database. You can now run <code class="docutils literal"><span class="pre">lpad</span></code> commands from within this directory. If you want to run commands from a different directory, use the <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-l</span></code> option to point to this file or set up this file as your default db location using the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>.</p>
 </div>
 </li>
 <li><p class="first">Reset/Initialize the FireWorks database (the LaunchPad):</p>

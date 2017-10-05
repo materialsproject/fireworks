@@ -14,7 +14,7 @@ This tutorial will emphasize "hands-on" usage of FireWorks via the command line 
 Start FireWorks
 ===============
 
-#. If not already running, start MongoDB::
+#. If not already running, start MongoDB (if your MongoDB is hosted and maintained externally, follow the note below regarding ``lpad init``)::
 
     mongod --logpath <FILENAME_TO_LOG_TO> --fork
 
@@ -22,7 +22,7 @@ Start FireWorks
 
    .. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. You may also wish to set up your Mongo config in a file and use the --config option.
 
-   .. note:: If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type ``lpad init``. This will set up a file that points to your remote database. You can now run ``lpad`` commands from within this directory. Alternatively, use the ``lpad -l`` option to point to this file or set up this file as your default db location using the :doc:`FW config </config_tutorial>`.
+   .. note:: If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type ``lpad init``. This will set up a ``my_launchpad.yaml`` file that points to your remote database. You can now run ``lpad`` commands from within this directory. If you want to run commands from a different directory, use the ``lpad -l`` option to point to this file or set up this file as your default db location using the :doc:`FW config </config_tutorial>`.
 
 #. Reset/Initialize the FireWorks database (the LaunchPad)::
 
