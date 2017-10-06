@@ -1,6 +1,11 @@
 ===================
 FireWorks Changelog
 ===================
+
+**v1.5.4**
+
+* fix some logic re:which config files to use
+
 **v1.5.3**
 
 * rapidfire with nlaunches=0 now loops until no READY or WAITINGS FWs via new launchpad.future_run_exists() (R. Gowers)
