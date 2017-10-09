@@ -119,9 +119,7 @@ Required parameters
         # ...
     }
 
-**Remark**: When a ``str`` is found instead of ``dict`` for some input or
-output key, for example ``inputs[1]: 'string'``, then ``'string'`` is
-automatically replaced with ``{spec['string']}``.
+.. note:: When a ``str`` is found instead of ``dict`` for some input or output key, for example ``inputs[1]: 'string'``, then ``'string'`` is automatically replaced with ``{spec['string']}``.
 
 The ``command`` key is a representation of the command as to be used with the
 *Subprocess* package. The optional keys ``inputs[0]``, ``inputs[1]``, ...,
@@ -146,13 +144,9 @@ The dictionaries ``dict1``, ``dict2``, etc. have the following schema::
         }
     }
 
-**Remarks**
+.. note:: If the ``type`` in the ``source`` field is ``data`` then ``value`` can be of types ``str``, ``int`` and ``float``.
+.. note:: When a ``str`` is found instead of ``dict`` for some ``source``, for example ``{'source': 'string'}``, then ``string`` is replaced with ``spec['string']``.
 
-- If the ``type`` in the ``source`` field is ``data`` then ``value`` can be
-  of types ``str``, ``int`` and ``float``.
-- When a ``str`` is found instead of ``dict`` for some ``source``,
-  for example ``{'source': 'string'}``, then ``string`` is replaced with
-  ``spec['string']``.
 
 Optional parameters
 -------------------
@@ -171,8 +165,7 @@ this firework and its children by inserting a parallel section of child
 fireworks. The number of the parallel fireworks is determined by the length of
 the list specified by the ``split`` parameter or the optional ``number of chunks`` parameter. Each child firework contains a firetask (of classes ``PythonFunctionTask``, ``CommandLineTask`` or similar) which processes one element (or one chunk) from this list. The output is passed to the **spec** of the firework(s) right after the detour using a push method, i.e. the outputs of all parallel fireworks are collected in a list specified in the ``outputs`` argument. 
 
-**NOTE:** the ordering of elements (or chunks) in the resulting ``outputs``
-list can be different from that in the original ``split`` list.
+.. note:: the ordering of elements (or chunks) in the resulting ``outputs`` list can be different from that in the original ``split`` list.
 
 
 Required parameters
