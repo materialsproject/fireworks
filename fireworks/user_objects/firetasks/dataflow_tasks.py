@@ -4,10 +4,13 @@ __author__ = 'Ivan Kondov'
 __email__ = 'ivan.kondov@kit.edu'
 __copyright__ = 'Copyright 2016, Karlsruhe Institute of Technology'
 
+import sys
 from fireworks import Firework
 from fireworks.core.firework import FWAction, FireTaskBase
 from fireworks.utilities.fw_serializers import load_object
-from past.builtins import basestring
+# from past.builtins import basestring
+if sys.version_info[0] > 2:
+    basestring = str
 
 
 class CommandLineTask(FireTaskBase):
