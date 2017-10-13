@@ -101,7 +101,7 @@ class CommandLineTask(FireTaskBase):
                 else:
                     inp = {}
                     for key in ['binding', 'source', 'target']:
-                        if key in cmd_spec[l].keys():
+                        if key in cmd_spec[l]:
                             item = cmd_spec[l][key]
                             if isinstance(item, basestring):
                                 inp[key] = fw_spec[item]
@@ -163,10 +163,10 @@ class CommandLineTask(FireTaskBase):
 
         def set_binding(arg):
             argstr = ''
-            if 'binding' in arg.keys():
-                if 'prefix' in arg['binding'].keys():
+            if 'binding' in arg:
+                if 'prefix' in arg['binding']:
                     argstr += arg['binding']['prefix']
-                if 'separator' in arg['binding'].keys():
+                if 'separator' in arg['binding']:
                     argstr += arg['binding']['separator']
             return argstr
 
@@ -180,10 +180,10 @@ class CommandLineTask(FireTaskBase):
                 argl = inp if isinstance(inp, list) else [inp]
                 for arg in argl:
                     argstr = set_binding(arg)
-                    assert 'source' in arg.keys(), 'input has no key "source"'
+                    assert 'source' in arg, 'input has no key "source"'
                     assert (arg['source']['type'] is not None
                             and arg['source']['value'] is not None)
-                    if 'target' in arg.keys():
+                    if 'target' in arg:
                         assert arg['target'] is not None
                         assert arg['target']['type'] == 'stdin'
                         if arg['source']['type'] == 'path':
@@ -210,7 +210,7 @@ class CommandLineTask(FireTaskBase):
                 if isinstance(arg, list):
                     arg = arg[0]
                 argstr = set_binding(arg)
-                assert 'target' in arg.keys()
+                assert 'target' in arg
                 assert arg['target'] is not None
                 if arg['target']['type'] == 'path':
                     assert 'value' in arg['target']
@@ -219,9 +219,9 @@ class CommandLineTask(FireTaskBase):
                     if os.path.isdir(path):
                         path = os.path.join(path, str(uuid.uuid4()))
                         arg['target']['value'] = path
-                    if 'source' in arg.keys():
+                    if 'source' in arg:
                         assert arg['source'] is not None
-                        assert 'type' in arg['source'].keys()
+                        assert 'type' in arg['source']
                         if arg['source']['type'] == 'stdout':
                             stdout = open(path, 'w')
                         elif arg['source']['type'] == 'stderr':
@@ -249,7 +249,7 @@ class CommandLineTask(FireTaskBase):
         retlist = []
         if outputs is not None:
             for output in outputs:
-                if ('source' in output.keys()
+                if ('source' in output
                         and output['source']['type'] == 'path'):
                     copyfile(
                         output['source']['value'],
@@ -462,7 +462,7 @@ class JoinDictTask(FireTaskBase):
         if not isinstance(self['output'], basestring):
             raise TypeError('"output" must be a single string item')
 
-        if self['output'] not in fw_spec.keys():
+        if self['output'] not in fw_spec:
             output = {}
         elif isinstance(fw_spec[self['output']], dict):
             output = fw_spec[self['output']]
@@ -489,7 +489,7 @@ class JoinListTask(FireTaskBase):
 
         if not isinstance(self['output'], basestring):
             raise TypeError('"output" must be a single string item')
-        if self['output'] not in fw_spec.keys():
+        if self['output'] not in fw_spec:
             output = []
         elif isinstance(fw_spec[self['output']], list):
             output = fw_spec[self['output']]
@@ -529,7 +529,7 @@ class ImportDataTask(FireTaskBase):
 
         leaf = reduce(operator.getitem, maplist[:-1], fw_spec)
         if isinstance(data, dict):
-            if maplist[-1] not in list(leaf.keys()):
+            if maplist[-1] not in leaf:
                 leaf[maplist[-1]] = data
             else:
                 leaf[maplist[-1]].update(data)
