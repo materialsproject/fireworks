@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.5.5**
+
+* Better handling of SSL certs (I. Kondov)
+* Improve performance of fw rerun (R. Gowers)
+
 **v1.5.4**
 
 * fix some logic re:which config files to use

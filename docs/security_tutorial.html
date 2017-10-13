@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuring Security &#8212; FireWorks 1.5.4 documentation</title>
+    <title>Configuring Security &#8212; FireWorks 1.5.5 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.5.4',
+        VERSION:     '1.5.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="tracker_tutorial.html" title="Tracking an output file during execution"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -131,6 +131,22 @@
 </ol>
 <p>To save typing, you can set things up so that the <code class="docutils literal"><span class="pre">-l</span></code> option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on <a class="reference internal" href="config_tutorial.html#configfile-label"><span class="std std-ref">Specifying default locations for the config files</span></a>.</p>
 </div>
+<div class="section" id="add-tls-ssl-configuration-to-your-launchpad-file">
+<h2>Add TLS/SSL configuration to your LaunchPad file<a class="headerlink" href="#add-tls-ssl-configuration-to-your-launchpad-file" title="Permalink to this headline">¶</a></h2>
+<p>If the MongoDB server is configured with TLS/SSL launchpad file
+<code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code> (or whatever launchpad file is specified after the <code class="docutils literal"><span class="pre">-l</span></code> option or in the configuration file) has to include further information in the following lines:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssl</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># whether to use TLS/SSL for connection to MongoDB, default: false</span>
+<span class="n">ssl_ca_certs</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">CA</span> <span class="n">certificate</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">connection</span><span class="o">&gt;</span>
+<span class="n">ssl_certfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">client</span> <span class="n">certificate</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">connection</span><span class="o">&gt;</span>
+<span class="n">ssl_keyfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">client</span> <span class="n">private</span> <span class="n">key</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="n">ssl_pem_passphrase</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">passphrase</span> <span class="k">for</span> <span class="n">the</span> <span class="n">client</span> <span class="n">private</span> <span class="n">key</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If <code class="docutils literal"><span class="pre">ssl</span></code> is <code class="docutils literal"><span class="pre">false</span></code> or omitted then all remaining TLS/SSL settings <strong>must</strong> be omitted. If <code class="docutils literal"><span class="pre">ssl</span></code> is <code class="docutils literal"><span class="pre">true</span></code> then the connection will be encrypted and the remaining TLS/SSL settings are optional, depending on the specific server policies.</p>
+</div>
+</div>
 </div>
 
 
@@ -144,6 +160,7 @@
 <li><a class="reference internal" href="#">Configuring Security</a><ul>
 <li><a class="reference internal" href="#create-an-authenticated-user-in-the-admin-database">Create an authenticated user in the admin database</a></li>
 <li><a class="reference internal" href="#add-username-and-password-keys-to-your-launchpad-file">Add username and password keys to your LaunchPad file</a></li>
+<li><a class="reference internal" href="#add-tls-ssl-configuration-to-your-launchpad-file">Add TLS/SSL configuration to your LaunchPad file</a></li>
 </ul>
 </li>
 </ul>
@@ -190,7 +207,7 @@
         <li class="right" >
           <a href="tracker_tutorial.html" title="Tracking an output file during execution"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.5 documentation</a> &#187;</li> 
       </ul>
     </div>
 
