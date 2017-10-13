@@ -209,7 +209,7 @@ class LaunchPad(FWSerializable):
         user_indices = d.get('user_indices', [])
         wf_user_indices = d.get('wf_user_indices', [])
         ssl = d.get('ssl', False)
-        ssl_ca_certs = d.get('ssl_ca_certs', None)
+        ssl_ca_certs = d.get('ssl_ca_certs', d.get('ssl_ca_file', None))  # ssl_ca_file was the old notation for FWS < 1.5.5
         ssl_certfile = d.get('ssl_certfile', None)
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
