@@ -1261,8 +1261,8 @@ class LaunchPad(FWSerializable):
         # sort the FWs by id, then the new FW_ids will match the order of the old ones...
         fws.sort(key=lambda x: x.fw_id)
 
-        used_ids = []
         if reassign_all:
+            used_ids = []
             # we can request multiple fw_ids up front
             # this is the FIRST fw_id we should use
             first_new_id = self.get_new_fw_id(quantity=len(fws))
@@ -1280,7 +1280,6 @@ class LaunchPad(FWSerializable):
                     new_id = self.get_new_fw_id()
                     old_new[fw.fw_id] = new_id
                     fw.fw_id = new_id
-                    used_ids.append(new_id)
 
                 self.fireworks.find_one_and_replace({'fw_id': fw.fw_id},
                                                     fw.to_db_dict(),
