@@ -19,6 +19,8 @@ import os
 
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 
+def afunc(y, z, a): return [pow(x, y, z) for x in a]
+
 class ScriptTaskTest(unittest.TestCase):
 
     def test_scripttask(self):
@@ -56,6 +58,56 @@ class PyTaskTest(unittest.TestCase):
         self.assertEqual(a.stored_data["data"], 9)
         p = PyTask(func="print", args=[3])
         p.run_task({})
+
+    def test_task_data_flow(self):
+        params = {'func': 'pow', 'inputs': ['arg', 'power', 'modulo'],
+                   'stored_data_varname': 'data'}
+        spec = {'arg': 2, 'power': 3, 'modulo': None}
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.stored_data['data'], 8)
+
+        params['outputs']= ['result']
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.stored_data['data'], 8)
+        self.assertEqual(a.update_spec['result'], 8)
+
+        params['chunk_number'] = 0
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.stored_data['data'], 8)
+        self.assertEqual(a.mod_spec[0]['_push']['result'], 8)
+
+        params['args'] = [2, 3]
+        params['inputs'] = ['modulo']
+        spec = {'modulo': 3}
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.stored_data['data'], 2)
+        self.assertEqual(a.mod_spec[0]['_push']['result'], 2)
+
+        params['func'] = afunc.__module__ + '.' + afunc.__name__
+        params['args'] = [3, 3]
+        params['inputs'] = ['array']
+        spec = {'array': [1, 2]}
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.stored_data['data'], [1, 2])
+        self.assertEqual(a.mod_spec[0]['_push']['result'], 1)
+        self.assertEqual(a.mod_spec[1]['_push']['result'], 2)
+
+        del(params['chunk_number'])
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.update_spec['result'][0], 1)
+        self.assertEqual(a.update_spec['result'][1], 2)
+
+        params['outputs'] = ['first', 'second']
+        p = PyTask(**params)
+        a = p.run_task(spec)
+        self.assertEqual(a.update_spec['first'], 1)
+        self.assertEqual(a.update_spec['second'], 2)
 
 
 if __name__ == '__main__':
