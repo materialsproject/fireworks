@@ -1221,12 +1221,16 @@ class LaunchPad(FWSerializable):
                                  {'$set': {'state_history': m_launch.to_db_dict()['state_history'],
                                            'trackers': [t.to_dict() for t in m_launch.trackers]}})
 
-    def get_new_fw_id(self):
+    def get_new_fw_id(self, quantity=1):
         """
         Checkout the next Firework id
+
+        Args:
+            quantity (int): optionally ask for many ids, otherwise defaults to 1
+                            this then returns the *first* fw_id in that range
         """
         try:
-            return self.fw_id_assigner.find_one_and_update({}, {'$inc': {'next_fw_id': 1}})['next_fw_id']
+            return self.fw_id_assigner.find_one_and_update({}, {'$inc': {'next_fw_id': quantity}})['next_fw_id']
         except:
             raise ValueError("Could not get next FW id! If you have not yet initialized the database,"
                              " please do so by performing a database reset (e.g., lpad reset)")
@@ -1256,12 +1260,32 @@ class LaunchPad(FWSerializable):
         old_new = {}
         # sort the FWs by id, then the new FW_ids will match the order of the old ones...
         fws.sort(key=lambda x: x.fw_id)
-        for fw in fws:
-            if fw.fw_id < 0 or reassign_all:
-                new_id = self.get_new_fw_id()
+
+        used_ids = []
+        if reassign_all:
+            # we can request multiple fw_ids up front
+            # this is the FIRST fw_id we should use
+            first_new_id = self.get_new_fw_id(quantity=len(fws))
+
+            for new_id, fw  in enumerate(fws, start=first_new_id):
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
-            self.fireworks.find_one_and_replace({'fw_id': fw.fw_id}, fw.to_db_dict(), upsert=True)
+                used_ids.append(new_id)
+            # delete/add in bulk
+            self.fireworks.delete_many({'fw_id': {'$in': used_ids}})
+            self.fireworks.insert_many((fw.to_db_dict() for fw in fws))
+        else:
+            for fw in fws:
+                if fw.fw_id < 0:
+                    new_id = self.get_new_fw_id()
+                    old_new[fw.fw_id] = new_id
+                    fw.fw_id = new_id
+                    used_ids.append(new_id)
+
+                self.fireworks.find_one_and_replace({'fw_id': fw.fw_id},
+                                                    fw.to_db_dict(),
+                                                    upsert=True)
+
         return old_new
 
     def rerun_fw(self, fw_id, rerun_duplicates=True, recover_launch=None, recover_mode=None):
