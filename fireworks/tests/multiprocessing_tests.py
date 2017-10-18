@@ -21,14 +21,6 @@ TESTDB_NAME = 'job_packing_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class TestLinks(TestCase):
-    def test_pickle(self):
-        links1 = Workflow.Links({1: 2, 3: [5, 7, 8]})
-        s = pickle.dumps(links1)
-        links2 = pickle.loads(s)
-        self.assertEqual(str(links1), str(links2))
-
-
 class TestCheckoutFW(TestCase):
     lp = None
 
