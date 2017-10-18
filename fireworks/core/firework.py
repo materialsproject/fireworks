@@ -624,7 +624,23 @@ class Workflow(FWSerializable):
             for child in val:
                 self._parent_links.setdefault(child, []).append(key)
             # Finally add to "real" dict
-            super(Workflow.Links, self).__setitem__(int(key), val)
+            super(Workflow.Links, self).__setitem__(key, val)
+
+        def __delitem__(self, key):
+            key = int(key)
+            # must delete reverse key
+            vals = self[key]
+            for val in vals:
+                parents = self._parent_links[val]
+                parents.remove(key)
+                if not parents:
+                    # if there are no more parents, remove the entry entirely
+                    del self._parent_links[val]
+                else:
+                    # else set to the now reduced list
+                    self._parent_links[val] = parents
+
+            super(Workflow.Links, self).__delitem__(key)
 
         @property
         def nodes(self):

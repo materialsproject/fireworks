@@ -60,6 +60,13 @@ class TestLinks(TestCase):
         del self.links[4]
         self.assertEqual(self.links.nodes, [1, 2, 3, 5, 7, 8])
 
+    def test_delitems_parents(self):
+        # check that parent_links get updated when other entries are deleted
+        del self.links[4]
+
+        self.assertEqual(self.links.parent_links,
+                         {2: [1], 5: [3], 7: [3], 8: [3]})
+
     def test_items(self):
         self.assertEqual(list(self.links.items()),
                          [(1, [2]),
