@@ -708,6 +708,7 @@ class Workflow(FWSerializable):
         name = name or 'unnamed WF'  # prevent None names
 
         links_dict = links_dict if links_dict else {}
+        self.links = Workflow.Links(links_dict)
 
         # main dict containing mapping of an id to a Firework object
         self.id_fw = {}
@@ -716,10 +717,8 @@ class Workflow(FWSerializable):
                 raise ValueError('FW ids must be unique!')
             self.id_fw[fw.fw_id] = fw
 
-            if fw.fw_id not in links_dict and fw not in links_dict:
-                links_dict[fw.fw_id] = []
-
-        self.links = Workflow.Links(links_dict)
+            if fw.fw_id not in self.links:
+                self.links[fw.fw_id] = []
 
         # add depends on
         for fw in fireworks:
