@@ -14,9 +14,12 @@ from fireworks.user_objects.firetasks.dataflow_tasks import JoinDictTask
 from fireworks.user_objects.firetasks.dataflow_tasks import JoinListTask
 from fireworks.user_objects.firetasks.dataflow_tasks import ImportDataTask
 
-def afunc(a, y): return [pow(x, y) for x in a]
+def afunc(array, power):
+    """ return the powers of a list of numbers """
+    return [pow(number, power) for number in array]
 
 class CommandLineTaskTest(unittest.TestCase):
+    """ run tests for CimmandLineTask """
 
     def test_command_line_task_1(self):
         """ input from string to stdin, output from stdout to string """
@@ -66,8 +69,8 @@ class CommandLineTaskTest(unittest.TestCase):
         action = CommandLineTask(**params).run_task(spec)
         filename = action.update_spec['output file']['value']
         self.assertTrue(os.path.exists(filename))
-        with open(filename, 'r') as fp:
-            self.assertEqual(fp.read().strip(), 'Hello world!')
+        with open(filename, 'r') as fptr:
+            self.assertEqual(fptr.read().strip(), 'Hello world!')
 
         params = {
             'command_spec': {
@@ -97,8 +100,8 @@ class CommandLineTaskTest(unittest.TestCase):
         self.assertEqual(output_string, 'Hello world!')
         output_file = action.update_spec['output file']['value']
         self.assertTrue(os.path.exists(output_file))
-        with open(output_file, 'r') as fp:
-            self.assertEqual(fp.read().strip(), 'Hello world!')
+        with open(output_file, 'r') as fptr:
+            self.assertEqual(fptr.read().strip(), 'Hello world!')
         os.remove(filename)
         os.remove(output_file)
 
@@ -210,6 +213,7 @@ class CommandLineTaskTest(unittest.TestCase):
 
 
 class ForeachTaskTest(unittest.TestCase):
+    """ run tests for ForeachTask """
 
     def test_foreach_pytask(self):
         """ run PyTask for a list of numbers """
@@ -235,8 +239,8 @@ class ForeachTaskTest(unittest.TestCase):
     def test_foreach_commandlinetask(self):
         """ run CommandLineTask for a list of input data """
         inputs = ['black', 'white', 2.5, 17]
-        wl = [{'source': {'type': 'data', 'value': s}} for s in inputs]
-        spec = {'work list': wl}
+        worklist = [{'source': {'type': 'data', 'value': s}} for s in inputs]
+        spec = {'work list': worklist}
         task = {
             '_fw_name': 'CommandLineTask',
             'command_spec': {
@@ -257,8 +261,8 @@ class ForeachTaskTest(unittest.TestCase):
             action = detour.tasks[0].run_task(detour.spec)
             ofile = action.mod_spec[0]['_push']['file set']['value']
             self.assertTrue(os.path.exists(ofile))
-            with open(ofile, 'r') as fp:
-                outputs.append(fp.read().strip())
+            with open(ofile, 'r') as fptr:
+                outputs.append(fptr.read().strip())
             os.remove(ofile)
         ref_str = ' '.join(str(inp) for inp in inputs)
         out_str = ' '.join(str(out) for out in outputs)
@@ -266,6 +270,7 @@ class ForeachTaskTest(unittest.TestCase):
 
 
 class JoinDictTaskTest(unittest.TestCase):
+    """ run tests for JoinDictTask """
 
     def test_join_dict_task(self):
         """ joins dictionaries into a new or existing dict in spec """
@@ -297,6 +302,7 @@ class JoinDictTaskTest(unittest.TestCase):
 
 
 class JoinListTaskTest(unittest.TestCase):
+    """ run tests for JoinListTask """
 
     def test_join_list_task(self):
         """ joins items into a new or existing list in spec """
@@ -325,10 +331,12 @@ class JoinListTaskTest(unittest.TestCase):
 
 
 class ImportDataTaskTest(unittest.TestCase):
+    """ run tests for ImportDataTask """
 
     def test_import_data_task(self):
         """ loads data from a file into spec """
-        import json, yaml
+        import json
+        import yaml
         temperature = {'value': 273.15, 'units': 'Kelvin'}
         spec = {'state parameters': {}}
         formats = {'json': json, 'yaml': yaml}
@@ -336,8 +344,8 @@ class ImportDataTaskTest(unittest.TestCase):
         for fmt in formats:
             filename = str(uuid.uuid4()) + '.' + fmt
             params['filename'] = filename
-            with open(filename, 'w') as fp:
-                formats[fmt].dump(temperature, fp)
+            with open(filename, 'w') as fptr:
+                formats[fmt].dump(temperature, fptr)
             action = ImportDataTask(**params).run_task(spec)
             root = action.update_spec['state parameters']
             self.assertTrue('temperature' in root)

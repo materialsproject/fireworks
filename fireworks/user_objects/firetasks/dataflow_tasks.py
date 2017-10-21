@@ -89,10 +89,10 @@ class CommandLineTask(FireTaskBase):
         outputs = []
         for ios, labels in zip([inputs, outputs], [ilabels, olabels]):
             # cmd_spec: {label: {{binding: {}}, {source: {}}, {target: {}}}}
-            for l in labels:
-                if isinstance(cmd_spec[l], basestring):
+            for label in labels:
+                if isinstance(cmd_spec[label], basestring):
                     inp = []
-                    for item in fw_spec[cmd_spec[l]]:
+                    for item in fw_spec[cmd_spec[label]]:
                         if 'source' in item:
                             inp.append(item)
                         else:
@@ -100,8 +100,8 @@ class CommandLineTask(FireTaskBase):
                 else:
                     inp = {}
                     for key in ['binding', 'source', 'target']:
-                        if key in cmd_spec[l]:
-                            item = cmd_spec[l][key]
+                        if key in cmd_spec[label]:
+                            item = cmd_spec[label][key]
                             if isinstance(item, basestring):
                                 inp[key] = fw_spec[item]
                             elif isinstance(item, dict):
@@ -118,17 +118,17 @@ class CommandLineTask(FireTaskBase):
                 mod_spec = []
                 if len(olabels) > 1:
                     assert len(olabels) == len(outlist)
-                    for ol, out in zip(olabels, outlist):
+                    for olab, out in zip(olabels, outlist):
                         for item in out:
-                            mod_spec.append({'_push': {ol: item}})
+                            mod_spec.append({'_push': {olab: item}})
                 else:
                     for out in outlist:
                         mod_spec.append({'_push': {olabels[0]: out}})
                 return FWAction(mod_spec=mod_spec)
             else:
                 output_dict = {}
-                for ol, out in zip(olabels, outlist):
-                    output_dict[ol] = out
+                for olab, out in zip(olabels, outlist):
+                    output_dict[olab] = out
                 return FWAction(update_spec=output_dict)
         else:
             return FWAction()
@@ -153,7 +153,7 @@ class CommandLineTask(FireTaskBase):
                              or 'stdin' or 'stdout' or 'stderr' or None
                     'value': str
                 }
-            If outputs is None then an empty list is returned.
+              If outputs is None then an empty list is returned.
         """
         import os
         import uuid
@@ -239,9 +239,9 @@ class CommandLineTask(FireTaskBase):
                 if len(argstr) > 0:
                     arglist.append(argstr)
 
-        p = Popen(arglist, stdin=stdin, stderr=stderr, stdout=stdout)
-        res = p.communicate(input=stdininp)
-        if p.returncode != 0:
+        proc = Popen(arglist, stdin=stdin, stderr=stderr, stdout=stdout)
+        res = proc.communicate(input=stdininp)
+        if proc.returncode != 0:
             err = res[1] if len(res) > 1 else ''
             raise RuntimeError(err)
 
@@ -265,15 +265,15 @@ class ForeachTask(FireTaskBase):
     """
     This firetask branches the workflow creating parallel fireworks
     using FWAction: one firework for each element or each chunk from the
-    *split* list. Each firework in this generated list contains the Firetask
+    *split* list. Each firework in this generated list contains the firetask
     specified in the *task* dictionary. If the number of chunks is specified
     the *split* list will be divided into this number of chunks and each
-    chunk will be processed by one of the generated child Fireworks.
+    chunk will be processed by one of the generated child fireworks.
 
     Required params:
         - task (dict): a dictionary version of the firetask
         - split (str): a label of an input list; it must be available both in
-          the *inputs* list of the specified task and in the Firework **spec**.
+          the *inputs* list of the specified task and in the spec.
 
     Optional params:
         - number of chunks (int): if provided the *split* input list will be
@@ -316,27 +316,28 @@ class ForeachTask(FireTaskBase):
 
 
 class JoinDictTask(FireTaskBase):
-    """
-    This firetask combines specified spec fields into a new dictionary.
-    """
+    """ combines specified spec fields into a dictionary """
     _fw_name = 'JoinDictTask'
     required_params = ['inputs', 'output']
     optional_params = ['rename']
 
     def run_task(self, fw_spec):
-
-        if not isinstance(self['output'], basestring):
-            raise TypeError('"output" must be a single string item')
+        assert isinstance(self['output'], basestring)
+        assert isinstance(self['inputs'], list)
 
         if self['output'] not in fw_spec:
             output = {}
-        elif isinstance(fw_spec[self['output']], dict):
-            output = fw_spec[self['output']]
         else:
-            raise TypeError('"output" exists but is not a dictionary')
+            assert isinstance(fw_spec[self['output']], dict)
+            output = fw_spec[self['output']]
 
+        if self.get('rename'):
+            assert isinstance(self.get('rename'), dict)
+            rename = self.get('rename')
+        else:
+            rename = {}
         for item in self['inputs']:
-            if self.get('rename') and item in self['rename']:
+            if item in rename:
                 output[self['rename'][item]] = fw_spec[item]
             else:
                 output[item] = fw_spec[item]
@@ -345,22 +346,18 @@ class JoinDictTask(FireTaskBase):
 
 
 class JoinListTask(FireTaskBase):
-    """
-    This firetask combines specified **spec*** fields into a new list.
-    """
+    """ combines specified spec fields into a list. """
     _fw_name = 'JoinListTask'
     required_params = ['inputs', 'output']
 
     def run_task(self, fw_spec):
-
-        if not isinstance(self['output'], basestring):
-            raise TypeError('"output" must be a single string item')
+        assert isinstance(self['output'], basestring)
+        assert isinstance(self['inputs'], list)
         if self['output'] not in fw_spec:
             output = []
-        elif isinstance(fw_spec[self['output']], list):
-            output = fw_spec[self['output']]
         else:
-            raise TypeError('"output" exists but is not a list')
+            assert isinstance(fw_spec[self['output']], list)
+            output = fw_spec[self['output']]
 
         for item in self['inputs']:
             output.append(fw_spec[item])
@@ -383,6 +380,7 @@ class ImportDataTask(FireTaskBase):
         from functools import reduce
         import operator
         import json
+        import yaml
 
         filename = self['filename']
         mapstring = self['mapstring']
@@ -390,8 +388,10 @@ class ImportDataTask(FireTaskBase):
         assert isinstance(mapstring, basestring)
         maplist = mapstring.split('/')
 
+        fmt = filename.split('.')[-1]
+        assert fmt in ['json', 'yaml']
         with open(filename, 'r') as inp:
-            data = json.load(inp)
+            data = json.load(inp) if fmt == 'json' else yaml.load(inp)
 
         leaf = reduce(operator.getitem, maplist[:-1], fw_spec)
         if isinstance(data, dict):
