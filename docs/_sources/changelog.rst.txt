@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.5.7**
+
+* Improve performance of workflow add to DB for large workflows (R. Gowers)
+
 **v1.5.5**
 
 * Better handling of SSL certs (I. Kondov)

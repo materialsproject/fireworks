@@ -1,5 +1,5 @@
-fireworks.user_objects.queue_adapters package
-=============================================
+fireworks\.user\_objects\.queue\_adapters package
+=================================================
 
 Subpackages
 -----------
@@ -11,16 +11,16 @@ Subpackages
 Submodules
 ----------
 
-fireworks.user_objects.queue_adapters.common_adapter module
------------------------------------------------------------
+fireworks\.user\_objects\.queue\_adapters\.common\_adapter module
+-----------------------------------------------------------------
 
 .. automodule:: fireworks.user_objects.queue_adapters.common_adapter
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.user_objects.queue_adapters.pbs_newt_adapter module
--------------------------------------------------------------
+fireworks\.user\_objects\.queue\_adapters\.pbs\_newt\_adapter module
+--------------------------------------------------------------------
 
 .. automodule:: fireworks.user_objects.queue_adapters.pbs_newt_adapter
     :members:
