@@ -4,6 +4,14 @@ fireworks\.user\_objects\.firetasks\.tests package
 Submodules
 ----------
 
+fireworks\.user\_objects\.firetasks\.tests\.test\_dataflow\_tasks module
+------------------------------------------------------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.tests.test_dataflow_tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks\.user\_objects\.firetasks\.tests\.test\_fileio\_tasks module
 ----------------------------------------------------------------------
 

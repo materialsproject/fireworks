@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v1.5.9**
+
+* Py2 bugfix
+
+**v1.5.8**
+
+* New data flow built-in Firetasks (I. Kondov)
+
 **v1.5.7**
 
 * Improve performance of workflow add to DB for large workflows (R. Gowers)

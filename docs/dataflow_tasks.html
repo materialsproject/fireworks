@@ -1,0 +1,421 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Using the dataflow Firetasks &#8212; FireWorks 1.5.9 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.5.9',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Controlling the directory and Worker of execution" href="controlworker.html" />
+    <link rel="prev" title="Using the built-in FilePad Tasks" href="filepad_tasks.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="controlworker.html" title="Controlling the directory and Worker of execution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.9 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-the-dataflow-firetasks">
+<h1>Using the dataflow Firetasks<a class="headerlink" href="#using-the-dataflow-firetasks" title="Permalink to this headline">¶</a></h1>
+<p>This group includes custom Firetasks to manage dataflow between Fireworks. The
+input data and output data are stored in the Firework <strong>spec</strong> and passed to the
+subsequent Firetasks and Fireworks via <em>FWAction</em> objects. The module includes:</p>
+<ul class="simple">
+<li>CommandLineTask</li>
+<li>ForeachTask</li>
+<li>JoinDictTask</li>
+<li>JoinListTask</li>
+<li>ImportDataTask</li>
+</ul>
+<p>To use a Python function in a dataflow context, see e.g. <a class="reference internal" href="pytask.html"><span class="doc">PyTask</span></a>.</p>
+<div class="section" id="commandlinetask">
+<h2>CommandLineTask<a class="headerlink" href="#commandlinetask" title="Permalink to this headline">¶</a></h2>
+<p>The CommandLineTask provides methods to handle commands in a shell with
+command line options, manage the inputs and outputs of commands and receive
+file metadata from parent Fireworks and pass file metadata to child Fireworks.</p>
+<div class="section" id="required-parameters">
+<h3>Required parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first"><strong>command_spec</strong> <em>(dict)</em>: a dictionary specification of the command.
+It has the following structure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">command_spec</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">list</span><span class="p">),</span> <span class="c1"># mandatory, list of strings</span>
+    <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">(</span><span class="nb">dict</span><span class="p">),</span> <span class="c1"># optional</span>
+    <span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="p">(</span><span class="nb">dict</span><span class="p">),</span> <span class="c1"># optional</span>
+    <span class="c1"># ...</span>
+    <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">(</span><span class="nb">dict</span><span class="p">),</span> <span class="c1"># optional</span>
+    <span class="n">outputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="p">(</span><span class="nb">dict</span><span class="p">),</span> <span class="c1"># optional</span>
+    <span class="c1"># ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When a <code class="docutils literal"><span class="pre">str</span></code> is found instead of <code class="docutils literal"><span class="pre">dict</span></code> for some input or output key, for example <code class="docutils literal"><span class="pre">inputs[1]:</span> <span class="pre">'string'</span></code>, then <code class="docutils literal"><span class="pre">'string'</span></code> is automatically replaced with <code class="docutils literal"><span class="pre">{spec['string']}</span></code>.</p>
+</div>
+<p>The <code class="docutils literal"><span class="pre">command</span></code> key is a representation of the command as to be used with the
+<em>Subprocess</em> package. The optional keys <code class="docutils literal"><span class="pre">inputs[0]</span></code>, <code class="docutils literal"><span class="pre">inputs[1]</span></code>, …,
+<code class="docutils literal"><span class="pre">outputs[0]</span></code>, <code class="docutils literal"><span class="pre">outputs[0]</span></code>, …, are
+the actual keys specified in <code class="docutils literal"><span class="pre">inputs</span></code> and <code class="docutils literal"><span class="pre">outputs</span></code>.
+The dictionaries <code class="docutils literal"><span class="pre">dict1</span></code>, <code class="docutils literal"><span class="pre">dict2</span></code>, etc. have the following schema:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;binding&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="kc">None</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;path&#39;</span> <span class="ow">or</span> <span class="s1">&#39;data&#39;</span> <span class="ow">or</span> <span class="s1">&#39;identifier&#39;</span>
+                 <span class="ow">or</span> <span class="s1">&#39;stdin&#39;</span> <span class="ow">or</span> <span class="s1">&#39;stdout&#39;</span> <span class="ow">or</span> <span class="s1">&#39;stderr&#39;</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;path&#39;</span> <span class="ow">or</span> <span class="s1">&#39;data&#39;</span> <span class="ow">or</span> <span class="s1">&#39;identifier&#39;</span>
+                 <span class="ow">or</span> <span class="s1">&#39;stdin&#39;</span> <span class="ow">or</span> <span class="s1">&#39;stdout&#39;</span> <span class="ow">or</span> <span class="s1">&#39;stderr&#39;</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the <code class="docutils literal"><span class="pre">type</span></code> in the <code class="docutils literal"><span class="pre">source</span></code> field is <code class="docutils literal"><span class="pre">data</span></code> then <code class="docutils literal"><span class="pre">value</span></code> can be of types <code class="docutils literal"><span class="pre">str</span></code>, <code class="docutils literal"><span class="pre">int</span></code> and <code class="docutils literal"><span class="pre">float</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When a <code class="docutils literal"><span class="pre">str</span></code> is found instead of <code class="docutils literal"><span class="pre">dict</span></code> for some <code class="docutils literal"><span class="pre">source</span></code>, for example <code class="docutils literal"><span class="pre">{'source':</span> <span class="pre">'string'}</span></code>, then <code class="docutils literal"><span class="pre">string</span></code> is replaced with <code class="docutils literal"><span class="pre">spec['string']</span></code>.</p>
+</div>
+</div>
+<div class="section" id="optional-parameters">
+<h3>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>inputs</strong> <em>(list)</em>: a list of keys, one for each input argument;
+default is empty.</li>
+<li><strong>outputs</strong> <em>(list)</em>: a list of keys, one for each output argument;
+default is empty.</li>
+<li><strong>chunk_number</strong> <em>(int)</em>: the serial number of the Firetask when it is part
+of a parallel group generated by a ForeachTask; default is <code class="docutils literal"><span class="pre">None</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>The following workflow executes the command <code class="docutils literal"><span class="pre">echo</span> <span class="pre">-n</span> <span class="pre">Hello</span> <span class="pre">world!</span></code> in the
+command line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>fws:
+- fw_id: 1
+  name: Run a command and store the result
+  spec:
+    _tasks:
+    - _fw_name: CommandLineTask
+      command_spec:
+        command: [echo, -n]
+        input string: {source: input string}
+        output file:
+          source: {type: stdout}
+          target: {type: path, value: /tmp}
+      inputs: [input string]
+      outputs: [output file]
+    input string: {type: data, value: Hello world!}
+links: {}
+metadata: {}
+</pre></div>
+</div>
+<p>The STDOUT output is collected and stored in a new file under <code class="docutils literal"><span class="pre">/tmp</span></code>. The
+full path of the file is stored in <strong>spec</strong> of the current Firework and all
+child Fireworks with key <code class="docutils literal"><span class="pre">output</span> <span class="pre">file</span></code>.</p>
+</div>
+</div>
+<div class="section" id="foreachtask">
+<h2>ForeachTask<a class="headerlink" href="#foreachtask" title="Permalink to this headline">¶</a></h2>
+<p>The purpose of ForeachTask is to dynamically branch the workflow between
+this Firework and its children by inserting a parallel section of child
+Fireworks. The number of the spawned parallel Fireworks is determined by the
+length of the list specified by the <code class="docutils literal"><span class="pre">split</span></code> parameter or the optional
+<code class="docutils literal"><span class="pre">number</span> <span class="pre">of</span> <span class="pre">chunks</span></code> parameter. Each child Firework contains a Firetask (of
+classes PyTask, CommandLineTask or any Firetask with <code class="docutils literal"><span class="pre">inputs</span></code> parameter)
+which processes one element (or one chunk) from this list. The output is passed
+to the <strong>spec</strong> of the Firework(s) right after the detour using a push method,
+i.e. the outputs of all parallel Fireworks are collected in a list specified
+in the <code class="docutils literal"><span class="pre">outputs</span></code> argument.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the ordering of elements (or chunks) in the resulting <code class="docutils literal"><span class="pre">outputs</span></code> list can be different from that in the original list depending on the execution order of spawned Fireworks.</p>
+</div>
+<div class="section" id="id1">
+<h3>Required parameters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>task</strong> <em>(dict)</em>: a dictionary representation of the Firetask</li>
+<li><strong>split</strong> <em>(str)</em>: a key in <strong>spec</strong> which contains input data to be
+distributed over the parallel child Fireworks. This key must also be available
+both in the <code class="docutils literal"><span class="pre">inputs</span></code> parameter of the Firetask and in the <strong>spec</strong>.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>Optional parameters<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>number of chunks</strong> <em>(int)</em>: if provided, the input list, specified with
+<code class="docutils literal"><span class="pre">split</span></code> will be divided into this number of sub-lists (chunks) and each chunk
+will be processed by a separate child Firework. This parameter can be used to
+reduce the number of parallel Fireworks. Default is the length of the input
+data list specified in <code class="docutils literal"><span class="pre">split</span></code>, i.e. for each data element a child Firework
+will be created.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>The following example demonstrates the use of ForeachTask in combination with
+PyTask:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fws</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">fw_id</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">Grind</span> <span class="n">coffee</span>
+  <span class="n">spec</span><span class="p">:</span>
+    <span class="n">_tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">ForeachTask</span>
+      <span class="n">split</span><span class="p">:</span> <span class="n">coffee</span> <span class="n">beans</span>
+      <span class="n">task</span><span class="p">:</span>
+        <span class="n">_fw_name</span><span class="p">:</span> <span class="n">PyTask</span>
+        <span class="n">function</span><span class="p">:</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">printurn</span>
+        <span class="n">inputs</span><span class="p">:</span> <span class="p">[</span><span class="n">coffee</span> <span class="n">beans</span><span class="p">]</span>
+        <span class="n">outputs</span><span class="p">:</span> <span class="n">coffee</span> <span class="n">powder</span>
+    <span class="n">coffee</span> <span class="n">beans</span><span class="p">:</span> <span class="p">[</span><span class="n">arabica</span><span class="p">,</span> <span class="n">robusta</span><span class="p">,</span> <span class="n">liberica</span><span class="p">]</span>
+<span class="o">-</span> <span class="n">fw_id</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">Brew</span> <span class="n">coffee</span>
+  <span class="n">spec</span><span class="p">:</span>
+    <span class="n">_tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">ForeachTask</span>
+      <span class="n">split</span><span class="p">:</span> <span class="n">coffee</span> <span class="n">powder</span>
+      <span class="n">task</span><span class="p">:</span>
+        <span class="n">_fw_name</span><span class="p">:</span> <span class="n">PyTask</span>
+        <span class="n">function</span><span class="p">:</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">printurn</span>
+        <span class="n">inputs</span><span class="p">:</span> <span class="p">[</span><span class="n">coffee</span> <span class="n">powder</span><span class="p">,</span> <span class="n">water</span><span class="p">]</span>
+        <span class="n">outputs</span><span class="p">:</span> <span class="n">pure</span> <span class="n">coffee</span>
+    <span class="n">water</span><span class="p">:</span> <span class="n">workflowing</span> <span class="n">water</span>
+<span class="o">-</span> <span class="n">fw_id</span><span class="p">:</span> <span class="mi">3</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">Serve</span> <span class="n">coffee</span>
+  <span class="n">spec</span><span class="p">:</span>
+    <span class="n">_tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">PyTask</span>
+      <span class="n">function</span><span class="p">:</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">printurn</span>
+      <span class="n">inputs</span><span class="p">:</span> <span class="p">[</span><span class="n">pure</span> <span class="n">coffee</span><span class="p">]</span>
+<span class="n">links</span><span class="p">:</span>
+  <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+  <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">metadata</span><span class="p">:</span> <span class="p">{}</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Workflow</span> <span class="k">for</span> <span class="n">many</span> <span class="n">sorts</span> <span class="n">of</span> <span class="n">coffee</span>
+</pre></div>
+</div>
+<p>In this example the function <code class="docutils literal"><span class="pre">auxiliary.printurn</span></code> prints and returns all
+its arguments:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printurn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>The module <code class="docutils literal"><span class="pre">auxiliary</span></code>, i.e. the file <code class="docutils literal"><span class="pre">auxiliary.py</span></code> must be in
+<code class="docutils literal"><span class="pre">$PYTHONPATH</span></code>.</p>
+</div>
+</div>
+<div class="section" id="joindicttask">
+<h2>JoinDictTask<a class="headerlink" href="#joindicttask" title="Permalink to this headline">¶</a></h2>
+<p>This Firetask combines the specified items from <strong>spec</strong> into a new or existing dictionary in <strong>spec</strong>.</p>
+<div class="section" id="id4">
+<h3>Required parameters<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>inputs</strong> <em>(list)</em>: a list of <strong>spec</strong> keys</li>
+<li><strong>output</strong> <em>(str)</em>: a <strong>spec</strong> key under which the joined items will be stored</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>Optional parameters<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>rename</strong> <em>(dict)</em>: a dictionary with key translations for keys, specified
+in <code class="docutils literal"><span class="pre">inputs</span></code>, e.g. <code class="docutils literal"><span class="pre">{'old</span> <span class="pre">name</span> <span class="pre">1':</span> <span class="pre">'new</span> <span class="pre">name</span> <span class="pre">1',</span> <span class="pre">'old</span> <span class="pre">name</span> <span class="pre">2':</span> <span class="pre">'new</span> <span class="pre">name</span> <span class="pre">2'}</span></code></li>
+</ul>
+</div>
+</div>
+<div class="section" id="joinlisttask">
+<h2>JoinListTask<a class="headerlink" href="#joinlisttask" title="Permalink to this headline">¶</a></h2>
+<p>This Firetask combines the items specified by <strong>spec</strong> keys into a new or existing list in <strong>spec</strong>.</p>
+<div class="section" id="id6">
+<h3>Required parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>inputs</strong> <em>(list)</em>: a list of <strong>spec</strong> keys</li>
+<li><strong>output</strong> <em>(str)</em>: a <strong>spec</strong> key under which the joined items will be stored</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>Optional parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>None.</p>
+</div>
+</div>
+<div class="section" id="importdatatask">
+<h2>ImportDataTask<a class="headerlink" href="#importdatatask" title="Permalink to this headline">¶</a></h2>
+<p>This Firetask updates a dictionary in <strong>spec</strong> with JSON/YAML data from file in a
+nested dictionary specified by a map string (see below).</p>
+<div class="section" id="id8">
+<h3>Required parameters<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>filename</strong> <em>(str)</em>: a filename from which the data is imported. The name
+must end with either <code class="docutils literal"><span class="pre">.json</span></code> or <code class="docutils literal"><span class="pre">.yaml</span></code>.</li>
+<li><strong>mapstring</strong> <em>(str)</em>: a map string in the format <code class="docutils literal"><span class="pre">maplist[0]/maplist[1]/...</span></code>.
+At least <code class="docutils literal"><span class="pre">maplist[0]</span></code> has to be defined because this is the key in <strong>spec</strong>
+to be used for the import. Every further nesting can be specified by extending
+the mapstring, for example if <code class="docutils literal"><span class="pre">mapstring</span></code> is <code class="docutils literal"><span class="pre">maplist[0]/maplist[1]</span></code> then
+the data will be imported as <code class="docutils literal"><span class="pre">spec[maplist[0]][maplist[1]]</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h3>Optional parameters<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>None.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using the dataflow Firetasks</a><ul>
+<li><a class="reference internal" href="#commandlinetask">CommandLineTask</a><ul>
+<li><a class="reference internal" href="#required-parameters">Required parameters</a></li>
+<li><a class="reference internal" href="#optional-parameters">Optional parameters</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#foreachtask">ForeachTask</a><ul>
+<li><a class="reference internal" href="#id1">Required parameters</a></li>
+<li><a class="reference internal" href="#id2">Optional parameters</a></li>
+<li><a class="reference internal" href="#id3">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#joindicttask">JoinDictTask</a><ul>
+<li><a class="reference internal" href="#id4">Required parameters</a></li>
+<li><a class="reference internal" href="#id5">Optional parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#joinlisttask">JoinListTask</a><ul>
+<li><a class="reference internal" href="#id6">Required parameters</a></li>
+<li><a class="reference internal" href="#id7">Optional parameters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#importdatatask">ImportDataTask</a><ul>
+<li><a class="reference internal" href="#id8">Required parameters</a></li>
+<li><a class="reference internal" href="#id9">Optional parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filepad_tasks.html"
+                        title="previous chapter">Using the built-in FilePad Tasks</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="controlworker.html"
+                        title="next chapter">Controlling the directory and Worker of execution</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/dataflow_tasks.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="controlworker.html" title="Controlling the directory and Worker of execution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.5.9 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>
