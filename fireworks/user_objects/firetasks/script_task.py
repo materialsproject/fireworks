@@ -169,9 +169,9 @@ class PyTask(FiretaskBase):
             # Handle built in functions.
             func = getattr(builtins, toks[0])
 
-        args = self.get('args', []).copy()
+        args = list(self.get('args', []))  # defensive copy
 
-        inputs = self.get('inputs', []).copy()
+        inputs = self.get('inputs', [])
         assert isinstance(inputs, list)
         for item in inputs:
             args.append(fw_spec[item])
@@ -182,7 +182,7 @@ class PyTask(FiretaskBase):
                               or k in self.required_params
                               or k in self.optional_params)}
         else:
-            kwargs = self.get('kwargs', {}).copy()
+            kwargs = self.get('kwargs', {})
 
         output = func(*args, **kwargs)
 
