@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+fireworks\.user\_objects\.firetasks\.dataflow\_tasks module
+-----------------------------------------------------------
+
+.. automodule:: fireworks.user_objects.firetasks.dataflow_tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks\.user\_objects\.firetasks\.fileio\_tasks module
 ---------------------------------------------------------
 

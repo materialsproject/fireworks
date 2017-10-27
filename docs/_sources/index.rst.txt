@@ -194,6 +194,7 @@ The built-in Firetasks
     fileiotasks
     pytask
     filepad_tasks
+    dataflow_tasks
 
 Misc
 ----
