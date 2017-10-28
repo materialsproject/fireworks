@@ -605,7 +605,7 @@ class LaunchPad(FWSerializable):
             # check first to see if any are READY
             return True
         else:
-            # grab all [RUNNING/RESERVED] fireworks
+            # retrieve all [RUNNING/RESERVED] fireworks
             q = fworker.query if fworker else {}
             q.update({'state': {'$in': ['RUNNING', 'RESERVED']}})
             active = self.get_fw_ids(q)
@@ -1617,7 +1617,7 @@ class LaunchPad(FWSerializable):
 
 class LazyFirework(object):
     """
-    A LazyFirework only has the fw_id, and grabs other data just-in-time.
+    A LazyFirework only has the fw_id, and retrieves other data just-in-time.
     This representation can speed up Workflow loading as only "important" FWs need to be
     fully loaded.
     """

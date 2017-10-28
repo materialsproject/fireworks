@@ -34,7 +34,7 @@ def handle_interrupt(signum, frame):
 
 def rlaunch():
 
-    m_description = 'This program launches one or more Rockets. A Rocket grabs a job from the ' \
+    m_description = 'This program launches one or more Rockets. A Rocket retrieves a job from the ' \
                     'central database and runs it. The "single-shot" option launches a single Rocket, ' \
                     'whereas the "rapidfire" option loops until all FireWorks are completed.'
 
