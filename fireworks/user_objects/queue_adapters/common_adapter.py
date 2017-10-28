@@ -200,7 +200,7 @@ class CommonAdapter(QueueAdapterBase):
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
 
-            # grab the returncode. PBS returns 0 if the job was successful
+            # retrieve the returncode. PBS returns 0 if the job was successful
             if p.returncode == 0:
                 try:
                     job_id = self._parse_jobid(p.stdout.read().decode())
