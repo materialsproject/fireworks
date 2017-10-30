@@ -1,4 +1,5 @@
 """ Unit tests for the dataflow tasks """
+from unittest import SkipTest
 
 __author__ = 'Ivan Kondov'
 __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
@@ -109,8 +110,7 @@ class CommandLineTaskTest(unittest.TestCase):
         """ input from string to data with command line options """
         import platform
         if platform.system() != 'Linux':
-            # currently not available on Windows and Darwin platforms
-            return
+            raise SkipTest("Command line test skipped for non-Linux platform")
         spec = {}
         params = {
             'command_spec': {
