@@ -105,15 +105,12 @@ class CommandLineTaskTest(unittest.TestCase):
         os.remove(filename)
         os.remove(output_file)
 
-    """
-    Oct 27, 2017: Commented out this unit test because it seems to depend on some kind of Unix data format.
-    On a Mac it yields the following error:
-    RuntimeError: b'date: illegal option -- -\nusage: date [-jnRu] [-d dst] [-r seconds] [-t west] [-v[+|-]val[ymwdHMS]] ... \n            [-f fmt date | [[[mm]dd]HH]MM[[cc]yy][.ss]] [+format]\n'
-    -Anubhav
-    """
-    """
-    def test_command_line_task_3(self):
-        # input from string to data with command line options
+    def test_command_line_task_3(self):    
+        """ input from string to data with command line options """
+        import platform
+        if platform.system() != 'Linux':
+            # currently not available on Windows and Darwin platforms
+            return
         spec = {}
         params = {
             'command_spec': {
@@ -178,7 +175,6 @@ class CommandLineTaskTest(unittest.TestCase):
         self.assertEqual(time_stamp_1[0:10], time_stamp_2[0:10])
         self.assertEqual(time_stamp_1[11:19], time_stamp_2[11:19])
         os.remove(filename)
-    """
 
     def test_command_line_task_4(self):
         """ multiple string inputs, multiple file outputs """
