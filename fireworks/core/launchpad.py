@@ -1332,7 +1332,7 @@ class LaunchPad(FWSerializable):
             
         # If no launch recovery specified, unset the firework recovery spec
         else:
-            set_spec = {"$unset":{"spec._recover_launch":""}}
+            set_spec = {"$unset":{"spec._recovery":""}}
             self.fireworks.find_one_and_update({"fw_id":fw_id}, set_spec)
 
 
