@@ -41,7 +41,7 @@ def do_launch(args):
     if not args.queueadapter_file and os.path.exists(
             os.path.join(args.config_dir, 'my_qadapter.yaml')):
         args.queueadapter_file = os.path.join(args.config_dir, 'my_qadapter.yaml')
-    else:
+    elif not args.queueadapter_file:
         args.queueadapter_file = QUEUEADAPTER_LOC
 
     launchpad = LaunchPad.from_file(

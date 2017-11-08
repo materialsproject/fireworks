@@ -139,8 +139,12 @@ class CommonAdapter(QueueAdapterBase):
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
                 return int(output_str.split('\n')[-2].split()[0])
         if self.q_type == "LoadSharingFacility":
-            #Just count the number of lines
-            return len(output_str.split('\n'))
+            # Count the number of lines which pertian to the queue
+            cnt = 0
+            for line in output_str.split('\n'):
+                if line.endswith(self['queue']):
+                    cnt += 1
+            return cnt
         if self.q_type == "SGE":
             # want only lines that include username;
             # this will exclude e.g. header lines
