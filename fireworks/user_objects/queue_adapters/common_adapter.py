@@ -139,7 +139,7 @@ class CommonAdapter(QueueAdapterBase):
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
                 return int(output_str.split('\n')[-2].split()[0])
         if self.q_type == "LoadSharingFacility":
-            # Count the number of lines which pertian to the queue
+            # Count the number of lines which pertain to the queue
             cnt = 0
             for line in output_str.split('\n'):
                 if line.endswith(self['queue']):
