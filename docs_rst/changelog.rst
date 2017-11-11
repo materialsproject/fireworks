@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.6.0**
+
+* fixes for task-level recovery (J. Montoya)
+* LSF queueadapter takes into account job counts by queue (J. Boes)
+* some unit test improvements (I. Kondov)
+
+
 **v1.5.9**
 
 * Py2 bugfix

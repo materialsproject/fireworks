@@ -39,6 +39,7 @@ Additional contributions from:
 * Alex Ganose
 * Remi Lahe
 * Ivan Kondov
+* Jacob Boes
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh
