@@ -29,13 +29,13 @@ def do_launch(args):
     if not args.launchpad_file and os.path.exists(
             os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
-    else:
+    elif not args.launchpad_file:
         args.launchpad_file = LAUNCHPAD_LOC
 
     if not args.fworker_file and os.path.exists(
             os.path.join(args.config_dir, 'my_fworker.yaml')):
         args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
-    else:
+    elif not args.fworker_file:
         args.fworker_file = FWORKER_LOC
 
     if not args.queueadapter_file and os.path.exists(
