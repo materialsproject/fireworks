@@ -83,8 +83,8 @@ def rlaunch():
     multi_parser.add_argument('--local_redirect', help="Redirect stdout and stderr to the launch directory",
                               action="store_true")
 
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
-    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWORKER_LOC)
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file')
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file')
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file '
                                                    '(used if -l, -w unspecified)',
                         default=CONFIG_FILE_DIR)
@@ -108,9 +108,13 @@ def rlaunch():
 
     if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
+    elif not args.launchpad_file:
+        args.fworker_file = LAUNCHPAD_LOC
 
     if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
         args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
+    elif not args.fworker_file:
+        args.fworker_file = FWORKER_LOC
 
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
