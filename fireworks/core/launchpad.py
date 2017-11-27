@@ -1639,6 +1639,8 @@ class LazyFirework(object):
         self._launches = {k: False for k in self.db_launch_fields}
         self._fw, self._lids, self._state = None, None, None
 
+    def __int__(self):
+        return self.fw_id
     # FireWork methods
 
     # Treat state as special case as it is always required when accessing a Firework lazily

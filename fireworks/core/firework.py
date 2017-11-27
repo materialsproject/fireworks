@@ -223,6 +223,10 @@ class Firework(FWSerializable):
 
         self._state = state
 
+    def __int__(self):
+        # allows int(FW) to return fw_id
+        return self.fw_id
+
     @property
     def state(self):
         """
@@ -595,45 +599,60 @@ class Workflow(FWSerializable):
         """
 
         def __init__(self, *args, **kwargs):
-            super(Workflow.Links, self).__init__(*args, **kwargs)
+            # reverse mapping
+            self._parent_links = dict()
+            for mapping in args:
+                if isinstance(mapping, dict):
+                    for k, v in mapping.items():
+                        self[k] = v
+                else:
+                    # assume tuple of k: v
+                    for k, v in mapping:
+                        self[k] = v
+            for k, v in kwargs.items():
+                self[k] = v
 
-            for k, v in list(self.items()):
-                if not isinstance(v, (list, tuple)):
-                    self[k] = [v]  # v must be list
+        def __setitem__(self, key, val):
+            # Convert singular values to lists
+            if not isinstance(val, (list, tuple)):
+                val = [val]
+            # convery any Fireworks and strings to ints
+            key = int(key)
+            val = [int(v) for v in val]
 
-                self[k] = [x.fw_id if hasattr(x, "fw_id") else x for x in self[k]]
+            # Update parent_fw
+            for child in val:
+                self._parent_links.setdefault(child, []).append(key)
+            # Finally add to "real" dict
+            super(Workflow.Links, self).__setitem__(key, val)
 
-                if not isinstance(k, int):
-                    if hasattr(k, "fw_id"):  # maybe it's a String?
-                        self[k.fw_id] = self[k]
-                    else:  # maybe it's a String?
-                        try:
-                            self[int(k)] = self[k]  # k must be int
-                        except:
-                            pass  # garbage input
-                    del self[k]
+        def __delitem__(self, key):
+            key = int(key)
+            # must delete reverse key
+            vals = self[key]
+            for val in vals:
+                parents = self._parent_links[val]
+                parents.remove(key)
+                if not parents:
+                    # if there are no more parents, remove the entry entirely
+                    del self._parent_links[val]
+                else:
+                    # else set to the now reduced list
+                    self._parent_links[val] = parents
+
+            super(Workflow.Links, self).__delitem__(key)
 
         @property
         def nodes(self):
             """ Return list of all nodes"""
-            allnodes = list(self.keys())
-            for v in self.values():
-                allnodes.extend(v)
-            return list(set(allnodes))
+            return list(set(self.keys()) | set(self.parent_links.keys()))
 
         @property
         def parent_links(self):
             """
             Return a dict of child and its parents.
-
-            Note: if performance of parent_links becomes an issue, override delitem/setitem to
-            update parent_links
             """
-            child_parents = defaultdict(list)
-            for (parent, children) in self.items():
-                for child in children:
-                    child_parents[child].append(parent)
-            return dict(child_parents)
+            return self._parent_links
 
         def to_dict(self):
             """
@@ -689,6 +708,7 @@ class Workflow(FWSerializable):
         name = name or 'unnamed WF'  # prevent None names
 
         links_dict = links_dict if links_dict else {}
+        self.links = Workflow.Links(links_dict)
 
         # main dict containing mapping of an id to a Firework object
         self.id_fw = {}
@@ -697,10 +717,8 @@ class Workflow(FWSerializable):
                 raise ValueError('FW ids must be unique!')
             self.id_fw[fw.fw_id] = fw
 
-            if fw.fw_id not in links_dict and fw not in links_dict:
-                links_dict[fw.fw_id] = []
-
-        self.links = Workflow.Links(links_dict)
+            if fw.fw_id not in self.links:
+                self.links[fw.fw_id] = []
 
         # add depends on
         for fw in fireworks:
