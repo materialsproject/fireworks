@@ -165,6 +165,21 @@ def add_wf(args):
         lp.add_wf(fwf)
 
 
+def append_wf(args):
+    lp = get_lp(args)
+    lp.append_wf(
+        Workflow.from_file(args.wf_file),
+        args.fw_id,
+        detour=args.detour,
+        pull_spec_mods=args.pull_spec_mods
+    )
+
+
+def dump_wf(args):
+    lp = get_lp(args)
+    lp.get_wf_by_fw_id(args.fw_id).to_file(args.wf_file)
+
+
 def add_wf_dir(args):
     lp = get_lp(args)
     for filename in os.listdir(args.wf_dir):
@@ -686,6 +701,18 @@ def lpad():
                               help="Path to a Firework or Workflow file")
     addwf_parser.set_defaults(func=add_wf)
 
+    append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')
+    append_wf_parser.add_argument('-i', '--fw_id', type=int, nargs='+', help='parent firework ids')
+    append_wf_parser.add_argument('-f', '--wf_file', help='path to a firework or workflow file')
+    append_wf_parser.add_argument('-d', '--detour', help='append workflow as a detour', dest='detour', action='store_true')
+    append_wf_parser.add_argument('--no_pull_spec_mods', help='do not to pull spec mods from parent', dest='pull_spec_mods', action='store_false')
+    append_wf_parser.set_defaults(func=append_wf, detour=False, pull_spec_mods=True)
+
+    dump_wf_parser = subparsers.add_parser('dump_wflow', help='dump a workflow from launchpad to a file')
+    dump_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
+    dump_wf_parser.add_argument('-f', '--wf_file', help='path to a local file to store the workflow')
+    dump_wf_parser.set_defaults(func=dump_wf)
+
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script '
                                                                  '(or several scripts) to run in sequence')
     addscript_parser.add_argument('scripts', help="Script to run, or space-separated names", nargs='*')
@@ -1046,7 +1073,11 @@ def lpad():
 
     args.output = get_output_func(args.output)
 
-    args.func(args)
+    if args.command is None:
+        # if no command supplied, print help
+        parser.print_help()
+    else:
+        args.func(args)
 
 if __name__ == '__main__':
     lpad()
