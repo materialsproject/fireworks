@@ -1073,7 +1073,11 @@ def lpad():
 
     args.output = get_output_func(args.output)
 
-    args.func(args)
+    if args.command is None:
+        # if no command supplied, print help
+        parser.print_help()
+    else:
+        args.func(args)
 
 if __name__ == '__main__':
     lpad()
