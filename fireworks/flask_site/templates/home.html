@@ -14,12 +14,6 @@
   {% endif %}
 {% endwith %}
 
- <div class="row">
-    <div class="span12">
-        <h3 class="text-center">Workflow Dashboard</h3>
-    </div>
- </div>
-
 <div class="row pull-down">
     <div class="span6">
         <table class="table table-bordered">
@@ -54,8 +48,22 @@
         </table>
     </div>
     <div class="span6">
+        {% if PLOTTING %}
+        <div class="report_images">
+            <div class="imgContainer">
+                <a href="/report/hours/12"><img src="/reports/fireworks/hours/12/fig.png" width="225px"></a>
+            </div>
+            <div class="imgContainer">
+                <a href="/report/days/7"><img src="/reports/fireworks/days/7/fig.png" width="225px"></a>
+            </div>
+        </div>
+        {% else %}
+        <p>
+            <em>Please install matplotlib to see plots.</em>
+        </p>
+        {% endif %}
         <table class="table table-bordered">
-            <tr><th colspan="3">Current Database Status</th></tr>
+            <tr><th colspan="3">Database snapshot</th></tr>
             <tr>
                 <th></th>
                 <th><a href="/fw">Fireworks</a></th>
@@ -81,6 +89,7 @@
 
         <hr />
         <h3>Summary Reports</h3>
+        <p>See a <a href="/dashboard">visual dashboard</a>.</p>
         <p>Get a report of all jobs for the past:</p>
         <ul>
             <li><a href="/report/minutes/30">30 minutes</a></li>

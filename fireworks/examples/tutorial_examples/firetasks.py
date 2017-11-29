@@ -1,5 +1,5 @@
 """
-This code is described in the Firetasks tutorial, http://pythonhosted.org/FireWorks/firetask_tutorial.html
+This code is described in the Firetasks tutorial, https://materialsproject.github.io/fireworks/firetask_tutorial.html
 """
 
 from fireworks import Firework, FWorker, LaunchPad

@@ -1,0 +1,195 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Using FilePad for storing and retrieving files &#8212; FireWorks 1.6.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference material" href="reference.html" />
+    <link rel="prev" title="Updating values (e.g., directory paths) in the database" href="update_text.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Reference material"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="update_text.html" title="Updating values (e.g., directory paths) in the database"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-filepad-for-storing-and-retrieving-files">
+<h1>Using FilePad for storing and retrieving files<a class="headerlink" href="#using-filepad-for-storing-and-retrieving-files" title="Permalink to this headline">¶</a></h1>
+<p>FilePad utility provides the api to add and delete arbitrary files of arbitray sizes to MongoDB(filepad).
+The is achieved by inserting the entire file contents to GridFS and storing the id returned by the
+GridFS insertion, the user provided label and the metadata in a document in the filepad. In the following
+documentation, <code class="docutils literal"><span class="pre">file</span> <span class="pre">contents</span></code> refers to the file contents stored in GridFS and <code class="docutils literal"><span class="pre">document</span></code> refers to the
+associated mongodb document that stores the <code class="docutils literal"><span class="pre">file_id</span></code>, <code class="docutils literal"><span class="pre">label</span></code> and other miscellaneous information
+pertaining to the file.</p>
+<div class="section" id="adding-files">
+<h2>Adding files<a class="headerlink" href="#adding-files" title="Permalink to this headline">¶</a></h2>
+<p>Create a FilePad object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fp</span> <span class="o">=</span> <span class="n">FilePad</span><span class="o">.</span><span class="n">auto_load</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To add a file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_id</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">label</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="o">/</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=&lt;</span><span class="n">metadata</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;path&gt;</span></code> is a string path to the file to be inserted, <code class="docutils literal"><span class="pre">&lt;label&gt;</span></code> is some
+unique label that can be used to retrieve the file, the ‘compress’ argument value tells whether or not to compress
+the file contents before insertion, <code class="docutils literal"><span class="pre">&lt;metadata&gt;</span></code> is a python dictionary input that will stored in the key ‘metadata’.
+A bare minimum document in the filepad database consists of keys <code class="docutils literal"><span class="pre">file_id``(used</span>
+<span class="pre">to</span> <span class="pre">store</span> <span class="pre">the</span> <span class="pre">string</span> <span class="pre">representation</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">object</span> <span class="pre">id</span> <span class="pre">returned</span> <span class="pre">by</span> <span class="pre">GridFS),</span> <span class="pre">``label``(used</span> <span class="pre">to</span> <span class="pre">store</span> <span class="pre">the</span>
+<span class="pre">user</span> <span class="pre">assigned</span> <span class="pre">label</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file),</span> <span class="pre">``original_file_name</span></code> , <code class="docutils literal"><span class="pre">original_file_path</span></code> and <code class="docutils literal"><span class="pre">metadata</span></code>.
+On successful insertion the <code class="docutils literal"><span class="pre">file_id</span></code> and the <code class="docutils literal"><span class="pre">label</span></code> are returned.</p>
+</div>
+<div class="section" id="retrieving-files">
+<h2>Retrieving files<a class="headerlink" href="#retrieving-files" title="Permalink to this headline">¶</a></h2>
+<p>Retrieve file contents and the associated document by the label:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_contents</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">label</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the returned values <code class="docutils literal"><span class="pre">file_contents</span></code> and <code class="docutils literal"><span class="pre">doc</span></code> are the contents of the file with label <code class="docutils literal"><span class="pre">&lt;label&gt;</span></code>
+and the document attached to it respectively.</p>
+<p>Retrieve file contents and the associated document by the file id:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_contents</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">get_file_by_id</span><span class="p">(</span><span class="o">&lt;</span><span class="n">file_id</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;file_id&gt;</span></code> is the file id associated with the file(the id returned during insertion)</p>
+<p>Retrieve all the file contents and the associated documents by a general mongo query:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">all_files</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">get_file_by_query</span><span class="p">(</span><span class="o">&lt;</span><span class="n">query</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;query&gt;</span></code> is monogo query dict and the returned values <code class="docutils literal"><span class="pre">all_files</span></code> is a list of <code class="docutils literal"><span class="pre">(file_contents,</span> <span class="pre">doc)</span></code>
+tuples that match the query.</p>
+</div>
+<div class="section" id="deleting-files">
+<h2>Deleting files<a class="headerlink" href="#deleting-files" title="Permalink to this headline">¶</a></h2>
+<p>To delete the contents of the file and the associated document by label:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fp</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">label</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To delete the file contents and the associated document by the file id:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fp</span><span class="o">.</span><span class="n">delete_file_by_id</span><span class="p">(</span><span class="o">&lt;</span><span class="n">file</span> <span class="nb">id</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To delete all the file contents and the associated documents by a general mongo query:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fp</span><span class="o">.</span><span class="n">delete_file_by_query</span><span class="p">(</span><span class="o">&lt;</span><span class="n">query</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using FilePad for storing and retrieving files</a><ul>
+<li><a class="reference internal" href="#adding-files">Adding files</a></li>
+<li><a class="reference internal" href="#retrieving-files">Retrieving files</a></li>
+<li><a class="reference internal" href="#deleting-files">Deleting files</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="update_text.html"
+                        title="previous chapter">Updating values (e.g., directory paths) in the database</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="next chapter">Reference material</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/filepad_tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Reference material"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="update_text.html" title="Updating values (e.g., directory paths) in the database"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

@@ -2,7 +2,7 @@ language: python
 services: mongodb
 python:
   - "2.7"
-  - "3.5"
+  - "3.6"
 install:
   - pip install -r requirements.txt
   - pip install coverage
@@ -19,7 +19,7 @@ notifications:
     recipients:
       - ajain@lbl.gov
       - dkgunter@lbl.gov
-      - ongsp@ucsd.edu
+      - shyuep@gmail.com
       - xqu@lbl.gov
       - g.petretto@gmail.com
     on_success: change

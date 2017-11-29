@@ -29,14 +29,20 @@ def do_launch(args):
     if not args.launchpad_file and os.path.exists(
             os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
+    elif not args.launchpad_file:
+        args.launchpad_file = LAUNCHPAD_LOC
 
     if not args.fworker_file and os.path.exists(
             os.path.join(args.config_dir, 'my_fworker.yaml')):
         args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
+    elif not args.fworker_file:
+        args.fworker_file = FWORKER_LOC
 
     if not args.queueadapter_file and os.path.exists(
             os.path.join(args.config_dir, 'my_qadapter.yaml')):
         args.queueadapter_file = os.path.join(args.config_dir, 'my_qadapter.yaml')
+    elif not args.queueadapter_file:
+        args.queueadapter_file = QUEUEADAPTER_LOC
 
     launchpad = LaunchPad.from_file(
         args.launchpad_file) if args.launchpad_file else LaunchPad(
@@ -90,6 +96,9 @@ def qlaunch():
                         help="Password for remote host (if necessary). For "
                              "best operation, it is recommended that you do "
                              "passwordless ssh.")
+    parser.add_argument("-rsh", "--remote_shell",
+                        help="Shell command to use on remote host for running submission.",
+                        default='/bin/bash -l -c')
 
     parser.add_argument("-rs", "--remote_setup",
                         help="Setup the remote config dir using files in "
@@ -106,10 +115,9 @@ def qlaunch():
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
     parser.add_argument('-r', '--reserve', help='reserve a fw', action='store_true')
-    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file', default=LAUNCHPAD_LOC)
-    parser.add_argument('-w', '--fworker_file', help='path to fworker file', default=FWORKER_LOC)
-    parser.add_argument('-q', '--queueadapter_file', help='path to queueadapter file',
-                        default=QUEUEADAPTER_LOC)
+    parser.add_argument('-l', '--launchpad_file', help='path to launchpad file')
+    parser.add_argument('-w', '--fworker_file', help='path to fworker file')
+    parser.add_argument('-q', '--queueadapter_file', help='path to queueadapter file')
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the config file (used if -l, -w, -q unspecified)',
                         default=CONFIG_FILE_DIR)
@@ -131,6 +139,16 @@ def qlaunch():
     
     single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', 
                                default=None, type=int)
+
+    try:
+        import argcomplete
+        argcomplete.autocomplete(parser)
+        # This supports bash autocompletion. To enable this, pip install
+        # argcomplete, activate global completion, or add
+        #      eval "$(register-python-argcomplete qlaunch)"
+        # into your .bash_profile or .bashrc
+    except ImportError:
+        pass
 
     args = parser.parse_args()
 
@@ -174,7 +192,7 @@ def qlaunch():
         if args.remote_host:
             for h in args.remote_host:
                 with settings(host_string=h, user=args.remote_user,
-                              password=args.remote_password):
+                              password=args.remote_password, shell=args.remote_shell):
                     for r in args.remote_config_dir:
                         r = os.path.expanduser(r)
                         with cd(r):

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Fireworks</h2>
+{% if PLOTTING %}
+<div class="report_images">
+    <div class="imgContainer">
+        <a href="/report/hours/24"><img src="/reports/fireworks/hours/24/fig.png" width="450px"></a>
+    </div>
+    <div class="imgContainer">
+        <a href="/report/days/30"><img src="/reports/fireworks/days/30/fig.png" width="450px"></a>
+    </div>
+</div>
+<div class="report_images">
+    <div class="imgContainer">
+        <a href="/report/months/12"><img src="/reports/fireworks/months/12/fig.png" width="450px"></a>
+    </div>
+    <div class="imgContainer">
+        <a href="/report/years/10"><img src="/reports/fireworks/years/10/fig.png" width="450px"></a>
+    </div>
+</div>
+{% else %}
+<p>
+    <em>Please install matplotlib to see plots.</em>
+</p>
+{% endif %}
+
+<h2>Workflows</h2>
+{% if PLOTTING %}
+<div class="report_images">
+    <div class="imgContainer">
+        <a href="/report/hours/24"><img src="/reports/workflows/hours/24/fig.png" width="450px"></a>
+    </div>
+    <div class="imgContainer">
+        <a href="/report/days/30"><img src="/reports/workflows/days/30/fig.png" width="450px"></a>
+    </div>
+</div>
+<div class="report_images">
+    <div class="imgContainer">
+        <a href="/report/months/12"><img src="/reports/workflows/months/12/fig.png" width="450px"></a>
+    </div>
+    <div class="imgContainer">
+        <a href="/report/years/10"><img src="/reports/workflows/years/10/fig.png" width="450px"></a>
+    </div>
+</div>
+{% else %}
+<p>
+    <em>Please install matplotlib to see plots.</em>
+</p>
+{% endif %}
+
+{% endblock %}

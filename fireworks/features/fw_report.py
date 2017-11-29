@@ -104,6 +104,67 @@ class FWReport:
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
 
+    def plot_stats(self, coll="fireworks", interval="days", num_intervals=5,
+                   states=None, style='bar', **kwargs):
+        """
+        Makes a chart with the summary data
+
+        Args:
+            coll (str): collection, either "fireworks", "workflows", or "launches"
+            interval (str): one of "minutes", "hours", "days", "months", "years"
+            num_intervals (int): number of intervals to go back in time from present moment
+            states ([str]): states to include in plot, defaults to all states,
+                note this also specifies the order of stacking
+            style (str): style of plot to generate, can either be 'bar' or 'fill'
+
+        Returns:
+            matplotlib plot module
+        """
+        results = self.get_stats(coll, interval, num_intervals, **kwargs)
+        state_to_color = {"RUNNING": "#F4B90B",
+                      "WAITING": "#1F62A2",
+                      "FIZZLED": "#DB0051",
+                      "READY": "#2E92F2",
+                      "COMPLETED": "#24C75A",
+                      "RESERVED": "#BB8BC1",
+                      "ARCHIVED": "#7F8287",
+                      "DEFUSED": "#B7BCC3",
+                      "PAUSED": "#FFCFCA"
+                      }
+        states = states or state_to_color.keys()
+
+        from matplotlib.figure import Figure
+        from matplotlib.ticker import MaxNLocator
+
+        fig = Figure()
+        ax = fig.add_subplot(111)
+        data = {state: [result['states'][state] for result in results]
+                for state in states}
+        
+        bottom = [0] * len(results)
+        for state in states:
+            if any(data[state]):
+                if style is 'bar':
+                    ax.bar(range(len(bottom)), data[state], bottom=bottom,
+                            color=state_to_color[state], label=state)
+                elif style is 'fill':
+                    ax.fill_between(range(len(bottom)),
+                                    bottom, [x + y for x, y in
+                                             zip(bottom, data[state])],
+                                    color=state_to_color[state], label=state)
+                bottom = [x + y for x, y in zip(bottom, data[state])]
+
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+        ax.set_xlabel("{} ago".format(interval), fontsize=18)
+        ax.set_xlim([-0.5, num_intervals-0.5])
+        ax.set_ylabel("number of {}".format(coll), fontsize=18)
+        ax.tick_params(labelsize=14)
+        ax.legend(fontsize=13)
+        fig.tight_layout()
+        return fig
+
     def get_stats_str(self, decorated_stat_list):
         """
         Convert the list of stats from FWReport.get_stats() to a string representation for viewing.

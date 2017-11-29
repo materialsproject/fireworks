@@ -2,7 +2,8 @@
 
 from __future__ import unicode_literals
 
-from monty.dev import deprecated
+from copy import deepcopy
+
 
 """
 This module contains some of the most central FireWorks classes:
@@ -47,7 +48,7 @@ class FiretaskMeta(abc.ABCMeta):
         o = abc.ABCMeta.__call__(cls, *args, **kwargs)
         for k in cls.required_params:
             if k not in o:
-                raise ValueError("Required parameter {} not specified!".format(k))
+                raise ValueError("{}: Required parameter {} not specified!".format(cls, k))
         return o
 
 
@@ -202,8 +203,6 @@ class Firework(FWSerializable):
 
         self.tasks = tasks
         self.spec = spec.copy() if spec else {}
-        # put tasks in a special location of the spec
-        self.spec['_tasks'] = [t.to_dict() for t in tasks]
 
         self.name = name or 'Unnamed FW'  # do it this way to prevent None
         # names
@@ -245,7 +244,10 @@ class Firework(FWSerializable):
 
     @recursive_serialize
     def to_dict(self):
-        m_dict = {'spec': self.spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
+        # put tasks in a special location of the spec
+        spec = self.spec
+        spec['_tasks'] = [t.to_dict() for t in self.tasks]
+        m_dict = {'spec': spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
                   'updated_on': self.updated_on}
 
         # only serialize these fields if non-empty
@@ -410,7 +412,7 @@ class Launch(FWSerializable, object):
         self.launch_id = launch_id
         self.fw_id = fw_id
 
-    def touch_history(self, update_time=None):
+    def touch_history(self, update_time=None, checkpoint=None):
         """
         Updates the update_on field of the state history of a Launch. Used to ping that a Launch
         is still alive.
@@ -419,6 +421,8 @@ class Launch(FWSerializable, object):
             update_time (datetime)
         """
         update_time = update_time or datetime.utcnow()
+        if checkpoint:
+            self.state_history[-1]['checkpoint'] = checkpoint
         self.state_history[-1]['updated_on'] = update_time
 
     def set_reservation_id(self, reservation_id):
@@ -546,10 +550,17 @@ class Launch(FWSerializable, object):
         Args:
             state (str)
         """
-        last_state = self.state_history[-1]['state'] if len(self.state_history) > 0 else None
+        if len(self.state_history) > 0:
+            last_state = self.state_history[-1]['state']
+            last_checkpoint = self.state_history[-1].get('checkpoint', None)
+        else:
+            last_state, last_checkpoint = None, None
         if state != last_state:
             now_time = datetime.utcnow()
-            self.state_history.append({'state': state, 'created_on': now_time})
+            new_history_entry = {'state': state, 'created_on': now_time}
+            if state != "COMPLETED" and last_checkpoint:
+                new_history_entry.update({'checkpoint': last_checkpoint})
+            self.state_history.append(new_history_entry)
             if state in ['RUNNING', 'RESERVED']:
                 self.touch_history()  # add updated_on key
 
@@ -708,6 +719,9 @@ class Workflow(FWSerializable):
         if set(self.links.nodes) != set(map(int, self.id_fw.keys())):
             raise ValueError("Specified links don't match given FW")
 
+        if len(self.links.nodes) == 0:
+            raise ValueError("Workflow cannot be empty (must contain at least 1 FW)")
+
         self.metadata = metadata if metadata else {}
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
@@ -735,21 +749,21 @@ class Workflow(FWSerializable):
         m_state = 'READY'
         #states = [fw.state for fw in self.fws]
         states = self.fw_states.values()
-        leaf_states = [self.fw_states[fw_id] for fw_id in self.leaf_fw_ids]
-        if all([s == 'COMPLETED' for s in leaf_states]):
+        leaf_states = (self.fw_states[fw_id] for fw_id in self.leaf_fw_ids)
+        if all(s == 'COMPLETED' for s in leaf_states):
             m_state = 'COMPLETED'
-        elif all([s == 'ARCHIVED' for s in states]):
+        elif all(s == 'ARCHIVED' for s in states):
             m_state = 'ARCHIVED'
-        elif any([s == 'DEFUSED' for s in states]):
+        elif any(s == 'DEFUSED' for s in states):
             m_state = 'DEFUSED'
-        elif any([s == 'PAUSED' for s in states]):
+        elif any(s == 'PAUSED' for s in states):
             m_state = 'PAUSED'
-        elif any([s == 'FIZZLED' for s in states]):
+        elif any(s == 'FIZZLED' for s in states):
             # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a
             # given fizzled firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
             # For each fizzled fw, we thus have to check the states of their children
-            fizzled_ids = [fw_id for fw_id, state in self.fw_states.items()
-                           if state not in ['READY', 'RUNNING', 'COMPLETED', 'RESERVED']]
+            fizzled_ids = (fw_id for fw_id, state in self.fw_states.items()
+                           if state not in ['READY', 'RUNNING', 'COMPLETED', 'RESERVED'])
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
                 if fizzled_id in self.leaf_fw_ids:
@@ -774,9 +788,9 @@ class Workflow(FWSerializable):
                     break
             else:
                 m_state = 'RUNNING'
-        elif any([s == 'COMPLETED' for s in states]) or any([s == 'RUNNING' for s in states]):
+        elif any(s == 'COMPLETED' for s in states) or any(s == 'RUNNING' for s in states):
             m_state = 'RUNNING'
-        elif any([s == 'RESERVED' for s in states]):
+        elif any(s == 'RESERVED' for s in states):
             m_state = 'RESERVED'
         return m_state
 
@@ -860,7 +874,8 @@ class Workflow(FWSerializable):
 
         # re-run all the children
         for child_id in self.links[fw_id]:
-            updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
+            if self.id_fw[child_id].state != 'WAITING':
+                updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
 
         # refresh the WF to get the states updated
         return self.refresh(fw_id, updated_ids)
@@ -1122,7 +1137,7 @@ class Workflow(FWSerializable):
                 if l.state == 'COMPLETED':
                     completed_launches.append(l)
         if completed_launches:
-            return sorted(completed_launches, key=lambda v: v.time_end)[-1]
+            return max(completed_launches, key=lambda v: v.time_end)
         return m_launch
 
     @classmethod
@@ -1201,6 +1216,47 @@ class Workflow(FWSerializable):
 
     def __str__(self):
         return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)
+
+    def remove_fws(self, fw_ids):
+        """
+        Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
+        parents of the removed fireworks become the parents of the children fireworks (only if the
+        children dont have any other parents).
+
+        Args:
+            fw_ids (list): list of fw ids to remove.
+
+        """
+        # not working with the copies, causes spurious behavior
+        wf_dict = deepcopy(self.as_dict())
+        orig_parent_links = deepcopy(self.links.parent_links)
+        fws = wf_dict["fws"]
+
+        # update the links dict: remove fw_ids and link their parents to their children (if they don't
+        # have any other parents).
+        for fid in fw_ids:
+            children = wf_dict["links"].pop(str(fid))
+            # root node --> no parents
+            try:
+                parents = orig_parent_links[int(fid)]
+            except KeyError:
+                parents = []
+            # remove the firework from their parent links and re-link their parents to the children.
+            for p in parents:
+                wf_dict["links"][str(p)].remove(fid)
+                # adopt the children
+                for c in children:
+                    # adopt only if the child doesn't have any other parents.
+                    if len(orig_parent_links[int(c)]) == 1:
+                        wf_dict["links"][str(p)].append(c)
+
+        # update the list of fireworks.
+        wf_dict["fws"] = [f for f in fws if f["fw_id"] not in fw_ids]
+
+        new_wf = Workflow.from_dict(wf_dict)
+        self.fw_states = new_wf.fw_states
+        self.id_fw = new_wf.id_fw
+        self.links = new_wf.links
 
 
 # old spelling

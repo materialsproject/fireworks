@@ -2,10 +2,10 @@ import json
 import os
 from functools import wraps
 
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, make_response
 from flask import redirect, url_for, abort, flash, session
 from flask_paginate import Pagination
-from pymongo import DESCENDING, ASCENDING
+from pymongo import DESCENDING
 
 from fireworks import Firework
 from fireworks.features.fw_report import FWReport
@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.use_reloader = True
 app.secret_key = os.environ.get(
     "FWAPP_SECRET_KEY",
-    '0\x07)\x95\x96)\xb9\xdf1\xc0l4\x99\xc4\xf1\x88Jk\xb4lZ\xb2\x81X')
+    os.urandom(24))
 
 hello = __name__
 lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
@@ -70,14 +70,16 @@ def _addq_FW(q):
     if session.get('wf_filt'):
         filt_from_wf = fwapp_util.fw_filt_given_wf_filt(
             session.get('wf_filt'), lp)
-    return {"$and": [q, app.BASE_Q, session['fw_filt'], filt_from_wf]}
+    return {
+        "$and": [q, app.BASE_Q, session.get('fw_filt', {}), filt_from_wf]}
 
 def _addq_WF(q):
     filt_from_fw = {}
     if session.get('fw_filt'):
         filt_from_fw = fwapp_util.wf_filt_given_fw_filt(
             session.get('fw_filt'), lp)
-    return {"$and": [q, app.BASE_Q_WF, session['wf_filt'], filt_from_fw]}
+    return {
+        "$and": [q, app.BASE_Q_WF, session.get('wf_filt', {}), filt_from_fw]}
 
 @app.template_filter('datetime')
 def datetime(value):
@@ -135,6 +137,14 @@ def home():
                                   limit=PER_PAGE, sort=[('fw_id', DESCENDING)],
                                   projection=["state", "name", "fw_id"]))
         })
+
+    PLOTTING = False
+    try:
+        import matplotlib as mpl
+        PLOTTING=True
+    except:
+        pass
+
     return render_template('home.html', **locals())
 
 
@@ -332,7 +342,26 @@ def report(interval, num_intervals):
                                    additional_query=app.BASE_Q_WF)
     wf_report_text = fwr.get_stats_str(wf_report_data)
 
+    PLOTTING = False
+    try:
+        import matplotlib as mpl
+        PLOTTING = True
+    except:
+        pass
+
     return render_template('report.html', **locals())
+
+@app.route('/dashboard/')
+@requires_auth
+def dashboard():
+    PLOTTING = False
+    try:
+        import matplotlib as mpl
+        PLOTTING = True
+    except:
+        pass
+
+    return render_template('dashboard.html', **locals())
 
 
 def bootstrap_app(*args, **kwargs):
@@ -368,6 +397,22 @@ def parse_querystr(querystr, coll):
               "to the database collection "
               "to make it run faster.".format(querystr))
     return d
+
+@app.route("/reports/<coll>/<interval>/<num_intervals>/fig.png")
+def simple(coll, interval, num_intervals):
+    from io import BytesIO
+
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+    fwr = FWReport(lp)
+    fig = fwr.plot_stats(coll, interval, int(num_intervals))
+
+    canvas = FigureCanvas(fig)
+    png_output = BytesIO()
+    canvas.print_png(png_output)
+    response = make_response(png_output.getvalue())
+    response.headers['Content-Type'] = 'image/png'
+    return response
 
 
 if __name__ == "__main__":

@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Running Tasks in the Background &#8212; FireWorks 1.6.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running FireWorks in “offline” mode on firewalled systems" href="offline_tutorial.html" />
+    <link rel="prev" title="Handling Duplicates Automatically" href="duplicates_tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="offline_tutorial.html" title="Running FireWorks in “offline” mode on firewalled systems"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="duplicates_tutorial.html" title="Handling Duplicates Automatically"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="running-tasks-in-the-background">
+<h1>Running Tasks in the Background<a class="headerlink" href="#running-tasks-in-the-background" title="Permalink to this headline">¶</a></h1>
+<p>When running a Firework, the Firetasks are run sequentially in the main thread. One way to run a background thread would be to write a Firetask that spawns a new Thread to perform some work. However, FireWorks also has a built-in method to run background tasks via BackgroundTasks. Each BackgroundTask is run in its own thread, in <em>parallel</em> to the main Firetasks, and can be repeated at stated intervals.</p>
+<div class="section" id="backgroundtasks-parameters">
+<h2>BackgroundTasks parameters<a class="headerlink" href="#backgroundtasks-parameters" title="Permalink to this headline">¶</a></h2>
+<p>BackgroundTasks have the following properties:</p>
+<ul class="simple">
+<li><strong>tasks</strong> - a list of Firetasks to execute in sequence. The Firetasks can read the initial spec of the Firework. Any action returned by Firetasks within a BackgroundTask is <em>NOT</em> interpreted (including instructions to store data).</li>
+<li><strong>num_launches</strong> - the total number of times to repeat the BackgroundTask. 0 or less indicates infinite repeats.</li>
+<li><strong>sleep_time</strong> - amount of time in seconds to sleep before repeating the BackgroundTask</li>
+<li><strong>run_on_finish</strong> - if True, the BackgroundTask will be run one last time at the end of the Firework</li>
+</ul>
+</div>
+<div class="section" id="setting-one-or-more-backgroundtasks-via-file">
+<h2>Setting one or more BackgroundTasks (via file)<a class="headerlink" href="#setting-one-or-more-backgroundtasks-via-file" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to set BackgroundTasks is via the Python code. However, if you are using flat files, you can define BackgroundTasks via the <code class="docutils literal"><span class="pre">_background_tasks</span></code> reserved keyword in the FW spec:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
+  <span class="n">_background_tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">BackgroundTask</span>
+    <span class="n">num_launches</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="n">run_on_finish</span><span class="p">:</span> <span class="n">false</span>
+    <span class="n">sleep_time</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="n">tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">ScriptTask</span>
+      <span class="n">script</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">echo</span> <span class="s2">&quot;hello from BACKGROUND thread #1&quot;</span>
+      <span class="n">use_shell</span><span class="p">:</span> <span class="n">true</span>
+  <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">BackgroundTask</span>
+    <span class="n">num_launches</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="n">run_on_finish</span><span class="p">:</span> <span class="n">true</span>
+    <span class="n">sleep_time</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="n">tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">ScriptTask</span>
+      <span class="n">script</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">echo</span> <span class="s2">&quot;hello from BACKGROUND thread #2&quot;</span>
+      <span class="n">use_shell</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">_tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">ScriptTask</span>
+    <span class="n">script</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">echo</span> <span class="s2">&quot;starting&quot;</span><span class="p">;</span> <span class="n">sleep</span> <span class="mi">30</span><span class="p">;</span> <span class="n">echo</span> <span class="s2">&quot;ending&quot;</span>
+    <span class="n">use_shell</span><span class="p">:</span> <span class="n">true</span>
+</pre></div>
+</div>
+<p>The specification above has two BackgroundTasks, one which repeats every 10 seconds and another which repeats every 5 seconds.</p>
+</div>
+<div class="section" id="setting-one-or-more-backgroundtasks-via-python">
+<h2>Setting one or more BackgroundTasks (via Python)<a class="headerlink" href="#setting-one-or-more-backgroundtasks-via-python" title="Permalink to this headline">¶</a></h2>
+<p>You can define a BackgroundTask via:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bg_task</span> <span class="o">=</span> <span class="n">BackgroundTask</span><span class="p">(</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello from BACKGROUND thread&quot;&#39;</span><span class="p">),</span> <span class="n">num_launches</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sleep_time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">run_on_finish</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and add it to a Firework via:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">my_firetasks</span><span class="p">],</span> <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;_background_tasks&#39;</span><span class="p">:[</span><span class="n">bg_task</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-example">
+<h2>Python example<a class="headerlink" href="#python-example" title="Permalink to this headline">¶</a></h2>
+<p>The following code runs a script that, in the main thread, prints ‘starting’, sleeps, then prints ‘ending’. In separate threads, two background threads run at different intervals. The second BackgroundTask has <code class="docutils literal"><span class="pre">run_on_finish</span></code> set to True, so it also runs after the main thread finishes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span> <span class="nn">fireworks.features.background_task</span> <span class="k">import</span> <span class="n">BackgroundTask</span>
+<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="k">import</span> <span class="n">rapidfire</span>
+
+<span class="c1"># set up the LaunchPad and reset it</span>
+<span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
+<span class="n">launchpad</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="s1">&#39;TODAYS DATE&#39;</span><span class="p">)</span>  <span class="c1"># set TODAYS DATE to be something like 2014-02-10</span>
+
+<span class="n">firetask1</span> <span class="o">=</span> <span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;starting&quot;; sleep 30; echo &quot;ending&quot;&#39;</span><span class="p">)</span>
+<span class="n">bg_task1</span> <span class="o">=</span> <span class="n">BackgroundTask</span><span class="p">(</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello from BACKGROUND thread #1&quot;&#39;</span><span class="p">),</span> <span class="n">sleep_time</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">bg_task2</span> <span class="o">=</span> <span class="n">BackgroundTask</span><span class="p">(</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello from BACKGROUND thread #2&quot;&#39;</span><span class="p">),</span> <span class="n">num_launches</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sleep_time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">run_on_finish</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># create the Firework consisting of a custom &quot;Fibonacci&quot; task</span>
+<span class="n">firework</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">firetask1</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;_background_tasks&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bg_task1</span><span class="p">,</span> <span class="n">bg_task2</span><span class="p">]})</span>
+
+<span class="c1">## store workflow and launch it locally</span>
+<span class="n">launchpad</span><span class="o">.</span><span class="n">add_wf</span><span class="p">(</span><span class="n">firework</span><span class="p">)</span>
+<span class="n">rapidfire</span><span class="p">(</span><span class="n">launchpad</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running Tasks in the Background</a><ul>
+<li><a class="reference internal" href="#backgroundtasks-parameters">BackgroundTasks parameters</a></li>
+<li><a class="reference internal" href="#setting-one-or-more-backgroundtasks-via-file">Setting one or more BackgroundTasks (via file)</a></li>
+<li><a class="reference internal" href="#setting-one-or-more-backgroundtasks-via-python">Setting one or more BackgroundTasks (via Python)</a></li>
+<li><a class="reference internal" href="#python-example">Python example</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="duplicates_tutorial.html"
+                        title="previous chapter">Handling Duplicates Automatically</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="offline_tutorial.html"
+                        title="next chapter">Running FireWorks in “offline” mode on firewalled systems</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/backgroundtask.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="offline_tutorial.html" title="Running FireWorks in “offline” mode on firewalled systems"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="duplicates_tutorial.html" title="Handling Duplicates Automatically"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>

@@ -1,5 +1,5 @@
 """
-This code is described in the Workflow tutorial, http://pythonhosted.org/FireWorks/workflow_tutorial.html
+This code is described in the Workflow tutorial, https://materialsproject.github.io/fireworks/workflow_tutorial.html
 """
 
 from fireworks import Firework, Workflow, FWorker, LaunchPad, ScriptTask

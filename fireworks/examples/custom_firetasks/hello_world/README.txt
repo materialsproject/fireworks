@@ -1,4 +1,4 @@
-This example shows you can define and run a custom Firetask in the most simple way. There is an online tutorial on custom Firetasks here: http://pythonhosted.org/FireWorks/guide_to_writing_firetasks.html
+This example shows you can define and run a custom Firetask in the most simple way. There is an online tutorial on custom Firetasks here: https://materialsproject.github.io/fireworks/guide_to_writing_firetasks.html
 
 The definition of the custom script to run is located in the file "hello_world_task.py". You might try modifying this example to produce more complex behavior. Note that if you want to refer to this Firetask outside the current package, you should follow the code registration instructions located in the tutorial.
 

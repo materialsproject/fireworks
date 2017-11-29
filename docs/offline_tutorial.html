@@ -1,0 +1,190 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Running FireWorks in “offline” mode on firewalled systems &#8212; FireWorks 1.6.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using Python to command FireWorks" href="python_tutorial.html" />
+    <link rel="prev" title="Running Tasks in the Background" href="backgroundtask.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="python_tutorial.html" title="Using Python to command FireWorks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="backgroundtask.html" title="Running Tasks in the Background"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="running-fireworks-in-offline-mode-on-firewalled-systems">
+<h1>Running FireWorks in “offline” mode on firewalled systems<a class="headerlink" href="#running-fireworks-in-offline-mode-on-firewalled-systems" title="Permalink to this headline">¶</a></h1>
+<p>FireWorks typically requires a network connection between the LaunchPad and the FireWorker to operate. The network connection allows the FireWorker to check out a job from the LaunchPad, and subsequently update the server with the status of the job:</p>
+<img alt="typical FW operation" class="align-center" src="_images/fw_offline1.png" />
+<p>Unfortunately, many computing centers employ an internal system of “compute nodes” that cannot access an outside network. The FireWorker is thus blocked from checking out jobs from the LaunchPad (or updating back the LaunchPad with the job status). There exists no way for the compute node to communicate with the LaunchPad. However, if the <em>login</em> node to the computing center can access the network, we can design a system whereby the login node handles all network connections and communicates with the compute nodes by serializing information as files:</p>
+<img alt="offline FW operation" class="align-center" src="_images/fw_offline2.png" />
+<p>This is the <em>offline</em> mode of FireWorks operation. Before using this option, however, it is important to understand that:</p>
+<ul class="simple">
+<li>The login node still needs to be able to access the FireWorks database. If you’re not sure, try to <a class="reference internal" href="query_tutorial.html"><span class="doc">run a database query</span></a> from the login node.</li>
+<li>The login node needs to be able to write files that can be read by the compute nodes, and vice-versa.</li>
+<li><em>Offline</em> mode can only be used with the <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">reservation mode</span></a> of the queue launcher, since the login node must checkout and serialize a job in advance of the queue submission starting to run.</li>
+<li>Using FireWorks in <em>offline</em> mode requires more human maintenance than normal mode, and generates extra files for communication within each job. Thus, trying to get a network connection up and running between your FireWorker and LaunchPad should always be your first line of attack.</li>
+</ul>
+<div class="section" id="part-1-checkout-and-submit-jobs-in-offline-mode">
+<h2>Part 1: Checkout and submit jobs in offline mode<a class="headerlink" href="#part-1-checkout-and-submit-jobs-in-offline-mode" title="Permalink to this headline">¶</a></h2>
+<p>In offline mode, the login node will checkout a job, serialize it to a <code class="docutils literal"><span class="pre">FW.json</span></code> file, and put that file in the launch directory. When the compute node starts running the job, it will read the <code class="docutils literal"><span class="pre">FW.json</span></code> file to instantiate the Firework and run it using the <code class="docutils literal"><span class="pre">--offline</span></code> option of the <em>rlaunch</em> command.</p>
+<p>To submit jobs in offline mode:</p>
+<ol class="arabic simple">
+<li>First, configure you queue file <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> according to the instructions in the <a class="reference internal" href="queue_tutorial.html"><span class="doc">simple queue tutorial</span></a>. However, in the <code class="docutils literal"><span class="pre">rocket_launch</span></code> section of the file, add the <code class="docutils literal"><span class="pre">--offline</span></code> tag to the end. For example, your <code class="docutils literal"><span class="pre">rocket_launch</span></code> section of the file might look like: <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">-w</span> <span class="pre">path/to/myfworker.yaml</span> <span class="pre">-l</span> <span class="pre">path/to/my_launchpad.yaml</span> <span class="pre">singleshot</span> <span class="pre">--offline</span></code>. When finished, you can add FireWorks to your database.</li>
+<li>When you are ready to submit the jobs to the queue, make sure you use the reservation mode of queue launcher (<code class="docutils literal"><span class="pre">-r</span></code> option). For example, <code class="docutils literal"><span class="pre">qlaunch</span> <span class="pre">-r</span> <span class="pre">rapidfire</span></code>. More details on reservation mode can be found <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">here</span></a>.</li>
+</ol>
+<p>With those two small modifications, your job should get submitted and run successfully. You’ll notice that a <code class="docutils literal"><span class="pre">FW.json</span></code> as well as a <code class="docutils literal"><span class="pre">FW_offline.json</span></code> file got written to your submission’s launch directory.</p>
+<p>Next, we allow the compute node to communicate back job information to the LaunchPad via the login node.</p>
+</div>
+<div class="section" id="part-2-recover-job-status">
+<h2>Part 2: Recover job status<a class="headerlink" href="#part-2-recover-job-status" title="Permalink to this headline">¶</a></h2>
+<p>Since the compute nodes have no way to communicate job status via a network, they write files (<code class="docutils literal"><span class="pre">FW_ping.json</span></code> and <code class="docutils literal"><span class="pre">FW_action.json</span></code>) in order to report this information. The login node can periodically read these files and subsequently pass the information back to the LaunchPad.</p>
+<p>To recover all offline jobs, type the command <em>from the login node</em>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">recover_offline</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">recover_offline</span> <span class="pre">-h</span></code> to see further options.</p>
+</div>
+<p>This will look inside all the offline job locations in search of <code class="docutils literal"><span class="pre">FW_ping.json</span></code> and <code class="docutils literal"><span class="pre">FW_action.json</span></code> files. If it finds them, it will connect to the LaunchPad and update the status of the jobs based on the files’ contents. At this point, we should note a few things:</p>
+<ul class="simple">
+<li>If you move the files around before the <code class="docutils literal"><span class="pre">lpad</span></code> command can recover them, FireWorks may never know that your job finished. FireWorks looks in the directory the job was submitted in for these files.</li>
+<li>If job B depends on job A, job B will never run until Firework A has been recovered and reported completed. So, you should run <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">recover_offline</span></code> frequently.</li>
+</ul>
+<div class="section" id="forgetting-about-offline-jobs">
+<h3>Forgetting about offline jobs<a class="headerlink" href="#forgetting-about-offline-jobs" title="Permalink to this headline">¶</a></h3>
+<p>Generally, you will not need to manually tell FireWorks to forget about certain directories. However, if you manually want to stop trying to recover certain FireWorks, you can type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">forget_offline</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>This prints a help file stating how can “forget” certain FireWorks so we no longer try to recover them. The state of these FireWorks in the database will be frozen unless you run a command like <code class="docutils literal"><span class="pre">defuse_fws</span></code> or <code class="docutils literal"><span class="pre">rerun_fws</span></code> to handle them.</p>
+</div>
+</div>
+<div class="section" id="an-advantage-to-offline-mode-robustness-to-db-downtime">
+<h2>An advantage to offline mode: robustness to DB downtime<a class="headerlink" href="#an-advantage-to-offline-mode-robustness-to-db-downtime" title="Permalink to this headline">¶</a></h2>
+<p>While offline mode is typically undesirable compared to normal FireWorks operation, one advantage is that it minimizes the need for database access. Whereas normal operation requires the database to be fully operational while jobs are running, offline operation only requires database access when checking out and submitting jobs (<code class="docutils literal"><span class="pre">qlaunch</span></code>) and when recovering jobs (<code class="docutils literal"><span class="pre">recover_offline</span></code>). The database can be down for maintenance in between, while jobs are running.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running FireWorks in “offline” mode on firewalled systems</a><ul>
+<li><a class="reference internal" href="#part-1-checkout-and-submit-jobs-in-offline-mode">Part 1: Checkout and submit jobs in offline mode</a></li>
+<li><a class="reference internal" href="#part-2-recover-job-status">Part 2: Recover job status</a><ul>
+<li><a class="reference internal" href="#forgetting-about-offline-jobs">Forgetting about offline jobs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#an-advantage-to-offline-mode-robustness-to-db-downtime">An advantage to offline mode: robustness to DB downtime</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="backgroundtask.html"
+                        title="previous chapter">Running Tasks in the Background</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python_tutorial.html"
+                        title="next chapter">Using Python to command FireWorks</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/offline_tutorial.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="python_tutorial.html" title="Using Python to command FireWorks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="backgroundtask.html" title="Running Tasks in the Background"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53488807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </body>
+</html>
