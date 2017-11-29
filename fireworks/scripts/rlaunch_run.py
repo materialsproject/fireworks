@@ -109,7 +109,7 @@ def rlaunch():
     if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, 'my_launchpad.yaml')):
         args.launchpad_file = os.path.join(args.config_dir, 'my_launchpad.yaml')
     elif not args.launchpad_file:
-        args.fworker_file = LAUNCHPAD_LOC
+        args.launchpad_file = LAUNCHPAD_LOC
 
     if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
         args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
