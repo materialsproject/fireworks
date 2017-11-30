@@ -138,7 +138,8 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
                 if subs_key not in template_keys:
                     warnings.warn('Key {} has been specified in qadapter '
                                   'but it is not present in template, please '
-                                  'check template for supported keys.'.format(subs_key))
+                                  'check template ({}) for supported keys.'
+                                  .format(subs_key, self.template_file))
 
             for k, v in self.defaults.items():
                 subs_dict.setdefault(k, v)
