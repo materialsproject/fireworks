@@ -2,12 +2,19 @@
 FireWorks Changelog
 ===================
 
+
+**v1.6.1**
+
+* some fixes to config file determination (A. Jain, G. Petretto)
+* add append_wf and dump_wf commands to lpad (I. Kondov)
+* faster GUI load (D. Winston)
+* minor code improvements and help/warning messages for the user (M. Horton)
+
 **v1.6.0**
 
 * fixes for task-level recovery (J. Montoya)
 * LSF queueadapter takes into account job counts by queue (J. Boes)
 * some unit test improvements (I. Kondov)
-
 
 **v1.5.9**
 

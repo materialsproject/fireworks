@@ -40,6 +40,7 @@ Additional contributions from:
 * Remi Lahe
 * Ivan Kondov
 * Jacob Boes
+* Matt Horton
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh
