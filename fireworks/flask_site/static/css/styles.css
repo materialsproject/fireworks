@@ -5,16 +5,15 @@ footer .navbar .nav {
 }
 
 .brand {
-	margin-top: 20px;
-	max-width: 170px;
+	margin-top: 10px;
+	max-width: 100px;
+    float:left
 }
 
 .pull-down {
-	margin-top: 30px;
 }
 
 .pull-down-sm {
-  margin-top: 10px;
 }
 
 .pull-up { margin-bottom: 30px;}
@@ -114,4 +113,12 @@ form.query label {
 form.query button[type=submit] {
     margin-left: 70px;
     width: 256px;
+}
+
+.imgContainer{
+    float:left;
+}
+
+hr.myhrline{
+ margin:5px;
 }

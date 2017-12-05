@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Dealing with Failures and Crashes &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Dealing with Failures and Crashes &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Database administration commands" href="maintain_tutorial.html" />
     <link rel="prev" title="Rerunning a Firework or Workflow" href="rerun_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -60,10 +57,10 @@
 <p class="first admonition-title">Warning</p>
 <p class="last">This documentation is written as a <strong>tutorial</strong> that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do <strong>not</strong> reset your FireWorks database as the tutorial instructs. Instead, first read through this tutorial to get an idea on how failures work in FireWorks. Then, refer to the <a class="reference internal" href="maintain_tutorial.html"><span class="doc">database maintenance instructions</span></a>.</p>
 </div>
-<p>Job exceptions, node failures, and system outages are all unfortunate realities of executing workflows. You&#8217;ll likely encounter some of these events when running FireWorks. This tutorial will simulate some of these events, so you can see how FireWorks detects job failures and what you can do about it.</p>
+<p>Job exceptions, node failures, and system outages are all unfortunate realities of executing workflows. You’ll likely encounter some of these events when running FireWorks. This tutorial will simulate some of these events, so you can see how FireWorks detects job failures and what you can do about it.</p>
 <div class="section" id="normal-operation">
 <h2>Normal operation<a class="headerlink" href="#normal-operation" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s first introduce normal operation of a Firework that prints <code class="docutils literal"><span class="pre">starting</span></code>, sleeps for 10 seconds, and then prints <code class="docutils literal"><span class="pre">ending</span></code>. The Firework is completed successfully only if <code class="docutils literal"><span class="pre">ending</span></code> gets printed.</p>
+<p>Let’s first introduce normal operation of a Firework that prints <code class="docutils literal"><span class="pre">starting</span></code>, sleeps for 10 seconds, and then prints <code class="docutils literal"><span class="pre">ending</span></code>. The Firework is completed successfully only if <code class="docutils literal"><span class="pre">ending</span></code> gets printed.</p>
 <ol class="arabic">
 <li><p class="first">Move to the <code class="docutils literal"><span class="pre">failures</span></code> tutorial directory in your installation directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">failures</span>
@@ -76,20 +73,20 @@
 <p class="last">You can increase or decrease the sleep time, depending on your patience level and reaction time later on in the tutorial.</p>
 </div>
 </li>
-<li><p class="first">Let&#8217;s add and run this Firework. You&#8217;ll have to wait 10 seconds for it to complete:</p>
+<li><p class="first">Let’s add and run this Firework. You’ll have to wait 10 seconds for it to complete:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_sleep</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">rlaunch</span> <span class="n">singleshot</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Hopefully, your patience was rewarded with <code class="docutils literal"><span class="pre">ending</span></code> printed to your terminal. If so, let&#8217;s keep going!</p>
+<li><p class="first">Hopefully, your patience was rewarded with <code class="docutils literal"><span class="pre">ending</span></code> printed to your terminal. If so, let’s keep going!</p>
 </li>
 </ol>
 </div>
 <div class="section" id="error-during-run-a-fizzled-firework">
 <h2>Error during run - a <em>FIZZLED</em> Firework!<a class="headerlink" href="#error-during-run-a-fizzled-firework" title="Permalink to this headline">¶</a></h2>
-<p>If your job throws an exception (error), FireWorks will automatically mark your job as <em>FIZZLED</em>. Any jobs that depend on this job will not run until you fix things. Let&#8217;s simulate this situation.</p>
+<p>If your job throws an exception (error), FireWorks will automatically mark your job as <em>FIZZLED</em>. Any jobs that depend on this job will not run until you fix things. Let’s simulate this situation.</p>
 <ol class="arabic">
 <li><p class="first">Reset your database and add back the sleeping Firework:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
@@ -97,20 +94,20 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">We&#8217;ll run the Firework again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C). Make sure you hit that keyboard combo immediately after running the job, before you see the text <code class="docutils literal"><span class="pre">ending</span></code>:</p>
+<li><p class="first">We’ll run the Firework again, but this time you should interrupt its operation using the keyboard shortcut to stop execution(Ctrl+C). Make sure you hit that keyboard combo immediately after running the job, before you see the text <code class="docutils literal"><span class="pre">ending</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">singleshot</span>
 <span class="p">(</span><span class="n">Ctrl</span><span class="o">+</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">If you did this correctly, you&#8217;ll have seen the text <code class="docutils literal"><span class="pre">starting</span></code> but not the text <code class="docutils literal"><span class="pre">ending</span></code>. You might also see some error text printed to your terminal.</p>
+<li><p class="first">If you did this correctly, you’ll have seen the text <code class="docutils literal"><span class="pre">starting</span></code> but not the text <code class="docutils literal"><span class="pre">ending</span></code>. You might also see some error text printed to your terminal.</p>
 </li>
-<li><p class="first">This behavior is what happens when your job throws an error (such as the <em>KeyboardInterrupt</em> error we just simulated). Let&#8217;s see what became of this ill-fated Firework:</p>
+<li><p class="first">This behavior is what happens when your job throws an error (such as the <em>KeyboardInterrupt</em> error we just simulated). Let’s see what became of this ill-fated Firework:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">You should notice the state of this Firework is automatically marked as <em>FIZZLED</em>. In addition, if you look at the <strong>stored_data</strong> key, you&#8217;ll see that there&#8217;s information about the error that was encountered during the run. If you&#8217;re thorough, you&#8217;ll see something about a <em>KeyboardInterruptError</em>.</p>
+<li><p class="first">You should notice the state of this Firework is automatically marked as <em>FIZZLED</em>. In addition, if you look at the <strong>stored_data</strong> key, you’ll see that there’s information about the error that was encountered during the run. If you’re thorough, you’ll see something about a <em>KeyboardInterruptError</em>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If the exception thrown by the job implements the <code class="docutils literal"><span class="pre">to_dict()</span></code> method, this will be called to serialize customized information about the exception and add them to the <code class="docutils literal"><span class="pre">stored_data</span></code>.</p>
@@ -125,7 +122,7 @@
 </div>
 <div class="section" id="catastrophic-failure">
 <h2>Catastrophic Failure<a class="headerlink" href="#catastrophic-failure" title="Permalink to this headline">¶</a></h2>
-<p>The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as <em>FIZZLED</em>. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let&#8217;s see how to handle this case.</p>
+<p>The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as <em>FIZZLED</em>. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let’s see how to handle this case.</p>
 <ol class="arabic">
 <li><p class="first">Reset your database and add back the sleeping Firework:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
@@ -133,13 +130,13 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">We&#8217;ll run the Firework again, but this time you should interrupt its operation by <strong>forcibly closing your terminal window</strong> (immediately after running the job, before you see the text <code class="docutils literal"><span class="pre">ending</span></code>):</p>
+<li><p class="first">We’ll run the Firework again, but this time you should interrupt its operation by <strong>forcibly closing your terminal window</strong> (immediately after running the job, before you see the text <code class="docutils literal"><span class="pre">ending</span></code>):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">singleshot</span>
 <span class="o">----</span><span class="p">(</span><span class="n">forcibly</span> <span class="n">close</span> <span class="n">your</span> <span class="n">terminal</span> <span class="n">window</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Now let&#8217;s re-open a terminal window and see what FireWorks thinks is happening with this job:</p>
+<li><p class="first">Now let’s re-open a terminal window and see what FireWorks thinks is happening with this job:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
 </pre></div>
 </div>
@@ -157,16 +154,16 @@
 <p class="last">An additional constraint, <code class="docutils literal"><span class="pre">--max_runtime</span></code>, can be used if you are looking for jobs that ran only a short time before failing. This can be useful to track down if a job was killed because it did not have walltime to run (if it was started in the middle of the queue job). Note that you should set this parameter to be in slightly larger intervals of the ping_time, since runtime is determined using pings.</p>
 </div>
 </li>
-<li><p class="first">This command will mark all jobs that have been running for more than 1 second as <em>FIZZLED</em>. We&#8217;ll improve this in a bit, but for now let&#8217;s check to make sure the command worked:</p>
+<li><p class="first">This command will mark all jobs that have been running for more than 1 second as <em>FIZZLED</em>. We’ll improve this in a bit, but for now let’s check to make sure the command worked:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">The Firework should now be correctly listed as <em>FIZZLED</em>!</p>
 </li>
-<li><p class="first">Of course, in production you&#8217;ll never want to mark all jobs running for 1 second as being <em>FIZZLED</em>; this will mark jobs that are running properly as <em>FIZZLED</em>!</p>
+<li><p class="first">Of course, in production you’ll never want to mark all jobs running for 1 second as being <em>FIZZLED</em>; this will mark jobs that are running properly as <em>FIZZLED</em>!</p>
 </li>
-<li><p class="first">In production, you need not specify the <code class="docutils literal"><span class="pre">--time</span></code> parameter at all. FireWorks will automatically detect a job as <em>FIZZLED</em> after 4 hours of idle time when you run <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">detect_lostruns</span></code>. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as <em>FIZZLED</em>. This is because the Rocket will automatically ping the LaunchPad that it&#8217;s <em>alive</em> every hour. FireWorks will only mark jobs as <em>FIZZLED</em> when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands:</p>
+<li><p class="first">In production, you need not specify the <code class="docutils literal"><span class="pre">--time</span></code> parameter at all. FireWorks will automatically detect a job as <em>FIZZLED</em> after 4 hours of idle time when you run <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">detect_lostruns</span></code>. Jobs that are running properly, even if they take longer than 4 hours, will not be marked as <em>FIZZLED</em>. This is because the Rocket will automatically ping the LaunchPad that it’s <em>alive</em> every hour. FireWorks will only mark jobs as <em>FIZZLED</em> when it does not receive this ping from the Rocket for 4 hours. You can test this feature with the following sequence of commands:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>lpad reset
 lpad add fw_sleep.yaml
 rlaunch singleshot
@@ -189,8 +186,8 @@ lpad get_fws -i 1 -d all
 </div>
 <div class="section" id="life-after-fizzled">
 <h2>Life after <em>FIZZLED</em><a class="headerlink" href="#life-after-fizzled" title="Permalink to this headline">¶</a></h2>
-<p>Once FireWorks has identified a job as <em>FIZZLED</em>, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you&#8217;ve correctly enabled <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">duplicate checking</span></a>, your new workflow will automatically pick up where you left off, and you won&#8217;t do any extra calculations. This is the preferred way of dealing with failures. If you haven&#8217;t enabled duplicate checking, then you can also <a class="reference internal" href="rerun_tutorial.html"><span class="doc">rerun your workflow</span></a>, starting from the failed job. If the <code class="docutils literal"><span class="pre">EXCEPT_DETAILS_ON_RERUN</span></code> option is enabled in your <a class="reference internal" href="config_tutorial.html"><span class="doc">FW configuration</span></a>, the exception details serialized during the last launch will be copied in the spec under the key <code class="docutils literal"><span class="pre">_exception_details</span></code>. Customized exceptions can then be implemented to store information that help properly restart the job. The only caveat to this latter method is that dynamic actions already taken by your workflow will <strong>not</strong> be reset to their initial state.</p>
-<p>You can also continue on with the Workflow even after <em>FIZZLED</em> by setting the <code class="docutils literal"><span class="pre">_allow_fizzled_parents</span></code> parameter in your <strong>spec</strong>. This will allow you to algorithmically fix errors using FireWorks&#8217; dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.</p>
+<p>Once FireWorks has identified a job as <em>FIZZLED</em>, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you’ve correctly enabled <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">duplicate checking</span></a>, your new workflow will automatically pick up where you left off, and you won’t do any extra calculations. This is the preferred way of dealing with failures. If you haven’t enabled duplicate checking, then you can also <a class="reference internal" href="rerun_tutorial.html"><span class="doc">rerun your workflow</span></a>, starting from the failed job. If the <code class="docutils literal"><span class="pre">EXCEPT_DETAILS_ON_RERUN</span></code> option is enabled in your <a class="reference internal" href="config_tutorial.html"><span class="doc">FW configuration</span></a>, the exception details serialized during the last launch will be copied in the spec under the key <code class="docutils literal"><span class="pre">_exception_details</span></code>. Customized exceptions can then be implemented to store information that help properly restart the job. The only caveat to this latter method is that dynamic actions already taken by your workflow will <strong>not</strong> be reset to their initial state.</p>
+<p>You can also continue on with the Workflow even after <em>FIZZLED</em> by setting the <code class="docutils literal"><span class="pre">_allow_fizzled_parents</span></code> parameter in your <strong>spec</strong>. This will allow you to algorithmically fix errors using FireWorks’ dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.</p>
 </div>
 <div class="section" id="database-locks-and-inconsistencies">
 <h2>Database locks and inconsistencies<a class="headerlink" href="#database-locks-and-inconsistencies" title="Permalink to this headline">¶</a></h2>
@@ -268,13 +265,13 @@ lpad get_fws -i 1 -d all
         <li class="right" >
           <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

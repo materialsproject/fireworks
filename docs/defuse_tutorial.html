@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Canceling (pausing), restarting, and deleting Workflows &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Canceling (pausing), restarting, and deleting Workflows &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Rerunning a Firework or Workflow" href="rerun_tutorial.html" />
     <link rel="prev" title="Assigning job priority" href="priority_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="priority_tutorial.html" title="Assigning job priority"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -59,7 +56,7 @@
 <div class="section" id="canceling-pausing-restarting-entire-workflows">
 <h2>Canceling/pausing/restarting entire workflows<a class="headerlink" href="#canceling-pausing-restarting-entire-workflows" title="Permalink to this headline">¶</a></h2>
 <p>You can pause Workflows in one of two ways: <em>pausing</em> them and <em>defusing</em> them. Both method do essentially the same thing,
-except that defusing Fireworks can be done programmatically via a <em>FWAction</em> and is often associated with something going &#8220;wrong&#8221;.</p>
+except that defusing Fireworks can be done programmatically via a <em>FWAction</em> and is often associated with something going “wrong”.</p>
 <p>To pause a Workflow:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">pause_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
 </pre></div>
@@ -110,7 +107,7 @@ except that defusing Fireworks can be done programmatically via a <em>FWAction</
 </div>
 <div class="section" id="archiving-workflows">
 <h2>Archiving workflows<a class="headerlink" href="#archiving-workflows" title="Permalink to this headline">¶</a></h2>
-<p>There are both &#8220;hard&#8221; and &#8220;soft&#8221; deletes of jobs from the FireWorks database. The <strong>archive</strong> command is a soft delete that prevents all steps in a Workflow from running. It also archives any FireWorks in the Workflow that already ran, in effect simulating that they never existed. Therefore, the Workflow is for practical purposes erased. However, archived Workflows still exist in the database, and you can <em>query</em> them down the road for job provenance, but you cannot rerun them.</p>
+<p>There are both “hard” and “soft” deletes of jobs from the FireWorks database. The <strong>archive</strong> command is a soft delete that prevents all steps in a Workflow from running. It also archives any FireWorks in the Workflow that already ran, in effect simulating that they never existed. Therefore, the Workflow is for practical purposes erased. However, archived Workflows still exist in the database, and you can <em>query</em> them down the road for job provenance, but you cannot rerun them.</p>
 <p>To archive Workflows, use the command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">archive_wflows</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
 </pre></div>
@@ -199,13 +196,13 @@ except that defusing Fireworks can be done programmatically via a <em>FWAction</
         <li class="right" >
           <a href="priority_tutorial.html" title="Assigning job priority"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Controlling the directory and Worker of execution &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Controlling the directory and Worker of execution &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,9 +24,9 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="“Packing” small jobs into larger ones with multi job launcher" href="multi_job.html" />
-    <link rel="prev" title="Using the built-in FilePad Tasks" href="filepad_tasks.html" /> 
+    <link rel="prev" title="Using the dataflow Firetasks" href="dataflow_tasks.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -43,9 +40,9 @@
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+          <a href="dataflow_tasks.html" title="Using the dataflow Firetasks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -63,15 +60,15 @@
 <ol class="arabic simple">
 <li>set the <code class="docutils literal"><span class="pre">_launch_dir</span></code> key in your Firework <em>spec</em> to the <em>full path</em> of the directory you want to execute the Firework in.</li>
 </ol>
-<p><em>(that&#8217;s it!)</em></p>
+<p><em>(that’s it!)</em></p>
 <div class="section" id="potential-pitfalls">
 <h3>Potential pitfalls<a class="headerlink" href="#potential-pitfalls" title="Permalink to this headline">¶</a></h3>
 <p>While setting execution directory is simple enough, we suggest that you avoid this feature of FireWorks unless absolutely necessary. Here are a few pitfalls to consider when using this feature:</p>
 <ol class="arabic simple">
 <li>If you have multiple Workers, make sure that the <code class="docutils literal"><span class="pre">_launch_dir</span></code> you set is accessible from all Workers. Or, set things up so that only the correct Worker will pull your job (see next section).</li>
 <li>If you direct multiple FireWorks into the same <code class="docutils literal"><span class="pre">_launch_dir</span></code>, you might overwrite output files (like <code class="docutils literal"><span class="pre">FW.json</span></code>).</li>
-<li>If your code depends on having a particular directory structure in order to function, it&#8217;s perhaps a sign that your code could be strengthened. For example, if you direct a job to a critical directory and it <em>fails</em> (e.g., due to a node crash), a rerun of that job might overwrite your original run because it&#8217;s being directed to the same directory. This might not be your intended behavior.</li>
-<li>Note that by default, FireWorks tries to clean (delete) the default FireWorks launch directory. If you find this is causing problems (it shouldn&#8217;t), you can set <code class="docutils literal"><span class="pre">REMOVE_USELESS_DIRS</span></code> to False in the <a class="reference internal" href="config_tutorial.html"><span class="doc">FireWorks config</span></a>.</li>
+<li>If your code depends on having a particular directory structure in order to function, it’s perhaps a sign that your code could be strengthened. For example, if you direct a job to a critical directory and it <em>fails</em> (e.g., due to a node crash), a rerun of that job might overwrite your original run because it’s being directed to the same directory. This might not be your intended behavior.</li>
+<li>Note that by default, FireWorks tries to clean (delete) the default FireWorks launch directory. If you find this is causing problems (it shouldn’t), you can set <code class="docutils literal"><span class="pre">REMOVE_USELESS_DIRS</span></code> to False in the <a class="reference internal" href="config_tutorial.html"><span class="doc">FireWorks config</span></a>.</li>
 </ol>
 </div>
 <div class="section" id="alternatives-to-using-launch-dir">
@@ -79,7 +76,7 @@
 <p>Potential alternatives to using <code class="docutils literal"><span class="pre">_launch_dir</span></code> are:</p>
 <ol class="arabic simple">
 <li>If you are worried about finding your jobs on the filesystem, try <a class="reference internal" href="query_tutorial.html"><span class="doc">exploring all the features of LaunchPad queries</span></a>. In general, the database method of searching for jobs is much more powerful than browsing filesystems, especially if you set up your FireWorks <em>name</em> and <em>spec</em> to include things you care about in your search.</li>
-<li>Another solution is to have your Firework write an empty file in its directory that has a name like &#8220;JOB&#8211;Cadmium&#8221; or &#8220;JOB&#8211;Silicon&#8221;. Then you can quickly see what kind of job is in a bunch of <code class="docutils literal"><span class="pre">launcher</span></code> directories using a command like <code class="docutils literal"><span class="pre">ls</span> <span class="pre">launcher*/JOB*</span></code> - you&#8217;ll see a list of launcher directories and which one contains &#8220;Cadmium&#8221; or &#8220;Silicon&#8221;.</li>
+<li>Another solution is to have your Firework write an empty file in its directory that has a name like “JOB–Cadmium” or “JOB–Silicon”. Then you can quickly see what kind of job is in a bunch of <code class="docutils literal"><span class="pre">launcher</span></code> directories using a command like <code class="docutils literal"><span class="pre">ls</span> <span class="pre">launcher*/JOB*</span></code> - you’ll see a list of launcher directories and which one contains “Cadmium” or “Silicon”.</li>
 <li>If you have a job that depends on knowing the location of other Firework runs, try writing your Firetasks to pass the location of execution to children using the <em>FWAction</em> object. Then, locations are passed dynamically in a true workflow fashion rather than hard-coded.</li>
 </ol>
 <p>Of course, these are just suggestions. In the end, do what works!</p>
@@ -100,7 +97,7 @@
 <p class="first admonition-title">Note</p>
 <p class="last">Recall the <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> file from the <a class="reference internal" href="worker_tutorial.html"><span class="doc">FireWorker tutorial</span></a>. To set the FireWorker name, modify the <code class="docutils literal"><span class="pre">name</span></code> key.</p>
 </div>
-<p>Once you&#8217;ve set these values, job execution occurs as follows:</p>
+<p>Once you’ve set these values, job execution occurs as follows:</p>
 <ul class="simple">
 <li>FireWorks with a <code class="docutils literal"><span class="pre">_fworker</span></code> variable set will only run on a FireWorker with the exactly matching <code class="docutils literal"><span class="pre">name</span></code> variable.</li>
 <li>Note that this does not set any restriction on the jobs the FireWorker can pull, i.e. your FireWorker can pull matching FireWorks as well as any other FireWork. To restrict jobs pulled by the FireWorker, use the methods below (perhaps in addition to this method).</li>
@@ -117,7 +114,7 @@
 <p class="first admonition-title">Note</p>
 <p class="last">Recall the <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> file from the <a class="reference internal" href="worker_tutorial.html"><span class="doc">FireWorker tutorial</span></a>. To set the FireWorker category, modify this file so that the <code class="docutils literal"><span class="pre">category</span></code> key is non-empty.</p>
 </div>
-<p>Once you&#8217;ve set these values, job execution occurs as follows:</p>
+<p>Once you’ve set these values, job execution occurs as follows:</p>
 <ul class="simple">
 <li>FireWorkers with no <code class="docutils literal"><span class="pre">category</span></code> variable set will be able to run <strong>any</strong> Firework (even FireWorks with a <code class="docutils literal"><span class="pre">_category</span></code> key in the spec).</li>
 <li>FireWorkers with a <code class="docutils literal"><span class="pre">category</span></code> set will only run the FireWorks with an exactly matching <code class="docutils literal"><span class="pre">_category</span></code> variable in the Firework spec.</li>
@@ -175,11 +172,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="filepad_tasks.html"
-                        title="previous chapter">Using the built-in FilePad Tasks</a></p>
+  <p class="topless"><a href="dataflow_tasks.html"
+                        title="previous chapter">Using the dataflow Firetasks</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="multi_job.html"
-                        title="next chapter">&#8220;Packing&#8221; small jobs into larger ones with multi job launcher</a></p>
+                        title="next chapter">“Packing” small jobs into larger ones with multi job launcher</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -214,15 +211,15 @@
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              >next</a> |</li>
         <li class="right" >
-          <a href="filepad_tasks.html" title="Using the built-in FilePad Tasks"
+          <a href="dataflow_tasks.html" title="Using the dataflow Firetasks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

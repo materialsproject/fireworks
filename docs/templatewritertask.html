@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Using the TemplateWriterTask to write files &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Using the TemplateWriterTask to write files &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Using the built-in FileIO Tasks" href="fileiotasks.html" />
     <link rel="prev" title="Using the ScriptTask to execute commands" href="scripttask.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="scripttask.html" title="Using the ScriptTask to execute commands"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -57,14 +54,14 @@
   <div class="section" id="using-the-templatewritertask-to-write-files">
 <h1>Using the TemplateWriterTask to write files<a class="headerlink" href="#using-the-templatewritertask-to-write-files" title="Permalink to this headline">¶</a></h1>
 <p>A common task in scientific workflows is to write an input file in a format that can be read by a program, and then execute that program. When automating the same program for different inputs (like different molecules or sections of a galaxy), slight modifications to the input file are needed. This tutorial introduces the built-in <em>TemplateWriterTask</em> as a method for writing input files (or any other type of templated file).</p>
-<p>We presented an example of using the <em>TemplateWriterTask</em> and subsequently running a program in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>. If you didn&#8217;t already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the <em>TemplateWriterTask</em> works.</p>
+<p>We presented an example of using the <em>TemplateWriterTask</em> and subsequently running a program in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>. If you didn’t already complete the first part of that tutorial, we suggest you do that first. This tutorial contains more details on how the <em>TemplateWriterTask</em> works.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The <em>TemplateWriterTask</em> is uses the Jinja2 templating engine, which provides a simple, extensible templating language.</p>
 </div>
 <div class="section" id="a-simple-template-variable-substitutions">
 <h2>A simple template - variable substitutions<a class="headerlink" href="#a-simple-template-variable-substitutions" title="Permalink to this headline">¶</a></h2>
-<p>We introduced a simple template in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>. Let&#8217;s explore this template in more detail.</p>
+<p>We introduced a simple template in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>. Let’s explore this template in more detail.</p>
 <ol class="arabic">
 <li><p class="first">Navigate to the template writer tutorial directory in your installation directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">templatewritertask</span>
@@ -78,12 +75,12 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The template file can be any text file, with any extension (or no extension at all). The actual template file is stored within the FireWorks code, so modifying this copy of a file won&#8217;t have any effect (more on this later in the tutorial).</p>
+<p class="last">The template file can be any text file, with any extension (or no extension at all). The actual template file is stored within the FireWorks code, so modifying this copy of a file won’t have any effect (more on this later in the tutorial).</p>
 </div>
 </li>
 <li><p class="first">Most of the template file is interpreted literally and is static. However, the text inside double curly braces <code class="docutils literal"><span class="pre">{{</span></code> and <code class="docutils literal"><span class="pre">}}</span></code> are <strong>variables</strong> that will be replaced later on by other text.</p>
 </li>
-<li><p class="first">We set the variables <strong>opt1</strong> and <strong>opt2</strong> using a <em>Context</em>. This is a dictionary that contains specific values for these parameters. Let&#8217;s see how this is defined by looking inside <code class="docutils literal"><span class="pre">fw_template.yaml</span></code>:</p>
+<li><p class="first">We set the variables <strong>opt1</strong> and <strong>opt2</strong> using a <em>Context</em>. This is a dictionary that contains specific values for these parameters. Let’s see how this is defined by looking inside <code class="docutils literal"><span class="pre">fw_template.yaml</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
   <span class="n">_tasks</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">TemplateWriterTask</span>
@@ -96,7 +93,7 @@
 </div>
 <p>Note that we have specified a <code class="docutils literal"><span class="pre">template_file</span></code>, a <code class="docutils literal"><span class="pre">context</span></code>, and an <code class="docutils literal"><span class="pre">output_file</span></code>. All three of these parameters are needed to use the <em>TemplateWriterTask</em>.</p>
 </li>
-<li><p class="first">In the Firework above, we are setting <strong>opt1</strong> to 5.0 and <strong>opt2</strong> to &#8220;fast method&#8221;. If we wanted to change these parameters, we can create a file like <code class="docutils literal"><span class="pre">fw_template2.yaml</span></code>:</p>
+<li><p class="first">In the Firework above, we are setting <strong>opt1</strong> to 5.0 and <strong>opt2</strong> to “fast method”. If we wanted to change these parameters, we can create a file like <code class="docutils literal"><span class="pre">fw_template2.yaml</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
   <span class="n">_tasks</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">TemplateWriterTask</span>
@@ -108,9 +105,9 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">This second Firework is identical to the first, except that we have changed the value of variables <strong>opt1</strong> and <strong>opt2</strong>. Thus, we have only changed the parameter values we care about when creating a new Firework. In addition, one could easily perform searches based on <strong>opt1</strong> and <strong>opt2</strong> values using MongoDB&#8217;s built-in search capabilities.</p>
+<li><p class="first">This second Firework is identical to the first, except that we have changed the value of variables <strong>opt1</strong> and <strong>opt2</strong>. Thus, we have only changed the parameter values we care about when creating a new Firework. In addition, one could easily perform searches based on <strong>opt1</strong> and <strong>opt2</strong> values using MongoDB’s built-in search capabilities.</p>
 </li>
-<li><p class="first">Let&#8217;s reset the database, add these FireWorks to the LaunchPad, and then execute them:</p>
+<li><p class="first">Let’s reset the database, add these FireWorks to the LaunchPad, and then execute them:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_template</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_template2</span><span class="o">.</span><span class="n">yaml</span>
@@ -140,7 +137,7 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The actual template file is stored within the FireWorks code, so modifying this copy of a file won&#8217;t have any effect (more on this later in the tutorial).</p>
+<p class="last">The actual template file is stored within the FireWorks code, so modifying this copy of a file won’t have any effect (more on this later in the tutorial).</p>
 </div>
 </li>
 <li><p class="first">Note that this template contains some additional tags. In particular, in between <code class="docutils literal"><span class="pre">{%</span></code> and <code class="docutils literal"><span class="pre">%}</span></code> we have some code that contains <em>if/then</em> statements and a <em>for</em> loop.</p>
@@ -163,26 +160,26 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Let&#8217;s run this Firework and examine what happens:</p>
+<li><p class="first">Let’s run this Firework and examine what happens:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_advanced</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">rlaunch</span> <span class="o">--</span><span class="n">silencer</span> <span class="n">singleshot</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">You&#8217;ll notice that we&#8217;ve iterated over our loop, and the optional parameter is indeed written to <code class="docutils literal"><span class="pre">inputs_advanced.txt</span></code>.</p>
+<li><p class="first">You’ll notice that we’ve iterated over our loop, and the optional parameter is indeed written to <code class="docutils literal"><span class="pre">inputs_advanced.txt</span></code>.</p>
 </li>
-<li><p class="first">Now, try deleting the line containing the <code class="docutils literal"><span class="pre">optparam</span></code> and repeating the launch process. You&#8217;ll see that the lines pertaining to the <code class="docutils literal"><span class="pre">OPTIONAL</span> <span class="pre">PARAMETER</span></code> are no longer written!</p>
+<li><p class="first">Now, try deleting the line containing the <code class="docutils literal"><span class="pre">optparam</span></code> and repeating the launch process. You’ll see that the lines pertaining to the <code class="docutils literal"><span class="pre">OPTIONAL</span> <span class="pre">PARAMETER</span></code> are no longer written!</p>
 </li>
 </ol>
-<p>Therefore, with Jinja2&#8217;s templating language we can write fairly general templates. While variable substitutions, <em>if/then</em> statements, and <em>for loops</em> should cover the majority of cases, you can see even more features in the <a class="reference external" href="http://jinja.pocoo.org">official Jinja2 documentation</a>. For example, you can use template inheritance or insert templates into other templates.</p>
+<p>Therefore, with Jinja2’s templating language we can write fairly general templates. While variable substitutions, <em>if/then</em> statements, and <em>for loops</em> should cover the majority of cases, you can see even more features in the <a class="reference external" href="http://jinja.pocoo.org">official Jinja2 documentation</a>. For example, you can use template inheritance or insert templates into other templates.</p>
 </div>
 <div class="section" id="writing-your-own-templates">
 <h2>Writing your own templates<a class="headerlink" href="#writing-your-own-templates" title="Permalink to this headline">¶</a></h2>
 <p>When writing your own templates, you have a few options on where to store the templates so they can be read by FireWorks. Note that all the worker computers using the templates must have the most recent templates installed locally.</p>
 <div class="section" id="option-1-the-user-objects-directory-of-the-fireworks-code">
 <h3>Option 1: The user_objects directory of the FireWorks code<a class="headerlink" href="#option-1-the-user-objects-directory-of-the-fireworks-code" title="Permalink to this headline">¶</a></h3>
-<p>The default place that FireWorks looks for templates is in the <code class="docutils literal"><span class="pre">user_objects/firetasks/templates</span></code> directory of your FireWorks installation. Indeed, the <code class="docutils literal"><span class="pre">simple_template.txt</span></code> and <code class="docutils literal"><span class="pre">advanced_template.txt</span></code> files used in this tutorial are stored there (that&#8217;s why modifying the tutorial files has no effect on the result). Any templates you put in this directory (or its subdirectories) will be read by FireWorks; just put the relative path of your template as the <code class="docutils literal"><span class="pre">template_file</span></code> parameter.</p>
+<p>The default place that FireWorks looks for templates is in the <code class="docutils literal"><span class="pre">user_objects/firetasks/templates</span></code> directory of your FireWorks installation. Indeed, the <code class="docutils literal"><span class="pre">simple_template.txt</span></code> and <code class="docutils literal"><span class="pre">advanced_template.txt</span></code> files used in this tutorial are stored there (that’s why modifying the tutorial files has no effect on the result). Any templates you put in this directory (or its subdirectories) will be read by FireWorks; just put the relative path of your template as the <code class="docutils literal"><span class="pre">template_file</span></code> parameter.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If you do not know how to find the correct directory, type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">version</span></code>. Then navigate to the install directory, then <code class="docutils literal"><span class="pre">cd</span> <span class="pre">fireworks/user_objects/firetasks/templates</span></code>.</p>
@@ -205,7 +202,7 @@
 </div>
 <div class="section" id="the-use-global-spec-option">
 <h2>The _use_global_spec option<a class="headerlink" href="#the-use-global-spec-option" title="Permalink to this headline">¶</a></h2>
-<p>By default, the parameters for the TemplateWriterTask should be defined within the <code class="docutils literal"><span class="pre">_task</span></code> section of the <strong>spec</strong> corresponding to the TemplateWriterTask, not as a root key of the <strong>spec</strong>. If you&#8217;d like to instead specify the parameters in the root of the <strong>spec</strong>, you can set <code class="docutils literal"><span class="pre">_use_global_spec</span></code> to True within the <code class="docutils literal"><span class="pre">_task</span></code> section. Note that <code class="docutils literal"><span class="pre">_use_global_spec</span></code> can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple TemplateWriterTasks within the same Firework.</p>
+<p>By default, the parameters for the TemplateWriterTask should be defined within the <code class="docutils literal"><span class="pre">_task</span></code> section of the <strong>spec</strong> corresponding to the TemplateWriterTask, not as a root key of the <strong>spec</strong>. If you’d like to instead specify the parameters in the root of the <strong>spec</strong>, you can set <code class="docutils literal"><span class="pre">_use_global_spec</span></code> to True within the <code class="docutils literal"><span class="pre">_task</span></code> section. Note that <code class="docutils literal"><span class="pre">_use_global_spec</span></code> can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple TemplateWriterTasks within the same Firework.</p>
 </div>
 <div class="section" id="python-example">
 <h2>Python example<a class="headerlink" href="#python-example" title="Permalink to this headline">¶</a></h2>
@@ -278,13 +275,13 @@
         <li class="right" >
           <a href="scripttask.html" title="Using the ScriptTask to execute commands"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

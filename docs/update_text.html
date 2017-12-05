@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Updating values (e.g., directory paths) in the database &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Updating values (e.g., directory paths) in the database &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Using FilePad for storing and retrieving files" href="filepad_tutorial.html" />
     <link rel="prev" title="Writing Queue Adapters" href="qadapter_programming.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="qadapter_programming.html" title="Writing Queue Adapters"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -57,7 +54,7 @@
   <div class="section" id="updating-values-e-g-directory-paths-in-the-database">
 <h1>Updating values (e.g., directory paths) in the database<a class="headerlink" href="#updating-values-e-g-directory-paths-in-the-database" title="Permalink to this headline">¶</a></h1>
 <p>The data in your FireWorks database might become out of date. For example, runs that were previously located with
-directory preamble &#8220;/scratch1/&#8221; might be moved to &#8220;/project/&#8221;. Or, a tag of &#8220;solar_all&#8221; might need updating to &#8220;solar_part1&#8221;.</p>
+directory preamble “/scratch1/” might be moved to “/project/”. Or, a tag of “solar_all” might need updating to “solar_part1”.</p>
 <p>You can perform a text replacement over all documents in your FireWorks database. This text-replacement is absolute, so you must make sure the text to replace is unique.</p>
 <p>In order to use this functionality, use the method: <em>fireworks.utilities.update_collection.update_launchpad_data</em>, and be sure to read the documentation.</p>
 <p>A few notes:</p>
@@ -65,8 +62,8 @@ directory preamble &#8220;/scratch1/&#8221; might be moved to &#8220;/project/&#
 <li>Turn everything off (i.e., new database insertions) before running this method.</li>
 <li>We highly suggest you back up the database (using mongodump) before running this method.</li>
 <li>Remember, the text replacement you specify will be applied for all keys over all documents. Make sure your replaced text is unique.</li>
-<li>After running the method, a backup of the original collections can be found with &#8220;_xiv_{DATE}&#8221; extension. If for any reason something goes wrong, you can move these original collections back using MongoDB.</li>
-<li>A &#8220;dry_run&#8221; option can be used; this will create collections for the new data with extensions &#8220;_tmp_refactor&#8221; but will not overwrite your original data. After running in &#8220;dry_run&#8221;, you may need to use &#8220;force_clear&#8221;=True to run the method again.</li>
+<li>After running the method, a backup of the original collections can be found with “_xiv_{DATE}” extension. If for any reason something goes wrong, you can move these original collections back using MongoDB.</li>
+<li>A “dry_run” option can be used; this will create collections for the new data with extensions “_tmp_refactor” but will not overwrite your original data. After running in “dry_run”, you may need to use “force_clear”=True to run the method again.</li>
 </ul>
 <p><em>fireworks.utilities.update_collection.update_launchpad_data</em> will update the core FireWorks collections: <em>launches</em>, <em>fireworks</em>, and <em>workflows</em>.
 If you want to update additional collections, use the <em>fireworks.utilities.update_collection.update_path_in_collection</em> method.</p>
@@ -121,13 +118,13 @@ If you want to update additional collections, use the <em>fireworks.utilities.up
         <li class="right" >
           <a href="qadapter_programming.html" title="Writing Queue Adapters"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

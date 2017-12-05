@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Writing Queue Adapters &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Writing Queue Adapters &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Updating values (e.g., directory paths) in the database" href="update_text.html" />
     <link rel="prev" title="Using Python to command FireWorks" href="python_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="python_tutorial.html" title="Using Python to command FireWorks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -134,13 +131,13 @@ $${post_rocket}
 </div>
 <div class="section" id="writing-a-new-adapter-from-scratch">
 <h3>Writing a new adapter from scratch<a class="headerlink" href="#writing-a-new-adapter-from-scratch" title="Permalink to this headline">¶</a></h3>
-<p>If your queue is a complex entity that is different than typical queue managers (maybe a web-based submission framework), you&#8217;ll need to write a new class from scratch that extends <code class="docutils literal"><span class="pre">QueueAdapterBase</span></code> and:</p>
+<p>If your queue is a complex entity that is different than typical queue managers (maybe a web-based submission framework), you’ll need to write a new class from scratch that extends <code class="docutils literal"><span class="pre">QueueAdapterBase</span></code> and:</p>
 <ul class="simple">
 <li>implement the <code class="docutils literal"><span class="pre">submit_to_queue()</span></code> method</li>
 <li>implement the <code class="docutils literal"><span class="pre">get_njobs_in_queue()</span></code> method</li>
 <li>set the <code class="docutils literal"><span class="pre">_fw_name</span></code> parameter to some unique String.</li>
 <li>set the <code class="docutils literal"><span class="pre">template_file</span></code> variable to a template file for your queue scripts</li>
-<li>implement the <code class="docutils literal"><span class="pre">get_script_str()</span></code> method (only in rare instances where your queue submission doesn&#8217;t involve writing a templated script, otherwise do not implement this method)</li>
+<li>implement the <code class="docutils literal"><span class="pre">get_script_str()</span></code> method (only in rare instances where your queue submission doesn’t involve writing a templated script, otherwise do not implement this method)</li>
 </ul>
 <p>You might look at the <em>CommonAdapter</em> class or <em>PBSAdapterNEWT</em> for examples. After writing your new code, decide on a location for your queue adapter Python code and template file. The built-in queue adapters are located in <code class="docutils literal"><span class="pre">&lt;INSTALL_DIR&gt;/fireworks/user_objects/queue_adapters</span></code>, and FireWorks will discover your code there automatically (you can find out <code class="docutils literal"><span class="pre">&lt;INSTALL_DIR&gt;</span></code> by typing <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">version</span></code>). However, you can also place your queue adapter in a different Python package if you set the <code class="docutils literal"><span class="pre">ADD_USER_PACKAGES</span></code> option as in the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>.</p>
 <p>Again, we suggest that you contact us for help (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>) if you run into any problems during the process.</p>
@@ -209,13 +206,13 @@ $${post_rocket}
         <li class="right" >
           <a href="python_tutorial.html" title="Using Python to command FireWorks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

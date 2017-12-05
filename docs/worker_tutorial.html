@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Worker Tutorial &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Worker Tutorial &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Launch Rockets through a queue" href="queue_tutorial.html" />
     <link rel="prev" title="Tips for designing Firetasks, FireWorks, and Workflows" href="design_tips.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="design_tips.html" title="Tips for designing Firetasks, FireWorks, and Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -56,15 +53,15 @@
             
   <div class="section" id="worker-tutorial">
 <h1>Worker Tutorial<a class="headerlink" href="#worker-tutorial" title="Permalink to this headline">¶</a></h1>
-<p>If you&#8217;ve set up your FireServer, this tutorial will help you to:</p>
+<p>If you’ve set up your FireServer, this tutorial will help you to:</p>
 <ul class="simple">
 <li>Set up a remote worker that connects to the FireServer to retrieve and execute jobs</li>
 </ul>
-<p>Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn&#8217;t intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.</p>
+<p>Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn’t intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.</p>
 <div class="section" id="launch-a-rocket-on-a-worker-machine-fireworker">
 <h2>Launch a Rocket on a worker machine (FireWorker)<a class="headerlink" href="#launch-a-rocket-on-a-worker-machine-fireworker" title="Permalink to this headline">¶</a></h2>
 <p>In the Introductory tutorial, we entered a Firework (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the Firework from the database and executed it, all within the same machine.</p>
-<p>A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside &#8216;worker&#8217; machine (FireWorkers). For example, you may have one node on a supercomputing resource dedicated to running MongoDB, but want to run FireWorks you have set up on that machine on a different supercomputing resource (e.g. running fireworks on ORNL or ALCF using a NERSC Fireserver).  We&#8217;ll next configure a worker machine.</p>
+<p>A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside ‘worker’ machine (FireWorkers). For example, you may have one node on a supercomputing resource dedicated to running MongoDB, but want to run FireWorks you have set up on that machine on a different supercomputing resource (e.g. running fireworks on ORNL or ALCF using a NERSC Fireserver).  We’ll next configure a worker machine.</p>
 <div class="section" id="install-fireworks-on-the-fireworker">
 <h3>Install FireWorks on the FireWorker<a class="headerlink" href="#install-fireworks-on-the-fireworker" title="Permalink to this headline">¶</a></h3>
 <p>On the worker machine, follow the instructions listed at <a class="reference internal" href="installation.html"><span class="doc">Basic FireWorks Installation</span></a>.</p>
@@ -72,7 +69,7 @@
 <div class="section" id="reset-the-fireworks-database">
 <h3>Reset the FireWorks database<a class="headerlink" href="#reset-the-fireworks-database" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Back at the <strong>FireServer</strong>, let&#8217;s reset our database and add a Firework:</p>
+<li><p class="first">Back at the <strong>FireServer</strong>, let’s reset our database and add a Firework:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">worker</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -109,18 +106,18 @@
 <p>This should print out the description of a Firework that is <em>READY</em> to run.</p>
 <div class="admonition tip">
 <p class="first admonition-title">Tip</p>
-<p class="last">If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the <a class="reference external" href="http://www.codingmonkeys.de/portmap/">Port Map</a> application to easily open ports. If you&#8217;re still having problems, you can use telnet to check if a port is open: <code class="docutils literal"><span class="pre">telnet</span> <span class="pre">&lt;HOSTNAME&gt;</span> <span class="pre">&lt;PORTNAME&gt;</span></code>, where <code class="docutils literal"><span class="pre">&lt;HOSTNAME&gt;</span></code> is your FireServer hostname and <code class="docutils literal"><span class="pre">&lt;PORTNAME&gt;</span></code> is your Mongo port (probably 27017).</p>
+<p class="last">If you cannot connect to the database from a remote worker, you might want to check your Firewall settings and ensure that port 27017 (the default Mongo port) is open/forwarded on the central server. For Macs, you might try the <a class="reference external" href="http://www.codingmonkeys.de/portmap/">Port Map</a> application to easily open ports. If you’re still having problems, you can use telnet to check if a port is open: <code class="docutils literal"><span class="pre">telnet</span> <span class="pre">&lt;HOSTNAME&gt;</span> <span class="pre">&lt;PORTNAME&gt;</span></code>, where <code class="docutils literal"><span class="pre">&lt;HOSTNAME&gt;</span></code> is your FireServer hostname and <code class="docutils literal"><span class="pre">&lt;PORTNAME&gt;</span></code> is your Mongo port (probably 27017).</p>
 </div>
 </li>
 </ol>
 </div>
 <div class="section" id="configure-your-fireworker">
 <h3>Configure your FireWorker<a class="headerlink" href="#configure-your-fireworker" title="Permalink to this headline">¶</a></h3>
-<p>The FireWorker file contains information about this worker&#8217;s configuration. Staying in the <code class="docutils literal"><span class="pre">worker</span></code> tutorial directory on the FireWorker, modify your <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> by changing the <code class="docutils literal"><span class="pre">name</span></code> parameter to something that will help you identify the worker that ran your Firework later on. For example, you might want to use the hostname of the worker machine.</p>
+<p>The FireWorker file contains information about this worker’s configuration. Staying in the <code class="docutils literal"><span class="pre">worker</span></code> tutorial directory on the FireWorker, modify your <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> by changing the <code class="docutils literal"><span class="pre">name</span></code> parameter to something that will help you identify the worker that ran your Firework later on. For example, you might want to use the hostname of the worker machine.</p>
 <blockquote>
 <div><div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The name <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> is a special filename that contains your FireWorker&#8217;s credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the <code class="docutils literal"><span class="pre">-w</span></code> parameter of <code class="docutils literal"><span class="pre">lpad</span></code>, or you can <a class="reference internal" href="config_tutorial.html"><span class="doc">set up your configuration</span></a> to set the location of this file once and for all.</p>
+<p class="last">The name <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code> is a special filename that contains your FireWorker’s credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the <code class="docutils literal"><span class="pre">-w</span></code> parameter of <code class="docutils literal"><span class="pre">lpad</span></code>, or you can <a class="reference internal" href="config_tutorial.html"><span class="doc">set up your configuration</span></a> to set the location of this file once and for all.</p>
 </div>
 </div></blockquote>
 </div>
@@ -155,7 +152,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Add three more FireWorks. Let&#8217;s do this from the FireWorker this time instead of the FireServer:</p>
+<li><p class="first">Add three more FireWorks. Let’s do this from the FireWorker this time instead of the FireServer:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -168,13 +165,13 @@
 </div>
 </li>
 </ol>
-<p>You&#8217;ve now run multiple jobs on your FireWorker! You could even try running the Rocket Launcher in <code class="docutils literal"><span class="pre">--nlaunches</span> <span class="pre">infinite</span></code> mode - then, you would have FireWorker that continuously ran new jobs added to the LaunchPad on the FireServer.</p>
+<p>You’ve now run multiple jobs on your FireWorker! You could even try running the Rocket Launcher in <code class="docutils literal"><span class="pre">--nlaunches</span> <span class="pre">infinite</span></code> mode - then, you would have FireWorker that continuously ran new jobs added to the LaunchPad on the FireServer.</p>
 <div class="section" id="setting-machine-specific-or-worker-specific-parameter-via-the-env-variable">
 <h3>Setting Machine-specific or worker-specific parameter via the <em>env</em> variable<a class="headerlink" href="#setting-machine-specific-or-worker-specific-parameter-via-the-env-variable" title="Permalink to this headline">¶</a></h3>
 <p>From v0.7.7, the FireWorker file now supports the <em>env</em> key. As its name
 implies, this key allows you to specify machine-specific (or more accurately, worker-specific) environment settings.
 For example, a particular command called in your Firetasks may be called
-&#8220;command&#8221; in machine 1 and &#8220;command_v1.2&#8221; in machine 2. You can then abstract
+“command” in machine 1 and “command_v1.2” in machine 2. You can then abstract
 out this command by specifying the differences in the FireWorker file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># For the FireWorker file on machine 1</span>
 <span class="n">env</span><span class="p">:</span>
@@ -185,7 +182,7 @@ out this command by specifying the differences in the FireWorker file:</p>
     <span class="n">command</span><span class="p">:</span> <span class="n">command_v1</span><span class="o">.</span><span class="mi">2</span>
 </pre></div>
 </div>
-<p>The env can then be accessed within your Firetasks as the &#8220;_fw_env&#8221; variable
+<p>The env can then be accessed within your Firetasks as the “_fw_env” variable
 in the fw_spec. For example, the run_task method for your Firetask may be
 something like:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="n">fw_spec</span><span class="p">):</span>
@@ -270,13 +267,13 @@ abstraction of machine-specific commands and settings. Note that you can also us
         <li class="right" >
           <a href="design_tips.html" title="Tips for designing Firetasks, FireWorks, and Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

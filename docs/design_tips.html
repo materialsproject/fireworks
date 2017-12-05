@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Tips for designing Firetasks, FireWorks, and Workflows &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Tips for designing Firetasks, FireWorks, and Workflows &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Worker Tutorial" href="worker_tutorial.html" />
     <link rel="prev" title="Dynamic Workflows" href="dynamic_wf_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="dynamic_wf_tutorial.html" title="Dynamic Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -83,7 +80,7 @@
 </ul>
 <p>A simplified version of the problem with 2 computing steps is shown below:</p>
 <a class="reference internal image-reference" href="_images/AorB.png"><img alt="Which solution is better?" class="align-center" src="_images/AorB.png" style="width: 400px;" /></a>
-<p>We saw an example of the &#8220;multi Firetask, single FW&#8221; solution in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">firetask tutorial</span></a> and the &#8220;single Firetask, multi FW&#8221; solution in the <a class="reference internal" href="workflow_tutorial.html"><span class="doc">Creating Workflows</span></a>. Which is better?</p>
+<p>We saw an example of the “multi Firetask, single FW” solution in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">firetask tutorial</span></a> and the “single Firetask, multi FW” solution in the <a class="reference internal" href="workflow_tutorial.html"><span class="doc">Creating Workflows</span></a>. Which is better?</p>
 <p>In general, using fewer FireWorks is simpler to implement, but less powerful. We suggest that you start by trying to map your workload into a <em>single</em> Firework with multiple tasks to maximize simplicity. Then, use the following table to help decide what points of your workload would benefit from being encapsulated into its own Firework, and what parts would be cumbersome to split up.</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -104,7 +101,7 @@ perhaps on different machines (custom)</td>
 <tr class="row-odd"><td>rerunning failed tasks is possible
 but one must be a little more careful</td>
 <td>can rerun individual FW; each Firework
-acts as a natural &#8220;checkpoint&#8221;</td>
+acts as a natural “checkpoint”</td>
 </tr>
 <tr class="row-even"><td>all tasks receive the same spec. Cannot
 modify spec between tasks</td>
@@ -141,12 +138,12 @@ for duplication with past runs</td>
 </tr>
 </tbody>
 </table>
-<p>What you might notice is that the FireWorks codebase treats the &#8220;Firework&#8221; object to be the atomic computing job. Jobs are launched, tracked, restarted, and duplicate-checked at the Firework level. The Firetasks are a convenience that let you simplify some of the overhead associated with having many FireWorks, especially when you want to run many tasks in the same directory and on the same machine. However, not many features are available at the Firetask level.</p>
+<p>What you might notice is that the FireWorks codebase treats the “Firework” object to be the atomic computing job. Jobs are launched, tracked, restarted, and duplicate-checked at the Firework level. The Firetasks are a convenience that let you simplify some of the overhead associated with having many FireWorks, especially when you want to run many tasks in the same directory and on the same machine. However, not many features are available at the Firetask level.</p>
 </div>
 <div class="section" id="the-end-is-just-the-beginning">
 <h2>The end is just the beginning<a class="headerlink" href="#the-end-is-just-the-beginning" title="Permalink to this headline">¶</a></h2>
-<p>You&#8217;ve made it to the end of the workflows tutorial! By now you should have a good feeling for the basic operation of FireWorks and the types of automation it allows. However, it is certainly not the end of the story. Job priorities, duplicate job detection, and running through queues are just some of the features we haven&#8217;t discussed in the core tutorial.</p>
-<p>If you haven&#8217;t already set up Worker computing resources to execute your jobs, you might do that now by following the <a class="reference internal" href="worker_tutorial.html"><span class="doc">Worker tutorial</span></a>. Otherwise, you might return to the <a class="reference internal" href="index.html"><span class="doc">home page</span></a> and choose what topic to pursue next.</p>
+<p>You’ve made it to the end of the workflows tutorial! By now you should have a good feeling for the basic operation of FireWorks and the types of automation it allows. However, it is certainly not the end of the story. Job priorities, duplicate job detection, and running through queues are just some of the features we haven’t discussed in the core tutorial.</p>
+<p>If you haven’t already set up Worker computing resources to execute your jobs, you might do that now by following the <a class="reference internal" href="worker_tutorial.html"><span class="doc">Worker tutorial</span></a>. Otherwise, you might return to the <a class="reference internal" href="index.html"><span class="doc">home page</span></a> and choose what topic to pursue next.</p>
 </div>
 </div>
 
@@ -208,13 +205,13 @@ for duplication with past runs</td>
         <li class="right" >
           <a href="dynamic_wf_tutorial.html" title="Dynamic Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

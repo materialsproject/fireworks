@@ -3,8 +3,21 @@
 
 {% block content %}
 
-<img src="/reports/fireworks/{{ interval }}/{{ num_intervals }}/fig.png" width="50%">
-<img src="/reports/workflows/{{ interval }}/{{ num_intervals }}/fig.png" width="50%">
+{% if PLOTTING %}
+<div class="report_images">
+    <div class="imgContainer">
+        <img src="/reports/fireworks/{{ interval }}/{{ num_intervals }}/fig.png" width="450px">
+    </div>
+    <div class="imgContainer">
+        <img src="/reports/workflows/{{ interval }}/{{ num_intervals }}/fig.png" width="450px">
+    </div>
+</div>
+{% else %}
+<p>
+    <em>Please install matplotlib to see plots.</em>
+</p>
+{% endif %}
+
 
 <h3 class="text-center">FireWorks Report</h3>
 

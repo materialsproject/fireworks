@@ -11,19 +11,19 @@ FireWorks requires a single MongoDB instance to store and access your workflows.
 
 To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
 
-To access via a *cloud provider*, you might try `Mongolab <http://www.mongolab.com>`_ or search for a different one. If you are using Mongolab, here are a few notes:
+To access via a *cloud provider*, you might try `mLab <http://mlab.com/>`_, `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`_, or search for a different one. If you are using mLab, here are a few notes:
 
-    * Set up an account via the Mongolab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
-    * Mongolab will ask you to create a database; any name is fine, but make sure you write down what it is.
-    * After creating a database, note that you'll need to create at least one admin user in order to access the database.
+    * Set up an account via the mLab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
+    * mLab will ask you to create a database; any name is fine, but make sure you write down what it is.
+    * After creating a database, note that you'll need to create at least one database user in order to access the database.
     * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
 
 Preparing to Install FireWorks (Python and pip)
 ===============================================
 To prepare for installation, you should:
 
-#. Install `python 2.7 <http://www.python.org>`_ (preferably Python 2.7.3 or higher), if not already packaged with your system. To check your python version, use the command ``python --version``. As of FireWorks v0.7, Python 3.3 should also work.
-#. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system. This will allow you to download required dependencies.
+#. Install `Python <http://www.python.org>`_ - either Python 2.7+ or Python 3 should work.
+#. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system (this sometimes comes bundled with your Python install). This will allow you to download required dependencies.
 
 .. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``. You should make sure that setuptools is installed using the proper Python version and probably without the ``--user`` option if running ``ez_setup.py``.
 
@@ -40,6 +40,7 @@ The easiest way to install FireWorks is to simply run a one-liner in pip. The do
 #. To install, simply type::
 
     pip install FireWorks
+    pip install matplotlib  # (only needed for seeing visual report plots in web gui!)
     pip install paramiko  # (only needed if using built-in remote file transfer!)
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
@@ -79,13 +80,13 @@ The most comprehensive way to install FireWorks is in 'developer mode', which wi
     pip install fabric  # (only needed if using daemon mode of qlaunch!)
     pip install requests  # (only needed if you want to use the NEWT queue adapter!)
     # follow instructions to install argcomplete library if you want auto-complete of FWS commands
-    
+
 Run unit tests
 --------------
 1. Staying in the directory containing setup.py, run the following command::
 
     python setup.py test
-    
+
 2. Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see :ref:`contributing-label`).
 
 .. _remote_test-label:

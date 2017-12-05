@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Defining Jobs using Firetasks &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Defining Jobs using Firetasks &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Creating Workflows" href="workflow_tutorial.html" />
     <link rel="prev" title="Introductory Tutorial" href="introduction.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="introduction.html" title="Introductory Tutorial"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -61,7 +58,7 @@
 <li>Run multiple tasks within a single Firework</li>
 <li>Run tasks that are defined within a Python function, rather than a shell script</li>
 </ul>
-<p>This tutorial can be completed from the command line, but some knowledge of Python is helpful. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you&#8217;ve set one up.</p>
+<p>This tutorial can be completed from the command line, but some knowledge of Python is helpful. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you’ve set one up.</p>
 <div class="section" id="introduction-to-firetasks">
 <h2>Introduction to Firetasks<a class="headerlink" href="#introduction-to-firetasks" title="Permalink to this headline">¶</a></h2>
 <p>In the <a class="reference internal" href="introduction.html"><span class="doc">Introductory tutorial</span></a>, we ran a simple script that performed <code class="docutils literal"><span class="pre">echo</span> <span class="pre">&quot;howdy,</span> <span class="pre">your</span> <span class="pre">job</span> <span class="pre">launched</span> <span class="pre">successfully!&quot;</span> <span class="pre">&gt;&gt;</span> <span class="pre">howdy.txt&quot;</span></code>. Looking inside <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, recall that the command was defined within a task labeled <code class="docutils literal"><span class="pre">ScriptTask</span></code>:</p>
@@ -71,14 +68,14 @@
     <span class="n">script</span><span class="p">:</span> <span class="n">echo</span> <span class="s2">&quot;howdy, your job launched successfully!&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">howdy</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">ScriptTask</span></code> is one type of <em>Firetask</em>, which is a predefined job template written in Python. The <code class="docutils literal"><span class="pre">ScriptTask</span></code> in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the <code class="docutils literal"><span class="pre">ScriptTask</span></code> to run almost any job (without worrying that it&#8217;s all done within a Python layer). However, you might want to set up jobs that are more powerful than shell scripts using Python programming. Later in this section, we&#8217;ll demonstrate how to accomplish this with custom <em>Firetasks</em>. However, first we&#8217;ll demonstrate the simplest version to linearly run multiple tasks.</p>
+<p>The <code class="docutils literal"><span class="pre">ScriptTask</span></code> is one type of <em>Firetask</em>, which is a predefined job template written in Python. The <code class="docutils literal"><span class="pre">ScriptTask</span></code> in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the <code class="docutils literal"><span class="pre">ScriptTask</span></code> to run almost any job (without worrying that it’s all done within a Python layer). However, you might want to set up jobs that are more powerful than shell scripts using Python programming. Later in this section, we’ll demonstrate how to accomplish this with custom <em>Firetasks</em>. However, first we’ll demonstrate the simplest version to linearly run multiple tasks.</p>
 </div>
 <div class="section" id="running-multiple-firetasks">
 <h2>Running multiple Firetasks<a class="headerlink" href="#running-multiple-firetasks" title="Permalink to this headline">¶</a></h2>
 <p>You can run multiple tasks within the same Firework (it might be helpful to review the <a class="reference internal" href="index.html#wfmodel-label"><span class="std std-ref">Workflow Model</span></a> diagram). For example, the first step of your Firework might write an input file that the second step reads and processes. Finally, a third step might move the entire output directory somewhere else on your filesystem (or a remote server).</p>
-<p>Let&#8217;s create a Firework that:</p>
+<p>Let’s create a Firework that:</p>
 <ol class="arabic simple">
-<li>Writes an input file based on a <em>template</em> with some substitutions applied. We&#8217;ll do this using a built-in <code class="docutils literal"><span class="pre">TemplateWriterTask</span></code> that can help create such files.</li>
+<li>Writes an input file based on a <em>template</em> with some substitutions applied. We’ll do this using a built-in <code class="docutils literal"><span class="pre">TemplateWriterTask</span></code> that can help create such files.</li>
 <li>Executes a script using <code class="docutils literal"><span class="pre">ScriptTask</span></code> that reads the input file and produces some output. In our test case, it will just count the number of words in that file. However, this code could be any program, for example a chemistry code.</li>
 <li>Copies all your outputs to your home directory using <code class="docutils literal"><span class="pre">FileTransferTask</span></code>.</li>
 </ol>
@@ -112,7 +109,7 @@
 <p>There are now three tasks inside our <strong>spec</strong>: the <code class="docutils literal"><span class="pre">TemplateWriterTask</span></code>, <code class="docutils literal"><span class="pre">ScriptTask</span></code>, and <code class="docutils literal"><span class="pre">FileTransferTask</span></code>. The <code class="docutils literal"><span class="pre">TemplateWriterTask</span></code> will load an example template called <code class="docutils literal"><span class="pre">simple_template.txt</span></code> from inside the FireWorks code, replace certain portions of the template using the <code class="docutils literal"><span class="pre">context</span></code>, and write the result to <code class="docutils literal"><span class="pre">input.txt</span></code>. Next, the <code class="docutils literal"><span class="pre">ScriptTask</span></code> runs a word count on <code class="docutils literal"><span class="pre">input.txt</span></code> using the <code class="docutils literal"><span class="pre">wc</span></code> command and print the result to <code class="docutils literal"><span class="pre">words.txt</span></code>. Finally, <code class="docutils literal"><span class="pre">FileTransferTask</span></code> will copy the resulting output file to your home directory.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you would like to know more about how templated input writing works and define your own templated files, you should consult the <a class="reference internal" href="templatewritertask.html"><span class="doc">TemplateWriterTask tutorial</span></a>. A copy of <code class="docutils literal"><span class="pre">simple_template.txt</span></code> is given in the directory as <code class="docutils literal"><span class="pre">simple_template_copy.txt</span></code> (however, modifying the copy won&#8217;t modify the actual template).</p>
+<p class="last">If you would like to know more about how templated input writing works and define your own templated files, you should consult the <a class="reference internal" href="templatewritertask.html"><span class="doc">TemplateWriterTask tutorial</span></a>. A copy of <code class="docutils literal"><span class="pre">simple_template.txt</span></code> is given in the directory as <code class="docutils literal"><span class="pre">simple_template_copy.txt</span></code> (however, modifying the copy won’t modify the actual template).</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -158,30 +155,30 @@
 </div>
 <div class="section" id="creating-a-custom-firetask">
 <span id="customtask-label"></span><h2>Creating a custom Firetask<a class="headerlink" href="#creating-a-custom-firetask" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal"><span class="pre">TemplateWriterTask</span></code>, <code class="docutils literal"><span class="pre">ScriptTask</span></code>, <code class="docutils literal"><span class="pre">FileTransferTask</span></code> are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the <code class="docutils literal"><span class="pre">ScriptTask</span></code> can run arbitrary shell scripts, it can in theory run any type of computation and is an &#8216;all-encompassing&#8217; Firetask. ScriptTask also has many additional features that are covered in the <a class="reference internal" href="scripttask.html"><span class="doc">ScriptTask tutorial</span></a>.</p>
+<p>The <code class="docutils literal"><span class="pre">TemplateWriterTask</span></code>, <code class="docutils literal"><span class="pre">ScriptTask</span></code>, <code class="docutils literal"><span class="pre">FileTransferTask</span></code> are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the <code class="docutils literal"><span class="pre">ScriptTask</span></code> can run arbitrary shell scripts, it can in theory run any type of computation and is an ‘all-encompassing’ Firetask. ScriptTask also has many additional features that are covered in the <a class="reference internal" href="scripttask.html"><span class="doc">ScriptTask tutorial</span></a>.</p>
 <p>However, if you are comfortable with some basic Python, you can define your own custom Firetasks for the codes you run. A custom Firetask gives you more control over your jobs, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.</p>
-<p>Even if you plan to only use the built-in tasks, we suggest that you still read through the next portion before continuing with the tutorial. We&#8217;ll be creating a custom Firetask that adds one or more numbers using Python&#8217;s <code class="docutils literal"><span class="pre">sum()</span></code> function, and later building workflows using this (and similar) Firetasks.</p>
+<p>Even if you plan to only use the built-in tasks, we suggest that you still read through the next portion before continuing with the tutorial. We’ll be creating a custom Firetask that adds one or more numbers using Python’s <code class="docutils literal"><span class="pre">sum()</span></code> function, and later building workflows using this (and similar) Firetasks.</p>
 <div class="section" id="how-fireworks-bootstraps-a-job">
 <h3>How FireWorks bootstraps a job<a class="headerlink" href="#how-fireworks-bootstraps-a-job" title="Permalink to this headline">¶</a></h3>
 <p>Before diving into an example of custom Firetask, it is worth understanding how FireWorks is bootstrapping jobs based on your specification. The basic process looks like this:</p>
 <a class="reference internal image-reference" href="_images/spec_sketch.png"><img alt="FireWorks Bootstrap" class="align-center" src="_images/spec_sketch.png" style="width: 500px;" /></a>
 <ol class="arabic simple">
-<li>The first step of the image just shows how the <strong>spec</strong> section of the Firework is structured. There is a section that contains your Firetasks (one or many), as we saw in the previous examples. The <strong>spec</strong> also allows you to define arbitrary JSON data (labeled <em>input</em> in the diagram) to pass into your Firetasks as input. So far, we haven&#8217;t seen an example of this; the only information we gave in the spec in the previous examples was within the <strong>_tasks</strong> section.</li>
-<li>In the second step, FireWorks dynamically loads Python objects based on your specified <strong>_tasks</strong>. It does this by searching a list of Python packages for Python objects that have a value of <em>_fw_name</em> that match your setting. When we set a <em>_fw_name</em> of <code class="docutils literal"><span class="pre">ScriptTask</span></code> in the previous examples, FireWorks was loading a Python object with a <em>_fw_name</em> class variable set to <code class="docutils literal"><span class="pre">ScriptTask</span></code> (and passing the <code class="docutils literal"><span class="pre">script</span></code> parameter to its constructor). The <code class="docutils literal"><span class="pre">ScriptTask</span></code> is just one type of Firetask that&#8217;s built into FireWorks to help you run scripts easily. You can write code for custom Firetasks anywhere in the <strong>user_packages</strong> directory of FireWorks, and it will automatically be discovered. If you want to place your Firetasks in a package outside of FireWorks, please read the <a class="reference internal" href="config_tutorial.html"><span class="doc">FireWorks configuration tutorial</span></a>. You will just need to define what Python packages to search for your custom Firetasks, or use a special format that allows for direct loading of classes.</li>
+<li>The first step of the image just shows how the <strong>spec</strong> section of the Firework is structured. There is a section that contains your Firetasks (one or many), as we saw in the previous examples. The <strong>spec</strong> also allows you to define arbitrary JSON data (labeled <em>input</em> in the diagram) to pass into your Firetasks as input. So far, we haven’t seen an example of this; the only information we gave in the spec in the previous examples was within the <strong>_tasks</strong> section.</li>
+<li>In the second step, FireWorks dynamically loads Python objects based on your specified <strong>_tasks</strong>. It does this by searching a list of Python packages for Python objects that have a value of <em>_fw_name</em> that match your setting. When we set a <em>_fw_name</em> of <code class="docutils literal"><span class="pre">ScriptTask</span></code> in the previous examples, FireWorks was loading a Python object with a <em>_fw_name</em> class variable set to <code class="docutils literal"><span class="pre">ScriptTask</span></code> (and passing the <code class="docutils literal"><span class="pre">script</span></code> parameter to its constructor). The <code class="docutils literal"><span class="pre">ScriptTask</span></code> is just one type of Firetask that’s built into FireWorks to help you run scripts easily. You can write code for custom Firetasks anywhere in the <strong>user_packages</strong> directory of FireWorks, and it will automatically be discovered. If you want to place your Firetasks in a package outside of FireWorks, please read the <a class="reference internal" href="config_tutorial.html"><span class="doc">FireWorks configuration tutorial</span></a>. You will just need to define what Python packages to search for your custom Firetasks, or use a special format that allows for direct loading of classes.</li>
 <li>In the third step, we execute the code of the Firetask we loaded. Specifically, we execute the <code class="docutils literal"><span class="pre">run_task</span></code> method which must be implemented for every Firetask. FireWorks passes in the <em>entire</em> spec to the <code class="docutils literal"><span class="pre">run_task</span></code> method; the <code class="docutils literal"><span class="pre">run_task</span></code> method can therefore modify its behavior based on any input data present in the spec, or by detecting previous or future tasks in the spec.</li>
 <li>When the Firetask is done executing, it returns a <em>FWAction</em> object that can modify the workflow (or continue as usual) and pass information to downstream FireWorks.</li>
 </ol>
 </div>
 <div class="section" id="custom-firetask-example-addition-task">
 <h3>Custom Firetask example: Addition Task<a class="headerlink" href="#custom-firetask-example-addition-task" title="Permalink to this headline">¶</a></h3>
-<p>Let&#8217;s explore custom Firetasks with an example: a custom Python script for adding two numbers specified in the <strong>spec</strong>.</p>
+<p>Let’s explore custom Firetasks with an example: a custom Python script for adding two numbers specified in the <strong>spec</strong>.</p>
 <ol class="arabic">
 <li><p class="first">Staying in the firetasks tutorial directory, remove any output from the previous step:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="n">howdy</span><span class="o">.</span><span class="n">txt</span> <span class="n">FW</span><span class="o">.</span><span class="n">json</span> <span class="n">words</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Let&#8217;s first look at what a custom Firetask looks like in Python. Look inside the file <code class="docutils literal"><span class="pre">addition_task.py</span></code> which defines the <code class="docutils literal"><span class="pre">Addition</span> <span class="pre">Task</span></code>:</p>
+<li><p class="first">Let’s first look at what a custom Firetask looks like in Python. Look inside the file <code class="docutils literal"><span class="pre">addition_task.py</span></code> which defines the <code class="docutils literal"><span class="pre">Addition</span> <span class="pre">Task</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AdditionTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
 
    <span class="n">_fw_name</span> <span class="o">=</span> <span class="s2">&quot;Addition Task&quot;</span>
@@ -196,16 +193,16 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">A few notes about what&#8217;s going on (things will be clearer after the next step):</p>
+<li><p class="first">A few notes about what’s going on (things will be clearer after the next step):</p>
 <ul class="simple">
 <li>In the class definition, we are extending <em>FiretaskBase</em> to tell FireWorks that this is a Firetask.</li>
 <li>A special parameter named <em>_fw_name</em> is set to <code class="docutils literal"><span class="pre">Addition</span> <span class="pre">Task</span></code>. This parameter sets what this Firetask will be called by the outside world and is used to bootstrap the object, as described in the previous section. If we did not set this ourselves, the default would have been <code class="docutils literal"><span class="pre">fireworks:AdditionTask</span></code> (the root module name plus the class name separated by a colon).</li>
 <li>The <code class="docutils literal"><span class="pre">run_task()</span></code> method is a special method name that gets called when the task is run. It can take in a Firework specification (<strong>spec</strong>) in order to modify its behavior.</li>
-<li>When executing <code class="docutils literal"><span class="pre">run_task()</span></code>, the AdditionTask we defined first reads the <strong>input_array</strong> parameter of the Firework&#8217;s <strong>spec</strong>. It then sums all the values it finds in the <strong>input_array</strong> parameter of the Firework&#8217;s <strong>spec</strong> using Python&#8217;s <code class="docutils literal"><span class="pre">sum()</span></code> function. Next, the Firetask prints the inputs and the sum to the standard out. Finally, the task returns a <em>FWAction</em> object.</li>
-<li>We&#8217;ll discuss the FWAction object in greater detail in future tutorials. For now, it is sufficient to know that this is giving two instructions. The first says we should store the sum we computed in the database (inside the Firework&#8217;s <code class="docutils literal"><span class="pre">stored_data</span></code> section). The second will pass the results on to any downstream FireTask or FireWork in the workflow as part of the <em>spec</em> inside a key called <code class="docutils literal"><span class="pre">input_array</span></code>.</li>
+<li>When executing <code class="docutils literal"><span class="pre">run_task()</span></code>, the AdditionTask we defined first reads the <strong>input_array</strong> parameter of the Firework’s <strong>spec</strong>. It then sums all the values it finds in the <strong>input_array</strong> parameter of the Firework’s <strong>spec</strong> using Python’s <code class="docutils literal"><span class="pre">sum()</span></code> function. Next, the Firetask prints the inputs and the sum to the standard out. Finally, the task returns a <em>FWAction</em> object.</li>
+<li>We’ll discuss the FWAction object in greater detail in future tutorials. For now, it is sufficient to know that this is giving two instructions. The first says we should store the sum we computed in the database (inside the Firework’s <code class="docutils literal"><span class="pre">stored_data</span></code> section). The second will pass the results on to any downstream FireTask or FireWork in the workflow as part of the <em>spec</em> inside a key called <code class="docutils literal"><span class="pre">input_array</span></code>.</li>
 </ul>
 </li>
-<li><p class="first">Now let&#8217;s define a Firework that runs this Firetask to add the numbers <code class="docutils literal"><span class="pre">1</span></code> and <code class="docutils literal"><span class="pre">2</span></code>. Look inside the file <code class="docutils literal"><span class="pre">fw_adder.yaml</span></code> for this new Firework definition:</p>
+<li><p class="first">Now let’s define a Firework that runs this Firetask to add the numbers <code class="docutils literal"><span class="pre">1</span></code> and <code class="docutils literal"><span class="pre">2</span></code>. Look inside the file <code class="docutils literal"><span class="pre">fw_adder.yaml</span></code> for this new Firework definition:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
   <span class="n">_tasks</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">Addition</span> <span class="n">Task</span>
@@ -216,7 +213,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Let&#8217;s match up this Firework with our code for our custom Firework:</p>
+<li><p class="first">Let’s match up this Firework with our code for our custom Firework:</p>
 <ul class="simple">
 <li>The <em>_fw_name</em> parameter is set to the same value as in our code for the Firetask (<code class="docutils literal"><span class="pre">Addition</span> <span class="pre">Task</span></code>). This is how FireWorks knows to run your custom Firetask rather than <code class="docutils literal"><span class="pre">ScriptTask</span></code> or some other Firetask.</li>
 <li>This <strong>spec</strong> has an <strong>input_array</strong> field defined to <code class="docutils literal"><span class="pre">1</span></code> and <code class="docutils literal"><span class="pre">2</span></code>. Remember that our Python code was grabbing the values in the <strong>input_array</strong>, summing them, and printing them to standard out.</li>
@@ -254,7 +251,7 @@
 </div>
 <div class="section" id="writing-your-own-custom-firetasks">
 <h2>Writing your own custom Firetasks<a class="headerlink" href="#writing-your-own-custom-firetasks" title="Permalink to this headline">¶</a></h2>
-<p>If you&#8217;d like to attempt writing your own Firetask, a guide to doing so can be found <a class="reference internal" href="guide_to_writing_firetasks.html"><span class="doc">here</span></a>.</p>
+<p>If you’d like to attempt writing your own Firetask, a guide to doing so can be found <a class="reference internal" href="guide_to_writing_firetasks.html"><span class="doc">here</span></a>.</p>
 </div>
 <div class="section" id="id1">
 <h2>Python example (optional)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
@@ -351,13 +348,13 @@
         <li class="right" >
           <a href="introduction.html" title="Introductory Tutorial"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

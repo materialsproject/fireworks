@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Running Tasks in the Background &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Running Tasks in the Background &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Running FireWorks in “offline” mode on firewalled systems" href="offline_tutorial.html" />
     <link rel="prev" title="Handling Duplicates Automatically" href="duplicates_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="duplicates_tutorial.html" title="Handling Duplicates Automatically"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -112,7 +109,7 @@
 </div>
 <div class="section" id="python-example">
 <h2>Python example<a class="headerlink" href="#python-example" title="Permalink to this headline">¶</a></h2>
-<p>The following code runs a script that, in the main thread, prints &#8216;starting&#8217;, sleeps, then prints &#8216;ending&#8217;. In separate threads, two background threads run at different intervals. The second BackgroundTask has <code class="docutils literal"><span class="pre">run_on_finish</span></code> set to True, so it also runs after the main thread finishes:</p>
+<p>The following code runs a script that, in the main thread, prints ‘starting’, sleeps, then prints ‘ending’. In separate threads, two background threads run at different intervals. The second BackgroundTask has <code class="docutils literal"><span class="pre">run_on_finish</span></code> set to True, so it also runs after the main thread finishes:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
 <span class="kn">from</span> <span class="nn">fireworks.features.background_task</span> <span class="k">import</span> <span class="n">BackgroundTask</span>
 <span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="k">import</span> <span class="n">rapidfire</span>
@@ -158,7 +155,7 @@
                         title="previous chapter">Handling Duplicates Automatically</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="offline_tutorial.html"
-                        title="next chapter">Running FireWorks in &#8220;offline&#8221; mode on firewalled systems</a></p>
+                        title="next chapter">Running FireWorks in “offline” mode on firewalled systems</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -195,13 +192,13 @@
         <li class="right" >
           <a href="duplicates_tutorial.html" title="Handling Duplicates Automatically"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

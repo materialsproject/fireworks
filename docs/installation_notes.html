@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Installation Notes on various clusters / supercomputing centers &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Installation Notes on various clusters / supercomputing centers &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Assigning job priority" href="priority_tutorial.html" />
     <link rel="prev" title="Advanced queue submission (reservation mode)" href="queue_tutorial_pt2.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="queue_tutorial_pt2.html" title="Advanced queue submission (reservation mode)"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -70,7 +67,7 @@
 <dt>A few notes:</dt>
 <dd><ul class="first last simple">
 <li>The <code class="docutils literal"><span class="pre">module</span> <span class="pre">unload</span> <span class="pre">python</span></code> command will unload your Python environment and load the proper Python version for the FireWorks.</li>
-<li>There may be multiple options available for the FireWorks module and the Python version - they are generally labeled as &#8220;fireworks/&lt;FW_VERSION&gt;-&lt;PYTHON_VERSION&gt;&#8221;. You can type <code class="docutils literal"><span class="pre">module</span> <span class="pre">avail</span> <span class="pre">fireworks</span></code> to see all options. If you don&#8217;t see the version you want, you can contact the NERSC help desk.</li>
+<li>There may be multiple options available for the FireWorks module and the Python version - they are generally labeled as “fireworks/&lt;FW_VERSION&gt;-&lt;PYTHON_VERSION&gt;”. You can type <code class="docutils literal"><span class="pre">module</span> <span class="pre">avail</span> <span class="pre">fireworks</span></code> to see all options. If you don’t see the version you want, you can contact the NERSC help desk.</li>
 <li>If you want to attempt a manual install, you can follow the normal <a class="reference internal" href="installation.html"><span class="doc">installation instructions</span></a> but use the <a class="reference internal" href="virtualenv_tutorial.html"><span class="doc">virtualenv</span></a> option to make sure your $PYTHONPATH is set up correctly and to install outside of the NERSC system Python. In general this is also easy, but not as easy as the modules system.</li>
 </ul>
 </dd>
@@ -82,19 +79,19 @@
 </div>
 <div class="section" id="installing-the-database">
 <h3>Installing the database<a class="headerlink" href="#installing-the-database" title="Permalink to this headline">¶</a></h3>
-<p>You&#8217;ll need a MongoDB database to store your actual workflows before you get started with the tutorials. You can follow the normal <a class="reference internal" href="installation.html"><span class="doc">installation instructions</span></a> for installing MongoDB; for getting started at NERSC, the best option is likely the free cloud service as you don&#8217;t need to install software or configure firewalls. You can also contact NERSC to see if they can host a database for your workflows; this process is slower but might be used in production. For example, NERSC hosts the production databases for the Materials Project.</p>
+<p>You’ll need a MongoDB database to store your actual workflows before you get started with the tutorials. You can follow the normal <a class="reference internal" href="installation.html"><span class="doc">installation instructions</span></a> for installing MongoDB; for getting started at NERSC, the best option is likely the free cloud service as you don’t need to install software or configure firewalls. You can also contact NERSC to see if they can host a database for your workflows; this process is slower but might be used in production. For example, NERSC hosts the production databases for the Materials Project.</p>
 </div>
 <div class="section" id="misc-notes">
 <h3>Misc notes<a class="headerlink" href="#misc-notes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>NERSC times-out your scripts, even if they are performing actions. For example, if you are running the Queue Launcher on Hopper/Carver in infinite mode, the script will time out after a few hours. This makes it difficult to run FireWorks as a &#8220;service&#8221; that always pulls any new jobs you enter into the database over the span of days or weeks. To get around this, you can try setting up a cron job at NERSC that regularly pulls jobs from the database and submits them to the queue.</li>
+<li>NERSC times-out your scripts, even if they are performing actions. For example, if you are running the Queue Launcher on Hopper/Carver in infinite mode, the script will time out after a few hours. This makes it difficult to run FireWorks as a “service” that always pulls any new jobs you enter into the database over the span of days or weeks. To get around this, you can try setting up a cron job at NERSC that regularly pulls jobs from the database and submits them to the queue.</li>
 <li>Once you get the hang of things, make sure you set up your <a class="reference internal" href="config_tutorial.html"><span class="doc">configuration file</span></a> to save time and typing - in particular, set the path to your LaunchPad, FireWorker, and QueueAdapter files.</li>
 </ul>
 </div>
 </div>
 <div class="section" id="after-installation">
 <h2>After installation<a class="headerlink" href="#after-installation" title="Permalink to this headline">¶</a></h2>
-<p>After you&#8217;ve installed the FireWorks software and set up a Mongo database for your workflows, you should proceed with the tutorials on the <a class="reference internal" href="index.html"><span class="doc">main page</span></a>.</p>
+<p>After you’ve installed the FireWorks software and set up a Mongo database for your workflows, you should proceed with the tutorials on the <a class="reference internal" href="index.html"><span class="doc">main page</span></a>.</p>
 </div>
 </div>
 
@@ -161,13 +158,13 @@
         <li class="right" >
           <a href="queue_tutorial_pt2.html" title="Advanced queue submission (reservation mode)"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

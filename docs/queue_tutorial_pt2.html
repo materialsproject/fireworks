@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Advanced queue submission (reservation mode) &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Advanced queue submission (reservation mode) &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Installation Notes on various clusters / supercomputing centers" href="installation_notes.html" />
     <link rel="prev" title="Launch Rockets through a queue" href="queue_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="queue_tutorial.html" title="Launch Rockets through a queue"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -56,8 +53,8 @@
             
   <div class="section" id="advanced-queue-submission-reservation-mode">
 <h1>Advanced queue submission (reservation mode)<a class="headerlink" href="#advanced-queue-submission-reservation-mode" title="Permalink to this headline">¶</a></h1>
-<p>Before we begin - if you&#8217;re here and haven&#8217;t completed the <a class="reference internal" href="queue_tutorial.html"><span class="doc">first tutorial on queue submission</span></a>, you should go back and complete that first. This tutorial assumes that you already have queue submission working and just need to overcome some of the limitations of simple queue submission.</p>
-<p>In this tutorial, we&#8217;ll introduce the notion of <em>reserving</em> FireWorks on queue submission. Some differences between the simple method of the previous tutorial and the reservation method are outlined below:</p>
+<p>Before we begin - if you’re here and haven’t completed the <a class="reference internal" href="queue_tutorial.html"><span class="doc">first tutorial on queue submission</span></a>, you should go back and complete that first. This tutorial assumes that you already have queue submission working and just need to overcome some of the limitations of simple queue submission.</p>
+<p>In this tutorial, we’ll introduce the notion of <em>reserving</em> FireWorks on queue submission. Some differences between the simple method of the previous tutorial and the reservation method are outlined below:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="27%" />
@@ -76,7 +73,7 @@
 file alone</td>
 <td><div class="first last line-block">
 <div class="line">1. <strong>reserve</strong> a FW from the database</div>
-<div class="line">2. use FW&#8217;s spec to modify queue script</div>
+<div class="line">2. use FW’s spec to modify queue script</div>
 </div>
 </td>
 </tr>
@@ -99,19 +96,19 @@ unreserved by user using detect_unreserved</td>
 </tr>
 </tbody>
 </table>
-<p>Reserving jobs allows for more flexibility, but also adds maintenance overhead when queues go down or jobs in the queue are cancelled. Hence, there are some advantages to sticking with Simple Queue Launching. With that out of the way, let&#8217;s explore the reservation method of queue submission!</p>
+<p>Reserving jobs allows for more flexibility, but also adds maintenance overhead when queues go down or jobs in the queue are cancelled. Hence, there are some advantages to sticking with Simple Queue Launching. With that out of the way, let’s explore the reservation method of queue submission!</p>
 <div class="section" id="reserving-fireworks">
 <h2>Reserving FireWorks<a class="headerlink" href="#reserving-fireworks" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first">Begin in your working directory from the <a class="reference internal" href="queue_tutorial.html"><span class="doc">previous tutorial</span></a>. You should have four files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code>.</p>
 </li>
-<li><p class="first">Let&#8217;s reset our database and add a Firework for testing:</p>
+<li><p class="first">Let’s reset our database and add a Firework for testing:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Reserving a Firework is as simple as adding the <code class="docutils literal"><span class="pre">-r</span></code> option to the Queue Launcher. Let&#8217;s queue up a reserved Firework and immediately check its state:</p>
+<li><p class="first">Reserving a Firework is as simple as adding the <code class="docutils literal"><span class="pre">-r</span></code> option to the Queue Launcher. Let’s queue up a reserved Firework and immediately check its state:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">qlaunch</span> <span class="o">-</span><span class="n">r</span> <span class="n">singleshot</span>
 <span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
 </pre></div>
@@ -135,7 +132,7 @@ unreserved by user using detect_unreserved</td>
 </div>
 <div class="section" id="preventing-too-many-jobs-in-the-queue">
 <h2>Preventing too many jobs in the queue<a class="headerlink" href="#preventing-too-many-jobs-in-the-queue" title="Permalink to this headline">¶</a></h2>
-<p>One nice feature of reserving FireWorks is that you are automatically prevented from submitting more jobs to the queue than exist FireWorks in the database. Let&#8217;s try to submit too many jobs and see what happens.</p>
+<p>One nice feature of reserving FireWorks is that you are automatically prevented from submitting more jobs to the queue than exist FireWorks in the database. Let’s try to submit too many jobs and see what happens.</p>
 <ol class="arabic">
 <li><p class="first">Clean your working directory of everything but four files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code></p>
 </li>
@@ -145,7 +142,7 @@ unreserved by user using detect_unreserved</td>
 </pre></div>
 </div>
 </li>
-<li><p class="first">We have only one Firework in the database, so we should only be able to submit one job to the queue. Let&#8217;s try submitting two:</p>
+<li><p class="first">We have only one Firework in the database, so we should only be able to submit one job to the queue. Let’s try submitting two:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">qlaunch</span> <span class="o">-</span><span class="n">r</span> <span class="n">singleshot</span>
 <span class="n">qlaunch</span> <span class="o">-</span><span class="n">r</span> <span class="n">singleshot</span>
 </pre></div>
@@ -161,27 +158,27 @@ unreserved by user using detect_unreserved</td>
 </div>
 <div class="section" id="overriding-queue-parameters-within-the-firework">
 <h2>Overriding Queue Parameters within the Firework<a class="headerlink" href="#overriding-queue-parameters-within-the-firework" title="Permalink to this headline">¶</a></h2>
-<p>Another key feature of reserving FireWorks before queue submission is that the Firework can override queue parameters. This is done by specifying the <code class="docutils literal"><span class="pre">_queueadapter</span></code> reserved key in the <code class="docutils literal"><span class="pre">spec</span></code>. For example, let&#8217;s override the walltime parameter.</p>
+<p>Another key feature of reserving FireWorks before queue submission is that the Firework can override queue parameters. This is done by specifying the <code class="docutils literal"><span class="pre">_queueadapter</span></code> reserved key in the <code class="docutils literal"><span class="pre">spec</span></code>. For example, let’s override the walltime parameter.</p>
 <ol class="arabic">
 <li><p class="first">Clean your working directory of everything but four files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code></p>
 </li>
 <li><p class="first">Look in the file <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>. You should have walltime parameter listed, perhaps set to 2 minutes. By default, all jobs submitted by this Queue Launcher would have a 2-minute walltime.</p>
 </li>
-<li><p class="first">Let&#8217;s copy over the <code class="docutils literal"><span class="pre">fw_walltime.yaml</span></code> file from the tutorials dir:</p>
+<li><p class="first">Let’s copy over the <code class="docutils literal"><span class="pre">fw_walltime.yaml</span></code> file from the tutorials dir:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">queue_pt2</span><span class="o">/</span><span class="n">fw_walltime</span><span class="o">.</span><span class="n">yaml</span> <span class="o">.</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Look inside <code class="docutils literal"><span class="pre">fw_walltime.yaml</span></code>. You will see a <code class="docutils literal"><span class="pre">_queueadapter</span></code> key in the spec that specifies a <code class="docutils literal"><span class="pre">walltime</span></code> of 10 minutes. Anything in the <code class="docutils literal"><span class="pre">_queueadapter</span></code> key will override the corresponding parameter in <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> when the Queue Launcher is run in reservation mode. So now, the Firework itself is determining key properties of the queue submission.</p>
 </li>
-<li><p class="first">Let&#8217;s add and run this Firework:</p>
+<li><p class="first">Let’s add and run this Firework:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_walltime</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">qlaunch</span> <span class="o">-</span><span class="n">r</span> <span class="n">singleshot</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">You might check the walltime that your job was submitted with using your queue manager&#8217;s built-in commands (e.g., <em>qstat</em> or <em>mstat</em>). You can also see the queue submission script by looking inside the file <code class="docutils literal"><span class="pre">FW_submit.script</span></code>. Inside, you&#8217;ll see the job was submitted with the walltime specified by your Firework, not the default walltime from <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>.</p>
+<li><p class="first">You might check the walltime that your job was submitted with using your queue manager’s built-in commands (e.g., <em>qstat</em> or <em>mstat</em>). You can also see the queue submission script by looking inside the file <code class="docutils literal"><span class="pre">FW_submit.script</span></code>. Inside, you’ll see the job was submitted with the walltime specified by your Firework, not the default walltime from <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>.</p>
 </li>
 <li><p class="first">Your job should complete successfully as before. You could also try to override other queue parameters such as the number of cores for running the job or the account which is charged for running the job. In this way, your queue submission can be tailored on a per-job basis!</p>
 </li>
@@ -189,11 +186,11 @@ unreserved by user using detect_unreserved</td>
 </div>
 <div class="section" id="limitations-dealing-with-failure">
 <h2>Limitations: dealing with failure<a class="headerlink" href="#limitations-dealing-with-failure" title="Permalink to this headline">¶</a></h2>
-<p>One limitation of reserving FireWorks is that the Firework&#8217;s fate is tied to that of the queue submission. If the place in the queue is deleted, that Firework is stuck in limbo unless you reset its state from <em>RESERVED</em> back to <em>READY</em>. Let&#8217;s try to simulate this:</p>
+<p>One limitation of reserving FireWorks is that the Firework’s fate is tied to that of the queue submission. If the place in the queue is deleted, that Firework is stuck in limbo unless you reset its state from <em>RESERVED</em> back to <em>READY</em>. Let’s try to simulate this:</p>
 <ol class="arabic">
 <li><p class="first">Clean your working directory of everything but four files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code></p>
 </li>
-<li><p class="first">Let&#8217;s add and run this Firework. Before the job starts running, delete it from the queue (if you&#8217;re too slow, repeat this entire step):</p>
+<li><p class="first">Let’s add and run this Firework. Before the job starts running, delete it from the queue (if you’re too slow, repeat this entire step):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">qlaunch</span> <span class="o">-</span><span class="n">r</span> <span class="n">singleshot</span>
@@ -216,7 +213,7 @@ unreserved by user using detect_unreserved</td>
 </div>
 <p>tells us that <code class="docutils literal"><span class="pre">No</span> <span class="pre">jobs</span> <span class="pre">exist</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">LaunchPad</span> <span class="pre">for</span> <span class="pre">submission</span> <span class="pre">to</span> <span class="pre">queue!</span></code>. FireWorks thinks that our old queue submission (the one that we deleted) is going to run this Firework and is not letting us submit another queue script for the same job.</p>
 </li>
-<li><p class="first">The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then cancel the reservation (&#8220;qdel&#8221;) them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks):</p>
+<li><p class="first">The way to fix this is to find all reservations that have been stuck in a queue for a long time, and then cancel the reservation (“qdel”) them. The following command unreserves all FireWorks that have been stuck in a queue for 1 second or more (basically all FireWorks):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">detect_unreserved</span> <span class="o">--</span><span class="n">time</span> <span class="mi">1</span> <span class="o">--</span><span class="n">rerun</span>
 </pre></div>
 </div>
@@ -238,7 +235,7 @@ unreserved by user using detect_unreserved</td>
 </ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you un-reserve a Firework that is still in a queue and hasn&#8217;t crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same Firework. The first queue script to run will run the Firework properly. The second job to run will not find a Firework to run and simply exit.</p>
+<p class="last">If you un-reserve a Firework that is still in a queue and hasn’t crashed, the consequences are not so bad. FireWorks might submit a second job to the queue that reserves this same Firework. The first queue script to run will run the Firework properly. The second job to run will not find a Firework to run and simply exit.</p>
 </div>
 </div>
 <div class="section" id="conclusion">
@@ -308,13 +305,13 @@ unreserved by user using detect_unreserved</td>
         <li class="right" >
           <a href="queue_tutorial.html" title="Launch Rockets through a queue"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>FireWorks Changelog &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>FireWorks Changelog &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -28,7 +25,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="The Comprehensive Guide to Writing Firetasks with Python" href="guide_to_writing_firetasks.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -41,7 +38,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -52,6 +49,52 @@
             
   <div class="section" id="fireworks-changelog">
 <h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.6.0</strong></p>
+<ul class="simple">
+<li>fixes for task-level recovery (J. Montoya)</li>
+<li>LSF queueadapter takes into account job counts by queue (J. Boes)</li>
+<li>some unit test improvements (I. Kondov)</li>
+</ul>
+<p><strong>v1.5.9</strong></p>
+<ul class="simple">
+<li>Py2 bugfix</li>
+</ul>
+<p><strong>v1.5.8</strong></p>
+<ul class="simple">
+<li>New data flow built-in Firetasks (I. Kondov)</li>
+</ul>
+<p><strong>v1.5.7</strong></p>
+<ul class="simple">
+<li>Improve performance of workflow add to DB for large workflows (R. Gowers)</li>
+</ul>
+<p><strong>v1.5.5</strong></p>
+<ul class="simple">
+<li>Better handling of SSL certs (I. Kondov)</li>
+<li>Improve performance of fw rerun (R. Gowers)</li>
+</ul>
+<p><strong>v1.5.4</strong></p>
+<ul class="simple">
+<li>fix some logic re:which config files to use</li>
+</ul>
+<p><strong>v1.5.3</strong></p>
+<ul class="simple">
+<li>rapidfire with nlaunches=0 now loops until no READY or WAITINGS FWs via new launchpad.future_run_exists() (R. Gowers)</li>
+</ul>
+<p><strong>v1.5.2</strong></p>
+<ul class="simple">
+<li>minor web gui improvements</li>
+<li>installation doc updates (R. Lahe)</li>
+</ul>
+<p><strong>v1.5.1</strong></p>
+<ul class="simple">
+<li>add visual dashboard feature to web gui (all graphics)</li>
+<li>Fixes to SGE queue adapter (A. Ganose)</li>
+</ul>
+<p><strong>v1.5.0</strong></p>
+<ul class="simple">
+<li>redesigned web gui with visual plots (J. Montoya, A. Jain)</li>
+<li>improved task-level recovery, including in offline mode (J. Montoya)</li>
+</ul>
 <p><strong>v1.4.8</strong></p>
 <ul class="simple">
 <li>Fix pip requirements</li>
@@ -71,7 +114,7 @@
 </ul>
 <p><strong>v1.4.5</strong></p>
 <ul class="simple">
-<li>hack to allow &#8220;_add_launchpad_and_fw_id&#8221; reserved spec to work in rlaunch multi mode</li>
+<li>hack to allow “_add_launchpad_and_fw_id” reserved spec to work in rlaunch multi mode</li>
 </ul>
 <p><strong>v1.4.4</strong></p>
 <ul class="simple">
@@ -84,7 +127,7 @@
 <ul class="simple">
 <li>only put tasks inside FW spec upon serialization! (see announcement on dev list)</li>
 <li>add qlauncher support for remote shell (D. Dotson)</li>
-<li>don&#8217;t allow creating an empty workflow</li>
+<li>don’t allow creating an empty workflow</li>
 <li>rare bugfix for rocket (G. Petretto)</li>
 <li>add gres support for Slurm (KeLiu)</li>
 </ul>
@@ -106,11 +149,11 @@
 </ul>
 <p><strong>v1.4.0</strong></p>
 <ul class="simple">
-<li>mlaunch is now &#8220;rlaunch multi&#8221;. See docs (S. Dwaraknath)</li>
+<li>mlaunch is now “rlaunch multi”. See docs (S. Dwaraknath)</li>
 <li>For FireTask, we now suggest you use Firetask (more consistent naming) - (A. Jain)</li>
 <li>Adds the FilePad, a way to store files in GridFS. See docs for more details (K. Mathew, A. Jain)</li>
 <li>Add query ability to frontend (M. Aykol, D. Winston)</li>
-<li>Add ability to &#8220;pause/resume&#8221; fireworks in addition to existing &#8220;defuse/reignite&#8221;. See docs (S. Dwaraknath)</li>
+<li>Add ability to “pause/resume” fireworks in addition to existing “defuse/reignite”. See docs (S. Dwaraknath)</li>
 <li>Add sort ability in frontend (D. Waroquiers)</li>
 <li>Misc frontend improvements (D. Winston, M. Aykol, A. Jain)</li>
 <li>Add ability to move run dirs, i.e. update the database with location of runs after they are moved (A. Faghaninia, A. Jain)</li>
@@ -126,7 +169,7 @@
 </ul>
 <p><strong>v1.3.8</strong></p>
 <ul class="simple">
-<li>don&#8217;t enforce j=True for Mongo connections (S.P. Ong)</li>
+<li>don’t enforce j=True for Mongo connections (S.P. Ong)</li>
 <li>improve testing framework (S.P. Ong)</li>
 <li>remove problems &amp; inefficiencies in workflow refresh (thanks to G. Petretto)</li>
 <li>properly update fw_states when you defuse a workflow</li>
@@ -167,8 +210,8 @@
 <p><strong>v1.3.3</strong></p>
 <ul class="simple">
 <li>Load default FWorker location when running launch commands from Python</li>
-<li>qlaunch: default maxjobs_queue is zero, meaning don&#8217;t automatically restrict to 10 jobs in queue</li>
-<li>Add &#8211;wfquery and &#8211;fwquery options to <code class="docutils literal"><span class="pre">lpad_webgui</span></code> for advanced users (alpha version)</li>
+<li>qlaunch: default maxjobs_queue is zero, meaning don’t automatically restrict to 10 jobs in queue</li>
+<li>Add –wfquery and –fwquery options to <code class="docutils literal"><span class="pre">lpad_webgui</span></code> for advanced users (alpha version)</li>
 </ul>
 <p><strong>v1.3.2</strong></p>
 <ul class="simple">
@@ -253,7 +296,7 @@
 </ul>
 <p><strong>v1.1.9</strong></p>
 <ul class="simple">
-<li>Workflow graph displayed visually in &#8220;lpad webgui&#8221; (C. Harris)</li>
+<li>Workflow graph displayed visually in “lpad webgui” (C. Harris)</li>
 <li>Add ability to override queue commands (thanks to D. Waroquiers)</li>
 <li>detect_unreserved should only detect reserved fws (G. Petretto)</li>
 </ul>
@@ -269,7 +312,7 @@
 <p class="last">FWS now properly handles workflow states for <code class="docutils literal"><span class="pre">allow_fizzled_parents</span></code>. Run <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">refresh</span> <span class="pre">-s</span> <span class="pre">FIZZLED</span></code> to update your DB.</p>
 </div>
 <ul class="simple">
-<li>fix WFLock causing inconsistent states in workflows; detect such cases in detect_lostruns; add &#8211;refresh as fix (G. Petretto)</li>
+<li>fix WFLock causing inconsistent states in workflows; detect such cases in detect_lostruns; add –refresh as fix (G. Petretto)</li>
 <li>add ability to introspect launches</li>
 <li>fix for COMPLETED workflow state when <cite>_allow_fizzled_parents</cite> is True (D. Waroquiers, G. Petretto)</li>
 <li>allow FWS users to use as_dict() instead of to_dict() if they prefer (psuedo-compatibility with MSONable)</li>
@@ -354,7 +397,7 @@
 .. note:: v1.05 is not in pip due to version number issues, use Github to get this legacy version</p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the &#8220;auto_kwargs&#8221; option to True in your FireTasks.</p>
+<p class="last">The default behavior for PyTask handling of kwargs has changed. To maintain legacy behavior, update the “auto_kwargs” option to True in your FireTasks.</p>
 </div>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
@@ -396,7 +439,7 @@
 <li>Fix bug in adding multiple detours</li>
 <li>Task-level reruns (G. Petretto)</li>
 <li>Better Fworker default restrictions (G. Petretto)</li>
-<li>Make _launch_dir if doesn&#8217;t exist (G. Petretto)</li>
+<li>Make _launch_dir if doesn’t exist (G. Petretto)</li>
 <li>Bug fixes (G. Petretto)</li>
 </ul>
 <p><strong>v0.96</strong></p>
@@ -460,7 +503,7 @@
 <li>Add many more unit tests (B. Medasani)</li>
 <li>Fix tracking when FireTask crashes (B. Medasani)</li>
 <li>Clean up some logging</li>
-<li>Don&#8217;t rerun DEFUSED FWs - they must be reignited</li>
+<li>Don’t rerun DEFUSED FWs - they must be reignited</li>
 <li>Allow defuse of COMPLETED FWs</li>
 <li>minor internal fixes</li>
 </ul>
@@ -504,7 +547,7 @@
 <ul class="simple">
 <li>add ability to define links via {fw1:fw2} objects rather than explicit IDs (based on conversation with H. Rusche)</li>
 <li>un-reserve a FW if queue submission goes badly and clean up queue launcher code</li>
-<li>internal cleanups (don&#8217;t rerun ARCHIVED jobs, skip reruns of WAITING jobs)</li>
+<li>internal cleanups (don’t rerun ARCHIVED jobs, skip reruns of WAITING jobs)</li>
 <li>stop rapidfire upon error in queue launch</li>
 <li>rerun fw on unreserve</li>
 <li>add methods to work with queue ids (<code class="docutils literal"><span class="pre">cancel_qid</span></code>, <code class="docutils literal"><span class="pre">--qid</span></code> option in <code class="docutils literal"><span class="pre">get_fws</span></code>, and <code class="docutils literal"><span class="pre">get_qid</span></code>)</li>
@@ -577,7 +620,7 @@
 <p class="last">The FWConfig parameters are no longer called via a FWConfig() class instantiation; you can import these parameters directly now.</p>
 </div>
 <ul class="simple">
-<li>Python 3 support! via &#8216;six&#8217; library (S.P. Ong)</li>
+<li>Python 3 support! via ‘six’ library (S.P. Ong)</li>
 <li>BackgroundTasks introduced</li>
 <li>Performance improvements to get_wf command (S.P. Ong)</li>
 <li>Deserialization warnings and added stability (S.P. Ong)</li>
@@ -666,7 +709,7 @@
 <ul class="simple">
 <li>Display name in trackers</li>
 <li>Fix some bugs relating to multiprocessing &amp; offline mode (Xiaohui Qu)</li>
-<li>Don&#8217;t require password when tracking many FWs</li>
+<li>Don’t require password when tracking many FWs</li>
 <li>Default 25 lines in trackers</li>
 </ul>
 <p><strong>v0.52</strong></p>
@@ -687,10 +730,10 @@
 </div>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The command/function <code class="docutils literal"><span class="pre">detect_unreserved</span></code> has changed - refactored &#8220;mark&#8221; to &#8220;fizzle&#8221;</p>
+<p class="last">The command/function <code class="docutils literal"><span class="pre">detect_unreserved</span></code> has changed - refactored “mark” to “fizzle”</p>
 </div>
 <ul class="simple">
-<li>add option to &#8220;rerun&#8221; when detecting lost runs</li>
+<li>add option to “rerun” when detecting lost runs</li>
 <li>add option to only detect short-lived lost jobs (useful for job packing type failures)</li>
 <li>refactored argument names and method names for clarity</li>
 </ul>
@@ -768,7 +811,7 @@
 <div class="section" id="v0-3">
 <h2>v0.3<a class="headerlink" href="#v0-3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>multi job launcher to &#8216;pack&#8217; jobs (Xiaohui Qu)</li>
+<li>multi job launcher to ‘pack’ jobs (Xiaohui Qu)</li>
 </ul>
 <p><strong>v0.25</strong></p>
 <ul class="simple">
@@ -813,7 +856,7 @@
 <ul class="simple">
 <li>minor update to ping()</li>
 <li>major docs reorganization and updates</li>
-<li>document and better support &#8216;pip&#8217; installation</li>
+<li>document and better support ‘pip’ installation</li>
 </ul>
 <p><strong>v0.16</strong></p>
 <ul class="simple">
@@ -843,7 +886,7 @@
 <p><strong>v0.13</strong></p>
 <ul class="simple">
 <li>multiple query and output display options and enhancements added for <code class="docutils literal"><span class="pre">get_fws</span></code> and <code class="docutils literal"><span class="pre">get_wfs</span></code>.</li>
-<li>use FW&#8217;s name to set more informative PBS job names</li>
+<li>use FW’s name to set more informative PBS job names</li>
 <li>make sure ping_launch only writes on running jobs (prevent race condition)</li>
 <li>minor bugfixes</li>
 </ul>
@@ -926,13 +969,13 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

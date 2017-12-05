@@ -1,5 +1,5 @@
-fireworks.user_objects package
-==============================
+fireworks\.user\_objects package
+================================
 
 Subpackages
 -----------

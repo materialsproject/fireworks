@@ -15,6 +15,7 @@ import traceback
 import abc
 import collections
 import six
+import warnings
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -122,11 +123,23 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             (str) the queue script
         """
         with open(self.template_file) as f:
-            a = QScriptTemplate(f.read())
+            template = f.read()
+            a = QScriptTemplate(template)
+
+            # get keys defined by template
+            template_keys = [i[1] for i in string.Formatter().parse(template)]
 
             # set substitution dict for replacements into the template
             subs_dict = {k: v for k, v in self.items()
                          if v is not None}  # clean null values
+                         
+            # warn user if they specify a key not present in template
+            for subs_key in subs_dict.keys():
+                if subs_key not in template_keys:
+                    warnings.warn('Key {} has been specified in qadapter '
+                                  'but it is not present in template, please '
+                                  'check template ({}) for supported keys.'
+                                  .format(subs_key, self.template_file))
 
             for k, v in self.defaults.items():
                 subs_dict.setdefault(k, v)

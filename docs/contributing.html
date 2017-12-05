@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Contributing Code to FireWorks &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Contributing Code to FireWorks &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,7 +34,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,14 +45,14 @@
             
   <div class="section" id="contributing-code-to-fireworks">
 <h1>Contributing Code to FireWorks<a class="headerlink" href="#contributing-code-to-fireworks" title="Permalink to this headline">¶</a></h1>
-<p>FireWorks is an open-source codebase, and one if its advantages is the possibility for community contribution and improvement. If you are interested in contributing code to FireWorks, we&#8217;d be very happy to have you join the team! As a contributor, your code will be made available to the entire FireWorks community, and your name will be added to our <a class="reference internal" href="contributors.html"><span class="doc">list of contributors</span></a>.</p>
-<p>We ask that all potential collaborators review our contribution criteria. You might also contact us directly at <img alt="developer contact" class="align-bottom" src="_images/mail.png" /> to let us know what you&#8217;re planning to contribute; we can discuss your plans and how to integrate your code for public release.</p>
+<p>FireWorks is an open-source codebase, and one if its advantages is the possibility for community contribution and improvement. If you are interested in contributing code to FireWorks, we’d be very happy to have you join the team! As a contributor, your code will be made available to the entire FireWorks community, and your name will be added to our <a class="reference internal" href="contributors.html"><span class="doc">list of contributors</span></a>.</p>
+<p>We ask that all potential collaborators review our contribution criteria. You might also contact us directly at <img alt="developer contact" class="align-bottom" src="_images/mail.png" /> to let us know what you’re planning to contribute; we can discuss your plans and how to integrate your code for public release.</p>
 <div class="section" id="criteria-for-inclusion">
 <h2>Criteria for Inclusion<a class="headerlink" href="#criteria-for-inclusion" title="Permalink to this headline">¶</a></h2>
 <p>Our criteria for inclusion of your code depends on the type of contribution you plan to submit.</p>
 <div class="section" id="adding-new-queue-adapters-firetasks-etc">
 <h3>Adding new Queue Adapters, Firetasks, etc.<a class="headerlink" href="#adding-new-queue-adapters-firetasks-etc" title="Permalink to this headline">¶</a></h3>
-<p>If you&#8217;ve written Queue Adapters, Firetasks, Duplicate Finders, or other &#8220;plug-in&#8221; type objects that do not modify existing code, we would be very happy to include them in the main repo. The main condition for inclusion is that they be useful to a broad section of the FireWorks community.</p>
+<p>If you’ve written Queue Adapters, Firetasks, Duplicate Finders, or other “plug-in” type objects that do not modify existing code, we would be very happy to include them in the main repo. The main condition for inclusion is that they be useful to a broad section of the FireWorks community.</p>
 </div>
 <div class="section" id="adding-new-features-or-performance-enhancements">
 <h3>Adding new features or performance enhancements<a class="headerlink" href="#adding-new-features-or-performance-enhancements" title="Permalink to this headline">¶</a></h3>
@@ -64,21 +61,25 @@
 </div>
 <div class="section" id="modifying-core-modules">
 <h3>Modifying core modules<a class="headerlink" href="#modifying-core-modules" title="Permalink to this headline">¶</a></h3>
-<p>The core FireWorks modules are the most important of all, as they affect all users. One of our major goals is to keep the core of FireWorks lightweight, simple to use and understand, and difficult to &#8220;break&#8221;. Proposed extensions or modifications to the core modules will therefore be evaluated quite strictly; they will be accepted only if they can be implemented very cleanly (i.e., generally in under 40 lines of code) and if they are of great interest to the majority of users.</p>
+<p>The core FireWorks modules are the most important of all, as they affect all users. One of our major goals is to keep the core of FireWorks lightweight, simple to use and understand, and difficult to “break”. Proposed extensions or modifications to the core modules will therefore be evaluated quite strictly; they will be accepted only if they can be implemented very cleanly (i.e., generally in under 40 lines of code) and if they are of great interest to the majority of users.</p>
 </div>
 <div class="section" id="documentation-coding-style-and-tests">
 <h3>Documentation, coding style, and tests<a class="headerlink" href="#documentation-coding-style-and-tests" title="Permalink to this headline">¶</a></h3>
 <p>We ask for reasonably clear documentation of modules, classes, methods, and tricky code sections (hopefully not too many of the last item!) Where possible, code within a method or class should be easy to understand without the need for additional documentation. In some cases, we may request a tutorial to clarify usage of your code to the community. In terms of programming style, some guidelines are given in <a class="reference external" href="http://www.python.org/dev/peps/pep-0008/">PEP 8</a>, but we mainly ask that you try to follow the style of the FireWorks core modules. Depending on the complexity of the contribution, tests might need to be included along with your code.</p>
 <p>However, when starting you should not be as concerned with these issues as with writing clear, succint, and functional code. If we feel that issues such as documentation or style are preventing merging of your code with the main repo, a core developer may request your permission to re-document and/or re-style your code, and add his/her name to either the <code class="docutils literal"><span class="pre">__credits__</span></code> or <code class="docutils literal"><span class="pre">__authors__</span></code> field of your code header (your name will still be retained in the <code class="docutils literal"><span class="pre">__authors__</span></code> field).</p>
 </div>
+<div class="section" id="os-compatibility">
+<h3>OS Compatibility<a class="headerlink" href="#os-compatibility" title="Permalink to this headline">¶</a></h3>
+<p>FireWorks is intended to work on a range of computing platforms, all the way from local computers (e.g., automating tasks on your laptop) up to large supercomputing facilities. The core features of FireWorks should work on Linux, Macintosh, and Windows. Please be mindful of this when writing code as well as when designing unit tests.</p>
+</div>
 <div class="section" id="licensing">
 <h3>Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline">¶</a></h3>
-<p>If you haven&#8217;t already, please read the FireWorks <a class="reference internal" href="license.html"><span class="doc">license</span></a>. Your contributions will also be distributed under this license.</p>
+<p>If you haven’t already, please read the FireWorks <a class="reference internal" href="license.html"><span class="doc">license</span></a>. Your contributions will also be distributed under this license.</p>
 </div>
 </div>
 <div class="section" id="how-to-contribute">
 <h2>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h2>
-<p>If you&#8217;re ready to contribute, awesome! The best way is to fork the FireWorks repo on Github and develop your feature independently in your own repository. Then, when you are ready to merge back, you can submit a merge request through Github.</p>
+<p>If you’re ready to contribute, awesome! The best way is to fork the FireWorks repo on Github and develop your feature independently in your own repository. Then, when you are ready to merge back, you can submit a merge request through Github.</p>
 <p>Two great tutorials for how to do this are:</p>
 <ul class="simple">
 <li>The <a class="reference external" href="http://pymatgen.org/contributing.html">Pymatgen Collaborative Workflow Guide</a>.</li>
@@ -102,6 +103,7 @@
 <li><a class="reference internal" href="#adding-new-features-or-performance-enhancements">Adding new features or performance enhancements</a></li>
 <li><a class="reference internal" href="#modifying-core-modules">Modifying core modules</a></li>
 <li><a class="reference internal" href="#documentation-coding-style-and-tests">Documentation, coding style, and tests</a></li>
+<li><a class="reference internal" href="#os-compatibility">OS Compatibility</a></li>
 <li><a class="reference internal" href="#licensing">Licensing</a></li>
 </ul>
 </li>
@@ -140,13 +142,13 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

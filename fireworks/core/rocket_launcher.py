@@ -86,10 +86,14 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
     start_time = datetime.now()
     num_loops = 0
 
-    while num_loops != max_loops and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
+    def time_ok():
+        # has the rapidfire run timed out?
+        return (timeout is None or
+                (datetime.now() - start_time).total_seconds() < timeout)
+
+    while num_loops != max_loops and time_ok():
         skip_check = False  # this is used to speed operation
-        while (skip_check or launchpad.run_exists(fworker)) and \
-                (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
+        while (skip_check or launchpad.run_exists(fworker)) and time_ok():
             os.chdir(curdir)
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
             os.chdir(launcher_dir)
@@ -115,7 +119,10 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 # add a small amount of buffer breathing time for DB to refresh in case we have a dynamic WF
                 time.sleep(0.15)
                 skip_check = False
-        if num_launched == nlaunches or nlaunches == 0:
+        if nlaunches == 0:
+            if not launchpad.future_run_exists():
+                break
+        elif num_launched == nlaunches:
             break
         log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)

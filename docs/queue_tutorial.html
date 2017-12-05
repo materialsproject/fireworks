@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Launch Rockets through a queue &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Launch Rockets through a queue &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Advanced queue submission (reservation mode)" href="queue_tutorial_pt2.html" />
     <link rel="prev" title="Worker Tutorial" href="worker_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="worker_tutorial.html" title="Worker Tutorial"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -56,15 +53,15 @@
             
   <div class="section" id="launch-rockets-through-a-queue">
 <h1>Launch Rockets through a queue<a class="headerlink" href="#launch-rockets-through-a-queue" title="Permalink to this headline">¶</a></h1>
-<p>If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won&#8217;t be able to launch Rockets directly. Instead, you&#8217;ll submit Rockets through an existing queueing system that allocates computer resources.</p>
-<p>The simplest way to execute jobs through a queue would be to write a templated queue file and then submit it as a two-task Firework, as in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>. However, FireWorks then considers your &#8220;job&#8221; to only be queue submission, and will consider the job completed after the queue submission is complete. FireWorks will not know when the actual payload starts running, or is finished, or if the job finishes successfully. Thus, many of the useful management and monitoring features of FireWorks will not be available to you.</p>
-<p>A more powerful way to execute jobs through a queue is presented in this tutorial. In this method, the queue file runs <code class="docutils literal"><span class="pre">rlaunch</span></code> instead of running your desired program. This method is just like typing <code class="docutils literal"><span class="pre">rlaunch</span></code> into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it&#8217;s very low-tech!). In particular, FireWorks is <em>completely unaware</em> that you are running through a queue!</p>
-<p>The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script &#8220;wakes&#8221; up and runs the Rocket Launcher, which then figures out what Firework to run.</p>
-<p>The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don&#8217;t have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your submission job stuck in the queue is not preventing high-priority jobs from running on other machines.</p>
-<p>There are also some disadvantages to this simple system for which you might want to tell FireWorks about the queue. We&#8217;ll discuss these limitations at the end of the tutorial and direct you on how to overcome them in the next tutorial. For now, we suggest that you get things working simply.</p>
+<p>If your FireWorker is a large, shared resource (such as a computing cluster or supercomputing center), you probably won’t be able to launch Rockets directly. Instead, you’ll submit Rockets through an existing queueing system that allocates computer resources.</p>
+<p>The simplest way to execute jobs through a queue would be to write a templated queue file and then submit it as a two-task Firework, as in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>. However, FireWorks then considers your “job” to only be queue submission, and will consider the job completed after the queue submission is complete. FireWorks will not know when the actual payload starts running, or is finished, or if the job finishes successfully. Thus, many of the useful management and monitoring features of FireWorks will not be available to you.</p>
+<p>A more powerful way to execute jobs through a queue is presented in this tutorial. In this method, the queue file runs <code class="docutils literal"><span class="pre">rlaunch</span></code> instead of running your desired program. This method is just like typing <code class="docutils literal"><span class="pre">rlaunch</span></code> into a Terminal window like in the core tutorials, except that now we are submitting a queue script that does the typing for us (it’s very low-tech!). In particular, FireWorks is <em>completely unaware</em> that you are running through a queue!</p>
+<p>The jobs we will submit to the queue are basically placeholder jobs that are asleep until the job starts running. When the job is actually assigned computer resources and runs, the script “wakes” up and runs the Rocket Launcher, which then figures out what Firework to run.</p>
+<p>The advantage of this low-tech system is that it is quite durable; if your queue system goes down or you delete a job from the queue, there are zero repercussions. You don’t have to tell FireWorks to run those jobs somewhere else, because FireWorks never knew about your queue in the first place. In addition, if you are running on multiple machines and the queue becomes backlogged on one of them, it does not matter at all. Your submission job stuck in the queue is not preventing high-priority jobs from running on other machines.</p>
+<p>There are also some disadvantages to this simple system for which you might want to tell FireWorks about the queue. We’ll discuss these limitations at the end of the tutorial and direct you on how to overcome them in the next tutorial. For now, we suggest that you get things working simply.</p>
 <div class="section" id="launch-a-single-job-through-a-queue">
 <h2>Launch a single job through a queue<a class="headerlink" href="#launch-a-single-job-through-a-queue" title="Permalink to this headline">¶</a></h2>
-<p>To get warmed up, let&#8217;s set up a <em>Queue Launcher</em> to run a single Firework through a queueing system.</p>
+<p>To get warmed up, let’s set up a <em>Queue Launcher</em> to run a single Firework through a queueing system.</p>
 <div class="section" id="configure-the-queue-launcher">
 <h3>Configure the Queue Launcher<a class="headerlink" href="#configure-the-queue-launcher" title="Permalink to this headline">¶</a></h3>
 <p>The Queue Launcher needs to write and submit a queue script that contains an executable (in our case, a Rocket Launcher). This is achieved through a QueueAdapter file.</p>
@@ -117,7 +114,7 @@
 </ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Be sure to indicate the full, absolute path name; do not use BASH shortcuts like &#8216;.&#8217;, &#8216;..&#8217;, or &#8216;~&#8217;, and do not indicate a relative path.</p>
+<p class="last">Be sure to indicate the full, absolute path name; do not use BASH shortcuts like ‘.’, ‘..’, or ‘~’, and do not indicate a relative path.</p>
 </div>
 </li>
 </ol>
@@ -125,7 +122,7 @@
 </div>
 <div class="section" id="add-some-fireworks">
 <h3>Add some FireWorks<a class="headerlink" href="#add-some-fireworks" title="Permalink to this headline">¶</a></h3>
-<p>Staying in your testing directory, let&#8217;s reset our database and add a new Firework, all from our FireWorker:</p>
+<p>Staying in your testing directory, let’s reset our database and add a new Firework, all from our FireWorker:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
@@ -143,7 +140,7 @@
 <blockquote>
 <div><div class="admonition tip">
 <p class="first admonition-title">Tip</p>
-<p class="last">Similar to the Rocket Launcher, if you use the names <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, then you don&#8217;t need to specify the <code class="docutils literal"><span class="pre">-l</span></code>, <code class="docutils literal"><span class="pre">-w</span></code>, and <code class="docutils literal"><span class="pre">-q</span></code> options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuration directory that you specify with a single <code class="docutils literal"><span class="pre">-c</span></code> parameter, or in the directories specified by your <a class="reference internal" href="config_tutorial.html"><span class="doc">FWConfig file</span></a>.</p>
+<p class="last">Similar to the Rocket Launcher, if you use the names <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, then you don’t need to specify the <code class="docutils literal"><span class="pre">-l</span></code>, <code class="docutils literal"><span class="pre">-w</span></code>, and <code class="docutils literal"><span class="pre">-q</span></code> options explicitly. FireWorks will automatically search for these files in the current directory, or in a configuration directory that you specify with a single <code class="docutils literal"><span class="pre">-c</span></code> parameter, or in the directories specified by your <a class="reference internal" href="config_tutorial.html"><span class="doc">FWConfig file</span></a>.</p>
 </div>
 </div></blockquote>
 <ol class="arabic">
@@ -161,11 +158,11 @@
 </div>
 <div class="section" id="adding-more-power-using-rapid-fire-mode">
 <h2>Adding more power: using rapid-fire mode<a class="headerlink" href="#adding-more-power-using-rapid-fire-mode" title="Permalink to this headline">¶</a></h2>
-<p>While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. Like the Rocket Launcher, the Queue Launcher can be run in a &#8220;rapid-fire&#8221; mode that provides these features.</p>
+<p>While launching a single job to a queue is nice, a more powerful use case is to submit a large number of jobs at once, or to maintain a certain number of jobs in the queue. Like the Rocket Launcher, the Queue Launcher can be run in a “rapid-fire” mode that provides these features.</p>
 <ol class="arabic">
 <li><p class="first">Clean your working directory of everything but four files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code></p>
 </li>
-<li><p class="first">Let&#8217;s reset our database and add three new FireWorks, all from our FireWorker:</p>
+<li><p class="first">Let’s reset our database and add three new FireWorks, all from our FireWorker:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -179,7 +176,7 @@
 </div>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
-<p class="last">The Queue Launcher sleeps between each job submission to give time for the queue manager to &#8216;breathe&#8217;. It might take a few minutes to submit all the jobs.</p>
+<p class="last">The Queue Launcher sleeps between each job submission to give time for the queue manager to ‘breathe’. It might take a few minutes to submit all the jobs.</p>
 </div>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
@@ -189,15 +186,15 @@
 <li><p class="first">The rapid-fire command should have created a directory beginning with the tag <code class="docutils literal"><span class="pre">block_</span></code>. Navigate inside this directory, and confirm that three directories starting with the tag <code class="docutils literal"><span class="pre">launch</span></code> were created. The <code class="docutils literal"><span class="pre">launch</span></code> directories contain your individual jobs.</p>
 </li>
 </ol>
-<p>You&#8217;ve now launched multiple Rockets with a single command, all through a queueing system!</p>
+<p>You’ve now launched multiple Rockets with a single command, all through a queueing system!</p>
 </div>
 <div class="section" id="continually-submit-jobs-to-the-queue">
 <h2>Continually submit jobs to the queue<a class="headerlink" href="#continually-submit-jobs-to-the-queue" title="Permalink to this headline">¶</a></h2>
-<p>You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the LaunchPad. Let&#8217;s set this up.</p>
+<p>You might want to set up your worker so that it maintains a certain number of jobs in the queue indefinitely. That way, it will continuously pull FireWorks from the LaunchPad. Let’s set this up.</p>
 <ol class="arabic">
 <li><p class="first">Clean your working directory of everything but four files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code>.</p>
 </li>
-<li><p class="first">Let&#8217;s reset our database and add four new FireWorks this time:</p>
+<li><p class="first">Let’s reset our database and add four new FireWorks this time:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -237,7 +234,7 @@
 </ol>
 </div></blockquote>
 </li>
-<li><p class="first">Let&#8217;s add three FireWorks to the LaunchPad and submit a <em>single</em> queue script:</p>
+<li><p class="first">Let’s add three FireWorks to the LaunchPad and submit a <em>single</em> queue script:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -246,7 +243,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">You should confirm that only a single job got submitted to the queue. However, when the job starts running, you&#8217;ll see that all three of your jobs completed in separate <code class="docutils literal"><span class="pre">launcher_</span></code> directories!</p>
+<li><p class="first">You should confirm that only a single job got submitted to the queue. However, when the job starts running, you’ll see that all three of your jobs completed in separate <code class="docutils literal"><span class="pre">launcher_</span></code> directories!</p>
 </li>
 </ol>
 <div class="admonition warning">
@@ -272,19 +269,19 @@ you want to use similarly. For example, you can use the default
 $HOME/.fireworks location, or setup every resource in a similar
 location.</li>
 <li>Passwordless ssh should ideally be configured for all clusters from the
-machine you want to run qlaunch from. While qlaunch provides a &#8220;-rp&#8221;
+machine you want to run qlaunch from. While qlaunch provides a “-rp”
 option to specify the password, it is less secure and less powerful (e.g.,
-you can&#8217;t manage lots of resources with a single command).</li>
+you can’t manage lots of resources with a single command).</li>
 </ol>
 <div class="section" id="sample-usage">
 <h3>Sample usage<a class="headerlink" href="#sample-usage" title="Permalink to this headline">¶</a></h3>
-<p>All remote options start with &#8220;-r&#8221; or &#8220;&#8211;remote&#8221;.</p>
+<p>All remote options start with “-r” or “–remote”.</p>
 <ol class="arabic">
 <li><p class="first">Running qlaunch rapidfire on one server:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">qlaunch</span> <span class="o">-</span><span class="n">rh</span> <span class="n">compute</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">gov</span> <span class="o">-</span><span class="n">ru</span> <span class="n">user</span> <span class="n">rapidfire</span> <span class="o">-</span><span class="n">m</span> <span class="mi">50</span>
 </pre></div>
 </div>
-<p>Note that rapidfire options such as &#8220;-m 50&#8221; are automatically transmitted
+<p>Note that rapidfire options such as “-m 50” are automatically transmitted
 to the resource.</p>
 </li>
 <li><p class="first">Running qlaunch rapidfire on a host with multiple queue configurations.
@@ -311,9 +308,9 @@ similar configurations across multiple resources. If you have more
 complicated setups, e.g., different users, different queue configurations
 across different computing resoruces, remote qlaunch will not be able to
 handle these. However, you can always write your own fabfile.py and use
-Fabric&#8217;s far more sophisticated execution model.</p>
+Fabric’s far more sophisticated execution model.</p>
 <p>A simple fabfile.py for different users on different hosts is given below. If
-you require Fabric&#8217;s sophistication, I encourage you to read <a class="reference external" href="http://docs.fabfile.org/">Fabric&#8217;s
+you require Fabric’s sophistication, I encourage you to read <a class="reference external" href="http://docs.fabfile.org/">Fabric’s
 official documentation</a>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fabric.api</span> <span class="k">import</span> <span class="n">run</span><span class="p">,</span> <span class="n">env</span>
 
@@ -341,27 +338,27 @@ official documentation</a>:</p>
 <h2>Limitations and Next Steps<a class="headerlink" href="#limitations-and-next-steps" title="Permalink to this headline">¶</a></h2>
 <p>The information in this tutorial might be all you need to automate your application. However, as we noted previously, there are some limitations to running under a model in which FireWorks is completely unaware of the existence of queues. In the simple queue execution model, limitations include:</p>
 <ol class="arabic simple">
-<li><strong>You can&#8217;t track how many of your jobs are queued</strong></li>
+<li><strong>You can’t track how many of your jobs are queued</strong></li>
 </ol>
-<p>Since FireWorks is unaware of your queue, there&#8217;s no way to track how many of your jobs are queued up on various machines. You&#8217;ll have to wait until they start running before their presence is reported to FireWorks.</p>
+<p>Since FireWorks is unaware of your queue, there’s no way to track how many of your jobs are queued up on various machines. You’ll have to wait until they start running before their presence is reported to FireWorks.</p>
 <ol class="arabic simple" start="2">
 <li><strong>You might submit too many jobs to the queue</strong></li>
 </ol>
-<p>It&#8217;s possible to submit more queue scripts than exist jobs in the database. Before submitting a queue script, the Queue Launcher checks that at least one unstarted job exists in the database. However, let&#8217;s take an example where you have one Firework in the database that&#8217;s ready to run. Nothing in the current system prevents you from using the Queue Launcher to rapid-fire 20 jobs to the queue.  You won&#8217;t be prevented from submitting queue scripts until that Firework has actually started running.</p>
-<p>If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn&#8217;t run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time. If you are using rapid-fire mode, you&#8217;ll also end up with an additional <code class="docutils literal"><span class="pre">launcher_</span></code> directory. You can look at the REMOVE_USELESS_DIRS option of the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a> as a solution to this.</p>
+<p>It’s possible to submit more queue scripts than exist jobs in the database. Before submitting a queue script, the Queue Launcher checks that at least one unstarted job exists in the database. However, let’s take an example where you have one Firework in the database that’s ready to run. Nothing in the current system prevents you from using the Queue Launcher to rapid-fire 20 jobs to the queue.  You won’t be prevented from submitting queue scripts until that Firework has actually started running.</p>
+<p>If the number of jobs in your database is kept much higher than the number of jobs you keep in your queues, then you shouldn’t run into this problem at all; all your submitted queue scripts will always find a job to run. Even if this is not the case, the additional queue scripts should pose only a minor penalty. Any extra queue scripts will wake up, find nothing to do, and exit without wasting more than few seconds of computer time. If you are using rapid-fire mode, you’ll also end up with an additional <code class="docutils literal"><span class="pre">launcher_</span></code> directory. You can look at the REMOVE_USELESS_DIRS option of the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a> as a solution to this.</p>
 <ol class="arabic simple" start="3">
-<li><strong>You can&#8217;t easily tailor queue parameters (e.g. walltime) individually for each the job</strong></li>
+<li><strong>You can’t easily tailor queue parameters (e.g. walltime) individually for each the job</strong></li>
 </ol>
 <p>Perhaps the most severe limitation is that the Queue Launcher submits queue scripts with identical queue parameters (e.g., all jobs will have the same walltime, use the same number of cores, etc.)</p>
-<p>If you have just two or three sets of queue parameters for your different job types, you can work around this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run <em>two</em> Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you&#8217;d like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.</p>
+<p>If you have just two or three sets of queue parameters for your different job types, you can work around this limitation. First, recall that you can use the FireWorker file to restrict which jobs get run (see tutorial). If you have two types of jobs, you can run <em>two</em> Queue Launchers. Each of these Queue Launchers use different queue parameters, corresponding to the two types of jobs you’d like to run. In addition, each Queue Launcher should be run with a corresponding FireWorker that restricts that jobs for that launcher to the desired job type.</p>
 <p>While this solution works for a few different job types, it is not practical if you have many job types. In addition, it requires some coordination between Firework categories, FireWorkers, and Queue Launchers. Therefore, if setting multiple sets of queue parameters is needed for your application, we suggest that you read on for a solution.</p>
 <p><strong>To solve these problems, you must *reserve* FireWorks in advance</strong>.</p>
 <div class="section" id="next-step-reserving-fireworks-to-overcome-limitations">
 <h3>Next step: reserving FireWorks to overcome limitations<a class="headerlink" href="#next-step-reserving-fireworks-to-overcome-limitations" title="Permalink to this headline">¶</a></h3>
-<p>If you feel these limitations impact your workflow, you should forge on to the next tutorial: <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">Reserving FireWorks upon queue submission</span></a>. We&#8217;ll explain how <em>reserving</em> FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity and introducing some new limitations and considerations.</p>
+<p>If you feel these limitations impact your workflow, you should forge on to the next tutorial: <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">Reserving FireWorks upon queue submission</span></a>. We’ll explain how <em>reserving</em> FireWorks upon queue submission can solve the limitations of simple queue submission, at the expense of added complexity and introducing some new limitations and considerations.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you are planning to complete the next tutorial, you should save your working directory with the files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code>. We&#8217;ll use it in the next tutorial.</p>
+<p class="last">If you are planning to complete the next tutorial, you should save your working directory with the files: <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>, <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code>, <code class="docutils literal"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code>. We’ll use it in the next tutorial.</p>
 </div>
 </div>
 </div>
@@ -441,13 +438,13 @@ official documentation</a>:</p>
         <li class="right" >
           <a href="worker_tutorial.html" title="Worker Tutorial"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

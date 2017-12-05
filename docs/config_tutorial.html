@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Modifying the FW Config &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Modifying the FW Config &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Improving FireWorks performance" href="performance_tutorial.html" />
     <link rel="prev" title="Configuring Security" href="security_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="security_tutorial.html" title="Configuring Security"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -58,7 +55,7 @@
 <h1>Modifying the FW Config<a class="headerlink" href="#modifying-the-fw-config" title="Permalink to this headline">¶</a></h1>
 <p>Many parameters used by FireWorks can be changed to suit your needs. Some examples include:</p>
 <ul class="simple">
-<li>specifying the default locations of your configuration files. This will save you <strong>a lot</strong> of typing when running FireWorks scripts, e.g. <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-l</span> <span class="pre">my_launchpad.yaml</span> <span class="pre">get_fws</span></code> becomes <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_fws</span></code> once you&#8217;ve set your default LaunchPad location.</li>
+<li>specifying the default locations of your configuration files. This will save you <strong>a lot</strong> of typing when running FireWorks scripts, e.g. <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-l</span> <span class="pre">my_launchpad.yaml</span> <span class="pre">get_fws</span></code> becomes <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_fws</span></code> once you’ve set your default LaunchPad location.</li>
 <li>enabling Firetasks for which the code is located outside of the FireWorks package</li>
 <li>smaller adjustments, e.g. whether to print a <code class="docutils literal"><span class="pre">FW.json</span></code> file in your run directory</li>
 <li>performance tweaks (not recommended!)</li>
@@ -71,8 +68,8 @@
 <dt>To activate the config file, you can do any one of the following:</dt>
 <dd><ol class="first lowerroman simple">
 <li>put it in the current directory where you run FireWorks commands</li>
-<li>put it in your root <code class="docutils literal"><span class="pre">&lt;INSTALL_DIR&gt;</span></code> (do not change it&#8217;s name!). Recall that your <code class="docutils literal"><span class="pre">&lt;INSTALL_DIR&gt;</span></code> can be found by typing <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">version</span></code>.</li>
-<li>put the config file in <code class="docutils literal"><span class="pre">&lt;HOME&gt;/.fireworks</span></code> where <code class="docutils literal"><span class="pre">&lt;HOME&gt;</span></code> is your home directory (don&#8217;t forget the <code class="docutils literal"><span class="pre">.</span></code> in the <code class="docutils literal"><span class="pre">.fireworks</span></code> directory!)</li>
+<li>put it in your root <code class="docutils literal"><span class="pre">&lt;INSTALL_DIR&gt;</span></code> (do not change it’s name!). Recall that your <code class="docutils literal"><span class="pre">&lt;INSTALL_DIR&gt;</span></code> can be found by typing <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">version</span></code>.</li>
+<li>put the config file in <code class="docutils literal"><span class="pre">&lt;HOME&gt;/.fireworks</span></code> where <code class="docutils literal"><span class="pre">&lt;HOME&gt;</span></code> is your home directory (don’t forget the <code class="docutils literal"><span class="pre">.</span></code> in the <code class="docutils literal"><span class="pre">.fireworks</span></code> directory!)</li>
 <li>put the config file anywhere, but set the <cite>FW_CONFIG_FILE</cite> as an environment variable in your OS. The <code class="docutils literal"><span class="pre">FW_CONFIG_FILE</span></code> environment variable should be set to the <strong>full</strong> path (no relative links!) of your config file, including the filename.</li>
 </ol>
 <div class="last admonition note">
@@ -108,7 +105,7 @@
 </div>
 <div class="section" id="linking-to-firetasks-in-external-packages">
 <h3>Linking to Firetasks in external packages<a class="headerlink" href="#linking-to-firetasks-in-external-packages" title="Permalink to this headline">¶</a></h3>
-<p>If you&#8217;ve placed Python code for some of your own custom Firetasks in an external Python package named <em>my_package.firetasks</em>, you can notify FireWorks of the Firetasks in this directory by adding the packages to your config:</p>
+<p>If you’ve placed Python code for some of your own custom Firetasks in an external Python package named <em>my_package.firetasks</em>, you can notify FireWorks of the Firetasks in this directory by adding the packages to your config:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ADD_USER_PACKAGES</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">my_package</span><span class="o">.</span><span class="n">firetasks</span>
 </pre></div>
@@ -138,16 +135,16 @@
 </ul>
 </div>
 <div class="section" id="parameters-that-you-probably-shouldn-t-change">
-<h3>Parameters that you probably shouldn&#8217;t change<a class="headerlink" href="#parameters-that-you-probably-shouldn-t-change" title="Permalink to this headline">¶</a></h3>
-<p>Some parameters that you can change, but probably shouldn&#8217;t, are:</p>
+<h3>Parameters that you probably shouldn’t change<a class="headerlink" href="#parameters-that-you-probably-shouldn-t-change" title="Permalink to this headline">¶</a></h3>
+<p>Some parameters that you can change, but probably shouldn’t, are:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">QUEUE_RETRY_ATTEMPTS:</span> <span class="pre">10</span></code> - number of attempts to re-try communicating with queue server when communication fails</li>
 <li><code class="docutils literal"><span class="pre">QUEUE_UPDATE_INTERVAL:</span> <span class="pre">5</span></code> - max interval (seconds) needed for queue to update after submitting a job</li>
 <li><code class="docutils literal"><span class="pre">WFLOCK_EXPIRATION_SECS:</span> <span class="pre">300</span></code> -  wait this long (in seconds) for a WFLock before expiring. Must set <em>much</em> higher than DB update time for a WF.</li>
 <li><code class="docutils literal"><span class="pre">WFLOCK_EXPIRATION_KILL</span> <span class="pre">False</span></code> - If True, kill WFLock on expiration. If False, raise Error instead.</li>
-<li><code class="docutils literal"><span class="pre">PING_TIME_SECS:</span> <span class="pre">3600</span></code> - means that the Rocket will ping the LaunchPad that it&#8217;s alive every 3600 seconds. See the <a class="reference internal" href="failures_tutorial.html"><span class="doc">failures tutorial</span></a>.</li>
-<li><code class="docutils literal"><span class="pre">RUN_EXPIRATION_SECS:</span> <span class="pre">14400</span></code> - means that the LaunchPad will mark a Rocket FIZZLED if it hasn&#8217;t received a ping in 14400 seconds. See the <a class="reference internal" href="failures_tutorial.html"><span class="doc">failures tutorial</span></a>.</li>
-<li><code class="docutils literal"><span class="pre">RESERVATION_EXPIRATION_SECS:</span> <span class="pre">1209600</span></code> - means that the LaunchPad will cancel the reservation of a Firework that&#8217;s been in the queue for 1209600 seconds (14 days). See the <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">queue reservation tutorial</span></a>.</li>
+<li><code class="docutils literal"><span class="pre">PING_TIME_SECS:</span> <span class="pre">3600</span></code> - means that the Rocket will ping the LaunchPad that it’s alive every 3600 seconds. See the <a class="reference internal" href="failures_tutorial.html"><span class="doc">failures tutorial</span></a>.</li>
+<li><code class="docutils literal"><span class="pre">RUN_EXPIRATION_SECS:</span> <span class="pre">14400</span></code> - means that the LaunchPad will mark a Rocket FIZZLED if it hasn’t received a ping in 14400 seconds. See the <a class="reference internal" href="failures_tutorial.html"><span class="doc">failures tutorial</span></a>.</li>
+<li><code class="docutils literal"><span class="pre">RESERVATION_EXPIRATION_SECS:</span> <span class="pre">1209600</span></code> - means that the LaunchPad will cancel the reservation of a Firework that’s been in the queue for 1209600 seconds (14 days). See the <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">queue reservation tutorial</span></a>.</li>
 <li><code class="docutils literal"><span class="pre">FW_BLOCK_FORMAT:</span> <span class="pre">%Y-%m-%d-%H-%M-%S-%f</span></code> - the <code class="docutils literal"><span class="pre">launcher_</span></code> and <code class="docutils literal"><span class="pre">block_</span></code> directories written by the Rocket and Queue Launchers add a date stamp to the directory. You can change this if desired.</li>
 <li><code class="docutils literal"><span class="pre">QSTAT_FREQUENCY:</span> <span class="pre">50</span></code> - number of jobs submitted to queue before re-executing a qstat. 1 means always do qstat, higher avoids unnecessarily loading the qstat server. Set this low if you have multiple processes submitting jobs to the same queue.</li>
 <li><code class="docutils literal"><span class="pre">PW_CHECK_NUM:</span> <span class="pre">10</span></code> - how many FireWorks/Worflows can be changed with a single LaunchPad command (like <code class="docutils literal"><span class="pre">rerun_fws</span></code>) before a password is required.</li>
@@ -171,7 +168,7 @@
 <li><a class="reference internal" href="#specifying-default-locations-for-the-config-files-alternate">Specifying default locations for the config files (alternate)</a></li>
 <li><a class="reference internal" href="#linking-to-firetasks-in-external-packages">Linking to Firetasks in external packages</a></li>
 <li><a class="reference internal" href="#parameters-you-might-want-to-change">Parameters you might want to change</a></li>
-<li><a class="reference internal" href="#parameters-that-you-probably-shouldn-t-change">Parameters that you probably shouldn&#8217;t change</a></li>
+<li><a class="reference internal" href="#parameters-that-you-probably-shouldn-t-change">Parameters that you probably shouldn’t change</a></li>
 </ul>
 </li>
 </ul>
@@ -220,13 +217,13 @@
         <li class="right" >
           <a href="security_tutorial.html" title="Configuring Security"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

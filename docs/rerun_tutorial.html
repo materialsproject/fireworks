@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Rerunning a Firework or Workflow &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Rerunning a Firework or Workflow &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Dealing with Failures and Crashes" href="failures_tutorial.html" />
     <link rel="prev" title="Canceling (pausing), restarting, and deleting Workflows" href="defuse_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="defuse_tutorial.html" title="Canceling (pausing), restarting, and deleting Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -58,10 +55,10 @@
 <h1>Rerunning a Firework or Workflow<a class="headerlink" href="#rerunning-a-firework-or-workflow" title="Permalink to this headline">¶</a></h1>
 <p>In some instances, you may want to rerun a Firework or Workflow. For example, your computing resource may have crashed or been configured incorrectly during the first run, leading to your first launch being <em>FIZZLED</em>. When you rerun a Firework:</p>
 <ul class="simple">
-<li>All the Firework&#8217;s previous launches are <em>archived</em> into a special section of the Firework called <em>archived_launches</em>. This process also occurs for all the children of the Firework (but not the parents).</li>
-<li>The Firework&#8217;s state is reset back <em>READY</em>. The state of all children is reset back to <em>WAITING</em> for the Firework to complete. The archived launches can be read by the user but do not affect the operation of the Firework.</li>
+<li>All the Firework’s previous launches are <em>archived</em> into a special section of the Firework called <em>archived_launches</em>. This process also occurs for all the children of the Firework (but not the parents).</li>
+<li>The Firework’s state is reset back <em>READY</em>. The state of all children is reset back to <em>WAITING</em> for the Firework to complete. The archived launches can be read by the user but do not affect the operation of the Firework.</li>
 </ul>
-<p>One issue with rerunning FireWorks is that the procedure does not reset any previous actions taken by your Firework. For example, if your Firework executed an instruction to create a new Workflow step within its FWAction, or modified the inputs of the child Firework, these actions will <strong>not</strong> be reset when you rerun the Firework. The point is important enough that we&#8217;ll repeat it in a warning:</p>
+<p>One issue with rerunning FireWorks is that the procedure does not reset any previous actions taken by your Firework. For example, if your Firework executed an instruction to create a new Workflow step within its FWAction, or modified the inputs of the child Firework, these actions will <strong>not</strong> be reset when you rerun the Firework. The point is important enough that we’ll repeat it in a warning:</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Re-running a Firework does not reset any dynamic actions taken by that Firework, such as creating new Workflow steps or modifying the <strong>spec</strong> of its children.</p>
@@ -163,13 +160,13 @@
         <li class="right" >
           <a href="defuse_tutorial.html" title="Canceling (pausing), restarting, and deleting Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

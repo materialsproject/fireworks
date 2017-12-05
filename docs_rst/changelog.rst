@@ -2,6 +2,53 @@
 FireWorks Changelog
 ===================
 
+**v1.6.0**
+
+* fixes for task-level recovery (J. Montoya)
+* LSF queueadapter takes into account job counts by queue (J. Boes)
+* some unit test improvements (I. Kondov)
+
+
+**v1.5.9**
+
+* Py2 bugfix
+
+**v1.5.8**
+
+* New data flow built-in Firetasks (I. Kondov)
+
+**v1.5.7**
+
+* Improve performance of workflow add to DB for large workflows (R. Gowers)
+
+**v1.5.5**
+
+* Better handling of SSL certs (I. Kondov)
+* Improve performance of fw rerun (R. Gowers)
+
+**v1.5.4**
+
+* fix some logic re:which config files to use
+
+**v1.5.3**
+
+* rapidfire with nlaunches=0 now loops until no READY or WAITINGS FWs via new launchpad.future_run_exists() (R. Gowers)
+
+**v1.5.2**
+
+* minor web gui improvements
+* installation doc updates (R. Lahe)
+
+**v1.5.1**
+
+* add visual dashboard feature to web gui (all graphics)
+* Fixes to SGE queue adapter (A. Ganose)
+
+**v1.5.0**
+
+* redesigned web gui with visual plots (J. Montoya, A. Jain)
+* improved task-level recovery, including in offline mode (J. Montoya)
+
 **v1.4.8**
 
 * Fix pip requirements

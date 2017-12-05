@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Five-minute quickstart &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Five-minute quickstart &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Introductory Tutorial" href="introduction.html" />
     <link rel="prev" title="Installing FireWorks" href="installation.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="installation.html" title="Installing FireWorks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -63,25 +60,25 @@
 <li>Monitor your job status with the FireWorks database</li>
 <li>Get a flavor of the Python API</li>
 </ul>
-<p>This tutorial will emphasize &#8220;hands-on&#8221; usage of FireWorks via the command line and not explain things in detail.</p>
+<p>This tutorial will emphasize “hands-on” usage of FireWorks via the command line and not explain things in detail.</p>
 <div class="section" id="start-fireworks">
 <h2>Start FireWorks<a class="headerlink" href="#start-fireworks" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">If not already running, start MongoDB:</p>
+<li><p class="first">If not already running, start MongoDB (if your MongoDB is hosted and maintained externally, follow the note below regarding <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">init</span></code>):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mongod</span> <span class="o">--</span><span class="n">logpath</span> <span class="o">&lt;</span><span class="n">FILENAME_TO_LOG_TO</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">fork</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you cannot access the <code class="docutils literal"><span class="pre">/data/db</span></code> directory or if you are running MongoDB on a shared machine, make sure that the <a href="#id1"><span class="problematic" id="id2">``</span></a>&#8211;dbpath` variable is set to a directory that you can access or set the appropriate permissions.</p>
+<p class="last">If you cannot access the <code class="docutils literal"><span class="pre">/data/db</span></code> directory or if you are running MongoDB on a shared machine, make sure that the <a href="#id1"><span class="problematic" id="id2">``</span></a>–dbpath` variable is set to a directory that you can access or set the appropriate permissions.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the <code class="docutils literal"><span class="pre">--quiet</span></code> option. You may also wish to set up your Mongo config in a file and use the &#8211;config option.</p>
+<p class="last">If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the <code class="docutils literal"><span class="pre">--quiet</span></code> option. You may also wish to set up your Mongo config in a file and use the –config option.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">init</span></code>. This will set up a file that points to your remote database. You can now run <code class="docutils literal"><span class="pre">lpad</span></code> commands from within this directory. Alternatively, use the <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-l</span></code> option to point to this file or set up this file as your default db location using the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>.</p>
+<p class="last">If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">init</span></code>. This will set up a <code class="docutils literal"><span class="pre">my_launchpad.yaml</span></code> file that points to your remote database. You can now run <code class="docutils literal"><span class="pre">lpad</span></code> commands from within this directory. If you want to run commands from a different directory, use the <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-l</span></code> option to point to this file or set up this file as your default db location using the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>.</p>
 </div>
 </li>
 <li><p class="first">Reset/Initialize the FireWorks database (the LaunchPad):</p>
@@ -100,7 +97,7 @@
 <div class="section" id="add-a-workflow">
 <h2>Add a Workflow<a class="headerlink" href="#add-a-workflow" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">There are many ways to add Workflows to the database. You can do it directly from the command line as:</p>
+<li><p class="first">There are many ways to add Workflows to the database, including a Python API. Let’s start with an extremely simple example that can be added via the command line:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add_scripts</span> <span class="s1">&#39;echo &quot;hello&quot;&#39;</span> <span class="s1">&#39;echo &quot;goodbye&quot;&#39;</span> <span class="o">-</span><span class="n">n</span> <span class="n">hello</span> <span class="n">goodbye</span> <span class="o">-</span><span class="n">w</span> <span class="n">test_workflow</span>
 </pre></div>
 </div>
@@ -108,9 +105,9 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">2013</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">03</span> <span class="mi">13</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span><span class="mi">991</span> <span class="n">INFO</span> <span class="n">Added</span> <span class="n">a</span> <span class="n">workflow</span><span class="o">.</span> <span class="n">id_map</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>This added a two-job linear workflow. The first jobs prints <em>hello</em> to the command line, and the second job prints <em>goodbye</em>. We gave names (optional) to each step as &#8220;hello&#8221; and &#8220;goodbye&#8221;. We named the workflow overall (optional) as &#8220;test_workflow&#8221;.</p>
+<p>This added a two-job linear workflow. The first jobs prints <em>hello</em> to the command line, and the second job prints <em>goodbye</em>. We gave names (optional) to each step as “hello” and “goodbye”. We named the workflow overall (optional) as “test_workflow”.</p>
 </li>
-<li><p class="first">Let&#8217;s look at our test workflow:</p>
+<li><p class="first">Let’s look at our test workflow:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">n</span> <span class="n">test_workflow</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
 </pre></div>
 </div>
@@ -131,14 +128,14 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>We get back basic information on our workflows. The second step &#8220;goodbye&#8221; is <em>waiting</em> for the first one to complete; it is not ready to run because it depends on the first job.</p>
+<p>We get back basic information on our workflows. The second step “goodbye” is <em>waiting</em> for the first one to complete; it is not ready to run because it depends on the first job.</p>
 </li>
 </ol>
 </div>
 <div class="section" id="run-all-workflows">
 <h2>Run all Workflows<a class="headerlink" href="#run-all-workflows" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">You can run jobs one at a time (<em>&#8220;singleshot&#8221;</em>) or all at once (<em>&#8220;rapidfire&#8221;</em>). Let&#8217;s run all jobs:</p>
+<li><p class="first">You can run jobs one at a time (<em>“singleshot”</em>) or all at once (<em>“rapidfire”</em>). Let’s run all jobs:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">--</span><span class="n">silencer</span> <span class="n">rapidfire</span>
 </pre></div>
 </div>
@@ -149,7 +146,7 @@
 </div>
 <p>Clearly, both steps of our workflow ran in the correct order.</p>
 </li>
-<li><p class="first">Let&#8217;s again look at our workflows:</p>
+<li><p class="first">Let’s again look at our workflows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_wflows</span> <span class="o">-</span><span class="n">n</span> <span class="n">test_workflow</span> <span class="o">-</span><span class="n">d</span> <span class="n">more</span>
 </pre></div>
 </div>
@@ -187,7 +184,7 @@
 </div>
 </li>
 </ol>
-<p>Note that there are options to run the web site in a server mode.</p>
+<p>Note that there are options to run the web site in a server mode, try <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">webgui</span> <span class="pre">-h</span></code> to see all the options.</p>
 </div>
 <div class="section" id="python-code">
 <h2>Python code<a class="headerlink" href="#python-code" title="Permalink to this headline">¶</a></h2>
@@ -218,7 +215,7 @@
 </div>
 <div class="section" id="next-steps">
 <h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
-<p>Now that you&#8217;ve successfully gotten things running, we encourage you to learn about all the different options FireWorks provides for designing, managing, running, and monitoring workflows. A good next step is the <a class="reference internal" href="introduction.html"><span class="doc">Introductory tutorial</span></a>, which takes things more slowly than this quickstart.</p>
+<p>Now that you’ve successfully gotten things running, we encourage you to learn about all the different options FireWorks provides for designing, managing, running, and monitoring workflows. A good next step is the <a class="reference internal" href="introduction.html"><span class="doc">Introductory tutorial</span></a>, which takes things more slowly than this quickstart.</p>
 </div>
 </div>
 
@@ -283,13 +280,13 @@
         <li class="right" >
           <a href="installation.html" title="Installing FireWorks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

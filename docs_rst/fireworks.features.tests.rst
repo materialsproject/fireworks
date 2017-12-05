@@ -1,11 +1,11 @@
-fireworks.features.tests package
-================================
+fireworks\.features\.tests package
+==================================
 
 Submodules
 ----------
 
-fireworks.features.tests.test_introspect module
------------------------------------------------
+fireworks\.features\.tests\.test\_introspect module
+---------------------------------------------------
 
 .. automodule:: fireworks.features.tests.test_introspect
     :members:

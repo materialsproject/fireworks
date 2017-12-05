@@ -14,11 +14,14 @@
 .. pull-quote:: | "Give me six hours to chop down a tree and I will spend the first four sharpening the axe."
                 |    - Abraham Lincoln
 
-FireWorks is a free, `open-source <https://github.com/materialsproject/fireworks>`_ code for defining, managing, and executing workflows. Complex workflows can be defined using Python, JSON, or YAML, are stored using MongoDB, and can be monitored through a built-in web interface. Workflow execution can be automated over arbitrary computing resources, including those that have a queueing system. FireWorks has been used to run millions of workflows encompassing tens of millions of CPU-hours across diverse application areas and in long-term production projects over the span of multiple years.
+FireWorks is a free, `open-source <https://github.com/materialsproject/fireworks>`_ code for defining, managing, and executing workflows. Complex workflows can be defined using Python, JSON, or YAML, are stored using MongoDB, and can be monitored through a built-in web interface. Workflow execution can be automated over arbitrary computing resources, including those that have a queueing system. FireWorks has been used to run millions of workflows encompassing tens of millions of CPU-hours across diverse application areas and in long-term production projects over the span of multiple years. An academic paper on FireWorks is also available. For details, see :ref:`citing-label`.
 
-Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers.
+Some features that distinguish FireWorks are dynamic workflows, failure-detection routines, and built-in tools and execution modes for running high-throughput computations at large computing centers. A screenshot of the workflow monitoring interface is shown below:
 
-**New!** An academic paper on FireWorks is now available. For details, see :ref:`citing-label`.
+.. image:: _static/webgui_splash.png
+   :width: 800px
+   :align: center
+   :alt: Web gui splash
 
 .. raw::</div>
 
@@ -191,6 +194,7 @@ The built-in Firetasks
     fileiotasks
     pytask
     filepad_tasks
+    dataflow_tasks
 
 Misc
 ----

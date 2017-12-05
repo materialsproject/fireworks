@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>fireworks.user_objects.queue_adapters package &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>fireworks.user_objects.queue_adapters package &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,7 +34,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -72,9 +69,33 @@
 <dd><p>Bases: <a class="reference internal" href="fireworks.queue.html#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.queue.queue_adapter.QueueAdapterBase</span></code></a></p>
 <p>An adapter that works on most PBS (including derivatives such as
 TORQUE), SGE, and SLURM queues.</p>
+<dl class="method">
+<dt id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>q_type</em>, <em>q_name=None</em>, <em>template_file=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>q_type</strong> – The type of queue. Right now it should be either PBS,
+SGE, SLURM, Cobalt or LoadLeveler.</li>
+<li><strong>q_name</strong> – A name for the queue. Can be any string.</li>
+<li><strong>template_file</strong> – The path to the template file. Leave it as
+None (the default) to use Fireworks’ built-in
+templates for PBS and SGE, which should work
+on most queues.</li>
+<li><strong>**kwargs</strong> – <p>Series of keyword args for queue parameters.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.default_q_commands">
-<code class="descname">default_q_commands</code><em class="property"> = {u'PBS': {u'submit_cmd': u'qsub', u'status_cmd': u'qstat'}, u'LoadSharingFacility': {u'submit_cmd': u'bsub', u'status_cmd': u'bjobs'}, u'SGE': {u'submit_cmd': u'qsub', u'status_cmd': u'qstat'}, u'SLURM': {u'submit_cmd': u'sbatch', u'status_cmd': u'squeue'}, u'Cobalt': {u'submit_cmd': u'qsub', u'status_cmd': u'qstat'}, u'LoadLeveler': {u'submit_cmd': u'llsubmit', u'status_cmd': u'llq'}}</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.default_q_commands" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_q_commands</code><em class="property"> = {'PBS': {'submit_cmd': 'qsub', 'status_cmd': 'qstat'}, 'SGE': {'submit_cmd': 'qsub', 'status_cmd': 'qstat'}, 'Cobalt': {'submit_cmd': 'qsub', 'status_cmd': 'qstat'}, 'SLURM': {'submit_cmd': 'sbatch', 'status_cmd': 'squeue'}, 'LoadLeveler': {'submit_cmd': 'llsubmit', 'status_cmd': 'llq'}, 'LoadSharingFacility': {'submit_cmd': 'bsub', 'status_cmd': 'bjobs'}}</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.default_q_commands" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
@@ -90,7 +111,7 @@ TORQUE), SGE, and SLURM queues.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>username</strong> &#8211; (str) the username of the jobs to count (default is to autodetect)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>username</strong> – (str) the username of the jobs to count (default is to autodetect)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(int) number of jobs in the queue</td>
 </tr>
@@ -106,7 +127,7 @@ TORQUE), SGE, and SLURM queues.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>script_file</strong> &#8211; (str) name of the script file to use (String)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>script_file</strong> – (str) name of the script file to use (String)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(int) job_id</td>
 </tr>
@@ -142,17 +163,17 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.q_name">
-<code class="descname">q_name</code><em class="property"> = u'pbs_newt'</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.q_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">q_name</code><em class="property"> = 'pbs_newt'</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.q_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.resource">
-<code class="descname">resource</code><em class="property"> = u'carver'</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.resource" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resource</code><em class="property"> = 'carver'</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.resource" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_cmd">
-<code class="descname">submit_cmd</code><em class="property"> = u''</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_cmd" title="Permalink to this definition">¶</a></dt>
+<code class="descname">submit_cmd</code><em class="property"> = ''</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_cmd" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -162,7 +183,7 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 
 <dl class="attribute">
 <dt id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.template_file">
-<code class="descname">template_file</code><em class="property"> = u'/Users/ajain/Documents/code_matgen/fireworks/fireworks/user_objects/queue_adapters/PBS_template.txt'</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.template_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">template_file</code><em class="property"> = '/Users/ajain/Documents/code_matgen/fireworks/fireworks/user_objects/queue_adapters/PBS_template.txt'</em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.template_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -221,13 +242,13 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

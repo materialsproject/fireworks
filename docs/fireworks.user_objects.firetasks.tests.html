@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>fireworks.user_objects.firetasks.tests package &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>fireworks.user_objects.firetasks.tests package &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,7 +34,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,6 +47,106 @@
 <h1>fireworks.user_objects.firetasks.tests package<a class="headerlink" href="#fireworks-user-objects-firetasks-tests-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fireworks.user_objects.firetasks.tests.test_dataflow_tasks">
+<span id="fireworks-user-objects-firetasks-tests-test-dataflow-tasks-module"></span><h2>fireworks.user_objects.firetasks.tests.test_dataflow_tasks module<a class="headerlink" href="#module-fireworks.user_objects.firetasks.tests.test_dataflow_tasks" title="Permalink to this headline">¶</a></h2>
+<p>Unit tests for the dataflow tasks</p>
+<dl class="class">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest">
+<em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.tests.test_dataflow_tasks.</code><code class="descname">CommandLineTaskTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>run tests for CimmandLineTask</p>
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_1">
+<code class="descname">test_command_line_task_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>input from string to stdin, output from stdout to string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_2">
+<code class="descname">test_command_line_task_2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>input from string to data, output from stdout to file;
+input from file to stdin, output from stdout to string and from file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_3">
+<code class="descname">test_command_line_task_3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>input from string to data with command line options</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_4">
+<code class="descname">test_command_line_task_4</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.CommandLineTaskTest.test_command_line_task_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>multiple string inputs, multiple file outputs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ForeachTaskTest">
+<em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.tests.test_dataflow_tasks.</code><code class="descname">ForeachTaskTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ForeachTaskTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>run tests for ForeachTask</p>
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ForeachTaskTest.test_foreach_commandlinetask">
+<code class="descname">test_foreach_commandlinetask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ForeachTaskTest.test_foreach_commandlinetask" title="Permalink to this definition">¶</a></dt>
+<dd><p>run CommandLineTask for a list of input data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ForeachTaskTest.test_foreach_pytask">
+<code class="descname">test_foreach_pytask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ForeachTaskTest.test_foreach_pytask" title="Permalink to this definition">¶</a></dt>
+<dd><p>run PyTask for a list of numbers</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ImportDataTaskTest">
+<em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.tests.test_dataflow_tasks.</code><code class="descname">ImportDataTaskTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ImportDataTaskTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>run tests for ImportDataTask</p>
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ImportDataTaskTest.test_import_data_task">
+<code class="descname">test_import_data_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ImportDataTaskTest.test_import_data_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads data from a file into spec</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinDictTaskTest">
+<em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.tests.test_dataflow_tasks.</code><code class="descname">JoinDictTaskTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinDictTaskTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>run tests for JoinDictTask</p>
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinDictTaskTest.test_join_dict_task">
+<code class="descname">test_join_dict_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinDictTaskTest.test_join_dict_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>joins dictionaries into a new or existing dict in spec</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinListTaskTest">
+<em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.tests.test_dataflow_tasks.</code><code class="descname">JoinListTaskTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinListTaskTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>run tests for JoinListTask</p>
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinListTaskTest.test_join_list_task">
+<code class="descname">test_join_list_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.JoinListTaskTest.test_join_list_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>joins items into a new or existing list in spec</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="fireworks.user_objects.firetasks.tests.test_dataflow_tasks.afunc">
+<code class="descclassname">fireworks.user_objects.firetasks.tests.test_dataflow_tasks.</code><code class="descname">afunc</code><span class="sig-paren">(</span><em>array</em>, <em>power</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.afunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the powers of a list of numbers</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-fireworks.user_objects.firetasks.tests.test_fileio_tasks">
 <span id="fireworks-user-objects-firetasks-tests-test-fileio-tasks-module"></span><h2>fireworks.user_objects.firetasks.tests.test_fileio_tasks module<a class="headerlink" href="#module-fireworks.user_objects.firetasks.tests.test_fileio_tasks" title="Permalink to this headline">¶</a></h2>
@@ -137,6 +234,7 @@
 </div>
 <div class="section" id="module-fireworks.user_objects.firetasks.tests.test_script_task">
 <span id="fireworks-user-objects-firetasks-tests-test-script-task-module"></span><h2>fireworks.user_objects.firetasks.tests.test_script_task module<a class="headerlink" href="#module-fireworks.user_objects.firetasks.tests.test_script_task" title="Permalink to this headline">¶</a></h2>
+<p>TODO: Modify unittest doc.</p>
 <dl class="class">
 <dt id="fireworks.user_objects.firetasks.tests.test_script_task.PyTaskTest">
 <em class="property">class </em><code class="descclassname">fireworks.user_objects.firetasks.tests.test_script_task.</code><code class="descname">PyTaskTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_script_task.PyTaskTest" title="Permalink to this definition">¶</a></dt>
@@ -151,6 +249,12 @@
 <code class="descname">test_task_auto_kwargs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_script_task.PyTaskTest.test_task_auto_kwargs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="fireworks.user_objects.firetasks.tests.test_script_task.PyTaskTest.test_task_data_flow">
+<code class="descname">test_task_data_flow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_script_task.PyTaskTest.test_task_data_flow" title="Permalink to this definition">¶</a></dt>
+<dd><p>test dataflow parameters: inputs, outputs and chunk_number</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -163,6 +267,11 @@
 <dd></dd></dl>
 
 </dd></dl>
+
+<dl class="function">
+<dt id="fireworks.user_objects.firetasks.tests.test_script_task.afunc">
+<code class="descclassname">fireworks.user_objects.firetasks.tests.test_script_task.</code><code class="descname">afunc</code><span class="sig-paren">(</span><em>y</em>, <em>z</em>, <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.tests.test_script_task.afunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-fireworks.user_objects.firetasks.tests.test_templatewriter_task">
@@ -194,6 +303,7 @@
   <ul>
 <li><a class="reference internal" href="#">fireworks.user_objects.firetasks.tests package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fireworks.user_objects.firetasks.tests.test_dataflow_tasks">fireworks.user_objects.firetasks.tests.test_dataflow_tasks module</a></li>
 <li><a class="reference internal" href="#module-fireworks.user_objects.firetasks.tests.test_fileio_tasks">fireworks.user_objects.firetasks.tests.test_fileio_tasks module</a></li>
 <li><a class="reference internal" href="#module-fireworks.user_objects.firetasks.tests.test_filepad_tasks">fireworks.user_objects.firetasks.tests.test_filepad_tasks module</a></li>
 <li><a class="reference internal" href="#module-fireworks.user_objects.firetasks.tests.test_script_task">fireworks.user_objects.firetasks.tests.test_script_task module</a></li>
@@ -233,13 +343,13 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

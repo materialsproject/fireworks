@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Introductory Tutorial &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Introductory Tutorial &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Defining Jobs using Firetasks" href="firetask_tutorial.html" />
     <link rel="prev" title="Five-minute quickstart" href="quickstart.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="quickstart.html" title="Five-minute quickstart"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -62,7 +59,7 @@
 <li>Run that workflow in a few modes</li>
 <li>Get a flavor of the Python API</li>
 </ul>
-<p>The purpose of this tutorial is to get you set up as quickly as possible; it isn&#8217;t intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.</p>
+<p>The purpose of this tutorial is to get you set up as quickly as possible; it isn’t intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.</p>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
 <p class="last">If you are having trouble with this tutorial, please post a message on the <a class="reference external" href="https://github.com/materialsproject/fireworks/issues">FireWorks Github page</a>.</p>
@@ -77,11 +74,11 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you cannot access the <code class="docutils literal"><span class="pre">/data/db</span></code> directory or if you are running MongoDB on a shared machine, make sure that the <a href="#id1"><span class="problematic" id="id2">``</span></a>&#8211;dbpath` variable is set to a directory that you can access or set the appropriate permissions.</p>
+<p class="last">If you cannot access the <code class="docutils literal"><span class="pre">/data/db</span></code> directory or if you are running MongoDB on a shared machine, make sure that the <a href="#id1"><span class="problematic" id="id2">``</span></a>–dbpath` variable is set to a directory that you can access or set the appropriate permissions.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the <code class="docutils literal"><span class="pre">--quiet</span></code> option. You may also wish to set up your Mongo config in a file and use the &#8211;config option.</p>
+<p class="last">If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the <code class="docutils literal"><span class="pre">--quiet</span></code> option. You may also wish to set up your Mongo config in a file and use the –config option.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -95,7 +92,7 @@
 <p>where &lt;INSTALL_DIR&gt; is your FireWorks installation directory.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you do not know your &lt;INSTALL_DIR&gt;, use the command <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">version</span></code> to print it to the terminal. If you used the <cite>pip</cite> installation, you&#8217;ll need to download the tutorial files separately as explained in the <a class="reference internal" href="installation.html"><span class="doc">Basic FireWorks Installation</span></a>.</p>
+<p class="last">If you do not know your &lt;INSTALL_DIR&gt;, use the command <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">version</span></code> to print it to the terminal. If you used the <cite>pip</cite> installation, you’ll need to download the tutorial files separately as explained in the <a class="reference internal" href="installation.html"><span class="doc">Basic FireWorks Installation</span></a>.</p>
 </div>
 </li>
 <li><p class="first">Reset the FireWorks database (the LaunchPad):</p>
@@ -104,14 +101,14 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If you are already curious about the various options that the LaunchPad offers, you can type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-h</span></code> or <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">reset</span> <span class="pre">-h</span></code>. The <code class="docutils literal"><span class="pre">-h</span></code> help option is available for all of the scripts and sub-commands (like <code class="docutils literal"><span class="pre">reset</span></code>) in FireWorks. For example, if you <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">reset</span></code> using the <code class="docutils literal"><span class="pre">--password</span></code> option set to today&#8217;s date, e.g. 2012-02-01, you can bypass the prompt asking you to confirm the reset.</p>
+<p class="last">If you are already curious about the various options that the LaunchPad offers, you can type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">-h</span></code> or <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">reset</span> <span class="pre">-h</span></code>. The <code class="docutils literal"><span class="pre">-h</span></code> help option is available for all of the scripts and sub-commands (like <code class="docutils literal"><span class="pre">reset</span></code>) in FireWorks. For example, if you <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">reset</span></code> using the <code class="docutils literal"><span class="pre">--password</span></code> option set to today’s date, e.g. 2012-02-01, you can bypass the prompt asking you to confirm the reset.</p>
 </div>
 </li>
 </ol>
 </div>
 <div class="section" id="add-a-firework-to-the-launchpad">
 <h2>Add a Firework to the LaunchPad<a class="headerlink" href="#add-a-firework-to-the-launchpad" title="Permalink to this headline">¶</a></h2>
-<p>A Firework contains a list of computing tasks (Firetasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We&#8217;ll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one Firetask thus looks like this:</p>
+<p>A Firework contains a list of computing tasks (Firetasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We’ll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one Firetask thus looks like this:</p>
 <a class="reference internal image-reference" href="_images/single_fw.png"><img alt="Single Firework" class="align-center" src="_images/single_fw.png" style="width: 200px;" /></a>
 <ol class="arabic">
 <li><p class="first">Staying in the tutorial directory, run the following command:</p>
@@ -126,7 +123,7 @@
     <span class="n">script</span><span class="p">:</span> <span class="n">echo</span> <span class="s2">&quot;howdy, your job launched successfully!&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">howdy</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-<p>If you&#8217;ve ever used other XML-based workflow systems, you might be surprised at how succinctly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we&#8217;ll provide more details and demonstrate how to add a workflow within Python code (rather than files).</p>
+<p>If you’ve ever used other XML-based workflow systems, you might be surprised at how succinctly a workflow can be defined in FireWorks. This specification is all that FireWorks needs to bootstrap your computing job. Later in this tutorial, we’ll provide more details and demonstrate how to add a workflow within Python code (rather than files).</p>
 </li>
 <li><p class="first">You should have received confirmation that the Firework got added. You can query the database for this Firework as follows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
@@ -155,15 +152,15 @@
 </ol>
 <ul class="simple">
 <li>The <strong>spec</strong> of the Firework contains <em>all</em> the information about what job to run and the parameters needed to run it.</li>
-<li>Within the <strong>spec</strong>, the <strong>_tasks</strong> section tells you what jobs will run. The <code class="docutils literal"><span class="pre">ScriptTask</span></code> is a particular type of task that runs commands through the shell. Other sections of the <strong>spec</strong> can be also be defined, but for now we&#8217;ll stick to just <strong>_tasks</strong>. Later on, we&#8217;ll describe how to run multiple <strong>_tasks</strong> or customized <strong>_tasks</strong>.</li>
+<li>Within the <strong>spec</strong>, the <strong>_tasks</strong> section tells you what jobs will run. The <code class="docutils literal"><span class="pre">ScriptTask</span></code> is a particular type of task that runs commands through the shell. Other sections of the <strong>spec</strong> can be also be defined, but for now we’ll stick to just <strong>_tasks</strong>. Later on, we’ll describe how to run multiple <strong>_tasks</strong> or customized <strong>_tasks</strong>.</li>
 <li>This Firework runs the script <code class="docutils literal"><span class="pre">echo</span> <span class="pre">&quot;howdy,</span> <span class="pre">your</span> <span class="pre">job</span> <span class="pre">launched</span> <span class="pre">successfully!&quot;</span> <span class="pre">&gt;&gt;</span> <span class="pre">howdy.txt&quot;</span></code>, which prints text to a file named <code class="docutils literal"><span class="pre">howdy.txt</span></code>.</li>
 <li>The <strong>state</strong> of <em>READY</em> means the Firework is ready to be run.</li>
 <li>The <strong>name</strong> is an optional field that we can set to help query for FireWorks later on. In this case, we did not specify one so a default name was used.</li>
 </ul>
-<p>You have now stored a Firework in the LaunchPad, and it&#8217;s ready to run!</p>
+<p>You have now stored a Firework in the LaunchPad, and it’s ready to run!</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The ScriptTask provides more options than what&#8217;s presented here; more details on using the <code class="docutils literal"><span class="pre">ScriptTask</span></code> can be found <a class="reference internal" href="scripttask.html"><span class="doc">here</span></a>.</p>
+<p class="last">The ScriptTask provides more options than what’s presented here; more details on using the <code class="docutils literal"><span class="pre">ScriptTask</span></code> can be found <a class="reference internal" href="scripttask.html"><span class="doc">here</span></a>.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -207,14 +204,14 @@
 </div>
 <div class="section" id="launch-many-rockets-rapidfire-mode">
 <h3>Launch many Rockets (rapidfire mode)<a class="headerlink" href="#launch-many-rockets-rapidfire-mode" title="Permalink to this headline">¶</a></h3>
-<p>If you just want to run many jobs on the central server itself, the simplest way is to run the Rocket Launcher in &#8220;rapidfire mode&#8221;. Let&#8217;s try this feature:</p>
+<p>If you just want to run many jobs on the central server itself, the simplest way is to run the Rocket Launcher in “rapidfire mode”. Let’s try this feature:</p>
 <ol class="arabic">
 <li><p class="first">Staying in the same directory, clean up your output files:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="n">FW</span><span class="o">.</span><span class="n">json</span> <span class="n">howdy</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Let&#8217;s add 3 identical FireWorks:</p>
+<li><p class="first">Let’s add 3 identical FireWorks:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -231,12 +228,12 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Let&#8217;s run launch Rockets in &#8220;rapidfire&#8221; mode, which will keep repeating until we run out of FireWorks to run:</p>
+<li><p class="first">Let’s run launch Rockets in “rapidfire” mode, which will keep repeating until we run out of FireWorks to run:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">rapidfire</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">You should see three directories starting with the tag <code class="docutils literal"><span class="pre">launcher_</span></code>. Inside each of these directories, you&#8217;ll find the results of one of your FireWorks (a file named <code class="docutils literal"><span class="pre">howdy.txt</span></code>):</p>
+<li><p class="first">You should see three directories starting with the tag <code class="docutils literal"><span class="pre">launcher_</span></code>. Inside each of these directories, you’ll find the results of one of your FireWorks (a file named <code class="docutils literal"><span class="pre">howdy.txt</span></code>):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">launch</span><span class="o">*/</span><span class="n">howdy</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
@@ -245,7 +242,7 @@
 </div>
 <div class="section" id="running-fireworks-automatically">
 <h3>Running FireWorks automatically<a class="headerlink" href="#running-fireworks-automatically" title="Permalink to this headline">¶</a></h3>
-<p>We can set our Rocket Launcher to continuously look for new FireWorks to run. Let&#8217;s try this feature.</p>
+<p>We can set our Rocket Launcher to continuously look for new FireWorks to run. Let’s try this feature.</p>
 <ol class="arabic">
 <li><p class="first">Staying in the same directory, clean up your previous output files:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="o">-</span><span class="n">r</span> <span class="n">launcher_</span><span class="o">*</span>
@@ -257,7 +254,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>In a new terminal window</strong>, navigate back to your working directory containing <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>. Let&#8217;s insert two FireWorks:</p>
+<li><p class="first"><strong>In a new terminal window</strong>, navigate back to your working directory containing <code class="docutils literal"><span class="pre">fw_test.yaml</span></code>. Let’s insert two FireWorks:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
@@ -282,12 +279,12 @@
 </div>
 <div class="section" id="what-just-happened">
 <h3>What just happened?<a class="headerlink" href="#what-just-happened" title="Permalink to this headline">¶</a></h3>
-<p>It&#8217;s important to understand that when you add a Firework to the LaunchPad using the <code class="docutils literal"><span class="pre">lpad</span></code> script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new Firework is added to the LaunchPad. Rather, a computing resource must <em>request</em> a computing task by running the Rocket Launcher.</p>
+<p>It’s important to understand that when you add a Firework to the LaunchPad using the <code class="docutils literal"><span class="pre">lpad</span></code> script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new Firework is added to the LaunchPad. Rather, a computing resource must <em>request</em> a computing task by running the Rocket Launcher.</p>
 <p>By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.</p>
 </div>
 <div class="section" id="python-examples-optional">
 <h3>Python Examples (optional)<a class="headerlink" href="#python-examples-optional" title="Permalink to this headline">¶</a></h3>
-<p>While it&#8217;s possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it:</p>
+<p>While it’s possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
 <span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="k">import</span> <span class="n">launch_rocket</span>
 
@@ -343,14 +340,14 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">FireWorks automatically detects what type of format you&#8217;re writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you&#8217;re using Python, there may not be any need to use files at all!</p>
+<p class="last">FireWorks automatically detects what type of format you’re writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you’re using Python, there may not be any need to use files at all!</p>
 </div>
 <p>The code above generally does not use a lot of the optional arguments to keep the examples looking clean and sharp. You might experiment with some of the options - for example, to set up logging when initializing the LaunchPad or control the parameters of rapid-fire mode. You can see the additional arguments by browsing the <a class="reference internal" href="modules.html"><span class="doc">modules documentation</span></a>.</p>
 </div>
 <div class="section" id="next-steps">
 <h3>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h3>
-<p>At this point, you&#8217;ve successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code>, and looked for new jobs automatically using the <strong>infinite</strong> Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.</p>
-<p>However, we still haven&#8217;t covered many important topics. For example, we have not executed complex workflows, run arbitrary Python code, or run jobs on different types of computing resources. Nor have we really looked into how to monitor and manage jobs and deploy FireWorks in production.</p>
+<p>At this point, you’ve successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code>, and looked for new jobs automatically using the <strong>infinite</strong> Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.</p>
+<p>However, we still haven’t covered many important topics. For example, we have not executed complex workflows, run arbitrary Python code, or run jobs on different types of computing resources. Nor have we really looked into how to monitor and manage jobs and deploy FireWorks in production.</p>
 <p>We suggest that you continue by learning how to <a class="reference internal" href="firetask_tutorial.html"><span class="doc">define jobs using Firetasks</span></a>. Alternatively, you could return to the <a class="reference internal" href="index.html"><span class="doc">home page</span></a> and choose a tutorial topic that suits your application.</p>
 </div>
 </div>
@@ -421,13 +418,13 @@
         <li class="right" >
           <a href="quickstart.html" title="Five-minute quickstart"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

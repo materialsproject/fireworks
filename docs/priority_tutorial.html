@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Assigning job priority &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Assigning job priority &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Canceling (pausing), restarting, and deleting Workflows" href="defuse_tutorial.html" />
     <link rel="prev" title="Installation Notes on various clusters / supercomputing centers" href="installation_notes.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="installation_notes.html" title="Installation Notes on various clusters / supercomputing centers"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -86,14 +83,14 @@
 <h3>Example 1: Prioritize one workflow over another<a class="headerlink" href="#example-1-prioritize-one-workflow-over-another" title="Permalink to this headline">¶</a></h3>
 <p>Imagine we have two workflows, A and B, with two steps each (1 and 2). We want to run workflow A in its entirety before beginning workflow B. Our execution should follow the blue arrow:</p>
 <a class="reference internal image-reference" href="_images/AthenB.png"><img alt="A then B" class="align-center" src="_images/AthenB.png" style="width: 400px;" /></a>
-<p>Let&#8217;s examine how we can set up such an execution model.</p>
+<p>Let’s examine how we can set up such an execution model.</p>
 <ol class="arabic">
 <li><p class="first">Move to the <code class="docutils literal"><span class="pre">A_then_B</span></code> subdirectory of the <code class="docutils literal"><span class="pre">priority</span></code> tutorial directory in your installation directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">priority</span><span class="o">/</span><span class="n">A_then_B</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Look inside the files <code class="docutils literal"><span class="pre">wfA.yaml</span></code> and <code class="docutils literal"><span class="pre">wfB.yaml</span></code>. You&#8217;ll notice that the <code class="docutils literal"><span class="pre">_priority</span></code> key for both steps of <code class="docutils literal"><span class="pre">wfA.yaml</span></code> is set to 2, whereas the corresponding values for the steps of <code class="docutils literal"><span class="pre">wfB.yaml</span></code> are only 1. This means that workflow A will execute in its entirety before starting workflow B.</p>
+<li><p class="first">Look inside the files <code class="docutils literal"><span class="pre">wfA.yaml</span></code> and <code class="docutils literal"><span class="pre">wfB.yaml</span></code>. You’ll notice that the <code class="docutils literal"><span class="pre">_priority</span></code> key for both steps of <code class="docutils literal"><span class="pre">wfA.yaml</span></code> is set to 2, whereas the corresponding values for the steps of <code class="docutils literal"><span class="pre">wfB.yaml</span></code> are only 1. This means that workflow A will execute in its entirety before starting workflow B.</p>
 </li>
 <li><p class="first">Add and run the FireWorks to confirm:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
@@ -114,7 +111,7 @@
 </div>
 <div class="section" id="example-2-a-breadth-first-workflow">
 <h3>Example 2: A breadth-first workflow<a class="headerlink" href="#example-2-a-breadth-first-workflow" title="Permalink to this headline">¶</a></h3>
-<p>Let&#8217;s now try another execution order: A-1, B-1, B-2, A-2.</p>
+<p>Let’s now try another execution order: A-1, B-1, B-2, A-2.</p>
 <a class="reference internal image-reference" href="_images/breadthfirst.png"><img alt="A then B" class="align-center" src="_images/breadthfirst.png" style="width: 500px;" /></a>
 <ol class="arabic">
 <li><p class="first">Move to the <code class="docutils literal"><span class="pre">breadthfirst</span></code> subdirectory of the <code class="docutils literal"><span class="pre">priority</span></code> tutorial directory in your installation directory:</p>
@@ -122,7 +119,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Look inside the files <code class="docutils literal"><span class="pre">wfA.yaml</span></code> and <code class="docutils literal"><span class="pre">wfB.yaml</span></code>. You&#8217;ll notice that this time, the <code class="docutils literal"><span class="pre">_priority</span></code> key is highest for step A-1 and lowest for step A-2, corresponding to our desired execution order.</p>
+<li><p class="first">Look inside the files <code class="docutils literal"><span class="pre">wfA.yaml</span></code> and <code class="docutils literal"><span class="pre">wfB.yaml</span></code>. You’ll notice that this time, the <code class="docutils literal"><span class="pre">_priority</span></code> key is highest for step A-1 and lowest for step A-2, corresponding to our desired execution order.</p>
 </li>
 <li><p class="first">Add and run the FireWorks to confirm:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
@@ -205,13 +202,13 @@
         <li class="right" >
           <a href="installation_notes.html" title="Installation Notes on various clusters / supercomputing centers"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>“Packing” small jobs into larger ones with multi job launcher &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>“Packing” small jobs into larger ones with multi job launcher &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Handling Duplicates Automatically" href="duplicates_tutorial.html" />
     <link rel="prev" title="Controlling the directory and Worker of execution" href="controlworker.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="controlworker.html" title="Controlling the directory and Worker of execution"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -55,12 +52,12 @@
           <div class="body" role="main">
             
   <div class="section" id="packing-small-jobs-into-larger-ones-with-multi-job-launcher">
-<h1>&#8220;Packing&#8221; small jobs into larger ones with multi job launcher<a class="headerlink" href="#packing-small-jobs-into-larger-ones-with-multi-job-launcher" title="Permalink to this headline">¶</a></h1>
-<p>With today&#8217;s multiprocessor and multi-node machines, it&#8217;s possible to get a lot of computing done quickly by exploiting parallelism. If you have many independent Fireworks to run (either across several Workflows or independent Fireworks within the same Workflow), FWS makes this process simple and automatic with the <strong>multi-job launcher</strong>. For example, you might want to simultaneously run 4 Fireworks over 4 cores, or 4 16-core parallel Fireworks over 64 cores.</p>
+<h1>“Packing” small jobs into larger ones with multi job launcher<a class="headerlink" href="#packing-small-jobs-into-larger-ones-with-multi-job-launcher" title="Permalink to this headline">¶</a></h1>
+<p>With today’s multiprocessor and multi-node machines, it’s possible to get a lot of computing done quickly by exploiting parallelism. If you have many independent Fireworks to run (either across several Workflows or independent Fireworks within the same Workflow), FWS makes this process simple and automatic with the <strong>multi-job launcher</strong>. For example, you might want to simultaneously run 4 Fireworks over 4 cores, or 4 16-core parallel Fireworks over 64 cores.</p>
 <p><strong>Important note</strong>: The <code class="docutils literal"><span class="pre">nlaunches</span></code> parameter is particularly important in multi-job mode. With <code class="docutils literal"><span class="pre">nlaunches</span></code> set to 0, a parallel worker will quit when it cannot find a Firework that is READY to run (even if further jobs exist in the database). For example, this can happen if you have a branching workflow, where initially there is only a single Firework to run, but later on there are multiple independent Fireworks that could in theory be run in parallel. Once the worker quits, it is no longer available for running parallel jobs, leading to reduction in parallelization. To avoid this issue, prefer <code class="docutils literal"><span class="pre">nlaunches</span></code> set to <code class="docutils literal"><span class="pre">&quot;infinity&quot;</span></code> or the specific number of jobs to complete rather than 0.</p>
 <div class="section" id="parallelizing-serial-jobs-on-a-single-multicore-machine">
 <h2>Parallelizing serial jobs on a single multicore machine<a class="headerlink" href="#parallelizing-serial-jobs-on-a-single-multicore-machine" title="Permalink to this headline">¶</a></h2>
-<p>If you have a single machine (e.g. workstation or laptop) with multiple cores, it&#8217;s easy to use all your cores to execute your Fireworks in parallel. Simply add your workflow(s) to the LaunchPad, and then type:</p>
+<p>If you have a single machine (e.g. workstation or laptop) with multiple cores, it’s easy to use all your cores to execute your Fireworks in parallel. Simply add your workflow(s) to the LaunchPad, and then type:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">multi</span> <span class="o">&lt;</span><span class="n">NP</span><span class="o">&gt;</span>
 </pre></div>
 </div>
@@ -77,7 +74,7 @@
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">&lt;MPIEXEC&gt;</span></code> is your MPI executable and <code class="docutils literal"><span class="pre">&lt;NP&gt;</span></code> is the <em>total</em> number of processors over all machines. Examples might be <code class="docutils literal"><span class="pre">mpirun</span> <span class="pre">-n</span> <span class="pre">128</span> <span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code>, or <code class="docutils literal"><span class="pre">mpiexec</span> <span class="pre">-n</span> <span class="pre">8</span> <span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code>, depending on your flavor of MPI.</p>
-<p>If you are familiar with MPI and FireWorks, you will recognize that this mode of operation is nothing special; we are just submitting the <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code> command over all cores using MPI. The <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code> doesn&#8217;t do anything different when run through MPI (it is not parallelized). It is the same <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code> from the introductory tutorials, and you can give it any of the same options as normal.</p>
+<p>If you are familiar with MPI and FireWorks, you will recognize that this mode of operation is nothing special; we are just submitting the <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code> command over all cores using MPI. The <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code> doesn’t do anything different when run through MPI (it is not parallelized). It is the same <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code> from the introductory tutorials, and you can give it any of the same options as normal.</p>
 <p>One note about this method is that unlike the special <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> command, no attempt is made to minimize database connections or improve database performance by sharing data between processes. So, there may be a fundamental limit to how much you can scale, depending on the performance and settings of your MongoDB server.</p>
 </div>
 <div class="section" id="parallelizing-parallel-jobs-over-several-interconnected-multicore-machines">
@@ -102,11 +99,11 @@
 </div>
 <div class="section" id="using-multi-job-launching-with-a-queue">
 <h2>Using multi job launching with a queue<a class="headerlink" href="#using-multi-job-launching-with-a-queue" title="Permalink to this headline">¶</a></h2>
-<p>It is easy to configure your queue script so that each queued job runs multiple Fireworks in parallel. In your <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> file, you should modify the <code class="docutils literal"><span class="pre">rocket_launch</span></code> key to be one of the <em>rlaunch multi</em> scripts described above (remember to add the number of jobs, e.g. <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span> <span class="pre">4</span></code>, as well as config file paths). Then, when the queued job &#8220;wakes up&#8221; and starts running, it will execute multiple jobs using <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> instead of single job using the basic <code class="docutils literal"><span class="pre">rlaunch</span></code>.</p>
+<p>It is easy to configure your queue script so that each queued job runs multiple Fireworks in parallel. In your <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> file, you should modify the <code class="docutils literal"><span class="pre">rocket_launch</span></code> key to be one of the <em>rlaunch multi</em> scripts described above (remember to add the number of jobs, e.g. <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span> <span class="pre">4</span></code>, as well as config file paths). Then, when the queued job “wakes up” and starts running, it will execute multiple jobs using <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> instead of single job using the basic <code class="docutils literal"><span class="pre">rlaunch</span></code>.</p>
 </div>
 <div class="section" id="a-note-on-packing-and-heterogeneous-jobs">
-<h2>A note on &#8220;packing&#8221; and heterogeneous jobs<a class="headerlink" href="#a-note-on-packing-and-heterogeneous-jobs" title="Permalink to this headline">¶</a></h2>
-<p>The multi job launcher does not actually &#8220;pack&#8221; jobs the way a queue scheduler does. Rather, it just creates a fixed number of Workers that pull Fireworks in parallel. In particular,  the multi-job launcher is designed to simultaneously run Fireworks <em>with homogeneous processor requirements</em>. If your Fireworks are not homogeneous (e.g., some Fireworks require more processors than others), we suggest you set up your FireWorker for <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> so that it only pulls jobs with a fixed computing requirement. The FireWorker can be set using the <code class="docutils literal"><span class="pre">-w</span></code> or <code class="docutils literal"><span class="pre">-c</span></code> option of the <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> command, and the configuration for only pulling certain jobs is described in the <a class="reference internal" href="controlworker.html"><span class="doc">control tutorial</span></a>.</p>
+<h2>A note on “packing” and heterogeneous jobs<a class="headerlink" href="#a-note-on-packing-and-heterogeneous-jobs" title="Permalink to this headline">¶</a></h2>
+<p>The multi job launcher does not actually “pack” jobs the way a queue scheduler does. Rather, it just creates a fixed number of Workers that pull Fireworks in parallel. In particular,  the multi-job launcher is designed to simultaneously run Fireworks <em>with homogeneous processor requirements</em>. If your Fireworks are not homogeneous (e.g., some Fireworks require more processors than others), we suggest you set up your FireWorker for <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> so that it only pulls jobs with a fixed computing requirement. The FireWorker can be set using the <code class="docutils literal"><span class="pre">-w</span></code> or <code class="docutils literal"><span class="pre">-c</span></code> option of the <code class="docutils literal"><span class="pre">rlaunch</span> <span class="pre">multi</span></code> command, and the configuration for only pulling certain jobs is described in the <a class="reference internal" href="controlworker.html"><span class="doc">control tutorial</span></a>.</p>
 </div>
 </div>
 
@@ -118,7 +115,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">&#8220;Packing&#8221; small jobs into larger ones with multi job launcher</a><ul>
+<li><a class="reference internal" href="#">“Packing” small jobs into larger ones with multi job launcher</a><ul>
 <li><a class="reference internal" href="#parallelizing-serial-jobs-on-a-single-multicore-machine">Parallelizing serial jobs on a single multicore machine</a></li>
 <li><a class="reference internal" href="#parallelizing-serial-jobs-over-several-interconnected-multicore-machines">Parallelizing serial jobs over several (interconnected) multicore machines</a></li>
 <li><a class="reference internal" href="#parallelizing-parallel-jobs-over-several-interconnected-multicore-machines">Parallelizing parallel jobs over several (interconnected) multicore machines</a><ul>
@@ -126,7 +123,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#using-multi-job-launching-with-a-queue">Using multi job launching with a queue</a></li>
-<li><a class="reference internal" href="#a-note-on-packing-and-heterogeneous-jobs">A note on &#8220;packing&#8221; and heterogeneous jobs</a></li>
+<li><a class="reference internal" href="#a-note-on-packing-and-heterogeneous-jobs">A note on “packing” and heterogeneous jobs</a></li>
 </ul>
 </li>
 </ul>
@@ -173,13 +170,13 @@
         <li class="right" >
           <a href="controlworker.html" title="Controlling the directory and Worker of execution"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

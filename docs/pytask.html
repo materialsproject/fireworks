@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>PyTask &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Using the PyTask &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="Using the built-in FilePad Tasks" href="filepad_tasks.html" />
     <link rel="prev" title="Using the built-in FileIO Tasks" href="fileiotasks.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="fileiotasks.html" title="Using the built-in FileIO Tasks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -54,31 +51,97 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="pytask">
-<h1>PyTask<a class="headerlink" href="#pytask" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="using-the-pytask">
+<h1>Using the PyTask<a class="headerlink" href="#using-the-pytask" title="Permalink to this headline">¶</a></h1>
 <p>The PyTask allows you to call any Python function. That function can (optionally) return a <em>FWAction</em> to perform dynamic actions (e.g., see the <a class="reference internal" href="guide_to_writing_firetasks.html"><span class="doc">Guide to Writing Firetasks</span></a>). Thus, with the PyTask you can basically do anything!</p>
 <div class="section" id="required-parameters">
 <h2>Required parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>func</strong>: <em>(str)</em> - Fully qualified python method. e.g., json.dump, or shutil.copy, or a user function!</li>
+<li><strong>func</strong> <em>(str)</em>: a fully qualified python method. If the function is part
+of a module then the name specification is something like <code class="docutils literal"><span class="pre">module.function</span></code>,
+e.g. <code class="docutils literal"><span class="pre">json.dump</span></code>, or <code class="docutils literal"><span class="pre">shutil.copy</span></code>, or a user function.</li>
 </ul>
 </div>
 <div class="section" id="optional-parameters">
 <h2>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>args</strong>: <em>(list)</em> - a list of args to feed into the function</li>
-<li><strong>kwargs</strong>: <em>(dict)</em> - Dictionary of keyword args. Default is empty.</li>
-<li><strong>auto_kwargs</strong>: <em>(bool)</em> - If True, all other params not starting with &#8220;_&#8221; are automatically supplied as keyword args</li>
-<li><strong>stored_data_varname</strong>: <em>(str)</em> If this is a string that does not evaluate to False, the output of the function will be stored as FWAction(stored_data={stored_data_varname: output}). The name is deliberately long to avoid potential name conflicts.</li>
+<li><strong>args</strong> <em>(list)</em>: a list of positional arguments to feed into the function. Default is an empty list.</li>
+<li><strong>kwargs</strong> <em>(dict)</em>: a dictionary of keyword arguments. Default is empty.</li>
+<li><strong>auto_kwargs</strong> <em>(bool)</em>: If <code class="docutils literal"><span class="pre">True</span></code>, all other parameters not starting with
+“_” are automatically supplied as keyword args.</li>
+<li><strong>stored_data_varname</strong> <em>(str)</em>: If this is a string that does not evaluate
+to <code class="docutils literal"><span class="pre">False</span></code>, the output of the function will be stored as
+<code class="docutils literal"><span class="pre">FWAction(stored_data={stored_data_varname:</span> <span class="pre">output})</span></code>.
+The name is deliberately long to avoid potential name conflicts.</li>
+<li><strong>inputs</strong> <em>(list)</em>: a list of <strong>spec</strong> keys which will be used to pass
+data from <strong>spec</strong> to the function as positional arguments; the so generated
+arguments list will be appended to <code class="docutils literal"><span class="pre">args</span></code>. Default is an empty list.</li>
+<li><strong>outputs</strong> <em>(list)</em>: a list of <strong>spec</strong> keys that will be used to pass
+returned values from the function to the <strong>spec</strong> of current and of child
+Fireworks; If the list is empty (<code class="docutils literal"><span class="pre">[]</span></code>) or not specified (<code class="docutils literal"><span class="pre">None</span></code>) then the
+output of the function will not be stored/passed. Default is an empty list.</li>
+<li><strong>chunk_number</strong> <em>(int)</em>: a serial number of the Firetask within a group
+of Firetasks generated by a ForeachTask. If <code class="docutils literal"><span class="pre">chunk_number</span></code> is not <code class="docutils literal"><span class="pre">None</span></code>
+the output will be merged with the output of the other Firetasks in the group
+into a list under the key specified in <code class="docutils literal"><span class="pre">outputs</span></code>. Default is <code class="docutils literal"><span class="pre">None</span></code>.</li>
 </ul>
 </div>
-<div class="section" id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-1-using-pytask-with-static-arguments">
+<h3>Example 1: Using PyTask with static arguments<a class="headerlink" href="#example-1-using-pytask-with-static-arguments" title="Permalink to this headline">¶</a></h3>
 <p>Here is an example of defining a PyTask that sleeps for 5 seconds:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fw_timer</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">PyTask</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="s1">&#39;time.sleep&#39;</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>Note that you can call any Python function this way!</p>
+</div>
+<div class="section" id="example-2-redirecting-data-from-and-to-spec">
+<h3>Example 2: Redirecting data from and to <strong>spec</strong><a class="headerlink" href="#example-2-redirecting-data-from-and-to-spec" title="Permalink to this headline">¶</a></h3>
+<p>Here is an example of using PyTask in a dataflow context:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fws</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">fw_id</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">Grind</span> <span class="n">coffee</span>
+  <span class="n">spec</span><span class="p">:</span>
+    <span class="n">_tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">PyTask</span>
+      <span class="n">function</span><span class="p">:</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">printurn</span>
+      <span class="n">inputs</span><span class="p">:</span> <span class="p">[</span><span class="n">coffee</span> <span class="n">beans</span><span class="p">]</span>
+      <span class="n">outputs</span><span class="p">:</span> <span class="n">coffee</span> <span class="n">powder</span>
+    <span class="n">coffee</span> <span class="n">beans</span><span class="p">:</span> <span class="n">best</span> <span class="n">selection</span>
+<span class="o">-</span> <span class="n">fw_id</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">Brew</span> <span class="n">coffee</span>
+  <span class="n">spec</span><span class="p">:</span>
+    <span class="n">_tasks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">PyTask</span>
+      <span class="n">function</span><span class="p">:</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">printurn</span>
+      <span class="n">inputs</span><span class="p">:</span> <span class="p">[</span><span class="n">coffee</span> <span class="n">powder</span><span class="p">,</span> <span class="n">water</span><span class="p">]</span>
+      <span class="n">outputs</span><span class="p">:</span> <span class="n">pure</span> <span class="n">coffee</span>
+    <span class="n">water</span><span class="p">:</span> <span class="n">workflowing</span> <span class="n">water</span>
+<span class="n">links</span><span class="p">:</span>
+  <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">metadata</span><span class="p">:</span> <span class="p">{}</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Simple</span> <span class="n">coffee</span> <span class="n">workflow</span>
+</pre></div>
+</div>
+<p>In this example the function <code class="docutils literal"><span class="pre">auxiliary.printurn</span></code> prints and returns all
+its arguments:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printurn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>The module <code class="docutils literal"><span class="pre">auxiliary</span></code>, i.e. the file <code class="docutils literal"><span class="pre">auxiliary.py</span></code> must be in
+<code class="docutils literal"><span class="pre">$PYTHONPATH</span></code>.</p>
+</div>
 </div>
 </div>
 
@@ -90,10 +153,14 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">PyTask</a><ul>
+<li><a class="reference internal" href="#">Using the PyTask</a><ul>
 <li><a class="reference internal" href="#required-parameters">Required parameters</a></li>
 <li><a class="reference internal" href="#optional-parameters">Optional parameters</a></li>
-<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#example-1-using-pytask-with-static-arguments">Example 1: Using PyTask with static arguments</a></li>
+<li><a class="reference internal" href="#example-2-redirecting-data-from-and-to-spec">Example 2: Redirecting data from and to <strong>spec</strong></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -140,13 +207,13 @@
         <li class="right" >
           <a href="fileiotasks.html" title="Using the built-in FileIO Tasks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

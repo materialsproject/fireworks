@@ -901,6 +901,10 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         self.assertEqual(ExecutionCounterTask.exec_counter, 1)
         self.assertEqual(ExceptionTestTask.exec_counter, 2)
         self.assertFalse(os.path.exists(os.path.join(dirs[1], "date_file")))
+        # Ensure rerun deletes recovery by default
+        self.lp.rerun_fw(1)
+        fw = self.lp.get_fw_by_id(1)
+        self.assertFalse("_recovery" in fw.spec) 
 
     def test_task_level_rerun_cp(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)

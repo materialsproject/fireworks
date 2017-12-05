@@ -1,20 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Reference material &#8212; FireWorks 1.4.8 documentation</title>
-    
+    <title>Reference material &#8212; FireWorks 1.6.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.8',
+        VERSION:     '1.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -29,7 +26,7 @@
     <link rel="next" title="The Comprehensive Guide to Writing Firetasks with Python" href="guide_to_writing_firetasks.html" />
     <link rel="prev" title="Using FilePad for storing and retrieving files" href="filepad_tutorial.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +42,7 @@
         <li class="right" >
           <a href="filepad_tutorial.html" title="Using FilePad for storing and retrieving files"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -57,7 +54,7 @@
   <div class="section" id="reference-material">
 <h1>Reference material<a class="headerlink" href="#reference-material" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="interpretation-of-state-of-fws-and-wfs">
-<h2>Interpretation of &#8216;state&#8217; of FWs and WFs<a class="headerlink" href="#interpretation-of-state-of-fws-and-wfs" title="Permalink to this headline">¶</a></h2>
+<h2>Interpretation of ‘state’ of FWs and WFs<a class="headerlink" href="#interpretation-of-state-of-fws-and-wfs" title="Permalink to this headline">¶</a></h2>
 <p>Recall that a Workflow is a composed of one or more FireWorks. Both FireWorks and Workflows have a <em>state</em> (status).</p>
 <p>You can get the states of FireWorks and Workflows using <a class="reference internal" href="query_tutorial.html"><span class="doc">LaunchPad queries</span></a> or through the <a class="reference internal" href="basesite_tutorial.html"><span class="doc">web interface</span></a>.</p>
 <div class="section" id="fireworks-states">
@@ -73,16 +70,16 @@
 <td><strong>Meaning</strong></td>
 </tr>
 <tr class="row-even"><td>ARCHIVED</td>
-<td>Similar to <em>deleted</em>. The Firework will not run, and its launches are archived (won&#8217;t be used in duplicate checking). However, you can still query the Firework. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</td>
+<td>Similar to <em>deleted</em>. The Firework will not run, and its launches are archived (won’t be used in duplicate checking). However, you can still query the Firework. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</td>
 </tr>
 <tr class="row-odd"><td>DEFUSED</td>
-<td>The Firework is canceled/paused. Child FireWorks won&#8217;t run (although siblings might). The Firework can be resumed (<em>reignited</em>) later. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</td>
+<td>The Firework is canceled/paused. Child FireWorks won’t run (although siblings might). The Firework can be resumed (<em>reignited</em>) later. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</td>
 </tr>
 <tr class="row-even"><td>WAITING</td>
 <td>The Firework is waiting for a parent Firework to complete. The Rocket Launcher will not pull this Firework until parent jobs complete.</td>
 </tr>
 <tr class="row-odd"><td>READY</td>
-<td>This Firework is ready to run, but hasn&#8217;t started running yet. The Rocket Launcher must pull this job and start running it.</td>
+<td>This Firework is ready to run, but hasn’t started running yet. The Rocket Launcher must pull this job and start running it.</td>
 </tr>
 <tr class="row-even"><td>RESERVED</td>
 <td>(Queue Launcher in reservation mode only). The Firework is waiting in a queue to run. More information <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">here</span></a>.</td>
@@ -152,10 +149,10 @@
 <td>Reserved for specifying the list of Firetasks in the spec.</td>
 </tr>
 <tr class="row-odd"><td>_priority</td>
-<td>Used to specify the job&#8217;s priority. More information <a class="reference internal" href="priority_tutorial.html"><span class="doc">here</span></a>.</td>
+<td>Used to specify the job’s priority. More information <a class="reference internal" href="priority_tutorial.html"><span class="doc">here</span></a>.</td>
 </tr>
 <tr class="row-even"><td>_pass_job_info</td>
-<td>This will pass a dictionary with keys [&#8220;fw_id&#8221;, &#8220;fw_name&#8221;, &#8220;launch_dir&#8221;] to the &#8220;_job_info&#8221; key. More information <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">here</span></a>.</td>
+<td>This will pass a dictionary with keys [“fw_id”, “fw_name”, “launch_dir”] to the “_job_info” key. More information <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">here</span></a>.</td>
 </tr>
 <tr class="row-odd"><td>_launch_dir</td>
 <td>Pre-specify the directory to run the job rather than using default FW directory. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</td>
@@ -222,7 +219,7 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Reference material</a><ul>
-<li><a class="reference internal" href="#interpretation-of-state-of-fws-and-wfs">Interpretation of &#8216;state&#8217; of FWs and WFs</a><ul>
+<li><a class="reference internal" href="#interpretation-of-state-of-fws-and-wfs">Interpretation of ‘state’ of FWs and WFs</a><ul>
 <li><a class="reference internal" href="#fireworks-states">FireWorks states</a></li>
 <li><a class="reference internal" href="#workflows-states">Workflows states</a></li>
 </ul>
@@ -274,13 +271,13 @@
         <li class="right" >
           <a href="filepad_tutorial.html" title="Using FilePad for storing and retrieving files"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.4.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
