@@ -43,6 +43,8 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO',
         fworker (FWorker)
         fw_id (int): if set, a particular Firework to run
         strm_lvl (str): level at which to output logs to stdout
+        pdb_on_exception (bool): if set to True, python will start
+            the debugger on a firework exception
 
     Returns:
         bool
