@@ -117,6 +117,10 @@ class Rocket:
     def run(self, pdb_on_exception=False):
         """
         Run the rocket (check out a job from the database and execute it)
+
+        Args:
+            pdb_on_exception (bool): whether to invoke the debugger on
+                a caught exception.  Default False.
         """
         all_stored_data = {}  # combined stored data for *all* the Tasks
         all_update_spec = {}  # combined update_spec for *all* the Tasks
