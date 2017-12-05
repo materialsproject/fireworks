@@ -6,11 +6,6 @@ from dateutil.relativedelta import relativedelta
 
 from fireworks import Firework
 
-<<<<<<< HEAD
-from matplotlib.figure import Figure
-
-=======
->>>>>>> master
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
 
@@ -109,12 +104,8 @@ class FWReport:
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
 
-<<<<<<< HEAD
-    def plot_stats(self, coll='fireworks', states=None, style='bar', **kwargs):
-=======
     def plot_stats(self, coll="fireworks", interval="days", num_intervals=5,
                    states=None, style='bar', **kwargs):
->>>>>>> master
         """
         Makes a chart with the summary data
 
@@ -149,6 +140,7 @@ class FWReport:
         ax = fig.add_subplot(111)
         data = {state: [result['states'][state] for result in results]
                 for state in states}
+
         bottom = [0] * len(results)
         for state in states:
             if any(data[state]):
