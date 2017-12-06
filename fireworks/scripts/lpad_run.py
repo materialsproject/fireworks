@@ -651,7 +651,7 @@ def lpad():
     # This makes common argument options easier to maintain. E.g., what if
     # there is a new state or disp option?
     fw_id_args = ["-i", "--fw_id"]
-    fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
+    fw_id_kwargs = {"type": str, "nargs": "+", "help": "fw_id"}
 
     state_args = ['-s', '--state']
     state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
@@ -1077,6 +1077,10 @@ def lpad():
         # if no command supplied, print help
         parser.print_help()
     else:
+        if args.fw_id:
+            if "," in args.fw_id[0]:
+                args.fw_id = args.fw_id[0].split(",")
+            args.fw_id = [int(_fw_id) for _fw_id in args.fw_id]
         args.func(args)
 
 if __name__ == '__main__':
