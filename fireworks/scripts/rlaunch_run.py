@@ -48,6 +48,7 @@ def rlaunch():
 
     single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run', default=None, type=int)
     single_parser.add_argument('--offline', help='run in offline mode (FW.json required)', action='store_true')
+    single_parser.add_argument('--pdb', help='shortcut to invoke debugger on error', action='store_true')
 
     rapid_parser.add_argument('--nlaunches', help='num_launches (int or "infinite"; '
                                                   'default 0 is all jobs in DB)', default=0)
@@ -151,7 +152,7 @@ def rlaunch():
                             exclude_current_node=args.exclude_current_node,
                             local_redirect=args.local_redirect)
     else:
-        launch_rocket(launchpad, fworker, args.fw_id, args.loglvl)
+        launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
 
 if __name__ == '__main__':
     rlaunch()

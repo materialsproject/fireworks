@@ -140,7 +140,7 @@ class FWReport:
         ax = fig.add_subplot(111)
         data = {state: [result['states'][state] for result in results]
                 for state in states}
-        
+
         bottom = [0] * len(results)
         for state in states:
             if any(data[state]):
