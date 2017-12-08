@@ -702,7 +702,7 @@ def lpad():
     addwf_parser.set_defaults(func=add_wf)
 
     append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')
-    append_wf_parser.add_argument('-i', '--fw_id', type=int, nargs='+', help='parent firework ids')
+    append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], nargs=fw_id_kwargs["nargs"], help='parent firework ids')
     append_wf_parser.add_argument('-f', '--wf_file', help='path to a firework or workflow file')
     append_wf_parser.add_argument('-d', '--detour', help='append workflow as a detour', dest='detour', action='store_true')
     append_wf_parser.add_argument('--no_pull_spec_mods', help='do not to pull spec mods from parent', dest='pull_spec_mods', action='store_false')
@@ -1077,10 +1077,11 @@ def lpad():
         # if no command supplied, print help
         parser.print_help()
     else:
-        if args.fw_id:
-            if "," in args.fw_id[0]:
-                args.fw_id = args.fw_id[0].split(",")
-            args.fw_id = [int(_fw_id) for _fw_id in args.fw_id]
+        if hasattr(args, "fw_id") and args.fw_id is not None:
+            if type(args.fw_id) is list:
+                if "," in args.fw_id[0]:
+                    args.fw_id = args.fw_id[0].split(",")
+                args.fw_id = [int(_fw_id) for _fw_id in args.fw_id]
         args.func(args)
 
 if __name__ == '__main__':
