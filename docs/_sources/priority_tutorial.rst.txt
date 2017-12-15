@@ -17,7 +17,7 @@ If you would like to set the priority of a Firework *after* you have already ent
 
     lpad set_priority <PRIORITY> -i <FW_IDS>
 
-where ``<FW_IDS>`` is the numerical id of the Firework you want to set the priority of (or a list of space-separated ids), and ``<PRIORITY>`` is the priority to assign.
+where ``<FW_IDS>`` is the numerical id of the Firework you want to set the priority of (or a list of comma-separated ids), and ``<PRIORITY>`` is the priority to assign.
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 

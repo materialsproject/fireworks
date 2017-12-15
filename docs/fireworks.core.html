@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.core package &#8212; FireWorks 1.6.1 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.6.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.6.1',
+        VERSION:     '1.6.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -1909,8 +1909,17 @@ fw_id (int): id of a specific Firework to run (quit if it cannot be found)</p>
 
 <dl class="method">
 <dt id="fireworks.core.rocket.Rocket.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><em>pdb_on_exception=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the rocket (check out a job from the database and execute it)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – whether to invoke the debugger on
+a caught exception.  Default False.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1974,7 +1983,7 @@ fw_id (int): id of a specific Firework to run (quit if it cannot be found)</p>
 
 <dl class="function">
 <dt id="fireworks.core.rocket_launcher.launch_rocket">
-<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">launch_rocket</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>fw_id=None</em>, <em>strm_lvl='INFO'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">launch_rocket</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>fw_id=None</em>, <em>strm_lvl='INFO'</em>, <em>pdb_on_exception=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a single rocket in the current directory.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1985,6 +1994,8 @@ fw_id (int): id of a specific Firework to run (quit if it cannot be found)</p>
 <li><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </li>
 <li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – if set, a particular Firework to run</li>
 <li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – level at which to output logs to stdout</li>
+<li><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – if set to True, python will start
+the debugger on a firework exception</li>
 </ul>
 </td>
 </tr>
@@ -1997,7 +2008,7 @@ fw_id (int): id of a specific Firework to run (quit if it cannot be found)</p>
 
 <dl class="function">
 <dt id="fireworks.core.rocket_launcher.rapidfire">
-<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">rapidfire</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>m_dir=None</em>, <em>nlaunches=0</em>, <em>max_loops=-1</em>, <em>sleep_time=None</em>, <em>strm_lvl='INFO'</em>, <em>timeout=None</em>, <em>local_redirect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">fireworks.core.rocket_launcher.</code><code class="descname">rapidfire</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker=None</em>, <em>m_dir=None</em>, <em>nlaunches=0</em>, <em>max_loops=-1</em>, <em>sleep_time=None</em>, <em>strm_lvl='INFO'</em>, <em>timeout=None</em>, <em>local_redirect=False</em>, <em>pdb_on_exception=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
 for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2078,7 +2089,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 

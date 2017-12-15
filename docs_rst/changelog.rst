@@ -3,6 +3,12 @@ FireWorks Changelog
 ===================
 
 
+**v1.6.2**
+
+* pad argparser to allow comma separated lists when using -i and --fw_id (E. Sivonxay)
+* important fix to cmd_line_tests.sh
+* ``pdb_on_exception`` option to use Python debugger to debug failed jobs (J. Montoya)
+
 **v1.6.1**
 
 * some fixes to config file determination (A. Jain, G. Petretto)

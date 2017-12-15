@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Dealing with Failures and Crashes &#8212; FireWorks 1.6.1 documentation</title>
+    <title>Dealing with Failures and Crashes &#8212; FireWorks 1.6.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.6.1',
+        VERSION:     '1.6.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -187,6 +187,11 @@ lpad get_fws -i 1 -d all
 <div class="section" id="life-after-fizzled">
 <h2>Life after <em>FIZZLED</em><a class="headerlink" href="#life-after-fizzled" title="Permalink to this headline">¶</a></h2>
 <p>Once FireWorks has identified a job as <em>FIZZLED</em>, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you’ve correctly enabled <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">duplicate checking</span></a>, your new workflow will automatically pick up where you left off, and you won’t do any extra calculations. This is the preferred way of dealing with failures. If you haven’t enabled duplicate checking, then you can also <a class="reference internal" href="rerun_tutorial.html"><span class="doc">rerun your workflow</span></a>, starting from the failed job. If the <code class="docutils literal"><span class="pre">EXCEPT_DETAILS_ON_RERUN</span></code> option is enabled in your <a class="reference internal" href="config_tutorial.html"><span class="doc">FW configuration</span></a>, the exception details serialized during the last launch will be copied in the spec under the key <code class="docutils literal"><span class="pre">_exception_details</span></code>. Customized exceptions can then be implemented to store information that help properly restart the job. The only caveat to this latter method is that dynamic actions already taken by your workflow will <strong>not</strong> be reset to their initial state.</p>
+<p>Note that you might also find the [python debugger](<a class="reference external" href="https://docs.python.org/3/library/pdb.html">https://docs.python.org/3/library/pdb.html</a>) to be a useful tool in inspecting local variables at the point of failure of a given firework, particularly if your firework is composed of PyTasks.  The debugger can be invoked upon an exception using the <cite>–pdb</cite> option with rlaunch, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">singleshot</span> <span class="o">-</span><span class="n">f</span> <span class="n">FW_ID_HERE</span> <span class="o">--</span><span class="n">pdb</span>
+<span class="p">(</span><span class="n">pdb</span><span class="p">)</span> <span class="nb">print</span> <span class="nb">locals</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>You can also continue on with the Workflow even after <em>FIZZLED</em> by setting the <code class="docutils literal"><span class="pre">_allow_fizzled_parents</span></code> parameter in your <strong>spec</strong>. This will allow you to algorithmically fix errors using FireWorks’ dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.</p>
 </div>
 <div class="section" id="database-locks-and-inconsistencies">
@@ -265,7 +270,7 @@ lpad get_fws -i 1 -d all
         <li class="right" >
           <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
