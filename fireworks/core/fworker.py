@@ -71,7 +71,10 @@ class FWorker(FWSerializable):
         else:
             q['$or'] = fworker_check
         if self.category and isinstance(self.category, six.string_types):
-            q['spec._category'] = self.category
+            if self.category == "__none__":
+                q['spec._category'] = {"$exists": False}
+            else:
+                q['spec._category'] = self.category
         elif self.category:  # category is list of str
             q['spec._category'] = {"$in": self.category}
 
