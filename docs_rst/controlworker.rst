@@ -74,8 +74,7 @@ Once you've set these values, job execution occurs as follows:
 And finally, a few final notes and limitations about this method:
 
 * The same ``category`` can be shared by multiple FireWorkers (if desired).
-* Each FireWorker can only have a single String category
-* A Firework can have an array of Strings for the ``_category`` variable, but we suggest you stick to a simple String where possible.
+* Each FireWorker can have a single String category (if that FireWorker should pull on a single category of job) or a list of String categories (if the FWorker should pull multiple categories of jobs)
 
 Method 3: Using raw queries
 ---------------------------
