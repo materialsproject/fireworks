@@ -2,10 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v1.6.3**
+
+* allow FWorker to have multiple categories (thanks to Johannes Jansson for the suggestion)
+* FWorker can set ``__none__`` for category which only pulls jobs with empty categories
 
 **v1.6.2**
 
-* pad argparser to allow comma separated lists when using -i and --fw_id (E. Sivonxay)
+* lpad argparser to allow comma separated lists when using -i and --fw_id (E. Sivonxay)
 * important fix to cmd_line_tests.sh
 * ``pdb_on_exception`` option to use Python debugger to debug failed jobs (J. Montoya)
 

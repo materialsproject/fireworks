@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Controlling the directory and Worker of execution &#8212; FireWorks 1.6.2 documentation</title>
+    <title>Controlling the directory and Worker of execution &#8212; FireWorks 1.6.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.6.2',
+        VERSION:     '1.6.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="dataflow_tasks.html" title="Using the dataflow Firetasks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -116,14 +116,14 @@
 </div>
 <p>Once you’ve set these values, job execution occurs as follows:</p>
 <ul class="simple">
-<li>FireWorkers with no <code class="docutils literal"><span class="pre">category</span></code> variable set will be able to run <strong>any</strong> Firework (even FireWorks with a <code class="docutils literal"><span class="pre">_category</span></code> key in the spec).</li>
+<li>FireWorkers with no <code class="docutils literal"><span class="pre">category</span></code> variable set will be able to run <strong>any</strong> Firework (even FireWorks with a <code class="docutils literal"><span class="pre">_category</span></code> key in the spec!).</li>
+<li>FireWorkers with a <code class="docutils literal"><span class="pre">_category</span></code> variable set to the special keyword <code class="docutils literal"><span class="pre">__none__</span></code> will only be able to run Fireworks with  no <code class="docutils literal"><span class="pre">_category</span></code> key in the spec. If this option is set, it must be the only category for the FWorker.</li>
 <li>FireWorkers with a <code class="docutils literal"><span class="pre">category</span></code> set will only run the FireWorks with an exactly matching <code class="docutils literal"><span class="pre">_category</span></code> variable in the Firework spec.</li>
 </ul>
 <p>And finally, a few final notes and limitations about this method:</p>
 <ul class="simple">
 <li>The same <code class="docutils literal"><span class="pre">category</span></code> can be shared by multiple FireWorkers (if desired).</li>
-<li>Each FireWorker can only have a single String category</li>
-<li>A Firework can have an array of Strings for the <code class="docutils literal"><span class="pre">_category</span></code> variable, but we suggest you stick to a simple String where possible.</li>
+<li>Each FireWorker can have a single String category (if that FireWorker should pull on a single category of job) or a list of String categories (if the FWorker should pull multiple categories of jobs)</li>
 </ul>
 </div>
 <div class="section" id="method-3-using-raw-queries">
@@ -213,7 +213,7 @@
         <li class="right" >
           <a href="dataflow_tasks.html" title="Using the dataflow Firetasks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.3 documentation</a> &#187;</li> 
       </ul>
     </div>
 
