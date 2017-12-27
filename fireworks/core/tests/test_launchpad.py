@@ -19,7 +19,6 @@ from multiprocessing import Process
 import filecmp
 
 from fireworks import Firework, Workflow, LaunchPad, FWorker
-from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
@@ -486,19 +485,19 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f, i = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
+        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
         self.assertEqual((l, f), ([1], [1]))
         time.sleep(4)   # Wait double the expected exec time and test
-        l, f, i = self.lp.detect_lostruns(2)
+        l, f, _ = self.lp.detect_lostruns(2)
         self.assertEqual((l, f), ([1], [1]))
 
-        l, f, i = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
+        l, f, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f, i = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
+        l, f, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f, i = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
+        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'READY')
 
@@ -821,7 +820,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.lp.rerun_fw(fw_id)
         rp = RapidfireProcess(self.lp, self.fworker)
         rp.start()
-        for i in range(20):
+        for _ in range(20):
             wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
             fws = wf.id_fw
             if fws[self.zeus_fw_id].state == 'READY':
