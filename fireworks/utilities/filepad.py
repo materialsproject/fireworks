@@ -99,7 +99,7 @@ class FilePad(MSONable):
             (str, str): the id returned by gridfs, identifier
         """
         if identifier is not None:
-            file_contents, doc = self.get_file(identifier)
+            _, doc = self.get_file(identifier)
             if doc is not None:
                 self.logger.warning("identifier: {} exists. Skipping insertion".format(identifier))
                 return doc["gfs_id"], doc["identifier"]

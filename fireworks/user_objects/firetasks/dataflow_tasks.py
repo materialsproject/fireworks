@@ -133,7 +133,8 @@ class CommandLineTask(FireTaskBase):
         else:
             return FWAction()
 
-    def command_line_tool(self, command, inputs=None, outputs=None):
+    @staticmethod
+    def command_line_tool(command, inputs=None, outputs=None):
         """
         This function composes and executes a command from provided
         specifications.

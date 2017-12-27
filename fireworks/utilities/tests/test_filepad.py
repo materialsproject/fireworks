@@ -46,14 +46,14 @@ class FilePadTest(unittest.TestCase):
         self.assertIsNone(doc)
 
     def test_update_file(self):
-        gfs_id, file_identifier = self.fp.add_file(self.chgcar_file, identifier="test_update_file")
+        gfs_id, _ = self.fp.add_file(self.chgcar_file, identifier="test_update_file")
         old_id, new_id = self.fp.update_file("test_update_file", self.chgcar_file)
         self.assertEqual(old_id, gfs_id)
         self.assertNotEqual(new_id, gfs_id)
         self.assertFalse(self.fp.gridfs.exists(old_id))
 
     def test_update_file_by_id(self):
-        gfs_id, file_identifier = self.fp.add_file(self.chgcar_file, identifier="some identifier")
+        gfs_id, _ = self.fp.add_file(self.chgcar_file, identifier="some identifier")
         old, new = self.fp.update_file_by_id(gfs_id, self.chgcar_file)
         self.assertEqual(old, gfs_id)
         self.assertNotEqual(new, gfs_id)

@@ -407,7 +407,7 @@ def _search_module_for_obj(m_module, obj_dict):
     """
     obj_name = obj_dict['_fw_name']
 
-    for name, obj in inspect.getmembers(m_module):
+    for _, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
                 getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:

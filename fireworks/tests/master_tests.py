@@ -63,7 +63,8 @@ class BasicTests(unittest.TestCase):
 
 class SerializationTests(unittest.TestCase):
 
-    def get_data(self, obj_dict):
+    @staticmethod
+    def get_data(obj_dict):
         modname = "fireworks.user_objects.queue_adapters.common_adapter"
         classname = "CommonAdapter"
         mod = __import__(modname, globals(), locals(), [classname], 0)
