@@ -42,9 +42,8 @@ def ping_multilaunch(port, stop_event):
                 try:
                     os.kill(pid, 0)  # throws OSError if the process is dead
                     lp.ping_launch(lid)
-                except OSError:
+                except OSError:  # means this process is dead!
                     fd.Running_IDs[pid] = None
-                    pass  # means this process is dead!
 
         stop_event.wait(PING_TIME_SECS)
 
