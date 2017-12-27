@@ -28,7 +28,7 @@ class FilePadTest(unittest.TestCase):
         self.assertEqual(file_identifier, gfs_id)
 
     def test_get_file(self):
-        gfs_id, file_identifier = self.fp.add_file(self.chgcar_file, identifier="xxx", metadata={"author": "Kiran Mathew"})
+        _, file_identifier = self.fp.add_file(self.chgcar_file, identifier="xxx", metadata={"author": "Kiran Mathew"})
         file_contents, doc = self.fp.get_file(file_identifier)
         self.assertEqual(file_contents, open(self.chgcar_file, "r").read().encode())
         self.assertEqual(doc["identifier"], file_identifier)
@@ -39,7 +39,7 @@ class FilePadTest(unittest.TestCase):
         self.assertEqual(doc["compressed"], True)
 
     def test_delete_file(self):
-        gfs_id, file_identifier = self.fp.add_file(self.chgcar_file)
+        _, file_identifier = self.fp.add_file(self.chgcar_file)
         self.fp.delete_file(file_identifier)
         contents, doc = self.fp.get_file(file_identifier)
         self.assertIsNone(contents)
