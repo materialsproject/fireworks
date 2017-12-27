@@ -24,7 +24,6 @@ class UpdateCollectionTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        pass
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 

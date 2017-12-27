@@ -351,7 +351,7 @@ def load_object(obj_dict):
     found_objects = [] # used to make sure we don't find multiple hits
     for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for loader, mod_name, is_pkg in pkgutil.walk_packages(
+        for _, mod_name, is_pkg in pkgutil.walk_packages(
                 root_module.__path__, package + '.'):
             try:
                 m_module = importlib.import_module(mod_name)
