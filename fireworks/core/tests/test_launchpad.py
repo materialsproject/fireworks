@@ -207,7 +207,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
             shutil.rmtree(ldir)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
@@ -664,7 +665,8 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
             shutil.rmtree(ldir)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)

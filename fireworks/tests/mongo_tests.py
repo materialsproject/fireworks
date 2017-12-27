@@ -87,7 +87,8 @@ class MongoTests(unittest.TestCase):
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)

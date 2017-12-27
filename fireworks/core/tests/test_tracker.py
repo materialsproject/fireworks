@@ -65,7 +65,8 @@ class TrackerTest(unittest.TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR,'launcher_*')):
             shutil.rmtree(i)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
