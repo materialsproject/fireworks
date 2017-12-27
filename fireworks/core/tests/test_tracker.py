@@ -168,7 +168,6 @@ class TrackerTest(unittest.TestCase):
             pwd = os.getcwd()
             for ldir in glob.glob(os.path.join(pwd,'launcher_*')):
                 shutil.rmtree(ldir)
-            pass
 
 
 if __name__ == '__main__':
