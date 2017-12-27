@@ -238,7 +238,7 @@ class Rocket:
                               '_all_stored_data': all_stored_data,
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
-                self.update_checkpoint(lp, launch_id, checkpoint)
+                Rocket.update_checkpoint(lp, launch_id, checkpoint)
  
                 if lp:
                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
@@ -414,8 +414,9 @@ class Rocket:
                     f.truncate()
 
             return True
-    
-    def update_checkpoint(self, launchpad, launch_id, checkpoint):
+
+    @staticmethod
+    def update_checkpoint(launchpad, launch_id, checkpoint):
         """
         Helper function to update checkpoint
 
