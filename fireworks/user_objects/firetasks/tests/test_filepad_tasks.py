@@ -24,9 +24,9 @@ class FilePadTasksTest(unittest.TestCase):
     def test_addfilestask_run(self):
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
-        write_file_contents, wdoc = self.fp.get_file("write")
+        write_file_contents, _ = self.fp.get_file("write")
         self.assertEqual(write_file_contents, open(self.paths[0], "r").read().encode())
-        del_file_contents, wdoc = self.fp.get_file("delete")
+        del_file_contents, _ = self.fp.get_file("delete")
         self.assertEqual(del_file_contents, open(self.paths[1], "r").read().encode())
 
     def test_deletefilestask_run(self):
