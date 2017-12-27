@@ -161,7 +161,8 @@ class FileTransferTask(FiretaskBase):
             sftp.close()
             ssh.close()
 
-    def _rexists(self, sftp, path):
+    @staticmethod
+    def _rexists(sftp, path):
         """
         os.path.exists for paramiko's SCP object
         """

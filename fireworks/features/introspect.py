@@ -163,7 +163,8 @@ class Introspector:
 
         return table
 
-    def print_report(self, table, coll):
+    @staticmethod
+    def print_report(table, coll):
 
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"

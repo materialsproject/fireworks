@@ -85,7 +85,7 @@ class LaunchPadTest(unittest.TestCase):
         self.assertFalse(self.lp.get_wf_ids())
 
         # test failsafe in a strict way
-        for x in range(30):
+        for _ in range(30):
             self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
 
         self.assertRaises(ValueError, self.lp.reset, '')
@@ -807,7 +807,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.assertEqual(fw_state, fw_cache_state)
 
         # Detect lost runs
-        lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
+        lost_lids, _, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
         # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw

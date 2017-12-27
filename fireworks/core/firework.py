@@ -1115,7 +1115,8 @@ class Workflow(FWSerializable):
         """
         return self.id_fw[int(fw_id)].name + '--' + str(fw_id)
 
-    def _get_representative_launch(self, fw):
+    @staticmethod
+    def _get_representative_launch(fw):
         """
         Returns a representative launch(one with the largest state rank) for the given firework.
         If there are multiple COMPLETED launches, the one with the most recent update time is
