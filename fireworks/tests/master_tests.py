@@ -80,10 +80,6 @@ class SerializationTests(unittest.TestCase):
         self.assertTrue(isinstance(load_object(pbs.to_dict()), CommonAdapter))
         self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))  # repeated test on purpose!
 
-    @recursive_deserialize
-    def _recurse(self, d):
-        return d
-
     def test_recursive_deserialize(self):
         my_dict = {'update_spec': {}, 'mod_spec': [], 'stored_data': {}, 'exit': False, 'detours': [], 'additions': [{'updated_on': '2014-10-14T00:56:27.758673', 'fw_id': -2, 'spec': {'_tasks': [{'use_shell': True, '_fw_name': 'ScriptTask', 'script': ['echo "1"']}]}, 'created_on': '2014-10-14T00:56:27.758669', 'name': 'Unnamed FW'}], 'defuse_children': False}
         FWAction.from_dict(my_dict)
