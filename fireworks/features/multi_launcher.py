@@ -88,7 +88,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
             # Some other sub jobs are still running
             log_multi(l_logger, 'Sleeping for {} secs before resubmit sub job'.format(sleep_time))
             time.sleep(sleep_time)
-            log_multi(l_logger, 'Resubmit sub job'.format(sleep_time))
+            log_multi(l_logger, 'Resubmit sub job')
             rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
                       max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout,
                       local_redirect=local_redirect)
