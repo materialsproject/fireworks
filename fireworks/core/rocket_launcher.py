@@ -129,5 +129,5 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
         log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
         time.sleep(sleep_time)
         num_loops += 1
-        log_multi(l_logger, 'Checking for FWs to run...'.format(sleep_time))
+        log_multi(l_logger, 'Checking for FWs to run...')
     os.chdir(curdir)
