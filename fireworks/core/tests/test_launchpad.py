@@ -806,7 +806,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.assertEqual(fw_state, fw_cache_state)
 
         # Detect lost runs
-        lost_lids, _, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
+        lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
         # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
@@ -905,7 +905,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         # Ensure rerun deletes recovery by default
         self.lp.rerun_fw(1)
         fw = self.lp.get_fw_by_id(1)
-        self.assertFalse("_recovery" in fw.spec) 
+        self.assertFalse("_recovery" in fw.spec)
 
     def test_task_level_rerun_cp(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
