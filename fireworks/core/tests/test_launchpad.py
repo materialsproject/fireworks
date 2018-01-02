@@ -19,7 +19,6 @@ from multiprocessing import Process
 import filecmp
 
 from fireworks import Firework, Workflow, LaunchPad, FWorker
-from fw_tutorials.dynamic_wf.addmod_task import AddModifyTask
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
@@ -85,7 +84,7 @@ class LaunchPadTest(unittest.TestCase):
         self.assertFalse(self.lp.get_wf_ids())
 
         # test failsafe in a strict way
-        for x in range(30):
+        for _ in range(30):
             self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
 
         self.assertRaises(ValueError, self.lp.reset, '')
@@ -207,7 +206,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
             shutil.rmtree(ldir)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
@@ -485,19 +485,19 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f, i = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
+        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
         self.assertEqual((l, f), ([1], [1]))
         time.sleep(4)   # Wait double the expected exec time and test
-        l, f, i = self.lp.detect_lostruns(2)
+        l, f, _ = self.lp.detect_lostruns(2)
         self.assertEqual((l, f), ([1], [1]))
 
-        l, f, i = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
+        l, f, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f, i = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
+        l, f, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f, i = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
+        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'READY')
 
@@ -664,7 +664,8 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
             shutil.rmtree(ldir)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
@@ -819,7 +820,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.lp.rerun_fw(fw_id)
         rp = RapidfireProcess(self.lp, self.fworker)
         rp.start()
-        for i in range(20):
+        for _ in range(20):
             wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
             fws = wf.id_fw
             if fws[self.zeus_fw_id].state == 'READY':
@@ -901,6 +902,10 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         self.assertEqual(ExecutionCounterTask.exec_counter, 1)
         self.assertEqual(ExceptionTestTask.exec_counter, 2)
         self.assertFalse(os.path.exists(os.path.join(dirs[1], "date_file")))
+        # Ensure rerun deletes recovery by default
+        self.lp.rerun_fw(1)
+        fw = self.lp.get_fw_by_id(1)
+        self.assertFalse("_recovery" in fw.spec)
 
     def test_task_level_rerun_cp(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)

@@ -64,5 +64,16 @@ Your LaunchPad file contains the location of the LaunchPad as well as any creden
 
 To save typing, you can set things up so that the ``-l`` option is automatically set to the correct value. This is especially useful if you want to store your LaunchPad file in a separate directory from the directory that you are running scripts. For details, see the tutorial on :ref:`configfile-label`.
 
+Add TLS/SSL configuration to your LaunchPad file
+================================================
 
+If the MongoDB server is configured with TLS/SSL launchpad file 
+``my_launchpad.yaml`` (or whatever launchpad file is specified after the ``-l`` option or in the configuration file) has to include further information in the following lines::
 
+    ssl: <bool> # whether to use TLS/SSL for connection to MongoDB, default: false
+    ssl_ca_certs: <path to the CA certificate to be used for connection>
+    ssl_certfile: <path to the client certificate to be used for connection>
+    ssl_keyfile: <path to the client private key (optional)>
+    ssl_pem_passphrase: <passphrase for the client private key (optional)>
+
+.. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted and the remaining TLS/SSL settings are optional, depending on the specific server policies.

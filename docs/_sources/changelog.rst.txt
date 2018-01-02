@@ -2,6 +2,47 @@
 FireWorks Changelog
 ===================
 
+**v1.6.3**
+
+* allow FWorker to have multiple categories (thanks to Johannes Jansson for the suggestion)
+* FWorker can set ``__none__`` for category which only pulls jobs with empty categories
+
+**v1.6.2**
+
+* lpad argparser to allow comma separated lists when using -i and --fw_id (E. Sivonxay)
+* important fix to cmd_line_tests.sh
+* ``pdb_on_exception`` option to use Python debugger to debug failed jobs (J. Montoya)
+
+**v1.6.1**
+
+* some fixes to config file determination (A. Jain, G. Petretto)
+* add append_wf and dump_wf commands to lpad (I. Kondov)
+* faster GUI load (D. Winston)
+* minor code improvements and help/warning messages for the user (M. Horton)
+
+**v1.6.0**
+
+* fixes for task-level recovery (J. Montoya)
+* LSF queueadapter takes into account job counts by queue (J. Boes)
+* some unit test improvements (I. Kondov)
+
+**v1.5.9**
+
+* Py2 bugfix
+
+**v1.5.8**
+
+* New data flow built-in Firetasks (I. Kondov)
+
+**v1.5.7**
+
+* Improve performance of workflow add to DB for large workflows (R. Gowers)
+
+**v1.5.5**
+
+* Better handling of SSL certs (I. Kondov)
+* Improve performance of fw rerun (R. Gowers)
+
 **v1.5.4**
 
 * fix some logic re:which config files to use

@@ -17,6 +17,7 @@ import threading
 import errno
 import glob
 import shutil
+import pdb
 import distutils.dir_util
 from monty.io import zopen
 from monty.serialization import loadfn, dumpfn
@@ -113,9 +114,13 @@ class Rocket:
         self.fworker = fworker
         self.fw_id = fw_id
 
-    def run(self):
+    def run(self, pdb_on_exception=False):
         """
         Run the rocket (check out a job from the database and execute it)
+
+        Args:
+            pdb_on_exception (bool): whether to invoke the debugger on
+                a caught exception.  Default False.
         """
         all_stored_data = {}  # combined stored data for *all* the Tasks
         all_update_spec = {}  # combined update_spec for *all* the Tasks
@@ -233,7 +238,7 @@ class Rocket:
                               '_all_stored_data': all_stored_data,
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
-                self.update_checkpoint(lp, launch_id, checkpoint)
+                Rocket.update_checkpoint(lp, launch_id, checkpoint)
  
                 if lp:
                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
@@ -257,6 +262,8 @@ class Rocket:
                     stop_backgrounds(ping_stop, btask_stops)
                     do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
                     # If the exception is serializable, save its details
+                    if pdb_on_exception:
+                        pdb.post_mortem()
                     try:
                         exception_details = e.to_dict()
                     except AttributeError:
@@ -407,8 +414,9 @@ class Rocket:
                     f.truncate()
 
             return True
-    
-    def update_checkpoint(self, launchpad, launch_id, checkpoint):
+
+    @staticmethod
+    def update_checkpoint(launchpad, launch_id, checkpoint):
         """
         Helper function to update checkpoint
 

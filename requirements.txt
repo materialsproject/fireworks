@@ -1,12 +1,12 @@
 PyYAML==3.12
-pymongo==3.5.1
-Jinja2==2.9.6
+pymongo==3.6.0
+Jinja2==2.10
 six==1.11.0
-monty==1.0.1
+monty==1.0.2
 python-dateutil==2.6.1
-tabulate==0.7.7
+tabulate==0.8.2
 flask==0.12.2
 flask-paginate==0.4.5
 gunicorn==19.6.0
-tqdm==4.11.2
+tqdm==4.19.5
 python-igraph==0.7.1

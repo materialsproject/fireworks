@@ -140,7 +140,7 @@ class FWReport:
         ax = fig.add_subplot(111)
         data = {state: [result['states'][state] for result in results]
                 for state in states}
-        
+
         bottom = [0] * len(results)
         for state in states:
             if any(data[state]):
@@ -165,7 +165,8 @@ class FWReport:
         fig.tight_layout()
         return fig
 
-    def get_stats_str(self, decorated_stat_list):
+    @staticmethod
+    def get_stats_str(decorated_stat_list):
         """
         Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
 

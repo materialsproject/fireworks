@@ -87,7 +87,8 @@ class MongoTests(unittest.TestCase):
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def _teardown(self, dests):
+    @staticmethod
+    def _teardown(dests):
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
@@ -423,6 +424,38 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_fw_by_id(1).tasks[0]['script'][0], 'echo "Task 1"')
         self.assertEqual(self.lp.get_fw_by_id(2).tasks[0]['script'][0], 'echo "Task 2"')
 
+    def test_category(self):
+        task1 = ScriptTask.from_str('echo "Task 1"')
+        task2 = ScriptTask.from_str('echo "Task 2"')
+
+        spec = {'_category': 'dummy_category'}
+
+        fw1 = Firework(task1, fw_id=1, name='Task 1', spec=spec)
+        fw2 = Firework(task2, fw_id=2, name='Task 2', spec=spec)
+
+        self.lp.add_wf(Workflow([fw1, fw2]))
+
+        self.assertTrue(self.lp.run_exists(FWorker(category="dummy_category")))
+        self.assertFalse(self.lp.run_exists(FWorker(category="other category")))
+        self.assertFalse(self.lp.run_exists(FWorker(category="__none__")))
+        self.assertTrue(self.lp.run_exists(FWorker()))  # can run any category
+        self.assertTrue(self.lp.run_exists(FWorker(category=["dummy_category",
+                                                             "other category"])))
+
+    def test_category_pt2(self):
+        task1 = ScriptTask.from_str('echo "Task 1"')
+        task2 = ScriptTask.from_str('echo "Task 2"')
+
+        fw1 = Firework(task1, fw_id=1, name='Task 1')
+        fw2 = Firework(task2, fw_id=2, name='Task 2')
+
+        self.lp.add_wf(Workflow([fw1, fw2]))
+
+        self.assertFalse(self.lp.run_exists(FWorker(category="dummy_category")))
+        self.assertTrue(self.lp.run_exists(FWorker(category="__none__")))
+        self.assertTrue(self.lp.run_exists(FWorker())) # can run any category
+        self.assertFalse(self.lp.run_exists(FWorker(category=["dummy_category",
+                                                             "other category"])))
     def test_delete_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = Firework(test1)

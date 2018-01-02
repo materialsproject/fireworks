@@ -40,8 +40,6 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
             my_list.append(separator_str+str(k))
         return my_list
 
-        return [flatten_to_keys(k, curr_recurs+1, max_recurs) for k in curr_doc]
-
     return [separator_str+str(curr_doc)]
 
 
@@ -165,7 +163,8 @@ class Introspector:
 
         return table
 
-    def print_report(self, table, coll):
+    @staticmethod
+    def print_report(table, coll):
 
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"

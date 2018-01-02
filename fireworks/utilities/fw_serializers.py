@@ -351,7 +351,7 @@ def load_object(obj_dict):
     found_objects = [] # used to make sure we don't find multiple hits
     for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for loader, mod_name, is_pkg in pkgutil.walk_packages(
+        for _, mod_name, is_pkg in pkgutil.walk_packages(
                 root_module.__path__, package + '.'):
             try:
                 m_module = importlib.import_module(mod_name)
@@ -407,7 +407,7 @@ def _search_module_for_obj(m_module, obj_dict):
     """
     obj_name = obj_dict['_fw_name']
 
-    for name, obj in inspect.getmembers(m_module):
+    for _, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
         if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
                 getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:

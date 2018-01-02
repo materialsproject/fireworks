@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import six
+
 """
 This module contains FireWorker, which encapsulates information about a computing resource
 """
@@ -27,7 +29,9 @@ class FWorker(FWSerializable):
         """
         Args:
             name (str): the name of the resource, should be unique
-            category (str): a String describing the computing resource, does not need to be unique
+            category (str or [str]): a String describing a specific category of
+                job to pull, does not need to be unique. If the FWorker should
+                pull jobs of multiple categories, use a list of str.
             query (dict): a dict query that restricts the type of Firework this resource will run
             env (dict): a dict of special environment variables for the resource.
                 This env is passed to running Firetasks as a _fw_env in the
@@ -66,8 +70,14 @@ class FWorker(FWSerializable):
             q['$and'].extend([{'$or': q.pop('$or')}, {'$or': fworker_check}])
         else:
             q['$or'] = fworker_check
-        if self.category:
-            q['spec._category'] = self.category
+        if self.category and isinstance(self.category, six.string_types):
+            if self.category == "__none__":
+                q['spec._category'] = {"$exists": False}
+            else:
+                q['spec._category'] = self.category
+        elif self.category:  # category is list of str
+            q['spec._category'] = {"$in": self.category}
+
         return q
 
     @classmethod

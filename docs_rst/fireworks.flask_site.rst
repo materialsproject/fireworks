@@ -1,27 +1,27 @@
-fireworks.flask_site package
-============================
+fireworks\.flask\_site package
+==============================
 
 Submodules
 ----------
 
-fireworks.flask_site.app module
--------------------------------
+fireworks\.flask\_site\.app module
+----------------------------------
 
 .. automodule:: fireworks.flask_site.app
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.flask_site.gunicorn module
-------------------------------------
+fireworks\.flask\_site\.gunicorn module
+---------------------------------------
 
 .. automodule:: fireworks.flask_site.gunicorn
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.flask_site.helpers module
------------------------------------
+fireworks\.flask\_site\.helpers module
+--------------------------------------
 
 .. automodule:: fireworks.flask_site.helpers
     :members:

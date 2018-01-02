@@ -21,6 +21,7 @@ module_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FileWriteDeleteTest(unittest.TestCase):
+
     def test_init(self):
         t = FileWriteTask(files_to_write="hello")
         t = FileWriteTask({"files_to_write": "hello"})

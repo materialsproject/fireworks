@@ -874,7 +874,8 @@ class Workflow(FWSerializable):
 
         # re-run all the children
         for child_id in self.links[fw_id]:
-            updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
+            if self.id_fw[child_id].state != 'WAITING':
+                updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
 
         # refresh the WF to get the states updated
         return self.refresh(fw_id, updated_ids)
@@ -1114,7 +1115,8 @@ class Workflow(FWSerializable):
         """
         return self.id_fw[int(fw_id)].name + '--' + str(fw_id)
 
-    def _get_representative_launch(self, fw):
+    @staticmethod
+    def _get_representative_launch(fw):
         """
         Returns a representative launch(one with the largest state rank) for the given firework.
         If there are multiple COMPLETED launches, the one with the most recent update time is

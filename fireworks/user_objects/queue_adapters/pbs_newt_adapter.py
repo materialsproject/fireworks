@@ -39,7 +39,8 @@ class PBSAdapterNEWT(QueueAdapterBase):
         r = Session().get("https://newt.nersc.gov/newt/queue/{}/?user={}".format(self.resource, username))
         return len(r.json())
 
-    def _init_auth_session(self, max_pw_requests=3):
+    @staticmethod
+    def _init_auth_session(max_pw_requests=3):
         """
         Initialize the _session class var with an authorized session. Asks for a /
         password in new sessions, skips PW check for previously authenticated sessions

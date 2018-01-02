@@ -110,6 +110,13 @@ Life after *FIZZLED*
 
 Once FireWorks has identified a job as *FIZZLED*, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you've correctly enabled :doc:`duplicate checking </duplicates_tutorial>`, your new workflow will automatically pick up where you left off, and you won't do any extra calculations. This is the preferred way of dealing with failures. If you haven't enabled duplicate checking, then you can also :doc:`rerun your workflow </rerun_tutorial>`, starting from the failed job. If the ``EXCEPT_DETAILS_ON_RERUN`` option is enabled in your :doc:`FW configuration </config_tutorial>`, the exception details serialized during the last launch will be copied in the spec under the key ``_exception_details``. Customized exceptions can then be implemented to store information that help properly restart the job. The only caveat to this latter method is that dynamic actions already taken by your workflow will **not** be reset to their initial state.
 
+Note that you might also find the [python debugger](https://docs.python.org/3/library/pdb.html) to be a useful tool in inspecting local variables at the point of failure of a given firework, particularly if your firework is composed of PyTasks.  The debugger can be invoked upon an exception using the `--pdb` option with rlaunch, e.g.::
+
+
+    rlaunch singleshot -f FW_ID_HERE --pdb
+    (pdb) print locals()
+
+
 You can also continue on with the Workflow even after *FIZZLED* by setting the ``_allow_fizzled_parents`` parameter in your **spec**. This will allow you to algorithmically fix errors using FireWorks' dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.
 
 Database locks and inconsistencies

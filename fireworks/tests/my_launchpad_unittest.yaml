@@ -1,0 +1,7 @@
+host: localhost
+port: 27017
+name: fireworks_unittest
+username: null
+password: null
+logdir: null
+strm_lvl: INFO

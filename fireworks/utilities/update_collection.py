@@ -56,7 +56,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
 
     modified_docs = []  # all docs that were modified; needed if you set "query" parameter
     print("updating new documents:")
-    for idx, doc in enumerate(tqdm(all_docs, total=ndocs)):
+    for _, doc in enumerate(tqdm(all_docs, total=ndocs)):
         # convert BSON to str, perform replacement, convert back to BSON
         m_str = dumps(doc)
         for old_path, new_path in replacements.items():

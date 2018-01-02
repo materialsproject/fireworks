@@ -168,6 +168,21 @@ def add_wf(args):
         lp.add_wf(fwf)
 
 
+def append_wf(args):
+    lp = get_lp(args)
+    lp.append_wf(
+        Workflow.from_file(args.wf_file),
+        args.fw_id,
+        detour=args.detour,
+        pull_spec_mods=args.pull_spec_mods
+    )
+
+
+def dump_wf(args):
+    lp = get_lp(args)
+    lp.get_wf_by_fw_id(args.fw_id).to_file(args.wf_file)
+
+
 def check_wf(args):
     from fireworks.utilities.dagflow import DAGFlow
     lp = get_lp(args)
@@ -649,7 +664,7 @@ def lpad():
     # This makes common argument options easier to maintain. E.g., what if
     # there is a new state or disp option?
     fw_id_args = ["-i", "--fw_id"]
-    fw_id_kwargs = {"type": int, "nargs": "+", "help": "fw_id"}
+    fw_id_kwargs = {"type": str, "nargs": "+", "help": "fw_id"}
 
     state_args = ['-s', '--state']
     state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
@@ -706,6 +721,18 @@ def lpad():
     check_wf_parser.add_argument('--view_data_flow', help='view the data flow graph in DOT format', dest='data_flow', action='store_true')
     check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot', default='workflow.dot')
     check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
+
+    append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')
+    append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], nargs=fw_id_kwargs["nargs"], help='parent firework ids')
+    append_wf_parser.add_argument('-f', '--wf_file', help='path to a firework or workflow file')
+    append_wf_parser.add_argument('-d', '--detour', help='append workflow as a detour', dest='detour', action='store_true')
+    append_wf_parser.add_argument('--no_pull_spec_mods', help='do not to pull spec mods from parent', dest='pull_spec_mods', action='store_false')
+    append_wf_parser.set_defaults(func=append_wf, detour=False, pull_spec_mods=True)
+
+    dump_wf_parser = subparsers.add_parser('dump_wflow', help='dump a workflow from launchpad to a file')
+    dump_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
+    dump_wf_parser.add_argument('-f', '--wf_file', help='path to a local file to store the workflow')
+    dump_wf_parser.set_defaults(func=dump_wf)
 
     addscript_parser = subparsers.add_parser('add_scripts', help='quickly add a script '
                                                                  '(or several scripts) to run in sequence')
@@ -1067,7 +1094,16 @@ def lpad():
 
     args.output = get_output_func(args.output)
 
-    args.func(args)
+    if args.command is None:
+        # if no command supplied, print help
+        parser.print_help()
+    else:
+        if hasattr(args, "fw_id") and args.fw_id is not None:
+            if type(args.fw_id) is list:
+                if "," in args.fw_id[0]:
+                    args.fw_id = args.fw_id[0].split(",")
+                args.fw_id = [int(_fw_id) for _fw_id in args.fw_id]
+        args.func(args)
 
 if __name__ == '__main__':
     lpad()

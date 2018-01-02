@@ -24,9 +24,9 @@ class FilePadTasksTest(unittest.TestCase):
     def test_addfilestask_run(self):
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
-        write_file_contents, wdoc = self.fp.get_file("write")
+        write_file_contents, _ = self.fp.get_file("write")
         self.assertEqual(write_file_contents, open(self.paths[0], "r").read().encode())
-        del_file_contents, wdoc = self.fp.get_file("delete")
+        del_file_contents, _ = self.fp.get_file("delete")
         self.assertEqual(del_file_contents, open(self.paths[1], "r").read().encode())
 
     def test_deletefilestask_run(self):
@@ -47,7 +47,7 @@ class FilePadTasksTest(unittest.TestCase):
         new_file_names = ["write_2.yaml"]
         t = GetFilesTask(identifiers=identifiers, dest_dir=dest_dir, new_file_names=new_file_names)
         t.run_task({})
-        write_file_contents, wdoc = self.fp.get_file("write")
+        write_file_contents, _ = self.fp.get_file("write")
         self.assertEqual(write_file_contents,
                          open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
         os.remove(os.path.join(dest_dir, new_file_names[0]))
@@ -55,7 +55,7 @@ class FilePadTasksTest(unittest.TestCase):
     def test_addfilesfrompatterntask_run(self):
         t = AddFilesTask(paths="*.yaml", directory=module_dir)
         t.run_task({})
-        write_file_contents, wdoc = self.fp.get_file(self.paths[0])
+        write_file_contents, _ = self.fp.get_file(self.paths[0])
         self.assertEqual(write_file_contents, open(self.paths[0], "r").read().encode())
         del_file_contents, wdoc = self.fp.get_file(self.paths[1])
         self.assertEqual(del_file_contents, open(self.paths[1], "r").read().encode())

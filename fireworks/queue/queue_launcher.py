@@ -241,7 +241,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 break
             l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
             time.sleep(sleep_time)
-            l_logger.info('Checking for Rockets to run...'.format(sleep_time))
+            l_logger.info('Checking for Rockets to run...')
 
     except:
         log_exception(l_logger, 'Error with queue launcher rapid fire!')

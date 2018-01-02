@@ -18,7 +18,7 @@ Rerunning a Firework is simple - just type::
 
     lpad rerun_fws -i <FW_IDS>
 
-where ``<FW_IDS>`` is the numerical id of the Firework you want to re-run (or a list of space-separated ids). Note that all children of a re-run Firework will also be re-run.
+where ``<FW_IDS>`` is the numerical id of the Firework you want to re-run (or a list of comma-separated ids). Note that all children of a re-run Firework will also be re-run.
 
 Instead of specifying ids, you can also specify a name (``-n``), a state (``-s``), or a custom query (``-q``). The full command is thus::
 

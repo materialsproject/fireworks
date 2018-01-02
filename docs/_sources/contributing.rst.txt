@@ -39,6 +39,11 @@ We ask for reasonably clear documentation of modules, classes, methods, and tric
 
 However, when starting you should not be as concerned with these issues as with writing clear, succint, and functional code. If we feel that issues such as documentation or style are preventing merging of your code with the main repo, a core developer may request your permission to re-document and/or re-style your code, and add his/her name to either the ``__credits__`` or ``__authors__`` field of your code header (your name will still be retained in the ``__authors__`` field).
 
+OS Compatibility
+----------------
+
+FireWorks is intended to work on a range of computing platforms, all the way from local computers (e.g., automating tasks on your laptop) up to large supercomputing facilities. The core features of FireWorks should work on Linux, Macintosh, and Windows. Please be mindful of this when writing code as well as when designing unit tests.
+
 Licensing
 ---------
 

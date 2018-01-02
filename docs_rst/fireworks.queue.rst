@@ -1,19 +1,19 @@
-fireworks.queue package
-=======================
+fireworks\.queue package
+========================
 
 Submodules
 ----------
 
-fireworks.queue.queue_adapter module
-------------------------------------
+fireworks\.queue\.queue\_adapter module
+---------------------------------------
 
 .. automodule:: fireworks.queue.queue_adapter
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks.queue.queue_launcher module
--------------------------------------
+fireworks\.queue\.queue\_launcher module
+----------------------------------------
 
 .. automodule:: fireworks.queue.queue_launcher
     :members:
