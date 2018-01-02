@@ -60,10 +60,9 @@ else:
     json_load_method = json.load
 
 
-
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
-    visualization of workflows. Currently it imports and exports fireworks
+    visualization of workflows. Currently it imports and exports FireWorks
     workflows but it is open for other workflow formats.
     """
 
@@ -252,7 +251,10 @@ class DAGFlow(Graph):
         lst = []
         parents = set(self.predecessors(step))
         # data entity passed from parent steps
-        lst.extend([p for p in parents if entity in self.vs[p]['outputs']])
+        for parent in parents:
+            if entity in self.vs[parent]['outputs']:
+                if not self.vs[parent]['chunk']:
+                    lst.append(parent)
 
         # data entity in the same step
         cparents = [p for p in parents if self.vs[p]['state'] == 'COMPLETED']
@@ -296,8 +298,13 @@ class DAGFlow(Graph):
                     else:
                         step[item].append(true_task[item])
         step['outputs'].extend(step['output'])
+
         # some tasks may share inputs
         step['inputs'] = list(set(step['inputs']))
+
+        # case of data chunks distributed over several steps
+        for task in step['tasks']:
+            step['chunk'] = True if 'chunk_number' in task else False                
 
     def get_steps(self):
         """ Returns a list of dictionaries describing the steps """
@@ -336,7 +343,7 @@ class DAGFlow(Graph):
         workflow.validate()
         step_ids = self.vs['id'] + workflow.vs['id']
         assert len(step_ids) == len(set(step_ids)), (
-            'workflow steps must have unique IDs'
+            'Workflow steps must have unique IDs.'
         )
 
         self += workflow
@@ -360,24 +367,24 @@ class DAGFlow(Graph):
     def validate(self):
         """ Validate the workflow """
         try:
-            assert self.is_dag(), 'the workflow graph must be a DAG'
+            assert self.is_dag(), 'The workflow graph must be a DAG.'
         except AssertionError as err:
             err.args = (err.args[0]
                         + ': found cycles: '
                         + repr(self._get_cycles()),)
             raise err
         assert self.is_connected(mode='weak'), (
-            'the workflow graph must be connected'
+            'The workflow graph must be connected.'
         )
         assert len(self.vs['id']) == len(set(self.vs['id'])), (
-            'workflow steps must have unique IDs'
+            'Workflow steps must have unique IDs.'
         )
 
     def _get_cycles(self):
         """ Returns a partial list of cycles in case of erroneous workflow """
         if self.is_dag():
             return []
-        for deg in range(2, len(self.vs)):
+        for deg in range(2, len(self.vs)+1):
             lst = self.get_subisomorphisms_vf2(Graph.Ring(deg, directed=True))
             flatten = lambda l: [item for sublist in l for item in sublist]
             if len(flatten(lst)) > 0:
