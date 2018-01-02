@@ -110,6 +110,7 @@ class DAGFlow(Graph):
             step = {}
             step['name'] = fw['name']
             step['id'] = fw['fw_id']
+            step['state'] = fw['state'] if 'state' in fw else None
             steps.append(step)
 
         links = []
@@ -227,7 +228,7 @@ class DAGFlow(Graph):
 
     def check_dataflow(self):
         """ Checks whether all inputs and outputs match """
-        if len(self.vs) == 1: return
+
         # check for shared output data entities
         for vertex in self.vs:
             outputs = vertex['outputs']
@@ -246,14 +247,30 @@ class DAGFlow(Graph):
                 )
 
     def get_sources(self, step, entity):
-        """ Returns a list of ids of all predecessor steps
-        that are data sources for the specified step. """
+        """ Returns a list of steps that act as sources for the data entity
+        in the specified step. """
         lst = []
-        for parent in set(self.predecessors(step)):
-            if entity in self.vs[parent]['outputs']:
-                lst.append(parent)
-        if entity in step['data']:
+        parents = set(self.predecessors(step))
+        # data entity passed from parent steps
+        lst.extend([p for p in parents if entity in self.vs[p]['outputs']])
+
+        # data entity in the same step
+        cparents = [p for p in parents if self.vs[p]['state'] == 'COMPLETED']
+        csrclist = [op for cp in cparents for op in self.vs[cp]['outputs']]
+        if entity in step['data'] and entity not in csrclist:
             lst.append(step.index)
+
+        # data entity from a preceeding task in the same step
+        outp_found = False
+        for task in step['tasks']:
+            if 'outputs' in task and entity in task['outputs']:
+                outp_found = True
+            if 'output' in task and entity == task['output']:
+                outp_found = True
+            if outp_found and 'inputs' in task and entity in task['inputs']:
+                lst.append(step.index)
+                break
+
         return lst
 
     def get_targets(self, step, entity):
@@ -268,20 +285,17 @@ class DAGFlow(Graph):
     @staticmethod
     def set_io_fields(step):
         """ Set io keys as step attributes """
-        for item in ['inputs', 'outputs']:
+        for item in ['inputs', 'outputs', 'output']:
             step[item] = []
             for task in step['tasks']:
-                if 'task' in task:
-                    if item in task['task']:
-                        if isinstance(task['task'][item], list):
-                            step[item].extend(task['task'][item])
-                        else:
-                            step[item].append(task['task'][item])
-                elif item in task:
-                    if isinstance(task[item], list):
-                        step[item].extend(task[item])
+                # test the case of meta-tasks
+                true_task = task['task'] if 'task' in task else task
+                if item in true_task:
+                    if isinstance(true_task[item], list):
+                        step[item].extend(true_task[item])
                     else:
-                        step[item].append(task[item])
+                        step[item].append(true_task[item])
+        step['outputs'].extend(step['output'])
         # some tasks may share inputs
         step['inputs'] = list(set(step['inputs']))
 
