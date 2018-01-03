@@ -6,28 +6,29 @@ __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
 import sys
 import json
+from itertools import combinations
 from igraph import Graph
 
 
-def translate_keys(d, key, tr):
-    """ Translates all keys which match the 'key' in dictionary d into tr """
+def translate_keys(dct, key, transl):
+    """ Translates all keys which match 'key' in 'dct' into 'transl' """
     new = {}
-    for k, v in d.items():
-        if isinstance(v, dict):
-            newv = translate_keys(v, key, tr)
-        elif isinstance(v, list):
-            newv = []
-            for item in v:
+    for k, val in dct.items():
+        if isinstance(val, dict):
+            newval = translate_keys(val, key, transl)
+        elif isinstance(val, list):
+            newval = []
+            for item in val:
                 if isinstance(item, dict):
-                    newv.append(translate_keys(item, key, tr))
+                    newval.append(translate_keys(item, key, transl))
                 else:
-                    newv.append(item)
+                    newval.append(item)
         else:
-            newv = v
+            newval = val
         if k == key:
-            new[tr] = newv
+            new[transl] = newval
         else:
-            new[k] = newv
+            new[k] = newval
     return new
 
 
@@ -62,9 +63,7 @@ else:
 
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
-    visualization of workflows. Currently it imports and exports FireWorks
-    workflows but it is open for other workflow formats.
-    """
+    visualization of workflows. """
 
     def __init__(self, steps=None, links=None, nlinks=None, name=None,
                  **kwargs):
@@ -302,9 +301,9 @@ class DAGFlow(Graph):
         # some tasks may share inputs
         step['inputs'] = list(set(step['inputs']))
 
-        # case of data chunks distributed over several steps
+        # data chunks distributed over several sibling steps
         for task in step['tasks']:
-            step['chunk'] = True if 'chunk_number' in task else False                
+            step['chunk'] = True if 'chunk_number' in task else False
 
     def get_steps(self):
         """ Returns a list of dictionaries describing the steps """
@@ -314,44 +313,6 @@ class DAGFlow(Graph):
                 if item in step.keys():
                     del item
         return steps
-
-    def add_step(self, step, children, parents):
-        """ Insert a new step to the workflow """
-        self.set_io_fields(step)
-        self.add_vertex(**step)
-        links = []
-        for idx in children:
-            links.append((step['id'], idx))
-        for idx in parents:
-            links.append((idx, step['id']))
-        self.add_ctrlflow_links(links)
-        self.validate()
-        self.check_dataflow()
-        self.add_dataflow_links(step['id'])
-        self.validate()
-
-    def delete_steps(self, step_ids):
-        """ Delete steps from the workflow """
-        lst = [self.get_index(step_id) for step_id in step_ids]
-        self.delete_vertices(lst)
-        self.validate()
-        self.check_dataflow()
-
-    def extend(self, workflow, links):
-        """ Extend the workflow with another workflow """
-        assert isinstance(workflow, self)
-        workflow.validate()
-        step_ids = self.vs['id'] + workflow.vs['id']
-        assert len(step_ids) == len(set(step_ids)), (
-            'Workflow steps must have unique IDs.'
-        )
-
-        self += workflow
-        self.add_ctrlflow_links(links)
-        self.delete_dataflow_links()
-        self.add_dataflow_links()
-        self.validate()
-        self.check_dataflow()
 
     def add_step_labels(self):
         """ Labels the workflow steps (i.e. graph vertices) """
@@ -438,14 +399,25 @@ class DAGFlow(Graph):
         with open(filename, 'w') as outfile:
             json.dump(dct, outfile, indent=4, separators=(',', ': '))
 
-    def to_dot(self, filename='wf.dot', view='control flow'):
+    def to_dot(self, filename='wf.dot', view='combined'):
         """ Writes the workflow into a file in DOT format """
-        if view == 'control flow':
+        if view == 'controlflow':
             graph = self.copy()
             graph.delete_dataflow_links()
-        elif view == 'data flow':
+        elif view == 'dataflow':
             graph = self.copy()
             graph.delete_ctrlflow_links()
+        elif view == 'combined':
+            graph = self.copy()
+            dlinks = []
+            for vertex1, vertex2 in combinations(graph.vs.indices, 2):
+                clinks = list(set(graph.incident(vertex1, mode='ALL'))
+                              & set(graph.incident(vertex2, mode='ALL')))
+                if len(clinks) > 1:
+                    for link in clinks:
+                        if graph.es[link]['label'] == ' ':
+                            dlinks.append(link)
+            graph.delete_edges(dlinks)
         else:
             graph = self
         graph.write_dot(filename)
