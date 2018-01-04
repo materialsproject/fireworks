@@ -71,18 +71,18 @@ class DAGFlow(Graph):
 
         if steps:
             for step in steps:
-                self.set_io_fields(step)
+                self._set_io_fields(step)
                 self.add_vertex(**step)
             assert len(steps) < 2 or links or nlinks, (
                 'steps must be defined with links'
             )
             if nlinks:
-                self.add_ctrlflow_links(self.get_links(nlinks))
+                self._add_ctrlflow_links(self._get_links(nlinks))
             elif links:
-                self.add_ctrlflow_links(links)
+                self._add_ctrlflow_links(links)
             self.validate()
             self.check_dataflow()
-            self.add_dataflow_links()
+            self._add_dataflow_links()
             self.validate()
 
         if kwargs:
@@ -158,7 +158,7 @@ class DAGFlow(Graph):
 
         return cls(steps=steps, links=links, name=name)
 
-    def get_links(self, nlinks):
+    def _get_links(self, nlinks):
         """ Translates named links into links between step ids """
         links = []
         for link in nlinks:
@@ -167,7 +167,7 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def get_ctrlflow_links(self):
+    def _get_ctrlflow_links(self):
         """ Returns a list of unique tuples of link ids """
         links = []
         for ilink in set([link.tuple for link in self.es]):
@@ -176,75 +176,45 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def get_ctrlflow_links_dict(self):
+    def _get_ctrlflow_links_dict(self):
         """ Returns a list if control flow links """
         dlinks = {}
         for step in self.vs:
             dlinks[str(step['id'])] = []
-        links = self.get_ctrlflow_links()
+        links = self._get_ctrlflow_links()
         for link in links:
             dlinks[str(link[0])].append(link[1])
         return dlinks
 
-    def add_ctrlflow_links(self, links):
+    def _add_ctrlflow_links(self, links):
         """ Adds graph edges corresponding to control flow links """
         for link in links:
-            source = self.get_index(link[0])
-            target = self.get_index(link[1])
+            source = self._get_index(link[0])
+            target = self._get_index(link[1])
             self.add_edge(source, target, **{'label': ' '})
 
-    def add_dataflow_links(self, step_id=None, mode='both'):
+    def _add_dataflow_links(self, step_id=None, mode='both'):
         """ Adds graph edges corresponding to data flow links """
         if step_id:
-            vidx = self.get_index(step_id)
+            vidx = self._get_index(step_id)
             vertex = self.vs[vidx]
             if mode in ['out', 'both']:
                 for entity in vertex['outputs']:
-                    for cidx in self.get_targets(vertex, entity):
+                    for cidx in self._get_targets(vertex, entity):
                         self.add_edge(vidx, cidx, **{'label': entity})
             if mode in ['in', 'both']:
                 for entity in vertex['inputs']:
-                    for pidx in self.get_sources(vertex, entity):
+                    for pidx in self._get_sources(vertex, entity):
                         if pidx != vidx:
                             self.add_edge(pidx, vidx, **{'label': entity})
         else:
             for parent in self.vs:
                 pidx = parent.index
                 for entity in parent['outputs']:
-                    for cidx in self.get_targets(parent, entity):
+                    for cidx in self._get_targets(parent, entity):
                         self.add_edge(pidx, cidx, **{'label': entity})
 
-    def delete_ctrlflow_links(self):
-        """ Deletes graph edges corresponding to control flow links """
-        lst = [link.index for link in self.es if link['label'] == ' ']
-        self.delete_edges(lst)
-
-    def delete_dataflow_links(self):
-        """ Deletes graph edges corresponding to data flow links """
-        lst = [link.index for link in self.es if link['label'] != ' ']
-        self.delete_edges(lst)
-
-    def check_dataflow(self):
-        """ Checks whether all inputs and outputs match """
-
-        # check for shared output data entities
-        for vertex in self.vs:
-            outputs = vertex['outputs']
-            assert len(outputs) == len(set(outputs)), (
-                'The tasks in a workflow step may not share output fields.',
-                [x for n, x in enumerate(outputs) if x in outputs[:n]]
-            )
-        # evaluate matching sources
-        for vertex in self.vs:
-            for entity in vertex['inputs']:
-                sources = self.get_sources(vertex, entity)
-                assert len(sources) == 1, (
-                    'An input field must have exactly one source',
-                    'step', vertex['name'], 'entity', entity,
-                    'sources', sources
-                )
-
-    def get_sources(self, step, entity):
+    def _get_sources(self, step, entity):
         """ Returns a list of steps that act as sources for the data entity
         in the specified step. """
         lst = []
@@ -274,7 +244,7 @@ class DAGFlow(Graph):
 
         return lst
 
-    def get_targets(self, step, entity):
+    def _get_targets(self, step, entity):
         """ Returns a list of IDs of all successor steps
         that are data targets for the specified step. """
         lst = []
@@ -284,7 +254,7 @@ class DAGFlow(Graph):
         return lst
 
     @staticmethod
-    def set_io_fields(step):
+    def _set_io_fields(step):
         """ Set io keys as step attributes """
         for item in ['inputs', 'outputs', 'output']:
             step[item] = []
@@ -305,7 +275,7 @@ class DAGFlow(Graph):
         for task in step['tasks']:
             step['chunk'] = True if 'chunk_number' in task else False
 
-    def get_steps(self):
+    def _get_steps(self):
         """ Returns a list of dictionaries describing the steps """
         steps = [vertex.attributes() for vertex in self.vs]
         for step in steps:
@@ -314,16 +284,39 @@ class DAGFlow(Graph):
                     del item
         return steps
 
-    def add_step_labels(self):
-        """ Labels the workflow steps (i.e. graph vertices) """
-        for vertex in self.vs:
-            vertex['label'] = vertex['name'] + ', id: ' + str(vertex['id'])
-
-    def get_index(self, step_id):
+    def _get_index(self, step_id):
         """ Returns the vertex index for a step with provided id """
         for vertex in self.vs:
             if vertex['id'] == step_id:
                 return vertex.index
+
+    def _get_cycles(self):
+        """ Returns a partial list of cycles in case of erroneous workflow """
+        if self.is_dag():
+            return []
+        for deg in range(2, len(self.vs)+1):
+            lst = self.get_subisomorphisms_vf2(Graph.Ring(deg, directed=True))
+            flatten = lambda l: [item for sublist in l for item in sublist]
+            if len(flatten(lst)) > 0:
+                break
+        cycs = [list(x) for x in set([tuple(sorted(l)) for l in lst])]
+        cycs = [[self.vs[ind]['id'] for ind in cycle] for cycle in cycs]
+        return cycs
+
+    def delete_ctrlflow_links(self):
+        """ Deletes graph edges corresponding to control flow links """
+        lst = [link.index for link in self.es if link['label'] == ' ']
+        self.delete_edges(lst)
+
+    def delete_dataflow_links(self):
+        """ Deletes graph edges corresponding to data flow links """
+        lst = [link.index for link in self.es if link['label'] != ' ']
+        self.delete_edges(lst)
+
+    def add_step_labels(self):
+        """ Labels the workflow steps (i.e. graph vertices) """
+        for vertex in self.vs:
+            vertex['label'] = vertex['name'] + ', id: ' + str(vertex['id'])
 
     def validate(self):
         """ Validate the workflow """
@@ -341,25 +334,32 @@ class DAGFlow(Graph):
             'Workflow steps must have unique IDs.'
         )
 
-    def _get_cycles(self):
-        """ Returns a partial list of cycles in case of erroneous workflow """
-        if self.is_dag():
-            return []
-        for deg in range(2, len(self.vs)+1):
-            lst = self.get_subisomorphisms_vf2(Graph.Ring(deg, directed=True))
-            flatten = lambda l: [item for sublist in l for item in sublist]
-            if len(flatten(lst)) > 0:
-                break
-        cycs = [list(x) for x in set([tuple(sorted(l)) for l in lst])]
-        cycs = [[self.vs[ind]['id'] for ind in cycle] for cycle in cycs]
-        return cycs
+    def check_dataflow(self):
+        """ Checks whether all inputs and outputs match """
+
+        # check for shared output data entities
+        for vertex in self.vs:
+            outputs = vertex['outputs']
+            assert len(outputs) == len(set(outputs)), (
+                'The tasks in a workflow step may not share output fields.',
+                [x for n, x in enumerate(outputs) if x in outputs[:n]]
+            )
+        # evaluate matching sources
+        for vertex in self.vs:
+            for entity in vertex['inputs']:
+                sources = self._get_sources(vertex, entity)
+                assert len(sources) == 1, (
+                    'An input field must have exactly one source',
+                    'step', vertex['name'], 'entity', entity,
+                    'sources', sources
+                )
 
     def to_dict(self):
         """ Returns a dictionary that can be passed to the constructor """
         dct = {}
         dct['name'] = self['name']
-        dct['steps'] = self.get_steps()
-        dct['links'] = self.get_ctrlflow_links()
+        dct['steps'] = self._get_steps()
+        dct['links'] = self._get_ctrlflow_links()
         return dct
 
     def to_fireworks(self, method='from dict'):
@@ -368,7 +368,7 @@ class DAGFlow(Graph):
 
         if method == 'from dict':
             fws = []
-            for step in self.get_steps():
+            for step in self._get_steps():
                 spec = step.copy()
                 for key in ['id', 'data', 'name', 'inputs', 'outputs']:
                     del spec[key]
@@ -381,15 +381,15 @@ class DAGFlow(Graph):
                 })
             dct = {
                 'fws': fws,
-                'links': self.get_ctrlflow_links_dict(),
+                'links': self._get_ctrlflow_links_dict(),
                 'name': self['name'],
                 'metadata': {}
             }
             return Workflow.from_dict(dct)
         if method == 'from object':
             return Workflow(
-                fireworks=[Firework(step) for step in self.get_steps()],
-                links_dict=self.get_ctrlflow_links_dict(),
+                fireworks=[Firework(step) for step in self._get_steps()],
+                links_dict=self._get_ctrlflow_links_dict(),
                 name=self['name']
             )
 
