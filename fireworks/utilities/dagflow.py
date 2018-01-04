@@ -401,14 +401,12 @@ class DAGFlow(Graph):
 
     def to_dot(self, filename='wf.dot', view='combined'):
         """ Writes the workflow into a file in DOT format """
+        graph = self.copy()
         if view == 'controlflow':
-            graph = self.copy()
             graph.delete_dataflow_links()
         elif view == 'dataflow':
-            graph = self.copy()
             graph.delete_ctrlflow_links()
         elif view == 'combined':
-            graph = self.copy()
             dlinks = []
             for vertex1, vertex2 in combinations(graph.vs.indices, 2):
                 clinks = list(set(graph.incident(vertex1, mode='ALL'))
@@ -418,6 +416,11 @@ class DAGFlow(Graph):
                         if graph.es[link]['label'] == ' ':
                             dlinks.append(link)
             graph.delete_edges(dlinks)
-        else:
-            graph = self
+        # remove non-string, non-numeric attributes because write_dot() warns
+        for vertex in graph.vs:
+            for key, val in vertex.attributes().items():
+                if not isinstance(val, (str, int, float, complex)):
+                    del vertex[key]
+                if isinstance(val, bool):
+                    del vertex[key]
         graph.write_dot(filename)
