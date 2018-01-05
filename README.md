@@ -1,4 +1,4 @@
-# <img alt="FireWorks" src="docs_rst/_static/FireWorks_logo.png" width="200">
+# <img alt="FireWorks" src="docs_rst/_static/FireWorks_logo.png" width="250">
 
 FireWorks stores, executes, and manages calculation workflows.
 
