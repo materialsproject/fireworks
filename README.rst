@@ -1,12 +1,12 @@
 .. image:: docs_rst/_static/FireWorks_logo.png
-   :width: 300 px
+   :width: 100 px
    :alt: FireWorks workflow software
 
 =========
 FireWorks
 =========
 
-FireWorks helps run calculation workflows, with a centralized workflow server controlling many worker nodes.
+FireWorks stores, executes, and manages calculation workflows.
 
 For more about FireWorks, please visit the official documentation_.
 
