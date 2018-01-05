@@ -1,3 +1,7 @@
+.. image:: _static/FireWorks_logo.png
+   :width: 300 px
+   :alt: FireWorks workflow software
+
 =========
 FireWorks
 =========
