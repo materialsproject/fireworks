@@ -1,5 +1,5 @@
 .. image:: docs_rst/_static/FireWorks_logo.png
-   :width: 100 px
+   :scale: 10%
    :alt: FireWorks workflow software
 
 =========
