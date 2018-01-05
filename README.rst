@@ -1,4 +1,4 @@
-.. image:: _static/FireWorks_logo.png
+.. image:: docs_rst/_static/FireWorks_logo.png
    :width: 300 px
    :alt: FireWorks workflow software
 
