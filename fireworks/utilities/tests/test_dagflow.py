@@ -47,7 +47,7 @@ class DAGFlowTest(unittest.TestCase):
             {self.fw1: [self.fw2], self.fw2: [self.fw3], self.fw3: []}
         )
         dagf = DAGFlow.from_fireworks(wfl)
-        dagf_new = DAGFlow(**dagf.to_dict())
+        DAGFlow(**dagf.to_dict())
 
     def test_dagflow_loop(self):
         """ loop in graph """
