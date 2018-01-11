@@ -41,16 +41,13 @@ class DAGFlowTest(unittest.TestCase):
         )
 
     def test_dagflow_ok(self):
-        """ normal use """
+        """ construct and replicate """
         wfl = Workflow(
             [self.fw1, self.fw2, self.fw3],
             {self.fw1: [self.fw2], self.fw2: [self.fw3], self.fw3: []}
         )
-        filename = str(uuid.uuid4())
-        DAGFlow.from_fireworks(wfl).to_file(filename)
-        self.assertTrue(os.path.exists(filename))
-        DAGFlow.from_file(filename).to_fireworks()
-        os.remove(filename)
+        dagf = DAGFlow.from_fireworks(wfl)
+        dagf_new = DAGFlow(**dagf.to_dict())
 
     def test_dagflow_loop(self):
         """ loop in graph """

@@ -4,62 +4,8 @@ __author__ = 'Ivan Kondov'
 __email__ = 'ivan.kondov@kit.edu'
 __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
-import sys
-import json
 from itertools import combinations
 from igraph import Graph
-
-
-def translate_keys(dct, key, transl):
-    """ Translates all keys which match 'key' in 'dct' into 'transl' """
-    new = {}
-    for k, val in dct.items():
-        if isinstance(val, dict):
-            newval = translate_keys(val, key, transl)
-        elif isinstance(val, list):
-            newval = []
-            for item in val:
-                if isinstance(item, dict):
-                    newval.append(translate_keys(item, key, transl))
-                else:
-                    newval.append(item)
-        else:
-            newval = val
-        if k == key:
-            new[transl] = newval
-        else:
-            new[k] = newval
-    return new
-
-
-def _byteify(data, ignore_dicts=False):
-    """ Translates unicode to byte strings, only for python 2 """
-    from past.builtins import unicode
-    if isinstance(data, unicode):
-        return data.encode('utf-8')
-    if isinstance(data, list):
-        return [_byteify(item, ignore_dicts=True) for item in data]
-    if isinstance(data, dict) and not ignore_dicts:
-        return {
-            _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
-            for key, value in data.iteritems()
-        }
-    return data
-
-
-def json_load_byteified(file_handle):
-    """ Loads from JSON and translates unicode to byte strings, for python 2 """
-    return _byteify(
-        json.load(file_handle, object_hook=_byteify),
-        ignore_dicts=True
-    )
-
-
-if sys.version_info < (3, 0):
-    json_load_method = json_load_byteified
-else:
-    json_load_method = json.load
-
 
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
@@ -89,13 +35,6 @@ class DAGFlow(Graph):
             self.kwargs = kwargs
 
     @classmethod
-    def from_file(cls, filename):
-        """ Loads a DAGFlow dictionary and returns a new DAGFlow object """
-        with open(filename, 'r') as infile:
-            dct = json_load_method(infile)
-        return cls(**dct)
-
-    @classmethod
     def from_fireworks(cls, fireworkflow):
         """ Converts a fireworks workflow object into a new DAGFlow object """
         wfd = fireworkflow.to_dict()
@@ -119,10 +58,7 @@ class DAGFlow(Graph):
         for idx, fw in enumerate(wfd['fws']):
             step = steps[idx]
             spec = fw['spec']
-            spec = translate_keys(spec, '_tasks', 'tasks')
-            spec = translate_keys(spec, '_fw_name', 'name')
             step.update(spec)
-            tasks = step['tasks']
 
             def task_input(task, spec):
                 """ extracts labels of available inputs from a task """
@@ -148,7 +84,7 @@ class DAGFlow(Graph):
                 return inps
 
             step_data = []
-            for task in tasks:
+            for task in step['_tasks']:
                 if 'task' in task:
                     # ForeachTask
                     step_data.extend(task_input(task['task'], spec))
@@ -233,7 +169,7 @@ class DAGFlow(Graph):
 
         # data entity from a preceeding task in the same step
         outp_found = False
-        for task in step['tasks']:
+        for task in step['_tasks']:
             if 'outputs' in task and entity in task['outputs']:
                 outp_found = True
             if 'output' in task and entity == task['output']:
@@ -258,7 +194,7 @@ class DAGFlow(Graph):
         """ Set io keys as step attributes """
         for item in ['inputs', 'outputs', 'output']:
             step[item] = []
-            for task in step['tasks']:
+            for task in step['_tasks']:
                 # test the case of meta-tasks
                 true_task = task['task'] if 'task' in task else task
                 if item in true_task:
@@ -272,7 +208,7 @@ class DAGFlow(Graph):
         step['inputs'] = list(set(step['inputs']))
 
         # data chunks distributed over several sibling steps
-        for task in step['tasks']:
+        for task in step['_tasks']:
             step['chunk'] = True if 'chunk_number' in task else False
 
     def _get_steps(self):
@@ -361,43 +297,6 @@ class DAGFlow(Graph):
         dct['steps'] = self._get_steps()
         dct['links'] = self._get_ctrlflow_links()
         return dct
-
-    def to_fireworks(self, method='from dict'):
-        """ Returns a fireworks workflow object """
-        from fireworks import Firework, Workflow
-
-        if method == 'from dict':
-            fws = []
-            for step in self._get_steps():
-                spec = step.copy()
-                for key in ['id', 'data', 'name', 'inputs', 'outputs']:
-                    del spec[key]
-                spec = translate_keys(spec, 'tasks', '_tasks')
-                spec = translate_keys(spec, 'name', '_fw_name')
-                fws.append({
-                    'name': step['name'],
-                    'fw_id': step['id'],
-                    'spec': spec
-                })
-            dct = {
-                'fws': fws,
-                'links': self._get_ctrlflow_links_dict(),
-                'name': self['name'],
-                'metadata': {}
-            }
-            return Workflow.from_dict(dct)
-        if method == 'from object':
-            return Workflow(
-                fireworks=[Firework(step) for step in self._get_steps()],
-                links_dict=self._get_ctrlflow_links_dict(),
-                name=self['name']
-            )
-
-    def to_file(self, filename):
-        """ Write the DAGFlow dictionary to a file """
-        dct = self.to_dict()
-        with open(filename, 'w') as outfile:
-            json.dump(dct, outfile, indent=4, separators=(',', ': '))
 
     def to_dot(self, filename='wf.dot', view='combined'):
         """ Writes the workflow into a file in DOT format """
