@@ -110,8 +110,7 @@ class DAGFlowTest(unittest.TestCase):
         )
         wfl = Workflow([self.fw1, fw2], {self.fw1: [fw2], fw2: []})
         msg = (r"'An input field must have exactly one source', 'step', "
-               r"'pow(pow(2, 3), 4)', 'entity', 'first power', 'sources'"
-               r", [0, 1]")
+               r"'pow(pow(2, 3), 4)', 'entity', 'first power', 'sources'")
         with self.assertRaises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl)
         self.assertTrue(msg in str(context.exception))
