@@ -19,7 +19,7 @@ if __name__ == "__main__":
         name='FireWorks',
         version="1.6.3",
         description='FireWorks workflow software',
-        long_description=open(os.path.join(module_dir, 'README.rst')).read(),
+        long_description=open(os.path.join(module_dir, 'README.md')).read(),
         url='https://github.com/materialsproject/fireworks',
         author='Anubhav Jain',
         author_email='anubhavster@gmail.com',

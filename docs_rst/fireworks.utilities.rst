@@ -43,14 +43,6 @@ fireworks\.utilities\.fw\_utilities module
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.timing module
------------------------------------
-
-.. automodule:: fireworks.utilities.timing
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 fireworks\.utilities\.update\_collection module
 -----------------------------------------------
 

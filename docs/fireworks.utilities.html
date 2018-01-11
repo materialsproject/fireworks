@@ -22,7 +22,10 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+ 
+<link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -770,205 +773,6 @@ using the firework names.</li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-fireworks.utilities.timing">
-<span id="fireworks-utilities-timing-module"></span><h2>fireworks.utilities.timing module<a class="headerlink" href="#module-fireworks.utilities.timing" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="fireworks.utilities.timing.NullTimer">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.timing.</code><code class="descname">NullTimer</code><a class="headerlink" href="#fireworks.utilities.timing.NullTimer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#fireworks.utilities.timing.Timer" title="fireworks.utilities.timing.Timer"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.timing.Timer</span></code></a></p>
-<p>Support performance timer interface, but do absolutely nothing.
-This is useful to avoid many tiresome if/else blocks.</p>
-<dl class="method">
-<dt id="fireworks.utilities.timing.NullTimer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.NullTimer.block">
-<code class="descname">block</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.block" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.NullTimer.start">
-<code class="descname">start</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.NullTimer.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.stop" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.NullTimer.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.NullTimer.write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="fireworks.utilities.timing.Timer">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.timing.</code><code class="descname">Timer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Simple performance timer.</p>
-<dl class="docutils">
-<dt>Usage:</dt>
-<dd><p class="first">p = Timer(“myname”)
-for thing in all_things:</p>
-<blockquote class="last">
-<div><p>p.start(“stage1”)
-do_stage_1()
-p.stop(“stage1”)
-# alt. ‘with’ interface
-with p.block(“stage2”):</p>
-<blockquote>
-<div>do_something_else()</div></blockquote>
-</div></blockquote>
-</dd>
-</dl>
-<p>Limitations:
-- Instances are not thread-safe.
-- The set_ns() class method is not thread-safe.
-- The ‘with’ block() cannot be nested,</p>
-<blockquote>
-<div>instead use different stages with begin()/end() pairs.</div></blockquote>
-<ul class="simple">
-<li>The only output format is CSV.</li>
-<li>There is no (easy) programmatic way to get the results.</li>
-</ul>
-<dl class="method">
-<dt id="fireworks.utilities.timing.Timer.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.Timer.block">
-<code class="descname">block</code><span class="sig-paren">(</span><em>stage</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.block" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="classmethod">
-<dt id="fireworks.utilities.timing.Timer.set_ns">
-<em class="property">classmethod </em><code class="descname">set_ns</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.set_ns" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a namespace (prefix) for all timers.
-In output, the namespace will be separated by the timer name by a “.”</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.Timer.start">
-<code class="descname">start</code><span class="sig-paren">(</span><em>stage='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Begin timing.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.Timer.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><em>stage='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop timing.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.Timer.stop_all">
-<code class="descname">stop_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.stop_all" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop all timers.
-Idempotent.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fireworks.utilities.timing.Timer.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>stream=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.Timer.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write results (CSV) to a stream.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="fireworks.utilities.timing.any_fw_timers">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">any_fw_timers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.any_fw_timers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether any timers are enabled and non-empty</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if so, False if not</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)">bool</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="fireworks.utilities.timing.enable_fw_timer">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">enable_fw_timer</code><span class="sig-paren">(</span><em>name</em>, <em>is_enabled</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.enable_fw_timer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable or disable a timer.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Timer’s name, or glob-style name pattern</li>
-<li><strong>is_enabled</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) – Whether to enable (True) or disable (False)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="fireworks.utilities.timing.get_fw_timer">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">get_fw_timer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.get_fw_timer" title="Permalink to this definition">¶</a></dt>
-<dd><p>G
-et timer, possibly a NullTimer, for a section of code.</p>
-<p>If the user did not enable timers for this section, will
-return a NullTimer. Otherwise will return a Timer.</p>
-<dl class="docutils">
-<dt>Usage:</dt>
-<dd>timer = get_fw_timer(“StarWars”)
-timer.start(“jumpToLightSpeed”)
-jumpToLightSpeed()
-timer.stop(“jumpToLightSpeed”)
-…
-print_fw_timers()  # prints results of all timers</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Name of a given timer.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A timer instance</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#fireworks.utilities.timing.Timer" title="fireworks.utilities.timing.Timer">Timer</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="fireworks.utilities.timing.print_fw_timers">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">print_fw_timers</code><span class="sig-paren">(</span><em>stream=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.timing.print_fw_timers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print results of all timers to the provided stream.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stream</strong> – Output stream, only needs to support ‘write’</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number of items (data rows) printed</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)">int</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="data">
-<dt id="fireworks.utilities.timing.timer_env_var">
-<code class="descclassname">fireworks.utilities.timing.</code><code class="descname">timer_env_var</code><em class="property"> = 'FW_TIMERS'</em><a class="headerlink" href="#fireworks.utilities.timing.timer_env_var" title="Permalink to this definition">¶</a></dt>
-<dd><p>Environment variable in which to list the enabled timers
-Use comma-separated strings, e.g.:</p>
-</dd></dl>
-
-</div>
 <div class="section" id="module-fireworks.utilities.update_collection">
 <span id="fireworks-utilities-update-collection-module"></span><h2>fireworks.utilities.update_collection module<a class="headerlink" href="#module-fireworks.utilities.update_collection" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -1042,7 +846,6 @@ the database with extension “_xiv_{Date}”.</p>
 <li><a class="reference internal" href="#module-fireworks.utilities.filepad">fireworks.utilities.filepad module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.fw_serializers">fireworks.utilities.fw_serializers module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.fw_utilities">fireworks.utilities.fw_utilities module</a></li>
-<li><a class="reference internal" href="#module-fireworks.utilities.timing">fireworks.utilities.timing module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.update_collection">fireworks.utilities.update_collection module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities">Module contents</a></li>
 </ul>
