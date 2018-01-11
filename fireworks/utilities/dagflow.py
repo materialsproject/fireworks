@@ -11,8 +11,7 @@ class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
     visualization of workflows. """
 
-    def __init__(self, steps=None, links=None, nlinks=None, name=None,
-                 **kwargs):
+    def __init__(self, steps=None, links=None, nlinks=None, name=None):
         Graph.__init__(self, directed=True, graph_attrs={'name': name})
 
         if steps:
@@ -31,14 +30,11 @@ class DAGFlow(Graph):
             self._add_dataflow_links()
             self.validate()
 
-        if kwargs:
-            self.kwargs = kwargs
-
     @classmethod
     def from_fireworks(cls, fireworkflow):
         """ Converts a fireworks workflow object into a new DAGFlow object """
         wfd = fireworkflow.to_dict()
-        if 'name' in wfd.keys():
+        if 'name' in wfd:
             name = wfd['name']
         fw_idx = {}
         steps = []
@@ -51,7 +47,7 @@ class DAGFlow(Graph):
             steps.append(step)
 
         links = []
-        for src in wfd['links'].keys():
+        for src in wfd['links']:
             for trg in wfd['links'][src]:
                 links.append((int(src), trg))
 
@@ -216,7 +212,7 @@ class DAGFlow(Graph):
         steps = [vertex.attributes() for vertex in self.vs]
         for step in steps:
             for item in ['inputs', 'outputs']:
-                if item in step.keys():
+                if item in step:
                     del item
         return steps
 
