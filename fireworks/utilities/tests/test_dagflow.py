@@ -7,13 +7,17 @@ __email__ = 'ivan.kondov@kit.edu'
 import os
 import uuid
 import unittest
-from fireworks.utilities.dagflow import DAGFlow
 from fireworks import PyTask, Firework, Workflow
 
 class DAGFlowTest(unittest.TestCase):
     """ run tests for DAGFlow class """
 
     def setUp(self):
+        try:
+            from fireworks.utilities.dagflow import DAGFlow
+        except:
+            raise unittest.SkipTest("Skipping test, DagFlow not installed")
+
         self.fw1 = Firework(
             PyTask(
                 func='math.pow',
