@@ -4,6 +4,14 @@ fireworks\.utilities\.tests package
 Submodules
 ----------
 
+fireworks\.utilities\.tests\.test\_dagflow module
+-------------------------------------------------
+
+.. automodule:: fireworks.utilities.tests.test_dagflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks\.utilities\.tests\.test\_filepad module
 -------------------------------------------------
 

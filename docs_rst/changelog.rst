@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.6.4**
+
+* new workflow check option that validates and plots a workflow using python-igraph (I. Kondov)
+* misc. code cleanup
+
 **v1.6.3**
 
 * allow FWorker to have multiple categories (thanks to Johannes Jansson for the suggestion)

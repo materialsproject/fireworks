@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+fireworks\.utilities\.dagflow module
+------------------------------------
+
+.. automodule:: fireworks.utilities.dagflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fireworks\.utilities\.dict\_mods module
 ---------------------------------------
 

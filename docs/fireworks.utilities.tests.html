@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.utilities.tests package &#8212; FireWorks 1.6.3 documentation</title>
+    <title>fireworks.utilities.tests package &#8212; FireWorks 1.6.4 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.6.3',
+        VERSION:     '1.6.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -50,6 +50,64 @@
 <h1>fireworks.utilities.tests package<a class="headerlink" href="#fireworks-utilities-tests-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fireworks.utilities.tests.test_dagflow">
+<span id="fireworks-utilities-tests-test-dagflow-module"></span><h2>fireworks.utilities.tests.test_dagflow module<a class="headerlink" href="#module-fireworks.utilities.tests.test_dagflow" title="Permalink to this headline">¶</a></h2>
+<p>Unit tests for the DAGFlow class</p>
+<dl class="class">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest">
+<em class="property">class </em><code class="descclassname">fireworks.utilities.tests.test_dagflow.</code><code class="descname">DAGFlowTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>run tests for DAGFlow class</p>
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut">
+<code class="descname">test_dagflow_cut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut" title="Permalink to this definition">¶</a></dt>
+<dd><p>disconnected graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_input">
+<code class="descname">test_dagflow_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>missing input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_link">
+<code class="descname">test_dagflow_link</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrong links</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_loop">
+<code class="descname">test_dagflow_loop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>loop in graph</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok">
+<code class="descname">test_dagflow_ok</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct and replicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_output">
+<code class="descname">test_dagflow_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>clashing inputs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_view">
+<code class="descname">test_dagflow_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>visualize the workflow graph</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-fireworks.utilities.tests.test_filepad">
 <span id="fireworks-utilities-tests-test-filepad-module"></span><h2>fireworks.utilities.tests.test_filepad module<a class="headerlink" href="#module-fireworks.utilities.tests.test_filepad" title="Permalink to this headline">¶</a></h2>
@@ -260,6 +318,7 @@
   <ul>
 <li><a class="reference internal" href="#">fireworks.utilities.tests package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.tests.test_dagflow">fireworks.utilities.tests.test_dagflow module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.tests.test_filepad">fireworks.utilities.tests.test_filepad module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.tests.test_fw_serializers">fireworks.utilities.tests.test_fw_serializers module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.tests.test_update_collection">fireworks.utilities.tests.test_update_collection module</a></li>
@@ -298,7 +357,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.4 documentation</a> &#187;</li> 
       </ul>
     </div>
 
