@@ -716,7 +716,7 @@ def lpad():
 
     check_wf_parser = subparsers.add_parser('check_wflow', help='validate and graph a workflow from launchpad')
     check_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
-    check_wf_parser.add_argument('-g', '--graph', type=str, help='graph the workflow in DOT format; allowed views: dataflow, conrolflow, combined.', dest='view', default=None)
+    check_wf_parser.add_argument('-g', '--graph', type=str, help='graph the workflow in DOT format; allowed views: dataflow, controlflow, combined.', dest='view', default=None)
     check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot', default='workflow.dot')
     check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
 
