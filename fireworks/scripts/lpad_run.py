@@ -162,6 +162,9 @@ def add_wf(args):
         files = args.wf_file
     for f in files:
         fwf = Workflow.from_file(f)
+        if args.check:
+            from fireworks.utilities.dagflow import DAGFlow
+            DAGFlow.from_fireworks(fwf)
         lp.add_wf(fwf)
 
 
@@ -178,6 +181,15 @@ def append_wf(args):
 def dump_wf(args):
     lp = get_lp(args)
     lp.get_wf_by_fw_id(args.fw_id).to_file(args.wf_file)
+
+
+def check_wf(args):
+    from fireworks.utilities.dagflow import DAGFlow
+    lp = get_lp(args)
+    dagf = DAGFlow.from_fireworks(lp.get_wf_by_fw_id(args.fw_id))
+    if args.view is not None:
+        dagf.add_step_labels()
+        dagf.to_dot(args.dot_file, view=args.view)
 
 
 def add_wf_dir(args):
@@ -699,7 +711,14 @@ def lpad():
                                    "paths given by wf_file.")
     addwf_parser.add_argument('wf_file', nargs="+",
                               help="Path to a Firework or Workflow file")
-    addwf_parser.set_defaults(func=add_wf)
+    addwf_parser.add_argument('-c', '--check', help='check the workflow before adding', dest='check', action='store_true')
+    addwf_parser.set_defaults(func=add_wf, check=False)
+
+    check_wf_parser = subparsers.add_parser('check_wflow', help='validate and graph a workflow from launchpad')
+    check_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
+    check_wf_parser.add_argument('-g', '--graph', type=str, help='graph the workflow in DOT format; allowed views: dataflow, conrolflow, combined.', dest='view', default=None)
+    check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot', default='workflow.dot')
+    check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
 
     append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')
     append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], nargs=fw_id_kwargs["nargs"], help='parent firework ids')
