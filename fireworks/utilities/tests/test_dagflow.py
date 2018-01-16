@@ -90,7 +90,7 @@ class DAGFlowTest(unittest.TestCase):
             PyTask(
                 func='math.pow',
                 inputs=['first power', 'exponent'],
-                outputs='second power'
+                outputs=['second power']
             ),
             name='pow(pow(2, 3), 4)'
         )
@@ -107,7 +107,7 @@ class DAGFlowTest(unittest.TestCase):
             PyTask(
                 func='math.pow',
                 inputs=['first power', 'exponent'],
-                outputs='second power'
+                outputs=['second power']
             ),
             name='pow(pow(2, 3), 4)',
             spec={'exponent': 4, 'first power': 8}

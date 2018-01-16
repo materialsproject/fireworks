@@ -11,24 +11,23 @@ class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
     visualization of workflows. """
 
-    def __init__(self, steps=None, links=None, nlinks=None, name=None):
+    def __init__(self, steps, links=None, nlinks=None, name=None):
         Graph.__init__(self, directed=True, graph_attrs={'name': name})
 
-        if steps:
-            for step in steps:
-                self._set_io_fields(step)
-                self.add_vertex(**step)
-            assert len(steps) < 2 or links or nlinks, (
-                'steps must be defined with links'
-            )
-            if nlinks:
-                self._add_ctrlflow_links(self._get_links(nlinks))
-            elif links:
-                self._add_ctrlflow_links(links)
-            self.validate()
-            self.check_dataflow()
-            self._add_dataflow_links()
-            self.validate()
+        for step in steps:
+            self._set_io_fields(step)
+            self.add_vertex(**step)
+        assert len(steps) < 2 or links or nlinks, (
+            'steps must be defined with links'
+        )
+        if nlinks:
+            self._add_ctrlflow_links(self._get_links(nlinks))
+        elif links:
+            self._add_ctrlflow_links(links)
+        self.validate()
+        self.check_dataflow()
+        self._add_dataflow_links()
+        self.validate()
 
     @classmethod
     def from_fireworks(cls, fireworkflow):
@@ -81,11 +80,14 @@ class DAGFlow(Graph):
 
             step_data = []
             for task in step['_tasks']:
-                if 'task' in task:
-                    # ForeachTask
-                    step_data.extend(task_input(task['task'], spec))
-                else:
-                    step_data.extend(task_input(task, spec))
+                true_task = task['task'] if 'task' in task else task
+                step_data.extend(task_input(true_task, spec))
+                if 'outputs' in true_task:
+                    assert isinstance(true_task['outputs'], list), (
+                        'outputs must be a list in fw_id ' + str(step['id']))
+                if 'inputs' in true_task:
+                    assert isinstance(true_task['inputs'], list), (
+                        'inputs must be a list in fw_id ' + str(step['id']))
             step['data'] = list(set(step_data))
 
         return cls(steps=steps, links=links, name=name)
