@@ -651,8 +651,9 @@ def get_output_func(format):
 def arg_positive_int(value):
     try:
         ivalue = int(value)
-        assert ivalue > 0
-    except (ValueError, AssertionError):
+        if ivalue < 1:
+            raise ValueError()
+    except ValueError:
         raise ArgumentTypeError("{} is not a positive integer".format(value))
     return ivalue
 
