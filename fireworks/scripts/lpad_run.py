@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 import os
 import time
 import ast
@@ -526,9 +526,10 @@ def webgui(args):
             import sys
             sys.exit("Gunicorn is required for server mode. "
                      "Install using `pip install gunicorn`.")
+        nworkers = args.nworkers if args.nworkers else number_of_workers()
         options = {
             'bind': '%s:%s' % (args.host, args.port),
-            'workers': number_of_workers(),
+            'workers': nworkers,
         }
         StandaloneApplication(bootstrap_app, options).run()
 
@@ -645,6 +646,16 @@ def get_output_func(format):
     else:
         return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False),
                                    default_flow_style=False)
+
+
+def arg_positive_int(value):
+    try:
+        ivalue = int(value)
+        if ivalue < 1:
+            raise ValueError()
+    except ValueError:
+        raise ArgumentTypeError("{} is not a positive integer".format(value))
+    return ivalue
 
 
 def lpad():
@@ -836,7 +847,7 @@ def lpad():
                                                        "prompt required when modifying more than {} "
                                                        "entries.".format(PW_CHECK_NUM))
     resume_fw_parser.set_defaults(func=resume_fws)
-    
+
     update_fws_parser = subparsers.add_parser(
         'update_fws', help='Update a Firework spec.')
     update_fws_parser.add_argument(*fw_id_args, **fw_id_kwargs)
@@ -996,6 +1007,7 @@ def lpad():
     webgui_parser.add_argument('--debug', help='print debug messages', action='store_true')
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)',
                                action='store_true')
+    webgui_parser.add_argument('--nworkers', type=arg_positive_int, help='Number of worker processes for server mode')
     webgui_parser.add_argument('--fwquery', help='additional query filter for FireWorks as JSON string')
     webgui_parser.add_argument('--wflowquery', help='additional query filter for Workflows as JSON string')
     webgui_parser.set_defaults(func=webgui)
