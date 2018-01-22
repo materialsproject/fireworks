@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.6.5**
+
+* sketch of MOAB queue adapter (with guidance from A. Gopalan)
+* add option to ``lpad webgui`` for number of server processes (D. Winston)
+* more sanity checks to workflow (I. Kondov)
+
 **v1.6.4**
 
 * new workflow check option that validates and plots a workflow using python-igraph (I. Kondov)

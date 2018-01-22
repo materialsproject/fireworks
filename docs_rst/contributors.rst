@@ -52,6 +52,7 @@ Thanks for helpful discussions:
 * Marat Valiev
 * Stephen Bailey
 * Deborah Bard
+* Arun Gopalan
 
 .. _pymatgen: http://packages.python.org/pymatgen/
 .. _custodian: https://pypi.python.org/pypi/custodian
