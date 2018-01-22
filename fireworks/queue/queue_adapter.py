@@ -135,7 +135,8 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
                          
             # warn user if they specify a key not present in template
             for subs_key in subs_dict.keys():
-                if subs_key not in template_keys:
+                if subs_key not in template_keys and not \
+                        subs_key.startswith("_") and not subs_key == "logdir":
                     warnings.warn('Key {} has been specified in qadapter '
                                   'but it is not present in template, please '
                                   'check template ({}) for supported keys.'
