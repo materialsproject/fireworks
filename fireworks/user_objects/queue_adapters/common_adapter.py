@@ -39,7 +39,8 @@ class CommonAdapter(QueueAdapterBase):
         "Cobalt": {"submit_cmd": "qsub", "status_cmd": "qstat"},
         "SLURM": {"submit_cmd": "sbatch", "status_cmd": "squeue"},
         "LoadLeveler": {"submit_cmd": "llsubmit", "status_cmd": "llq"},
-        "LoadSharingFacility": {"submit_cmd": "bsub", "status_cmd": "bjobs"}
+        "LoadSharingFacility": {"submit_cmd": "bsub", "status_cmd": "bjobs"},
+        "MOAB": {"submit_cmd": "msub", "status_cmd": "showq"}
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, **kwargs):
@@ -116,6 +117,10 @@ class CommonAdapter(QueueAdapterBase):
             status_cmd.extend(['-u', username])
             if self.get('queue'):
                 status_cmd.extend(['-q', self['queue']])
+        elif self.q_type == "MOAB":
+            status_cmd.extend(['-w', "user={}".format(username)])
+            if self.get('queue'):
+                status_cmd.extend(['-p', self['queue']])
         else:
             status_cmd.extend(['-u', username])
 
@@ -146,6 +151,11 @@ class CommonAdapter(QueueAdapterBase):
                     cnt += 1
             return cnt
         if self.q_type == "SGE":
+            # want only lines that include username;
+            # this will exclude e.g. header lines
+            return len([l for l in output_str.split('\n') if username in l])
+
+        if self.q_type == "MOAB":
             # want only lines that include username;
             # this will exclude e.g. header lines
             return len([l for l in output_str.split('\n') if username in l])

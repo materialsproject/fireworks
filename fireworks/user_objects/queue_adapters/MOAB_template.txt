@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#MOAB -l nodes=$${nodes}:ppn=$${ppn}
+#MOAB -l walltime=$${walltime}
+#MOAB -N $${job_name}
+#MOAB -j $${stdout_stderr}
+#MOAB -q $${queue}
+#MOAB -A $${account}
+
+$${pre_rocket}
+cd $${launch_dir}
+$${rocket_launch}
+$${post_rocket}
