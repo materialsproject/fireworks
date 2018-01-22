@@ -1,0 +1,20 @@
+_fw_name: CommonAdapter
+_fw_q_type: MOAB
+rocket_launch: rlaunch -w path/to/my_fworker.yaml -l path/to/my_launchpad.yaml singleshot
+nodes: 1
+ppn: 16
+walltime: '1:00:00'
+queue: null
+account: null
+job_name: null
+logdir: path/to/logging
+pre_rocket: null
+post_rocket: null
+
+# You can override commands by uncommenting and changing the following lines:
+# _q_commands_override:
+#    submit_cmd: my_qsubmit
+#    status_cmd: my_qstatus
+
+#You can also supply your own template by uncommenting and changing the following line:
+#template_file: /full/path/to/template
