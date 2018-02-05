@@ -119,8 +119,7 @@ class CommonAdapter(QueueAdapterBase):
                 status_cmd.extend(['-q', self['queue']])
         elif self.q_type == "MOAB":
             status_cmd.extend(['-w', "user={}".format(username)])
-            if self.get('queue'):
-                status_cmd.extend(['-p', self['queue']])
+            # no queue restriction command known for QUEST supercomputer, i.e., -p option doesn't work
         else:
             status_cmd.extend(['-u', username])
 
