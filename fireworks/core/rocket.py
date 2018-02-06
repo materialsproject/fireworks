@@ -23,8 +23,9 @@ from monty.io import zopen
 from monty.serialization import loadfn, dumpfn
 
 from fireworks.core.firework import FWAction, Firework
-from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, PRINT_FW_JSON, \
-    PRINT_FW_YAML, STORE_PACKING_INFO
+from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, \
+    PRINT_FW_JSON, \
+    PRINT_FW_YAML, STORE_PACKING_INFO, ROCKET_STREAM_LOGLEVEL
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.core.launchpad import LockedWorkflowError, LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -129,7 +130,8 @@ class Rocket:
         lp = self.launchpad
         launch_dir = os.path.abspath(os.getcwd())
         logdir = lp.get_logdir() if lp else None
-        l_logger = get_fw_logger('rocket.launcher', l_dir=logdir,stream_level='INFO')
+        l_logger = get_fw_logger('rocket.launcher', l_dir=logdir,
+                                 stream_level=ROCKET_STREAM_LOGLEVEL)
 
         # check a FW job out of the launchpad
         if lp:
