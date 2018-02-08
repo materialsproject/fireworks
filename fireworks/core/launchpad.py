@@ -13,6 +13,8 @@ import random
 import time
 import traceback
 from collections import OrderedDict, defaultdict
+from itertools import chain
+from tqdm import tqdm
 
 from pymongo import MongoClient
 from pymongo import DESCENDING, ASCENDING
@@ -312,6 +314,42 @@ class LaunchPad(FWSerializable):
         self.workflows.insert_one(wf.to_db_dict())
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
+
+    def add_wfs(self, wfs):
+        """
+
+        Args:
+            wfs ([Workflow]): list of workflows or fireworks
+
+        Returns:
+            list of fireworks with reassigned ids
+
+        """
+        # Make all fireworks workflows
+        wfs = [Workflow.from_firework(wf) if isinstance(wf, Firework)
+               else wf for wf in wfs]
+
+        # Initialize new firework counter, starting from the next fw id
+        total_num_fws = sum([len(wf.fws) for wf in wfs])
+        new_fw_counter = self.fw_id_assigner.find_one_and_update(
+            {}, {'$inc': {'next_fw_id': total_num_fws}})['next_fw_id']
+        for wf in tqdm(wfs):
+            # Reassign fw_ids
+            old_new = dict(zip(
+                wf.id_fw.keys(),
+                range(new_fw_counter, new_fw_counter + len(wf.fws))))
+            wf._reassign_ids(old_new)
+            new_fw_counter += len(wf.fws)
+
+            # Set root fws to READY
+            for fw_id in wf.root_fw_ids:
+                wf.id_fw[fw_id].state = 'READY'
+                wf.fw_states[fw_id] = 'READY'
+
+        # Insert all fws and wfs, do workflows first
+        self.workflows.insert_many([wf.to_db_dict() for wf in wfs])
+        all_fws = chain.from_iterable([wf.fws for wf in wfs])
+        self.fireworks.insert_many([fw.to_db_dict() for fw in all_fws])
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
         """
@@ -1319,7 +1357,7 @@ class LaunchPad(FWSerializable):
                                               "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
                     duplicates.append(d['fw_id'])
             duplicates = list(set(duplicates))
-        
+
         # Launch recovery
         if recover_launch is not None:
             recovery = self.get_recovery(fw_id, recover_launch)
@@ -1329,7 +1367,7 @@ class LaunchPad(FWSerializable):
                 prev_dir = self.get_launch_by_id(recovery.get('_launch_id')).launch_dir
                 set_spec['$set']['spec._launch_dir'] = prev_dir 
             self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
-            
+
         # If no launch recovery specified, unset the firework recovery spec
         else:
             set_spec = {"$unset":{"spec._recovery":""}}
@@ -1355,7 +1393,7 @@ class LaunchPad(FWSerializable):
             r = self.rerun_fw(f, rerun_duplicates=False, recover_launch=recover_launch,
                               recover_mode=recover_mode)
             reruns.extend(r)
-        
+
         return reruns
 
     def get_recovery(self, fw_id, launch_id='last'):

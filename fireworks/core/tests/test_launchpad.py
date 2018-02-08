@@ -113,6 +113,25 @@ class LaunchPadTest(unittest.TestCase):
         self.assertEqual(len(fw_ids), 3)
         self.lp.reset('',require_password=False)
 
+    def test_add_wfs(self):
+        ftask = ScriptTask.from_str('echo "lorem ipsum"')
+        from random import randint
+        wfs = []
+        for n in range(100):
+            # create workflows with 3-10 simple fireworks
+            wfs.append(Workflow([Firework(ftask, name='lorem')
+                                 for n in range(0, randint(3, 10))],
+                                name='lorem workflow'))
+        self.lp.add_wfs(wfs)
+        num_fws_total = sum([len(wf.fws) for wf in wfs])
+        distinct_fw_ids = self.lp.fireworks.distinct('fw_id', {'name': 'lorem'})
+        self.assertEqual(len(distinct_fw_ids), num_fws_total)
+        num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem workflow"}))
+        self.assertEqual(num_wfs_in_db, len(wfs))
+        self.lp.reset('', require_password=False, max_reset_wo_password=1000)
+
+
+
 
 class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
