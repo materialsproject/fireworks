@@ -17,6 +17,7 @@ import shutil
 import datetime
 from multiprocessing import Process
 import filecmp
+from random import randint
 
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
@@ -115,7 +116,6 @@ class LaunchPadTest(unittest.TestCase):
 
     def test_add_wfs(self):
         ftask = ScriptTask.from_str('echo "lorem ipsum"')
-        from random import randint
         wfs = []
         for n in range(100):
             # create workflows with 3-10 simple fireworks
@@ -129,8 +129,6 @@ class LaunchPadTest(unittest.TestCase):
         num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem workflow"}))
         self.assertEqual(num_wfs_in_db, len(wfs))
         self.lp.reset('', require_password=False, max_reset_wo_password=1000)
-
-
 
 
 class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):

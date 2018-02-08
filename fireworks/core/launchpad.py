@@ -317,12 +317,15 @@ class LaunchPad(FWSerializable):
 
     def add_wfs(self, wfs):
         """
+        Adds a list of workflows to the fireworks database
+        using insert_many for both the fws and wfs, is
+        more efficient than adding them one at a time.
 
         Args:
             wfs ([Workflow]): list of workflows or fireworks
 
         Returns:
-            list of fireworks with reassigned ids
+            None
 
         """
         # Make all fireworks workflows
@@ -334,7 +337,7 @@ class LaunchPad(FWSerializable):
         new_fw_counter = self.fw_id_assigner.find_one_and_update(
             {}, {'$inc': {'next_fw_id': total_num_fws}})['next_fw_id']
         for wf in tqdm(wfs):
-            # Reassign fw_ids
+            # Reassign fw_ids and increment the counter
             old_new = dict(zip(
                 wf.id_fw.keys(),
                 range(new_fw_counter, new_fw_counter + len(wf.fws))))
@@ -346,10 +349,12 @@ class LaunchPad(FWSerializable):
                 wf.id_fw[fw_id].state = 'READY'
                 wf.fw_states[fw_id] = 'READY'
 
-        # Insert all fws and wfs, do workflows first
+        # Insert all fws and wfs, do workflows first so fws don't
+        # get checked out prematurely
         self.workflows.insert_many([wf.to_db_dict() for wf in wfs])
         all_fws = chain.from_iterable([wf.fws for wf in wfs])
         self.fireworks.insert_many([fw.to_db_dict() for fw in all_fws])
+        return None
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
         """
