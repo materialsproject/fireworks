@@ -2,6 +2,9 @@
 FireWorks Changelog
 ===================
 
+**v1.6.6**
+
+* Improve qlaunch rapidfire (with guidance from A. Gopalan)
 **v1.6.5**
 
 * sketch of MOAB queue adapter (with guidance from A. Gopalan)
