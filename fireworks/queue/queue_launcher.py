@@ -206,9 +206,19 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while (not njobs_queue or jobs_in_queue < njobs_queue) and \
-                    (launchpad.run_exists(fworker) or (fill_mode and not reserve)) \
-                    and (not timeout or (datetime.now() - start_time).total_seconds() < timeout):
+            while (launchpad.run_exists(fworker) or
+                   (fill_mode and not reserve)):
+
+                if timeout and (datetime.now() - start_time).total_seconds() >= timeout:
+                    l_logger.info("Timeout reached.")
+                    break
+
+                if njobs_queue and jobs_in_queue >= njobs_queue:
+                    l_logger.info("Jobs in queue ({}) exceeds "
+                                  "maximum allowed ({})".format(jobs_in_queue,
+                                                                njobs_queue))
+                    break
+
                 l_logger.info('Launching a rocket!')
 
                 # switch to new block dir if it got too big
@@ -226,6 +236,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if num_launched == nlaunches:
+                    l_logger.info('Launched allowed number of '
+                                  'jobs: {}'.format(num_launched))
                     break
                 # wait for the queue system to update
                 l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
@@ -236,9 +248,11 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
-            if num_launched == nlaunches or nlaunches == 0 or \
-                    (timeout and (datetime.now() - start_time).total_seconds() >= timeout):
+            if num_launched == nlaunches or \
+                    (timeout and (datetime.now() - start_time).total_seconds()
+                     >= timeout) or (nlaunches == 0 and not launchpad.run_exists(fworker)):
                 break
+
             l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
             time.sleep(sleep_time)
             l_logger.info('Checking for Rockets to run...')
