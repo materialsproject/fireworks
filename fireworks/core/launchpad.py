@@ -315,7 +315,7 @@ class LaunchPad(FWSerializable):
         self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
         return old_new
 
-    def add_wfs(self, wfs):
+    def bulk_add_wfs(self, wfs):
         """
         Adds a list of workflows to the fireworks database
         using insert_many for both the fws and wfs, is
@@ -351,9 +351,9 @@ class LaunchPad(FWSerializable):
 
         # Insert all fws and wfs, do workflows first so fws don't
         # get checked out prematurely
-        self.workflows.insert_many([wf.to_db_dict() for wf in wfs])
-        all_fws = chain.from_iterable([wf.fws for wf in wfs])
-        self.fireworks.insert_many([fw.to_db_dict() for fw in all_fws])
+        self.workflows.insert_many(wf.to_db_dict() for wf in wfs)
+        all_fws = chain.from_iterable(wf.fws for wf in wfs)
+        self.fireworks.insert_many(fw.to_db_dict() for fw in all_fws)
         return None
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
@@ -1370,7 +1370,7 @@ class LaunchPad(FWSerializable):
             set_spec = {'$set': {'spec._recovery': recovery}}
             if recover_mode == 'prev_dir':
                 prev_dir = self.get_launch_by_id(recovery.get('_launch_id')).launch_dir
-                set_spec['$set']['spec._launch_dir'] = prev_dir 
+                set_spec['$set']['spec._launch_dir'] = prev_dir
             self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
 
         # If no launch recovery specified, unset the firework recovery spec
@@ -1583,7 +1583,7 @@ class LaunchPad(FWSerializable):
                                                             })
                     if f:
                         self._refresh_wf(fw_id)
-                
+
                 if 'checkpoint' in offline_data:
                     m_launch.touch_history(checkpoint=offline_data['checkpoint'])
                     self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
