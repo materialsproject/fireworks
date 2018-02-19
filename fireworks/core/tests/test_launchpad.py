@@ -17,7 +17,6 @@ import shutil
 import datetime
 from multiprocessing import Process
 import filecmp
-from random import randint
 
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
@@ -118,7 +117,7 @@ class LaunchPadTest(unittest.TestCase):
     def test_add_wfs(self):
         ftask = ScriptTask.from_str('echo "lorem ipsum"')
         wfs = []
-        for n in range(50):
+        for _ in range(50):
             # Add two workflows with 3 and 5 simple fireworks
             wf3 = Workflow([Firework(ftask, name='lorem') for _ in range(3)],
                            name='lorem wf')
