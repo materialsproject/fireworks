@@ -54,7 +54,8 @@ class LaunchPadTest(unittest.TestCase):
 
 
     def tearDown(self):
-        self.lp.reset(password=None,require_password=False)
+        self.lp.reset(password=None, require_password=False,
+                      max_reset_wo_password=1000)
         # Delete launch locations
         if os.path.exists(os.path.join('FW.json')):
             os.remove('FW.json')
@@ -112,6 +113,23 @@ class LaunchPadTest(unittest.TestCase):
         fw_ids = self.lp.get_fw_ids()
         self.assertEqual(len(fw_ids), 3)
         self.lp.reset('',require_password=False)
+
+    def test_add_wfs(self):
+        ftask = ScriptTask.from_str('echo "lorem ipsum"')
+        wfs = []
+        for _ in range(50):
+            # Add two workflows with 3 and 5 simple fireworks
+            wf3 = Workflow([Firework(ftask, name='lorem') for _ in range(3)],
+                           name='lorem wf')
+            wf5 = Workflow([Firework(ftask, name='lorem') for _ in range(5)],
+                           name='lorem wf')
+            wfs.extend([wf3, wf5])
+        self.lp.bulk_add_wfs(wfs)
+        num_fws_total = sum([len(wf.fws) for wf in wfs])
+        distinct_fw_ids = self.lp.fireworks.distinct('fw_id', {'name': 'lorem'})
+        self.assertEqual(len(distinct_fw_ids), num_fws_total)
+        num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem wf"}))
+        self.assertEqual(num_wfs_in_db, len(wfs))
 
 
 class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
