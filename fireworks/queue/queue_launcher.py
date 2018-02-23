@@ -214,7 +214,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     break
 
                 if njobs_queue and jobs_in_queue >= njobs_queue:
-                    l_logger.info("Jobs in queue ({}) exceeds "
+                    l_logger.info("Jobs in queue ({}) meets/exceeds "
                                   "maximum allowed ({})".format(jobs_in_queue,
                                                                 njobs_queue))
                     break
