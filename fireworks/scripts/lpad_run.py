@@ -608,7 +608,7 @@ def introspect(args):
 
 def get_launchdir(args):
     lp = get_lp(args)
-    ld = lp.get_launchdir(args.fw_id)
+    ld = lp.get_launchdir(args.fw_id, args.launch_idx)
     print(ld)
 
 
@@ -739,6 +739,7 @@ def lpad():
 
     get_launchdir_parser = subparsers.add_parser('get_launchdir', help='get the directory of the most recent launch of the given fw_id. A common usage is "cd `get_launchdir <FW_ID>`" to change the working directory that of the FW launch')
     get_launchdir_parser.add_argument('fw_id', type=int, help='fw_id to chdir to')
+    get_launchdir_parser.add_argument('--launch_idx', type=int, help='the index of the launch to get (default of -1 is most recent launch)', default=-1)
     get_launchdir_parser.set_defaults(func=get_launchdir)
 
     append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')

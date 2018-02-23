@@ -1647,14 +1647,16 @@ class LaunchPad(FWSerializable):
                 data.append({'launch_id': l['launch_id'], 'trackers': trackers})
         return data
 
-    def get_launchdir(self, fw_id):
+    def get_launchdir(self, fw_id, launch_idx=-1):
         """
         Returns the directory of the *most recent* launch of a fw_id
         Args:
             fw_id: (int) fw_id to get launch id for
+            launch_idx: (int) index of the launch to get. Default is -1, which is most recent.
         """
         fw = self.get_fw_by_id(fw_id)
-        return fw.launches[-1].launch_dir if len(fw.launches) > 0 else None
+        return fw.launches[launch_idx].launch_dir \
+            if len(fw.launches) > 0 else None
 
     def log_message(self, level, message):
         """
