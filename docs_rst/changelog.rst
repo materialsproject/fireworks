@@ -2,9 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.6.7**
+
+* lpad bulk insert workflow function - if you have 10 or more workflows to enter, do it 10X faster using this function (J. Montoya)
+* add ``lpad get_launchdir <FW_ID>`` function. e.g., can now do "cd `get_launchdir <FW_ID>` to change to the most recent launch dir of a FW.
+
 **v1.6.6**
 
 * Improve qlaunch rapidfire (with guidance from A. Gopalan)
+
 **v1.6.5**
 
 * sketch of MOAB queue adapter (with guidance from A. Gopalan)
