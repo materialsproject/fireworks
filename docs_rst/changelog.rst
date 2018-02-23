@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.6.8**
+
+* add ``launch_idx`` option to ``lpad get_launchdir`` command (as requested by S. Dwaraknath)
+
 **v1.6.7**
 
 * lpad bulk insert workflow function - if you have 10 or more workflows to enter, do it 10X faster using this function (J. Montoya)
