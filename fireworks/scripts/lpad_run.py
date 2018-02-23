@@ -606,6 +606,11 @@ def introspect(args):
         print('')
 
 
+def chdir_to_fw(args):
+    lp = get_lp(args)
+    lp.chdir_to_fw(args.fw_id)
+
+
 def track_fws(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, skip_pw=True)
@@ -730,6 +735,10 @@ def lpad():
     check_wf_parser.add_argument('-g', '--graph', type=str, help='graph the workflow in DOT format; allowed views: dataflow, controlflow, combined.', dest='view', default=None)
     check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot', default='workflow.dot')
     check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
+
+    chdir_to_fw_parser = subparsers.add_parser('chdir_to_fw', help='change the current working directory to the most recent launch of the given fw_id')
+    chdir_to_fw_parser.add_argument('fw_id', type=int, help='fw_id to chdir to')
+    chdir_to_fw_parser.set_defaults(func=chdir_to_fw)
 
     append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')
     append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], nargs=fw_id_kwargs["nargs"], help='parent firework ids')

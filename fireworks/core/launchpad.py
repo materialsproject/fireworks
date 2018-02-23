@@ -1647,6 +1647,18 @@ class LaunchPad(FWSerializable):
                 data.append({'launch_id': l['launch_id'], 'trackers': trackers})
         return data
 
+    def chdir_to_fw(self, fw_id):
+        fw = self.get_fw_by_id(fw_id)
+        if len(fw.launches) == 0:
+            raise ValueError("Cannot chdir: fw_id: {} has no launches!".
+                             format(fw_id))
+        launch_dir = fw.launches[-1].launch_dir
+        try:
+            os.chdir(launch_dir)
+        except:
+            raise RuntimeError("Error trying to chdir to: {}".
+                               format(launch_dir))
+
     def log_message(self, level, message):
         """
         Support for job packing
