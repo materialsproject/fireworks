@@ -1647,17 +1647,14 @@ class LaunchPad(FWSerializable):
                 data.append({'launch_id': l['launch_id'], 'trackers': trackers})
         return data
 
-    def chdir_to_fw(self, fw_id):
+    def get_launchdir(self, fw_id):
+        """
+        Returns the directory of the *most recent* launch of a fw_id
+        Args:
+            fw_id: (int) fw_id to get launch id for
+        """
         fw = self.get_fw_by_id(fw_id)
-        if len(fw.launches) == 0:
-            raise ValueError("Cannot chdir: fw_id: {} has no launches!".
-                             format(fw_id))
-        launch_dir = fw.launches[-1].launch_dir
-        try:
-            os.chdir(launch_dir)
-        except:
-            raise RuntimeError("Error trying to chdir to: {}".
-                               format(launch_dir))
+        return fw.launches[-1].launch_dir if len(fw.launches) > 0 else None
 
     def log_message(self, level, message):
         """
