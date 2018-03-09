@@ -57,7 +57,7 @@ class CommonAdapterTest(unittest.TestCase):
             hello="world", queue="random")
         print(p.get_script_str("."))
         import ruamel.yaml as yaml
-        print(yaml.dump(p.to_dict(), default_flow_style=False))
+        print(yaml.safe_dump(p.to_dict(), default_flow_style=False))
 
     def test_parse_njobs(self):
         pbs = """

@@ -43,11 +43,6 @@ import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
 
-# hack ruamel.yaml so it doesn't output ugly !!python/unicode all over the place in Py2.x
-if six.PY2:
-    import ruamel
-    ruamel.yaml.representer.Representer.add_representer(
-        unicode, lambda self, data: self.represent_str(data.encode('utf-8')))
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -235,7 +230,7 @@ class FWSerializable(object):
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
+            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
                              allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))

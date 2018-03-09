@@ -13,7 +13,6 @@ import ast
 import json
 import datetime
 import traceback
-import six
 from six.moves import input, zip
 
 from pymongo import DESCENDING, ASCENDING
@@ -31,12 +30,6 @@ from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
-
-# hack ruamel.yaml so it doesn't output ugly !!python/unicode all over the place in Py2.x
-if six.PY2:
-    import ruamel
-    ruamel.yaml.representer.Representer.add_representer(
-        unicode, lambda self, data: self.represent_str(data.encode('utf-8')))
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Shyue Ping Ong'
@@ -654,7 +647,7 @@ def get_output_func(format):
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
     else:
-        return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False),
+        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False),
                                    default_flow_style=False)
 
 
