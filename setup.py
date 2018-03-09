@@ -29,7 +29,7 @@ if __name__ == "__main__":
                       'fireworks.flask_site': ['static/images/*', 'static/css/*', 'static/js/*', 'templates/*'],
                       'fireworks.flask_site.static.font-awesome-4.0.3': ['css/*', 'fonts/*', 'less/*', 'scss/*']},
         zip_safe=False,
-        install_requires=['pyyaml>=3.11.0', 'pymongo>=3.3.0', 'Jinja2>=2.8.0',
+        install_requires=['ruamel.yaml>=0.15.35', 'pymongo>=3.3.0', 'Jinja2>=2.8.0',
                           'six>=1.10.0', 'monty>=1.0.1',
                           'python-dateutil>=2.5.3',
                           'tabulate>=0.7.5', 'flask>=0.11.1',

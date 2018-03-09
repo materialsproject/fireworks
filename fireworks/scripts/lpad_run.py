@@ -16,7 +16,7 @@ import traceback
 from six.moves import input, zip
 
 from pymongo import DESCENDING, ASCENDING
-import yaml
+import ruamel.yaml as yaml
 
 from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
@@ -134,7 +134,7 @@ def init_yaml(args):
         doc[k] = val if val else v
     doc["port"] = int(doc["port"])  # enforce the port as an int
     with open(args.config_file, "w") as f:
-        import yaml
+        import ruamel.yaml as yaml
         doc = LaunchPad.from_dict(doc).to_dict()
         doc = recursive_dict(doc, preserve_unicode=False)  # drop unicode
         yaml.dump(doc, f)

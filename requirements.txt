@@ -1,4 +1,4 @@
-PyYAML==3.12
+ruamel.yaml==0.15.35
 pymongo==3.6.0
 Jinja2==2.10
 six==1.11.0
