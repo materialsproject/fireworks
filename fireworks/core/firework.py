@@ -43,11 +43,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-class FiretaskMeta(abc.ABCMeta):
-    pass
-
-
-@add_metaclass(FiretaskMeta)
+@add_metaclass(abc.ABCMeta)
 class FiretaskBase(defaultdict, FWSerializable):
     """
     FiretaskBase is used like an abstract class that defines a computing task
