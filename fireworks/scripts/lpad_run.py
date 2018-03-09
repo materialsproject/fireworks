@@ -34,12 +34,9 @@ from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
 # hack ruamel.yaml so it doesn't output ugly !!python/unicode all over the place in Py2.x
 if six.PY2:
-    def my_unicode_repr(self, data):
-        return self.represent_str(data.encode('utf-8'))
-
     import ruamel
-    ruamel.yaml.representer.Representer.add_representer(unicode,
-                                                        my_unicode_repr)
+    ruamel.yaml.representer.Representer.add_representer(
+        unicode, lambda self, data: self.represent_str(data.encode('utf-8')))
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Shyue Ping Ong'
