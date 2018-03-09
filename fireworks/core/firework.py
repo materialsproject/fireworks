@@ -43,16 +43,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-class FiretaskMeta(abc.ABCMeta):
-    def __call__(cls, *args, **kwargs):
-        o = abc.ABCMeta.__call__(cls, *args, **kwargs)
-        for k in cls.required_params:
-            if k not in o:
-                raise ValueError("{}: Required parameter {} not specified!".format(cls, k))
-        return o
-
-
-@add_metaclass(FiretaskMeta)
+@add_metaclass(abc.ABCMeta)
 class FiretaskBase(defaultdict, FWSerializable):
     """
     FiretaskBase is used like an abstract class that defines a computing task
@@ -65,6 +56,10 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
+
+        for k in self.required_params:
+            if k not in self:
+                raise ValueError("{}: Required parameter {} not specified!".format(self, k))
 
     @abc.abstractmethod
     def run_task(self, fw_spec):
@@ -102,6 +97,19 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     def __repr__(self):
         return '<{}>:{}'.format(self.fw_name, dict(self))
+
+    # not strictly needed here for pickle/unpickle, but complements __setstate__
+    def __getstate__(self):
+        return self.to_dict()
+
+    # added to support pickle/unpickle
+    def __setstate__(self, state):
+        self.__init__(state)
+
+    # added to support pickle/unpickle
+    def __reduce__(self):
+        t = defaultdict.__reduce__(self)
+        return (t[0], (self.to_dict(),), t[2], t[3], t[4])
 
 
 class FWAction(FWSerializable):
