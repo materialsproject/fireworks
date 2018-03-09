@@ -40,10 +40,17 @@ import abc
 import sys
 import six
 import ruamel.yaml as yaml
-
 from monty.json import MontyDecoder, MSONable
-
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
+
+# hack ruamel.yaml so it doesn't output ugly !!python/unicode all over the place in Py2.x
+if six.PY2:
+    def my_unicode_repr(self, data):
+        return self.represent_str(data.encode('utf-8'))
+
+    import ruamel
+    ruamel.yaml.representer.Representer.add_representer(unicode,
+                                                        my_unicode_repr)
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'

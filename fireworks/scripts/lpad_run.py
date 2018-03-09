@@ -13,6 +13,7 @@ import ast
 import json
 import datetime
 import traceback
+import six
 from six.moves import input, zip
 
 from pymongo import DESCENDING, ASCENDING
@@ -30,6 +31,15 @@ from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
+
+# hack ruamel.yaml so it doesn't output ugly !!python/unicode all over the place in Py2.x
+if six.PY2:
+    def my_unicode_repr(self, data):
+        return self.represent_str(data.encode('utf-8'))
+
+    import ruamel
+    ruamel.yaml.representer.Representer.add_representer(unicode,
+                                                        my_unicode_repr)
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Shyue Ping Ong'
@@ -133,12 +143,9 @@ def init_yaml(args):
         val = input("Enter {} (default: {}) : ".format(k, v))
         doc[k] = val if val else v
     doc["port"] = int(doc["port"])  # enforce the port as an int
-    with open(args.config_file, "w") as f:
-        import ruamel.yaml as yaml
-        doc = LaunchPad.from_dict(doc).to_dict()
-        doc = recursive_dict(doc, preserve_unicode=False)  # drop unicode
-        yaml.dump(doc, f)
-        print("\nConfiguration written to {}!".format(args.config_file))
+    lp = LaunchPad.from_dict(doc)
+    lp.to_file(args.config_file)
+    print("\nConfiguration written to {}!".format(args.config_file))
 
 
 def reset(args):
