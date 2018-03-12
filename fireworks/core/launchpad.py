@@ -341,6 +341,8 @@ class LaunchPad(FWSerializable):
             old_new = dict(zip(
                 wf.id_fw.keys(),
                 range(new_fw_counter, new_fw_counter + len(wf.fws))))
+            for fw in wf.fws:
+                fw.fw_id = old_new[fw.fw_id]
             wf._reassign_ids(old_new)
             new_fw_counter += len(wf.fws)
 
