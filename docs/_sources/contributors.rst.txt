@@ -42,6 +42,7 @@ Additional contributions from:
 * Jacob Boes
 * Matt Horton
 * Eric Sivonxay
+* Matt Henderson
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh

@@ -2,11 +2,22 @@
 FireWorks Changelog
 ===================
 
+**v1.6.9**
+
+* important bugfix: bulk insert workflow inserted negative FW_ids (G. Petretto)
+* option to delete launch dirs when deleting workflow (G. Petretto)
+* modify FireTask to be compatible with pickle/unpickle (M. Henderson)
+* switch to ruamel.yaml to use more up to date YAML standard
+
 **v1.6.8**
+
+.. warning:: a bug in bulk insert workflow function resulting in negative FW_ids was fixed in v1.6.9
 
 * add ``launch_idx`` option to ``lpad get_launchdir`` command (as requested by S. Dwaraknath)
 
 **v1.6.7**
+
+.. warning:: a bug in bulk insert workflow function resulting in negative FW_ids was fixed in v1.6.9
 
 * lpad bulk insert workflow function - if you have 10 or more workflows to enter, do it 10X faster using this function (J. Montoya)
 * add ``lpad get_launchdir <FW_ID>`` function. e.g., can now do "cd `get_launchdir <FW_ID>` to change to the most recent launch dir of a FW.

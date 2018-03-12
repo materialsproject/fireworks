@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.core package &#8212; FireWorks 1.6.8 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.6.9 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.6.8',
+        VERSION:     '1.6.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.9 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -188,12 +188,6 @@ these multiple resources.</td>
 <code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="fireworks.core.firework.FiretaskMeta">
-<em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FiretaskMeta</code><a class="headerlink" href="#fireworks.core.firework.FiretaskMeta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABCMeta" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">abc.ABCMeta</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
@@ -1073,13 +1067,18 @@ marked for rerun and then defused.</li>
 
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.delete_wf">
-<code class="descname">delete_wf</code><span class="sig-paren">(</span><em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.delete_wf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_wf</code><span class="sig-paren">(</span><em>fw_id</em>, <em>delete_launch_dirs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.delete_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the workflow containing firework with the given id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Firework id</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Firework id</li>
+<li><strong>delete_launch_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – if True all the launch directories associated with
+the WF will be deleted as well, if possible.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -2120,7 +2119,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.9 documentation</a> &#187;</li> 
       </ul>
     </div>
 
