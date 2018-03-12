@@ -402,7 +402,13 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
     def test_delete_wf(self):
         # Run a firework before deleting Zeus
-        launch_rocket(self.lp, self.fworker)
+        rapidfire(self.lp, self.fworker, nlaunches=1)
+
+        # Get the launch dir
+        fw = self.lp.get_fw_by_id(self.lp.get_fw_ids({'state':'COMPLETED'})[0])
+        launches = fw.launches
+        first_ldir = launches[0].launch_dir
+        self.assertTrue(os.path.isdir(first_ldir))
 
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id)
@@ -413,6 +419,30 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.assertFalse(fw_ids)
         wf_ids = self.lp.get_wf_ids()
         self.assertFalse(wf_ids)
+        # Check that the launch dir has not been deleted
+        self.assertTrue(os.path.isdir(first_ldir))
+
+    def test_delete_wf_and_files(self):
+        # Run a firework before deleting Zeus
+        rapidfire(self.lp, self.fworker, nlaunches=1)
+
+        # Get the launch dir
+        fw = self.lp.get_fw_by_id(self.lp.get_fw_ids({'state':'COMPLETED'})[0])
+        launches = fw.launches
+        first_ldir = launches[0].launch_dir
+        self.assertTrue(os.path.isdir(first_ldir))
+
+        # Delete workflow containing Zeus.
+        self.lp.delete_wf(self.zeus_fw_id, delete_ldirs=True)
+        # Check if any fireworks and the workflow are available
+        with self.assertRaises(ValueError):
+            self.lp.get_wf_by_fw_id(self.zeus_fw_id)
+        fw_ids = self.lp.get_fw_ids()
+        self.assertFalse(fw_ids)
+        wf_ids = self.lp.get_wf_ids()
+        self.assertFalse(wf_ids)
+        # Check that the launch dir has not been deleted
+        self.assertFalse(os.path.isdir(first_ldir))
 
     def test_rerun_fws2(self):
         # Launch all fireworks
