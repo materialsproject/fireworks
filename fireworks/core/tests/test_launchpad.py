@@ -433,7 +433,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.assertTrue(os.path.isdir(first_ldir))
 
         # Delete workflow containing Zeus.
-        self.lp.delete_wf(self.zeus_fw_id, delete_ldirs=True)
+        self.lp.delete_wf(self.zeus_fw_id, delete_launch_dirs=True)
         # Check if any fireworks and the workflow are available
         with self.assertRaises(ValueError):
             self.lp.get_wf_by_fw_id(self.zeus_fw_id)
