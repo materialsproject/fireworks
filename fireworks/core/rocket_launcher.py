@@ -113,7 +113,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 # remove the empty shell of a directory
                 os.chdir(curdir)
                 os.rmdir(launcher_dir)
-            if num_launched == nlaunches:
+            if nlaunches > 0 and num_launched == nlaunches:
                 break
             if launchpad.run_exists(fworker):
                 skip_check = True  # don't wait, pull the next FW right away

@@ -235,7 +235,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 elif not return_code:
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
-                if num_launched == nlaunches:
+                if nlaunches > 0 and num_launched == nlaunches:
                     l_logger.info('Launched allowed number of '
                                   'jobs: {}'.format(num_launched))
                     break
@@ -248,7 +248,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 
-            if num_launched == nlaunches or \
+            if (nlaunches > 0 and num_launched == nlaunches) or \
                     (timeout and (datetime.now() - start_time).total_seconds()
                      >= timeout) or (nlaunches == 0 and not launchpad.run_exists(fworker)):
                 break
