@@ -16,7 +16,7 @@ import traceback
 from six.moves import input, zip
 
 from pymongo import DESCENDING, ASCENDING
-import yaml
+import ruamel.yaml as yaml
 
 from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, PW_CHECK_NUM, MAINTAIN_INTERVAL, CONFIG_FILE_DIR, \
@@ -133,12 +133,9 @@ def init_yaml(args):
         val = input("Enter {} (default: {}) : ".format(k, v))
         doc[k] = val if val else v
     doc["port"] = int(doc["port"])  # enforce the port as an int
-    with open(args.config_file, "w") as f:
-        import yaml
-        doc = LaunchPad.from_dict(doc).to_dict()
-        doc = recursive_dict(doc, preserve_unicode=False)  # drop unicode
-        yaml.dump(doc, f)
-        print("\nConfiguration written to {}!".format(args.config_file))
+    lp = LaunchPad.from_dict(doc)
+    lp.to_file(args.config_file)
+    print("\nConfiguration written to {}!".format(args.config_file))
 
 
 def reset(args):
@@ -324,7 +321,7 @@ def delete_wfs(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
-        lp.delete_wf(f)
+        lp.delete_wf(f, delete_launch_dirs=args.delete_launch_dirs)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished deleting {} WFs'.format(len(fw_ids)))
 
@@ -650,7 +647,7 @@ def get_output_func(format):
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
     else:
-        return lambda x: yaml.dump(recursive_dict(x, preserve_unicode=False),
+        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False),
                                    default_flow_style=False)
 
 
@@ -956,7 +953,10 @@ def lpad():
                                                       "Password or positive response to input prompt "
                                                       "required when modifying more than {} "
                                                       "entries.".format(PW_CHECK_NUM))
-    delete_wfs_parser.set_defaults(func=delete_wfs)
+    delete_wfs_parser.add_argument('--ldirs', help="the launch directories associated with the WF will "
+                                                   "be deleted as well, if possible", dest="delete_launch_dirs",
+                                   action='store_true')
+    delete_wfs_parser.set_defaults(func=delete_wfs, delete_launch_dirs=False)
 
     get_qid_parser = subparsers.add_parser('get_qids', help='get the queue id of a Firework')
     get_qid_parser.add_argument(*fw_id_args, **fw_id_kwargs)

@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FireWorks Changelog &#8212; FireWorks 1.6.8 documentation</title>
+    <title>FireWorks Changelog &#8212; FireWorks 1.6.9 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.6.8',
+        VERSION:     '1.6.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.9 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -52,11 +52,26 @@
             
   <div class="section" id="fireworks-changelog">
 <h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.6.9</strong></p>
+<ul class="simple">
+<li>important bugfix: bulk insert workflow inserted negative FW_ids (G. Petretto)</li>
+<li>option to delete launch dirs when deleting workflow (G. Petretto)</li>
+<li>modify FireTask to be compatible with pickle/unpickle (M. Henderson)</li>
+<li>switch to ruamel.yaml to use more up to date YAML standard</li>
+</ul>
 <p><strong>v1.6.8</strong></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">a bug in bulk insert workflow function resulting in negative FW_ids was fixed in v1.6.9</p>
+</div>
 <ul class="simple">
 <li>add <code class="docutils literal"><span class="pre">launch_idx</span></code> option to <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_launchdir</span></code> command (as requested by S. Dwaraknath)</li>
 </ul>
 <p><strong>v1.6.7</strong></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">a bug in bulk insert workflow function resulting in negative FW_ids was fixed in v1.6.9</p>
+</div>
 <ul class="simple">
 <li>lpad bulk insert workflow function - if you have 10 or more workflows to enter, do it 10X faster using this function (J. Montoya)</li>
 <li>add <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_launchdir</span> <span class="pre">&lt;FW_ID&gt;</span></code> function. e.g., can now do “cd <cite>get_launchdir &lt;FW_ID&gt;</cite> to change to the most recent launch dir of a FW.</li>
@@ -1014,7 +1029,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.8 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.6.9 documentation</a> &#187;</li> 
       </ul>
     </div>
 

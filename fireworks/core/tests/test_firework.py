@@ -31,7 +31,8 @@ class FiretaskBaseTest(unittest.TestCase):
             def run_task(self, fw_spec):
                 return self["hello"]
 
-        self.assertRaises(ValueError, DummyTask)
+        with self.assertRaises(ValueError):
+            DummyTask()
         d = DummyTask(hello="world")
         self.assertEqual(d.run_task({}), "world")
         d = DummyTask({"hello": "world2"})
@@ -43,6 +44,30 @@ class FiretaskBaseTest(unittest.TestCase):
 
         d = DummyTask2()
         self.assertRaises(NotImplementedError, d.run_task, {})
+
+
+class PickleTask(FiretaskBase):
+    required_params = ["test"]
+
+    def run_task(self, fw_spec):
+        return self["test"]
+
+
+class FiretaskPickleTest(unittest.TestCase):
+    def setUp(self):
+        import pickle
+        self.task = PickleTask(test=0)
+        self.pkl_task = pickle.dumps(self.task)
+        self.upkl_task = pickle.loads(self.pkl_task)
+
+    def test_init(self):
+        self.assertIsInstance(self.upkl_task, PickleTask)
+        self.assertEqual(PickleTask.from_dict(self.task.to_dict()), self.upkl_task)
+        self.assertEqual(dir(self.task), dir(self.upkl_task))
+
+        result_task = self.task.run_task({})
+        result_upkl_task = self.upkl_task.run_task({})
+        self.assertEqual(result_task, result_upkl_task)
 
 
 @explicit_serialize

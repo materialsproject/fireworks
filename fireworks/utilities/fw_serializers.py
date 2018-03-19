@@ -38,18 +38,11 @@ import importlib
 import datetime
 import abc
 import sys
-
-import yaml
-# Use CLoader for faster performance where possible.
-try:
-    from yaml import CLoader as Loader, CSafeDumper as Dumper
-except ImportError:
-    from yaml import Loader as Loader, SafeDumper as Dumper
 import six
-
+import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
-
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
+
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -237,8 +230,8 @@ class FWSerializable(object):
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
-            return yaml.dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                             allow_unicode=True, Dumper=Dumper)
+            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
+                             allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -258,7 +251,7 @@ class FWSerializable(object):
             return cls.from_dict(reconstitute_dates(json.loads(f_str)))
         elif f_format == 'yaml':
             return cls.from_dict(reconstitute_dates(
-                yaml.load(f_str, Loader=Loader)))
+                yaml.safe_load(f_str)))
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -394,7 +387,7 @@ def load_object_from_file(filename, f_format=None):
         if f_format == 'json':
             m_dict = reconstitute_dates(json.loads(f.read()))
         elif f_format == 'yaml':
-            m_dict = reconstitute_dates(yaml.load(f, Loader=Loader))
+            m_dict = reconstitute_dates(yaml.safe_load(f))
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 

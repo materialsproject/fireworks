@@ -381,7 +381,7 @@ class ImportDataTask(FireTaskBase):
         from functools import reduce
         import operator
         import json
-        import yaml
+        import ruamel.yaml as yaml
 
         filename = self['filename']
         mapstring = self['mapstring']
@@ -392,7 +392,7 @@ class ImportDataTask(FireTaskBase):
         fmt = filename.split('.')[-1]
         assert fmt in ['json', 'yaml']
         with open(filename, 'r') as inp:
-            data = json.load(inp) if fmt == 'json' else yaml.load(inp)
+            data = json.load(inp) if fmt == 'json' else yaml.safe_load(inp)
 
         leaf = reduce(operator.getitem, maplist[:-1], fw_spec)
         if isinstance(data, dict):

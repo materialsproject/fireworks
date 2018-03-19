@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 PyYAML==3.12
 pymongo==3.6.1
+=======
+ruamel.yaml==0.15.35
+pymongo==3.6.0
+>>>>>>> 1fe14bb686bca90bdbf102707ed596ada1a63002
 Jinja2==2.10
 six==1.11.0
 monty==1.0.2

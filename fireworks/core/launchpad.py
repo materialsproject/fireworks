@@ -12,6 +12,7 @@ import os
 import random
 import time
 import traceback
+import shutil
 from collections import OrderedDict, defaultdict
 from itertools import chain
 from tqdm import tqdm
@@ -341,6 +342,8 @@ class LaunchPad(FWSerializable):
             old_new = dict(zip(
                 wf.id_fw.keys(),
                 range(new_fw_counter, new_fw_counter + len(wf.fws))))
+            for fw in wf.fws:
+                fw.fw_id = old_new[fw.fw_id]
             wf._reassign_ids(old_new)
             new_fw_counter += len(wf.fws)
 
@@ -463,12 +466,14 @@ class LaunchPad(FWSerializable):
                         links_dict['metadata'], links_dict['created_on'],
                         links_dict['updated_on'], fw_states)
 
-    def delete_wf(self, fw_id):
+    def delete_wf(self, fw_id, delete_launch_dirs=False):
         """
         Delete the workflow containing firework with the given id.
 
         Args:
             fw_id (int): Firework id
+            delete_launch_dirs (bool): if True all the launch directories associated with
+                the WF will be deleted as well, if possible.
         """
         links_dict = self.workflows.find_one({'nodes': fw_id})
         fw_ids = links_dict["nodes"]
@@ -482,6 +487,14 @@ class LaunchPad(FWSerializable):
             if not self.fireworks.find_one({'$or': [{"launches": i}, {'archived_launches': i}],
                                             'fw_id': {"$nin": fw_ids}}, {'launch_id': 1}):
                 launch_ids.append(i)
+
+        if delete_launch_dirs:
+            launch_dirs = []
+            for i in launch_ids:
+                launch_dirs.append(self.launches.find_one({'launch_id': i}, {'launch_dir': 1})['launch_dir'])
+            print("Remove folders %s" % launch_dirs)
+            for d in launch_dirs:
+                shutil.rmtree(d, ignore_errors=True)
 
         print("Remove fws %s" % fw_ids)
         print("Remove launches %s" % launch_ids)

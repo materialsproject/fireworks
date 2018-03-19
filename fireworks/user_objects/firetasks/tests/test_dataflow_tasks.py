@@ -340,7 +340,7 @@ class ImportDataTaskTest(unittest.TestCase):
     def test_import_data_task(self):
         """ loads data from a file into spec """
         import json
-        import yaml
+        import ruamel.yaml as yaml
         temperature = {'value': 273.15, 'units': 'Kelvin'}
         spec = {'state parameters': {}}
         formats = {'json': json, 'yaml': yaml}
