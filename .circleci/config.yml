@@ -20,5 +20,5 @@ jobs:
       - run:
           name: Run fireworks tests
           command: |
-            source ~/tox_env36/bin/activate
+            source ~/tox_env/bin/activate
             tox
