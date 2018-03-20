@@ -1,48 +1,24 @@
 version: 2
 
 jobs:
-  py2:
-    working_directory: ~/fireworks
-    docker:
-      - image: circleci/python:2.7.14
-    steps:
-      - checkout
-      - run:
-          name: Make tox env
-          command: |
-            cd ~
-            virtualenv tox_env27
-            cd ~/fireworks
-            source ~/tox_env27/bin/activate
-            pip install tox tox-pyenv
-      - run:
-          name: Run fireworks tests
-          command: |
-            source ~/tox_env27/bin/activate
-            tox
-
-  py3:
+  build:
     working_directory: ~/fireworks
     docker:
       - image: circleci/python:3.6.2
     steps:
       - checkout
       - run:
-          name: Make tox env
+          name: Make tox env and setup mongo
           command: |
-            mkdir ~/tox_env36
-            python -m venv ~/tox_env36
-            source ~/tox_env36/bin/activate
+            mkdir ~/mongo
+            mkdir ~/mongo/data
+            mongod --dbpath ~/mongo/data &
+            mkdir ~/tox_env
+            python -m venv ~/tox_env
+            source ~/tox_env/bin/activate
             pip install tox tox-pyenv
       - run:
           name: Run fireworks tests
           command: |
             source ~/tox_env36/bin/activate
             tox
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - py3
-      - py2
