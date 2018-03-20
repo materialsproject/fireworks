@@ -1,0 +1,22 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/fireworks
+    docker:
+      - image: circleci/python:3.6.2
+      - image: circleci/mongo:3.7.3
+    steps:
+      - checkout
+      - run:
+          name: Make tox env and setup mongo
+          command: |
+            mkdir ~/tox_env
+            python -m venv ~/tox_env
+            source ~/tox_env/bin/activate
+            pip install tox tox-pyenv
+      - run:
+          name: Run fireworks tests
+          command: |
+            source ~/tox_env/bin/activate
+            tox
