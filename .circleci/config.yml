@@ -11,9 +11,6 @@ jobs:
       - run:
           name: Make tox env and setup mongo
           command: |
-            mkdir ~/mongo
-            mkdir ~/mongo/data
-            mongod --dbpath ~/mongo/data &
             mkdir ~/tox_env
             python -m venv ~/tox_env
             source ~/tox_env/bin/activate
