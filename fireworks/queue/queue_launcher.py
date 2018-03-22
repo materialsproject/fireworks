@@ -250,7 +250,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
 
             if (nlaunches > 0 and num_launched == nlaunches) or \
                     (timeout and (datetime.now() - start_time).total_seconds()
-                     >= timeout) or (nlaunches == 0 and not launchpad.run_exists(fworker)):
+                     >= timeout) or (nlaunches == 0 and not launchpad.future_run_exists(fworker)):
                 break
 
             l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
