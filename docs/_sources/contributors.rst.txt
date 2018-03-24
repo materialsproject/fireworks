@@ -54,6 +54,7 @@ Thanks for helpful discussions:
 * Stephen Bailey
 * Deborah Bard
 * Arun Gopalan
+* User: Primer
 
 .. _pymatgen: http://packages.python.org/pymatgen/
 .. _custodian: https://pypi.python.org/pypi/custodian

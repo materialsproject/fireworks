@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.7.1**
+
+* update FWS rapidfire launch logic (thanks to Primer for suggestions)
+* upgrade CircleCI testing (A. Dunn)
+
 **v1.6.9**
 
 * important bugfix: bulk insert workflow inserted negative FW_ids (G. Petretto)
