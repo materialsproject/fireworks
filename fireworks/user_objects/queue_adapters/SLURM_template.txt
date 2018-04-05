@@ -14,6 +14,7 @@
 #SBATCH --output=$${job_name}-%j.out
 #SBATCH --error=$${job_name}-%j.error
 #SBATCH --constraint=$${constraint}
+#SBATCH --signal=$${signal}
 
 $${pre_rocket}
 cd $${launch_dir}
