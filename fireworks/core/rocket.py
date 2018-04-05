@@ -240,7 +240,7 @@ class Rocket:
                               '_all_stored_data': all_stored_data,
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
-                Rocket.update_checkpoint(lp, launch_id, checkpoint)
+                Rocket.update_checkpoint(lp, launch_dir, launch_id, checkpoint)
  
                 if lp:
                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
@@ -418,21 +418,23 @@ class Rocket:
             return True
 
     @staticmethod
-    def update_checkpoint(launchpad, launch_id, checkpoint):
+    def update_checkpoint(launchpad, launch_dir, launch_id, checkpoint):
         """
         Helper function to update checkpoint
 
         Args:
             launchpad (LaunchPad): LaunchPad to ping with checkpoint data
+            launch_dir (str): directory in which FW_offline.json was created
             launch_id (int): launch id to update
             checkpoint (dict): checkpoint data
         """
         if launchpad:
             launchpad.ping_launch(launch_id, checkpoint=checkpoint)
         else:
-            offline_info = loadfn("FW_offline.json")
+            fpath = os.path.join(launch_dir, "FW_offline.json")
+            offline_info = loadfn(fpath)
             offline_info.update({"checkpoint": checkpoint})
-            dumpfn(offline_info, "FW_offline.json")
+            dumpfn(offline_info, fpath)
 
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
