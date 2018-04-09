@@ -76,7 +76,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
         return pw_check(args.fw_id, args, skip_pw)
     if args.query:
         query = ast.literal_eval(args.query)
-    if args.name and not args.launches_mode:
+    if args.name and 'launches_mode' in args and not args.launches_mode:
         query['name'] = args.name
     if args.state:
         query['state'] = args.state
