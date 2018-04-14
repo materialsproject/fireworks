@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Tips for designing Firetasks, FireWorks, and Workflows &#8212; FireWorks 1.7.1 documentation</title>
+    <title>Tips for designing Firetasks, FireWorks, and Workflows &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,8 +20,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +36,7 @@
         <li class="right" >
           <a href="dynamic_wf_tutorial.html" title="Dynamic Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -64,13 +55,13 @@
 <h2>Designing Firework specs<a class="headerlink" href="#designing-firework-specs" title="Permalink to this headline">¶</a></h2>
 <p>Recall that the <strong>spec</strong> of a Firework completely bootstraps a job and determines what will run. One of the major tasks as a FireWorks user is to decide how your <strong>spec</strong> is structured. We suggest you keep the following suggestions in mind:</p>
 <ol class="arabic simple">
-<li>In general, put any flexible input data as root keys in your <strong>spec</strong>, <em>outside</em> the <code class="docutils literal"><span class="pre">_tasks</span></code> section. An example of this was the <code class="docutils literal"><span class="pre">input_array</span></code> parameter that defined the numbers to add in our <code class="docutils literal"><span class="pre">Addition</span> <span class="pre">Task</span></code> (see the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">firetask tutorial</span></a>).</li>
+<li>In general, put any flexible input data as root keys in your <strong>spec</strong>, <em>outside</em> the <code class="docutils literal notranslate"><span class="pre">_tasks</span></code> section. An example of this was the <code class="docutils literal notranslate"><span class="pre">input_array</span></code> parameter that defined the numbers to add in our <code class="docutils literal notranslate"><span class="pre">Addition</span> <span class="pre">Task</span></code> (see the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">firetask tutorial</span></a>).</li>
 <li>Also put in the <strong>spec</strong> any metadata about your job that you want to query on later. You can perform rich MongoDB queries over the JSON document in the <strong>spec</strong>. Performance will be better for keys that are at the root of your <strong>spec</strong> versus nested within dicts.</li>
 <li>If you are using the <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">duplicate check feature</span></a>, also put in the spec any parameter needed to help verify that a job is truly duplicated. For example, you might provide a unique String that FireWorks can use to quickly check duplication between jobs without explicitly checking that every parameter of two jobs are the same.</li>
 </ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">You can also put input data needed by your Firetasks <em>within</em> the <code class="docutils literal"><span class="pre">_tasks</span></code> section of your <strong>spec</strong>. For example, the <code class="docutils literal"><span class="pre">ScriptTask</span></code> we explored defined the <code class="docutils literal"><span class="pre">script</span></code> input parameter within the <em>_tasks</em> section (see the <a class="reference internal" href="introduction.html"><span class="doc">introductory tutorial</span></a>). Generally, this technique makes querying on your parameters more difficult and can lead to input data repetition if you have many Firetasks that need to access the same data. However, its advantage is preventing namespace collisions between parameters used in different Firetasks or if when running the same Firetask multiple times. For example, you might have multiple <code class="docutils literal"><span class="pre">ScriptTask</span></code> instances in your Firework, and each needs its own distinct <code class="docutils literal"><span class="pre">script</span></code> rather than a global parameter. The default Firetasks built into FireWorks generally allow you to choose how you want to do things; for example, see the <code class="docutils literal"><span class="pre">_use_global_spec</span></code> option in the <a class="reference internal" href="scripttask.html"><span class="doc">ScriptTask documentation</span></a>.</p>
+<p class="last">You can also put input data needed by your Firetasks <em>within</em> the <code class="docutils literal notranslate"><span class="pre">_tasks</span></code> section of your <strong>spec</strong>. For example, the <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> we explored defined the <code class="docutils literal notranslate"><span class="pre">script</span></code> input parameter within the <em>_tasks</em> section (see the <a class="reference internal" href="introduction.html"><span class="doc">introductory tutorial</span></a>). Generally, this technique makes querying on your parameters more difficult and can lead to input data repetition if you have many Firetasks that need to access the same data. However, its advantage is preventing namespace collisions between parameters used in different Firetasks or if when running the same Firetask multiple times. For example, you might have multiple <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> instances in your Firework, and each needs its own distinct <code class="docutils literal notranslate"><span class="pre">script</span></code> rather than a global parameter. The default Firetasks built into FireWorks generally allow you to choose how you want to do things; for example, see the <code class="docutils literal notranslate"><span class="pre">_use_global_spec</span></code> option in the <a class="reference internal" href="scripttask.html"><span class="doc">ScriptTask documentation</span></a>.</p>
 </div>
 </div>
 <div class="section" id="multi-firetask-or-multi-firework">
@@ -181,12 +172,14 @@ for duplication with past runs</td>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -208,13 +201,13 @@ for duplication with past runs</td>
         <li class="right" >
           <a href="dynamic_wf_tutorial.html" title="Dynamic Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

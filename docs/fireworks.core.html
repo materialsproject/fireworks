@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.core package &#8212; FireWorks 1.7.1 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -26,8 +18,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -73,7 +64,7 @@
 <dl class="class">
 <dt id="fireworks.core.firework.FWAction">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FWAction</code><span class="sig-paren">(</span><em>stored_data=None</em>, <em>exit=False</em>, <em>update_spec=None</em>, <em>mod_spec=None</em>, <em>additions=None</em>, <em>detours=None</em>, <em>defuse_children=False</em>, <em>defuse_workflow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
 Firetask completes). The FWAction allows a user to store rudimentary output data as well
 as return commands that alter the workflow.</p>
@@ -131,20 +122,21 @@ current FW’s children)</li>
 <dl class="class">
 <dt id="fireworks.core.firework.FireTaskBase">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FireTaskBase</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FireTaskBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.firework.FiretaskBase">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">FiretaskBase</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>FiretaskBase is used like an abstract class that defines a computing task
 (Firetask). All Firetasks should inherit from FiretaskBase.</p>
 <p>You can set parameters of a Firetask like you’d use a dict.</p>
 <dl class="method">
 <dt id="fireworks.core.firework.FiretaskBase.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="fireworks.core.firework.FiretaskBase.from_dict">
@@ -193,11 +185,11 @@ these multiple resources.</td>
 <dl class="class">
 <dt id="fireworks.core.firework.Firework">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Firework</code><span class="sig-paren">(</span><em>tasks</em>, <em>spec=None</em>, <em>name=None</em>, <em>launches=None</em>, <em>archived_launches=None</em>, <em>state='WAITING'</em>, <em>created_on=None</em>, <em>fw_id=None</em>, <em>parents=None</em>, <em>updated_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Firework is a workflow step and might be contain several Firetasks.</p>
 <dl class="attribute">
 <dt id="fireworks.core.firework.Firework.STATE_RANKS">
-<code class="descname">STATE_RANKS</code><em class="property"> = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED': 0, 'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4, 'COMPLETED': 5}</em><a class="headerlink" href="#fireworks.core.firework.Firework.STATE_RANKS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">STATE_RANKS</code><em class="property"> = {'ARCHIVED': -2, 'COMPLETED': 5, 'DEFUSED': 0, 'FIZZLED': -1, 'PAUSED': 0, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4, 'WAITING': 1}</em><a class="headerlink" href="#fireworks.core.firework.Firework.STATE_RANKS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -213,10 +205,10 @@ these multiple resources.</td>
 <li><strong>launches</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Launch" title="fireworks.core.firework.Launch"><em>Launch</em></a><em>]</em>) – a list of Launch objects of this Firework.</li>
 <li><strong>archived_launches</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Launch" title="fireworks.core.firework.Launch"><em>Launch</em></a><em>]</em>) – a list of archived Launch objects of this Firework.</li>
 <li><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – the state of the FW (e.g. WAITING, RUNNING, COMPLETED, ARCHIVED)</li>
-<li><strong>created_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#module-datetime" title="(in Python v3.6)"><em>datetime</em></a>) – time of creation</li>
+<li><strong>created_on</strong> (<em>datetime</em>) – time of creation</li>
 <li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – an identification number for this Firework.</li>
 <li><strong>parents</strong> (<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a><em> or </em><em>[</em><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a><em>]</em>) – list of parent FWs this FW depends on.</li>
-<li><strong>updated_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#module-datetime" title="(in Python v3.6)"><em>datetime</em></a>) – last time the STATE was updated.</li>
+<li><strong>updated_on</strong> (<em>datetime</em>) – last time the STATE was updated.</li>
 </ul>
 </td>
 </tr>
@@ -251,7 +243,7 @@ these multiple resources.</td>
 <dl class="class">
 <dt id="fireworks.core.firework.Launch">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Launch</code><span class="sig-paren">(</span><em>state</em>, <em>launch_dir</em>, <em>fworker=None</em>, <em>host=None</em>, <em>ip=None</em>, <em>trackers=None</em>, <em>action=None</em>, <em>state_history=None</em>, <em>launch_id=None</em>, <em>fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Launch encapsulates data about a specific run of a Firework on a computing resource.</p>
 <dl class="method">
 <dt id="fireworks.core.firework.Launch.__init__">
@@ -358,7 +350,7 @@ is still alive.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#module-datetime" title="(in Python v3.6)"><em>datetime</em></a>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_time</strong> (<em>datetime</em>) – </td>
 </tr>
 </tbody>
 </table>
@@ -369,7 +361,7 @@ is still alive.</p>
 <dl class="class">
 <dt id="fireworks.core.firework.Tracker">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Tracker</code><span class="sig-paren">(</span><em>filename</em>, <em>nlines=25</em>, <em>content=''</em>, <em>allow_zipped=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Tracker monitors a file and returns the last N lines for updating the Launch object.</p>
 <dl class="attribute">
 <dt id="fireworks.core.firework.Tracker.MAX_TRACKER_LINES">
@@ -428,17 +420,18 @@ is still alive.</p>
 <dl class="class">
 <dt id="fireworks.core.firework.Workflow">
 <em class="property">class </em><code class="descclassname">fireworks.core.firework.</code><code class="descname">Workflow</code><span class="sig-paren">(</span><em>fireworks</em>, <em>links_dict=None</em>, <em>name=None</em>, <em>metadata=None</em>, <em>created_on=None</em>, <em>updated_on=None</em>, <em>fw_states=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Workflow connects a group of FireWorks in an execution order.</p>
 <dl class="class">
 <dt id="fireworks.core.firework.Workflow.Links">
 <em class="property">class </em><code class="descname">Links</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>An inner class for storing the DAG links between FireWorks</p>
 <dl class="method">
 <dt id="fireworks.core.firework.Workflow.Links.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="fireworks.core.firework.Workflow.Links.from_dict">
@@ -501,8 +494,8 @@ update parent_links</p>
 <li><strong>links_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – links between the FWs as (parent_id):[(child_id1, child_id2)]</li>
 <li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – name of workflow.</li>
 <li><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – metadata for this Workflow.</li>
-<li><strong>created_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#module-datetime" title="(in Python v3.6)"><em>datetime</em></a>) – time of creation</li>
-<li><strong>updated_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#module-datetime" title="(in Python v3.6)"><em>datetime</em></a>) – time of update</li>
+<li><strong>created_on</strong> (<em>datetime</em>) – time of creation</li>
+<li><strong>updated_on</strong> (<em>datetime</em>) – time of update</li>
 <li><strong>fw_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – leave this alone unless you are purposefully creating a Lazy-style WF</li>
 </ul>
 </td>
@@ -710,7 +703,7 @@ children dont have any other parents).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reset_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – if <code class="docutils literal"><span class="pre">True</span></code>, give each Firework a new id.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reset_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, give each Firework a new id.</td>
 </tr>
 </tbody>
 </table>
@@ -761,7 +754,7 @@ children dont have any other parents).</p>
 <dl class="class">
 <dt id="fireworks.core.fworker.FWorker">
 <em class="property">class </em><code class="descclassname">fireworks.core.fworker.</code><code class="descname">FWorker</code><span class="sig-paren">(</span><em>name='Automatically generated Worker'</em>, <em>category=''</em>, <em>query=None</em>, <em>env=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.fworker.FWorker.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>name='Automatically generated Worker'</em>, <em>category=''</em>, <em>query=None</em>, <em>env=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.__init__" title="Permalink to this definition">¶</a></dt>
@@ -778,7 +771,7 @@ pull jobs of multiple categories, use a list of str.</li>
 <li><strong>env</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – a dict of special environment variables for the resource.
 This env is passed to running Firetasks as a _fw_env in the
 fw_spec, which provides for abstraction of resource-specific
-commands or settings.  See <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a>
+commands or settings.  See <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a>
 for information on how to use this env variable in Firetasks.</li>
 </ul>
 </td>
@@ -817,7 +810,7 @@ for information on how to use this env variable in Firetasks.</li>
 <dl class="class">
 <dt id="fireworks.core.launchpad.LaunchPad">
 <em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LaunchPad</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>name='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>The LaunchPad manages the FireWorks database.</p>
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.__init__">
@@ -858,7 +851,7 @@ for information on how to use this env variable in Firetasks.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – launch id</li>
-<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#id" title="(in Python v3.6)"><em>id</em></a>) – firework id</li>
+<li><strong>fw_id</strong> (<em>id</em>) – firework id</li>
 <li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – </li>
 </ul>
 </td>
@@ -1340,7 +1333,7 @@ this then returns the <em>first</em> fw_id in that range</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#id" title="(in Python v3.6)"><em>id</em></a>) – firework id</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<em>id</em>) – firework id</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list tracker dicts</td>
 </tr>
@@ -1530,7 +1523,7 @@ Launch.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – </li>
-<li><strong>ptime</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#module-datetime" title="(in Python v3.6)"><em>datetime</em></a>) – </li>
+<li><strong>ptime</strong> (<em>datetime</em>) – </li>
 </ul>
 </td>
 </tr>
@@ -1778,7 +1771,7 @@ collection.</li>
 <dl class="class">
 <dt id="fireworks.core.launchpad.LazyFirework">
 <em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LazyFirework</code><span class="sig-paren">(</span><em>fw_id</em>, <em>fw_coll</em>, <em>launch_coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A LazyFirework only has the fw_id, and retrieves other data just-in-time.
 This representation can speed up Workflow loading as only “important” FWs need to be
 fully loaded.</p>
@@ -1880,7 +1873,7 @@ fully loaded.</p>
 <dl class="exception">
 <dt id="fireworks.core.launchpad.LockedWorkflowError">
 <em class="property">exception </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LockedWorkflowError</code><a class="headerlink" href="#fireworks.core.launchpad.LockedWorkflowError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">ValueError</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Error raised if the context manager WFLock can’t acquire the lock on the WF within the selected
 time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (WFLOCK_EXPIRATION_KILL)</p>
 </dd></dl>
@@ -1888,7 +1881,7 @@ time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (
 <dl class="class">
 <dt id="fireworks.core.launchpad.WFLock">
 <em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">WFLock</code><span class="sig-paren">(</span><em>lp</em>, <em>fw_id</em>, <em>expire_secs=300</em>, <em>kill=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Lock a Workflow, i.e. for performing update operations
 Raises a LockedWorkflowError if the lock couldn’t be acquired withing expire_secs and kill==False.
 Calling functions are responsible for handling the error in order to avoid database inconsistencies.</p>
@@ -1919,7 +1912,7 @@ Calling functions are responsible for handling the error in order to avoid datab
 <dl class="class">
 <dt id="fireworks.core.rocket.Rocket">
 <em class="property">class </em><code class="descclassname">fireworks.core.rocket.</code><code class="descname">Rocket</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The Rocket fetches a workflow step from the FireWorks database and executes it.</p>
 <dl class="method">
 <dt id="fireworks.core.rocket.Rocket.__init__">
@@ -1954,7 +1947,7 @@ a caught exception.  Default False.</td>
 
 <dl class="staticmethod">
 <dt id="fireworks.core.rocket.Rocket.update_checkpoint">
-<em class="property">static </em><code class="descname">update_checkpoint</code><span class="sig-paren">(</span><em>launchpad</em>, <em>launch_id</em>, <em>checkpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">update_checkpoint</code><span class="sig-paren">(</span><em>launch_dir</em>, <em>launch_id</em>, <em>checkpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to update checkpoint</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1962,6 +1955,7 @@ a caught exception.  Default False.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – LaunchPad to ping with checkpoint data</li>
+<li><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – directory in which FW_offline.json was created</li>
 <li><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – launch id to update</li>
 <li><strong>checkpoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – checkpoint data</li>
 </ul>
@@ -2098,12 +2092,14 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -2119,13 +2115,13 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

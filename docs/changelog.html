@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FireWorks Changelog &#8212; FireWorks 1.7.1 documentation</title>
+    <title>FireWorks Changelog &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -27,8 +19,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -41,7 +32,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -52,6 +43,12 @@
             
   <div class="section" id="fireworks-changelog">
 <h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.7.2</strong></p>
+<ul class="simple">
+<li>fix FW_offline if job changes directory</li>
+<li>fixed lpad cli when performing wflow operations (R. Gowers)</li>
+<li>Add signal to SLURM queue adapter (S. Dwaraknath)</li>
+</ul>
 <p><strong>v1.7.1</strong></p>
 <ul class="simple">
 <li>update FWS rapidfire launch logic (thanks to Primer for suggestions)</li>
@@ -70,7 +67,7 @@
 <p class="last">a bug in bulk insert workflow function resulting in negative FW_ids was fixed in v1.6.9</p>
 </div>
 <ul class="simple">
-<li>add <code class="docutils literal"><span class="pre">launch_idx</span></code> option to <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_launchdir</span></code> command (as requested by S. Dwaraknath)</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">launch_idx</span></code> option to <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">get_launchdir</span></code> command (as requested by S. Dwaraknath)</li>
 </ul>
 <p><strong>v1.6.7</strong></p>
 <div class="admonition warning">
@@ -79,7 +76,7 @@
 </div>
 <ul class="simple">
 <li>lpad bulk insert workflow function - if you have 10 or more workflows to enter, do it 10X faster using this function (J. Montoya)</li>
-<li>add <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">get_launchdir</span> <span class="pre">&lt;FW_ID&gt;</span></code> function. e.g., can now do “cd <cite>get_launchdir &lt;FW_ID&gt;</cite> to change to the most recent launch dir of a FW.</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">get_launchdir</span> <span class="pre">&lt;FW_ID&gt;</span></code> function. e.g., can now do “cd <cite>get_launchdir &lt;FW_ID&gt;</cite> to change to the most recent launch dir of a FW.</li>
 </ul>
 <p><strong>v1.6.6</strong></p>
 <ul class="simple">
@@ -88,7 +85,7 @@
 <p><strong>v1.6.5</strong></p>
 <ul class="simple">
 <li>sketch of MOAB queue adapter (with guidance from A. Gopalan)</li>
-<li>add option to <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">webgui</span></code> for number of server processes (D. Winston)</li>
+<li>add option to <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">webgui</span></code> for number of server processes (D. Winston)</li>
 <li>more sanity checks to workflow (I. Kondov)</li>
 </ul>
 <p><strong>v1.6.4</strong></p>
@@ -99,13 +96,13 @@
 <p><strong>v1.6.3</strong></p>
 <ul class="simple">
 <li>allow FWorker to have multiple categories (thanks to Johannes Jansson for the suggestion)</li>
-<li>FWorker can set <code class="docutils literal"><span class="pre">__none__</span></code> for category which only pulls jobs with empty categories</li>
+<li>FWorker can set <code class="docutils literal notranslate"><span class="pre">__none__</span></code> for category which only pulls jobs with empty categories</li>
 </ul>
 <p><strong>v1.6.2</strong></p>
 <ul class="simple">
 <li>lpad argparser to allow comma separated lists when using -i and –fw_id (E. Sivonxay)</li>
 <li>important fix to cmd_line_tests.sh</li>
-<li><code class="docutils literal"><span class="pre">pdb_on_exception</span></code> option to use Python debugger to debug failed jobs (J. Montoya)</li>
+<li><code class="docutils literal notranslate"><span class="pre">pdb_on_exception</span></code> option to use Python debugger to debug failed jobs (J. Montoya)</li>
 </ul>
 <p><strong>v1.6.1</strong></p>
 <ul class="simple">
@@ -170,7 +167,7 @@
 <p class="last">pip may require manual dependency installation in this distribution</p>
 </div>
 <ul class="simple">
-<li>Add new protocol for file transfer using <code class="docutils literal"><span class="pre">_files_in</span></code> and <code class="docutils literal"><span class="pre">_files_out</span></code> spec params (S.P. Ong)</li>
+<li>Add new protocol for file transfer using <code class="docutils literal notranslate"><span class="pre">_files_in</span></code> and <code class="docutils literal notranslate"><span class="pre">_files_out</span></code> spec params (S.P. Ong)</li>
 <li>update docs location to <a class="reference external" href="https://materialsproject.github.io/fireworks">https://materialsproject.github.io/fireworks</a></li>
 </ul>
 <p><strong>v1.4.6</strong></p>
@@ -276,7 +273,7 @@
 <ul class="simple">
 <li>Load default FWorker location when running launch commands from Python</li>
 <li>qlaunch: default maxjobs_queue is zero, meaning don’t automatically restrict to 10 jobs in queue</li>
-<li>Add –wfquery and –fwquery options to <code class="docutils literal"><span class="pre">lpad_webgui</span></code> for advanced users (alpha version)</li>
+<li>Add –wfquery and –fwquery options to <code class="docutils literal notranslate"><span class="pre">lpad_webgui</span></code> for advanced users (alpha version)</li>
 </ul>
 <p><strong>v1.3.2</strong></p>
 <ul class="simple">
@@ -288,7 +285,7 @@
 <ul class="simple">
 <li>FileTransferTask has max_retry parameter (D. Dotson)</li>
 <li>Allow copying workflows but w/reset ids (D. Dotson)</li>
-<li>add <code class="docutils literal"><span class="pre">max_loops</span></code> option to rlaunch; this allows you to limit infinite mode to a few cycles</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">max_loops</span></code> option to rlaunch; this allows you to limit infinite mode to a few cycles</li>
 </ul>
 <p><strong>v1.3.0</strong></p>
 <ul class="simple">
@@ -298,14 +295,14 @@
 </ul>
 <p><strong>v1.2.9</strong></p>
 <ul class="simple">
-<li>add <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">unlock</span></code> command to force unlock of workflows</li>
-<li>add <code class="docutils literal"><span class="pre">--timeout</span></code> option for rapidfire launches</li>
-<li>add <code class="docutils literal"><span class="pre">user</span></code> parameter for FileTransferTask (D. Dotson)</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">unlock</span></code> command to force unlock of workflows</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">--timeout</span></code> option for rapidfire launches</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">user</span></code> parameter for FileTransferTask (D. Dotson)</li>
 <li>fix bug in FileTransferTask (D. Dotson)</li>
 </ul>
 <p><strong>v1.2.8</strong></p>
 <ul class="simple">
-<li>fix spelling of <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> (thanks to specter119)</li>
+<li>fix spelling of <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code> (thanks to specter119)</li>
 </ul>
 <p><strong>v1.2.7</strong></p>
 <ul class="simple">
@@ -329,7 +326,7 @@
 <p><strong>v1.2.4</strong></p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The deprecated <code class="docutils literal"><span class="pre">FireWork</span></code> class has been removed. Be sure to use <code class="docutils literal"><span class="pre">Firework</span></code> (see capitalization). Also, use <code class="docutils literal"><span class="pre">Workflow.from_Firework()</span></code>.</p>
+<p class="last">The deprecated <code class="docutils literal notranslate"><span class="pre">FireWork</span></code> class has been removed. Be sure to use <code class="docutils literal notranslate"><span class="pre">Firework</span></code> (see capitalization). Also, use <code class="docutils literal notranslate"><span class="pre">Workflow.from_Firework()</span></code>.</p>
 </div>
 <ul class="simple">
 <li>remove deprecated capitalization of FireWork</li>
@@ -374,7 +371,7 @@
 <p><strong>v1.1.7</strong></p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">FWS now properly handles workflow states for <code class="docutils literal"><span class="pre">allow_fizzled_parents</span></code>. Run <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">refresh</span> <span class="pre">-s</span> <span class="pre">FIZZLED</span></code> to update your DB.</p>
+<p class="last">FWS now properly handles workflow states for <code class="docutils literal notranslate"><span class="pre">allow_fizzled_parents</span></code>. Run <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">refresh</span> <span class="pre">-s</span> <span class="pre">FIZZLED</span></code> to update your DB.</p>
 </div>
 <ul class="simple">
 <li>fix WFLock causing inconsistent states in workflows; detect such cases in detect_lostruns; add –refresh as fix (G. Petretto)</li>
@@ -385,8 +382,8 @@
 </ul>
 <p><strong>v1.1.6</strong></p>
 <ul class="simple">
-<li>add beta of <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">introspect</span></code> (no docs yet)</li>
-<li>fix <code class="docutils literal"><span class="pre">-q</span></code> option of <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">report</span></code> (D. Winston)</li>
+<li>add beta of <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">introspect</span></code> (no docs yet)</li>
+<li>fix <code class="docutils literal notranslate"><span class="pre">-q</span></code> option of <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">report</span></code> (D. Winston)</li>
 </ul>
 <p><strong>v1.1.5</strong></p>
 <div class="admonition caution">
@@ -394,7 +391,7 @@
 <p class="last">FWS now decodes monty-style objects, e.g. pymatgen. If you encounter decoding issues, set DECODE_MONTY=False in your fw_config.</p>
 </div>
 <ul class="simple">
-<li>completely reimplemented reporting (type <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">report</span></code> for an example)</li>
+<li>completely reimplemented reporting (type <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">report</span></code> for an example)</li>
 <li>both encode and decode for monty-style objects</li>
 <li>safer require_password=False option</li>
 <li>fix njobs for SLURM (P. Huck)</li>
@@ -492,7 +489,7 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Users of the frontend will need to install Flask, <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">flask;</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">flask-paginate</span></code>. Django is no longer required for the frontend.</p>
+<p class="last">Users of the frontend will need to install Flask, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">flask;</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">flask-paginate</span></code>. Django is no longer required for the frontend.</p>
 </div>
 <ul class="simple">
 <li>Ability to add FireWorks to existing workflow (launchpad.add_wf_to_fwids)</li>
@@ -615,7 +612,7 @@
 <li>internal cleanups (don’t rerun ARCHIVED jobs, skip reruns of WAITING jobs)</li>
 <li>stop rapidfire upon error in queue launch</li>
 <li>rerun fw on unreserve</li>
-<li>add methods to work with queue ids (<code class="docutils literal"><span class="pre">cancel_qid</span></code>, <code class="docutils literal"><span class="pre">--qid</span></code> option in <code class="docutils literal"><span class="pre">get_fws</span></code>, and <code class="docutils literal"><span class="pre">get_qid</span></code>)</li>
+<li>add methods to work with queue ids (<code class="docutils literal notranslate"><span class="pre">cancel_qid</span></code>, <code class="docutils literal notranslate"><span class="pre">--qid</span></code> option in <code class="docutils literal notranslate"><span class="pre">get_fws</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_qid</span></code>)</li>
 </ul>
 <p><strong>v0.81</strong></p>
 <div class="admonition note">
@@ -714,15 +711,15 @@
 <p><strong>v0.64</strong></p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">This version introduced a major bug in <code class="docutils literal"><span class="pre">qlaunch</span> <span class="pre">singleshot</span></code> via the command line (fixed in v0.65)</p>
+<p class="last">This version introduced a major bug in <code class="docutils literal notranslate"><span class="pre">qlaunch</span> <span class="pre">singleshot</span></code> via the command line (fixed in v0.65)</p>
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">This version introduced a bug in <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">reset</span></code> via the command line (fixed in v0.66)</p>
+<p class="last">This version introduced a bug in <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">reset</span></code> via the command line (fixed in v0.66)</p>
 </div>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The <code class="docutils literal"><span class="pre">add_dir</span></code> command is incorporated into the <code class="docutils literal"><span class="pre">add</span></code> command. e.g. <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">add</span> <span class="pre">my_dir/*.yaml</span></code>. Many command line options that allowed comma-separated lists are now space-separated lists to better employ argparse (see updated docs).</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">add_dir</span></code> command is incorporated into the <code class="docutils literal notranslate"><span class="pre">add</span></code> command. e.g. <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">add</span> <span class="pre">my_dir/*.yaml</span></code>. Many command line options that allowed comma-separated lists are now space-separated lists to better employ argparse (see updated docs).</p>
 </div>
 <ul class="simple">
 <li>clean up argument parsing (S.P. Ong)</li>
@@ -758,7 +755,7 @@
 <h2>v0.6<a class="headerlink" href="#v0-6" title="Permalink to this headline">¶</a></h2>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The QueueAdapter code has been refactored in a way that is not fully backward compatible. Chances are, you will have to modify any <code class="docutils literal"><span class="pre">my_qadapter.yaml</span></code> files you have so that the <code class="docutils literal"><span class="pre">_fw_name</span></code> is set to <em>CommonAdapter</em> and a new <code class="docutils literal"><span class="pre">_fw_q_type</span></code> parameter is set to <em>PBS</em>, <em>SGE</em>, or <em>SLURM</em>.</p>
+<p class="last">The QueueAdapter code has been refactored in a way that is not fully backward compatible. Chances are, you will have to modify any <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code> files you have so that the <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> is set to <em>CommonAdapter</em> and a new <code class="docutils literal notranslate"><span class="pre">_fw_q_type</span></code> parameter is set to <em>PBS</em>, <em>SGE</em>, or <em>SLURM</em>.</p>
 </div>
 <ul class="simple">
 <li>Major refactor of QueueAdapters so it is easy to change template files without adding new code (S.P. Ong)</li>
@@ -767,7 +764,7 @@
 </ul>
 <p><strong>v0.54</strong></p>
 <ul class="simple">
-<li>Add <code class="docutils literal"><span class="pre">--exclude</span></code> and <code class="docutils literal"><span class="pre">--include</span></code> options to Trackers + minor formatting changes</li>
+<li>Add <code class="docutils literal notranslate"><span class="pre">--exclude</span></code> and <code class="docutils literal notranslate"><span class="pre">--include</span></code> options to Trackers + minor formatting changes</li>
 <li>use config file in current dir if possible</li>
 </ul>
 <p><strong>v0.53</strong></p>
@@ -791,11 +788,11 @@
 <h2>v0.5<a class="headerlink" href="#v0-5" title="Permalink to this headline">¶</a></h2>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The command/function <code class="docutils literal"><span class="pre">detect_fizzled</span></code> has changed to <code class="docutils literal"><span class="pre">detect_lostruns</span></code>, changed old arguments and added additional ones</p>
+<p class="last">The command/function <code class="docutils literal notranslate"><span class="pre">detect_fizzled</span></code> has changed to <code class="docutils literal notranslate"><span class="pre">detect_lostruns</span></code>, changed old arguments and added additional ones</p>
 </div>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The command/function <code class="docutils literal"><span class="pre">detect_unreserved</span></code> has changed - refactored “mark” to “fizzle”</p>
+<p class="last">The command/function <code class="docutils literal notranslate"><span class="pre">detect_unreserved</span></code> has changed - refactored “mark” to “fizzle”</p>
 </div>
 <ul class="simple">
 <li>add option to “rerun” when detecting lost runs</li>
@@ -824,7 +821,7 @@
 </ul>
 <p><strong>v0.41</strong></p>
 <ul class="simple">
-<li>add <code class="docutils literal"><span class="pre">set_priority</span></code> function to LaunchPad</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">set_priority</span></code> function to LaunchPad</li>
 <li>minor bug fixes related to multi-launcher and default queue params</li>
 </ul>
 </div>
@@ -836,20 +833,20 @@
 <p><strong>v0.37</strong></p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The default behavior in ScriptTask is now <code class="docutils literal"><span class="pre">fizzle_bad_rc</span></code>.</p>
+<p class="last">The default behavior in ScriptTask is now <code class="docutils literal notranslate"><span class="pre">fizzle_bad_rc</span></code>.</p>
 </div>
 <ul class="simple">
-<li>add <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">add_scripts</span></code></li>
-<li><code class="docutils literal"><span class="pre">fizzle_bad_rc</span></code> by default in ScriptTask</li>
+<li>add <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">add_scripts</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">fizzle_bad_rc</span></code> by default in ScriptTask</li>
 <li>add FWorker() by default in rlaunch</li>
 </ul>
 <p><strong>v0.36</strong></p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The <code class="docutils literal"><span class="pre">rerun_fw</span></code>, <code class="docutils literal"><span class="pre">defuse_fw</span></code>, and <code class="docutils literal"><span class="pre">reignite_fw</span></code> commands are now pluralized, <code class="docutils literal"><span class="pre">refresh_wf</span></code> is simply <code class="docutils literal"><span class="pre">refresh</span></code>, and <code class="docutils literal"><span class="pre">rerun_fizzled</span></code> has been incorporated into <code class="docutils literal"><span class="pre">rerun_fws</span></code>.</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">rerun_fw</span></code>, <code class="docutils literal notranslate"><span class="pre">defuse_fw</span></code>, and <code class="docutils literal notranslate"><span class="pre">reignite_fw</span></code> commands are now pluralized, <code class="docutils literal notranslate"><span class="pre">refresh_wf</span></code> is simply <code class="docutils literal notranslate"><span class="pre">refresh</span></code>, and <code class="docutils literal notranslate"><span class="pre">rerun_fizzled</span></code> has been incorporated into <code class="docutils literal notranslate"><span class="pre">rerun_fws</span></code>.</p>
 </div>
 <ul class="simple">
-<li>much more powerful control for <code class="docutils literal"><span class="pre">rerun_fws</span></code>, <code class="docutils literal"><span class="pre">defuse</span></code>, <code class="docutils literal"><span class="pre">archive</span></code>, <code class="docutils literal"><span class="pre">reignite</span></code>, <code class="docutils literal"><span class="pre">defuse_fws</span></code>, <code class="docutils literal"><span class="pre">reignite_fws</span></code>, <code class="docutils literal"><span class="pre">refresh</span></code>.</li>
+<li>much more powerful control for <code class="docutils literal notranslate"><span class="pre">rerun_fws</span></code>, <code class="docutils literal notranslate"><span class="pre">defuse</span></code>, <code class="docutils literal notranslate"><span class="pre">archive</span></code>, <code class="docutils literal notranslate"><span class="pre">reignite</span></code>, <code class="docutils literal notranslate"><span class="pre">defuse_fws</span></code>, <code class="docutils literal notranslate"><span class="pre">reignite_fws</span></code>, <code class="docutils literal notranslate"><span class="pre">refresh</span></code>.</li>
 </ul>
 <p><strong>v0.35</strong></p>
 <ul class="simple">
@@ -885,16 +882,16 @@
 <p><strong>v0.24</strong></p>
 <ul class="simple">
 <li>TransferTask added</li>
-<li>fix <code class="docutils literal"><span class="pre">_use_global_spec</span></code></li>
+<li>fix <code class="docutils literal notranslate"><span class="pre">_use_global_spec</span></code></li>
 </ul>
 <p><strong>v0.23</strong></p>
 <ul class="simple">
-<li>delete useless dirs when setting <code class="docutils literal"><span class="pre">_launch_dir</span></code></li>
-<li>ScriptTask and TemplateWriterTask have <code class="docutils literal"><span class="pre">_use_global_spec</span></code> option</li>
+<li>delete useless dirs when setting <code class="docutils literal notranslate"><span class="pre">_launch_dir</span></code></li>
+<li>ScriptTask and TemplateWriterTask have <code class="docutils literal notranslate"><span class="pre">_use_global_spec</span></code> option</li>
 </ul>
 <p><strong>v0.22</strong></p>
 <ul class="simple">
-<li>allow user to control where a FW gets executed using <code class="docutils literal"><span class="pre">_launch_dir</span></code></li>
+<li>allow user to control where a FW gets executed using <code class="docutils literal notranslate"><span class="pre">_launch_dir</span></code></li>
 </ul>
 <p><strong>v0.21</strong></p>
 <ul class="simple">
@@ -943,14 +940,14 @@
 <p><strong>v0.14</strong></p>
 <ul class="simple">
 <li>pin down and fix known issue of launches sometimes not being updated</li>
-<li>further refine display options and enhancements for <code class="docutils literal"><span class="pre">get_fws</span></code> and <code class="docutils literal"><span class="pre">get_wfs</span></code>.</li>
+<li>further refine display options and enhancements for <code class="docutils literal notranslate"><span class="pre">get_fws</span></code> and <code class="docutils literal notranslate"><span class="pre">get_wfs</span></code>.</li>
 <li>minor enhancements to queue launcher and PBS adapter</li>
 <li>support user indices for workflows</li>
 <li>minor bugfixes and internal code cleanup</li>
 </ul>
 <p><strong>v0.13</strong></p>
 <ul class="simple">
-<li>multiple query and output display options and enhancements added for <code class="docutils literal"><span class="pre">get_fws</span></code> and <code class="docutils literal"><span class="pre">get_wfs</span></code>.</li>
+<li>multiple query and output display options and enhancements added for <code class="docutils literal notranslate"><span class="pre">get_fws</span></code> and <code class="docutils literal notranslate"><span class="pre">get_wfs</span></code>.</li>
 <li>use FW’s name to set more informative PBS job names</li>
 <li>make sure ping_launch only writes on running jobs (prevent race condition)</li>
 <li>minor bugfixes</li>
@@ -958,7 +955,7 @@
 <p><strong>v0.12</strong></p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
-<p class="last">The <code class="docutils literal"><span class="pre">get_fw_id</span></code> and <code class="docutils literal"><span class="pre">get_fw</span></code> LaunchPad commands were merged into <code class="docutils literal"><span class="pre">get_fws</span></code>.</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">get_fw_id</span></code> and <code class="docutils literal notranslate"><span class="pre">get_fw</span></code> LaunchPad commands were merged into <code class="docutils literal notranslate"><span class="pre">get_fws</span></code>.</p>
 </div>
 <ul class="simple">
 <li>better support for getting states of FireWorks and Workflows</li>
@@ -1010,12 +1007,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1034,13 +1033,13 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.7.1 documentation</title>
+    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,8 +20,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +36,7 @@
         <li class="right" >
           <a href="reference.html" title="Reference material"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -78,7 +69,7 @@
 <div class="section" id="step-2-start-with-a-firetask-template-and-modify-it">
 <h3>Step 2: Start with a Firetask template and modify it<a class="headerlink" href="#step-2-start-with-a-firetask-template-and-modify-it" title="Permalink to this headline">¶</a></h3>
 <p>The easiest way to understand a Firetask is to examine an example; for example, here’s one implementation of a task to archive files:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ArchiveDirTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ArchiveDirTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">   Wrapper around shutil.make_archive to make tar archives.</span>
 
@@ -106,7 +97,7 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>The class extends the <em>FiretaskBase</em> abstract class. This abstract class does some work under the covers and also requires that you define a <code class="docutils literal"><span class="pre">run_task(self,</span> <span class="pre">fw_spec)</span></code> method.</dt>
+<dt>The class extends the <em>FiretaskBase</em> abstract class. This abstract class does some work under the covers and also requires that you define a <code class="docutils literal notranslate"><span class="pre">run_task(self,</span> <span class="pre">fw_spec)</span></code> method.</dt>
 <dd><ul class="first last">
 <li><em>Keep this intact.</em></li>
 </ul>
@@ -114,7 +105,7 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>The <code class="docutils literal"><span class="pre">_fw_name</span></code> is how this Firetask is identified. It must be a unique name that is always retained. See the Appendix section for working around this and an alternate formulations for identifying the Firetask.</dt>
+<dt>The <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> is how this Firetask is identified. It must be a unique name that is always retained. See the Appendix section for working around this and an alternate formulations for identifying the Firetask.</dt>
 <dd><ul class="first last">
 <li><em>Change the ``fw_name`` value to a desired identifier for your Firetask, e.g. MyFavoriteTask.</em></li>
 </ul>
@@ -122,7 +113,7 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>The <code class="docutils literal"><span class="pre">required_params</span></code> and <code class="docutils literal"><span class="pre">optional_params</span></code> relate to how the Firetask is constructed. In the example above, an <em>ArchiveTask</em> could be instantiated using something like <code class="docutils literal"><span class="pre">my_task</span> <span class="pre">=</span> <span class="pre">ArchiveTask(base_name=&quot;my_filename&quot;,</span> <span class="pre">format=&quot;bztar&quot;)</span></code>. Because <code class="docutils literal"><span class="pre">base_name</span></code> is in <code class="docutils literal"><span class="pre">required_params</span></code>, it <strong>must</strong> be specified (<code class="docutils literal"><span class="pre">optional_params</span></code> does not actually <em>do</em> anything).</dt>
+<dt>The <code class="docutils literal notranslate"><span class="pre">required_params</span></code> and <code class="docutils literal notranslate"><span class="pre">optional_params</span></code> relate to how the Firetask is constructed. In the example above, an <em>ArchiveTask</em> could be instantiated using something like <code class="docutils literal notranslate"><span class="pre">my_task</span> <span class="pre">=</span> <span class="pre">ArchiveTask(base_name=&quot;my_filename&quot;,</span> <span class="pre">format=&quot;bztar&quot;)</span></code>. Because <code class="docutils literal notranslate"><span class="pre">base_name</span></code> is in <code class="docutils literal notranslate"><span class="pre">required_params</span></code>, it <strong>must</strong> be specified (<code class="docutils literal notranslate"><span class="pre">optional_params</span></code> does not actually <em>do</em> anything).</dt>
 <dd><ul class="first last">
 <li><em>Add your required and optional parameters as desired.</em></li>
 </ul>
@@ -130,7 +121,7 @@
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>The meat of the Firetask is the <code class="docutils literal"><span class="pre">run_task(self,</span> <span class="pre">fw_spec)</span></code> method. It has two sources of information: the keys in <code class="docutils literal"><span class="pre">fw_spec</span></code> and a dictionary of <code class="docutils literal"><span class="pre">self</span></code> (which includes parameters like <code class="docutils literal"><span class="pre">base_name</span></code> used to construct the object). In this case, it’s tarring and gzipping some files according to the parameters the dictionary of itself, and ignoring anything in the <code class="docutils literal"><span class="pre">fw_spec</span></code>.</dt>
+<dt>The meat of the Firetask is the <code class="docutils literal notranslate"><span class="pre">run_task(self,</span> <span class="pre">fw_spec)</span></code> method. It has two sources of information: the keys in <code class="docutils literal notranslate"><span class="pre">fw_spec</span></code> and a dictionary of <code class="docutils literal notranslate"><span class="pre">self</span></code> (which includes parameters like <code class="docutils literal notranslate"><span class="pre">base_name</span></code> used to construct the object). In this case, it’s tarring and gzipping some files according to the parameters the dictionary of itself, and ignoring anything in the <code class="docutils literal notranslate"><span class="pre">fw_spec</span></code>.</dt>
 <dd><em>Keep the run_task method header intact, but change the definition to your custom operation. Remember you can access dict keys of “fw_spec” as well as dict keys of “self”</em></dd>
 </dl>
 </li>
@@ -139,22 +130,22 @@
 <div class="section" id="step-3-register-your-firetask">
 <h3>Step 3: Register your Firetask<a class="headerlink" href="#step-3-register-your-firetask" title="Permalink to this headline">¶</a></h3>
 <p>When FireWorks bootstraps your Firetask from a database definition, it needs to know where to look for Firetasks.</p>
-<p><strong>First</strong>, you need to make sure your Firetask is defined in a file location that can be found by Python, i.e. is within Python’s search path and that you can import your Firetask in a Python shell. If Python cannot import your code (e.g., from the shell), neither can FireWorks. This step usually means either installing the code into your <code class="docutils literal"><span class="pre">site-packages</span></code> directory (where many Python tools install code) or modifying your <code class="docutils literal"><span class="pre">PYTHONPATH</span></code> environment variable to include the location of the Firetask. You can see the locations where Python looks for code by typing <code class="docutils literal"><span class="pre">import</span> <span class="pre">sys</span></code> followed by <code class="docutils literal"><span class="pre">print(sys.path)</span></code>. If you are unfamiliar with this topic, some more details about this process can be found <a class="reference external" href="http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch28s04.html">here</a>, or try Googling “how does Python find modules?”</p>
+<p><strong>First</strong>, you need to make sure your Firetask is defined in a file location that can be found by Python, i.e. is within Python’s search path and that you can import your Firetask in a Python shell. If Python cannot import your code (e.g., from the shell), neither can FireWorks. This step usually means either installing the code into your <code class="docutils literal notranslate"><span class="pre">site-packages</span></code> directory (where many Python tools install code) or modifying your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable to include the location of the Firetask. You can see the locations where Python looks for code by typing <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">sys</span></code> followed by <code class="docutils literal notranslate"><span class="pre">print(sys.path)</span></code>. If you are unfamiliar with this topic, some more details about this process can be found <a class="reference external" href="http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch28s04.html">here</a>, or try Googling “how does Python find modules?”</p>
 <p><strong>Second</strong>, you must register your Firetask so that it can be found by the FireWorks software. There are a couple of options for registering your Firetask (you only need to do <em>one</em> of the below):</p>
 <ol class="arabic simple">
 <li>Use the <strong>&#64;explicit_serialize</strong> decorator to define your FW name (see the Appendix). No further registration is needed if you use this option.</li>
-<li>(or) if you have access to the FireWorks source directory, put your Firetask definition anywhere in <code class="docutils literal"><span class="pre">fireworks.user_objects</span></code> or it subdirectories - it will be automatically be found there.</li>
-<li>(or) put the Firetask wherever you’d like. However, you need to modify the <code class="docutils literal"><span class="pre">USER_PACKAGES</span></code> variable of the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a> to include the package for where to find the Firetask, e.g. “mypackage.my_subpackage”. Note that FireWorks will search within subpackages automatically, so you can just put a root package (but loading will be slightly slower).</li>
+<li>(or) if you have access to the FireWorks source directory, put your Firetask definition anywhere in <code class="docutils literal notranslate"><span class="pre">fireworks.user_objects</span></code> or it subdirectories - it will be automatically be found there.</li>
+<li>(or) put the Firetask wherever you’d like. However, you need to modify the <code class="docutils literal notranslate"><span class="pre">USER_PACKAGES</span></code> variable of the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a> to include the package for where to find the Firetask, e.g. “mypackage.my_subpackage”. Note that FireWorks will search within subpackages automatically, so you can just put a root package (but loading will be slightly slower).</li>
 </ol>
 <p>You are now ready to use your Firetask!</p>
 </div>
 </div>
 <div class="section" id="dynamic-and-message-passing-workflows">
 <h2>Dynamic and message-passing Workflows<a class="headerlink" href="#dynamic-and-message-passing-workflows" title="Permalink to this headline">¶</a></h2>
-<p>In the previous example, the <code class="docutils literal"><span class="pre">run_task</span></code> method did not return anything, nor does it pass data to downstream Firetasks or FireWorks. Remember that the setting the <code class="docutils literal"><span class="pre">_pass_job_info</span></code> key in the Firework spec to True will automatically pass information about the current job to the child job - see <a class="reference internal" href="reference.html"><span class="doc">reference</span></a> for more details.</p>
-<p>However, one can also return a <code class="docutils literal"><span class="pre">FWAction</span></code> object that performs many powerful actions including dynamic workflows.</p>
+<p>In the previous example, the <code class="docutils literal notranslate"><span class="pre">run_task</span></code> method did not return anything, nor does it pass data to downstream Firetasks or FireWorks. Remember that the setting the <code class="docutils literal notranslate"><span class="pre">_pass_job_info</span></code> key in the Firework spec to True will automatically pass information about the current job to the child job - see <a class="reference internal" href="reference.html"><span class="doc">reference</span></a> for more details.</p>
+<p>However, one can also return a <code class="docutils literal notranslate"><span class="pre">FWAction</span></code> object that performs many powerful actions including dynamic workflows.</p>
 <p>Here’s an example of a Firetask implementation that includes dynamic actions via the <em>FWAction</em> object:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FibonacciAdderTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FibonacciAdderTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
    <span class="n">_fw_name</span> <span class="o">=</span> <span class="s2">&quot;Fibonacci Adder Task&quot;</span>
 
    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fw_spec</span><span class="p">):</span>
@@ -177,7 +168,7 @@
 <p>We discussed running this example in the <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">Dynamic Workflow tutorial</span></a> - if you have not gone through that tutorial, we strongly suggest you do so now (it also includes an example of message passing).</p>
 <p>Note that this example is slightly different than the previous one:</p>
 <ul class="simple">
-<li>We did not define any required or optional parameters. The parameters are taken from the <code class="docutils literal"><span class="pre">fw_spec</span></code> rather than <code class="docutils literal"><span class="pre">self</span></code>.</li>
+<li>We did not define any required or optional parameters. The parameters are taken from the <code class="docutils literal notranslate"><span class="pre">fw_spec</span></code> rather than <code class="docutils literal notranslate"><span class="pre">self</span></code>.</li>
 <li>We are explicitly returning <em>FWAction</em> objects. In one case, the object looks to be storing data and adding FireWorks.</li>
 </ul>
 <p>Other than those differences, the code is the same format as earlier. The dynamicism comes only from the <em>FWAction</em> object; next, we will this object in more detail.</p>
@@ -185,10 +176,10 @@
 <div class="section" id="file-passing-workflows">
 <h2>File-passing Workflows<a class="headerlink" href="#file-passing-workflows" title="Permalink to this headline">¶</a></h2>
 <p>In many common types of workflows, you want to pass files from one Firework to the next. For example, the output files generated by one Firework may be used by the next Firework as an input.</p>
-<p>FireWorks support two keys - <code class="docutils literal"><span class="pre">_files_in</span></code> and <code class="docutils literal"><span class="pre">files_out</span></code> - as a means to specifying the expected input and output
+<p>FireWorks support two keys - <code class="docutils literal notranslate"><span class="pre">_files_in</span></code> and <code class="docutils literal notranslate"><span class="pre">files_out</span></code> - as a means to specifying the expected input and output
 files for a Firework. See <a class="reference internal" href="reference.html"><span class="doc">reference</span></a> for more details.</p>
 <p>An example of such a workflow is given below:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fw1</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fw1</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span>
     <span class="p">[</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;This is the first FireWork&quot; &gt; test1&#39;</span><span class="p">)],</span>
     <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;_files_out&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fwtest1&quot;</span><span class="p">:</span> <span class="s2">&quot;test1&quot;</span><span class="p">}},</span> <span class="n">fw_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">fw2</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;gzip hello&#39;</span><span class="p">)],</span> <span class="n">fw_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -202,13 +193,13 @@ files for a Firework. See <a class="reference internal" href="reference.html"><s
               <span class="p">{</span><span class="n">fw1</span><span class="p">:</span> <span class="p">[</span><span class="n">fw2</span><span class="p">],</span> <span class="n">fw2</span><span class="p">:</span> <span class="p">[</span><span class="n">fw3</span><span class="p">]})</span>
 </pre></div>
 </div>
-<p>Both  <code class="docutils literal"><span class="pre">_files_in</span></code> and <code class="docutils literal"><span class="pre">_files_out</span></code> are dicts of {mapped_name: actual_file_name}. If the child Firework has <code class="docutils literal"><span class="pre">_files_in</span></code>
-that intersects with <code class="docutils literal"><span class="pre">files_out</span></code> of the parent, these files are automatically copied over and renamed, with gzip,
-bzip2 compression being handled transparently. In the above example, <code class="docutils literal"><span class="pre">fw1</span></code> generates a file called <code class="docutils literal"><span class="pre">test1</span></code>, which
-is available in _files_out under the name <code class="docutils literal"><span class="pre">fwtest1</span></code>. The <code class="docutils literal"><span class="pre">files_in</span></code> of fw2 contains <code class="docutils literal"><span class="pre">fwtest1</span></code>, which means that
-the file <code class="docutils literal"><span class="pre">test1</span></code> is being copied to the launch directory of fw2 and renamed as <code class="docutils literal"><span class="pre">hello</span></code>. The same concept applies
+<p>Both  <code class="docutils literal notranslate"><span class="pre">_files_in</span></code> and <code class="docutils literal notranslate"><span class="pre">_files_out</span></code> are dicts of {mapped_name: actual_file_name}. If the child Firework has <code class="docutils literal notranslate"><span class="pre">_files_in</span></code>
+that intersects with <code class="docutils literal notranslate"><span class="pre">files_out</span></code> of the parent, these files are automatically copied over and renamed, with gzip,
+bzip2 compression being handled transparently. In the above example, <code class="docutils literal notranslate"><span class="pre">fw1</span></code> generates a file called <code class="docutils literal notranslate"><span class="pre">test1</span></code>, which
+is available in _files_out under the name <code class="docutils literal notranslate"><span class="pre">fwtest1</span></code>. The <code class="docutils literal notranslate"><span class="pre">files_in</span></code> of fw2 contains <code class="docutils literal notranslate"><span class="pre">fwtest1</span></code>, which means that
+the file <code class="docutils literal notranslate"><span class="pre">test1</span></code> is being copied to the launch directory of fw2 and renamed as <code class="docutils literal notranslate"><span class="pre">hello</span></code>. The same concept applies
 to fw2 and fw3, though in this case, the gzipped file of fw2 is moved to the launch directory of fw3, ungzipped and
-made available as <code class="docutils literal"><span class="pre">fwtest.2</span></code>. Note that the mapped names must conform to MongoDB rules, i.e., no “.” and “$” cannot be
+made available as <code class="docutils literal notranslate"><span class="pre">fwtest.2</span></code>. Note that the mapped names must conform to MongoDB rules, i.e., no “.” and “$” cannot be
 the first character. There are no restrictions on the actual file name.</p>
 <p>This framework completely decouples the input and output file names between linked Fireworks for flexibility, and also
 makes it easier for most Fireworks to make use of compression where necessary to reduce storage requirements without
@@ -222,7 +213,7 @@ complete definition of expected input and output files, a very common use case i
 <p>The parameters of FWAction are as follows:</p>
 <ul class="simple">
 <li><strong>stored_data</strong>: <em>(dict)</em> data to store from the run. The data is put in the Launch database along with the rest of the FWAction. Does not affect the operation of FireWorks.</li>
-<li><strong>exit</strong>: <em>(bool)</em> if set to True, any remaining Firetasks within the same Firework are skipped (like a <code class="docutils literal"><span class="pre">break</span></code> statement for a Firework).</li>
+<li><strong>exit</strong>: <em>(bool)</em> if set to True, any remaining Firetasks within the same Firework are skipped (like a <code class="docutils literal notranslate"><span class="pre">break</span></code> statement for a Firework).</li>
 <li><strong>update_spec</strong>: <em>(dict)</em> A data dict that will update the spec for any remaining Firetasks <em>and</em> the following Firework. Thus, this parameter can be used to pass data between Firetasks or between FireWorks. Note that if the original fw_spec and the update_spec contain the same key, the original will be overwritten.</li>
 <li><strong>mod_spec</strong>: ([dict]) This has the same purpose as update_spec - to pass data between Firetasks/FireWorks. However, the update_spec option is limited in that it can’t increment variables or append to lists. This parameter allows one to update the child FW’s spec using the DictMod language, a Mongo-like syntax that allows more fine-grained changes to the fw_spec.</li>
 <li><strong>additions</strong>: ([Workflow]) a list of WFs/FWs to add as children to this Firework.</li>
@@ -234,16 +225,16 @@ complete definition of expected input and output files, a very common use case i
 </div>
 <div class="section" id="appendix-1-accessing-the-launchpad-within-the-firetask">
 <h2>Appendix 1: accessing the LaunchPad within the Firetask<a class="headerlink" href="#appendix-1-accessing-the-launchpad-within-the-firetask" title="Permalink to this headline">¶</a></h2>
-<p>It is generally not good practice to use the LaunchPad within the Firetask because this makes the task specification less explicit. For example, this could make duplicate checking more problematic. However, if you really need to access the LaunchPad within a Firetask, you can set the <code class="docutils literal"><span class="pre">_add_launchpad_and_fw_id</span></code> key of the Firework spec to be True. Then, your tasks will be able to access two new variables, <code class="docutils literal"><span class="pre">launchpad</span></code> (a LaunchPad object) and <code class="docutils literal"><span class="pre">fw_id</span></code> (an int), as members of your Firetask. One example is shown in the unit test <code class="docutils literal"><span class="pre">test_add_lp_and_fw_id()</span></code>.</p>
+<p>It is generally not good practice to use the LaunchPad within the Firetask because this makes the task specification less explicit. For example, this could make duplicate checking more problematic. However, if you really need to access the LaunchPad within a Firetask, you can set the <code class="docutils literal notranslate"><span class="pre">_add_launchpad_and_fw_id</span></code> key of the Firework spec to be True. Then, your tasks will be able to access two new variables, <code class="docutils literal notranslate"><span class="pre">launchpad</span></code> (a LaunchPad object) and <code class="docutils literal notranslate"><span class="pre">fw_id</span></code> (an int), as members of your Firetask. One example is shown in the unit test <code class="docutils literal notranslate"><span class="pre">test_add_lp_and_fw_id()</span></code>.</p>
 </div>
 <div class="section" id="appendix-2-alternate-ways-to-identify-the-firetask-and-changing-the-identification">
 <h2>Appendix 2: alternate ways to identify the Firetask and changing the identification<a class="headerlink" href="#appendix-2-alternate-ways-to-identify-the-firetask-and-changing-the-identification" title="Permalink to this headline">¶</a></h2>
-<p>Other than explicitly defining a <code class="docutils literal"><span class="pre">_fw_name</span></code> parameter, there are two alternate ways to identify the Firetask:</p>
+<p>Other than explicitly defining a <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> parameter, there are two alternate ways to identify the Firetask:</p>
 <ul>
-<li><p class="first">You can omit the <code class="docutils literal"><span class="pre">_fw_name</span></code> parameter altogether, and the code will then use the Class name as the identifier. However, note that this is dangerous as changing your Class name later on can break your code. In addition, if you have two Firetasks with the same name the code will throw an error.</p>
+<li><p class="first">You can omit the <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> parameter altogether, and the code will then use the Class name as the identifier. However, note that this is dangerous as changing your Class name later on can break your code. In addition, if you have two Firetasks with the same name the code will throw an error.</p>
 </li>
-<li><p class="first">(or) You can omit the <code class="docutils literal"><span class="pre">_fw_name</span></code> <strong>and</strong> add an <code class="docutils literal"><span class="pre">&#64;explicit_serialize</span></code> decorator to your Class. This will identify your class by the module name AND class name. This prevents namespace collisions, AND it allows you to skip registering your Firetask! However, the serialization is even more sensitive to refactoring: moving your Class to a different module will break the code, as will renaming it. Here’s an example of how to use the decorator:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks.utilities.fw_utilities</span> <span class="k">import</span> <span class="n">explicit_serialize</span>
+<li><p class="first">(or) You can omit the <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> <strong>and</strong> add an <code class="docutils literal notranslate"><span class="pre">&#64;explicit_serialize</span></code> decorator to your Class. This will identify your class by the module name AND class name. This prevents namespace collisions, AND it allows you to skip registering your Firetask! However, the serialization is even more sensitive to refactoring: moving your Class to a different module will break the code, as will renaming it. Here’s an example of how to use the decorator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks.utilities.fw_utilities</span> <span class="k">import</span> <span class="n">explicit_serialize</span>
 
 <span class="nd">@explicit_serialize</span>
 <span class="k">class</span> <span class="nc">PrintFW</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
@@ -253,7 +244,7 @@ complete definition of expected input and output files, a very common use case i
 </div>
 </li>
 </ul>
-<p>In both cases of removing <code class="docutils literal"><span class="pre">_fw_name</span></code>, there is still a workaround if you refactor your code. The <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a> has a parameter called <code class="docutils literal"><span class="pre">FW_NAME_UPDATES</span></code> that allows one to map old names to new ones via a dictionary of {&lt;old name&gt;:&lt;new name&gt;}. This method also works if you need to change your <code class="docutils literal"><span class="pre">_fw_name</span></code> for any reason.</p>
+<p>In both cases of removing <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code>, there is still a workaround if you refactor your code. The <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a> has a parameter called <code class="docutils literal notranslate"><span class="pre">FW_NAME_UPDATES</span></code> that allows one to map old names to new ones via a dictionary of {&lt;old name&gt;:&lt;new name&gt;}. This method also works if you need to change your <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> for any reason.</p>
 </div>
 </div>
 
@@ -297,12 +288,14 @@ complete definition of expected input and output files, a very common use case i
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -324,13 +317,13 @@ complete definition of expected input and output files, a very common use case i
         <li class="right" >
           <a href="reference.html" title="Reference material"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

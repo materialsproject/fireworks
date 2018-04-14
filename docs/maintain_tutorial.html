@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Database administration commands &#8212; FireWorks 1.7.1 documentation</title>
+    <title>Database administration commands &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,8 +20,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +36,7 @@
         <li class="right" >
           <a href="failures_tutorial.html" title="Dealing with Failures and Crashes"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -64,11 +55,11 @@
 <div class="section" id="maintain-to-mark-failed-jobs-and-queue-reservations">
 <h2>Maintain to mark failed jobs and queue reservations<a class="headerlink" href="#maintain-to-mark-failed-jobs-and-queue-reservations" title="Permalink to this headline">¶</a></h2>
 <p>We recommend that all users periodically run the <em>maintain</em> command from the LaunchPad. This will detect failed jobs and queue reservations - for details, refer to the <a class="reference internal" href="failures_tutorial.html"><span class="doc">failures tutorial</span></a> and <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">queue reservation tutorial</span></a>. In summary, the command will mark the state of failed jobs as <em>FIZZLED</em> and will move any long-waiting <em>RESERVED</em> FireWorks back to <em>READY</em>. The maintenance command can be run using:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">maintain</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">maintain</span>
 </pre></div>
 </div>
 <p>If you would like to run maintenance in an infinite loop, you can use:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">maintain</span> <span class="o">--</span><span class="n">infinite</span> <span class="o">--</span><span class="n">maintain_interval</span> <span class="mi">6000</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">maintain</span> <span class="o">--</span><span class="n">infinite</span> <span class="o">--</span><span class="n">maintain_interval</span> <span class="mi">6000</span>
 </pre></div>
 </div>
 <p>This formulation will run a maintenance job every 6000 seconds (100 minutes).</p>
@@ -77,11 +68,11 @@
 <h2>Tuneup to improve performance<a class="headerlink" href="#tuneup-to-improve-performance" title="Permalink to this headline">¶</a></h2>
 <p>You only need to run a database tuneup if you are not satisfied with the performance of FireWorks.</p>
 <p>The tuneup will update all the indices:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">tuneup</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">tuneup</span>
 </pre></div>
 </div>
 <p>You can do a full tuneup which will block while updating indices and also compact the database. You should only run the full tuneup command during periods of downtime:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">tuneup</span> <span class="o">--</span><span class="n">full</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">admin</span> <span class="n">tuneup</span> <span class="o">--</span><span class="n">full</span>
 </pre></div>
 </div>
 </div>
@@ -90,7 +81,7 @@
 <p>This command should not be needed, but if you would like to force a workflow refresh you can do it via:</p>
 <blockquote>
 <div>lpad admin refresh_wf -i &lt;FW_ID&gt;</div></blockquote>
-<p>where <code class="docutils literal"><span class="pre">&lt;FW_ID&gt;</span></code> is the id of any one FW in the Workflow you want to refresh. More options are available, use <code class="docutils literal"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">refresh</span> <span class="pre">-h</span></code> for more information.</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;FW_ID&gt;</span></code> is the id of any one FW in the Workflow you want to refresh. More options are available, use <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">admin</span> <span class="pre">refresh</span> <span class="pre">-h</span></code> for more information.</p>
 </div>
 </div>
 
@@ -125,12 +116,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -152,13 +145,13 @@
         <li class="right" >
           <a href="failures_tutorial.html" title="Dealing with Failures and Crashes"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

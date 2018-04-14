@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.features package &#8212; FireWorks 1.7.1 documentation</title>
+    <title>fireworks.features package &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -26,8 +18,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -69,7 +60,7 @@
 <dl class="class">
 <dt id="fireworks.features.background_task.BackgroundTask">
 <em class="property">class </em><code class="descclassname">fireworks.features.background_task.</code><code class="descname">BackgroundTask</code><span class="sig-paren">(</span><em>tasks</em>, <em>num_launches=0</em>, <em>sleep_time=60</em>, <em>run_on_finish=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.background_task.BackgroundTask.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>tasks</em>, <em>num_launches=0</em>, <em>sleep_time=60</em>, <em>run_on_finish=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask.__init__" title="Permalink to this definition">¶</a></dt>
@@ -78,7 +69,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>[</strong><strong>Firetask</strong><strong>]</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LazyFirework.tasks" title="fireworks.core.launchpad.LazyFirework.tasks"><em>tasks</em></a>) – a list of Firetasks to perform</li>
+<li><strong>[</strong><strong>Firetask</strong><strong>]</strong> (<em>tasks</em>) – a list of Firetasks to perform</li>
 <li><strong>num_launches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – the total number of times to run the process (0=infinite)</li>
 <li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – sleep time in seconds between background runs</li>
 <li><strong>run_on_finish</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – always run this task upon completion of Firework</li>
@@ -107,12 +98,13 @@
 <dl class="class">
 <dt id="fireworks.features.dupefinder.DupeFinderBase">
 <em class="property">class </em><code class="descclassname">fireworks.features.dupefinder.</code><code class="descname">DupeFinderBase</code><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>This serves an Abstract class for implementing Duplicate Finders</p>
 <dl class="method">
 <dt id="fireworks.features.dupefinder.DupeFinderBase.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="fireworks.features.dupefinder.DupeFinderBase.from_dict">
@@ -164,7 +156,7 @@ spec2 (dict)</p>
 <dl class="class">
 <dt id="fireworks.features.fw_report.FWReport">
 <em class="property">class </em><code class="descclassname">fireworks.features.fw_report.</code><code class="descname">FWReport</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.fw_report.FWReport.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.__init__" title="Permalink to this definition">¶</a></dt>
@@ -198,7 +190,7 @@ e.g. past 5 days.</p>
 
 <dl class="staticmethod">
 <dt id="fireworks.features.fw_report.FWReport.get_stats_str">
-<em class="property">static </em><code class="descname">get_stats_str</code><span class="sig-paren">(</span><em>decorated_stat_list</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats_str" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_stats_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the list of stats from FWReport.get_stats() to a string representation for viewing.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -245,7 +237,7 @@ note this also specifies the order of stacking</li>
 <dl class="class">
 <dt id="fireworks.features.introspect.Introspector">
 <em class="property">class </em><code class="descclassname">fireworks.features.introspect.</code><code class="descname">Introspector</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.introspect.Introspector.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.__init__" title="Permalink to this definition">¶</a></dt>
@@ -266,7 +258,7 @@ note this also specifies the order of stacking</li>
 
 <dl class="staticmethod">
 <dt id="fireworks.features.introspect.Introspector.print_report">
-<em class="property">static </em><code class="descname">print_report</code><span class="sig-paren">(</span><em>table</em>, <em>coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.print_report" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">print_report</code><span class="sig-paren">(</span><em>coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.print_report" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -451,7 +443,7 @@ number of times each key appears.</p>
 <dl class="class">
 <dt id="fireworks.features.stats.FWStats">
 <em class="property">class </em><code class="descclassname">fireworks.features.stats.</code><code class="descname">FWStats</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.stats.FWStats.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.__init__" title="Permalink to this definition">¶</a></dt>
@@ -626,12 +618,14 @@ datetime.timedelta function. args and query_start can not be given at the same t
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -647,13 +641,13 @@ datetime.timedelta function. args and query_start can not be given at the same t
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

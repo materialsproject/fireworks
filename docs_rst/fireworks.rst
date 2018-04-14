@@ -19,8 +19,8 @@ Subpackages
 Submodules
 ----------
 
-fireworks\.fw\_config module
-----------------------------
+fireworks.fw\_config module
+---------------------------
 
 .. automodule:: fireworks.fw_config
     :members:

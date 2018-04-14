@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Handling Duplicates Automatically &#8212; FireWorks 1.7.1 documentation</title>
+    <title>Handling Duplicates Automatically &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,8 +20,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +36,7 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -67,12 +58,12 @@
 <h2>Preventing Trivial Duplicates<a class="headerlink" href="#preventing-trivial-duplicates" title="Permalink to this headline">¶</a></h2>
 <p>A trivial duplicate might occur if two users submit the same workflow to the FireServer. Let’s see how this plays out when we have duplicate checking enabled for our workflows.</p>
 <ol class="arabic">
-<li><p class="first">Move to the <code class="docutils literal"><span class="pre">duplicates</span></code> tutorial directory in your installation directory:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">duplicates</span>
+<li><p class="first">Move to the <code class="docutils literal notranslate"><span class="pre">duplicates</span></code> tutorial directory in your installation directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">duplicates</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Look inside the file <code class="docutils literal"><span class="pre">wf_12.yaml</span></code>. This contains a workflow in which the first step adds the numbers 1+1, and the second step adds the number 2 to the result. Visually, the workflow looks like this:</p>
+<li><p class="first">Look inside the file <code class="docutils literal notranslate"><span class="pre">wf_12.yaml</span></code>. This contains a workflow in which the first step adds the numbers 1+1, and the second step adds the number 2 to the result. Visually, the workflow looks like this:</p>
 <blockquote>
 <div><div class="figure align-center" id="id1">
 <a class="reference internal image-reference" href="_images/wf_12.png"><img alt="Add and Modify WF" src="_images/wf_12.png" style="width: 200px;" /></a>
@@ -80,42 +71,42 @@
 </div>
 </div></blockquote>
 </li>
-<li><p class="first">After having completed the <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">dynamic workflow tutorial</span></a>, the contents of the file <code class="docutils literal"><span class="pre">wf_12.yaml</span></code> should be familiar to you; it is almost identical to the <code class="docutils literal"><span class="pre">addmod_wf.yaml</span></code> file that we examined in great detail for that tutorial. However, one section of this workflow is new, and looks like this:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_dupefinder</span><span class="p">:</span>
+<li><p class="first">After having completed the <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">dynamic workflow tutorial</span></a>, the contents of the file <code class="docutils literal notranslate"><span class="pre">wf_12.yaml</span></code> should be familiar to you; it is almost identical to the <code class="docutils literal notranslate"><span class="pre">addmod_wf.yaml</span></code> file that we examined in great detail for that tutorial. However, one section of this workflow is new, and looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_dupefinder</span><span class="p">:</span>
   <span class="n">_fw_name</span><span class="p">:</span> <span class="n">DupeFinderExact</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li>The <code class="docutils literal"><span class="pre">_dupefinder</span></code> key is a special key inside the Firework <strong>spec</strong> that tells us how to identify duplicates. The <code class="docutils literal"><span class="pre">DupeFinderExact</span></code> text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same <strong>spec</strong>.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> key is a special key inside the Firework <strong>spec</strong> that tells us how to identify duplicates. The <code class="docutils literal notranslate"><span class="pre">DupeFinderExact</span></code> text refers to a built-in set of rules for finding duplicates; it considers two FireWorks to be the same if they contain the same <strong>spec</strong>.</li>
 </ul>
 </li>
 <li><p class="first">Let’s add our workflow to the database and run it:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">wf_12</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">You should see two output directories, one corresponding to each section of the workflow. The standard out should have also printed the lines:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="nb">sum</span> <span class="n">of</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">2</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="nb">sum</span> <span class="n">of</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">2</span>
 <span class="n">The</span> <span class="nb">sum</span> <span class="n">of</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">4</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">So far, there is nothing surprising; we defined a workflow and ran it. Let’s see what happens when we try to add back the same exact workflow:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">wf_12</span><span class="o">.</span><span class="n">yaml</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">wf_12</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">This completes successfully; the built-in duplicate checker will allow you to add in the same workflow twice. Let’s see what happens when we try to run this workflow:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Nothing runs! Even though we added a new workflow, FireWorks did not actually run it because it was a duplicate of the previous workflow.</p>
 </li>
-<li><p class="first">Instead of actually running the new FireWorks, FireWorks simply copied the launch data from the earlier, duplicated FireWorks. Let’s confirm that this is the case. Our first workflow had FireWorks with``fw_id`` 1 and 2, and our second workflow had FireWorks with <code class="docutils literal"><span class="pre">fw_id</span></code> 3 and 4:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
+<li><p class="first">Instead of actually running the new FireWorks, FireWorks simply copied the launch data from the earlier, duplicated FireWorks. Let’s confirm that this is the case. Our first workflow had FireWorks with``fw_id`` 1 and 2, and our second workflow had FireWorks with <code class="docutils literal notranslate"><span class="pre">fw_id</span></code> 3 and 4:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">1</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
 <span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">2</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
 <span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">3</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
 <span class="n">lpad</span> <span class="n">get_fws</span> <span class="o">-</span><span class="n">i</span> <span class="mi">4</span> <span class="o">-</span><span class="n">d</span> <span class="nb">all</span>
@@ -125,19 +116,19 @@
 <li><p class="first">All four FireWorks - both the ones we ran explicitly and the second set of duplicated runs - show Launch data as if they had been <em>all</em> been run explicitly.</p>
 </li>
 </ol>
-<p>In summary, when the <code class="docutils literal"><span class="pre">_dupefinder</span></code> key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow has its run data copied from an earlier run (in other words, the duplicate run <em>steals</em> the launches of the original run). This process occurs when you run the Rocket Launcher - before running a Firework, the Rocket will check to see if it’s been run before. If so, it will just copy the Launch output from the previous Firework that had the same <strong>spec</strong>.</p>
+<p>In summary, when the <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow has its run data copied from an earlier run (in other words, the duplicate run <em>steals</em> the launches of the original run). This process occurs when you run the Rocket Launcher - before running a Firework, the Rocket will check to see if it’s been run before. If so, it will just copy the Launch output from the previous Firework that had the same <strong>spec</strong>.</p>
 </div>
 <div class="section" id="sub-workflow-duplicate-detection">
 <h2>Sub-Workflow Duplicate Detection<a class="headerlink" href="#sub-workflow-duplicate-detection" title="Permalink to this headline">¶</a></h2>
 <p>One nice feature of FireWorks’ built-in duplicate detection is that it operates on a <em>sub-workflow</em> level. If only a portion of a workflow has been run before, FireWorks can avoid re-running that portion while still running unique sections, even within dynamic workflows.</p>
 <ol class="arabic">
-<li><p class="first">Clear out your previous output in the <code class="docutils literal"><span class="pre">duplicate</span></code> tutorials directory:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="o">-</span><span class="n">r</span> <span class="n">launcher_</span><span class="o">*</span>
+<li><p class="first">Clear out your previous output in the <code class="docutils literal notranslate"><span class="pre">duplicate</span></code> tutorials directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="o">-</span><span class="n">r</span> <span class="n">launcher_</span><span class="o">*</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Let’s add back our two-step workflow and run it:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
 <span class="n">lpad</span> <span class="n">add</span> <span class="n">wf_12</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span>
 </pre></div>
@@ -152,24 +143,24 @@
 </div></blockquote>
 </li>
 <li><p class="first">Ideally, we would want to only run the third step of the workflow from scratch, since it is unique. The first two steps we’ve already run before, and we can just copy the results from a past run. Let’s confirm that this is what happens when we run our new three-step workflow:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">wf_123</span><span class="o">.</span><span class="n">yaml</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">wf_123</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">rlaunch</span> <span class="o">-</span><span class="n">s</span> <span class="n">rapidfire</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">You should see text in the standard out that reads:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="nb">sum</span> <span class="n">of</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">7</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="nb">sum</span> <span class="n">of</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">7</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">So indeed it looks like we skipped straight to the third step of our workflow (there was no text indicating that the first two steps ran explicitly). You can confirm that only one more <code class="docutils literal"><span class="pre">launcher_</span></code> directory was added, meaning only the third addition took place!</p>
+<li><p class="first">So indeed it looks like we skipped straight to the third step of our workflow (there was no text indicating that the first two steps ran explicitly). You can confirm that only one more <code class="docutils literal notranslate"><span class="pre">launcher_</span></code> directory was added, meaning only the third addition took place!</p>
 </li>
 </ol>
-<p>In summary, with FireWorks’ duplicate checking you are free to submit many workflows in which some or all steps are duplicated from previous workflows. By enabling the <code class="docutils literal"><span class="pre">_dupefinder</span></code> field, only the new steps are actually run. The user can thus concentrate on submitting whatever workflows are of interest rather than doing the tedious bookkeeping of figuring out what steps of the workflow have been run before.</p>
+<p>In summary, with FireWorks’ duplicate checking you are free to submit many workflows in which some or all steps are duplicated from previous workflows. By enabling the <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> field, only the new steps are actually run. The user can thus concentrate on submitting whatever workflows are of interest rather than doing the tedious bookkeeping of figuring out what steps of the workflow have been run before.</p>
 </div>
 <div class="section" id="performance-and-customization">
 <h2>Performance and Customization<a class="headerlink" href="#performance-and-customization" title="Permalink to this headline">¶</a></h2>
-<p>The built-in duplicate finder, <code class="docutils literal"><span class="pre">Exact</span> <span class="pre">Dupe</span> <span class="pre">Finder</span></code>, suffers from two limitations:</p>
+<p>The built-in duplicate finder, <code class="docutils literal notranslate"><span class="pre">Exact</span> <span class="pre">Dupe</span> <span class="pre">Finder</span></code>, suffers from two limitations:</p>
 <ul class="simple">
 <li>performance is not great when the number of FireWorks is large</li>
 <li>matching is limited to <em>exact</em> matches of the Firework spec. You cannot, for example, define two FireWorks to be duplicated if a portion of the spec matches within some numerical tolerance.</li>
@@ -209,12 +200,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -236,13 +229,13 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

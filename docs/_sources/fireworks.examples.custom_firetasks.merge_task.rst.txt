@@ -1,11 +1,11 @@
-fireworks\.examples\.custom\_firetasks\.merge\_task package
-===========================================================
+fireworks.examples.custom\_firetasks.merge\_task package
+========================================================
 
 Submodules
 ----------
 
-fireworks\.examples\.custom\_firetasks\.merge\_task\.merge\_task module
------------------------------------------------------------------------
+fireworks.examples.custom\_firetasks.merge\_task.merge\_task module
+-------------------------------------------------------------------
 
 .. automodule:: fireworks.examples.custom_firetasks.merge_task.merge_task
     :members:

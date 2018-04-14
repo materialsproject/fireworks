@@ -1,11 +1,11 @@
-fireworks\.user\_objects\.dupefinders package
-=============================================
+fireworks.user\_objects.dupefinders package
+===========================================
 
 Submodules
 ----------
 
-fireworks\.user\_objects\.dupefinders\.dupefinder\_exact module
----------------------------------------------------------------
+fireworks.user\_objects.dupefinders.dupefinder\_exact module
+------------------------------------------------------------
 
 .. automodule:: fireworks.user_objects.dupefinders.dupefinder_exact
     :members:

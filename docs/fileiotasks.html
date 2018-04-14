@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using the built-in FileIO Tasks &#8212; FireWorks 1.7.1 documentation</title>
+    <title>Using the built-in FileIO Tasks &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,8 +20,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +36,7 @@
         <li class="right" >
           <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -93,11 +84,11 @@
 <h2>FileTransferTask<a class="headerlink" href="#filetransfertask" title="Permalink to this headline">¶</a></h2>
 <p>The FileTransferTask is a built-in Firetask for moving and copying files, perhaps to a remote server. Its usage is straightforward:</p>
 <ul class="simple">
-<li>a <code class="docutils literal"><span class="pre">files</span></code> key that contains a list of files to move or copy</li>
+<li>a <code class="docutils literal notranslate"><span class="pre">files</span></code> key that contains a list of files to move or copy</li>
 <li>additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors</li>
 </ul>
-<p>An example of a Firework that copies two files, <code class="docutils literal"><span class="pre">file1.txt</span></code> and <code class="docutils literal"><span class="pre">file2.txt</span></code>, to the home directory looks as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
+<p>An example of a Firework that copies two files, <code class="docutils literal notranslate"><span class="pre">file1.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">file2.txt</span></code>, to the home directory looks as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
   <span class="n">_tasks</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">FileTransferTask</span>
     <span class="n">files</span><span class="p">:</span>
@@ -109,12 +100,12 @@
 </pre></div>
 </div>
 <p>In Python code, the same task would be defined as:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">firetask1</span> <span class="o">=</span> <span class="n">FileTransferTask</span><span class="p">({</span><span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="s1">&#39;file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span> <span class="s1">&#39;~/file1.txt&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span> <span class="s1">&#39;~/file2.txt&#39;</span><span class="p">}],</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">firetask1</span> <span class="o">=</span> <span class="n">FileTransferTask</span><span class="p">({</span><span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="s1">&#39;file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span> <span class="s1">&#39;~/file1.txt&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span> <span class="s1">&#39;~/file2.txt&#39;</span><span class="p">}],</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">files</span></code> parameter <em>must</em> be specified, and is an array of dictionaries with <code class="docutils literal"><span class="pre">src</span></code> and <code class="docutils literal"><span class="pre">dest</span></code> keys. The default mode of operation is to move files from the source to destination; by changing the <code class="docutils literal"><span class="pre">mode</span></code> to copy, we will copy the files instead. Note that you can put as many files (or directories) in the <code class="docutils literal"><span class="pre">files</span></code> list as you want; the same <code class="docutils literal"><span class="pre">mode</span></code> will be applied to all of them. If you want to move some files and copy others, you’d need to include two different <a href="#id3"><span class="problematic" id="id4">``</span></a>FileTransferTask``s in your Firework.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">files</span></code> parameter <em>must</em> be specified, and is an array of dictionaries with <code class="docutils literal notranslate"><span class="pre">src</span></code> and <code class="docutils literal notranslate"><span class="pre">dest</span></code> keys. The default mode of operation is to move files from the source to destination; by changing the <code class="docutils literal notranslate"><span class="pre">mode</span></code> to copy, we will copy the files instead. Note that you can put as many files (or directories) in the <code class="docutils literal notranslate"><span class="pre">files</span></code> list as you want; the same <code class="docutils literal notranslate"><span class="pre">mode</span></code> will be applied to all of them. If you want to move some files and copy others, you’d need to include two different <a href="#id3"><span class="problematic" id="id4">``</span></a>FileTransferTask``s in your Firework.</p>
 <p>A more compact representation for File Transfers can be given if several files are being moved/copied to the same directory:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
   <span class="n">_tasks</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">_fw_name</span><span class="p">:</span> <span class="n">FileTransferTask</span>
     <span class="n">dest</span><span class="p">:</span> <span class="n">dest_dir</span>
@@ -125,7 +116,7 @@
 </pre></div>
 </div>
 <p>In Python code, this representation would be defined as:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">firetask1</span> <span class="o">=</span> <span class="n">FileTransferTask</span><span class="p">({</span><span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">],</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span><span class="s1">&#39;dest_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">firetask1</span> <span class="o">=</span> <span class="n">FileTransferTask</span><span class="p">({</span><span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;file1.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;file2.txt&#39;</span><span class="p">],</span> <span class="s1">&#39;dest&#39;</span><span class="p">:</span><span class="s1">&#39;dest_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>An example of the FileTransferTask in action is given in the <a class="reference internal" href="firetask_tutorial.html"><span class="doc">Firetask tutorial</span></a>.</p>
@@ -144,37 +135,37 @@
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">With the exception of <strong>rtransfer</strong>, <code class="docutils literal"><span class="pre">FileTransferTask</span></code> is using Python’s <em>shutil</em> module to do the move/copy. You can read more about these modes in <a href="#id9"><span class="problematic" id="id10">`Python's *shutil* docs &lt;http://docs.python.org/2/library/shutil.html`_</span></a>.</p>
+<p class="last">With the exception of <strong>rtransfer</strong>, <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code> is using Python’s <em>shutil</em> module to do the move/copy. You can read more about these modes in <a href="#id9"><span class="problematic" id="id10">`Python's *shutil* docs &lt;http://docs.python.org/2/library/shutil.html`_</span></a>.</p>
 </div>
 <p><strong>ignore_errors</strong></p>
-<p>Either <em>True</em> or <em>False</em> (default=*False*). If True, a failed move/copy will just cause <code class="docutils literal"><span class="pre">FileTransferTask</span></code> to move to the next file in the <code class="docutils literal"><span class="pre">files</span></code> list. If False, a failed move/copy will raise an error.</p>
+<p>Either <em>True</em> or <em>False</em> (default=*False*). If True, a failed move/copy will just cause <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code> to move to the next file in the <code class="docutils literal notranslate"><span class="pre">files</span></code> list. If False, a failed move/copy will raise an error.</p>
 <p><strong>shell_interpret</strong></p>
-<p>Either <em>True</em> or <em>False</em> (default=*True*). If False, the <em>src</em> and <em>dest</em> of files are taken literally. If <em>True</em>, the <em>src</em> and <em>dest</em> interpret environment variables and shortcuts like <code class="docutils literal"><span class="pre">~</span></code> and <code class="docutils literal"><span class="pre">.</span></code></p>
+<p>Either <em>True</em> or <em>False</em> (default=*True*). If False, the <em>src</em> and <em>dest</em> of files are taken literally. If <em>True</em>, the <em>src</em> and <em>dest</em> interpret environment variables and shortcuts like <code class="docutils literal notranslate"><span class="pre">~</span></code> and <code class="docutils literal notranslate"><span class="pre">.</span></code></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In remote transfer mode, some shortcuts like <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">~</span></code> are not interpreted for the destination. However, environment variables will still be interpreted if <code class="docutils literal"><span class="pre">shell_interpret</span></code> is True.</p>
+<p class="last">In remote transfer mode, some shortcuts like <code class="docutils literal notranslate"><span class="pre">.</span></code> and <code class="docutils literal notranslate"><span class="pre">~</span></code> are not interpreted for the destination. However, environment variables will still be interpreted if <code class="docutils literal notranslate"><span class="pre">shell_interpret</span></code> is True.</p>
 </div>
 </div>
 <div class="section" id="remote-transfers">
 <h3>Remote Transfers<a class="headerlink" href="#remote-transfers" title="Permalink to this headline">¶</a></h3>
-<p>Remote transfers are handled via SFTP using the <em>paramiko</em> Python library (make sure you’ve installed it via <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">paramiko</span></code>). To do a remote transfer, you set <code class="docutils literal"><span class="pre">files</span></code> as before but:</p>
+<p>Remote transfers are handled via SFTP using the <em>paramiko</em> Python library (make sure you’ve installed it via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">paramiko</span></code>). To do a remote transfer, you set <code class="docutils literal notranslate"><span class="pre">files</span></code> as before but:</p>
 <ul class="simple">
 <li>You’ll first need to configure passwordless login via ssh between the two machines that are transferring files</li>
 <li>Set the <strong>mode</strong> of transfer to <em>rtransfer</em> (see previous section)</li>
 <li>You <em>must</em> set an additional option called <strong>server</strong> to the remote server hostname or IP</li>
-<li>Make sure the <em>dest</em> doesn’t contain symbols that can’t properly be interpreted on the local machine, like <code class="docutils literal"><span class="pre">~</span></code> or <code class="docutils literal"><span class="pre">.</span></code></li>
-<li>If you are using a non-standard keyfile location (e.g., not something like <code class="docutils literal"><span class="pre">~/.ssh/id_dsa.pub</span></code>), you need to set the <strong>key_filename</strong> option to the location of your key filename.</li>
+<li>Make sure the <em>dest</em> doesn’t contain symbols that can’t properly be interpreted on the local machine, like <code class="docutils literal notranslate"><span class="pre">~</span></code> or <code class="docutils literal notranslate"><span class="pre">.</span></code></li>
+<li>If you are using a non-standard keyfile location (e.g., not something like <code class="docutils literal notranslate"><span class="pre">~/.ssh/id_dsa.pub</span></code>), you need to set the <strong>key_filename</strong> option to the location of your key filename.</li>
 </ul>
-<p>If all this is configured properly, you should be able to transfer files to a remote machine via <code class="docutils literal"><span class="pre">FileTransferTask</span></code>. Some potential hiccups:</p>
+<p>If all this is configured properly, you should be able to transfer files to a remote machine via <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code>. Some potential hiccups:</p>
 <ul class="simple">
 <li>You require a password to SSH between machines and haven’t configured passwordless SSH.</li>
 <li>You are using a non-standard SSH port</li>
-<li>Your <code class="docutils literal"><span class="pre">known_hosts</span></code> file is not located in <code class="docutils literal"><span class="pre">~/.ssh/known_hosts</span></code></li>
+<li>Your <code class="docutils literal notranslate"><span class="pre">known_hosts</span></code> file is not located in <code class="docutils literal notranslate"><span class="pre">~/.ssh/known_hosts</span></code></li>
 </ul>
 </div>
 <div class="section" id="the-use-global-spec-option">
 <h3>The _use_global_spec option<a class="headerlink" href="#the-use-global-spec-option" title="Permalink to this headline">¶</a></h3>
-<p>By default, the parameters for the FileTransferTask should be defined within the <code class="docutils literal"><span class="pre">_task</span></code> section of the <strong>spec</strong> corresponding to the FileTransferTask, not as a root key of the <strong>spec</strong>. If you’d like to instead specify the parameters in the root of the <strong>spec</strong>, you can set <code class="docutils literal"><span class="pre">_use_global_spec</span></code> to True within the <code class="docutils literal"><span class="pre">_task</span></code> section. Note that <code class="docutils literal"><span class="pre">_use_global_spec</span></code> can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same Firework.</p>
+<p>By default, the parameters for the FileTransferTask should be defined within the <code class="docutils literal notranslate"><span class="pre">_task</span></code> section of the <strong>spec</strong> corresponding to the FileTransferTask, not as a root key of the <strong>spec</strong>. If you’d like to instead specify the parameters in the root of the <strong>spec</strong>, you can set <code class="docutils literal notranslate"><span class="pre">_use_global_spec</span></code> to True within the <code class="docutils literal notranslate"><span class="pre">_task</span></code> section. Note that <code class="docutils literal notranslate"><span class="pre">_use_global_spec</span></code> can simplify querying and communication of parameters between FireWorks but can cause problems if you have multiple FileTransferTasks within the same Firework.</p>
 </div>
 </div>
 <div class="section" id="compressdirtask">
@@ -266,12 +257,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -293,13 +286,13 @@
         <li class="right" >
           <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using the Web GUI &#8212; FireWorks 1.7.1 documentation</title>
+    <title>Using the Web GUI &#8212; FireWorks 1.7.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.7.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,8 +20,7 @@
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,7 +36,7 @@
         <li class="right" >
           <a href="query_tutorial.html" title="Querying FireWorks and Workflows / Generating Reports"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -61,20 +52,20 @@
 <div class="section" id="launching-the-web-framework">
 <h2>Launching the web framework<a class="headerlink" href="#launching-the-web-framework" title="Permalink to this headline">¶</a></h2>
 <p>It is easy to launch the web framework using the LaunchPad:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">webgui</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">webgui</span>
 </pre></div>
 </div>
 <p>if your LaunchPad file is automatically set via an environment variable on in the current directory (see the <a class="reference internal" href="config_tutorial.html"><span class="doc">config tutorial</span></a>), or:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="o">-</span><span class="n">l</span> <span class="n">my_launchpad</span><span class="o">.</span><span class="n">yaml</span> <span class="n">webgui</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="o">-</span><span class="n">l</span> <span class="n">my_launchpad</span><span class="o">.</span><span class="n">yaml</span> <span class="n">webgui</span>
 </pre></div>
 </div>
 <p>if you need to explicitly specify the LaunchPad file to use.</p>
-<p>The <code class="docutils literal"><span class="pre">-s</span></code> (or <code class="docutils literal"><span class="pre">--server</span></code>) option runs in ‘server mode’, e.g. skips opening up a browser. Other options include <code class="docutils literal"><span class="pre">--host</span></code> and <code class="docutils literal"><span class="pre">--port</span></code>, but you probably won’t need to modify these.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-s</span></code> (or <code class="docutils literal notranslate"><span class="pre">--server</span></code>) option runs in ‘server mode’, e.g. skips opening up a browser. Other options include <code class="docutils literal notranslate"><span class="pre">--host</span></code> and <code class="docutils literal notranslate"><span class="pre">--port</span></code>, but you probably won’t need to modify these.</p>
 </div>
 <div class="section" id="using-the-web-framework">
 <h2>Using the web framework<a class="headerlink" href="#using-the-web-framework" title="Permalink to this headline">¶</a></h2>
 <p>The current web framework is limited but simple - just click the links you are interested in. One thing to note is that the URLs can be easily modified to quickly bring up a particular Firework, e.g.:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">fw</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">fw</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span>
 </pre></div>
 </div>
 <p>points to the data for Firework id #1 (for the default host and port). You can easily modify this URL to check up on a particular Firework.</p>
@@ -82,7 +73,7 @@
 </div>
 <div class="section" id="authentication">
 <h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
-<p>You can add authentication by setting the <code class="docutils literal"><span class="pre">FWAPP_AUTH_USERNAME</span></code> and <code class="docutils literal"><span class="pre">FWAPP_AUTH_PASSWORD</span></code> environment variables.</p>
+<p>You can add authentication by setting the <code class="docutils literal notranslate"><span class="pre">FWAPP_AUTH_USERNAME</span></code> and <code class="docutils literal notranslate"><span class="pre">FWAPP_AUTH_PASSWORD</span></code> environment variables.</p>
 </div>
 </div>
 
@@ -117,12 +108,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -144,13 +137,13 @@
         <li class="right" >
           <a href="query_tutorial.html" title="Querying FireWorks and Workflows / Generating Reports"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

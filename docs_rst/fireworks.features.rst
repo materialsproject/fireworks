@@ -1,5 +1,5 @@
-fireworks\.features package
-===========================
+fireworks.features package
+==========================
 
 Subpackages
 -----------
@@ -11,48 +11,48 @@ Subpackages
 Submodules
 ----------
 
-fireworks\.features\.background\_task module
---------------------------------------------
+fireworks.features.background\_task module
+------------------------------------------
 
 .. automodule:: fireworks.features.background_task
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.features\.dupefinder module
---------------------------------------
+fireworks.features.dupefinder module
+------------------------------------
 
 .. automodule:: fireworks.features.dupefinder
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.features\.fw\_report module
---------------------------------------
+fireworks.features.fw\_report module
+------------------------------------
 
 .. automodule:: fireworks.features.fw_report
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.features\.introspect module
---------------------------------------
+fireworks.features.introspect module
+------------------------------------
 
 .. automodule:: fireworks.features.introspect
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.features\.multi\_launcher module
--------------------------------------------
+fireworks.features.multi\_launcher module
+-----------------------------------------
 
 .. automodule:: fireworks.features.multi_launcher
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.features\.stats module
----------------------------------
+fireworks.features.stats module
+-------------------------------
 
 .. automodule:: fireworks.features.stats
     :members:

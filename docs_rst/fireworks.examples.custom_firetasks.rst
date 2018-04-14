@@ -1,5 +1,5 @@
-fireworks\.examples\.custom\_firetasks package
-==============================================
+fireworks.examples.custom\_firetasks package
+============================================
 
 Subpackages
 -----------

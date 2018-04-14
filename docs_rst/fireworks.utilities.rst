@@ -1,5 +1,5 @@
-fireworks\.utilities package
-============================
+fireworks.utilities package
+===========================
 
 Subpackages
 -----------
@@ -11,48 +11,48 @@ Subpackages
 Submodules
 ----------
 
-fireworks\.utilities\.dagflow module
-------------------------------------
+fireworks.utilities.dagflow module
+----------------------------------
 
 .. automodule:: fireworks.utilities.dagflow
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.dict\_mods module
----------------------------------------
+fireworks.utilities.dict\_mods module
+-------------------------------------
 
 .. automodule:: fireworks.utilities.dict_mods
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.filepad module
-------------------------------------
+fireworks.utilities.filepad module
+----------------------------------
 
 .. automodule:: fireworks.utilities.filepad
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.fw\_serializers module
---------------------------------------------
+fireworks.utilities.fw\_serializers module
+------------------------------------------
 
 .. automodule:: fireworks.utilities.fw_serializers
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.fw\_utilities module
-------------------------------------------
+fireworks.utilities.fw\_utilities module
+----------------------------------------
 
 .. automodule:: fireworks.utilities.fw_utilities
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.update\_collection module
------------------------------------------------
+fireworks.utilities.update\_collection module
+---------------------------------------------
 
 .. automodule:: fireworks.utilities.update_collection
     :members:

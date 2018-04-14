@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.7.2**
+
+* fix FW_offline if job changes directory
+* fixed lpad cli when performing wflow operations (R. Gowers)
+* Add signal to SLURM queue adapter (S. Dwaraknath)
+
 **v1.7.1**
 
 * update FWS rapidfire launch logic (thanks to Primer for suggestions)

@@ -1,5 +1,5 @@
-fireworks\.examples package
-===========================
+fireworks.examples package
+==========================
 
 Subpackages
 -----------

@@ -1,35 +1,35 @@
-fireworks\.utilities\.tests package
-===================================
+fireworks.utilities.tests package
+=================================
 
 Submodules
 ----------
 
-fireworks\.utilities\.tests\.test\_dagflow module
--------------------------------------------------
+fireworks.utilities.tests.test\_dagflow module
+----------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_dagflow
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.tests\.test\_filepad module
--------------------------------------------------
+fireworks.utilities.tests.test\_filepad module
+----------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_filepad
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.tests\.test\_fw\_serializers module
----------------------------------------------------------
+fireworks.utilities.tests.test\_fw\_serializers module
+------------------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_fw_serializers
     :members:
     :undoc-members:
     :show-inheritance:
 
-fireworks\.utilities\.tests\.test\_update\_collection module
-------------------------------------------------------------
+fireworks.utilities.tests.test\_update\_collection module
+---------------------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_update_collection
     :members:
