@@ -3,6 +3,8 @@
 #SBATCH --nodes=$${nodes}
 #SBATCH --ntasks=$${ntasks}
 #SBATCH --ntasks-per-node=$${ntasks_per_node}
+#SBATCH --ntasks-per-core=$${ntasks_per_core}
+#SBATCH --exclude=$${exclude_nodes}
 #SBATCH --cpus-per-task=$${cpus_per_task}
 #SBATCH --gres=$${gres}
 #SBATCH --qos=$${qos}
