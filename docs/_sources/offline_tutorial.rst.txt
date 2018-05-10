@@ -21,6 +21,16 @@ This is the *offline* mode of FireWorks operation. Before using this option, how
 * *Offline* mode can only be used with the :doc:`reservation mode </queue_tutorial_pt2>` of the queue launcher, since the login node must checkout and serialize a job in advance of the queue submission starting to run.
 * Using FireWorks in *offline* mode requires more human maintenance than normal mode, and generates extra files for communication within each job. Thus, trying to get a network connection up and running between your FireWorker and LaunchPad should always be your first line of attack.
 
+Part 0: Before trying offline mode:
+===================================
+
+Offline mode comes with many limitations and some additional work/maintenance from the user. Before trying offline mode, check if any of the following will work you:
+
+* contact your computing center to review their security policy to allow connections from your MongoDB server (best resolution)
+* host your Mongo database on a machine that you are able to securely connect to, e.g. on the supercomputing network itself (ask a system administrator for help)
+* use a proxy service to forward connections from the MongoDB --> login node --> compute node (you might try, for example, `this tool <https://github.com/bakks/mongo-proxy`_).
+* set up an ssh tunnel to forward connections from allowed machines (the tunnel must be kept alive at all times you are running workflows)
+
 Part 1: Checkout and submit jobs in offline mode
 ================================================
 
