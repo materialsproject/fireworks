@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.7.3**
+
+* minor update to SLURM template (E. Sivonxay)
+* minor doc updates
+
 **v1.7.2**
 
 * fix FW_offline if job changes directory
