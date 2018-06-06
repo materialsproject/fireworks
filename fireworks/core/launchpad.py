@@ -1048,7 +1048,7 @@ class LaunchPad(FWSerializable):
         self.complete_launch(launch_id, state='FIZZLED')
 
     def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False,
-                        max_runtime=None, min_runtime=None, refresh=False):
+                        max_runtime=None, min_runtime=None, refresh=False, query=None):
         """
         Detect lost runs i.e running fireworks that haven't been updated within the specified
         time limit or running firework whose launch has been marked fizzed or completed.
@@ -1060,6 +1060,7 @@ class LaunchPad(FWSerializable):
             max_runtime (seconds): maximum run time
             min_runtime (seconds): minimum run time
             refresh (bool): if True, refresh the workflow with inconsistent fireworks.
+            query (dict): restrict search to FWs matching this query
 
         Returns:
             ([int], [int], [int]): tuple of list of lost launch ids, lost firework ids and
@@ -1070,14 +1071,22 @@ class LaunchPad(FWSerializable):
         potential_lost_fw_ids = []
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
-        bad_launch_data = self.launches.find({'state': 'RUNNING',
-                                              'state_history':
-                                                  {'$elemMatch':
-                                                      {'state': 'RUNNING',
-                                                       'updated_on': {'$lte': cutoff_timestr}
-                                                       }
-                                                  }
-                                              },
+
+        lostruns_query = {'state': 'RUNNING',
+                          'state_history':
+                              {'$elemMatch':
+                                   {'state': 'RUNNING',
+                                    'updated_on': {'$lte': cutoff_timestr}
+                                    }
+                               }
+                          }
+
+        if query:
+            fw_ids = [x["fw_id"] for x in self.fireworks.find(query,
+                                                              {"fw_id": 1})]
+            lostruns_query["fw_id"] = {"$in": fw_ids}
+
+        bad_launch_data = self.launches.find(lostruns_query,
                                              {'launch_id': 1, 'fw_id': 1})
         for ld in bad_launch_data:
             bad_launch = True
@@ -1118,7 +1127,10 @@ class LaunchPad(FWSerializable):
                         self.rerun_fw(fw_id)
 
         inconsistent_fw_ids = []
-        running_fws = self.fireworks.find({'state': 'RUNNING'}, {'fw_id': 1, 'launches': 1})
+        inconsistent_query = query or {}
+        inconsistent_query['state'] = 'RUNNING'
+        running_fws = self.fireworks.find(inconsistent_query,
+                                          {'fw_id': 1, 'launches': 1})
         for fw in running_fws:
             if self.launches.find_one({'launch_id': {'$in': fw['launches']},
                                        'state': {'$in': ['FIZZLED', 'COMPLETED']}}):
