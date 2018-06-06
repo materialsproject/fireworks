@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from monty.io import zopen
+
 """
 The LaunchPad manages the FireWorks database.
 """
@@ -1590,7 +1592,7 @@ class LaunchPad(FWSerializable):
 
             # look for action in FW_offline.json
             offline_loc = os.path.join(m_launch.launch_dir, "FW_offline.json")
-            with open(offline_loc) as f:
+            with zopen(offline_loc) as f:
                 offline_data = loadfn(offline_loc)
                 if 'started_on' in offline_data:
                     m_launch.state = 'RUNNING'
