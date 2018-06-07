@@ -678,7 +678,7 @@ def lpad():
     # This makes common argument options easier to maintain. E.g., what if
     # there is a new state or disp option?
     fw_id_args = ["-i", "--fw_id"]
-    fw_id_kwargs = {"type": str, "nargs": "+", "help": "fw_id"}
+    fw_id_kwargs = {"type": str, "help": "fw_id"}
 
     state_args = ['-s', '--state']
     state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.",
@@ -741,7 +741,7 @@ def lpad():
     get_launchdir_parser.set_defaults(func=get_launchdir)
 
     append_wf_parser = subparsers.add_parser('append_wflow', help='append a workflow from file to a workflow on launchpad')
-    append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], nargs=fw_id_kwargs["nargs"], help='parent firework ids')
+    append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], help='parent firework ids')
     append_wf_parser.add_argument('-f', '--wf_file', help='path to a firework or workflow file')
     append_wf_parser.add_argument('-d', '--detour', help='append workflow as a detour', dest='detour', action='store_true')
     append_wf_parser.add_argument('--no_pull_spec_mods', help='do not to pull spec mods from parent', dest='pull_spec_mods', action='store_false')
@@ -1123,10 +1123,11 @@ def lpad():
         parser.print_help()
     else:
         if hasattr(args, "fw_id") and args.fw_id is not None:
-            if type(args.fw_id) is list:
-                if "," in args.fw_id[0]:
-                    args.fw_id = args.fw_id[0].split(",")
-                args.fw_id = [int(_fw_id) for _fw_id in args.fw_id]
+                if "," in args.fw_id:
+                    args.fw_id = [int(x) for x in args.fw_id.split(",")]
+                else:
+                    args.fw_id = [int(args.fw_id)]
+
         args.func(args)
 
 if __name__ == '__main__':
