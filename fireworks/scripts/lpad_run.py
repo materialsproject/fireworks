@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import six
+
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
@@ -1122,7 +1124,8 @@ def lpad():
         # if no command supplied, print help
         parser.print_help()
     else:
-        if hasattr(args, "fw_id") and args.fw_id is not None:
+        if hasattr(args, "fw_id") and args.fw_id is not None and \
+                isinstance(args.fw_id, six.string_types):
                 if "," in args.fw_id:
                     args.fw_id = [int(x) for x in args.fw_id.split(",")]
                 else:
