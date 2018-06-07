@@ -147,7 +147,7 @@ class Rocket:
                 d = json.loads(f_in.read())
                 d['started_on'] = datetime.utcnow().isoformat()
                 with zopen(fpath, "wt") as f_out:
-                    f_out.write(unicode(json.dumps(d)))
+                    f_out.write(json.dumps(d, ensure_ascii=False))
 
             launch_id = None  # we don't need this in offline mode...
 
@@ -301,7 +301,7 @@ class Rocket:
                             d['state'] = 'FIZZLED'
                             d['completed_on'] = datetime.utcnow().isoformat()
                             with zopen(fpath, "wt") as f_out:
-                                f_out.write(unicode(json.dumps(d)))
+                                f_out.write(json.dumps(d, ensure_ascii=False))
 
                     return True
 
@@ -364,7 +364,7 @@ class Rocket:
                     d['state'] = 'COMPLETED'
                     d['completed_on'] = datetime.utcnow().isoformat()
                     with zopen(fpath, "wt") as f_out:
-                        f_out.write(unicode(json.dumps(d)))
+                        f_out.write(json.dumps(d, ensure_ascii=False))
 
             return True
 
@@ -416,7 +416,7 @@ class Rocket:
                     d['state'] = 'FIZZLED'
                     d['completed_on'] = datetime.utcnow().isoformat()
                     with zopen(fpath, "wt") as f_out:
-                        f_out.write(unicode(json.dumps(d)))
+                        f_out.write(json.dumps(d, ensure_ascii=False))
 
             return True
 
@@ -439,7 +439,7 @@ class Rocket:
                 d = json.loads(f_in.read())
                 d['checkpoint'] = checkpoint
                 with zopen(fpath, "wt") as f_out:
-                    f_out.write(unicode(json.dumps(d)))
+                    f_out.write(json.dumps(d, ensure_ascii=False))
 
     def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
 
