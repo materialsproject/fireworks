@@ -102,6 +102,14 @@ Here is a complete Python example that runs multiple Firetasks within a single F
     launchpad.add_wf(fw)
     launch_rocket(launchpad, FWorker())
 
+Modifying FireWorks by adding and removing tasks is easy in python. All Fireworks have a tasks propery that is a python list. Simply modifying this list modifies the FireWork::
+
+    # modify the firework by removing the first firetask and then inserting a new FireTask in its place
+    firetask4 = TemplateWriterTask({'context': {'opt1': 1.0, 'opt2': 'slow method'}, 'template_file': 'simple_template.txt', 		'output_file': 'inputs.txt'})
+    fw.tasks.pop(0) # Removes the first firetask
+    fw.tasks.insert(0,firetask4) # Insert firetask4 into the front of the tasks list
+
+
 .. _customtask-label:
 
 Creating a custom Firetask
