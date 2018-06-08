@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.7.4**
+
+* multiple fw_ids in lpad are always comma-separated, fix for autodocs
+* offline mode more naturally supports gzipped FW_offline.json
+* add a "query" filter option for detect_lostruns
+* tutorial updates on updating Fireworks (S. Dwaraknath)
+
 **v1.7.3**
 
 * minor update to SLURM template (E. Sivonxay)
