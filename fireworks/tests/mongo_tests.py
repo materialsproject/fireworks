@@ -494,6 +494,8 @@ class MongoTests(unittest.TestCase):
         # this will ensure the first Rocket is actually in the DB
         launch_rocket(self.lp, self.fworker)
 
+        time.sleep(1)
+
         if self.lp.launches.count() > 1:
             print("TOO MANY LAUNCHES FOUND!")
             print("--------")
