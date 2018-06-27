@@ -122,7 +122,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 time.sleep(0.15)
                 skip_check = False
         if nlaunches == 0:
-            if not launchpad.future_run_exists():
+            if not launchpad.future_run_exists(fworker):
                 break
         elif num_launched == nlaunches:
             break

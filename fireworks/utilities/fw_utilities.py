@@ -305,8 +305,8 @@ def redirect_local():
         old_err = os.dup(sys.stderr.fileno())
         old_out = os.dup(sys.stdout.fileno())
 
-        new_err = open('FW_job.out', 'w')
-        new_out = open('FW_job.error', 'w')
+        new_err = open('FW_job.error', 'w')
+        new_out = open('FW_job.out', 'w')
 
         os.dup2(new_err.fileno(), sys.stderr.fileno())
         os.dup2(new_out.fileno(), sys.stdout.fileno())
