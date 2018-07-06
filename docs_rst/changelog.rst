@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.7.5**
+
+* minor bug fixes (G. Petretto)
+
 **v1.7.4**
 
 * multiple fw_ids in lpad are always comma-separated, fix for autodocs

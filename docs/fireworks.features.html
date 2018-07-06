@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.features package &#8212; FireWorks 1.7.4 documentation</title>
+    <title>fireworks.features package &#8212; FireWorks 1.7.5 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -60,7 +60,7 @@
 <dl class="class">
 <dt id="fireworks.features.background_task.BackgroundTask">
 <em class="property">class </em><code class="descclassname">fireworks.features.background_task.</code><code class="descname">BackgroundTask</code><span class="sig-paren">(</span><em>tasks</em>, <em>num_launches=0</em>, <em>sleep_time=60</em>, <em>run_on_finish=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.background_task.BackgroundTask.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>tasks</em>, <em>num_launches=0</em>, <em>sleep_time=60</em>, <em>run_on_finish=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask.__init__" title="Permalink to this definition">¶</a></dt>
@@ -70,9 +70,9 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>[</strong><strong>Firetask</strong><strong>]</strong> (<em>tasks</em>) – a list of Firetasks to perform</li>
-<li><strong>num_launches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – the total number of times to run the process (0=infinite)</li>
-<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – sleep time in seconds between background runs</li>
-<li><strong>run_on_finish</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – always run this task upon completion of Firework</li>
+<li><strong>num_launches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the total number of times to run the process (0=infinite)</li>
+<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – sleep time in seconds between background runs</li>
+<li><strong>run_on_finish</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – always run this task upon completion of Firework</li>
 </ul>
 </td>
 </tr>
@@ -119,7 +119,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – spec to check for duplicates</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – spec to check for duplicates</td>
 </tr>
 </tbody>
 </table>
@@ -156,7 +156,7 @@ spec2 (dict)</p>
 <dl class="class">
 <dt id="fireworks.features.fw_report.FWReport">
 <em class="property">class </em><code class="descclassname">fireworks.features.fw_report.</code><code class="descname">FWReport</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.fw_report.FWReport.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.__init__" title="Permalink to this definition">¶</a></dt>
@@ -174,10 +174,10 @@ e.g. past 5 days.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>coll</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – collection, either “fireworks”, “workflows”, or “launches”</li>
-<li><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – one of “minutes”, “hours”, “days”, “months”, “years”</li>
-<li><strong>num_intervals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of intervals to go back in time from present moment</li>
-<li><strong>additional_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – additional constraints on reporting</li>
+<li><strong>coll</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – collection, either “fireworks”, “workflows”, or “launches”</li>
+<li><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – one of “minutes”, “hours”, “days”, “months”, “years”</li>
+<li><strong>num_intervals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of intervals to go back in time from present moment</li>
+<li><strong>additional_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – additional constraints on reporting</li>
 </ul>
 </td>
 </tr>
@@ -196,7 +196,7 @@ e.g. past 5 days.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>decorated_stat_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a><em>]</em>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>decorated_stat_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a><em>]</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">str</td>
 </tr>
@@ -213,12 +213,12 @@ e.g. past 5 days.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>coll</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – collection, either “fireworks”, “workflows”, or “launches”</li>
-<li><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – one of “minutes”, “hours”, “days”, “months”, “years”</li>
-<li><strong>num_intervals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of intervals to go back in time from present moment</li>
-<li><strong>states</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>]</em>) – states to include in plot, defaults to all states,
+<li><strong>coll</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – collection, either “fireworks”, “workflows”, or “launches”</li>
+<li><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – one of “minutes”, “hours”, “days”, “months”, “years”</li>
+<li><strong>num_intervals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of intervals to go back in time from present moment</li>
+<li><strong>states</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – states to include in plot, defaults to all states,
 note this also specifies the order of stacking</li>
-<li><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – style of plot to generate, can either be ‘bar’ or ‘fill’</li>
+<li><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – style of plot to generate, can either be ‘bar’ or ‘fill’</li>
 </ul>
 </td>
 </tr>
@@ -237,7 +237,7 @@ note this also specifies the order of stacking</li>
 <dl class="class">
 <dt id="fireworks.features.introspect.Introspector">
 <em class="property">class </em><code class="descclassname">fireworks.features.introspect.</code><code class="descname">Introspector</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.introspect.Introspector.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector.__init__" title="Permalink to this definition">¶</a></dt>
@@ -274,7 +274,7 @@ number of times each key appears.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>list_keys</strong> – </li>
-<li><strong>filter_truncated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – </li>
+<li><strong>filter_truncated</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – </li>
 </ul>
 </td>
 </tr>
@@ -300,8 +300,8 @@ number of times each key appears.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>curr_doc</strong> – </li>
-<li><strong>curr_recurs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – </li>
-<li><strong>max_recurs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – </li>
+<li><strong>curr_recurs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – </li>
+<li><strong>max_recurs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – </li>
 </ul>
 </td>
 </tr>
@@ -326,15 +326,15 @@ number of times each key appears.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </li>
 <li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </li>
-<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – level at which to output logs</li>
-<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop forever</li>
-<li><strong>num_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of sub jobs</li>
-<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
-<li><strong>total_node_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>]</em>) – contents of NODEFILE (doesn’t affect execution)</li>
-<li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – processors per node (doesn’t affect execution)</li>
-<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
+<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – level at which to output logs</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop forever</li>
+<li><strong>num_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of sub jobs</li>
+<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
+<li><strong>total_node_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – contents of NODEFILE (doesn’t affect execution)</li>
+<li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – processors per node (doesn’t affect execution)</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
 <li><strong>exclude_current_node</strong> – Don’t use the script launching node as a compute node</li>
-<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – redirect standard input and output to local file</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -351,7 +351,7 @@ number of times each key appears.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Listening port number of the DataServer</li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Listening port number of the DataServer</li>
 <li><strong>stop_event</strong> (<em>Thread.Event</em>) – stop event</li>
 </ul>
 </td>
@@ -370,15 +370,15 @@ number of times each key appears.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – object</li>
-<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop forever</li>
-<li><strong>sleep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
-<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – level at which to output logs to stdout</li>
-<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Listening port number of the shared object manage</li>
-<li><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – security password to access the server</li>
-<li><strong>node_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>]</em>) – computer node list</li>
-<li><strong>sub_nproc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of processors of the sub job</li>
-<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
-<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – redirect standard input and output to local file</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop forever</li>
+<li><strong>sleep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
+<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – level at which to output logs to stdout</li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Listening port number of the shared object manage</li>
+<li><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – security password to access the server</li>
+<li><strong>node_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – computer node list</li>
+<li><strong>sub_nproc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of processors of the sub job</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -395,9 +395,9 @@ number of times each key appears.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>num_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of sub jobs</li>
+<li><strong>num_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of sub jobs</li>
 <li><strong>total_node_list</strong> (<em>list of str</em>) – the node list of the whole large job</li>
-<li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of procesors per node</li>
+<li><strong>ppn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of procesors per node</li>
 </ul>
 </td>
 </tr>
@@ -418,15 +418,15 @@ number of times each key appears.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – object</li>
-<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop forever</li>
-<li><strong>sleep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
-<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – level at which to output logs to stdout</li>
-<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Listening port number</li>
-<li><strong>node_lists</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>]</em>) – computer node list</li>
-<li><strong>sub_nproc_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a><em>]</em>) – list of the number of the process of sub jobs</li>
-<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
-<li><strong>running_ids_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Shared dict between process to record IDs</li>
-<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – redirect standard input and output to local file</li>
+<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop forever</li>
+<li><strong>sleep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
+<li><strong>loglvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – level at which to output logs to stdout</li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Listening port number</li>
+<li><strong>node_lists</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – computer node list</li>
+<li><strong>sub_nproc_list</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>]</em>) – list of the number of the process of sub jobs</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
+<li><strong>running_ids_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Shared dict between process to record IDs</li>
+<li><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – redirect standard input and output to local file</li>
 </ul>
 </td>
 </tr>
@@ -443,7 +443,7 @@ number of times each key appears.</p>
 <dl class="class">
 <dt id="fireworks.features.stats.FWStats">
 <em class="property">class </em><code class="descclassname">fireworks.features.stats.</code><code class="descname">FWStats</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.features.stats.FWStats.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>lpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats.__init__" title="Permalink to this definition">¶</a></dt>
@@ -482,13 +482,13 @@ datetime.timedelta function. args and query_start can not be given at the same t
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>query_start</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+<li><strong>query_start</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
 Default is 30 days before current time.</li>
-<li><strong>query_end</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+<li><strong>query_end</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
 Default is current time.</li>
-<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Additional Pymongo queries to filter entries for process.</li>
-<li><strong>time_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The field to query time range. Default is “updated_on”.</li>
-<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Time difference to calculate query_start from query_end.
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Additional Pymongo queries to filter entries for process.</li>
+<li><strong>time_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The field to query time range. Default is “updated_on”.</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Time difference to calculate query_start from query_end.
 Accepts arguments in python datetime.timedelta function. args and query_start can
 not be given at the same time. Default is 30 days.</li>
 </ul>
@@ -510,15 +510,15 @@ not be given at the same time. Default is 30 days.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>query_start</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+<li><strong>query_start</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
 Default is 30 days before current time.</li>
-<li><strong>query_end</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
+<li><strong>query_end</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
 Default is current time.</li>
-<li><strong>time_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – The field to query time range. Default is “time_end”.</li>
-<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Additional Pymongo queries to filter entries for process.</li>
-<li><strong>runtime_stats</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – If return runtime stats. Default is False.</li>
-<li><strong>include_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) – If return fw_ids. Default is False.</li>
-<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – Time difference to calculate query_start from query_end.
+<li><strong>time_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The field to query time range. Default is “time_end”.</li>
+<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Additional Pymongo queries to filter entries for process.</li>
+<li><strong>runtime_stats</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If return runtime stats. Default is False.</li>
+<li><strong>include_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If return fw_ids. Default is False.</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Time difference to calculate query_start from query_end.
 Accepts arguments in python datetime.timedelta function. args and query_start can
 not be given at the same time. Default is 30 days.</li>
 </ul>
@@ -641,7 +641,7 @@ datetime.timedelta function. args and query_start can not be given at the same t
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.5 documentation</a> &#187;</li> 
       </ul>
     </div>
 
