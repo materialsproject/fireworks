@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/fireworks
     docker:
       - image: circleci/python:3.6.2
-      - image: circleci/mongo:3.7.3
+      - image: circleci/mongo:3.2.16
     steps:
       - checkout
       - run:
