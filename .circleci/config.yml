@@ -5,8 +5,6 @@ jobs:
     working_directory: ~/fireworks
     docker:
       - image: circleci/python:3.6.2
-        environment:
-          FW_CONFIG_FILE: "$CIRCLE_WORKING_DIRECTORY/tests/FW_config_unittest.yaml"
       - image: circleci/mongo:3.6
         command: [--auth]
     steps:
@@ -35,4 +33,4 @@ jobs:
           name: Run fireworks tests
           command: |
             source ~/tox_env/bin/activate
-            tox
+            FW_CONFIG_FILE="$CIRCLE_WORKING_DIR gsECTORY/tests/FW_config_unittest.yaml" tox
