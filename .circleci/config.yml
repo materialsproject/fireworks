@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: circleci/python:3.6.2
         environment:
-          FW_CONFIG_FILE: "~/fireworks/tests/FW_config_unittest.yaml"
+          FW_CONFIG_FILE: "$CIRCLE_WORKING_DIRECTORY/tests/FW_config_unittest.yaml"
       - image: circleci/mongo:3.6
         command: [--auth]
     steps:
