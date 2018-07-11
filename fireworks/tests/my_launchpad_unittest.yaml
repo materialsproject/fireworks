@@ -1,7 +1,9 @@
 host: localhost
 port: 27017
 name: fireworks_unittest
-username: null
-password: null
+username: fwuser
+password: fwpass
+admin_user: fwuser
+admin_password: fwpass
 logdir: null
 strm_lvl: INFO

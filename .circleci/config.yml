@@ -5,7 +5,10 @@ jobs:
     working_directory: ~/fireworks
     docker:
       - image: circleci/python:3.6.2
+        environment:
+          FW_CONFIG_FILE: "~/fireworks/tests/FW_config_unittest.yaml"
       - image: circleci/mongo:latest
+        command: [--auth]
     steps:
       - checkout
       - run:
@@ -15,6 +18,19 @@ jobs:
             python -m venv ~/tox_env
             source ~/tox_env/bin/activate
             pip install tox tox-pyenv
+      - run:
+          name: Install MongoDB Shell 3.6 for Ubuntu Trusty
+          command: |
+            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+            echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+            sudo apt-get update
+            sudo apt-get install -y --force-yes mongodb-org-shell
+      # Config
+      - run:
+          name: Configure MongoDB
+          command: |
+            mongo admin --eval 'db.createUser({ user: "admin", pwd: "admin", roles: [{ role: "userAdminAnyDatabase", db: "admin" }]})'
+            mongo fireworks_unittest -u admin -p admin --authenticationDatabase admin --eval 'db.createUser({ user: "fwuser", pwd: "fwpass", roles: [{ role: "dbOwner", db: "fireworks_unittest" }]})'
       - run:
           name: Run fireworks tests
           command: |

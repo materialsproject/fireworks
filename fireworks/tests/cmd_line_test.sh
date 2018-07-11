@@ -23,3 +23,8 @@ test_cmd lpad -l fireworks/tests/my_launchpad_unittest.yaml append_wflow -i 1 -f
 test_cmd lpad -l fireworks/tests/my_launchpad_unittest.yaml dump_wflow -i 1 -f test_dump_wflow.json && rm -f test_dump_wflow.json
 test_cmd rlaunch -l fireworks/tests/my_launchpad_unittest.yaml singleshot
 test_cmd lpad -l fireworks/tests/my_launchpad_unittest.yaml delete_wflows -i 1
+
+test_cmd lpad add_scripts 'echo "hello"' 'echo "goodbye"' -n hello goodbye -w test_workflow
+test_cmd rlaunch --silencer singleshot
+test_cmd lpad delete_wflows -i 1
+
