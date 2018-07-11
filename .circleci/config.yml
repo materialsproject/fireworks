@@ -7,7 +7,7 @@ jobs:
       - image: circleci/python:3.6.2
         environment:
           FW_CONFIG_FILE: "~/fireworks/tests/FW_config_unittest.yaml"
-      - image: circleci/mongo:latest
+      - image: circleci/mongo:3.6
         command: [--auth]
     steps:
       - checkout
