@@ -3,16 +3,16 @@
 {% block title %}Workflow {{ wf_id }} Details{% endblock %}
 
 {% block morehead %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.jsonview.css') }}" />
-<link href="{{ url_for('static', filename='font-awesome-4.0.3/css/font-awesome.css')}}" rel="stylesheet" type="text/css" />
-<link href="{{ url_for('static', filename='css/cytoscape.js-panzoom.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ url_for('fw_webgui_main.static', filename='css/jquery.jsonview.css') }}" />
+<link href="{{ url_for('fw_webgui_main.static', filename='font-awesome-4.0.3/css/font-awesome.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('fw_webgui_main.static', filename='css/cytoscape.js-panzoom.css')}}" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.jsonview.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/cytoscape.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/dagre.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/handlebars-v4.0.2.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/cytoscape-panzoom.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/wf_cyto.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/jquery.jsonview.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/cytoscape.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/dagre.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/handlebars-v4.0.2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/cytoscape-panzoom.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/wf_cyto.js') }}"></script>
 {% raw %}
 <script id="job-details" type="text/x-handlebars-template">
 <div class="panel panel-default">

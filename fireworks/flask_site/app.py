@@ -15,6 +15,11 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.fw_config import WEBSERVER_PERFWARNINGS
 import fireworks.flask_site.helpers as fwapp_util
 
+from flask import Blueprint
+tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+stat_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+main_bp = Blueprint('fw_webgui_main', __name__, template_folder=tmpl_dir, static_folder=stat_dir)
+
 app = Flask(__name__)
 app.use_reloader = True
 app.secret_key = os.environ.get(
@@ -81,7 +86,7 @@ def _addq_WF(q):
     return {
         "$and": [q, app.BASE_Q_WF, session.get('wf_filt', {}), filt_from_fw]}
 
-@app.template_filter('datetime')
+@main_bp.app_template_filter('datetime')
 def datetime(value):
     import datetime as dt
 
@@ -89,7 +94,7 @@ def datetime(value):
     return date.strftime('%m/%d/%Y')
 
 
-@app.template_filter('pluralize')
+@main_bp.app_template_filter('pluralize')
 def pluralize(number, singular='', plural='s'):
     if number == 1:
         return singular
@@ -97,7 +102,7 @@ def pluralize(number, singular='', plural='s'):
         return plural
 
 
-@app.route("/")
+@main_bp.route("/")
 @requires_auth
 def home():
     fw_querystr = request.args.get('fw_query')
@@ -148,7 +153,7 @@ def home():
     return render_template('home.html', **locals())
 
 
-@app.route('/fw/<int:fw_id>/details')
+@main_bp.route('/fw/<int:fw_id>/details')
 @requires_auth
 def get_fw_details(fw_id):
     # just fill out whatever attributse you want to see per step, then edit the handlebars template in
@@ -161,7 +166,7 @@ def get_fw_details(fw_id):
     return jsonify(fw)
 
 
-@app.route('/fw/<int:fw_id>')
+@main_bp.route('/fw/<int:fw_id>')
 @requires_auth
 def fw_details(fw_id):
     try:
@@ -174,7 +179,7 @@ def fw_details(fw_id):
     return render_template('fw_details.html', **locals())
 
 
-@app.route('/wf/<int:wf_id>/json')
+@main_bp.route('/wf/<int:wf_id>/json')
 @requires_auth
 def workflow_json(wf_id):
     try:
@@ -215,7 +220,7 @@ def workflow_json(wf_id):
     return jsonify(nodes_and_edges)
 
 
-@app.route('/wf/<int:wf_id>')
+@main_bp.route('/wf/<int:wf_id>')
 @requires_auth
 def wf_details(wf_id):
     try:
@@ -229,9 +234,9 @@ def wf_details(wf_id):
     return render_template('wf_details.html', **locals())
 
 
-@app.route('/fw/', defaults={"state": "total"})
-@app.route("/fw/<state>/", defaults={"sorting_key": "_id", "sorting_order": "DESCENDING"})
-@app.route("/fw/<state>/<sorting_key>/<sorting_order>/")
+@main_bp.route('/fw/', defaults={"state": "total"})
+@main_bp.route("/fw/<state>/", defaults={"sorting_key": "_id", "sorting_order": "DESCENDING"})
+@main_bp.route("/fw/<state>/<sorting_key>/<sorting_order>/")
 @requires_auth
 def fw_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     if sorting_order == "ASCENDING":
@@ -259,9 +264,9 @@ def fw_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     return render_template('fw_state.html', **locals())
 
 
-@app.route('/wf/', defaults={"state": "total"})
-@app.route("/wf/<state>/", defaults={"sorting_key": "_id", "sorting_order": "DESCENDING"})
-@app.route("/wf/<state>/<sorting_key>/<sorting_order>/")
+@main_bp.route('/wf/', defaults={"state": "total"})
+@main_bp.route("/wf/<state>/", defaults={"sorting_key": "_id", "sorting_order": "DESCENDING"})
+@main_bp.route("/wf/<state>/<sorting_key>/<sorting_order>/")
 @requires_auth
 def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     if sorting_order == "ASCENDING":
@@ -289,8 +294,8 @@ def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
     return render_template('wf_state.html', **locals())
 
 
-@app.route("/wf/metadata/<key>/<value>/", defaults={"state": "total"})
-@app.route("/wf/metadata/<key>/<value>/<state>/")
+@main_bp.route("/wf/metadata/<key>/<value>/", defaults={"state": "total"})
+@main_bp.route("/wf/metadata/<key>/<value>/<state>/")
 @requires_auth
 def wf_metadata_find(key, value, state):
     db = lp.workflows
@@ -324,9 +329,9 @@ def wf_metadata_find(key, value, state):
         return render_template('wf_metadata.html', **locals())
 
 
-@app.route('/report/', defaults={"interval": "months", "num_intervals": 6})
-@app.route('/report/<interval>/', defaults={"num_intervals": 6})
-@app.route("/report/<interval>/<num_intervals>/")
+@main_bp.route('/report/', defaults={"interval": "months", "num_intervals": 6})
+@main_bp.route('/report/<interval>/', defaults={"num_intervals": 6})
+@main_bp.route("/report/<interval>/<num_intervals>/")
 @requires_auth
 def report(interval, num_intervals):
     num_intervals = int(num_intervals)
@@ -351,7 +356,7 @@ def report(interval, num_intervals):
 
     return render_template('report.html', **locals())
 
-@app.route('/dashboard/')
+@main_bp.route('/dashboard/')
 @requires_auth
 def dashboard():
     PLOTTING = False
@@ -398,7 +403,7 @@ def parse_querystr(querystr, coll):
               "to make it run faster.".format(querystr))
     return d
 
-@app.route("/reports/<coll>/<interval>/<num_intervals>/fig.png")
+@main_bp.route("/reports/<coll>/<interval>/<num_intervals>/fig.png")
 def simple(coll, interval, num_intervals):
     from io import BytesIO
 
