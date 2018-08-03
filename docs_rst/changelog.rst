@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+
+**v1.7.6**
+
+* greatly improve speed of workflow refresh with many parents (huge thanks to Github user tahorst)
+
 **v1.7.5**
 
 * minor bug fixes (G. Petretto)
