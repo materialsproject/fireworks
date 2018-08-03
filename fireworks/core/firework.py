@@ -982,16 +982,15 @@ class Workflow(FWSerializable):
             self.fw_states[fw_id] = fw.state
             return updated_ids
 
-        # what are the parent states?
-        parent_states = [self.id_fw[p].state for p in self.links.parent_links.get(fw_id, [])]
-
         completed_parent_states = ['COMPLETED']
         if fw.spec.get('_allow_fizzled_parents'):
             completed_parent_states.append('FIZZLED')
 
-        if len(parent_states) != 0 and not all(s in completed_parent_states for s in parent_states):
-            m_state = 'WAITING'
-
+        # check parent states for any that are not completed
+        for parent in self.links.parent_links.get(fw_id, []):
+            if self.id_fw[parent].state not in completed_parent_states:
+                m_state = 'WAITING'
+                break
         else:  # not DEFUSED/ARCHIVED, and all parents are done running. Now the state depends on the launch status
             # my state depends on launch whose state has the highest 'score' in STATE_RANKS
             m_launch = self._get_representative_launch(fw)
