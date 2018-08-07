@@ -811,7 +811,6 @@ class LaunchPad(FWSerializable):
 
         Args:
             fw_id (int): firework id
-            defuse_all_states (bool)
         """
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
