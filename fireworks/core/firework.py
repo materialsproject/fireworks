@@ -757,7 +757,9 @@ class Workflow(FWSerializable):
         m_state = 'READY'
         #states = [fw.state for fw in self.fws]
         states = self.fw_states.values()
-        leaf_states = (self.fw_states[fw_id] for fw_id in self.leaf_fw_ids)
+        leaf_fw_ids = self.leaf_fw_ids  # to save recalculating this
+
+        leaf_states = (self.fw_states[fw_id] for fw_id in leaf_fw_ids)
         if all(s == 'COMPLETED' for s in leaf_states):
             m_state = 'COMPLETED'
         elif all(s == 'ARCHIVED' for s in states):
@@ -767,32 +769,15 @@ class Workflow(FWSerializable):
         elif any(s == 'PAUSED' for s in states):
             m_state = 'PAUSED'
         elif any(s == 'FIZZLED' for s in states):
-            # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a
-            # given fizzled firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
-            # For each fizzled fw, we thus have to check the states of their children
             fizzled_ids = (fw_id for fw_id, state in self.fw_states.items()
-                           if state not in ['READY', 'RUNNING', 'COMPLETED', 'RESERVED'])
+                           if state == 'FIZZLED')
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
-                if fizzled_id in self.leaf_fw_ids:
+                if (fizzled_id in leaf_fw_ids or
+                    # Otherwise all children must be ok with the fizzled parent
+                    not all(self.id_fw[child_id].spec.get('_allow_fizzled_parents', False)
+                            for child_id in self.links[fizzled_id])):
                     m_state = 'FIZZLED'
-                    break
-                childs_ids = self.links[fizzled_id]
-                mybreak = False
-                for child_id in childs_ids:
-                    # If one of the childs of a fizzled fw is also fizzled, then the workflow is fizzled
-                    # WARNING: this does not handle the case in which the childs of this child
-                    #          might be not fizzled one would need some recursive check here, but
-                    #          we can assume that _allow_fizzled_parents is usually not set twice
-                    #          in a row (in a child as well as in a "grandchild" of a given fw).
-                    #          Anyway, if in the end the workflow reaches completion, its state
-                    #          will be COMPLETED as it will be set as such by the first check on
-                    #          COMPLETED states of all leaf fireworks.
-                    if self.fw_states[child_id] == 'FIZZLED':
-                        mybreak = True
-                        m_state = 'FIZZLED'
-                        break
-                if mybreak:
                     break
             else:
                 m_state = 'RUNNING'
