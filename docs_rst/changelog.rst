@@ -3,6 +3,11 @@ FireWorks Changelog
 ===================
 
 
+**v1.7.7**
+
+* fix bug in Workflow.state pertaining to when _allow_fizzled_parents is set (R. Gowers)
+* minor docfix (R. Gowers)
+
 **v1.7.6**
 
 * greatly improve speed of workflow refresh with many parents (huge thanks to Github user tahorst)
