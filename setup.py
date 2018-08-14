@@ -37,7 +37,7 @@ if __name__ == "__main__":
                           'tqdm>=4.8.4'],
         extras_require={'rtransfer': ['paramiko>=2.4.1'],
                         'newt': ['requests>=2.01'],
-                        'daemon_mode':['fabric>=1.8.1'],
+                        'daemon_mode':['fabric>=2.3.1'],
                         'flask-plotting': ['matplotlib>=2.0.1'],
                         'workflow-checks': ['python-igraph>=0.7.1']},
         classifiers=['Programming Language :: Python',
