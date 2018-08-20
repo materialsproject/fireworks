@@ -2,6 +2,9 @@
 FireWorks Changelog
 ===================
 
+**v1.7.8**
+
+* upgrade to use Fabric 2 for Py3 compatibility (R. Gowers)
 
 **v1.7.7**
 
