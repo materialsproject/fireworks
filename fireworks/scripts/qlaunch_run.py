@@ -109,6 +109,10 @@ def qlaunch():
                         help="Shell command to use on remote host for running submission.",
                         default='/bin/bash -l -c')
 
+    parser.add_argument("-rkf", "--remote_keyfile",
+                        help="SSH keyfile for connecting to remote hosts",
+                        type=str, default=None)
+
     parser.add_argument("-rs", "--remote_setup",
                         help="Setup the remote config dir using files in "
                              "the directory specified by -c.",
@@ -169,11 +173,14 @@ def qlaunch():
         for h in args.remote_host:
             conf = fabric.Configuration()
             conf.run.shell = args.remote_shell
+            connect_kwargs = {'password': args.remote_password}
+            if args.remote_keyfile:
+                connect_kwargs["key_filename"] = args.remote_keyfile
             with fabric.Connection(
                     host=h,
                     user=args.remote_user,
                     config=fabric.Config({'run': {'shell': args.remote_shell}}),
-                    connect_kwargs={'password': args.remote_password}) as conn:
+                    connect_kwargs=connect_kwargs) as conn:
                 for r in args.remote_config_dir:
                     r = os.path.expanduser(r)
                     conn.run("mkdir -p {}".format(r))
@@ -197,6 +204,9 @@ def qlaunch():
     interval = args.daemon
     while True:
         if args.remote_host:
+            connect_kwargs = {'password': args.remote_password}
+            if args.remote_keyfile:
+                connect_kwargs["key_filename"] = args.remote_keyfile
             for h in args.remote_host:
                 with fabric.Connection(
                         host=h,
@@ -216,6 +226,7 @@ def qlaunch():
             time.sleep(args.daemon)
         else:
             break
+
 
 if __name__ == '__main__':
     qlaunch()
