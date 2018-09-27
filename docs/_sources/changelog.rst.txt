@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.8.0**
+
+* bugfix remote_keyfile option to qlaunch (thanks to A. Takahashi)
+
 **v1.7.9**
 
 * add remote_keyfile option to qlaunch
