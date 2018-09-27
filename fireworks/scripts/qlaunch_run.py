@@ -212,7 +212,7 @@ def qlaunch():
                         host=h,
                         user=args.remote_user,
                         config=fabric.Config({'run': {'shell': args.remote_shell}}),
-                        connect_kwargs={'password': args.remote_password}) as conn:
+                        connect_kwargs=connect_kwargs) as conn:
                     for r in args.remote_config_dir:
                         r = os.path.expanduser(r)
                         with conn.cd(r):
