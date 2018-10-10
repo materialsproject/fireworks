@@ -17,6 +17,9 @@
 #SBATCH --error=$${job_name}-%j.error
 #SBATCH --constraint=$${constraint}
 #SBATCH --signal=$${signal}
+#SBATCH --mem=$${mem}
+#SBATCH --mem-per-cpu=$${mem_per_cpu}
+
 
 $${pre_rocket}
 cd $${launch_dir}
