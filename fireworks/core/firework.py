@@ -868,7 +868,7 @@ class Workflow(FWSerializable):
         # re-run all the children
         for child_id in self.links[fw_id]:
             if self.id_fw[child_id].state != 'WAITING':
-                # self.refresh(fw_id, updated_ids)
+                self.refresh(fw_id, updated_ids)
                 updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
 
         # refresh the WF to get the states updated
