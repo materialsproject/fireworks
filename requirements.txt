@@ -1,4 +1,4 @@
-ruamel.yaml==0.15.61
+ruamel.yaml==0.15.44
 pymongo==3.7.1
 Jinja2==2.10
 six==1.11.0
@@ -6,6 +6,6 @@ monty==1.0.3
 python-dateutil==2.7.3
 tabulate==0.8.2
 flask==1.0.2
-flask-paginate==0.5.1
-gunicorn==19.9.0
-tqdm==4.25.0
+flask-paginate==0.5.0
+gunicorn==19.7.1
+tqdm==4.23.1
