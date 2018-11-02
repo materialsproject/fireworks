@@ -865,13 +865,16 @@ class Workflow(FWSerializable):
         m_fw._rerun()
         updated_ids.add(fw_id)
 
+        # refresh the states of the current fw before rerunning the children
+        # so that they get the correct state of the parent.
+        updated_ids.union(self.refresh(fw_id, updated_ids))
+
         # re-run all the children
         for child_id in self.links[fw_id]:
             if self.id_fw[child_id].state != 'WAITING':
                 updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
 
-        # refresh the WF to get the states updated
-        return self.refresh(fw_id, updated_ids)
+        return updated_ids
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=False):
         """

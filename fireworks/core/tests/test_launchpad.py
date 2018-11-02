@@ -452,8 +452,17 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         first_ldir = launches[0].launch_dir
         ts = datetime.datetime.utcnow()
 
+        # check that all the zeus children are completed
+        completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertTrue(completed.issuperset(set(self.zeus_child_fw_ids)))
+
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
+
+        # now the children should be waiting
+        completed = set(self.lp.get_fw_ids({'state':'WAITING'}))
+        self.assertTrue(completed.issuperset(set(self.zeus_child_fw_ids)))
+
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
