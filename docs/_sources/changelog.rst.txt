@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.8.1**
+
+* bugfix on FW rerun where child states were not updated properly (G. Petretto)
+* Added --mem and --mem-per-cpu to SLURM template (S. Torrisi)
+* update paramiko version for better security
+
 **v1.8.0**
 
 * bugfix remote_keyfile option to qlaunch (thanks to A. Takahashi)

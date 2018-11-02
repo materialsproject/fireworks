@@ -43,6 +43,7 @@ Additional contributions from:
 * Matt Horton
 * Eric Sivonxay
 * Matt Henderson
+* Steven Torrisi
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh
