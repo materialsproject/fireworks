@@ -13,11 +13,11 @@ Required parameters
 -------------------
 
 * paths ([str]): list of paths to files to be added
-* labels ([str]): list of labels, one for each file in the paths list.
 
 Optional parameters
 -------------------
 
+* identifiers ([str]): list of identifiers, one for each file in the paths list.
 * filepad_file (str): path to the filepad db config file
 * compress (bool): whether or not to compress the file before inserting to gridfs
 * metadata (dict): metadata to store along with the file, stored in 'metadata' key
@@ -31,7 +31,7 @@ them to the given destination directory.
 Required parameters
 -------------------
 
-* labels ([str]): list of labels, one for each file in the paths list.
+* identifiers ([str]): list of identifiers, one for each file in the paths list.
 
 Optional parameters
 -------------------
@@ -48,7 +48,7 @@ The *DeleteFilesTask* lets you delete one or more files from the filepad.
 Required parameters
 -------------------
 
-* labels: ([str]) file labels to delete
+* identifiers: ([str]) file identifiers to delete
 
 Optional parameters
 -------------------

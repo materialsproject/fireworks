@@ -288,11 +288,11 @@ class FilePad(MSONable):
         creds = loadfn(db_file)
 
         if admin:
-            user = creds.get("admin_user")
-            password = creds.get("admin_password")
+            user = creds.get("admin_user", creds.get("username"))
+            password = creds.get("admin_password", creds.get("password"))
         else:
-            user = creds.get("readonly_user")
-            password = creds.get("readonly_password")
+            user = creds.get("readonly_user", creds.get("username"))
+            password = creds.get("readonly_password", creds.get("password"))
 
         coll_name = creds.get("filepad", "filepad")
         gfs_name = creds.get("filepad_gridfs", "filepad_gfs")
