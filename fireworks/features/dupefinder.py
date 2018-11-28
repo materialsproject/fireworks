@@ -26,8 +26,10 @@ class DupeFinderBase(FWSerializable):
 
     def verify(self, spec1, spec2):
         """
-        Method that checks whether two specs are identical enough to be considered duplicates.
-        Return true if duplicated.
+        Method that checks whether two specs are identical enough to be
+        considered duplicates. Return true if duplicated. Note that
+        implementing this method might slow  FireWorks performance somewhat,
+        so it is best to do as much as possible within the "query" method.
 
         Args:
         spec1 (dict)

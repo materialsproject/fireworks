@@ -1521,15 +1521,27 @@ class LaunchPad(FWSerializable):
             for potential_match in self.fireworks.find(m_query):
                 self.m_logger.debug('Verifying for duplicates, fw_ids: {}, {}'.format(
                     thief_fw.fw_id, potential_match['fw_id']))
-                # steal the launches
-                victim_fw = self.get_fw_by_id(potential_match['fw_id'])
-                thief_launches = [l.launch_id for l in thief_fw.launches]
-                valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
-                for launch in valuable_launches:
-                    thief_fw.launches.append(launch)
-                    stolen = True
-                    self.m_logger.info('Duplicate found! fwids {} and {}'.format(
-                        thief_fw.fw_id, potential_match['fw_id']))
+
+                # see if verification is needed, as this slows the process
+                try:
+                    m_dupefinder.verify({}, {})  # is implemented test
+                    spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
+                    spec2 = dict(potential_match['spec'])  # defensive copy
+                    verified = m_dupefinder.verify(spec1, spec2)
+
+                except NotImplementedError:
+                    verified = True
+
+                if verified:
+                    # steal the launches
+                    victim_fw = self.get_fw_by_id(potential_match['fw_id'])
+                    thief_launches = [l.launch_id for l in thief_fw.launches]
+                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
+                    for launch in valuable_launches:
+                        thief_fw.launches.append(launch)
+                        stolen = True
+                        self.m_logger.info('Duplicate found! fwids {} and {}'.format(
+                            thief_fw.fw_id, potential_match['fw_id']))
         return stolen
 
     def set_priority(self, fw_id, priority):
