@@ -125,7 +125,7 @@ Based on jcollado’s solution:
 
 <dl class="attribute">
 <dt id="fireworks.queue.queue_adapter.QScriptTemplate.pattern">
-<code class="descname">pattern</code><em class="property"> = re.compile('\n    \\$\\$(?:\n      (?P&lt;escaped&gt;\\$\\$) |   # Escape sequence of two delimiters\n      (?P&lt;named&gt;(?-i:[_a-zA-Z][_a-zA-Z0-9]*))      |   # delimiter and a Python identifier\n      {(?P&lt;braced&gt;(?-i:, re.IGNORECASE|re.VERBOSE)</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.pattern" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pattern</code><em class="property"> = re.compile('\n    \\$\\$(?:\n      (?P&lt;escaped&gt;\\$\\$) |   # Escape sequence of two delimiters\n      (?P&lt;named&gt;[_a-z][_a-z0-9]*)      |   # delimiter and a Python identifier\n      {(?P&lt;braced&gt;[_a-z][_a-z0-9]*), re.IGNORECASE|re.VERBOSE)</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.pattern" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

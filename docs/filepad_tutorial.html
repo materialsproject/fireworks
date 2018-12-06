@@ -49,36 +49,42 @@
 <h1>Using FilePad for storing and retrieving files<a class="headerlink" href="#using-filepad-for-storing-and-retrieving-files" title="Permalink to this headline">¶</a></h1>
 <p>FilePad utility provides the api to add and delete arbitrary files of arbitray sizes to MongoDB(filepad).
 The is achieved by inserting the entire file contents to GridFS and storing the id returned by the
-GridFS insertion, the user provided label and the metadata in a document in the filepad. In the following
+GridFS insertion, the user provided identifier and the metadata in a document in the filepad. In the following
 documentation, <code class="docutils literal notranslate"><span class="pre">file</span> <span class="pre">contents</span></code> refers to the file contents stored in GridFS and <code class="docutils literal notranslate"><span class="pre">document</span></code> refers to the
-associated mongodb document that stores the <code class="docutils literal notranslate"><span class="pre">file_id</span></code>, <code class="docutils literal notranslate"><span class="pre">label</span></code> and other miscellaneous information
+associated mongodb document that stores the <code class="docutils literal notranslate"><span class="pre">file_id</span></code>, <code class="docutils literal notranslate"><span class="pre">identifier</span></code> and other miscellaneous information
 pertaining to the file.</p>
 <div class="section" id="adding-files">
 <h2>Adding files<a class="headerlink" href="#adding-files" title="Permalink to this headline">¶</a></h2>
 <p>Create a FilePad object:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fp</span> <span class="o">=</span> <span class="n">FilePad</span><span class="o">.</span><span class="n">auto_load</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fp</span> <span class="o">=</span> <span class="n">FilePad</span><span class="o">.</span><span class="n">from_db_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">PATH_TO_DB_FILE</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>or:</p>
+<blockquote>
+<div>fp = FilePad.auto_load()  # if you have your configuration file paths set up for automatic loading</div></blockquote>
+<p>The db file needs to contain <code class="docutils literal notranslate"><span class="pre">username</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code> keys. You should be able to reuse your existing <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code> file for this purpose.</p>
 <p>To add a file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_id</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">label</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="o">/</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=&lt;</span><span class="n">metadata</span><span class="o">&gt;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_id</span><span class="p">,</span> <span class="n">identifier</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">identifier</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="o">/</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=&lt;</span><span class="n">metadata</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> is a string path to the file to be inserted, <code class="docutils literal notranslate"><span class="pre">&lt;label&gt;</span></code> is some
-unique label that can be used to retrieve the file, the ‘compress’ argument value tells whether or not to compress
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> is a string path to the file to be inserted, <code class="docutils literal notranslate"><span class="pre">&lt;identifier&gt;</span></code> is some
+unique identifier that can be used to retrieve the file, the ‘compress’ argument value tells whether or not to compress
 the file contents before insertion, <code class="docutils literal notranslate"><span class="pre">&lt;metadata&gt;</span></code> is a python dictionary input that will stored in the key ‘metadata’.
 A bare minimum document in the filepad database consists of keys <code class="docutils literal notranslate"><span class="pre">file_id``(used</span>
-<span class="pre">to</span> <span class="pre">store</span> <span class="pre">the</span> <span class="pre">string</span> <span class="pre">representation</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">object</span> <span class="pre">id</span> <span class="pre">returned</span> <span class="pre">by</span> <span class="pre">GridFS),</span> <span class="pre">``label``(used</span> <span class="pre">to</span> <span class="pre">store</span> <span class="pre">the</span>
-<span class="pre">user</span> <span class="pre">assigned</span> <span class="pre">label</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file),</span> <span class="pre">``original_file_name</span></code> , <code class="docutils literal notranslate"><span class="pre">original_file_path</span></code> and <code class="docutils literal notranslate"><span class="pre">metadata</span></code>.
-On successful insertion the <code class="docutils literal notranslate"><span class="pre">file_id</span></code> and the <code class="docutils literal notranslate"><span class="pre">label</span></code> are returned.</p>
+<span class="pre">to</span> <span class="pre">store</span> <span class="pre">the</span> <span class="pre">string</span> <span class="pre">representation</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">object</span> <span class="pre">id</span> <span class="pre">returned</span> <span class="pre">by</span> <span class="pre">GridFS),</span> <span class="pre">``identifier``(used</span> <span class="pre">to</span> <span class="pre">store</span> <span class="pre">the</span>
+<span class="pre">user</span> <span class="pre">assigned</span> <span class="pre">identifier</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file),</span> <span class="pre">``original_file_name</span></code> , <code class="docutils literal notranslate"><span class="pre">original_file_path</span></code> and <code class="docutils literal notranslate"><span class="pre">metadata</span></code>.
+On successful insertion the <code class="docutils literal notranslate"><span class="pre">file_id</span></code> and the <code class="docutils literal notranslate"><span class="pre">identifier</span></code> are returned.</p>
 </div>
 <div class="section" id="retrieving-files">
 <h2>Retrieving files<a class="headerlink" href="#retrieving-files" title="Permalink to this headline">¶</a></h2>
-<p>Retrieve file contents and the associated document by the label:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_contents</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">label</span><span class="o">&gt;</span><span class="p">)</span>
+<p>Retrieve file contents and the associated document by the identifier:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_contents</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">identifier</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>where the returned values <code class="docutils literal notranslate"><span class="pre">file_contents</span></code> and <code class="docutils literal notranslate"><span class="pre">doc</span></code> are the contents of the file with label <code class="docutils literal notranslate"><span class="pre">&lt;label&gt;</span></code>
-and the document attached to it respectively.</p>
+<p>where the returned values <code class="docutils literal notranslate"><span class="pre">file_contents</span></code> and <code class="docutils literal notranslate"><span class="pre">doc</span></code> are the contents of the file with identifier <code class="docutils literal notranslate"><span class="pre">&lt;identifier&gt;</span></code>
+and the document attached to it respectively. Note that if you had set the <code class="docutils literal notranslate"><span class="pre">compress</span></code> option to True when
+inserting the file, it will automatically be decompressed at this stage so that you will retrieve the
+original file contents as expected.</p>
 <p>Retrieve file contents and the associated document by the file id:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_contents</span><span class="p">,</span> <span class="n">doc</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">get_file_by_id</span><span class="p">(</span><span class="o">&lt;</span><span class="n">file_id</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
@@ -93,8 +99,8 @@ tuples that match the query.</p>
 </div>
 <div class="section" id="deleting-files">
 <h2>Deleting files<a class="headerlink" href="#deleting-files" title="Permalink to this headline">¶</a></h2>
-<p>To delete the contents of the file and the associated document by label:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fp</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">label</span><span class="o">&gt;</span><span class="p">)</span>
+<p>To delete the contents of the file and the associated document by identifier:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fp</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="o">&lt;</span><span class="n">identifier</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To delete the file contents and the associated document by the file id:</p>
