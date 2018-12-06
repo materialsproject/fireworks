@@ -133,8 +133,10 @@
 <dl class="method">
 <dt id="fireworks.features.dupefinder.DupeFinderBase.verify">
 <code class="descname">verify</code><span class="sig-paren">(</span><em>spec1</em>, <em>spec2</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.verify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method that checks whether two specs are identical enough to be considered duplicates.
-Return true if duplicated.</p>
+<dd><p>Method that checks whether two specs are identical enough to be
+considered duplicates. Return true if duplicated. Note that
+implementing this method might slow  FireWorks performance somewhat,
+so it is best to do as much as possible within the “query” method.</p>
 <p>Args:
 spec1 (dict)
 spec2 (dict)</p>

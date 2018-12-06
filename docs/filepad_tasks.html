@@ -55,12 +55,12 @@
 <h3>Required parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>paths ([str]): list of paths to files to be added</li>
-<li>labels ([str]): list of labels, one for each file in the paths list.</li>
 </ul>
 </div>
 <div class="section" id="optional-parameters">
 <h3>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>identifiers ([str]): list of identifiers, one for each file in the paths list.</li>
 <li>filepad_file (str): path to the filepad db config file</li>
 <li>compress (bool): whether or not to compress the file before inserting to gridfs</li>
 <li>metadata (dict): metadata to store along with the file, stored in ‘metadata’ key</li>
@@ -74,7 +74,7 @@ them to the given destination directory.</p>
 <div class="section" id="id1">
 <h3>Required parameters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>labels ([str]): list of labels, one for each file in the paths list.</li>
+<li>identifiers ([str]): list of identifiers, one for each file in the paths list.</li>
 </ul>
 </div>
 <div class="section" id="id2">
@@ -92,7 +92,7 @@ them to the given destination directory.</p>
 <div class="section" id="id3">
 <h3>Required parameters<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>labels: ([str]) file labels to delete</li>
+<li>identifiers: ([str]) file identifiers to delete</li>
 </ul>
 </div>
 <div class="section" id="id4">
