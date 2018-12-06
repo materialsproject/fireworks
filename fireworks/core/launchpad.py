@@ -1525,12 +1525,15 @@ class LaunchPad(FWSerializable):
                 # see if verification is needed, as this slows the process
                 try:
                     m_dupefinder.verify({}, {})  # is implemented test
+
+                except NotImplementedError:
+                    verified = True  # no dupefinder.verify() implemented, skip verification
+
+                else:
+                    # dupefinder.verify() is implemented, let's call verify()
                     spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
                     spec2 = dict(potential_match['spec'])  # defensive copy
                     verified = m_dupefinder.verify(spec1, spec2)
-
-                except NotImplementedError:
-                    verified = True
 
                 if verified:
                     # steal the launches
