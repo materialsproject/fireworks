@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v1.8.2**
+
+* call Dupefinder.verify() properly (thanks to A. Takahashi)
+* allow authsource on LaunchPad (thanks to agrav, C. Pashartis)
+* better contribution docs (A. Dunn, A. Jain)
+* webgui bugfix (D. Winston)
+* better FilePad authentication and docs
+
 **v1.8.1**
 
 * bugfix on FW rerun where child states were not updated properly (G. Petretto)

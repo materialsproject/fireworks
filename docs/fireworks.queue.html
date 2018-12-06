@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.queue package &#8212; FireWorks 1.8.1 documentation</title>
+    <title>fireworks.queue package &#8212; FireWorks 1.8.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.2 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -125,7 +125,7 @@ Based on jcollado’s solution:
 
 <dl class="attribute">
 <dt id="fireworks.queue.queue_adapter.QScriptTemplate.pattern">
-<code class="descname">pattern</code><em class="property"> = re.compile('\n    \\$\\$(?:\n      (?P&lt;escaped&gt;\\$\\$) |   # Escape sequence of two delimiters\n      (?P&lt;named&gt;[_a-z][_a-z0-9]*)      |   # delimiter and a Python identifier\n      {(?P&lt;braced&gt;[_a-z][_a-z0-9]*), re.IGNORECASE|re.VERBOSE)</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.pattern" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pattern</code><em class="property"> = re.compile('\n    \\$\\$(?:\n      (?P&lt;escaped&gt;\\$\\$) |   # Escape sequence of two delimiters\n      (?P&lt;named&gt;(?-i:[_a-zA-Z][_a-zA-Z0-9]*))      |   # delimiter and a Python identifier\n      {(?P&lt;braced&gt;(?-i:, re.IGNORECASE|re.VERBOSE)</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.pattern" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -346,7 +346,7 @@ non-reservation mode)</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.2 documentation</a> &#187;</li> 
       </ul>
     </div>
 

@@ -51,14 +51,6 @@ fireworks.utilities.fw\_utilities module
     :undoc-members:
     :show-inheritance:
 
-fireworks.utilities.test module
--------------------------------
-
-.. automodule:: fireworks.utilities.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 fireworks.utilities.update\_collection module
 ---------------------------------------------
 
