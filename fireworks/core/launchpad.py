@@ -1529,13 +1529,17 @@ class LaunchPad(FWSerializable):
                     thief_fw.fw_id, potential_match['fw_id']))
 
                 # see if verification is needed, as this slows the process
+                verified = False
                 try:
                     m_dupefinder.verify({}, {})  # is implemented test
 
                 except NotImplementedError:
                     verified = True  # no dupefinder.verify() implemented, skip verification
 
-                else:
+                except:  # we want to catch any exceptions from testing an empty dict, which the dupefinder might not be designed for
+                    pass
+
+                if not verified:
                     # dupefinder.verify() is implemented, let's call verify()
                     spec1 = dict(thief_fw.to_dict()['spec'])  # defensive copy
                     spec2 = dict(potential_match['spec'])  # defensive copy
