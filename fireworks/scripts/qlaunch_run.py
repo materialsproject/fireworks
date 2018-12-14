@@ -68,7 +68,7 @@ def do_launch(args):
                   reserve=args.reserve, strm_lvl=args.loglvl, timeout=args.timeout, fill_mode=args.fill_mode)
     else:
         launch_rocket_to_queue(launchpad, fworker, queueadapter,
-                               args.launch_dir, args.reserve, args.loglvl, False, args.fill_mode)
+                               args.launch_dir, args.reserve, args.loglvl, False, args.fill_mode, args.fw_id)
 
 def qlaunch():
     m_description = 'This program is used to submit jobs to a queueing system. ' \
