@@ -2,6 +2,11 @@
 FireWorks Changelog
 ===================
 
+**v1.8.3**
+
+* better Dupefinder.verify() (thanks to A. Takahashi)
+* fix missing fw_id parameter passing in qlaunch command (thanks to A. Takahashi)
+
 **v1.8.2**
 
 * call Dupefinder.verify() properly (thanks to A. Takahashi)

@@ -55,6 +55,7 @@ Thanks for helpful discussions:
 * Stephen Bailey
 * Deborah Bard
 * Arun Gopalan
+* Akira Takahashi
 * User: Primer
 * User: tahorst
 
