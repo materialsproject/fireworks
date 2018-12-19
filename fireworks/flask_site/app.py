@@ -22,7 +22,6 @@ app.secret_key = os.environ.get(
     os.urandom(24))
 
 hello = __name__
-lp = LaunchPad.from_dict(json.loads(os.environ["FWDB_CONFIG"]))
 app.BASE_Q = {}
 app.BASE_Q_WF = {}
 
@@ -69,7 +68,7 @@ def _addq_FW(q):
     filt_from_wf = {}
     if session.get('wf_filt'):
         filt_from_wf = fwapp_util.fw_filt_given_wf_filt(
-            session.get('wf_filt'), lp)
+            session.get('wf_filt'), app.lp)
     return {
         "$and": [q, app.BASE_Q, session.get('fw_filt', {}), filt_from_wf]}
 
@@ -77,7 +76,7 @@ def _addq_WF(q):
     filt_from_fw = {}
     if session.get('fw_filt'):
         filt_from_fw = fwapp_util.wf_filt_given_fw_filt(
-            session.get('fw_filt'), lp)
+            session.get('fw_filt'), app.lp)
     return {
         "$and": [q, app.BASE_Q_WF, session.get('wf_filt', {}), filt_from_fw]}
 
@@ -105,18 +104,18 @@ def home():
     fw_querystr = fw_querystr if fw_querystr else ''
     wf_querystr = wf_querystr if wf_querystr else ''
 
-    session['fw_filt'] = (parse_querystr(fw_querystr, lp.fireworks)
+    session['fw_filt'] = (parse_querystr(fw_querystr, app.lp.fireworks)
                           if fw_querystr else {})
-    session['wf_filt'] = (parse_querystr(wf_querystr, lp.workflows)
+    session['wf_filt'] = (parse_querystr(wf_querystr, app.lp.workflows)
                           if wf_querystr else {})
 
     fw_nums = []
     wf_nums = []
     for state in STATES:
-        fw_nums.append(lp.get_fw_ids(query=_addq_FW({'state': state}),
+        fw_nums.append(app.lp.get_fw_ids(query=_addq_FW({'state': state}),
                                      count_only=True))
         wf_nums.append(
-            lp.get_wf_ids(query=_addq_WF({'state': state}),
+            app.lp.get_wf_ids(query=_addq_WF({'state': state}),
                           count_only=True))
     state_nums = zip(STATES, fw_nums, wf_nums)
 
@@ -124,7 +123,7 @@ def home():
     tot_wfs = sum(wf_nums)
 
     # Newest Workflows table data
-    wfs_shown = lp.workflows.find(_addq_WF({}), limit=PER_PAGE,
+    wfs_shown = app.lp.workflows.find(_addq_WF({}), limit=PER_PAGE,
                                   sort=[('_id', DESCENDING)])
     wf_info = []
     for item in wfs_shown:
@@ -133,7 +132,7 @@ def home():
             "name": item['name'],
             "state": item['state'],
             "fireworks": list(
-                lp.fireworks.find({"fw_id": {"$in": item["nodes"]}},
+                app.lp.fireworks.find({"fw_id": {"$in": item["nodes"]}},
                                   limit=PER_PAGE, sort=[('fw_id', DESCENDING)],
                                   projection=["state", "name", "fw_id"]))
         })
@@ -154,7 +153,7 @@ def get_fw_details(fw_id):
     # just fill out whatever attributse you want to see per step, then edit the handlebars template in
     # wf_details.html
     # to control their display
-    fw = lp.get_fw_dict_by_id(fw_id)
+    fw = app.lp.get_fw_dict_by_id(fw_id)
     for launch in fw['launches']:
         del launch['_id']
     del fw['_id']
@@ -168,7 +167,7 @@ def fw_details(fw_id):
         int(fw_id)
     except:
         raise ValueError("Invalid fw_id: {}".format(fw_id))
-    fw = lp.get_fw_dict_by_id(fw_id)
+    fw = app.lp.get_fw_dict_by_id(fw_id)
     fw = json.loads(
         json.dumps(fw, default=DATETIME_HANDLER))  # formats ObjectIds
     return render_template('fw_details.html', **locals())
@@ -194,8 +193,8 @@ def workflow_json(wf_id):
                       "PAUSED": "#FFCFCA"
                       }
 
-    wf = lp.workflows.find_one({'nodes': wf_id})
-    fireworks = list(lp.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
+    wf = app.lp.workflows.find_one({'nodes': wf_id})
+    fireworks = list(app.lp.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
                                        projection=["name", "fw_id", "state"]))
     nodes_and_edges = {'nodes': list(), 'edges': list()}
     for fw in fireworks:
@@ -222,7 +221,7 @@ def wf_details(wf_id):
         int(wf_id)
     except ValueError:
         raise ValueError("Invalid fw_id: {}".format(wf_id))
-    wf = lp.get_wf_summary_dict(wf_id, mode="all")
+    wf = app.lp.get_wf_summary_dict(wf_id, mode="all")
     wf = json.loads(
         json.dumps(wf, default=DATETIME_HANDLER))  # formats ObjectIds
     all_states = list(set(wf["states"].values()))
@@ -242,10 +241,10 @@ def fw_state(state, sorting_key='_id', sorting_order="DESCENDING"):
         raise RuntimeError()
     current_sorting_key = sorting_key
     current_sorting_order = sorting_order
-    db = lp.fireworks
+    db = app.lp.fireworks
     q = {} if state == "total" else {"state": state}
     q = _addq_FW(q)
-    fw_count = lp.get_fw_ids(query=q, count_only=True)
+    fw_count = app.lp.get_fw_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
     except ValueError:
@@ -272,10 +271,10 @@ def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
         raise RuntimeError()
     current_sorting_key = sorting_key
     current_sorting_order = sorting_order
-    db = lp.workflows
+    db = app.lp.workflows
     q = {} if state == "total" else {"state": state}
     q = _addq_WF(q)
-    wf_count = lp.get_wf_ids(query=q, count_only=True)
+    wf_count = app.lp.get_wf_ids(query=q, count_only=True)
     try:
         page = int(request.args.get('page', 1))
     except ValueError:
@@ -293,7 +292,7 @@ def wf_state(state, sorting_key='_id', sorting_order="DESCENDING"):
 @app.route("/wf/metadata/<key>/<value>/<state>/")
 @requires_auth
 def wf_metadata_find(key, value, state):
-    db = lp.workflows
+    db = app.lp.workflows
     try:
         value = int(value)
     except ValueError:
@@ -302,7 +301,7 @@ def wf_metadata_find(key, value, state):
     state_mixin = {} if state == "total" else {"state": state}
     q.update(state_mixin)
     q = _addq_WF(q)
-    wf_count = lp.get_wf_ids(query=q, count_only=True)
+    wf_count = app.lp.get_wf_ids(query=q, count_only=True)
     if wf_count == 0:
         abort(404)
     elif wf_count == 1:
@@ -330,7 +329,7 @@ def wf_metadata_find(key, value, state):
 @requires_auth
 def report(interval, num_intervals):
     num_intervals = int(num_intervals)
-    fwr = FWReport(lp)
+    fwr = FWReport(app.lp)
 
     fw_report_data = fwr.get_stats(coll="fireworks", interval=interval,
                                    num_intervals=num_intervals,
@@ -364,19 +363,6 @@ def dashboard():
     return render_template('dashboard.html', **locals())
 
 
-def bootstrap_app(*args, **kwargs):
-    """Pass instead of `app` to a forking process.
-
-    This is so a server process will re-initialize a MongoDB client
-    connection after forking. This is useful to avoid deadlock when
-    using pymongo with multiprocessing.
-    """
-    import fireworks.flask_site.app
-    fireworks.flask_site.app.lp = LaunchPad.from_dict(
-        json.loads(os.environ["FWDB_CONFIG"]))
-    return app(*args, **kwargs)
-
-
 def parse_querystr(querystr, coll):
     # try to parse using `json.loads`.
     # validate as valid mongo filter dict
@@ -404,7 +390,7 @@ def simple(coll, interval, num_intervals):
 
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-    fwr = FWReport(lp)
+    fwr = FWReport(app.lp)
     fig = fwr.plot_stats(coll, interval, int(num_intervals))
 
     canvas = FigureCanvas(fig)

@@ -16,6 +16,7 @@ import json
 import datetime
 import traceback
 from six.moves import input, zip
+from flask import g
 
 from pymongo import DESCENDING, ASCENDING
 import ruamel.yaml as yaml
@@ -498,8 +499,8 @@ def set_priority(args):
 
 
 def webgui(args):
-    os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
     from fireworks.flask_site.app import app
+    app.lp = get_lp(args)
     if args.wflowquery:
         app.BASE_Q_WF = json.loads(args.wflowquery)
     if args.fwquery:
@@ -531,7 +532,7 @@ def webgui(args):
             'bind': '%s:%s' % (args.host, args.port),
             'workers': nworkers,
         }
-        StandaloneApplication(bootstrap_app, options).run()
+        StandaloneApplication(app, options).run()
 
 
 def add_scripts(args):

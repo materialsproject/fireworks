@@ -39,3 +39,17 @@ Authentication
 ==============
 
 You can add authentication by setting the ``FWAPP_AUTH_USERNAME`` and ``FWAPP_AUTH_PASSWORD`` environment variables.
+
+Running the Flask app via Python
+================================
+
+If you want to run the Flask app via Python you should do something like::
+
+    from fireworks import LaunchPad
+    import os
+    from fireworks.flask_site.app import app
+
+    app.lp = LaunchPad()  # change the LaunchPad info if needed
+    os.environ["FWAPP_AUTH_USERNAME"] = "MY_APP_USERNAME"  # optional basic password-protection
+    os.environ["FWAPP_AUTH_PASSWORD"] = "MY_APP_PASSWORD"  # optional basic password-protection
+    app.run(debug=True)
