@@ -501,6 +501,14 @@ def set_priority(args):
 def webgui(args):
     from fireworks.flask_site.app import app
     app.lp = get_lp(args)
+
+    if any([args.webgui_username, args.webgui_password]) and not \
+            all([args.webgui_username, args.webgui_password]):
+        raise ValueError("Must set BOTH a webgui_username and webgui_password!")
+
+    app.config["WEBGUI_USERNAME"] = args.webgui_username
+    app.config["WEBGUI_PASSWORD"] = args.webgui_password
+
     if args.wflowquery:
         app.BASE_Q_WF = json.loads(args.wflowquery)
     if args.fwquery:
@@ -1027,6 +1035,10 @@ def lpad():
     webgui_parser.add_argument('--nworkers', type=arg_positive_int, help='Number of worker processes for server mode')
     webgui_parser.add_argument('--fwquery', help='additional query filter for FireWorks as JSON string')
     webgui_parser.add_argument('--wflowquery', help='additional query filter for Workflows as JSON string')
+    webgui_parser.add_argument('--webgui_username',
+                               help='Optional username needed to access webgui', type=str, default=None)
+    webgui_parser.add_argument('--webgui_password',
+                               help='Optional password needed to access webgui', type=str, default=None)
     webgui_parser.set_defaults(func=webgui)
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')

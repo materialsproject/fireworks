@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.8.4**
+
+.. warning:: this version changes the manner in which one authenticates to the web gui via Python (command line is unaffected). You no longer set environment variables. See docs on the web gui for more information.
+
+* improve the way lpad webgui handles arguments (no more environment variables!)
+* allow a user to set a username/password to webgui from the command line
+
 **v1.8.3**
 
 * better Dupefinder.verify() (thanks to A. Takahashi)

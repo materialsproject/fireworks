@@ -30,15 +30,15 @@ logger = get_fw_logger('app')
 PER_PAGE = 20
 STATES = sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.get)
 
-AUTH_USER = os.environ.get("FWAPP_AUTH_USERNAME", None)
-AUTH_PASSWD = os.environ.get("FWAPP_AUTH_PASSWORD", None)
-
 
 def check_auth(username, password):
     """
     This function is called to check if a username /
     password combination is valid.
     """
+    AUTH_USER = app.config.get("WEBGUI_USERNAME")
+    AUTH_PASSWD = app.config.get("WEBGUI_PASSWORD")
+
     if (AUTH_USER is None) or (AUTH_PASSWD is None):
         return True
     return username == AUTH_USER and password == AUTH_PASSWD
@@ -56,6 +56,7 @@ def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
+        AUTH_USER = app.config.get("WEBGUI_USERNAME")
         if (AUTH_USER is not None) and (not auth or not check_auth(
                 auth.username, auth.password)):
             return authenticate()
