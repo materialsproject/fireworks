@@ -75,3 +75,21 @@ class WaitWFLockTask(FiretaskBase):
             raise ValueError('Testing; this error is normal.')
 
         return FWAction(update_spec={"WaitWFLockTask": 1})
+
+@explicit_serialize
+class DoNothingTask(FiretaskBase):
+    def run_task(self, fw_spec):
+        pass
+
+@explicit_serialize
+class DetoursTask(FiretaskBase):
+    optional_params = ["n_detours", "data_per_detour"]
+
+    def run_task(self, fw_spec):
+        data_per_detour = self.get("data_per_detour", None)
+        n_detours = self.get("n_detours", 10)
+        fws = []
+        for i in range(n_detours):
+            fws.append(Firework([DoNothingTask(data=data_per_detour)]))
+
+        return FWAction(detours=fws)
