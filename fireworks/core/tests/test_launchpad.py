@@ -1249,17 +1249,16 @@ class GridfsStoredDataTest(unittest.TestCase):
         self.assertEqual(fw.state, 'COMPLETED')
 
         launch_db = self.lp.launches.find_one({"launch_id":1})
-        assert len(launch_db["action"]["detours"]) == 0
+        self.assertIsNotNone(launch_db["action"]["gridfs_id"])
+        self.assertNotIn("detours", launch_db["action"])
 
-        assert self.lp.get_fw_ids(count_only=True) == 2001
+        self.assertEqual(self.lp.get_fw_ids(count_only=True), 2001)
 
         launch_full = self.lp.get_launch_by_id(1)
-        assert len(launch_full.action.detours) == 2000
-        assert launch_full.action_gridfs_id is not None
+        self.assertEqual(len(launch_full.action.detours), 2000)
 
         wf = self.lp.get_wf_by_fw_id_lzyfw(1)
-        assert len(wf.id_fw[1].launches[0].action.detours) == 2000
-        assert wf.id_fw[1].launches[0].action_gridfs_id is not None
+        self.assertEqual(len(wf.id_fw[1].launches[0].action.detours), 2000)
 
     def test_many_detours_offline(self):
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
@@ -1279,10 +1278,11 @@ class GridfsStoredDataTest(unittest.TestCase):
         self.assertIsNone(self.lp.recover_offline(launch_id))
 
         launch_db = self.lp.launches.find_one({"launch_id": launch_id})
-        assert len(launch_db["action"]["detours"]) == 0
+        self.assertIsNotNone(launch_db["action"]["gridfs_id"])
+        self.assertNotIn("detours", launch_db["action"])
 
         launch_full = self.lp.get_launch_by_id(1)
-        assert len(launch_full.action.detours) == 2000
+        self.assertEqual(len(launch_full.action.detours), 2000)
 
 
 if __name__ == '__main__':

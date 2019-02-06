@@ -89,7 +89,7 @@ class DetoursTask(FiretaskBase):
         data_per_detour = self.get("data_per_detour", None)
         n_detours = self.get("n_detours", 10)
         fws = []
-        for i in range(n_detours):
+        for _ in range(n_detours):
             fws.append(Firework([DoNothingTask(data=data_per_detour)]))
 
         return FWAction(detours=fws)

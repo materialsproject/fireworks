@@ -393,7 +393,7 @@ class Launch(FWSerializable, object):
     """
 
     def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, trackers=None,
-                 action=None, action_gridfs_id=None, state_history=None, launch_id=None, fw_id=None):
+                 action=None, state_history=None, launch_id=None, fw_id=None):
         """
         Args:
             state (str): the state of the Launch (e.g. RUNNING, COMPLETED)
@@ -403,8 +403,6 @@ class Launch(FWSerializable, object):
             ip (str): the IP address where the launch took place (set automatically if None)
             trackers ([Tracker]): File Trackers for this Launch
             action (FWAction): the output of the Launch
-            action_gridfs_id (str): the document id of the gridfs file where the action is
-                stored in case the size of the Launch document exceeds the 16MB limit.
             state_history ([dict]): a history of all states of the Launch and when they occurred
             launch_id (int): launch_id set by the LaunchPad
             fw_id (int): id of the Firework this Launch is running
@@ -417,7 +415,6 @@ class Launch(FWSerializable, object):
         self.ip = ip or get_my_ip()
         self.trackers = trackers if trackers else []
         self.action = action if action else None
-        self.action_gridfs_id = action_gridfs_id
         self.state_history = state_history if state_history else []
         self.state = state
         self.launch_id = launch_id
@@ -530,7 +527,6 @@ class Launch(FWSerializable, object):
                 'ip': self.ip,
                 'trackers': self.trackers,
                 'action': self.action,
-                'action_gridfs_id': self.action_gridfs_id,
                 'state': self.state,
                 'state_history': self.state_history,
                 'launch_id': self.launch_id}
@@ -552,7 +548,7 @@ class Launch(FWSerializable, object):
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
         trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get('trackers') else None
         return Launch(m_dict['state'], m_dict['launch_dir'], fworker,
-                      m_dict['host'], m_dict['ip'], trackers, action, m_dict["action_gridfs_id"],
+                      m_dict['host'], m_dict['ip'], trackers, action,
                       m_dict['state_history'], m_dict['launch_id'], m_dict['fw_id'])
 
     def _update_state_history(self, state):

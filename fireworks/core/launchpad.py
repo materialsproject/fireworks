@@ -407,7 +407,8 @@ class LaunchPad(FWSerializable):
         """
         m_launch = self.launches.find_one({'launch_id': launch_id})
         if m_launch:
-            m_launch = set_action_from_gridfs(m_launch, self.gridfs_fallback)
+            if m_launch.get("action") and "gridfs_id" in m_launch["action"]:
+                m_launch["action"] = get_action_from_gridfs(m_launch["action"]["gridfs_id"], self.gridfs_fallback)
             return Launch.from_dict(m_launch)
         raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
@@ -426,10 +427,14 @@ class LaunchPad(FWSerializable):
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
         # recreate launches from the launch collection
         launches = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}}))
-        launches = [set_action_from_gridfs(l, self.gridfs_fallback) for l in launches]
+        for l in launches:
+            if l.get("action") and "gridfs_id" in l["action"]:
+                l["action"] = get_action_from_gridfs(l["action"]["gridfs_id"], self.gridfs_fallback)
         fw_dict['launches'] = launches
         launches = list(self.launches.find({'launch_id': {"$in": fw_dict['archived_launches']}}))
-        launches = [set_action_from_gridfs(l, self.gridfs_fallback) for l in launches]
+        for l in launches:
+            if l.get("action") and "gridfs_id" in l["action"]:
+                l["action"] = get_action_from_gridfs(l["action"]["gridfs_id"], self.gridfs_fallback)
         fw_dict['archived_launches'] = launches
         return fw_dict
 
@@ -1294,19 +1299,23 @@ class LaunchPad(FWSerializable):
         try:
             self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
                                                m_launch.to_db_dict(), upsert=True)
-        except DocumentTooLarge:
+        except DocumentTooLarge as err:
             launch_db_dict = m_launch.to_db_dict()
             action_dict = launch_db_dict.get("action", None)
-            if self.gridfs_fallback is None or not action_dict:
+            if not action_dict:
                 # in case the action is empty and it is not the source of
                 # the error, raise the exception again.
                 raise
+            if self.gridfs_fallback is None:
+                err.args = (err.args[0]
+                            + '. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml'
+                              ' to a value different from None',)
+                raise err
 
-            launch_db_dict["action"] = FWAction().to_db_dict()
             # encoding required for python2/3 compatibility.
             action_id = self.gridfs_fallback.put(json.dumps(action_dict), encoding="utf-8",
                                                  metadata={"launch_id": launch_id})
-            launch_db_dict["action_gridfs_id"] = str(action_id)
+            launch_db_dict["action"] = {"gridfs_id": str(action_id)}
             self.m_logger.warn("The size of the launch document was too large. Saving "
                                "the action in gridfs.")
 
@@ -1933,7 +1942,8 @@ class LazyFirework(object):
             if launch_ids:
                 data = self._lc.find({'launch_id': {"$in": launch_ids}})
                 for ld in data:
-                    ld = set_action_from_gridfs(ld, self._ffs)
+                    if ld.get("action") and "gridfs_id" in ld["action"]:
+                        ld["action"] = get_action_from_gridfs(ld["action"]["gridfs_id"], self._ffs)
                     result.append(Launch.from_dict(ld))
 
             setattr(fw, name, result)  # put into real FireWork obj
@@ -1941,24 +1951,18 @@ class LazyFirework(object):
         return getattr(fw, name)
 
 
-def set_action_from_gridfs(launch_data, fallback_fs):
+def get_action_from_gridfs(action_gridfs_id, fallback_fs):
     """
-    Helper function that checks if the information about the action in a launch
-    has been stored in the gridfs and updates the original document with the
-    information taken from gridfs
+    Helper function that retrieves an action from gridfs based on its identifier.
     
     Args:
-        launch_data (dict): the dictionary of the Launch
+        action_gridfs_id (str): the id of the action in gridfs.
         fallback_fs (GridFS): the GridFS with the actions exceeding the 16MB limit.
     Returns:
+        dict: the dictionary of the action.
     """
-    action_gridfs_id = launch_data.get("action_gridfs_id")
-    if action_gridfs_id:
-        action_gridfs_id = ObjectId(action_gridfs_id)
-        # allow the possibility that the data has been deleted from
-        # the gridfs collection.
-        if fallback_fs.exists(action_gridfs_id):
-            action_data = fallback_fs.get(ObjectId(action_gridfs_id))
-            launch_data["action"] = json.loads(action_data.read())
 
-    return launch_data
+    action_gridfs_id = ObjectId(action_gridfs_id)
+
+    action_data = fallback_fs.get(ObjectId(action_gridfs_id))
+    return json.loads(action_data.read())
