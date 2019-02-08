@@ -113,3 +113,14 @@ The built-in duplicate finder, ``Exact Dupe Finder``, suffers from two limitatio
 * matching is limited to *exact* matches of the Firework spec. You cannot, for example, define two FireWorks to be duplicated if a portion of the spec matches within some numerical tolerance.
 
 In the future, we will include a tutorial on implementing custom Dupe Finders for your application that overcome these limitations. For now, we suggest that you refer to the internal docs or contact us for help. (see :ref:`contributing-label`). You can also try to improve performance by manually adding database indices to :doc:`improve performance <performance_tutorial>`.
+
+Adding a DupeFinder with Python
+===============================
+
+If you are creating a FireWork within Python and want to add in a DupeFinder object, create a key in your spec called ``_dupefinder`` and drop your DupeFinder object in there. For example::
+
+    from fireworks import Firework, ScriptTask
+    from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
+
+    fw = Firework([ScriptTask.from_str('echo "hello"')],
+                  spec={"_dupefinder": DupeFinderExact()})
