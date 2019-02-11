@@ -16,17 +16,20 @@ import random
 import time
 import traceback
 import shutil
+import gridfs
 from collections import OrderedDict, defaultdict
 from itertools import chain
 from tqdm import tqdm
+from bson import ObjectId
 
 from pymongo import MongoClient
 from pymongo import DESCENDING, ASCENDING
+from pymongo.errors import DocumentTooLarge
 from monty.serialization import loadfn
 
 from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, WFLOCK_EXPIRATION_KILL, \
-    MONGO_SOCKET_TIMEOUT_MS
+    MONGO_SOCKET_TIMEOUT_MS, GRIDFS_FALLBACK_COLLECTION
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
 from fireworks.core.firework import Firework, Launch, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -162,6 +165,10 @@ class LaunchPad(FWSerializable):
         self.offline_runs = self.db.offline_runs
         self.fw_id_assigner = self.db.fw_id_assigner
         self.workflows = self.db.workflows
+        if GRIDFS_FALLBACK_COLLECTION:
+            self.gridfs_fallback = gridfs.GridFS(self.db, GRIDFS_FALLBACK_COLLECTION)
+        else:
+            self.gridfs_fallback = None
 
         self.backup_launch_data = {}
         self.backup_fw_data = {}
@@ -256,6 +263,9 @@ class LaunchPad(FWSerializable):
             self.workflows.delete_many({})
             self.offline_runs.delete_many({})
             self._restart_ids(1, 1)
+            if self.gridfs_fallback is not None:
+                self.db.drop_collection("{}.chunks".format(GRIDFS_FALLBACK_COLLECTION))
+                self.db.drop_collection("{}.files".format(GRIDFS_FALLBACK_COLLECTION))
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
         elif not require_password:
@@ -397,6 +407,7 @@ class LaunchPad(FWSerializable):
         """
         m_launch = self.launches.find_one({'launch_id': launch_id})
         if m_launch:
+            m_launch["action"] = get_action_from_gridfs(m_launch.get("action"), self.gridfs_fallback)
             return Launch.from_dict(m_launch)
         raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
@@ -414,9 +425,14 @@ class LaunchPad(FWSerializable):
         if not fw_dict:
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
         # recreate launches from the launch collection
-        fw_dict['launches'] = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}}))
-        fw_dict['archived_launches'] = list(self.launches.find({'launch_id': {
-            "$in": fw_dict['archived_launches']}}))
+        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}}))
+        for l in launches:
+            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
+        fw_dict['launches'] = launches
+        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['archived_launches']}}))
+        for l in launches:
+            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
+        fw_dict['archived_launches'] = launches
         return fw_dict
 
     def get_fw_by_id(self, fw_id):
@@ -464,7 +480,7 @@ class LaunchPad(FWSerializable):
 
         fws = []
         for fw_id in links_dict['nodes']:
-            fws.append(LazyFirework(fw_id, self.fireworks, self.launches))
+            fws.append(LazyFirework(fw_id, self.fireworks, self.launches, self.gridfs_fallback))
         # Check for fw_states in links_dict to conform with pre-optimized workflows
         if 'fw_states' in links_dict:
             fw_states = dict([(int(k), v) for (k, v) in links_dict['fw_states'].items()])
@@ -508,6 +524,10 @@ class LaunchPad(FWSerializable):
         print("Remove fws %s" % fw_ids)
         print("Remove launches %s" % launch_ids)
         print("Removing workflow.")
+        if self.gridfs_fallback is not None:
+            for lid in launch_ids:
+                for f in self.gridfs_fallback.find({"metadata.launch_id": lid}):
+                    self.gridfs_fallback.delete(f._id)
         self.launches.delete_many({'launch_id': {"$in": launch_ids}})
         self.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
@@ -699,6 +719,10 @@ class LaunchPad(FWSerializable):
         self.launches.create_index('launch_id', unique=True, background=bkground)
         self.launches.create_index('fw_id', background=bkground)
         self.launches.create_index('state_history.reservation_id', background=bkground)
+
+        if GRIDFS_FALLBACK_COLLECTION is not None:
+            files_collection = self.db["{}.files".format(GRIDFS_FALLBACK_COLLECTION)]
+            files_collection.create_index('metadata.launch_id', unique=True, background=bkground)
 
         for f in ('state', 'time_start', 'time_end', 'host', 'ip', 'fworker.name'):
             self.launches.create_index(f, background=bkground)
@@ -1269,8 +1293,32 @@ class LaunchPad(FWSerializable):
         if action:
             m_launch.action = action
 
-        self.launches.find_one_and_replace({'launch_id': m_launch.launch_id}, m_launch.to_db_dict(),
-                                           upsert=True)
+        try:
+            self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
+                                               m_launch.to_db_dict(), upsert=True)
+        except DocumentTooLarge as err:
+            launch_db_dict = m_launch.to_db_dict()
+            action_dict = launch_db_dict.get("action", None)
+            if not action_dict:
+                # in case the action is empty and it is not the source of
+                # the error, raise the exception again.
+                raise
+            if self.gridfs_fallback is None:
+                err.args = (err.args[0]
+                            + '. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml'
+                              ' to a value different from None',)
+                raise err
+
+            # encoding required for python2/3 compatibility.
+            action_id = self.gridfs_fallback.put(json.dumps(action_dict), encoding="utf-8",
+                                                 metadata={"launch_id": launch_id})
+            launch_db_dict["action"] = {"gridfs_id": str(action_id)}
+            self.m_logger.warn("The size of the launch document was too large. Saving "
+                               "the action in gridfs.")
+
+            self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
+                                               launch_db_dict, upsert=True)
+
 
         # find all the fws that have this launch
         for fw in self.fireworks.find({'launches': launch_id}, {'fw_id': 1}):
@@ -1650,8 +1698,10 @@ class LaunchPad(FWSerializable):
                     for s in m_launch.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = reconstitute_dates(offline_data['completed_on'])
-                    self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                                       m_launch.to_db_dict(), upsert=True)
+                    self.launches.find_one_and_update({'launch_id': m_launch.launch_id},
+                                                      {'$set':
+                                                           {'state_history': m_launch.state_history}
+                                                      })
                     self.offline_runs.update_one({"launch_id": launch_id},
                                                  {"$set": {"completed": True}})
 
@@ -1733,7 +1783,7 @@ class LazyFirework(object):
     db_fields = ('name', 'fw_id', 'spec', 'created_on', 'state')
     db_launch_fields = ('launches', 'archived_launches')
 
-    def __init__(self, fw_id, fw_coll, launch_coll):
+    def __init__(self, fw_id, fw_coll, launch_coll, fallback_fs):
         """
         Args:
             fw_id (int): firework id
@@ -1742,7 +1792,7 @@ class LazyFirework(object):
         """
         # This is the only attribute known w/o a DB query
         self.fw_id = fw_id
-        self._fwc, self._lc = fw_coll, launch_coll
+        self._fwc, self._lc, self._ffs = fw_coll, launch_coll, fallback_fs
         self._launches = {k: False for k in self.db_launch_fields}
         self._fw, self._lids, self._state = None, None, None
 
@@ -1885,11 +1935,38 @@ class LazyFirework(object):
         fw = self.partial_fw  # assure stage 1
         if not self._launches[name]:
             launch_ids = self._lids[name]
+            result = []
             if launch_ids:
                 data = self._lc.find({'launch_id': {"$in": launch_ids}})
-                result = list(map(Launch.from_dict, data))
-            else:
-                result = []
+                for ld in data:
+                    ld["action"] = get_action_from_gridfs(ld.get("action"), self._ffs)
+                    result.append(Launch.from_dict(ld))
+
             setattr(fw, name, result)  # put into real FireWork obj
             self._launches[name] = True
         return getattr(fw, name)
+
+
+def get_action_from_gridfs(action_dict, fallback_fs):
+    """
+    Helper function to obtain the correct dictionary of the FWAction associated
+    with a launch. If necessary retrieves the information from gridfs based
+    on its identifier, otherwise simply returns the dictionary in input.
+    Should be used when accessing a launch to ensure the presence of the
+    correct action dictionary.
+    
+    Args:
+        action_dict (dict): the dictionary contained in the "action" key of a launch
+            document.
+        fallback_fs (GridFS): the GridFS with the actions exceeding the 16MB limit.
+    Returns:
+        dict: the dictionary of the action.
+    """
+
+    if not action_dict or "gridfs_id" not in action_dict:
+        return action_dict
+
+    action_gridfs_id = ObjectId(action_dict["gridfs_id"])
+
+    action_data = fallback_fs.get(ObjectId(action_gridfs_id))
+    return json.loads(action_data.read())
