@@ -407,8 +407,7 @@ class LaunchPad(FWSerializable):
         """
         m_launch = self.launches.find_one({'launch_id': launch_id})
         if m_launch:
-            if m_launch.get("action") and "gridfs_id" in m_launch["action"]:
-                m_launch["action"] = get_action_from_gridfs(m_launch["action"]["gridfs_id"], self.gridfs_fallback)
+            m_launch["action"] = get_action_from_gridfs(m_launch.get("action"), self.gridfs_fallback)
             return Launch.from_dict(m_launch)
         raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
@@ -428,13 +427,11 @@ class LaunchPad(FWSerializable):
         # recreate launches from the launch collection
         launches = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}}))
         for l in launches:
-            if l.get("action") and "gridfs_id" in l["action"]:
-                l["action"] = get_action_from_gridfs(l["action"]["gridfs_id"], self.gridfs_fallback)
+            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
         fw_dict['launches'] = launches
         launches = list(self.launches.find({'launch_id': {"$in": fw_dict['archived_launches']}}))
         for l in launches:
-            if l.get("action") and "gridfs_id" in l["action"]:
-                l["action"] = get_action_from_gridfs(l["action"]["gridfs_id"], self.gridfs_fallback)
+            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
         fw_dict['archived_launches'] = launches
         return fw_dict
 
@@ -1942,8 +1939,7 @@ class LazyFirework(object):
             if launch_ids:
                 data = self._lc.find({'launch_id': {"$in": launch_ids}})
                 for ld in data:
-                    if ld.get("action") and "gridfs_id" in ld["action"]:
-                        ld["action"] = get_action_from_gridfs(ld["action"]["gridfs_id"], self._ffs)
+                    ld["action"] = get_action_from_gridfs(ld.get("action"), self._ffs)
                     result.append(Launch.from_dict(ld))
 
             setattr(fw, name, result)  # put into real FireWork obj
@@ -1951,18 +1947,26 @@ class LazyFirework(object):
         return getattr(fw, name)
 
 
-def get_action_from_gridfs(action_gridfs_id, fallback_fs):
+def get_action_from_gridfs(action_dict, fallback_fs):
     """
-    Helper function that retrieves an action from gridfs based on its identifier.
+    Helper function to obtain the correct dictionary of the FWAction associated
+    with a launch. If necessary retrieves the information from gridfs based
+    on its identifier, otherwise simply returns the dictionary in input.
+    Should be used when accessing a launch to ensure the presence of the
+    correct action dictionary.
     
     Args:
-        action_gridfs_id (str): the id of the action in gridfs.
+        action_dict (dict): the dictionary contained in the "action" key of a launch
+            document.
         fallback_fs (GridFS): the GridFS with the actions exceeding the 16MB limit.
     Returns:
         dict: the dictionary of the action.
     """
 
-    action_gridfs_id = ObjectId(action_gridfs_id)
+    if not action_dict or "gridfs_id" not in action_dict:
+        return action_dict
+
+    action_gridfs_id = ObjectId(action_dict["gridfs_id"])
 
     action_data = fallback_fs.get(ObjectId(action_gridfs_id))
     return json.loads(action_data.read())
