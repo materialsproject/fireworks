@@ -471,7 +471,7 @@ def unlock(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         with WFLock(lp, f, expire_secs=0, kill=True):
-            lp.m_logger.warn('FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {}'.format(f))
+            lp.m_logger.warning('FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {}'.format(f))
             lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished unlocking {} Workflows'.format(len(fw_ids)))
 
@@ -484,7 +484,7 @@ def get_qid(args):
 
 def cancel_qid(args):
     lp = get_lp(args)
-    lp.m_logger.warn("WARNING: cancel_qid does not actually remove jobs from the queue "
+    lp.m_logger.warning("WARNING: cancel_qid does not actually remove jobs from the queue "
                      "(e.g., execute qdel), this must be done manually!")
     lp.cancel_reservation_by_reservation_id(args.qid)
 

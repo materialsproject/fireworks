@@ -90,7 +90,7 @@ class WFLock(object):
                 if not wf:
                     raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
                 if self.kill:  # force lock acquisition
-                    self.lp.m_logger.warn('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
+                    self.lp.m_logger.warning('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
                     links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id},
                                                                        {'$set': {'locked': True}})
                 else:  # throw error if we don't want to force lock acquisition
@@ -141,7 +141,7 @@ class LaunchPad(FWSerializable):
         self.ssl_certfile = ssl_certfile
         self.ssl_keyfile = ssl_keyfile
         self.ssl_pem_passphrase = ssl_pem_passphrase
-        self.authsource = authsource
+        self.authsource = authsource or name
 
         # set up logger
         self.logdir = logdir
@@ -155,10 +155,8 @@ class LaunchPad(FWSerializable):
         self.connection = MongoClient(host, port, ssl=self.ssl,
             ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
             ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
-            socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, connect=False)
+            socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=username, password=password)
         self.db = self.connection[name]
-        if username:
-            self.db.authenticate(username, password, source=self.authsource)
 
         self.fireworks = self.db.fireworks
         self.launches = self.db.launches
@@ -216,7 +214,7 @@ class LaunchPad(FWSerializable):
                                     'state': {"$in": allowed_states}}, mod_spec)
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
-            self.m_logger.warn("Cannot update spec of fw_id: {} with state: {}. "
+            self.m_logger.warning("Cannot update spec of fw_id: {} with state: {}. "
                                "Try rerunning first".format(fw['fw_id'], fw['state']))
 
     @classmethod
@@ -1313,7 +1311,7 @@ class LaunchPad(FWSerializable):
             action_id = self.gridfs_fallback.put(json.dumps(action_dict), encoding="utf-8",
                                                  metadata={"launch_id": launch_id})
             launch_db_dict["action"] = {"gridfs_id": str(action_id)}
-            self.m_logger.warn("The size of the launch document was too large. Saving "
+            self.m_logger.warning("The size of the launch document was too large. Saving "
                                "the action in gridfs.")
 
             self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
