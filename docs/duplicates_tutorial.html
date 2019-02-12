@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Handling Duplicates Automatically &#8212; FireWorks 1.8.4 documentation</title>
+    <title>Handling Duplicates Automatically &#8212; FireWorks 1.8.5 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -167,6 +167,17 @@
 </ul>
 <p>In the future, we will include a tutorial on implementing custom Dupe Finders for your application that overcome these limitations. For now, we suggest that you refer to the internal docs or contact us for help. (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>). You can also try to improve performance by manually adding database indices to <a class="reference internal" href="performance_tutorial.html"><span class="doc">improve performance</span></a>.</p>
 </div>
+<div class="section" id="adding-a-dupefinder-with-python">
+<h2>Adding a DupeFinder with Python<a class="headerlink" href="#adding-a-dupefinder-with-python" title="Permalink to this headline">¶</a></h2>
+<p>If you are creating a FireWork within Python and want to add in a DupeFinder object, create a key in your spec called <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> and drop your DupeFinder object in there. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span> <span class="nn">fireworks.user_objects.dupefinders.dupefinder_exact</span> <span class="k">import</span> <span class="n">DupeFinderExact</span>
+
+<span class="n">fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello&quot;&#39;</span><span class="p">)],</span>
+              <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;_dupefinder&quot;</span><span class="p">:</span> <span class="n">DupeFinderExact</span><span class="p">()})</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -181,6 +192,7 @@
 <li><a class="reference internal" href="#preventing-trivial-duplicates">Preventing Trivial Duplicates</a></li>
 <li><a class="reference internal" href="#sub-workflow-duplicate-detection">Sub-Workflow Duplicate Detection</a></li>
 <li><a class="reference internal" href="#performance-and-customization">Performance and Customization</a></li>
+<li><a class="reference internal" href="#adding-a-dupefinder-with-python">Adding a DupeFinder with Python</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +241,7 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.5 documentation</a> &#187;</li> 
       </ul>
     </div>
 

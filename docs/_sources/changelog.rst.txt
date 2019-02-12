@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.8.5**
+
+.. caution:: the code to authenticate to databases was changed in this version. If you encounter problems after updating, contact the help group.
+
+* save action in GridFS if Launch document too large (G. Petretto)
+* fixed Jinja functionality in TemplateWriterTask (E. Ateljevich)
+* update authentication method to not use deprecated db.authenticate
+* small updates to tutorials / docs to reflect user questions
+
 **v1.8.4**
 
 .. warning:: this version changes the manner in which one authenticates to the web gui via Python (command line is unaffected). You no longer set environment variables. See docs on the web gui for more information.

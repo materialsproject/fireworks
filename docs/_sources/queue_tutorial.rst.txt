@@ -247,6 +247,12 @@ More information
     qlaunch singleshot -h
     qlaunch rapidfire -h
 
+
+Submitting to the queue with Python
+===================================
+
+Although most people will submit jobs to the queue with the command line, you can also submit jobs via Python. The example is similar to previous tutorials for running the ``rapidfire`` command, however you want to replace ``fireworks.core.rocket_launcher.rapidfire`` with ``fireworks.core.queue_launcher.rapidfire`` and adjust the parameters accordingly.
+
 Limitations and Next Steps
 ==========================
 

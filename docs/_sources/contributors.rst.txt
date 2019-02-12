@@ -44,6 +44,7 @@ Additional contributions from:
 * Eric Sivonxay
 * Matt Henderson
 * Steven Torrisi
+* Eli Ateljevich
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh
