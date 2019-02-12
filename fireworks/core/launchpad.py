@@ -129,7 +129,7 @@ class LaunchPad(FWSerializable):
             ssl_certfile (str): path to the client certificate to be used for mongodb connection
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
-            authsource (str): authsource parameter for MongoDB authentication
+            authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if not set
         """
         self.host = host
         self.port = port
