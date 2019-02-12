@@ -42,7 +42,8 @@ class TemplateWriterTask(FiretaskBase):
             self._load_params(self)
 
         with open(self.template_file) as f:
-            t = Environment(loader=FileSystemLoader(self.template_dir)).from_string(f.read())
+            t = Environment(loader=FileSystemLoader(self.template_dir),
+                            autoescape=True).from_string(f.read())
             output = t.render(self.context)
 
             write_mode = 'w+' if self.append_file else 'w'
