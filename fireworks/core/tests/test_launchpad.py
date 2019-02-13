@@ -43,7 +43,7 @@ class AuthenticationTest(unittest.TestCase):
         with self.assertRaises(OperationFailure):
             lp = LaunchPad(name="admin", username="myuser",
                            password="mypassword", authsource="admin")
-            lp.db.count()
+            lp.db.collection.count()
 
     def test_authenticating_to_users_db(self):
         """A user should be able to authenticate against a database that they
@@ -51,7 +51,7 @@ class AuthenticationTest(unittest.TestCase):
         """
         lp = LaunchPad(name="not_the_admin_db", username="myuser",
                        password="mypassword", authsource="not_the_admin_db")
-        lp.db.count()
+        lp.db.collection.count()
 
     def test_authsource_infered_from_db_name(self):
         """The default behavior is to authenticate against the db that the user
@@ -59,7 +59,7 @@ class AuthenticationTest(unittest.TestCase):
         """
         lp = LaunchPad(name="not_the_admin_db", username="myuser",
                        password="mypassword")
-        lp.db.count()
+        lp.db.collection.count()
 
 
 class LaunchPadTest(unittest.TestCase):
