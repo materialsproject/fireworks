@@ -7,8 +7,7 @@ jobs:
       - image: circleci/python:3.6.2
       - image: circleci/mongo:latest
         command: |
-          mongod
-          mongo not_the_admin_db --eval "db.createUser({user: \"myuser\", pwd: \"mypassword\", roles: [ \"dbOwner\" ]})"
+          mongod & mongo not_the_admin_db --eval "db.createUser({user: \"myuser\", pwd: \"mypassword\", roles: [ \"dbOwner\" ]})"
     steps:
       - checkout
       - run:
