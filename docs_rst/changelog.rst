@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+
+**v1.8.6**
+
+* fix authsource in updated authentication (M. Dylla)
+* doc update for PyTask (I. Kondov)
+
 **v1.8.5**
 
 .. caution:: the code to authenticate to databases was changed in this version. If you encounter problems after updating, contact the help group.

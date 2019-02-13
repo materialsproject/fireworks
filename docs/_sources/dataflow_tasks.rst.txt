@@ -158,9 +158,9 @@ PyTask::
           split: coffee beans
           task:
             _fw_name: PyTask
-            function: auxiliary.printurn
+            func: auxiliary.printurn
             inputs: [coffee beans]
-            outputs: coffee powder
+            outputs: [coffee powder]
         coffee beans: [arabica, robusta, liberica]
     - fw_id: 2
       name: Brew coffee
@@ -170,16 +170,16 @@ PyTask::
           split: coffee powder
           task:
             _fw_name: PyTask
-            function: auxiliary.printurn
+            func: auxiliary.printurn
             inputs: [coffee powder, water]
-            outputs: pure coffee
+            outputs: [pure coffee]
         water: workflowing water
     - fw_id: 3
       name: Serve coffee
       spec:
         _tasks:
         - _fw_name: PyTask
-          function: auxiliary.printurn
+          func: auxiliary.printurn
           inputs: [pure coffee]
     links:
       '1': [2]
