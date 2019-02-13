@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Make tox env and setup mongo
           command: |
+            mongo not_the_admin_db --eval "db.createUser({user: \"myuser\", pwd: \"mypassword\", roles: [ \"dbOwner\" ]})"
             mkdir ~/tox_env
             python -m venv ~/tox_env
             source ~/tox_env/bin/activate
