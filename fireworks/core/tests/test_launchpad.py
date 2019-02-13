@@ -18,6 +18,8 @@ import datetime
 from multiprocessing import Process
 import filecmp
 
+from pymongo.errors import OperationFailure
+
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.queue.queue_launcher import setup_offline_job
@@ -29,6 +31,35 @@ from monty.os import cd
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+class AuthenticationTest(unittest.TestCase):
+    """Tests whether users are authenticating agains the correct mongo dbs.
+    """
+
+    def test_no_admin_privileges_for_plebs(self):
+        """Normal users can not authenticate against the admin db.
+        """
+        with self.assertRaises(OperationFailure):
+            lp = LaunchPad(name="admin", username="myuser",
+                           password="mypassword", authsource="admin")
+            lp.db.count()
+
+    def test_authenticating_to_users_db(self):
+        """A user should be able to authenticate against a database that they
+        are a user of.
+        """
+        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+                       password="mypassword", authsource="not_the_admin_db")
+        lp.db.count()
+
+    def test_authsource_infered_from_db_name(self):
+        """The default behavior is to authenticate against the db that the user
+        is trying to access.
+        """
+        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+                       password="mypassword")
+        lp.db.count()
 
 
 class LaunchPadTest(unittest.TestCase):
