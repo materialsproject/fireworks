@@ -59,18 +59,18 @@ Here is an example of using PyTask in a dataflow context::
       spec:
         _tasks:
         - _fw_name: PyTask
-          function: auxiliary.printurn
+          func: auxiliary.printurn
           inputs: [coffee beans]
-          outputs: coffee powder
+          outputs: [coffee powder]
         coffee beans: best selection
     - fw_id: 2
       name: Brew coffee
       spec:
         _tasks:
         - _fw_name: PyTask
-          function: auxiliary.printurn
+          func: auxiliary.printurn
           inputs: [coffee powder, water]
-          outputs: pure coffee
+          outputs: [pure coffee]
         water: workflowing water
     links:
       '1': [2]
