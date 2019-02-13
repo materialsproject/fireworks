@@ -156,7 +156,7 @@ class LaunchPad(FWSerializable):
             ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
             ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
             socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=username, password=password,
-            authSource=authsource)
+            authSource=self.authsource)
         self.db = self.connection[name]
 
         self.fireworks = self.db.fireworks
