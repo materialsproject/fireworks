@@ -18,6 +18,7 @@ import datetime
 from multiprocessing import Process
 import filecmp
 
+from pymongo import MongoClient
 from pymongo.errors import OperationFailure
 
 from fireworks import Firework, Workflow, LaunchPad, FWorker
@@ -36,6 +37,16 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 class AuthenticationTest(unittest.TestCase):
     """Tests whether users are authenticating agains the correct mongo dbs.
     """
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            client = MongoClient()
+            client.not_the_admin_db.command(
+                "createUser", "myuser", pwd="mypassword", roles=['dbOwner'])
+        except Exception:
+            raise unittest.SkipTest(
+                'MongoDB is not running in localhost:27017! Skipping tests.')
 
     def test_no_admin_privileges_for_plebs(self):
         """Normal users can not authenticate against the admin db.
