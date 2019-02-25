@@ -8,12 +8,12 @@ from six.moves import builtins
 if sys.version_info[0] > 2:
     basestring = str
 
-__author__ = 'Anubhav Jain'
+__author__ = 'Anubhav Jain, Johannes Hörmann'
 __copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
+__version__ = '0.1.1'
 __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 18, 2013'
+__date__ = 'Jan 27, 2019'
 
 
 class ScriptTask(FiretaskBase):
@@ -110,7 +110,7 @@ class ScriptTask(FiretaskBase):
         self.stderr_file = d.get('stderr_file')
         self.store_stdout = d.get('store_stdout')
         self.store_stderr = d.get('store_stderr')
-        self.shell_exe = d.get('shell_exe')
+        self.shell_exe = d.get('shell_exe', '/bin/bash') # bash as default
         self.defuse_bad_rc = d.get('defuse_bad_rc')
         self.fizzle_bad_rc = d.get('fizzle_bad_rc', not self.defuse_bad_rc)
 

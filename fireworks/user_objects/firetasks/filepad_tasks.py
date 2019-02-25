@@ -77,7 +77,8 @@ class GetFilesTask(FiretaskBase):
         for i, l in enumerate(self["identifiers"]):
             file_contents, doc = fpad.get_file(identifier=l)
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
-            with open(os.path.join(dest_dir, file_name), "w") as f:
+            # if content of db is non-ascii, but filesystem standard is, then encoding must be specified:
+            with open(os.path.join(dest_dir, file_name), "w", encoding="utf-8") as f:
                 f.write(file_contents.decode())
 
 
