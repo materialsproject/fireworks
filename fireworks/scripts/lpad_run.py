@@ -527,7 +527,6 @@ def webgui(args):
         webbrowser.open("http://{}:{}".format(args.host, args.port))
         p1.join()
     else:
-        from fireworks.flask_site.app import bootstrap_app
         try:
             from fireworks.flask_site.gunicorn import (
                 StandaloneApplication, number_of_workers)
