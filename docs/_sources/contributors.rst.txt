@@ -57,6 +57,7 @@ Thanks for helpful discussions:
 * Deborah Bard
 * Arun Gopalan
 * Akira Takahashi
+* J. Hörmann
 * User: Primer
 * User: tahorst
 

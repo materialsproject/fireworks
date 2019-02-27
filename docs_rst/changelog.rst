@@ -2,6 +2,9 @@
 FireWorks Changelog
 ===================
 
+**v1.8.7**
+
+* fix lpad webgui bug (thanks to J. Hörmann)
 
 **v1.8.6**
 
