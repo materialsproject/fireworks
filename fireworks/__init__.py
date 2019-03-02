@@ -10,6 +10,7 @@ from fireworks.core.firework import FiretaskBase, FireTaskBase, Firework, Launch
     FWAction, Tracker
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
+from fireworks.core.offline_launchpad import OfflineLaunchPad
 from fireworks.utilities.fw_utilities import explicit_serialize
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.user_objects.firetasks.fileio_tasks import FileDeleteTask, FileTransferTask, \
