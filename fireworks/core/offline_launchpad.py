@@ -1,57 +1,62 @@
 """Internet? Where we're going we don't need internet
 
+Stores everything in a sqlite database (instead of MongoDB)
+
+Implementation notes:
+
+Each mdb collection is roughly translated into a separate table in the db
+
+The 'meta' table keeps counts of ids as they're handed out.
+
+Fireworks are stored a row each.  Only the important information (which is
+later queried upon) is pulled out into columns, everything else is stuffed
+as a json representation into 'data' which represents anything/everything.
+
+Workflows follow a similar strategy.  In order to get a unique 'key' for
+these, they follow a similar strategy to Fireworks in requesting a unique
+id upon insertion.
+
+There is a table of firework to workflow id 'mapping'.  This allows searching
+for the parent workflow of a given Firework.  (ie replicate $in in SQL).
+To remove this table we'd have to store Workflow ID alongside Fireworks
+(not impossible tbh, Fireworks are only inserted in the context of a WF).
+
+
 """
 # https://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable
-from bson import json_util
+from bson import json_util as json
 import datetime
-import json
-import pathlib
 import sqlite3
 
 from .firework import Firework, Workflow, Launch
 
+def firework_to_sqlite(firework):
+    d = firework.to_dict()
+    fw_id = d.pop('fw_id')
+    state = d.pop('state')
+    d = json.dumps(d)
 
-class Collection(object):
-    """Mimics a MongoDB collection, kinda"""
-    def __init__(self, rootdir, name):
-        self.rootdir = pathlib.Path(rootdir) / name
-        if not self.rootdir.exists():
-            self.rootdir.mkdir(parents=True)
+    return fw_id, state, d
 
-    def read(self, item):
-        """Read given entry"""
-        item += '.json'
+def sqlite_to_firework(firework):
+    fw_id, state, data = firework
+    d = json.loads(data)
 
-        with (self.rootdir / item).open('r') as f:
-            return json.loads(f.read(),
-                              object_hook=json_util.object_hook)
+    d['fw_id'] = fw_id
+    d['state'] = state
 
-    def write(self, item, content):
-        """Write given entry, overwriting if exists"""
-        item += '.json'
+    return d
 
-        with (self.rootdir / item).open('w') as f:
-            f.write(json.dumps(content,
-                               default=json_util.default))
+def workflow_to_sqlite(workflow):
+    return json.dumps(workflow.to_dict())
 
-    def find_one(self, **kwargs):
-        for item in self.rootdir.glob('*json'):
-            with item.open('r') as f:
-                stuff = json.loads(f.read(),
-                                   object_hook=json_util.object_hook)
-                if all(stuff[k] == kwargs[k]
-                       for k in kwargs):
-                    return stuff
+def sqlite_to_workflow(workflow):
+    return json.loads(workflow)
 
 
 class OfflineLaunchPad(object):
     def __init__(self, *args, logdir=None, **kwargs):
         self._db = sqlite3.connect(':memory:')
-
-        self._metadata = Collection('.launchpad', 'metadata')
-        self.fireworks = Collection('.launchpad', 'fireworks')
-        self.workflows = Collection('.launchpad', 'workflows')
-        self.launches = Collection('.launchpad', 'launches')
 
         self.logdir = logdir
 
@@ -71,15 +76,24 @@ class OfflineLaunchPad(object):
 
     def reset(self, *args, **kwargs):
         with self._db as c:
+            # TODO: Can squish these commands into single call?
             # reset count of ids
             c.execute('DROP TABLE IF EXISTS meta')
             c.execute('CREATE TABLE meta(name TEXT, value INTEGER)')
             c.executemany('INSERT INTO meta VALUES(?, 1)',
-                          [('next_fw_id',), ('next_launch_id',)])
+                          (('next_fw_id',),
+                           ('next_launch_id',),
+                           ('next_workflow_id',)))
             c.execute('DROP TABLE IF EXISTS fireworks')
             c.execute('''CREATE TABLE fireworks(fw_id INTEGER,
                                                 state TEXT,
                                                 data TEXT)''')
+            c.execute('DROP TABLE IF EXISTS workflows')
+            c.execute('''CREATE TABLE workflows(wf_if INTEGER,
+                                                data TEXT)''')
+            c.execute('DROP TABLE IF EXISTS mapping')
+            c.execute('''CREATE TABLE mapping(firework_id INTEGER,
+                                              workflow_id INTEGER)''')
 
     def maintain(self, **kwargs):
         raise NotImplementedError
@@ -97,12 +111,21 @@ class OfflineLaunchPad(object):
         old_new = self._upsert_fws(list(wf.id_fw.values()),
                                    reassign_all=reassign_all)
         wf._reassign_ids(old_new)
-        self.workflows.write('1', wf.to_db_dict())
 
+        wf_id = self._get_new_workflow_id()
+
+        with self._db as c:
+            workflow_id = self._get_new_workflow_id()
+            c.execute('INSERT INTO workflows VALUES(?, ?)',
+                      (workflow_id, workflow_to_sqlite(wf)))
+            c.executemany('INSERT INTO mapping VALUES(?, ?)', (
+                (fw_id, workflow_id) for fw_id in wf.id_fw
+            ))
         return old_new
 
     def bulk_add_wfs(self, wfs):
-        raise NotImplementedError
+        for wf in wfs:
+            self.add_wf(wf)
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
         raise NotImplementedError
@@ -111,12 +134,11 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def get_fw_dict_by_id(self, fw_id):
-        try:
-            fw_dict = self.fireworks.load(str(fw_id))
-        except FileNotFoundError:
-            raise ValueError
+        with self._db as c:
+            val = c.execute('SELECT * FROM fireworks WHERE fw_id = ?',
+                            (fw_id,)).fetchone()
 
-        return fw_dict
+        return sqlite_to_firework(val)
 
     def get_fw_by_id(self, fw_id):
         return Firework.from_dict(self.get_fw_dict_by_id(fw_id))
@@ -298,6 +320,10 @@ class OfflineLaunchPad(object):
 
         return next_id
 
+    def _get_new_workflow_id(self, quantity=1):
+        # not official API, a hack to make SQL work
+        return self._get_new_and_increment('next_workflow_id', quantity)
+
     def get_new_fw_id(self, quantity=1):
         return self._get_new_and_increment('next_fw_id', quantity)
 
@@ -321,10 +347,12 @@ class OfflineLaunchPad(object):
             with self._db as c:
                 # delete rows that existed
                 # TODO: How to use 'WHERE fw_id IN used_ids'?
+                # WHERE fw_id IN (?,)*len(fws)
+                # '(' + ','.join(['?'] * len(fws)) + ')'
                 c.executemany('DELETE FROM fireworks WHERE fw_id = ?',
-                              [(i,) for i in used_ids])
+                              ((i,) for i in used_ids))
                 c.executemany('INSERT INTO fireworks VALUES(?,?,?)',
-                              [self._fw_to_sqlite(fw) for fw in fws])
+                              (firework_to_sqlite(fw) for fw in fws))
         else:
             for fw in fws:
                 if fw.fw_id < 0:
@@ -333,7 +361,7 @@ class OfflineLaunchPad(object):
                     fw.fw_id = new_id
             with self._db as c:
                 c.executemany('INSERT INTO fireworks VALUES(?,?,?)',
-                              [self._fw_to_sqlite(fw) for fw in fws])
+                              (firework_to_sqlite(fw) for fw in fws))
 
         return old_new
 
