@@ -4,6 +4,14 @@ import fireworks as fw
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
 
+def assert_datetime_almost_equal(a, b, tol=0.001):
+    # checks time diff between two is less than tol *seconds*
+    # sometimes tzinfo is set, so just strip that out
+    a = a.replace(tzinfo=None)
+    b = b.replace(tzinfo=None)
+    assert abs((a - b).total_seconds()) < tol
+
+
 def assert_fireworks_equal(a, b):
     assert a.to_dict() == b.to_dict()
 
@@ -12,6 +20,7 @@ def assert_workflows_equal(a, b):
     d_a, d_b = a.to_dict(), b.to_dict()
     for k in ['created_on', 'updated_on']:
         val_a, val_b = d_a.pop(k), d_b.pop(k)
+        assert_datetime_almost_equal(val_a, val_b)
     fws_a, fws_b = d_a.pop('fws'), d_b.pop('fws')
     for fw_a, fw_b in zip(sorted(fws_a, key=lambda x: x['fw_id']),
                           sorted(fws_b, key=lambda x: x['fw_id'])):
