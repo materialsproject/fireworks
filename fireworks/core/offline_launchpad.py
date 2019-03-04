@@ -113,10 +113,8 @@ class OfflineLaunchPad(object):
                                    reassign_all=reassign_all)
         wf._reassign_ids(old_new)
 
-        wf_id = self._get_new_workflow_id()
-
+        workflow_id = self._get_new_workflow_id()
         with self._db as c:
-            workflow_id = self._get_new_workflow_id()
             c.execute('INSERT INTO workflows VALUES(?, ?)',
                       (workflow_id, workflow_to_sqlite(wf)))
             c.executemany('INSERT INTO mapping VALUES(?, ?)', (
@@ -238,20 +236,29 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
-        # some stuff about priority todo
+        if not query is None:
+            # let's smoke out where/if this is ever used
+            raise NotImplementedError
 
-        if fw_id:
-            firework = self.fireworks.read(str(fw_id))
-        else:
-            firework = self.fireworks.find_one(state='READY')
+        # TODO: Case where no firework is found
+        with self._db as c:
+            if fw_id:
+                firework = c.execute('SELECT * FROM fireworks '
+                                     'WHERE fw_id = ?',
+                                     (fw_id,)).fetchone()
+            else:
+                firework = c.execute('SELECT * FROM fireworks ',
+                                     '').fetchone()
+            firework = sqlite_to_firework(firework)
+            if checkout:
+                # TODO: Updated on field in fireworks schema
+                c.execute('UPDATE fireworks SET state = ? '
+                          'WHERE fw_id = ?',
+                          ("RESERVED", fw.fw_id))
 
-        if checkout:
-            firework.state = 'RESERVED'
-            firework.updated_on = datetime.datetime.utcnow()
+        # TODO: Check for uniqueness
 
-            self.fireworks.write(str(fw_id), firework)
-
-
+        return firework
 
     def _get_active_launch_ids(self):
         raise NotImplementedError
@@ -302,8 +309,7 @@ class OfflineLaunchPad(object):
                           trackers=trackers, state_history=None,
                           launch_id=launch_id, fw_id=m_fw.fw_id)
 
-        self.launches.write(str(m_launch.launch_id),
-                            m_launch)
+        # TODO: launches collection
 
         if not reserved_launch:
             m_fw.launches.append(m_launch)
@@ -318,6 +324,8 @@ class OfflineLaunchPad(object):
         # if state == "RUNNING"
 
         # TODO: Backup fw_data?
+
+        return m_fw, launch_id
 
     def change_launch_dir(self, launch_id, launch_dir):
         raise NotImplementedError
@@ -343,7 +351,7 @@ class OfflineLaunchPad(object):
         return next_id
 
     def _get_new_workflow_id(self, quantity=1):
-        # not official API, a hack to make SQL work
+        # not official API, a hack to make workflow->firework mapping work
         return self._get_new_and_increment('next_workflow_id', quantity)
 
     def get_new_fw_id(self, quantity=1):
@@ -394,28 +402,31 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def _refresh_wf(self, fw_id):
-        # TODO: Locks
-        wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-        updated_ids = wf.refresh(fw_id)
-        self._update_wf(wf, updated_ids)
+        # TODO: Locks check
+        with self._db as c:
+            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+            updated_ids = wf.refresh(fw_id)
+            self._update_wf(wf, updated_ids, cursor=c)
         # TODO: Extra junk in the 2nd except branch
+        # ^ Can probably replicate and just update FIZZLED too
 
-    def _update_wf(self, wf, updated_ids):
+    def _update_wf(self, wf, updated_ids, cursor):
+        # TODO: I've changed the API of this call, is this bad?
+        # Inherits 'Lock' from calling function
+        # in sqlite, 'Lock' is the context manager
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
 
-        query_node = None
-        for f in wf.id_fw:
-            if f not in old_new.values() or old_new.get(f, None) == f:
-                query_node = f
-                break
-        else:
-            raise ValueError
-
-        wf = wf.to_db_dict()
-        wf['locked'] = True
-        self.workflows.write('1', wf)
+        # TODO: We're finding workflow_id again here, despite
+        #       the fact we were indirectly just using it...
+        workflow_id = cursor.execute('SELECT workflow_id FROM mapping'
+                                     'WHERE firework_id = ?',
+                                     (updated_ids[0],)).fetchone()[0]
+        # rewrite the payload of the workflow
+        cursor.execute('UPDATE workflows SET data = ?'
+                       'WHERE wf_id = ?',
+                       (workflow_to_sqlite(wf), workflow_id))
 
     def _steal_launches(self, thief_fw):
         raise NotImplementedError
