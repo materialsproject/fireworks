@@ -8,6 +8,17 @@ def assert_fireworks_equal(a, b):
     assert a.to_dict() == b.to_dict()
 
 
+def assert_workflows_equal(a, b):
+    d_a, d_b = a.to_dict(), b.to_dict()
+    for k in ['created_on', 'updated_on']:
+        val_a, val_b = d_a.pop(k), d_b.pop(k)
+    fws_a, fws_b = d_a.pop('fws'), d_b.pop('fws')
+    for fw_a, fw_b in zip(sorted(fws_a, key=lambda x: x['fw_id']),
+                          sorted(fws_b, key=lambda x: x['fw_id'])):
+        assert fw_a == fw_b
+    assert d_a == d_b
+
+
 @pytest.fixture
 def lp():
     lp = fw.OfflineLaunchPad()
@@ -65,3 +76,10 @@ def test_get_fw_by_id(lp, workflow):
 
     assert_fireworks_equal(firework1, fw1)
     assert_fireworks_equal(firework2, fw2)
+
+def test_get_wf_by_fw_id(lp, workflow):
+    lp.add_wf(workflow)
+
+    work = lp.get_wf_by_fw_id(workflow.fws[0].fw_id)
+
+    assert_workflows_equal(work, workflow)
