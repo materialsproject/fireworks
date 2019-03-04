@@ -30,6 +30,13 @@ import sqlite3
 
 from .firework import Firework, Workflow, Launch
 
+
+def _nq(n):
+    # for IN statements
+    # generates a (?,...,?) block with *n* values
+    return '(' + ','.join(['?'] * n) + ')'
+
+
 def firework_to_sqlite(firework):
     d = firework.to_dict()
     fw_id = d.pop('fw_id')
@@ -96,7 +103,6 @@ class OfflineLaunchPad(object):
                                               workflow_id INTEGER)''')
 
     def maintain(self, **kwargs):
-        # TODO: Just do sqlite VACUUM ?
         raise NotImplementedError
 
     def add_wf(self, wf, reassign_all=True):
@@ -197,12 +203,35 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def run_exists(self, fworker=None):
-        raise NotImplementedError
+        if not fworker is None:
+            raise NotImplementedError
+        return bool(self._get_a_fw_to_run(query=None,
+                                          checkout=False))
 
     def future_run_exists(self, fworker=None):
-        raise NotImplementedError
+        if self.run_exists(fworker):
+            return True
+        if not fworker is None:
+            raise NotImplementedError
+        with self._db as c:
+            # iterate over 'active' fireworks checking for waiting children
+            for fw in c.execute('SELECT * FROM fireworks '
+                                'WHERE state in ("RUNNING", "RESERVED")'):
+                # TODO: Could optimise here by grouping into workflows
+                #       & fetch each unique workflow only once...
+                children = self.get_wf_by_fw_id_lzyfw(fw_id).links[fw_id]
+                # If any children are "WAITING" then we've got future work
+                if c.execute('SELECT state FROM fireworks '
+                             'WHERE fw_id = ' + _nq(len(children)) + '',
+                             'AND state = "WAITING"',
+                             children):
+                    return True
+            else:
+                # At end of loop, no future work remains
+                return False
 
     def tuneup(self, bkground=True):
+        # TODO: Just do sqlite VACUUM ?
         raise NotImplementedError
 
     def pause_fw(self, fw_id):
