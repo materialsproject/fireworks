@@ -85,17 +85,18 @@ class OfflineLaunchPad(object):
                            ('next_launch_id',),
                            ('next_workflow_id',)))
             c.execute('DROP TABLE IF EXISTS fireworks')
-            c.execute('''CREATE TABLE fireworks(fw_id INTEGER,
+            c.execute('''CREATE TABLE fireworks(fw_id INTEGER UNIQUE,
                                                 state TEXT,
                                                 data TEXT)''')
             c.execute('DROP TABLE IF EXISTS workflows')
-            c.execute('''CREATE TABLE workflows(wf_id INTEGER,
+            c.execute('''CREATE TABLE workflows(wf_id INTEGER UNIQUE,
                                                 data TEXT)''')
             c.execute('DROP TABLE IF EXISTS mapping')
-            c.execute('''CREATE TABLE mapping(firework_id INTEGER,
+            c.execute('''CREATE TABLE mapping(firework_id INTEGER UNIQUE,
                                               workflow_id INTEGER)''')
 
     def maintain(self, **kwargs):
+        # TODO: Just do sqlite VACUUM ?
         raise NotImplementedError
 
     def add_wf(self, wf, reassign_all=True):
