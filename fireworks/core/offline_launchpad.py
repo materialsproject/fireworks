@@ -33,7 +33,7 @@ from .firework import Firework, Workflow, Launch
 def firework_to_sqlite(firework):
     d = firework.to_dict()
     fw_id = d.pop('fw_id')
-    state = d.pop('state')
+    state = d.pop('state', None)
     d = json.dumps(d)
 
     return fw_id, state, d
@@ -48,7 +48,7 @@ def sqlite_to_firework(firework):
     return d
 
 def workflow_to_sqlite(workflow):
-    return json.dumps(workflow.to_dict())
+    return json.dumps(workflow.to_db_dict())
 
 def sqlite_to_workflow(workflow):
     return json.loads(workflow)
@@ -89,7 +89,7 @@ class OfflineLaunchPad(object):
                                                 state TEXT,
                                                 data TEXT)''')
             c.execute('DROP TABLE IF EXISTS workflows')
-            c.execute('''CREATE TABLE workflows(wf_if INTEGER,
+            c.execute('''CREATE TABLE workflows(wf_id INTEGER,
                                                 data TEXT)''')
             c.execute('DROP TABLE IF EXISTS mapping')
             c.execute('''CREATE TABLE mapping(firework_id INTEGER,
@@ -146,23 +146,44 @@ class OfflineLaunchPad(object):
     def get_wf_by_fw_id(self, fw_id):
         # search through all Workflows, looking for correct fw_id?
         # or could have some index file, but this could get stale
-        raise NotImplementedError
+        with self._db as c:
+            # TODO: Maybe this can be some fancy INNER JOIN
+            wf_id = c.execute('SELECT workflow_id FROM mapping WHERE firework_id = ?',
+                              (fw_id,)).fetchone()[0]
+
+            workflow = c.execute('SELECT data FROM workflows WHERE wf_id = ?',
+                                 (wf_id,)).fetchone()[0]
+
+        workflow = sqlite_to_workflow(workflow)
+
+        fireworks = [self.get_fw_by_id(i) for i in workflow['nodes']]
+
+        return Workflow(fireworks, workflow['links'], workflow['name'],
+                        workflow['metadata'], workflow['created_on'],
+                        workflow['updated_on'])
 
     def get_wf_by_fw_id_lzyfw(self, fw_id):
-        wf = self.workflows.find_one(fw_id=fw_id)
+        with self._db as c:
+            wf_id = c.execute('SELECT workflow_id FROM mapping WHERE firework_id = ?',
+                              (fw_id,)).fetchone()[0]
 
-        fws = [LazyFirework(fw_id, self.fireworks, self.launches)
-               for fw_id in wf['nodes']]
+            workflow = c.execute('SELECT data FROM workflows WHERE wf_id = ?',
+                                 (wf_id,)).fetchone()[0]
 
-        if 'fw_states' in wf:
+        workflow = sqlite_to_workflow(workflow)
+
+        fws = [LazyFirework(fw_id, self)
+               for fw_id in workflow['nodes']]
+
+        if 'fw_states' in workflow:
             fw_states = dict([(int(k), v)
-                              for (k, v) in wf['fw_states'].items()])
+                              for (k, v) in workflow['fw_states'].items()])
         else:
             fw_states = None
 
-        return Workflow(fws, wf['links'], wf['name'],
-                        wf['metadata'], wf['created_on'],
-                        wf['updated_on'], fw_states)
+        return Workflow(fws, workflow['links'], workflow['name'],
+                        workflow['metadata'], workflow['created_on'],
+                        workflow['updated_on'], fw_states)
 
     def delete_wf(self, fw_id, delete_launch_dirs=False):
         raise NotImplementedError
@@ -425,4 +446,6 @@ class OfflineLaunchPad(object):
 
 class LazyFirework(Firework):
     # Yeah...
-    pass
+    def __init__(self, fw_id, hook):
+        self.fw_id = fw_id
+        self.hook = hook
