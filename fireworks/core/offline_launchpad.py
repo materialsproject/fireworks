@@ -50,7 +50,8 @@ def sqlite_to_firework(firework):
     d = json.loads(data)
 
     d['fw_id'] = fw_id
-    d['state'] = state
+    if not state is None:
+        d['state'] = state
 
     return d
 
@@ -269,21 +270,22 @@ class OfflineLaunchPad(object):
             # let's smoke out where/if this is ever used
             raise NotImplementedError
 
-        # TODO: Case where no firework is found
         with self._db as c:
             if fw_id:
                 firework = c.execute('SELECT * FROM fireworks '
                                      'WHERE fw_id = ?',
                                      (fw_id,)).fetchone()
             else:
+                # TODO: Ordering expected here
                 firework = c.execute('SELECT * FROM fireworks ',
                                      '').fetchone()
-            firework = sqlite_to_firework(firework)
-            if checkout:
-                # TODO: Updated on field in fireworks schema
-                c.execute('UPDATE fireworks SET state = ? '
-                          'WHERE fw_id = ?',
-                          ("RESERVED", fw.fw_id))
+            if not firework is None:
+                firework = sqlite_to_firework(firework)
+                if checkout:
+                    # TODO: Updated on field in fireworks schema
+                    c.execute('UPDATE fireworks SET state = ? '
+                              'WHERE fw_id = ?',
+                              ("RESERVED", fw.fw_id))
 
         # TODO: Check for uniqueness
 
