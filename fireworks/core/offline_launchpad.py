@@ -417,7 +417,12 @@ class OfflineLaunchPad(object):
         return m_fw, launch_id
 
     def change_launch_dir(self, launch_id, launch_dir):
-        raise NotImplementedError
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.launch_dir = launch_dir
+        with self._db as c:
+            c.execute('UPDATE launches SET data = ? '
+                      'WHERE launch_id = ?',
+                      (launch_to_sqlite(m_launch), launch_id))
 
     def restore_backup_data(self, launch_id, fw_id):
         # Doesn't seem to ever be used by anything, can ignore

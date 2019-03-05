@@ -170,3 +170,13 @@ def test_get_launch(lp, workflow):
     assert isinstance(launch, fw.Launch)
     assert launch.fw_id == firework.fw_id
     assert launch.launch_dir == './here/'
+
+
+def test_change_launch_idr(lp, workflow):
+    lp.add_wf(workflow)
+
+    firework, launch_id = lp.checkout_fw(fw.FWorker(), './here/')
+
+    lp.change_launch_dir(launch_id, './newplace')
+
+    assert lp.get_launch_by_id(launch_id).launch_dir == './newplace'
