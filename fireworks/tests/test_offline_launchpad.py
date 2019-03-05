@@ -70,11 +70,24 @@ def test_get_new_fw_id(lp):
 def test_not_run_exists(lp):
     assert not lp.run_exists()
 
+def test_not_future_run_exists(lp):
+    assert not lp.future_run_exists()
 
 def test_run_exists(lp, workflow):
     lp.add_wf(workflow)
 
     assert lp.run_exists()
+
+def test_future_run_exists(lp, workflow):
+    lp.add_wf(workflow)
+
+    _, _ = lp.checkout_fw(fw.FWorker(), '.')
+    _, _ = lp.checkout_fw(fw.FWorker(), '.')
+
+    # at this point, 2 RUNNING FWs and 1 WAITING
+    # this counts as future_run but not run_exists
+    assert not lp.run_exists()
+    assert lp.future_run_exists()
 
 def test_get_fw_by_id(lp, workflow):
     lp.add_wf(workflow)
@@ -131,3 +144,17 @@ def test_checkout_multiple(lp, workflow):
     for ref_firework in [ref_fw1, ref_fw2]:
         assert any(firework.fw_id == ref_firework.fw_id
                    for firework in (fw1, fw2))
+
+
+def test_checkout_exhaustion(lp, workflow):
+    lp.add_wf(workflow)
+
+    ref_fw1, ref_fw2, ref_fw3 = workflow.fws
+
+    _, _ = lp.checkout_fw(fw.FWorker(), '.')
+    _, _ = lp.checkout_fw(fw.FWorker(), '.')
+    # At this point, only 1 Firework left and it's WAITING
+    val1, val2 = lp.checkout_fw(fw.FWorker(), '.')
+
+    assert val1 is None
+    assert val2 is None

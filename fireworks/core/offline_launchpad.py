@@ -230,14 +230,16 @@ class OfflineLaunchPad(object):
             raise NotImplementedError
         with self._db as c:
             # iterate over 'active' fireworks checking for waiting children
-            for fw in c.execute('SELECT * FROM fireworks '
+            for fw in c.execute('SELECT fw_id FROM fireworks '
                                 'WHERE state in ("RUNNING", "RESERVED")'):
+                fw_id = fw[0]  # sqlite returns tuple always
                 # TODO: Could optimise here by grouping into workflows
                 #       & fetch each unique workflow only once...
-                children = self.get_wf_by_fw_id_lzyfw(fw_id).links[fw_id]
+                # TODO: Make lazy again
+                children = self.get_wf_by_fw_id(fw_id).links[fw_id]
                 # If any children are "WAITING" then we've got future work
                 if c.execute('SELECT state FROM fireworks '
-                             'WHERE fw_id IN ' + _nq(len(children)) + ' ',
+                             'WHERE fw_id IN ' + _nq(len(children)) + ' '
                              'AND state = "WAITING"',
                              children):
                     return True
