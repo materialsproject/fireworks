@@ -466,7 +466,6 @@ class OfflineLaunchPad(object):
         # TODO: I've changed the API of this call, is this bad?
         # Inherits 'Lock' from calling function
         # in sqlite, 'Lock' is the context manager
-        print(updated_ids)
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
