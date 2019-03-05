@@ -81,12 +81,26 @@ def sqlite_to_launch(launch):
 
 
 class OfflineLaunchPad(object):
-    def __init__(self, address, *args, logdir=None, **kwargs):
+    def __init__(self, address=None, host='localhost',
+                 logdir=None, strm_lvl=None, user_indices=None,
+                 wf_user_indices=None):
+        if address is None:
+            # default location for sqlite file defined somewhere etc..
+            raise NotImplementedError
         self._address = address  # store how we got here
         self._db = sqlite3.connect(address)
         with self._db as c:
             c.execute('PRAGMA foreign_keys = ON')
+
+        self.host = host
+        # set up logger
         self.logdir = logdir
+        self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
+        self.m_logger = get_fw_logger('launchpad', l_dir=self.logdir, stream_level=self.strm_lvl)
+
+        self.user_indices = user_indices if user_indices else []
+        self.wf_user_indices = wf_user_indices if wf_user_indices else []
+
 
     def copy(self):
         # can only use one connection per thread
