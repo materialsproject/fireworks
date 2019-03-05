@@ -81,11 +81,17 @@ def sqlite_to_launch(launch):
 
 
 class OfflineLaunchPad(object):
-    def __init__(self, *args, logdir=None, **kwargs):
-        self._db = sqlite3.connect(':memory:')
+    def __init__(self, address, *args, logdir=None, **kwargs):
+        self._address = address  # store how we got here
+        self._db = sqlite3.connect(address)
         with self._db as c:
             c.execute('PRAGMA foreign_keys = ON')
         self.logdir = logdir
+
+    def copy(self):
+        # can only use one connection per thread
+        # so this method creates a new connection for threads
+        return self.__class__(self._address)
 
     def to_dict(self):
         raise NotImplementedError

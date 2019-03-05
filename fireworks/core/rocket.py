@@ -30,6 +30,7 @@ from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, \
     PRINT_FW_YAML, STORE_PACKING_INFO, ROCKET_STREAM_LOGLEVEL
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.core.launchpad import LockedWorkflowError, LaunchPad
+from fireworks.core.offline_launchpad import OfflineLaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Anubhav Jain'
@@ -49,6 +50,10 @@ def do_ping(launchpad, launch_id):
 
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
+    if isinstance(launchpad, OfflineLaunchPad):
+        # one connection per thread
+        launchpad = launchpad.copy()
+
     while not stop_event.is_set() and master_thread.isAlive():
         do_ping(launchpad, launch_id)
         stop_event.wait(PING_TIME_SECS)
