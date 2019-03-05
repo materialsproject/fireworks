@@ -232,7 +232,7 @@ class OfflineLaunchPad(object):
                 children = self.get_wf_by_fw_id_lzyfw(fw_id).links[fw_id]
                 # If any children are "WAITING" then we've got future work
                 if c.execute('SELECT state FROM fireworks '
-                             'WHERE fw_id = ' + _nq(len(children)) + '',
+                             'WHERE fw_id IN ' + _nq(len(children)) + ' ',
                              'AND state = "WAITING"',
                              children):
                     return True
@@ -284,12 +284,13 @@ class OfflineLaunchPad(object):
         with self._db as c:
             if fw_id:
                 firework = c.execute('SELECT * FROM fireworks '
-                                     'WHERE fw_id = ?',
+                                     'WHERE fw_id = ? AND '
+                                     'state IN ("READY", "RESERVED")',
                                      (fw_id,)).fetchone()
             else:
                 # TODO: Ordering expected here
                 firework = c.execute('SELECT * FROM fireworks '
-                                     '').fetchone()
+                                     'WHERE state = "READY"').fetchone()
             if not firework is None:
                 firework = Firework.from_dict(sqlite_to_firework(firework))
                 if checkout:
