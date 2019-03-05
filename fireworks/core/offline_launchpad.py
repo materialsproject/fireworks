@@ -101,6 +101,8 @@ class OfflineLaunchPad(object):
             c.execute('''CREATE TABLE workflows(wf_id INTEGER UNIQUE,
                                                 data TEXT)''')
             c.execute('DROP TABLE IF EXISTS mapping')
+            # TODO: Maybe store this inside the fireworks collection?
+            # ie add row of workflow_id values to fireworks schema
             c.execute('CREATE TABLE mapping(firework_id INTEGER UNIQUE, '
                       'workflow_id INTEGER, '
                       # all entries must match a fw_id in fireworks
@@ -111,6 +113,9 @@ class OfflineLaunchPad(object):
                       'FOREIGN KEY (workflow_id) REFERENCES workflows(wf_id) '
                       #'ON UPDATE CASCADE ON DELETE CASCADE)'
                       ')')
+            c.execute('DROP TABLE IF EXISTS launches')
+            c.execute('CREATE TABLE launches(launch_id INTEGER UNIQUE, '
+                      'data TEXT)')
 
     def maintain(self, **kwargs):
         raise NotImplementedError
