@@ -65,7 +65,8 @@ def sqlite_to_workflow(workflow):
 class OfflineLaunchPad(object):
     def __init__(self, *args, logdir=None, **kwargs):
         self._db = sqlite3.connect(':memory:')
-
+        with self._db as c:
+            c.execute('PRAGMA foreign_keys = ON')
         self.logdir = logdir
 
     def to_dict(self):
@@ -100,8 +101,16 @@ class OfflineLaunchPad(object):
             c.execute('''CREATE TABLE workflows(wf_id INTEGER UNIQUE,
                                                 data TEXT)''')
             c.execute('DROP TABLE IF EXISTS mapping')
-            c.execute('''CREATE TABLE mapping(firework_id INTEGER UNIQUE,
-                                              workflow_id INTEGER)''')
+            c.execute('CREATE TABLE mapping(firework_id INTEGER UNIQUE, '
+                      'workflow_id INTEGER, '
+                      # all entries must match a fw_id in fireworks
+                      'FOREIGN KEY (firework_id) REFERENCES fireworks(fw_id) '
+                      # ie when these rows are modified,
+                      # also update this table
+                      #'ON UPDATE CASCADE ON DELETE CASCADE, '
+                      'FOREIGN KEY (workflow_id) REFERENCES workflows(wf_id) '
+                      #'ON UPDATE CASCADE ON DELETE CASCADE)'
+                      ')')
 
     def maintain(self, **kwargs):
         raise NotImplementedError
@@ -266,9 +275,11 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
-        if not query is None:
-            # let's smoke out where/if this is ever used
-            raise NotImplementedError
+        # TODO: FWorker query isn't implemented at all
+        #       At minimum need category functionality
+        #if query:
+        #    # let's smoke out where/if this is ever used
+        #    raise NotImplementedError
 
         with self._db as c:
             if fw_id:
@@ -277,15 +288,15 @@ class OfflineLaunchPad(object):
                                      (fw_id,)).fetchone()
             else:
                 # TODO: Ordering expected here
-                firework = c.execute('SELECT * FROM fireworks ',
+                firework = c.execute('SELECT * FROM fireworks '
                                      '').fetchone()
             if not firework is None:
-                firework = sqlite_to_firework(firework)
+                firework = Firework.from_dict(sqlite_to_firework(firework))
                 if checkout:
                     # TODO: Updated on field in fireworks schema
-                    c.execute('UPDATE fireworks SET state = ? '
+                    c.execute('UPDATE fireworks SET state = "RESERVED" '
                               'WHERE fw_id = ?',
-                              ("RESERVED", fw.fw_id))
+                              (firework.fw_id,))
 
         # TODO: Check for uniqueness
 
@@ -348,6 +359,8 @@ class OfflineLaunchPad(object):
             raise NotImplementedError
 
         m_fw.state = state
+        # TODO: Why upsert here?
+        #       Why not just update the STATE field? - because of launches?
         self._upsert_fws([m_fw])
         self._refresh_wf(m_fw.fw_id)
 
@@ -412,7 +425,8 @@ class OfflineLaunchPad(object):
                 # '(' + ','.join(['?'] * len(fws)) + ')'
                 c.executemany('DELETE FROM fireworks WHERE fw_id = ?',
                               ((i,) for i in used_ids))
-                c.executemany('INSERT INTO fireworks VALUES(?,?,?)',
+                # Use REPLACE to upsert
+                c.executemany('REPLACE INTO fireworks VALUES(?,?,?)',
                               (firework_to_sqlite(fw) for fw in fws))
         else:
             for fw in fws:
@@ -421,7 +435,7 @@ class OfflineLaunchPad(object):
                     old_new[fw.fw_id] = new_id
                     fw.fw_id = new_id
             with self._db as c:
-                c.executemany('INSERT INTO fireworks VALUES(?,?,?)',
+                c.executemany('REPLACE INTO fireworks VALUES(?,?,?)',
                               (firework_to_sqlite(fw) for fw in fws))
 
         return old_new
@@ -435,7 +449,8 @@ class OfflineLaunchPad(object):
     def _refresh_wf(self, fw_id):
         # TODO: Locks check
         with self._db as c:
-            wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+            # TODO: Make this lazy again
+            wf = self.get_wf_by_fw_id(fw_id)
             updated_ids = wf.refresh(fw_id)
             self._update_wf(wf, updated_ids, cursor=c)
         # TODO: Extra junk in the 2nd except branch
@@ -445,15 +460,19 @@ class OfflineLaunchPad(object):
         # TODO: I've changed the API of this call, is this bad?
         # Inherits 'Lock' from calling function
         # in sqlite, 'Lock' is the context manager
+        print(updated_ids)
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
         wf._reassign_ids(old_new)
 
+        query_node = [f for f in wf.id_fw
+                      if f not in old_new.values() or old_new.get(f, None) == f][0]
+
         # TODO: We're finding workflow_id again here, despite
         #       the fact we were indirectly just using it...
-        workflow_id = cursor.execute('SELECT workflow_id FROM mapping'
+        workflow_id = cursor.execute('SELECT workflow_id FROM mapping '
                                      'WHERE firework_id = ?',
-                                     (updated_ids[0],)).fetchone()[0]
+                                     (query_node,)).fetchone()[0]
         # rewrite the payload of the workflow
         cursor.execute('UPDATE workflows SET data = ?'
                        'WHERE wf_id = ?',
