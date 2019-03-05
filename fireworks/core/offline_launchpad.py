@@ -109,22 +109,25 @@ class OfflineLaunchPad(object):
 
     def reset(self, *args, **kwargs):
         with self._db as c:
+            # Drop in correct order to not offend foreign key constraints
+            c.execute('DROP TABLE IF EXISTS launches')
+            c.execute('DROP TABLE IF EXISTS mapping')
+            c.execute('DROP TABLE IF EXISTS meta')
+            c.execute('DROP TABLE IF EXISTS workflows')
+            c.execute('DROP TABLE IF EXISTS fireworks')
+
             # TODO: Can squish these commands into single call?
             # reset count of ids
-            c.execute('DROP TABLE IF EXISTS meta')
             c.execute('CREATE TABLE meta(name TEXT, value INTEGER)')
             c.executemany('INSERT INTO meta VALUES(?, 1)',
                           (('next_fw_id',),
                            ('next_launch_id',),
                            ('next_workflow_id',)))
-            c.execute('DROP TABLE IF EXISTS fireworks')
             c.execute('''CREATE TABLE fireworks(fw_id INTEGER UNIQUE,
                                                 state TEXT,
                                                 data TEXT)''')
-            c.execute('DROP TABLE IF EXISTS workflows')
             c.execute('''CREATE TABLE workflows(wf_id INTEGER UNIQUE,
                                                 data TEXT)''')
-            c.execute('DROP TABLE IF EXISTS mapping')
             # TODO: Maybe store this inside the fireworks collection?
             # ie add row of workflow_id values to fireworks schema
             c.execute('CREATE TABLE mapping(firework_id INTEGER UNIQUE, '
@@ -137,7 +140,6 @@ class OfflineLaunchPad(object):
                       'FOREIGN KEY (workflow_id) REFERENCES workflows(wf_id) '
                       #'ON UPDATE CASCADE ON DELETE CASCADE)'
                       ')')
-            c.execute('DROP TABLE IF EXISTS launches')
             c.execute('CREATE TABLE launches(launch_id INTEGER UNIQUE, '
                       'fw_id INTEGER, '
                       'data TEXT, '
