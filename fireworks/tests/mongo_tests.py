@@ -14,6 +14,8 @@ from fireworks import explicit_serialize, FWAction
 from fireworks.core.firework import Firework, Workflow, FiretaskBase
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
+from fireworks.core.offline_launchpad import OfflineLaunchPad
+
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
 from fireworks.queue.queue_launcher import setup_offline_job
@@ -595,6 +597,35 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         workflow_results=s.get_workflow_summary(time_field="updated_on")
         self.assertEqual((workflow_results[0]["_id"], workflow_results[0]["count"]), ("COMPLETED", 3))
+
+
+class SQLiteTests(MongoTests):
+    @classmethod
+    def setUpClass(cls):
+        cls.fworker = FWorker()
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def setUp(self):
+        self.lp = OfflineLaunchPad('db.sqlite')
+        self.lp.reset()
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        os.remove('db.sqlite')
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        if os.path.exists(os.path.join('FW_offline.json')):
+            os.remove('FW_offline.json')
+        if os.path.exists(os.path.join('FW_ping.json')):
+            os.remove('FW_ping.json')
+        os.chdir(self.old_wd)
+        for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
+            shutil.rmtree(i)
+
+
 
 
 if __name__ == "__main__":
