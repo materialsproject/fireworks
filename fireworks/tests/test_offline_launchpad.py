@@ -2,6 +2,7 @@ import pytest
 
 import fireworks as fw
 from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.core.rocket_launcher import launch_rocket
 
 
 def assert_datetime_almost_equal(a, b, tol=0.001):
@@ -180,3 +181,11 @@ def test_change_launch_idr(lp, workflow):
     lp.change_launch_dir(launch_id, './newplace')
 
     assert lp.get_launch_by_id(launch_id).launch_dir == './newplace'
+
+
+def test_launch_rocket(lp, workflow):
+    lp.add_wf(workflow)
+
+    val = launch_rocket(lp)
+
+    assert val is True

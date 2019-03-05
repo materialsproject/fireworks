@@ -177,9 +177,9 @@ class OfflineLaunchPad(object):
             cur = c.execute('SELECT * FROM launches '
                             'WHERE launch_id = ?', (launch_id,))
             payload = cur.fetchone()
-        launch = sqlite_to_launch(payload)
+        m_launch = sqlite_to_launch(payload)
 
-        return Launch.from_dict(launch)
+        return Launch.from_dict(m_launch)
 
     def get_fw_dict_by_id(self, fw_id):
         # TODO: Storage of launches/fireworks
@@ -267,9 +267,8 @@ class OfflineLaunchPad(object):
             raise NotImplementedError
         with self._db as c:
             # iterate over 'active' fireworks checking for waiting children
-            for fw in c.execute('SELECT fw_id FROM fireworks '
-                                'WHERE state in ("RUNNING", "RESERVED")'):
-                fw_id = fw[0]  # sqlite returns tuple always
+            for (fw_id,) in c.execute('SELECT fw_id FROM fireworks '
+                                      'WHERE state in ("RUNNING", "RESERVED")'):
                 # TODO: Could optimise here by grouping into workflows
                 #       & fetch each unique workflow only once...
                 # TODO: Make lazy again
@@ -425,14 +424,36 @@ class OfflineLaunchPad(object):
                       (launch_to_sqlite(m_launch), launch_id))
 
     def restore_backup_data(self, launch_id, fw_id):
-        # Doesn't seem to ever be used by anything, can ignore
+        # called from Rocket.run() if everything falls apart completely
         raise NotImplementedError
 
     def complete_launch(self, launch_id, action=None, state='COMPLETED'):
-        raise NotImplementedError
+        m_launch = self.get_launch_by_id(launch_id)
+        m_launch.state = state
+        if action:
+            m_launch.action = action
+
+        with self._db as c:
+            c.execute('UPDATE launches SET data = ? '
+                      'WHERE launch_id = ?',
+                      (launch_to_sqlite(m_launch), launch_id))
+            # find related fireworks
+            for (fw_id,) in c.execute('SELECT fw_id FROM launches '
+                                      'WHERE launch_id = ?', (launch_id,)):
+                self._refresh_wf(fw_id)
+
+        return m_launch.to_dict()
 
     def ping_launch(self, launch_id, ptime=None, checkpoint=None):
-        raise NotImplementedError
+        m_launch = self.get_launch_by_id(launch_id)
+        for tracker in m_launch.trackers:
+            track_file(m_launch.launch_dir)
+        m_launch.touch_history(ptime, checkpoint=checkpoint)
+
+        with self._db as c:
+            c.execute('UPDATE launches SET data = ? '
+                      'WHERE launch_id = ?',
+                      (launch_to_sqlite(m_launch), launch_id))
 
     def _get_new_and_increment(self, table, increment):
         with self._db as c:
