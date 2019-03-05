@@ -38,7 +38,7 @@ def _nq(n):
 
 
 def firework_to_sqlite(firework):
-    d = firework.to_dict()
+    d = firework.to_db_dict()
     fw_id = d.pop('fw_id')
     state = d.pop('state', None)
     d = json.dumps(d)
@@ -60,6 +60,24 @@ def workflow_to_sqlite(workflow):
 
 def sqlite_to_workflow(workflow):
     return json.loads(workflow)
+
+
+def launch_to_sqlite(launch):
+    dlaunch = launch.to_db_dict()
+
+    fw_id = dlaunch.pop('fw_id')
+    launch_id = dlaunch.pop('launch_id')
+
+    return json.dumps(dlaunch)
+
+def sqlite_to_launch(launch):
+    launch_id, fw_id, dlaunch = launch
+
+    dlaunch = json.loads(dlaunch)
+    dlaunch['fw_id'] = fw_id
+    dlaunch['launch_id'] = launch_id
+
+    return dlaunch
 
 
 class OfflineLaunchPad(object):
@@ -115,7 +133,11 @@ class OfflineLaunchPad(object):
                       ')')
             c.execute('DROP TABLE IF EXISTS launches')
             c.execute('CREATE TABLE launches(launch_id INTEGER UNIQUE, '
-                      'data TEXT)')
+                      'fw_id INTEGER, '
+                      'data TEXT, '
+                      # launches know what firework they're for
+                      'FOREIGN KEY(fw_id) REFERENCES fireworks(fw_id) '
+                      ')')
 
     def maintain(self, **kwargs):
         raise NotImplementedError
@@ -151,14 +173,29 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def get_launch_by_id(self, launch_id):
-        raise NotImplementedError
+        with self._db as c:
+            cur = c.execute('SELECT * FROM launches '
+                            'WHERE launch_id = ?', (launch_id,))
+            payload = cur.fetchone()
+        launch = sqlite_to_launch(payload)
+
+        return Launch.from_dict(launch)
 
     def get_fw_dict_by_id(self, fw_id):
+        # TODO: Storage of launches/fireworks
         with self._db as c:
             val = c.execute('SELECT * FROM fireworks WHERE fw_id = ?',
                             (fw_id,)).fetchone()
+            launches = c.execute('SELECT * FROM launches '
+                                 'WHERE fw_id = ?', (fw_id,))
+            firework = sqlite_to_firework(val)
+            # these are converted into Launch objects by Firework.from_dict
+            launches = [(sqlite_to_launch(l)) for l in launches]
+        # TODO: Differentiate between archived and not
+        #       Maybe extra boolean column in launches schema?
+        firework['launches'] = launches
 
-        return sqlite_to_firework(val)
+        return firework
 
     def get_fw_by_id(self, fw_id):
         return Firework.from_dict(self.get_fw_dict_by_id(fw_id))
@@ -351,15 +388,15 @@ class OfflineLaunchPad(object):
 
         launch_id = (reserved_launch.launch_id if reserved_launch
                      else self.get_new_launch_id())
-
         # TODO: trackers
         trackers=None
 
         m_launch = Launch(state, launch_dir, fworker, host, ip,
                           trackers=trackers, state_history=None,
                           launch_id=launch_id, fw_id=m_fw.fw_id)
-
-        # TODO: launches collection
+        with self._db as c:
+            c.execute('INSERT INTO launches VALUES(?, ?, ?)',
+                      (launch_id, m_fw.fw_id, launch_to_sqlite(m_launch)))
 
         if not reserved_launch:
             m_fw.launches.append(m_launch)

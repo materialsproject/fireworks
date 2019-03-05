@@ -158,3 +158,15 @@ def test_checkout_exhaustion(lp, workflow):
 
     assert val1 is None
     assert val2 is None
+
+
+def test_get_launch(lp, workflow):
+    lp.add_wf(workflow)
+
+    firework, launch_id = lp.checkout_fw(fw.FWorker(), './here/')
+
+    launch = lp.get_launch_by_id(launch_id)
+
+    assert isinstance(launch, fw.Launch)
+    assert launch.fw_id == firework.fw_id
+    assert launch.launch_dir == './here/'
