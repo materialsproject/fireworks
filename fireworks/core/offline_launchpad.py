@@ -28,7 +28,13 @@ from bson import json_util as json
 import datetime
 import sqlite3
 
+from fireworks.utilities.fw_utilities import get_fw_logger
 from .firework import Firework, Workflow, Launch
+from .fworker import FWorker
+
+# this is a dict with some mongodb mumbo jumbo
+# we want to know what the default looks like to compare against later
+_DEFAULT_FWORKER_QUERY = FWorker().query
 
 
 def _nq(n):
@@ -277,7 +283,9 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def run_exists(self, fworker=None):
-        if not fworker is None:
+        # we can't do custom queries yet
+        # so anything spicy gets rejected
+        if not (fworker.query == _DEFAULT_FWORKER_QUERY):
             raise NotImplementedError
         return bool(self._get_a_fw_to_run(query=None,
                                           checkout=False))
@@ -285,7 +293,7 @@ class OfflineLaunchPad(object):
     def future_run_exists(self, fworker=None):
         if self.run_exists(fworker):
             return True
-        if not fworker is None:
+        if not (fworker.query == _DEFAULT_FWORKER_QUERY):
             raise NotImplementedError
         with self._db as c:
             # iterate over 'active' fireworks checking for waiting children
