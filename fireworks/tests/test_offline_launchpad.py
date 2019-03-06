@@ -31,7 +31,7 @@ def assert_workflows_equal(a, b):
 
 @pytest.fixture
 def lp():
-    lp = fw.OfflineLaunchPad()
+    lp = fw.OfflineLaunchPad(address=':memory:')
     lp.reset()
 
     return lp

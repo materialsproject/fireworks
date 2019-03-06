@@ -44,15 +44,16 @@ def _nq(n):
 
 
 def firework_to_sqlite(firework):
-    d = firework.to_db_dict()
+    d = firework.to_dict()
     fw_id = d.pop('fw_id')
-    state = d.pop('state', None)
+    _ = d.pop('launches', None)
+    _ = d.pop('archived_launches', None)
     d = json.dumps(d)
 
-    return fw_id, state, d
+    return d
 
 def sqlite_to_firework(firework):
-    fw_id, state, data = firework
+    fw_id, _, state, data = firework
     d = json.loads(data)
 
     d['fw_id'] = fw_id
@@ -131,10 +132,9 @@ class OfflineLaunchPad(object):
         with self._db as c:
             # Drop in correct order to not offend foreign key constraints
             c.execute('DROP TABLE IF EXISTS launches')
-            c.execute('DROP TABLE IF EXISTS mapping')
-            c.execute('DROP TABLE IF EXISTS meta')
-            c.execute('DROP TABLE IF EXISTS workflows')
             c.execute('DROP TABLE IF EXISTS fireworks')
+            c.execute('DROP TABLE IF EXISTS workflows')
+            c.execute('DROP TABLE IF EXISTS meta')
 
             # TODO: Can squish these commands into single call?
             # reset count of ids
@@ -143,23 +143,14 @@ class OfflineLaunchPad(object):
                           (('next_fw_id',),
                            ('next_launch_id',),
                            ('next_workflow_id',)))
+            c.execute('''CREATE TABLE workflows(workflow_id INTEGER UNIQUE,
+                                                data TEXT)''')
             c.execute('''CREATE TABLE fireworks(fw_id INTEGER UNIQUE,
+                                                workflow_id INTEGER,
                                                 state TEXT,
-                                                data TEXT)''')
-            c.execute('''CREATE TABLE workflows(wf_id INTEGER UNIQUE,
-                                                data TEXT)''')
-            # TODO: Maybe store this inside the fireworks collection?
-            # ie add row of workflow_id values to fireworks schema
-            c.execute('CREATE TABLE mapping(firework_id INTEGER UNIQUE, '
-                      'workflow_id INTEGER, '
-                      # all entries must match a fw_id in fireworks
-                      'FOREIGN KEY (firework_id) REFERENCES fireworks(fw_id) '
-                      # ie when these rows are modified,
-                      # also update this table
-                      #'ON UPDATE CASCADE ON DELETE CASCADE, '
-                      'FOREIGN KEY (workflow_id) REFERENCES workflows(wf_id) '
-                      #'ON UPDATE CASCADE ON DELETE CASCADE)'
-                      ')')
+                                                data TEXT,
+                         FOREIGN KEY (workflow_id) REFERENCES workflows(workflow_id)
+            )''')
             c.execute('CREATE TABLE launches(launch_id INTEGER UNIQUE, '
                       'fw_id INTEGER, '
                       'data TEXT, '
@@ -179,18 +170,21 @@ class OfflineLaunchPad(object):
             wf.id_fw[fw_id].state = 'READY'
             wf.fw_states[fw_id] = 'READY'
 
-        # "insert" and get new mapping of ids
-        old_new = self._upsert_fws(list(wf.id_fw.values()),
-                                   reassign_all=reassign_all)
-        wf._reassign_ids(old_new)
-
-        workflow_id = self._get_new_workflow_id()
+        # Adds Workflow with single transaction
         with self._db as c:
+            workflow_id = self._get_new_workflow_id(cursor=c)
+            # Little bit hacky as Workflow holds some state of firework
+            # First insert empty workflow to create the workflow_id
             c.execute('INSERT INTO workflows VALUES(?, ?)',
-                      (workflow_id, workflow_to_sqlite(wf)))
-            c.executemany('INSERT INTO mapping VALUES(?, ?)', (
-                (fw_id, workflow_id) for fw_id in wf.id_fw
-            ))
+                      (workflow_id, None))
+            old_new = self._insert_fws(list(wf.id_fw.values()),
+                                       workflow_id, c,
+                                       reassign_all=reassign_all)
+            wf._reassign_ids(old_new)
+            # Then update the workflow and insert this
+            c.execute('UPDATE workflows SET data = ? '
+                      'WHERE workflow_id = ?',
+                      (workflow_to_sqlite(wf), workflow_id))
         return old_new
 
     def bulk_add_wfs(self, wfs):
@@ -215,10 +209,10 @@ class OfflineLaunchPad(object):
             val = c.execute('SELECT * FROM fireworks WHERE fw_id = ?',
                             (fw_id,)).fetchone()
             launches = c.execute('SELECT * FROM launches '
-                                 'WHERE fw_id = ?', (fw_id,))
-            firework = sqlite_to_firework(val)
-            # these are converted into Launch objects by Firework.from_dict
-            launches = [(sqlite_to_launch(l)) for l in launches]
+                                 'WHERE fw_id = ?', (fw_id,)).fetchall()
+        firework = sqlite_to_firework(val)
+        # these are converted into Launch objects by Firework.from_dict?
+        launches = [(sqlite_to_launch(l)) for l in launches]
         # TODO: Differentiate between archived and not
         #       Maybe extra boolean column in launches schema?
         firework['launches'] = launches
@@ -232,16 +226,29 @@ class OfflineLaunchPad(object):
         # search through all Workflows, looking for correct fw_id?
         # or could have some index file, but this could get stale
         with self._db as c:
-            # TODO: Maybe this can be some fancy INNER JOIN
-            wf_id = c.execute('SELECT workflow_id FROM mapping WHERE firework_id = ?',
-                              (fw_id,)).fetchone()[0]
+            workflow = c.execute('SELECT * FROM workflows WHERE workflow_id = '
+                                 '(SELECT workflow_id FROM fireworks WHERE '
+                                 'fw_id = ?)', (fw_id,)).fetchone()
+            wf_id, wf_payload = workflow
+            fireworks = c.execute('SELECT * FROM fireworks '
+                                  'WHERE workflow_id = ?', (wf_id,)).fetchall()
+            launches = c.execute('SELECT l.* FROM launches AS l '
+                                 'INNER JOIN fireworks AS f '
+                                 'ON f.fw_id = l.fw_id '
+                                 'WHERE f.workflow_id = ?', (wf_id,)).fetchall()
+        workflow = sqlite_to_workflow(wf_payload)
 
-            workflow = c.execute('SELECT data FROM workflows WHERE wf_id = ?',
-                                 (wf_id,)).fetchone()[0]
-
-        workflow = sqlite_to_workflow(workflow)
-
-        fireworks = [self.get_fw_by_id(i) for i in workflow['nodes']]
+        # Ugly little block, need to deserialise the fireworks
+        # match them to launches (using dict of {fw_id: fw_dict}
+        # them create the Firework objects (which also makes the Launch)
+        fireworks = {fw[0]: sqlite_to_firework(fw) for fw in fireworks}
+        for fw in fireworks.values():
+            fw['launches'] = []
+        # attach launches
+        for payload in launches:
+            l = sqlite_to_launch(payload)
+            fireworks[l['fw_id']]['launches'].append(l)
+        fireworks = [Firework.from_dict(fw) for fw in fireworks.values()]
 
         return Workflow(fireworks, workflow['links'], workflow['name'],
                         workflow['metadata'], workflow['created_on'],
@@ -249,16 +256,16 @@ class OfflineLaunchPad(object):
 
     def get_wf_by_fw_id_lzyfw(self, fw_id):
         with self._db as c:
-            wf_id = c.execute('SELECT workflow_id FROM mapping WHERE firework_id = ?',
-                              (fw_id,)).fetchone()[0]
+            workflow = c.execute('SELECT * FROM workflows WHERE workflow_id = '
+                                 '(SELECT workflow_id FROM fireworks WHERE '
+                                 'fw_id = ?)', (fw_id,)).fetchone()
+            wf_id, wf_payload = workflow
+            fireworks = c.execute('SELECT fw_id FROM fireworks '
+                                  'WHERE workflow_id = ?', (wf_id)).fetchall()
 
-            workflow = c.execute('SELECT data FROM workflows WHERE wf_id = ?',
-                                 (wf_id,)).fetchone()[0]
-
-        workflow = sqlite_to_workflow(workflow)
-
+        workflow = sqlite_to_workflow(wf_payload)
         fws = [LazyFirework(fw_id, self)
-               for fw_id in workflow['nodes']]
+               for fw_id in fireworks]
 
         if 'fw_states' in workflow:
             fw_states = dict([(int(k), v)
@@ -271,7 +278,31 @@ class OfflineLaunchPad(object):
                         workflow['updated_on'], fw_states)
 
     def delete_wf(self, fw_id, delete_launch_dirs=False):
-        raise NotImplementedError
+        with self._db as c:
+            (workflow_id,)= c.execute('SELECT workflow_id FROM mapping '
+                                      'WHERE fw_id = ?', (fw_id,)).fetchone()
+            if delete_launch_dirs:
+                # iterate over launches in given workflow_id
+                for launch in c.execute('SELECT l.* FROM launches AS l '
+                                        'INNER JOIN fireworks AS f '
+                                        'ON f.fw_id = l.fw_id '
+                                        'WHERE f.workflow_id = ?',
+                                        (workflow_id,)):
+                    # rehydrate all launches so we can nuke the launch dir
+                    m_launch = sqlite_to_launch(launch)
+                    shutil.rmtree(m_launch['launch_dir'], ignore_errors=True)
+
+            # delete launches
+            c.execute('DELETE FROM launches '
+                      'WHERE fw_id in '
+                      '(SELECT fw_id FROM fireworks WHERE workflow_id = ?)',
+                      (workflow_id,))
+            # delete fireworks
+            c.execute('DELETE FROM fireworks WHERE workflow_id = ?',
+                      (workflow_id,))
+            # finally delete workflow
+            c.execute('DELETE FROM workflows WHERE workflow_id = ?',
+                      (workflow_id,))
 
     def get_wf_summary_dict(self, fw_id, mode='more'):
         raise NotImplementedError
@@ -285,7 +316,7 @@ class OfflineLaunchPad(object):
     def run_exists(self, fworker=None):
         # we can't do custom queries yet
         # so anything spicy gets rejected
-        if not (fworker.query == _DEFAULT_FWORKER_QUERY):
+        if fworker and not (fworker.query == _DEFAULT_FWORKER_QUERY):
             raise NotImplementedError
         return bool(self._get_a_fw_to_run(query=None,
                                           checkout=False))
@@ -293,21 +324,22 @@ class OfflineLaunchPad(object):
     def future_run_exists(self, fworker=None):
         if self.run_exists(fworker):
             return True
-        if not (fworker.query == _DEFAULT_FWORKER_QUERY):
+        if fworker and not (fworker.query == _DEFAULT_FWORKER_QUERY):
             raise NotImplementedError
         with self._db as c:
             # iterate over 'active' fireworks checking for waiting children
-            for (fw_id,) in c.execute('SELECT fw_id FROM fireworks '
-                                      'WHERE state in ("RUNNING", "RESERVED")'):
-                # TODO: Could optimise here by grouping into workflows
-                #       & fetch each unique workflow only once...
-                # TODO: Make lazy again
-                children = self.get_wf_by_fw_id(fw_id).links[fw_id]
+            # grab firework IDs and workflow blobs
+            for (fw_id, wf) in c.execute(
+                    'SELECT f.fw_id, w.data FROM fireworks as f '
+                    'INNER JOIN workflows AS w ON f.workflow_id = w.workflow_id '
+                    'WHERE f.state in ("RUNNING", "RESERVED")'):
+                wf = sqlite_to_workflow(wf)
+                children = wf['links'][str(fw_id)]
                 # If any children are "WAITING" then we've got future work
-                if c.execute('SELECT state FROM fireworks '
+                if c.execute('SELECT 1 FROM fireworks '
                              'WHERE fw_id IN ' + _nq(len(children)) + ' '
                              'AND state = "WAITING"',
-                             children):
+                             children).fetchone():
                     return True
             else:
                 # At end of loop, no future work remains
@@ -485,25 +517,61 @@ class OfflineLaunchPad(object):
                       'WHERE launch_id = ?',
                       (launch_to_sqlite(m_launch), launch_id))
 
-    def _get_new_and_increment(self, table, increment):
-        with self._db as c:
-            c2 = c.execute('SELECT value FROM meta WHERE name = ?',
-                           (table,))
-            next_id = c2.fetchone()[0]
+    def _get_new_and_increment(self, table, quantity, cursor):
+        # maybe start a transaction, maybe continue one
+        if cursor is None:
+            with self._db as c:
+                (next_id,) = c.execute('SELECT value FROM meta WHERE name = ?',
+                                       (table,)).fetchone()
+                c.execute('UPDATE meta SET value = ? WHERE name = ?',
+                          (next_id + quantity, table))
+        else:
+            c = cursor
+            (next_id,) = c.execute('SELECT value FROM meta WHERE name = ?',
+                                   (table,)).fetchone()
             c.execute('UPDATE meta SET value = ? WHERE name = ?',
-                      (next_id + increment, table))
+                      (next_id + quantity, table))
 
         return next_id
 
-    def _get_new_workflow_id(self, quantity=1):
+    def _get_new_workflow_id(self, quantity=1, cursor=None):
         # not official API, a hack to make workflow->firework mapping work
-        return self._get_new_and_increment('next_workflow_id', quantity)
+        return self._get_new_and_increment('next_workflow_id',
+                                           quantity=quantity,
+                                           cursor=cursor)
 
-    def get_new_fw_id(self, quantity=1):
-        return self._get_new_and_increment('next_fw_id', quantity)
+    def get_new_fw_id(self, quantity=1, cursor=None):
+        return self._get_new_and_increment('next_fw_id',
+                                           quantity=quantity,
+                                           cursor=cursor)
 
-    def get_new_launch_id(self):
-        return self._get_new_and_increment('next_launch_id', 1)
+    def get_new_launch_id(self, cursor=None):
+        return self._get_new_and_increment('next_launch_id',
+                                           quantity=1,
+                                           cursor=cursor)
+
+    def _insert_fws(self, fws, workflow_id, cursor, reassign_all=False):
+        # already inside a context manager *cursor*
+        old_new = {}
+        fws.sort(key=lambda x: x.fw_id)
+
+        if reassign_all:
+            first_new_id = self.get_new_fw_id(quantity=len(fws), cursor=cursor)
+            for new_id, fw in enumerate(fws, start=first_new_id):
+                old_new[fw.fw_id] = new_id
+                fw.fw_id = new_id
+        else:
+            for fw in fws:
+                if fw.fw_id < 0:
+                    new_id = self.get_new_fw_id(cursor=cursor)
+                    old_new[fw.fw_id] = new_id
+                    fw.fw_id = new_id
+        cursor.executemany('INSERT INTO fireworks VALUES(?, ?, ?, ?)', (
+            (fw.fw_id, workflow_id, fw.state, firework_to_sqlite(fw))
+            for fw in fws
+        ))
+
+        return old_new
 
     def _upsert_fws(self, fws, reassign_all=False):
         """Insert into Fireworks 'collection'"""
@@ -518,27 +586,19 @@ class OfflineLaunchPad(object):
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
                 used_ids.append(new_id)
-
-            with self._db as c:
-                # delete rows that existed
-                # TODO: How to use 'WHERE fw_id IN used_ids'?
-                # WHERE fw_id IN (?,)*len(fws)
-                # '(' + ','.join(['?'] * len(fws)) + ')'
-                c.executemany('DELETE FROM fireworks WHERE fw_id = ?',
-                              ((i,) for i in used_ids))
-                # Use REPLACE to upsert
-                c.executemany('REPLACE INTO fireworks VALUES(?,?,?)',
-                              (firework_to_sqlite(fw) for fw in fws))
         else:
             for fw in fws:
                 if fw.fw_id < 0:
                     new_id = self.get_new_fw_id()
                     old_new[fw.fw_id] = new_id
                     fw.fw_id = new_id
-            with self._db as c:
-                c.executemany('REPLACE INTO fireworks VALUES(?,?,?)',
-                              (firework_to_sqlite(fw) for fw in fws))
 
+        with self._db as c:
+            c.executemany('UPDATE fireworks SET state = ?, data = ? '
+                          'WHERE fw_id = ?', (
+                              (fw.state, firework_to_sqlite(fw), fw.fw_id)
+                              for fw in fws
+                          ))
         return old_new
 
     def rerun_fw(self, fw_id, **kwargs):
@@ -570,12 +630,12 @@ class OfflineLaunchPad(object):
 
         # TODO: We're finding workflow_id again here, despite
         #       the fact we were indirectly just using it...
-        workflow_id = cursor.execute('SELECT workflow_id FROM mapping '
-                                     'WHERE firework_id = ?',
-                                     (query_node,)).fetchone()[0]
+        (workflow_id,) = cursor.execute('SELECT workflow_id FROM fireworks '
+                                        'WHERE fw_id = ?',
+                                        (query_node,)).fetchone()
         # rewrite the payload of the workflow
         cursor.execute('UPDATE workflows SET data = ?'
-                       'WHERE wf_id = ?',
+                       'WHERE workflow_id = ?',
                        (workflow_to_sqlite(wf), workflow_id))
 
     def _steal_launches(self, thief_fw):
