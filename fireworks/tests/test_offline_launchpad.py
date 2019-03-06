@@ -1,3 +1,4 @@
+import os
 import pytest
 
 import fireworks as fw
@@ -28,10 +29,18 @@ def assert_workflows_equal(a, b):
         assert fw_a == fw_b
     assert d_a == d_b
 
+@pytest.fixture
+def in_tmpdir(tmp_path):
+    cwd = os.getcwd()
+    os.chdir(tmp_path)
+    try:
+        yield
+    finally:
+        os.chdir(cwd)
 
 @pytest.fixture
-def lp():
-    lp = fw.OfflineLaunchPad(address=':memory:')
+def lp(in_tmpdir):
+    lp = fw.OfflineLaunchPad(address='db.sqlite')
     lp.reset()
 
     return lp
