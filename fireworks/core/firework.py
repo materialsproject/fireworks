@@ -182,148 +182,6 @@ class FWAction(FWSerializable):
         return "FWAction\n" + pprint.pformat(self.to_dict())
 
 
-class Firework(FWSerializable):
-    """
-    A Firework is a workflow step and might be contain several Firetasks.
-    """
-
-    STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
-                   'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
-                   'COMPLETED': 5}
-
-    # note: if you modify this signature, you must also modify LazyFirework
-    def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
-                 state='WAITING', created_on=None, fw_id=None, parents=None, updated_on=None):
-        """
-        Args:
-            tasks (Firetask or [Firetask]): a list of Firetasks to run in sequence.
-            spec (dict): specification of the job to run. Used by the Firetask.
-            launches ([Launch]): a list of Launch objects of this Firework.
-            archived_launches ([Launch]): a list of archived Launch objects of this Firework.
-            state (str): the state of the FW (e.g. WAITING, RUNNING, COMPLETED, ARCHIVED)
-            created_on (datetime): time of creation
-            fw_id (int): an identification number for this Firework.
-            parents (Firework or [Firework]): list of parent FWs this FW depends on.
-            updated_on (datetime): last time the STATE was updated.
-        """
-
-        tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
-
-        self.tasks = tasks
-        self.spec = spec.copy() if spec else {}
-
-        self.name = name or 'Unnamed FW'  # do it this way to prevent None
-        # names
-        if fw_id is not None:
-            self.fw_id = fw_id
-        else:
-            global NEGATIVE_FWID_CTR
-            NEGATIVE_FWID_CTR -= 1
-            self.fw_id = NEGATIVE_FWID_CTR
-
-        self.launches = launches if launches else []
-        self.archived_launches = archived_launches if archived_launches else []
-        self.created_on = created_on or datetime.utcnow()
-        self.updated_on = updated_on or datetime.utcnow()
-
-        parents = [parents] if isinstance(parents, Firework) else parents
-        self.parents = parents if parents else []
-
-        self._state = state
-
-    @property
-    def state(self):
-        """
-        Returns:
-            str: The current state of the Firework
-        """
-        return self._state
-
-    @state.setter
-    def state(self, state):
-        """
-        Setter for the the FW state, which triggers updated_on change
-
-        Args:
-            state (str): the state to set for the FW
-        """
-        self._state = state
-        self.updated_on = datetime.utcnow()
-
-    @recursive_serialize
-    def to_dict(self):
-        # put tasks in a special location of the spec
-        spec = self.spec
-        spec['_tasks'] = [t.to_dict() for t in self.tasks]
-        m_dict = {'spec': spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
-                  'updated_on': self.updated_on}
-
-        # only serialize these fields if non-empty
-        if len(list(self.launches)) > 0:
-            m_dict['launches'] = self.launches
-
-        if len(list(self.archived_launches)) > 0:
-            m_dict['archived_launches'] = self.archived_launches
-
-        # keep export of new FWs to files clean
-        if self.state != 'WAITING':
-            m_dict['state'] = self.state
-
-        m_dict['name'] = self.name
-
-        return m_dict
-
-    def _rerun(self):
-        """
-        Moves all Launches to archived Launches and resets the state to 'WAITING'. The Firework
-        can thus be re-run even if it was Launched in the past. This method should be called by
-        a Workflow because a refresh is needed after calling this method.
-        """
-        if self.state == 'FIZZLED':
-            last_launch = self.launches[-1]
-            if (EXCEPT_DETAILS_ON_RERUN and last_launch.action and
-                last_launch.action.stored_data.get('_exception', {}).get('_details')):
-                # add the exception details to the spec
-                self.spec['_exception_details'] = last_launch.action.stored_data['_exception']['_details']
-            else:
-                # clean spec from stale details
-                self.spec.pop('_exception_details', None)
-
-        self.archived_launches.extend(self.launches)
-        self.archived_launches = list(set(self.archived_launches))  # filter duplicates
-        self.launches = []
-        self.state = 'WAITING'
-
-    def to_db_dict(self):
-        """
-        Return firework dict with updated launches and state.
-        """
-        m_dict = self.to_dict()
-        # the launches are stored separately
-        m_dict['launches'] = [l.launch_id for l in self.launches]
-        # the archived launches are stored separately
-        m_dict['archived_launches'] = [l.launch_id for l in self.archived_launches]
-        m_dict['state'] = self.state
-        return m_dict
-
-    @classmethod
-    @recursive_deserialize
-    def from_dict(cls, m_dict):
-        tasks = m_dict['spec']['_tasks']
-        launches = [Launch.from_dict(tmp) for tmp in m_dict.get('launches', [])]
-        archived_launches = [Launch.from_dict(tmp) for tmp in m_dict.get('archived_launches', [])]
-        fw_id = m_dict.get('fw_id', -1)
-        state = m_dict.get('state', 'WAITING')
-        created_on = m_dict.get('created_on')
-        updated_on = m_dict.get('updated_on')
-        name = m_dict.get('name', None)
-        return Firework(tasks, m_dict['spec'], name, launches, archived_launches, state, created_on,
-                        fw_id, updated_on=updated_on)
-
-    def __str__(self):
-        return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
-
-
 class Tracker(FWSerializable, object):
     """
     A Tracker monitors a file and returns the last N lines for updating the Launch object.
@@ -387,38 +245,48 @@ class Tracker(FWSerializable, object):
         return '### Filename: {}\n{}'.format(self.filename, self.content)
 
 
-class Launch(FWSerializable, object):
+class Firework(FWSerializable):
     """
-    A Launch encapsulates data about a specific run of a Firework on a computing resource.
+    A Firework is a workflow step and might be contain several Firetasks.
+    It contains the Firetasks to be executed and the state of the execution.
     """
 
-    def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, trackers=None,
-                 action=None, state_history=None, launch_id=None, fw_id=None):
-        """
-        Args:
-            state (str): the state of the Launch (e.g. RUNNING, COMPLETED)
-            launch_dir (str): the directory where the Launch takes place
-            fworker (FWorker): The FireWorker running the Launch
-            host (str): the hostname where the launch took place (set automatically if None)
-            ip (str): the IP address where the launch took place (set automatically if None)
-            trackers ([Tracker]): File Trackers for this Launch
-            action (FWAction): the output of the Launch
-            state_history ([dict]): a history of all states of the Launch and when they occurred
-            launch_id (int): launch_id set by the LaunchPad
-            fw_id (int): id of the Firework this Launch is running
-        """
-        if state not in Firework.STATE_RANKS:
-            raise ValueError("Invalid launch state: {}".format(state))
-        self.launch_dir = launch_dir
+    STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
+                   'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
+                   'COMPLETED': 5}
+
+    def __init__(self, tasks, launch_dir=None, spec=None, name=None, state='WAITING',
+                 fworker=None, host=None, ip=None, trackers=None,
+                 fw_id=None, parents=None, created_on=None, updated_on=None,
+                 action=None, state_history=None):
+
+        self.tasks = tasks
+        self.spec = spec.copy() if spec else {}
+        self.name = name or 'Unnamed FW'
+        # names
+        if fw_id is not None:
+            self.fw_id = wf_id
+        else:
+            global NEGATIVE_FWID_CTR
+            NEGATIVE_FWID_CTR -= 1
+            self.fw_id = NEGATIVE_FWID_CTR
+
+        self.launch_dir = launch_dir or os.getcwd()
+
+        self._state = state
+        self.parents = parents if parents else []
+        self.created_on = created_on or datetime.utcnow()
+        self.updated_on = updated_on or datetime.utcnow()
+
         self.fworker = fworker or FWorker()
         self.host = host or get_my_host()
         self.ip = ip or get_my_ip()
         self.trackers = trackers if trackers else []
+
         self.action = action if action else None
         self.state_history = state_history if state_history else []
-        self.state = state
-        self.launch_id = launch_id
-        self.fw_id = fw_id
+
+    # FUNCTIONS FOR ACCESSING AND UPDATING STATE HISTORY
 
     def touch_history(self, update_time=None, checkpoint=None):
         """
@@ -432,6 +300,47 @@ class Launch(FWSerializable, object):
         if checkpoint:
             self.state_history[-1]['checkpoint'] = checkpoint
         self.state_history[-1]['updated_on'] = update_time
+        self.updated_on = update_time
+
+    def _update_state_history(self, state):
+        """
+        Internal method to update the state history whenever the Launch state is modified.
+
+        Args:
+            state (str)
+        """
+        if len(self.state_history) > 0:
+            last_state = self.state_history[-1]['state']
+            last_checkpoint = self.state_history[-1].get('checkpoint', None)
+        else:
+            last_state, last_checkpoint = None, None
+        if state != last_state:
+            now_time = datetime.utcnow()
+            new_history_entry = {'state': state, 'created_on': now_time}
+            if state != "COMPLETED" and last_checkpoint:
+                new_history_entry.update({'checkpoint': last_checkpoint})
+            self.state_history.append(new_history_entry)
+            if state in ['RUNNING', 'RESERVED']:
+                self.touch_history()  # add updated_on key
+
+    def _get_time(self, states, use_update_time=False):
+        """
+        Internal method to help get the time of various events in the Launch (e.g. RUNNING)
+        from the state history.
+
+        Args:
+            states (list/tuple): match one of these states
+            use_update_time (bool): use the "updated_on" time rather than "created_on"
+
+        Returns:
+            (datetime)
+        """
+        states = states if isinstance(states, (list, tuple)) else [states]
+        for data in self.state_history:
+            if data['state'] in states:
+                if use_update_time:
+                    return data['updated_on']
+                return data['created_on']
 
     def set_reservation_id(self, reservation_id):
         """
@@ -520,16 +429,24 @@ class Launch(FWSerializable, object):
 
     @recursive_serialize
     def to_dict(self):
-        return {'fworker': self.fworker,
-                'fw_id': self.fw_id,
-                'launch_dir': self.launch_dir,
-                'host': self.host,
-                'ip': self.ip,
-                'trackers': self.trackers,
-                'action': self.action,
-                'state': self.state,
-                'state_history': self.state_history,
-                'launch_id': self.launch_id}
+        # put tasks in a special location of the spec
+        spec = self.spec
+        spec['_tasks'] = [t.to_dict() for t in self.tasks]
+        m_dict = {'spec': spec,
+                  'name': self.name
+                  'fw_id': self.fw_id,
+                  'fworker': self.fworker,
+                  'launch_dir': self.launch_dir,
+                  'host': self.host,
+                  'ip': self.ip,
+                  'trackers': self.trackers,
+                  'action': self.action,
+                  'state': self.state,
+                  'state_history': self.state_history,
+                  'created_on': self.created_on,
+                  'updated_on': self.updated_on}
+
+        return m_dict
 
     @recursive_serialize
     def to_db_dict(self):
@@ -544,52 +461,22 @@ class Launch(FWSerializable, object):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        tasks = m_dict['spec']['_tasks']
+        fw_id = m_dict.get('fw_id', -1)
+        state = m_dict.get('state', 'WAITING')
+        created_on = m_dict.get('created_on')
+        updated_on = m_dict.get('updated_on')
+        name = m_dict.get('name', None)
         fworker = FWorker.from_dict(m_dict['fworker']) if m_dict['fworker'] else None
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
         trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get('trackers') else None
-        return Launch(m_dict['state'], m_dict['launch_dir'], fworker,
-                      m_dict['host'], m_dict['ip'], trackers, action,
-                      m_dict['state_history'], m_dict['launch_id'], m_dict['fw_id'])
+        return Firework(tasks, m_dict['launch_dir'], m_dict['spec'], name, state,
+                        fworker, m_dict['host'], m_dict['ip'], trackers,
+                        fw_id, m_dict['parents'], created_on, updated_on,
+                        action, m_dict['state_history'])
 
-    def _update_state_history(self, state):
-        """
-        Internal method to update the state history whenever the Launch state is modified.
-
-        Args:
-            state (str)
-        """
-        if len(self.state_history) > 0:
-            last_state = self.state_history[-1]['state']
-            last_checkpoint = self.state_history[-1].get('checkpoint', None)
-        else:
-            last_state, last_checkpoint = None, None
-        if state != last_state:
-            now_time = datetime.utcnow()
-            new_history_entry = {'state': state, 'created_on': now_time}
-            if state != "COMPLETED" and last_checkpoint:
-                new_history_entry.update({'checkpoint': last_checkpoint})
-            self.state_history.append(new_history_entry)
-            if state in ['RUNNING', 'RESERVED']:
-                self.touch_history()  # add updated_on key
-
-    def _get_time(self, states, use_update_time=False):
-        """
-        Internal method to help get the time of various events in the Launch (e.g. RUNNING)
-        from the state history.
-
-        Args:
-            states (list/tuple): match one of these states
-            use_update_time (bool): use the "updated_on" time rather than "created_on"
-
-        Returns:
-            (datetime)
-        """
-        states = states if isinstance(states, (list, tuple)) else [states]
-        for data in self.state_history:
-            if data['state'] in states:
-                if use_update_time:
-                    return data['updated_on']
-                return data['created_on']
+    def __str__(self):
+        return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
 
 class Workflow(FWSerializable):
