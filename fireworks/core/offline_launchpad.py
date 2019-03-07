@@ -381,7 +381,21 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def archive_wf(self, fw_id):
-        raise NotImplementedError
+        # TODO: Make Lazy
+        wf = self.get_wf_by_fw_id(fw_id)
+        if wf.state != 'ARCHIVED':
+            for fw in wf.fws:
+                self.rerun_fw(fw.fw_id)
+
+            # necessary to grab again?
+            wf = self.get_wf_by_fw_id(fw_id)
+            for fw in wf.fws:
+                fw.state = 'ARCHIVED'
+                # commit changes
+                # TODO maybe revert like original and do manual?
+                with self._db as c:
+                    self._update_fws([fw], wf._wf_id, c)
+                self._refresh_wf(fw.fw_id)
 
     def _restart_ids(self, next_fw_id, next_launch_id):
         raise NotImplementedError
@@ -621,8 +635,46 @@ class OfflineLaunchPad(object):
                            ))
         return old_new
 
-    def rerun_fw(self, fw_id, **kwargs):
-        raise NotImplementedError
+    def rerun_fw(self, fw_id, rerun_duplicates=True, recover_launch=None,
+                 recover_mode=None):
+        # reset a Firework so it can be run again
+        try:
+            with self._db as c:
+                (state,) = c.execute('SELECT state FROM fireworks '
+                                     'WHERE fw_id = ?', (fw_id,)).fetchone()
+        except TypeError:
+            raise ValueError("Firework doesn't exist")
+
+        # TODO: duplicates
+        duplicates = []
+        if rerun_duplicates:
+            pass
+        reruns = []
+
+        # TODO: Launch recovery
+        if recover_launch is not None:
+            pass
+
+        if state in ['ARCHIVED', 'DEFUSED']:
+            # cannot rerun
+            pass
+        elif state == 'WAITING' and not recover_launch:
+            # nothing to do
+            pass
+        else:
+            # TODO: Make lazy
+            with self._db as c:
+                # grab the workflow
+                wf = self.get_wf_by_fw_id(fw_id)
+                updated_ids = wf.rerun_fw(fw_id)
+                self._update_wf(wf, updated_ids, c)
+                reruns.append(fw_id)
+
+        for f in duplicates:
+            # TODO: Duplicates
+            pass
+        
+        return reruns
 
     def get_recovery(self, fw_id, launch_id='last'):
         raise NotImplementedError
