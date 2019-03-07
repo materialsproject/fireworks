@@ -189,17 +189,12 @@ class OfflineLaunchPad(object):
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
         # grab existing workflow
         wf = self.get_wf_by_fw_id(fw_ids[0])
-
         # call append_wf on that to get updated IDs
         updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour,
                                    pull_spec_mods=pull_spec_mods)
         with self._db as c:
             # create firework stubs for new fireworks
             self._update_wf(wf, updated_ids, cursor=c)
-        # update affected fireworks
-        # insert new fireworks
-        # update workflow
-        raise NotImplementedError
 
     def get_launch_by_id(self, launch_id):
         with self._db as c:
