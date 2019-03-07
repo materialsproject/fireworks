@@ -486,6 +486,9 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(self.lp.get_launch_by_id(1).action.stored_data[
             'stdout'], 'test1\n')
 
+    def count_collection(self, name):
+        return getattr(self.lp, name).count()
+
     def test_dupefinder(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()})
@@ -510,11 +513,14 @@ class MongoTests(unittest.TestCase):
         fw1 = Firework([UpdateSpecTask()])
         fw2 = Firework([ModSpecTask()])
         self.lp.add_wf(Workflow([fw1, fw2]))
-        self.assertEqual(self.lp.fireworks.count(), 2)
+        #self.assertEqual(self.lp.fireworks.count(), 2)
+        self.assertEqual(self.count_collection('fireworks'), 2)
         launch_rocket(self.lp, self.fworker)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.launches.count(), 2)
-        self.assertEqual(self.lp.fireworks.count(), 3)  # due to detour
+        #self.assertEqual(self.lp.launches.count(), 2)
+        #self.assertEqual(self.lp.fireworks.count(), 3)  # due to detour
+        self.assertEqual(self.count_collection('launches'), 2)
+        self.assertEqual(self.count_collection('fireworks'), 3)
 
         new_wf = Workflow([Firework([ModSpecTask()])])
         self.lp.append_wf(new_wf, [1, 2])
@@ -525,8 +531,10 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(new_fw.spec['dummy1'], 1)
         self.assertEqual(new_fw.spec['dummy2'], [True])
 
-        self.assertEqual(self.lp.launches.count(), 4)
-        self.assertEqual(self.lp.fireworks.count(), 4)
+        #self.assertEqual(self.lp.launches.count(), 4)
+        #self.assertEqual(self.lp.fireworks.count(), 4)
+        self.assertEqual(self.count_collection('launches'), 4)
+        self.assertEqual(self.count_collection('fireworks'), 4)
 
         new_wf = Workflow([Firework([ModSpecTask()])])
         self.lp.append_wf(new_wf, [4])
@@ -624,6 +632,12 @@ class SQLiteTests(MongoTests):
         os.chdir(self.old_wd)
         for i in glob.glob(os.path.join(MODULE_DIR, 'launcher*')):
             shutil.rmtree(i)
+
+    def count_collection(self, name):
+        with self.lp._db as c:
+            # can't use variable table name (afaik)
+            n = len(c.execute('SELECT * FROM {}'.format(name)).fetchall())
+        return n
 
 
 
