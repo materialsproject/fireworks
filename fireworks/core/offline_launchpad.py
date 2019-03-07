@@ -138,11 +138,11 @@ class OfflineLaunchPad(object):
 
             # TODO: Can squish these commands into single call?
             # reset count of ids
-            c.execute('CREATE TABLE meta(name TEXT, value INTEGER)')
+            c.execute('CREATE TABLE meta(name TEXT, next_id INTEGER)')
             c.executemany('INSERT INTO meta VALUES(?, 1)',
-                          (('next_fw_id',),
-                           ('next_launch_id',),
-                           ('next_workflow_id',)))
+                          (('workflows',),
+                           ('fireworks',),
+                           ('launches',)))
             c.execute('''CREATE TABLE workflows(workflow_id INTEGER UNIQUE,
                                                 data TEXT)''')
             c.execute('''CREATE TABLE fireworks(fw_id INTEGER UNIQUE,
@@ -173,15 +173,10 @@ class OfflineLaunchPad(object):
         # Adds Workflow with single transaction
         with self._db as c:
             workflow_id = self._get_new_workflow_id(cursor=c)
-            # Little bit hacky as Workflow holds some state of firework
-            # First insert empty workflow to create the workflow_id
-            c.execute('INSERT INTO workflows VALUES(?, ?)',
-                      (workflow_id, None))
-            old_new = self._insert_fws(list(wf.id_fw.values()),
+            old_new = self._update_fws(list(wf.id_fw.values()),
                                        workflow_id, c,
                                        reassign_all=reassign_all)
             wf._reassign_ids(old_new)
-            # Then update the workflow and insert this
             c.execute('UPDATE workflows SET data = ? '
                       'WHERE workflow_id = ?',
                       (workflow_to_sqlite(wf), workflow_id))
@@ -192,6 +187,18 @@ class OfflineLaunchPad(object):
             self.add_wf(wf)
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
+        # grab existing workflow
+        wf = self.get_wf_by_fw_id(fw_ids[0])
+
+        # call append_wf on that to get updated IDs
+        updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour,
+                                   pull_spec_mods=pull_spec_mods)
+        with self._db as c:
+            # create firework stubs for new fireworks
+            self._update_wf(wf, updated_ids, cursor=c)
+        # update affected fireworks
+        # insert new fireworks
+        # update workflow
         raise NotImplementedError
 
     def get_launch_by_id(self, launch_id):
@@ -250,9 +257,13 @@ class OfflineLaunchPad(object):
             fireworks[l['fw_id']]['launches'].append(l)
         fireworks = [Firework.from_dict(fw) for fw in fireworks.values()]
 
-        return Workflow(fireworks, workflow['links'], workflow['name'],
-                        workflow['metadata'], workflow['created_on'],
-                        workflow['updated_on'])
+        wf = Workflow(fireworks, workflow['links'], workflow['name'],
+                      workflow['metadata'], workflow['created_on'],
+                      workflow['updated_on'])
+        # TODO: Remove? little hack to make things easier later
+        wf._wf_id = wf_id
+
+        return wf
 
     def get_wf_by_fw_id_lzyfw(self, fw_id):
         with self._db as c:
@@ -273,9 +284,13 @@ class OfflineLaunchPad(object):
         else:
             fw_states = None
 
-        return Workflow(fws, workflow['links'], workflow['name'],
-                        workflow['metadata'], workflow['created_on'],
-                        workflow['updated_on'], fw_states)
+        wf = Workflow(fws, workflow['links'], workflow['name'],
+                      workflow['metadata'], workflow['created_on'],
+                      workflow['updated_on'], fw_states)
+        # TODO: Remove this little hack
+        wf._wf_id = wf_id
+
+        return wf
 
     def delete_wf(self, fw_id, delete_launch_dirs=False):
         with self._db as c:
@@ -455,19 +470,20 @@ class OfflineLaunchPad(object):
         m_launch = Launch(state, launch_dir, fworker, host, ip,
                           trackers=trackers, state_history=None,
                           launch_id=launch_id, fw_id=m_fw.fw_id)
+        m_fw.state = state
         with self._db as c:
-            c.execute('INSERT INTO launches VALUES(?, ?, ?)',
-                      (launch_id, m_fw.fw_id, launch_to_sqlite(m_launch)))
+            c.execute('UPDATE launches SET fw_id=?, data=? '
+                      'WHERE launch_id = ?',
+                      (m_fw.fw_id, launch_to_sqlite(m_launch), launch_id))
+            c.execute('UPDATE fireworks SET state = ?, data = ? '
+                      'WHERE fw_id = ?',
+                      (m_fw.state, firework_to_sqlite(m_fw), m_fw.fw_id))
 
         if not reserved_launch:
             m_fw.launches.append(m_launch)
         else:
             raise NotImplementedError
 
-        m_fw.state = state
-        # TODO: Why upsert here?
-        #       Why not just update the STATE field? - because of launches?
-        self._upsert_fws([m_fw])
         self._refresh_wf(m_fw.fw_id)
 
         # TODO: Duplicate run stuff
@@ -518,45 +534,81 @@ class OfflineLaunchPad(object):
                       (launch_to_sqlite(m_launch), launch_id))
 
     def _get_new_and_increment(self, table, quantity, cursor):
+        # grabs the next value from the meta counter table
+        # increments the meta counter table (by quantity)
+        # inserts empty rows in the appropriate table
+        # ie row allocation is only done here, allowing all other
+        # methods to do UPDATE only (and never touch the index column)
+        try:
+            idxname = {
+                'workflows': 'workflow_id',
+                'fireworks': 'fw_id',
+                'launches': 'launch_id',
+            }[table]
+        except KeyError:
+            # quick safety check since we're doing string tricks
+            raise ValueError
+
         # maybe start a transaction, maybe continue one
         if cursor is None:
             with self._db as c:
-                (next_id,) = c.execute('SELECT value FROM meta WHERE name = ?',
+                (next_id,) = c.execute('SELECT next_id FROM meta WHERE name = ?',
                                        (table,)).fetchone()
-                c.execute('UPDATE meta SET value = ? WHERE name = ?',
+                c.execute('UPDATE meta SET next_id = ? WHERE name = ?',
                           (next_id + quantity, table))
+                # creates rows with all NULL values
+                c.executemany('INSERT INTO {}({}) values(?)'
+                              ''.format(table, idxname), (
+                                  (i,) for i in range(next_id, next_id + quantity)))
         else:
             c = cursor
-            (next_id,) = c.execute('SELECT value FROM meta WHERE name = ?',
+            (next_id,) = c.execute('SELECT next_id FROM meta WHERE name = ?',
                                    (table,)).fetchone()
-            c.execute('UPDATE meta SET value = ? WHERE name = ?',
+            c.execute('UPDATE meta SET next_id = ? WHERE name = ?',
                       (next_id + quantity, table))
+            c.executemany('INSERT INTO {}({}) values(?)'
+                          ''.format(table, idxname), (
+                              (i,) for i in range(next_id, next_id + quantity)))
 
         return next_id
 
     def _get_new_workflow_id(self, quantity=1, cursor=None):
         # not official API, a hack to make workflow->firework mapping work
-        return self._get_new_and_increment('next_workflow_id',
+        return self._get_new_and_increment('workflows',
                                            quantity=quantity,
                                            cursor=cursor)
 
     def get_new_fw_id(self, quantity=1, cursor=None):
-        return self._get_new_and_increment('next_fw_id',
+        return self._get_new_and_increment('fireworks',
                                            quantity=quantity,
                                            cursor=cursor)
 
     def get_new_launch_id(self, cursor=None):
-        return self._get_new_and_increment('next_launch_id',
+        return self._get_new_and_increment('launches',
                                            quantity=1,
                                            cursor=cursor)
 
-    def _insert_fws(self, fws, workflow_id, cursor, reassign_all=False):
-        # already inside a context manager *cursor*
+    def _update_fws(self, fws, workflow_id, cursor, reassign_all=False):
+        """Update Fireworks in collection
+
+        Parameters
+        ----------
+        fws : list of Firework
+          who to update
+        workflow_id : int
+          index of the workflow they belong to
+        cursor : sqlite.Connection
+          activate transaction
+        reassign_all : bool
+          if to give all fireworks a new id
+
+        """
         old_new = {}
         fws.sort(key=lambda x: x.fw_id)
 
         if reassign_all:
-            first_new_id = self.get_new_fw_id(quantity=len(fws), cursor=cursor)
+            first_new_id = self.get_new_fw_id(quantity=len(fws),
+                                              cursor=cursor)
             for new_id, fw in enumerate(fws, start=first_new_id):
                 old_new[fw.fw_id] = new_id
                 fw.fw_id = new_id
@@ -566,39 +618,12 @@ class OfflineLaunchPad(object):
                     new_id = self.get_new_fw_id(cursor=cursor)
                     old_new[fw.fw_id] = new_id
                     fw.fw_id = new_id
-        cursor.executemany('INSERT INTO fireworks VALUES(?, ?, ?, ?)', (
-            (fw.fw_id, workflow_id, fw.state, firework_to_sqlite(fw))
-            for fw in fws
-        ))
 
-        return old_new
-
-    def _upsert_fws(self, fws, reassign_all=False):
-        """Insert into Fireworks 'collection'"""
-        old_new = {}
-        fws.sort(key=lambda x: x.fw_id)
-
-        if reassign_all:
-            used_ids = []
-            first_new_id = self.get_new_fw_id(quantity=len(fws))
-
-            for new_id, fw in enumerate(fws, start=first_new_id):
-                old_new[fw.fw_id] = new_id
-                fw.fw_id = new_id
-                used_ids.append(new_id)
-        else:
-            for fw in fws:
-                if fw.fw_id < 0:
-                    new_id = self.get_new_fw_id()
-                    old_new[fw.fw_id] = new_id
-                    fw.fw_id = new_id
-
-        with self._db as c:
-            c.executemany('UPDATE fireworks SET state = ?, data = ? '
-                          'WHERE fw_id = ?', (
-                              (fw.state, firework_to_sqlite(fw), fw.fw_id)
-                              for fw in fws
-                          ))
+        cursor.executemany('UPDATE fireworks SET workflow_id = ?, state = ?, data = ? '
+                           'WHERE fw_id = ?', (
+                               (workflow_id, fw.state, firework_to_sqlite(fw), fw.fw_id)
+                               for fw in fws
+                           ))
         return old_new
 
     def rerun_fw(self, fw_id, **kwargs):
@@ -613,26 +638,20 @@ class OfflineLaunchPad(object):
             # TODO: Make this lazy again
             wf = self.get_wf_by_fw_id(fw_id)
             updated_ids = wf.refresh(fw_id)
-            self._update_wf(wf, updated_ids, cursor=c)
+            self._update_wf(wf, updated_ids, c)
         # TODO: Extra junk in the 2nd except branch
         # ^ Can probably replicate and just update FIZZLED too
 
     def _update_wf(self, wf, updated_ids, cursor):
-        # TODO: I've changed the API of this call, is this bad?
-        # Inherits 'Lock' from calling function
-        # in sqlite, 'Lock' is the context manager
+        # TODO: Little hack that needs removing, see get_wf_from_wf_id
+        workflow_id = wf._wf_id
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
-        old_new = self._upsert_fws(updated_fws)
+        # old new will have some negative ids to positive ids
+        old_new = self._update_fws(updated_fws, workflow_id, cursor)
         wf._reassign_ids(old_new)
 
         query_node = [f for f in wf.id_fw
                       if f not in old_new.values() or old_new.get(f, None) == f][0]
-
-        # TODO: We're finding workflow_id again here, despite
-        #       the fact we were indirectly just using it...
-        (workflow_id,) = cursor.execute('SELECT workflow_id FROM fireworks '
-                                        'WHERE fw_id = ?',
-                                        (query_node,)).fetchone()
         # rewrite the payload of the workflow
         cursor.execute('UPDATE workflows SET data = ?'
                        'WHERE workflow_id = ?',
