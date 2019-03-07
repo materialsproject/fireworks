@@ -639,7 +639,11 @@ class SQLiteTests(MongoTests):
             n = len(c.execute('SELECT * FROM {}'.format(name)).fetchall())
         return n
 
+    def test_basic_fw_offline(self):
+        pass
 
+    def test_offline_fw_passinfo(self):
+        pass
 
 
 if __name__ == "__main__":
