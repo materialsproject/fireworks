@@ -4,22 +4,54 @@ Stores everything in a sqlite database (instead of MongoDB)
 
 Implementation notes:
 
-Each mdb collection is roughly translated into a separate table in the db
+Currently there are 4 tableso storing everything
 
-The 'meta' table keeps counts of ids as they're handed out.
+*meta* (table_name, next_id)
 
-Fireworks are stored a row each.  Only the important information (which is
-later queried upon) is pulled out into columns, everything else is stuffed
-as a json representation into 'data' which represents anything/everything.
+Stores the next_id for each other table.  Could maybe use autoincrement
+instead, but I read a couple weird things about using that.
 
-Workflows follow a similar strategy.  In order to get a unique 'key' for
-these, they follow a similar strategy to Fireworks in requesting a unique
-id upon insertion.
+When new ids are requested (via get_new_X methods) the rows in the appropriate
+table are also INSERTed.  **All** other operations should then just UPDATE,
+rather than REPLACE.  Unless you're deleting, that's ok I guess.
 
-There is a table of firework to workflow id 'mapping'.  This allows searching
-for the parent workflow of a given Firework.  (ie replicate $in in SQL).
-To remove this table we'd have to store Workflow ID alongside Fireworks
-(not impossible tbh, Fireworks are only inserted in the context of a WF).
+*workflows* (workflow_id, data)
+
+Stores the workflow objects as bson dumps of the objects.  Different to MongoDB,
+each Workflow has an ID.  This is used to quickly move between Fireworks in
+the same Workflow (without requiring the deserialisation of the Workflow).
+
+*fireworks* (fw_id, workflow_id, useful attributes, data)
+
+Stores Firework objects.  FW_ID is used as the index.  The mapping to Workflow
+is second column.  Last column is the bson dump of the object.
+
+Between all these, some useful attributes are pulled out to help with searching
+currently:
+ - state
+
+In the future:
+ - created_on (for sorting)
+ - fworker name / category data (for FWorker.query)
+
+*launches* (launch_id, fw_id, data)
+
+Stores Launch objects.  These store the fw_id they are associated to, then
+a bson dump of the object.
+
+
+*duplicate launches* (launch_id, fw_id)
+
+If I've understood the duplicate feature correctly, some Fireworks try and
+piggyback on an existing Launch object if it also satisfies them. The current
+many to one schema in *launches* won't allow for this as each Launch_ID must be
+unique.
+
+I think duplicates can be implemented with a duplicates table which map
+existing Launch_IDs to FW_IDs.  Here Launch_ID aren't unique keys any more.
+These FW_ID objects aren't the owners/original creators of the launch either,
+but represent the FW_ID that has been satisfied with an existing Launch.
+
 
 
 """
