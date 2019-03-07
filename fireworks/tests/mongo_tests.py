@@ -40,10 +40,10 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 NCORES_PARALLEL_TEST = 4
 
 def random_launch(lp_creds):
-        lp = LaunchPad.from_dict(lp_creds)
-        while lp.run_exists(None):
-            launch_rocket(lp)
-            time.sleep(random.random()/3+0.1)
+    lp = LaunchPad.from_dict(lp_creds)
+    while lp.run_exists(None):
+        launch_rocket(lp)
+        time.sleep(random.random()/3+0.1)
 
 def throw_error(msg):
     raise ValueError(msg)
