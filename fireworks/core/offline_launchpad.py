@@ -55,6 +55,9 @@ but represent the FW_ID that has been satisfied with an existing Launch.
 
 
 """
+
+import six
+
 # https://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable
 from bson import json_util as json
 import datetime
@@ -68,6 +71,42 @@ from .fworker import FWorker
 # we want to know what the default looks like to compare against later
 _DEFAULT_FWORKER_QUERY = FWorker().query
 
+def fworker_query_to_sqlite(fworker):
+    """Create sqlite query based upon fworker
+
+    Parameters
+    ----------
+    fworker : fw.FWorker or None
+      the FWorker to build query from.
+      if FWorker is None, then an empty string is returned
+
+    Returns
+    -------
+    q : str
+      something like ' AND (worker_name = "this")'
+      will always start with ' AND '
+    """
+    if fworker is None:
+        return ''
+    # TODO: string sanitation needed here
+    # replicates FWorker.query, but for sqlite not mongodb
+    q = ' AND '
+    # name must be unset (NULL) or *exactly* match the worker
+    q += '(worker_name = "{}" OR worker_name IS NULL) '.format(fworker.name)
+    if fworker.category == '__none__':
+        q += 'AND worker_cat IS NULL '
+    elif fworker.category:
+        if isinstance(fworker.category, six.string_types):
+            # single category
+            q += 'AND worker_cat IS "{}"'.format(fworker.category)
+        else:
+            # iterable of categories
+            # creates 'worker_cat IN ("this","that","other")'
+            q += 'AND worker_cat IN ("'
+            q += '","'.join(fworker.category)
+            q += '")'
+
+    return q
 
 def _nq(n):
     # for IN statements
@@ -76,16 +115,31 @@ def _nq(n):
 
 
 def firework_to_sqlite(firework):
+    # Return Firework row without fw_id and workflow_id
+
+    # firework schema:
+    # - fw_id (immutable)
+    # - workflow_id (immutable?)
+    # - worker_name (spec._fworker)
+    # - worker_cat (spec._category)
+    # - state (.state attribute)
+    # - data (everything as json blob)
+    worker_name = firework.spec.get('_fworker', None)
+    worker_cat = firework.spec.get('_category', None)
+
     d = firework.to_dict()
+    # strip some items out of dict
     fw_id = d.pop('fw_id')
+    # launches are stored elsewhere
     _ = d.pop('launches', None)
     _ = d.pop('archived_launches', None)
     d = json.dumps(d)
 
-    return d
+    return worker_name, worker_cat, firework.state, d
 
 def sqlite_to_firework(firework):
-    fw_id, _, state, data = firework
+    # unpack sqlite row
+    fw_id, _, _, _, state, data = firework
     d = json.loads(data)
 
     d['fw_id'] = fw_id
@@ -179,6 +233,8 @@ class OfflineLaunchPad(object):
                                                 data TEXT)''')
             c.execute('''CREATE TABLE fireworks(fw_id INTEGER UNIQUE,
                                                 workflow_id INTEGER,
+                                                worker_name TEXT,
+                                                worker_cat TEXT,
                                                 state TEXT,
                                                 data TEXT,
                          FOREIGN KEY (workflow_id) REFERENCES workflows(workflow_id)
@@ -356,25 +412,21 @@ class OfflineLaunchPad(object):
         raise NotImplementedError
 
     def run_exists(self, fworker=None):
-        # we can't do custom queries yet
-        # so anything spicy gets rejected
-        if fworker and not (fworker.query == _DEFAULT_FWORKER_QUERY):
-            raise NotImplementedError
-        return bool(self._get_a_fw_to_run(query=None,
+        return bool(self._get_a_fw_to_run(fworker=fworker,
                                           checkout=False))
 
     def future_run_exists(self, fworker=None):
         if self.run_exists(fworker):
             return True
-        if fworker and not (fworker.query == _DEFAULT_FWORKER_QUERY):
-            raise NotImplementedError
         with self._db as c:
             # iterate over 'active' fireworks checking for waiting children
             # grab firework IDs and workflow blobs
             for (fw_id, wf) in c.execute(
-                    'SELECT f.fw_id, w.data FROM fireworks as f '
+                    # TODO: This won't work because of the 'AS f' which screws query building
+                    'SELECT f.fw_id, w.data FROM fireworks AS f '
                     'INNER JOIN workflows AS w ON f.workflow_id = w.workflow_id '
-                    'WHERE f.state in ("RUNNING", "RESERVED")'):
+                    'WHERE f.state in ("RUNNING", "RESERVED")'
+                    '' + fworker_query_to_sqlite(fworker)):
                 wf = sqlite_to_workflow(wf)
                 children = wf['links'][str(fw_id)]
                 # If any children are "WAITING" then we've got future work
@@ -435,7 +487,12 @@ class OfflineLaunchPad(object):
     def _check_fw_for_uniqueness(self, m_fw):
         raise NotImplementedError
 
-    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
+    def _get_a_fw_to_run(self, fworker=None, fw_id=None, checkout=True):
+        if fworker and fworker._query:
+            raise NotImplementedError("cant do custom queries on workers")
+
+        fquery = fworker_query_to_sqlite(fworker)
+
         # TODO: FWorker query isn't implemented at all
         #       At minimum need category functionality
         #if query:
@@ -446,12 +503,14 @@ class OfflineLaunchPad(object):
             if fw_id:
                 firework = c.execute('SELECT * FROM fireworks '
                                      'WHERE fw_id = ? AND '
-                                     'state IN ("READY", "RESERVED")',
+                                     'state IN ("READY", "RESERVED")'
+                                     '' + fquery,
                                      (fw_id,)).fetchone()
             else:
                 # TODO: Ordering expected here
                 firework = c.execute('SELECT * FROM fireworks '
-                                     'WHERE state = "READY"').fetchone()
+                                     'WHERE state = "READY"'
+                                     '' + fquery).fetchone()
             if not firework is None:
                 firework = Firework.from_dict(sqlite_to_firework(firework))
                 if checkout:
@@ -496,7 +555,7 @@ class OfflineLaunchPad(object):
 
     def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None,
                     ip=None, state="RUNNING"):
-        m_fw = self._get_a_fw_to_run(fworker.query, fw_id=fw_id)
+        m_fw = self._get_a_fw_to_run(fworker=fworker, fw_id=fw_id)
         if not m_fw:
             return None, None
 
@@ -518,7 +577,9 @@ class OfflineLaunchPad(object):
                       (m_fw.fw_id, launch_to_sqlite(m_launch), launch_id))
             c.execute('UPDATE fireworks SET state = ?, data = ? '
                       'WHERE fw_id = ?',
-                      (m_fw.state, firework_to_sqlite(m_fw), m_fw.fw_id))
+                      # TODO: Can fworker info
+                      # last item is data blob
+                      (m_fw.state, firework_to_sqlite(m_fw)[-1], m_fw.fw_id))
 
         if not reserved_launch:
             m_fw.launches.append(m_launch)
@@ -660,9 +721,9 @@ class OfflineLaunchPad(object):
                     old_new[fw.fw_id] = new_id
                     fw.fw_id = new_id
 
-        cursor.executemany('UPDATE fireworks SET workflow_id = ?, state = ?, data = ? '
+        cursor.executemany('UPDATE fireworks SET workflow_id = ?, worker_name = ?, worker_cat = ?, state = ?, data = ? '
                            'WHERE fw_id = ?', (
-                               (workflow_id, fw.state, firework_to_sqlite(fw), fw.fw_id)
+                               (workflow_id,) + firework_to_sqlite(fw) + (fw.fw_id,)
                                for fw in fws
                            ))
         return old_new
