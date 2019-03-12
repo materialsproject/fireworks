@@ -32,6 +32,8 @@ from fireworks.utilities.dict_mods import apply_mod
 from fireworks.core.launchpad import LockedWorkflowError, LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger
 
+from typing import List, Dict
+
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
@@ -40,18 +42,21 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 7, 2013'
 
 
-def do_ping(launchpad, fw_id):
+def do_ping(launchpad: LaunchPad, fw_id: int):
     if launchpad:
         launchpad.ping_launch(wf_id)
 
 
-def ping_launch(launchpad, fw_id, stop_event, master_thread):
+def ping_launch(launchpad: LaunchPad, fw_id: int,
+                stop_event: threading.Event,
+                master_thread: threading.Thread):
     while not stop_event.is_set() and master_thread.isAlive():
         do_ping(launchpad, fw_id)
         stop_event.wait(PING_TIME_SECS)
 
 
-def start_ping_launch(launchpad, fw_id):
+def start_ping_launch(launchpad: LaunchPad,
+                      fw_id: int):
     # TODO
     # This should be formatted such that this file doesn't care if fw_id is None
     # Maybe add a launchpad.multiprocessing_compatible attribute???
@@ -70,7 +75,7 @@ def start_ping_launch(launchpad, fw_id):
         return ping_stop
 
 
-def stop_backgrounds(ping_stop, btask_stops):
+def stop_backgrounds(ping_stop: Event, btask_stops: List[Event]):
     fd = FWData()
     if fd.MULTIPROCESSING:
         fd.Running_IDs[os.getpid()] = None
@@ -81,7 +86,8 @@ def stop_backgrounds(ping_stop, btask_stops):
         b.set()
 
 
-def background_task(btask, spec, stop_event, master_thread):
+def background_task(btask: Firetask, spec: Dict,
+                    stop_event: Event, master_thread: Thread):
     num_launched = 0
     while not stop_event.is_set() and master_thread.isAlive():
         for task in btask.tasks:
@@ -93,7 +99,7 @@ def background_task(btask, spec, stop_event, master_thread):
             break
 
 
-def start_background_task(btask, spec):
+def start_background_task(btask: Firetask, spec: Dict):
     ping_stop = threading.Event()
     ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop,
                                                                  threading.currentThread()))
@@ -106,7 +112,7 @@ class Rocket:
     The Rocket fetches a workflow step from the FireWorks database and executes it.
     """
 
-    def __init__(self, launchpad, fworker, fw_id):
+    def __init__(self, launchpad: LaunchPad, fworker: FWorker, fw_id: int):
         """
         Args:
         launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
@@ -118,7 +124,7 @@ class Rocket:
         self.fworker = fworker
         self.fw_id = fw_id
 
-    def run(self, pdb_on_exception=False):
+    def run(self, pdb_on_exception: bool = False) -> bool:
         """
         Run the rocket (check out a job from the database and execute it)
 
@@ -376,7 +382,8 @@ class Rocket:
             return True
 
 
-    def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
+    def decorate_fwaction(self, fwaction: FWAction, my_spec: Dict,
+                          m_fw: Firework, launch_dir: str) -> FWAction:
 
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
