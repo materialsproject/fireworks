@@ -50,6 +50,8 @@ class LaunchPad(FWSerializable, ABC):
     def __init__(*args, **kwargs):
         pass
 
+    """THE FOLLOWING ARE BASIC FWSerializable FUNCTIONS"""
+
     @abstractmethod
     def copy(self):
         pass
@@ -77,6 +79,10 @@ class LaunchPad(FWSerializable, ABC):
     def _reset(self):
         pass
 
+    """FUNCTIONS ACCESSED BY EXTERNAL CODE (lpad_run.py, rocket.py)"""
+
+    """FUNCTION DEFINED IN FULL HERE"""
+
     @abstractmethod
     def reset(self, password, require_password=True, max_reset_wo_password=25):
         """
@@ -101,19 +107,6 @@ class LaunchPad(FWSerializable, ABC):
                 self.fireworks.count(), max_reset_wo_password))
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
-
-    @abstractmethod
-    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False,
-                        max_runtime=None, min_runtime=None, refresh=False, query=None):
-        pass
-
-    @abstractmethod
-    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, rerun=False):
-        pass
-
-    @abstractmethod
-    def update_spec(self, fw_ids, spec_document, mongo=False):
-        pass
 
     def maintain(self, infinite=True, maintain_interval=None):
         """
@@ -148,32 +141,6 @@ class LaunchPad(FWSerializable, ABC):
 
             self.m_logger.debug('Sleeping for {} secs...'.format(maintain_interval))
             time.sleep(maintain_interval)
-
-    @abstractmethod
-    def _refresh_wf(self, fw_id):
-        # this should be abstracted to do the error catching so that
-        # functions like pause_wf etc. don't have to
-        pass
-
-    @abstractmethod
-    def _update_wf(self, wf, updated_ids):
-        pass
-
-    @abstractmethod
-    def _insert_wfs(self, wfs):
-        pass
-
-    @abstractmethod
-    def _insert_fws(self, fws):
-        pass
-
-    @abstractmethod
-    def _upsert_fws(self, fws):
-        pass
-
-    @abstractmethod
-    def set_priority(self, fw_id, priority):
-        pass
 
     def add_wf(self, wf, reassign_all=True):
         """
@@ -244,9 +211,6 @@ class LaunchPad(FWSerializable, ABC):
         self._insert_fws(all_fws)
         return None
 
-    def _edit_db(self, id, command, find_one, update, replace, ):
-        pass
-
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
         """
         Append a new workflow on top of an existing workflow.
@@ -264,27 +228,6 @@ class LaunchPad(FWSerializable, ABC):
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)
 
-    @abstractmethod
-    def get_fw_by_id(self, fw_id):
-        pass
-
-    @abstractmethod
-    def get_wf_by_fw_id(self, fw_id):
-        pass
-
-    @abstractmethod
-    def get_wf_by_fw_id_lzyfw(self, fw_id):
-        pass
-
-    @abstractmethod
-    def delete_wf(self, fw_id, delete_launch_dirs=False):
-        pass
-
-    @abstractmethod
-    def _get_wf_data(self, wf_id):
-        pass
-
-    @abstractmethod
     def get_wf_summary_dict(self, fw_id, mode="more"):
         """
         A much faster way to get summary information about a Workflow by querying only for
@@ -332,18 +275,6 @@ class LaunchPad(FWSerializable, ABC):
         del wf["fw"]
 
         return wf
-
-    @abstractmethod
-    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
-        pass
-
-    @abstractmethod
-    def get_wf_ids(self, query=None, sort=None, limit=0, count_only=False):
-        pass
-
-    @abstractmethod
-    def tuneup(self, bkground=True):
-        pass
 
     def pause_fw(self,fw_id):
         """
@@ -452,50 +383,7 @@ class LaunchPad(FWSerializable, ABC):
          """
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
-            self.reignite_fw(fw.fw_id)   
-
-    def run_exists(self, fworker=None):
-        """
-        Checks to see if the database contains any FireWorks that are ready to run.
-
-        Returns:
-            bool: True if the database contains any FireWorks that are ready to run.
-        """
-        q = fworker.query if fworker else {}
-        return bool(self._get_a_fw_to_run(query=q, checkout=False))
-
-    def future_run_exists(self, fworker=None):
-        """Check if database has any current OR future Fireworks available
-
-        Returns:
-            bool: True if database has any ready or waiting Fireworks.
-        """
-        if self.run_exists(fworker):
-            # check first to see if any are READY
-            return True
-        else:
-            # retrieve all [RUNNING/RESERVED] fireworks
-            q = fworker.query if fworker else {}
-            q.update({'state': {'$in': ['RUNNING', 'RESERVED']}})
-            active = self.get_fw_ids(q)
-            # then check if they have WAITING children
-            for fw_id in active:
-                children = self.get_wf_by_fw_id_lzyfw(fw_id).links[fw_id]
-                if any(self.get_fw_dict_by_id(i)['state'] == 'WAITING'
-                       for i in children):
-                    return True
-
-            # if we loop over all active and none have WAITING children
-            # there is no future work to do
-            return False
-
-    @abstractmethod
-    def _restart_ids(self, next_fw_id):
-        pass
-
-    @abstractmethod
-    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
-        pass
+            self.reignite_fw(fw.fw_id)
 
     def complete_firework(self, fw_id, action=None, state='COMPLETED'):
         """
@@ -519,52 +407,62 @@ class LaunchPad(FWSerializable, ABC):
         # change return type to dict to make return type serializable to support job packing
         return m_fw.to_dict()
 
+
+
+    """ EXTERNALLY CALLABLE FUNCTIONS WITH ABSTRACT DECLARATIONS """
+
+    @abstractmethod
+    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False,
+                        max_runtime=None, min_runtime=None, refresh=False, query=None):
+        pass
+
+    @abstractmethod
+    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, rerun=False):
+        pass
+
+    @abstractmethod
+    def update_spec(self, fw_ids, spec_document, mongo=False):
+        pass
+
+    @abstractmethod
+    def _refresh_wf(self, fw_id):
+        pass
+
+    @abstractmethod
+    def set_priority(self, fw_id, priority):
+        pass
+
+    @abstractmethod
+    def get_fw_by_id(self, fw_id):
+        pass
+
+    @abstractmethod
+    def get_wf_by_fw_id(self, fw_id):
+        pass
+
+    @abstractmethod
+    def get_wf_by_fw_id_lzyfw(self, fw_id):
+        pass
+
+    @abstractmethod
+    def delete_wf(self, fw_id, delete_launch_dirs=False):
+        pass
+
+    @abstractmethod
+    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
+        pass
+
+    @abstractmethod
+    def get_wf_ids(self, query=None, sort=None, limit=0, count_only=False):
+        pass
+
+    @abstractmethod
+    def tuneup(self, bkground=True):
+        pass
+
     @abstractmethod
     def checkout_fw(self, fworker, launch_dir, fw_id=None, host=None, ip=None, state="RUNNING"):
         pass
-
-    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
-        """
-        Checkout the next ready firework and mark the launch reserved.
-
-        Args:
-            fworker (FWorker)
-            launch_dir (str): path to the launch directory.
-            host (str): hostname
-            ip (str): ip address
-            fw_id (int): fw_id to be reserved, if desired
-
-        Returns:
-            (Firework, int): the checked out firework and the new launch id
-        """
-        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
-
-    #......
-
-    def mark_fizzled(self, fw_id):
-        """
-        Mark the launch corresponding to the given id as FIZZLED.
-
-        Args:
-            launch_id (int): launch id
-
-        Returns:
-            dict: updated launch
-        """
-        # Do a confirmed write and make sure state_history is preserved
-        self.complete_launch(fw_id, state='FIZZLED')
-
-    #......
-
-    def log_message(self, level, message):
-        """
-        Support for job packing
-
-        Args:
-            level (str)
-            message (str)
-        """
-        self.m_logger.log(level, message)
 
     @abstractmethod
     def get_tracker_data(self, fw_id):
@@ -610,9 +508,111 @@ class LaunchPad(FWSerializable, ABC):
     def ping_launch(self, launch_id, ptime=None, checkpoint=None):
         pass
 
+
+
+    """ INTERNAL FUNCTIONS """
+
+    """ INTERNAL FUNCTIONS FULLY DEFINED HERE """
+
+    def run_exists(self, fworker=None):
+        """
+        Checks to see if the database contains any FireWorks that are ready to run.
+
+        Returns:
+            bool: True if the database contains any FireWorks that are ready to run.
+        """
+        q = fworker.query if fworker else {}
+        return bool(self._get_a_fw_to_run(query=q, checkout=False))
+
+    def future_run_exists(self, fworker=None):
+        """Check if database has any current OR future Fireworks available
+
+        Returns:
+            bool: True if database has any ready or waiting Fireworks.
+        """
+        if self.run_exists(fworker):
+            # check first to see if any are READY
+            return True
+        else:
+            # retrieve all [RUNNING/RESERVED] fireworks
+            q = fworker.query if fworker else {}
+            q.update({'state': {'$in': ['RUNNING', 'RESERVED']}})
+            active = self.get_fw_ids(q)
+            # then check if they have WAITING children
+            for fw_id in active:
+                children = self.get_wf_by_fw_id_lzyfw(fw_id).links[fw_id]
+                if any(self.get_fw_dict_by_id(i)['state'] == 'WAITING'
+                       for i in children):
+                    return True
+
+            # if we loop over all active and none have WAITING children
+            # there is no future work to do
+            return False
+
+    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
+        """
+        Checkout the next ready firework and mark the launch reserved.
+
+        Args:
+            fworker (FWorker)
+            launch_dir (str): path to the launch directory.
+            host (str): hostname
+            ip (str): ip address
+            fw_id (int): fw_id to be reserved, if desired
+
+        Returns:
+            (Firework, int): the checked out firework and the new launch id
+        """
+        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
+
+    def mark_fizzled(self, fw_id):
+        """
+        Mark the launch corresponding to the given id as FIZZLED.
+
+        Args:
+            launch_id (int): launch id
+
+        Returns:
+            dict: updated launch
+        """
+        # Do a confirmed write and make sure state_history is preserved
+        self.complete_launch(fw_id, state='FIZZLED')
+
+
+
+    """ INTERNAL FUNCTION WITH ABSTRACT DECLARATIONS """
+
     @abstractmethod
-    def complete_launch(self, launch_id, action=None, state='COMPLETED'):
+    def _update_wf(self, wf, updated_ids):
         pass
+
+    @abstractmethod
+    def _insert_wfs(self, wfs):
+        pass
+
+    @abstractmethod
+    def _insert_fws(self, fws):
+        pass
+
+    @abstractmethod
+    def _upsert_fws(self, fws):
+        pass
+
+    @abstractmethod
+    def _restart_ids(self, next_fw_id):
+        pass
+
+    @abstractmethod
+    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
+        pass
+
+    @abstractmethod
+    def _get_wf_data(self, wf_id):
+        pass
+
+
+
+    """ LOGGING UTILITIES """
 
     def get_logdir(self):
         """
@@ -621,13 +621,22 @@ class LaunchPad(FWSerializable, ABC):
         """
         return self.logdir
 
+    def log_message(self, level, message):
+        """
+        Support for job packing
+
+        Args:
+            level (str)
+            message (str)
+        """
+        self.m_logger.log(level, message)
+
+
+
     # *** USEFUL (BUT NOT REQUIRED) FUNCTIONS
 
     def _check_fw_for_uniqueness(self, m_fw):
         raise NotImplementedError
 
     def _restart_ids(self, next_fw_id, next_launch_id):
-        raise NotImplementedError
-
-    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
         raise NotImplementedError
