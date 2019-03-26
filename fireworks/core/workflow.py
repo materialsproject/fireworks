@@ -1,3 +1,44 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
+from copy import deepcopy
+
+
+"""
+This module contains:
+
+    - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
+"""
+
+from collections import defaultdict, OrderedDict
+import abc
+from datetime import datetime
+import os
+import pprint
+
+from monty.io import reverse_readline, zopen
+from monty.os.path import zpath
+
+from six import add_metaclass
+
+from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
+from fireworks.core.fworker import FWorker
+from fireworks.utilities.dict_mods import apply_mod
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \
+    recursive_deserialize, serialize_fw
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
+
+from typing import List, Dict
+
+__author__ = "Anubhav Jain"
+__credits__ = "Shyue Ping Ong"
+__copyright__ = "Copyright 2013, The Materials Project"
+__version__ = "0.1"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Feb 5, 2013"
+
 class Workflow(FWSerializable):
     """
     A Workflow connects a group of FireWorks in an execution order.

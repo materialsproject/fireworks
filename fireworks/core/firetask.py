@@ -1,3 +1,39 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
+
+from copy import deepcopy
+
+
+"""
+This module contains:
+
+    - A Firetask defines the contract for tasks that run within a Firework (Firetasks).
+    - A BackgroundTask specifies a Firetask to be run in the background during workflow execution.
+    - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after
+        a job completes.
+"""
+
+from collections import defaultdict, OrderedDict
+import abc
+from datetime import datetime
+import os
+import pprint
+
+from monty.io import reverse_readline, zopen
+from monty.os.path import zpath
+
+from six import add_metaclass
+
+from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
+from fireworks.core.fworker import FWorker
+from fireworks.utilities.dict_mods import apply_mod
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \
+    recursive_deserialize, serialize_fw
+from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
+
+from typing import List, Dict
+
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -175,67 +211,3 @@ class FWAction(FWSerializable):
 
     def __str__(self):
         return "FWAction\n" + pprint.pformat(self.to_dict())
-
-
-class Tracker(FWSerializable, object):
-    """
-    A Tracker monitors a file and returns the last N lines for updating the Launch object.
-    """
-
-    MAX_TRACKER_LINES = 1000
-
-    def __init__(self, filename: str, nlines: int=TRACKER_LINES,
-                 content: str='', allow_zipped: bool=False):
-        """
-        Args:
-            filename (str)
-            nlines (int): number of lines to track
-            content (str): tracked content
-            allow_zipped (bool): if set, will look for zipped file.
-        """
-        if nlines > self.MAX_TRACKER_LINES:
-            raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(
-                self.MAX_TRACKER_LINES, nlines))
-        self.filename = filename
-        self.nlines = nlines
-        self.content = content
-        self.allow_zipped = allow_zipped
-
-    def track_file(self, launch_dir: str=None) -> str:
-        """
-        Reads the monitored file and returns back the last N lines
-
-        Args:
-            launch_dir (str): directory where job was launched in case of relative filename
-
-        Returns:
-            str: the content(last N lines)
-        """
-        m_file = self.filename
-        if launch_dir and not os.path.isabs(self.filename):
-            m_file = os.path.join(launch_dir, m_file)
-        lines = []
-        if self.allow_zipped:
-            m_file = zpath(m_file)
-        if os.path.exists(m_file):
-            with zopen(m_file, "rt") as f:
-                for l in reverse_readline(f):
-                    lines.append(l)
-                    if len(lines) == self.nlines:
-                        break
-            self.content = '\n'.join(reversed(lines))
-        return self.content
-
-    def to_dict(self) -> dict:
-        m_dict = {'filename': self.filename, 'nlines': self.nlines, 'allow_zipped': self.allow_zipped}
-        if self.content:
-            m_dict['content'] = self.content
-        return m_dict
-
-    @classmethod
-    def from_dict(cls, m_dict: dict) -> Tracker:
-        return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''),
-                       m_dict.get('allow_zipped', False))
-
-    def __str__(self):
-        return '### Filename: {}\n{}'.format(self.filename, self.content)

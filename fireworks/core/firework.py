@@ -6,14 +6,10 @@ from copy import deepcopy
 
 
 """
-This module contains some of the most central FireWorks classes:
+This module contains:
 
-    - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
-    - A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
-    - A Launch describes the run of a Firework on a computing resource.
-    - A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
-    - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after
-        a job completes.
+    - A Firework defines a workflow step and contains one or more Firetasks along with
+        a description of its run on a computing resource.
 """
 
 from collections import defaultdict, OrderedDict
@@ -282,3 +278,67 @@ class Firework(FWSerializable):
 
     def __str__(self):
         return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
+
+
+class Tracker(FWSerializable, object):
+    """
+    A Tracker monitors a file and returns the last N lines for updating the Launch object.
+    """
+
+    MAX_TRACKER_LINES = 1000
+
+    def __init__(self, filename: str, nlines: int=TRACKER_LINES,
+                 content: str='', allow_zipped: bool=False):
+        """
+        Args:
+            filename (str)
+            nlines (int): number of lines to track
+            content (str): tracked content
+            allow_zipped (bool): if set, will look for zipped file.
+        """
+        if nlines > self.MAX_TRACKER_LINES:
+            raise ValueError("Tracker only supports a maximum of {} lines; you put {}.".format(
+                self.MAX_TRACKER_LINES, nlines))
+        self.filename = filename
+        self.nlines = nlines
+        self.content = content
+        self.allow_zipped = allow_zipped
+
+    def track_file(self, launch_dir: str=None) -> str:
+        """
+        Reads the monitored file and returns back the last N lines
+
+        Args:
+            launch_dir (str): directory where job was launched in case of relative filename
+
+        Returns:
+            str: the content(last N lines)
+        """
+        m_file = self.filename
+        if launch_dir and not os.path.isabs(self.filename):
+            m_file = os.path.join(launch_dir, m_file)
+        lines = []
+        if self.allow_zipped:
+            m_file = zpath(m_file)
+        if os.path.exists(m_file):
+            with zopen(m_file, "rt") as f:
+                for l in reverse_readline(f):
+                    lines.append(l)
+                    if len(lines) == self.nlines:
+                        break
+            self.content = '\n'.join(reversed(lines))
+        return self.content
+
+    def to_dict(self) -> dict:
+        m_dict = {'filename': self.filename, 'nlines': self.nlines, 'allow_zipped': self.allow_zipped}
+        if self.content:
+            m_dict['content'] = self.content
+        return m_dict
+
+    @classmethod
+    def from_dict(cls, m_dict: dict) -> Tracker:
+        return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''),
+                       m_dict.get('allow_zipped', False))
+
+    def __str__(self):
+        return '### Filename: {}\n{}'.format(self.filename, self.content)
