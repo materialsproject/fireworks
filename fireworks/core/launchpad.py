@@ -63,24 +63,6 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def update_spec(self, fw_ids: List[int],
-                    spec_document: Dict):
-        """
-        Update fireworks with a spec. Sometimes you need to modify a firework in progress.
-
-        Args:
-            fw_ids [int]: All fw_ids to modify.
-            spec_document (dict): The spec document. Note that only modifications to
-                the spec key are allowed. So if you supply {"_tasks.1.parameter": "hello"},
-                you are effectively modifying spec._tasks.1.parameter in the actual fireworks
-                collection.
-            mongo (bool): spec_document uses mongo syntax to directly update the spec
-
-        TODO addres mongo variable, shouldn't be needed in general
-        """
-        pass
-
-    @abstractmethod
     @classmethod
     def from_dict(cls, d: Dict):
         pass
@@ -155,7 +137,7 @@ class LaunchPad(FWSerializable, ABC):
             self.m_logger.debug('Sleeping for {} secs...'.format(maintain_interval))
             time.sleep(maintain_interval)
 
-    def add_wf(self, wf: Union[Workflow, Firework], reassign_all: bool=True):
+    def add_wf(self, wf: Union[Workflow, Firework], reassign_all: bool=True) -> Dict:
         """
         Add workflow(or firework) to the launchpad. The firework ids will be reassigned.
 
@@ -242,7 +224,7 @@ class LaunchPad(FWSerializable, ABC):
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)
 
-    def get_wf_summary_dict(self, fw_id: int, mode: str="more"):
+    def get_wf_summary_dict(self, fw_id: int, mode: str="more") -> Dict:
         """
         A much faster way to get summary information about a Workflow by querying only for
         needed information.
@@ -290,7 +272,7 @@ class LaunchPad(FWSerializable, ABC):
 
         return wf
 
-    def pause_fw(self, fw_id: int):
+    def pause_fw(self, fw_id: int) -> Dict:
         """
         Given the firework id, pauses the firework and refresh the workflow
 
@@ -304,7 +286,7 @@ class LaunchPad(FWSerializable, ABC):
         return f
 
 
-    def defuse_fw(self, fw_id: int, rerun_duplicates: bool=True):
+    def defuse_fw(self, fw_id: int, rerun_duplicates: bool=True) -> Dict:
         """
         Given the firework id, defuse the firework and refresh the workflow.
 
@@ -320,7 +302,7 @@ class LaunchPad(FWSerializable, ABC):
             f = self._refresh_wf(fw_id, state='DEFUSED', allowed_states=allowed_states)
         return f
 
-    def reignite_fw(self, fw_id: int):
+    def reignite_fw(self, fw_id: int) -> Dict:
         """
         Given the firework id, re-ignite(set state=WAITING) the defused firework.
 
@@ -330,7 +312,7 @@ class LaunchPad(FWSerializable, ABC):
         f = self._refresh_wf(fw_id, state='WAITING', allowed_states='DEFUSED')
         return f
 
-    def resume_fw(self, fw_id: int):
+    def resume_fw(self, fw_id: int) -> Dict:
         """
         Given the firework id, resume (set state=WAITING) the paused firework.
 
@@ -342,7 +324,7 @@ class LaunchPad(FWSerializable, ABC):
 
     def rerun_fw(self, fw_id: int, rerun_duplicates: bool=True,
                  recover_launch: Union[str,int,None]=None,
-                 recover_mode: Optional[str]=None):
+                 recover_mode: Optional[str]=None) -> List[int]:
         """
         Rerun the firework corresponding to the given id.
 
@@ -450,7 +432,7 @@ class LaunchPad(FWSerializable, ABC):
             self.reignite_fw(fw.fw_id)
 
     def complete_firework(self, fw_id: int, action: Optional[FWAction]=None,
-                          state: str='COMPLETED'):
+                          state: str='COMPLETED') -> Dict:
         """
         Internal method used to mark a Firework's Launch as completed.
 
@@ -474,7 +456,7 @@ class LaunchPad(FWSerializable, ABC):
 
     def checkout_fw(self, fworker: FWorker, launch_dir: str, fw_id: int=None,
                     host: Optional[str]=None, ip: Optional[str]=None,
-                    state: str="RUNNING"):
+                    state: str="RUNNING") -> Tuple[Firework, int]:
         """
         Checkout the next ready firework, mark it with the given state(RESERVED or RUNNING) and
         return it to the caller. The caller is responsible for running the Firework.
@@ -569,96 +551,270 @@ class LaunchPad(FWSerializable, ABC):
     """ EXTERNALLY CALLABLE FUNCTIONS WITH ABSTRACT DECLARATIONS """
 
     @abstractmethod
-    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, rerun=False):
+    def detect_unreserved(self, expiration_secs: int=RESERVATION_EXPIRATION_SECS,
+                          rerun: bool=False) -> List[int]:
+        """
+        Return the reserved launch ids that have not been updated for a while.
+
+        Args:
+            expiration_secs (seconds): time limit
+            rerun (bool): if True, the expired reservations are cancelled and the fireworks rerun.
+
+        Returns:
+            [int]: list of expired lacunh ids
+        """
         pass
 
     @abstractmethod
-    def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False,
-                        max_runtime=None, min_runtime=None, refresh=False, query=None):
+    def detect_lostruns(self, expiration_secs: int=RUN_EXPIRATION_SECS, fizzle: bool=False,
+                        rerun: bool=False, max_runtime: Optional[int]=None,
+                        min_runtime: Optional[int]=None, refresh: bool=False,
+                        query: Dict=None) -> Tuple[List[int], List[int], List[int]]:
+        """
+        Detect lost runs i.e running fireworks that haven't been updated within the specified
+        time limit or running firework whose launch has been marked fizzed or completed.
+
+        Args:
+            expiration_secs (seconds): expiration time in seconds
+            fizzle (bool): if True, mark the lost runs fizzed
+            rerun (bool): if True, mark the lost runs fizzed and rerun
+            max_runtime (seconds): maximum run time
+            min_runtime (seconds): minimum run time
+            refresh (bool): if True, refresh the workflow with inconsistent fireworks.
+            query (dict): restrict search to FWs matching this query
+
+        Returns:
+            ([int], [int], [int]): tuple of list of lost launch ids, lost firework ids and
+                inconsistent firework ids.
+        """
         pass
 
     @abstractmethod
-    def update_spec(self, fw_ids, spec_document, mongo=False):
+    def update_spec(self, fw_ids: List[int],
+                    spec_document: Dict):
+        """
+        Update fireworks with a spec. Sometimes you need to modify a firework in progress.
+
+        Args:
+            fw_ids [int]: All fw_ids to modify.
+            spec_document (dict): The spec document. Note that only modifications to
+                the spec key are allowed. So if you supply {"_tasks.1.parameter": "hello"},
+                you are effectively modifying spec._tasks.1.parameter in the actual fireworks
+                collection.
+            mongo (bool): spec_document uses mongo syntax to directly update the spec
+
+        TODO addres mongo variable, shouldn't be needed in general
+        """
         pass
 
     @abstractmethod
-    def _refresh_wf(self, fw_id):
+    def _refresh_wf(self, fw_id: int, state: Optional[str]=None,
+                    allowed_states: Optional[str]=None) -> Union[Dict, None]:
+        """
+        Update the FW state of all jobs in workflow.
+
+        Args:
+            fw_id (int): the parent fw_id - children will be refreshed
+        """
         pass
 
     @abstractmethod
-    def set_priority(self, fw_id, priority):
+    def set_priority(self, fw_id: int, priority: int):
+        """
+        Set priority to the firework with the given id.
+
+        Args:
+            fw_id (int): firework id
+            priority
+        """
         pass
 
     @abstractmethod
-    def get_fw_by_id(self, fw_id):
+    def get_fw_by_id(self, fw_id: int) -> Firework:
+        """
+        Given a Firework id, give back a Firework object.
+
+        Args:
+            fw_id (int): Firework id.
+
+        Returns:
+            Firework object
+        """
         pass
 
     @abstractmethod
-    def get_wf_by_fw_id(self, fw_id):
+    def get_wf_by_fw_id(self, fw_id: int) -> Workflow:
+        """
+        Given a Firework id, give back the Workflow containing that Firework.
+
+        Args:
+            fw_id (int)
+
+        Returns:
+            A Workflow object
+        """
         pass
 
     @abstractmethod
-    def get_wf_by_fw_id_lzyfw(self, fw_id):
+    def get_wf_by_fw_id_lzyfw(self, fw_id: int) -> Workflow:
+        """
+        Given a FireWork id, give back the Workflow containing that FireWork.
+
+        Args:
+            fw_id (int)
+
+        Returns:
+            A Workflow object
+        """
         pass
 
     @abstractmethod
-    def delete_wf(self, fw_id, delete_launch_dirs=False):
+    def delete_wf(self, fw_id: int, delete_launch_dirs: bool=False):
+        """
+        Delete the workflow containing firework with the given id.
+
+        Args:
+            fw_id (int): Firework id
+            delete_launch_dirs (bool): if True all the launch directories associated with
+                the WF will be deleted as well, if possible.
+        """
         pass
 
     @abstractmethod
-    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
+    def get_fw_ids(self, query: Dict=None, sort: Optional[List[Tuple[str,str]]] =None,
+                   limit: int=0, count_only: bool=False) -> List[int]:
+        """
+        Return all the fw ids that match a query.
+
+        Args:
+            query (dict): representing a Mongo query
+            sort [(str,str)]: sort argument in Pymongo format
+            limit (int): limit the results
+            count_only (bool): only return the count rather than explicit ids
+
+        Returns:
+            list: list of firework ids matching the query
+        """
         pass
 
     @abstractmethod
-    def get_wf_ids(self, query=None, sort=None, limit=0, count_only=False):
+    def get_wf_ids(self, query: Dict=None, sort: Optional[List[Tuple[str,str]]] =None,
+                   limit: int=0, count_only: bool=False) -> List[int]:
+        """
+        Return one fw id for all workflows that match a query.
+
+        Args:
+            query (dict): representing a Mongo query
+            sort [(str,str)]: sort argument in Pymongo format
+            limit (int): limit the results
+            count_only (bool): only return the count rather than explicit ids
+
+        Returns:
+            list: list of firework ids
+        """
         pass
 
     @abstractmethod
-    def tuneup(self, bkground=True):
+    def tuneup(self, bkground: bool=True):
+        """
+        Database tuneup: build indexes
+        """
         pass
 
     # might be able to define functions below here
 
     @abstractmethod
-    def get_tracker_data(self, fw_id):
+    def get_tracker_data(self, fw_id: int) -> List[Dict]:
+        """
+        Args:
+            fw_id (id): firework id
+
+        Returns:
+            [dict]: list tracker dicts
+        """
         pass
 
     @abstractmethod
-    def change_launch_dir(self, launch_id, launch_dir):
+    def change_launch_dir(self, launch_id: int, launch_dir: str):
+        """
+        Change the launch directory corresponding to the given launch id.
+
+        Args:
+            launch_id (int)
+            launch_dir (str): path to the new launch directory.
+        """
         pass
 
     @abstractmethod
-    def restore_backup_data(self, launch_id, fw_id):
+    def restore_backup_data(self, launch_id: int, fw_id: int):
+        """
+        For the given launch id and firework id, restore the back up data.
+        """
         pass
 
     @abstractmethod
-    def get_reservation_id_from_fw_id(self, fw_id):
-        pass
-
-    #can probably make one of these not abstract by moving the error catching around
-    @abstractmethod
-    def cancel_reservation_by_reservation_id(self, reservation_id):
-        pass
-
-    @abstractmethod
-    def cancel_reservation(self, launch_id):
+    def get_reservation_id_from_fw_id(self, fw_id: int):
+        """
+        Given the firework id, return the reservation id
+        """
         pass
 
     @abstractmethod
-    def add_offline_run(self, launch_id, fw_id, name):
+    def cancel_reservation_by_reservation_id(self, reservation_id: int):
+        """
+        Given the reservation id, cancel the reservation and rerun the corresponding fireworks.
+        """
         pass
 
     @abstractmethod
-    def recover_offline(self, launch_id, ignore_errors=False, print_errors=False):
+    def cancel_reservation(self, launch_id: int):
+        """
+        given the launch id, cancel the reservation and rerun the fireworks
+        """
         pass
 
     @abstractmethod
-    def forget_offline(self, launchid_or_fwid, launch_mode=True):
+    def add_offline_run(self, launch_id: int, fw_id: int, name: str):
+        """
+        Add the launch and firework to the offline_run collection.
+
+        Args:
+            launch_id (int): launch id
+            fw_id (id): firework id
+            name (str)
+        """
+        pass
+
+    @abstractmethod
+    def recover_offline(self, launch_id: int, ignore_errors: bool=False,
+                        print_errors: bool=False) -> int:
+        """
+        Update the launch state using the offline data in FW_offline.json file.
+
+        Args:
+            launch_id (int): launch id
+            ignore_errors (bool)
+            print_errors (bool)
+
+        Returns:
+            firework id if the recovering fails otherwise None
+        """
+        pass
+
+    @abstractmethod
+    def forget_offline(self, launchid_or_fwid: int, launch_mode: bool=True):
+        """
+        Unmark the offline run for the given launch or firework id.
+
+        Args:
+            launchid_or_fwid (int): launch od or firework id
+            launch_mode (bool): if True then launch id is given.
+        """
         pass
 
     """ new external functions to replace member accesses """
     @abstractmethod
-    def print_tracker_output(self, fw_id):
+    def print_tracker_output(self, fw_id: int):
         # replaces access to lp.fireworks in lpad_run.py
         pass
 
@@ -672,7 +828,7 @@ class LaunchPad(FWSerializable, ABC):
 
     """ INTERNAL FUNCTIONS FULLY DEFINED HERE """
 
-    def run_exists(self, fworker=None):
+    def run_exists(self, fworker: Optional[FWorker]=None) -> bool:
         """
         Checks to see if the database contains any FireWorks that are ready to run.
 
@@ -682,7 +838,7 @@ class LaunchPad(FWSerializable, ABC):
         q = fworker.query if fworker else {}
         return bool(self._get_a_fw_to_run(query=q, checkout=False))
 
-    def future_run_exists(self, fworker=None):
+    def future_run_exists(self, fworker: Optional[FWorker]=None) -> bool:
         """Check if database has any current OR future Fireworks available
 
         Returns:
@@ -707,7 +863,9 @@ class LaunchPad(FWSerializable, ABC):
             # there is no future work to do
             return False
 
-    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
+    def reserve_fw(self, fworker: FWorker, launch_dir: str,
+                   host: Optional[str]=None, ip: Optional[str]=None,
+                   fw_id: int=None) -> Tuple[Firework, int]:
         """
         Checkout the next ready firework and mark the launch reserved.
 
@@ -723,7 +881,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
-    def mark_fizzled(self, fw_id):
+    def mark_fizzled(self, fw_id: int):
         """
         Mark the launch corresponding to the given id as FIZZLED.
 
@@ -749,51 +907,102 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _update_wf(self, wf, updated_ids):
+    def _update_wf(self, wf: Workflow, updated_ids: List[int]):
+        """
+        Update the workflow with the updated firework ids.
+        Note: must be called within an enclosing WFLock
+
+        Args:
+            wf (Workflow)
+            updated_ids ([int]): list of firework ids
+        """
         pass
 
     @abstractmethod
-    def _update_fw(self, fw_id, m_fw):
+    def _update_fw(self, fw_id: int, m_fw: Firework):
         pass
 
     @abstractmethod
-    def _insert_wfs(self, wfs):
+    def _insert_wfs(self, wfs: Union[Workflow, List[Workflow]]):
         pass
 
     @abstractmethod
-    def _insert_fws(self, fws):
+    def _insert_fws(self, fws: Union[Firework, List[Firework]]):
         pass
 
     @abstractmethod
-    def _upsert_fws(self, fws):
+    def _upsert_fws(self, fws: List[Firework]):
+        """
+        Insert the fireworks to the 'fireworks' collection.
+
+        Args:
+            fws ([Firework]): list of fireworks
+            reassign_all (bool): if True, reassign the firework ids. The ids are also reassigned
+                if the current firework ids are negative.
+
+        Returns:
+            dict: mapping between old and new Firework ids
+        """
         pass
 
     @abstractmethod
-    def _restart_ids(self, next_fw_id):
+    def _restart_ids(self, next_fw_id: int):
+        """
+        internal method used to reset firework id counters.
+
+        Args:
+            next_fw_id (int): id to give next Firework
+        """
         pass
 
     @abstractmethod
-    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
+    def _get_a_fw_to_run(self, query: Optional[Dict]=None, fw_id: Optional[int]=None,
+                         checkout: bool=True) -> Firework:
+        """
+        Get the next ready firework to run.
+
+        Args:
+            query (dict)
+            fw_id (int): If given the query is updated.
+                Note: We want to return None if this specific FW  doesn't exist anymore. This is
+                because our queue params might have been tailored to this FW.
+            checkout (bool): if True, check out the matching firework and set state=RESERVED
+
+        Returns:
+            Firework
+        """
         pass
 
     @abstractmethod
-    def _get_wf_data(self, wf_id):
+    def _get_wf_data(self, wf_id: int) -> Dict:
+        """
+        Helper function for get_wf_summary_dict
+        """
         pass
 
     @abstractmethod
-    def _complete_fw(self, fw, action, state):
+    def _complete_fw(self, fw: Firework, action: FWAction, state: str):
+        """
+        Helper function for complete_firework
+        """
         pass
 
     @abstractmethod
-    def _find_duplciates(self, fw_id):
+    def _find_duplciates(self, fw_id: int) -> Union[List[Firework], None]:
+        """
+        Find duplicates of Firework with id fw_id
+        """
         pass
 
     @abstractmethod
-    def _recover(self, fw_id, recover_launch = None):
+    def _recover(self, fw_id: int, recover_launch = None):
+        """
+        """
         pass
 
     @abstractmethod
-    def _find_fws(self, fw_id, allowed_states=None, find_one=False):
+    def _find_fws(self, fw_id: int, allowed_states: Union[List[str], str, None]=None,
+                  find_one: bool=False) -> Union[List[Firework], Firework]:
         pass
 
 
@@ -807,7 +1016,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         return self.logdir
 
-    def log_message(self, level, message):
+    def log_message(self, level: str, message: str):
         """
         Support for job packing
 
@@ -817,18 +1026,15 @@ class LaunchPad(FWSerializable, ABC):
         """
         self.m_logger.log(level, message)
 
-    def get_launchdir(self, fw_id):
+    def get_launchdir(self, fw_id: int) -> str:
         return self.get_fw_by_id(fw_id).launch_dir
 
 
 
     # *** USEFUL (BUT NOT REQUIRED) FUNCTIONS
 
-    def _check_fw_for_uniqueness(self, m_fw):
+    def _check_fw_for_uniqueness(self, m_fw: Firework) -> bool:
         raise NotImplementedError
 
-    def _restart_ids(self, next_fw_id, next_launch_id):
-        raise NotImplementedError
-
-    def get_fw_dict_by_id(self, fw_id):
+    def get_fw_dict_by_id(self, fw_id: int) -> Dict:
         raise NotImplementedError
