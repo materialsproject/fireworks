@@ -184,8 +184,7 @@ class LaunchPad(FWSerializable, ABC):
 
         # Initialize new firework counter, starting from the next fw id
         total_num_fws = sum([len(wf.fws) for wf in wfs])
-        new_fw_counter = self.fw_id_assigner.find_one_and_update(
-            {}, {'$inc': {'next_fw_id': total_num_fws}})['next_fw_id']
+        new_fw_counter = self.get_new_fw_id(total_num_fws)
         for wf in tqdm(wfs):
             # Reassign fw_ids and increment the counter
             old_new = dict(zip(
@@ -510,9 +509,7 @@ class LaunchPad(FWSerializable, ABC):
         # update any duplicated runs
         # TODO CHANGED THIS TO USE _find_fws HELPER FUNCTION (ALSO DON'T BACKUP LAUNCH DATA)
         if state == "RUNNING":
-            for fw in self._find_fws(1,
-                                    allowed_states = ['WAITING', 'READY', 'RESERVED', 'FIZZLED'],
-                                    find_one = False):
+            for fw in self._get_duplicates(fw_id)
                 fw_id = fw['fw_id']
                 fw = self.get_fw_by_id(fw_id)
                 fw.state = state
@@ -543,7 +540,7 @@ class LaunchPad(FWSerializable, ABC):
         for tracker in m_fw.trackers:
             tracker.track_file(m_fw.launch_dir)
         m_fw.touch_history(ptime, checkpoint=checkpoint)
-        self._update_fw(fw_id, m_fw)
+        self._update_fw(m_fw)
 
 
 
@@ -919,7 +916,7 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _update_fw(self, fw_id: int, m_fw: Firework):
+    def _update_fw(self, m_fw: Firework):
         pass
 
     @abstractmethod
