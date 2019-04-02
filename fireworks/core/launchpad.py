@@ -550,6 +550,23 @@ class LaunchPad(FWSerializable, ABC):
     # INSTEAD OF launch_id's ETC.
 
     @abstractmethod
+    @property
+    def workflow_count(self):
+        pass
+
+    @abstractmethod
+    @property
+    def firework_count(self):
+        pass
+
+    @abstractmethod
+    def get_fireworks(self):
+        pass
+
+    @abstractmethod
+    def get_workflows(self):
+
+    @abstractmethod
     def detect_unreserved(self, expiration_secs: int=RESERVATION_EXPIRATION_SECS,
                           rerun: bool=False) -> List[int]:
         """

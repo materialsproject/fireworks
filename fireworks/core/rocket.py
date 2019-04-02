@@ -44,10 +44,10 @@ __date__ = 'Feb 7, 2013'
 
 def do_ping(launchpad: LaunchPad, fw_id: int):
     if launchpad:
-        launchpad.ping_launch(wf_id)
+        launchpad.ping_firework(fw_id)
 
 
-def ping_launch(launchpad: LaunchPad, fw_id: int,
+def ping_firework(launchpad: LaunchPad, fw_id: int,
                 stop_event: threading.Event,
                 master_thread: threading.Thread):
     while not stop_event.is_set() and master_thread.isAlive():
@@ -55,7 +55,7 @@ def ping_launch(launchpad: LaunchPad, fw_id: int,
         stop_event.wait(PING_TIME_SECS)
 
 
-def start_ping_launch(launchpad: LaunchPad,
+def start_ping_firework(launchpad: LaunchPad,
                       fw_id: int):
     # TODO
     # This should be formatted such that this file doesn't care if fw_id is None
@@ -69,7 +69,7 @@ def start_ping_launch(launchpad: LaunchPad,
         return None
     else:
         ping_stop = threading.Event()
-        ping_thread = threading.Thread(target=ping_launch,
+        ping_thread = threading.Thread(target=ping_firework,
                                        args=(launchpad, fw_id, ping_stop, threading.currentThread()))
         ping_thread.start()
         return ping_stop
@@ -220,7 +220,7 @@ class Rocket:
             my_spec["_fw_env"] = self.fworker.env
 
             # set up heartbeat (pinging the server that we're still alive)
-            ping_stop = start_ping_launch(lp, fw_id)
+            ping_stop = start_ping_firework(lp, fw_id)
 
             # start background tasks
             if '_background_tasks' in my_spec:
@@ -233,7 +233,7 @@ class Rocket:
                               '_all_stored_data': all_stored_data,
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
-                lp.ping_launch(fw_id, checkpoint=checkpoint)
+                lp.ping_firework(fw_id, checkpoint=checkpoint)
  
                 l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
@@ -285,7 +285,7 @@ class Rocket:
                     m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
                     final_state = 'FIZZLED'
-                    lp.complete_launch(fw_id, m_action, final_state)
+                    lp.checkin_fw(fw_id, m_action, final_state)
 
                     return True
 
@@ -336,7 +336,7 @@ class Rocket:
             m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
             final_state = 'COMPLETED'
-            lp.complete_launch(fw_id, m_action, final_state)
+            lp.checkin_fw(fw_id, m_action, final_state)
 
             return True
 
@@ -369,7 +369,7 @@ class Rocket:
                 traceback.print_exc()
 
             try:
-                lp.complete_launch(fw_id, m_action, 'FIZZLED')
+                lp.checkin_fw(fw_id, m_action, 'FIZZLED')
             except LockedWorkflowError as e:
                 l_logger.log(logging.DEBUG, traceback.format_exc())
                 l_logger.log(logging.WARNING,

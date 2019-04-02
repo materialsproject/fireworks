@@ -300,7 +300,7 @@ class Workflow(FWSerializable):
         Archives the launches of a Firework so that it can be re-run.
 
         Args:
-            fw_id (int): id of firework to tbe rerun
+            fw_id (int): id of firework to be rerun
             updated_ids (set(int)): set of fireworks id to rerun
 
         Returns:

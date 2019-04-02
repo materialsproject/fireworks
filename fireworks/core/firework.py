@@ -54,8 +54,8 @@ class Firework(FWSerializable):
     def __init__(self, tasks: List[Firetask], launch_dir: str=None,
                  spec: dict=None, name: str=None, state: str='WAITING',
                  fworker: FWorker=None, host: str=None, ip: str=None,
-                 trackers: List[Tracker]=None, fw_id: int=None,
-                 parents: List[Firework]=None,
+                 trackers: List[Tracker]=None, fw_id: Optional[int]=None,
+                 launch_idx: int=0, parents: List[Firework]=None,
                  created_on: datetime.datetime=None,
                  updated_on: datetime.datetime=None,
                  action: FWAction=None, state_history: dict=None):
@@ -65,13 +65,15 @@ class Firework(FWSerializable):
         self.name = name or 'Unnamed FW'
         # names
         if fw_id is not None:
-            self.fw_id = wf_id
+            self.fw_id = fw_id
         else:
             global NEGATIVE_FWID_CTR
             NEGATIVE_FWID_CTR -= 1
             self.fw_id = NEGATIVE_FWID_CTR
 
-        self.launch_dir = launch_dir or os.getcwd()
+        self.launch_idx = 0
+
+        self.launch_dir = launch_dir
 
         self._state = state
         self.parents = parents if parents else []
@@ -174,6 +176,12 @@ class Firework(FWSerializable):
         self._state = state
         self._update_state_history(state)
 
+    def set_launch_dir(self, launch_dir: str):
+        """
+        Update the launch_dir. Might change this to a setter later
+        """
+        self.launch_dir = launch_dir
+
     @property
     def time_start(self):
         """
@@ -264,6 +272,7 @@ class Firework(FWSerializable):
     def from_dict(cls, m_dict: dict):
         tasks = m_dict['spec']['_tasks']
         fw_id = m_dict.get('fw_id', -1)
+        launch_idx = m_dict.get('launch_idx', 0)
         state = m_dict.get('state', 'WAITING')
         created_on = m_dict.get('created_on')
         updated_on = m_dict.get('updated_on')
@@ -273,8 +282,11 @@ class Firework(FWSerializable):
         trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get('trackers') else None
         return Firework(tasks, m_dict['launch_dir'], m_dict['spec'], name, state,
                         fworker, m_dict['host'], m_dict['ip'], trackers,
-                        fw_id, m_dict['parents'], created_on, updated_on,
+                        fw_id, launch_idx, m_dict['parents'], created_on, updated_on,
                         action, m_dict['state_history'])
+
+    def copy(self):
+        return Firework.from_dict(self.to_dict())
 
     def __str__(self):
         return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)

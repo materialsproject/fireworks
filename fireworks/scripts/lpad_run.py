@@ -71,6 +71,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     Returns:
         list of ids
     """
+    # TODO launches mode is not longer necessary here
     if args.fw_id and sum([bool(x) for x in [args.name, args.state, args.query]]) >= 1:
         raise ValueError('Cannot specify both fw_id and name/state/query)')
 
@@ -79,6 +80,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
         return pw_check(args.fw_id, args, skip_pw)
     if args.query:
         query = ast.literal_eval(args.query)
+    # remove ref to launches_mode
     if args.name and 'launches_mode' in args and not args.launches_mode:
         query['name'] = args.name
     if args.state:
@@ -101,6 +103,8 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
 
 def get_lp(args):
+    # TODO add a launchpad_type argument to determine which type of lpad
+    # is to be initialized
     try:
         if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
             args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
@@ -145,7 +149,7 @@ def reset(args):
     lp = get_lp(args)
     if not args.password:
         if input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(
-                lp.workflows.count()))[0].upper() == 'Y':
+                lp.workflow_count))[0].upper() == 'Y':
             args.password=datetime.datetime.now().strftime('%Y-%m-%d')
         else:
             raise ValueError('Operation aborted by user.')
@@ -200,6 +204,8 @@ def add_wf_dir(args):
 
 
 def get_fws(args):
+    # TODO This section should be agnostic to the query format.
+    # Need to change get_fw_ids to have a general query format...
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
@@ -263,12 +269,14 @@ def get_fws(args):
 
 
 def update_fws(args):
+    # TODO remove args.mongo
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     lp.update_spec(fw_ids, json.loads(args.update),args.mongo)
 
 
 def get_wfs(args):
+    # TODO query format agnostic
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
@@ -394,7 +402,6 @@ def archive(args):
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished archiving {} WFs'.format(len(fw_ids)))
 
-
 def reignite_wfs(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
@@ -439,6 +446,7 @@ def resume_fws(args):
 
 
 def rerun_fws(args):
+    # TODO switch launch_id to launch_idx (or just remove references to launches?)
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     if args.task_level:
@@ -556,6 +564,8 @@ def add_scripts(args):
     lp.add_wf(Workflow(fws, links, args.wf_name))
 
 
+# TODO remove the offline utilites for the time being, should not be
+# necessary with the new fireworks
 def recover_offline(args):
     lp = get_lp(args)
     fworker_name = FWorker.from_file(args.fworker_file).name if args.fworker_file else None
@@ -588,6 +598,7 @@ def forget_offline(args):
     lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
 
 
+# TODO make FWReport and Introspector compatible with the new LaunchPad
 def report(args):
     lp=get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
@@ -635,7 +646,7 @@ def track_fws(args):
                     output.append('## Launch id: {}'.format(d['launch_id']))
                     output.append(str(t))
         if output:
-            name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})['name']
+            name = lp.get_fw_by_id(f).name # changed this to avoid accessing fireworks directly
             output.insert(0, '# FW id: {}, FW name: {}'.format(f, name))
             if first_print:
                 first_print = False
