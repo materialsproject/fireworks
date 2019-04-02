@@ -33,6 +33,8 @@ from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
 from fireworks.core.firework import Firework, Launch, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.fw_serializers import recursive_dict
+
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -1447,7 +1449,7 @@ class LaunchPad(FWSerializable):
         if recover_launch is not None:
             recovery = self.get_recovery(fw_id, recover_launch)
             recovery.update({'_mode': recover_mode})
-            set_spec = {'$set': {'spec._recovery': recovery}}
+            set_spec = recursive_dict({'$set': {'spec._recovery': recovery}})
             if recover_mode == 'prev_dir':
                 prev_dir = self.get_launch_by_id(recovery.get('_launch_id')).launch_dir
                 set_spec['$set']['spec._launch_dir'] = prev_dir
