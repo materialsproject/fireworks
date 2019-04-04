@@ -258,7 +258,7 @@ class MongoLaunchPad(FWSerializable):
         else:
             self.fireworks.insert_many(fw.to_db_dict() for fw in fws)
 
-    def get_fw_dict_by_id(self, fw_id):
+    def get_fw_dict_by_id(self, fw_id, launch_idx=-1):
         """
         Given firework id, return firework dict.
 
@@ -268,29 +268,27 @@ class MongoLaunchPad(FWSerializable):
         Returns:
             dict
         """
-        fw_id = self._external_fwid_to_internal_fwid(fw_id)
-        fw_dict = self.fireworks.find_one({'fw_id': fw_id}, sort=("launch_idx", DESCENDING))
-        if not fw_dict:
-            raise ValueError('No Firework exists with id: {}'.format(fw_id))
+        # TODO made this function a bit more sophisiticated. Usually you just want
+        # most recent fw with id, so launch_idx=-1, but you might want other launches too.
+        if launch_idx == -1:
+            fw_dict = self.fireworks.find_one({'fw_id': fw_id}, sort=("launch_idx", DESCENDING))
+        elif launch_idx < 0:
+            fw_dict = self.fireworks.find({'fw_id': fw_id}, sort=("launch_idx", DESCENDING))[-launch_idx]
+        else:
+            fw_dict = self.fireworks.find_one({'fw_id': fw_id, 'launch_idx': launch_idx})
+
+        if fw_dict:
+            fw_dict["action"] = get_action_from_gridfs(fw_dict.get("action"), self.gridfs_fallback)
+        else:
+            if launch_idx == -1:
+                raise ValueError('No Firework exists with id: {}'.format(fw_id))
+            else:
+                raise ValueError('No Firework exists with id {} and launch index {}'\
+                    .format(fw_id, launch_idx))
+
         return fw_dict
 
-        """
-        fw_dict = self.fireworks.find_one({'fw_id': fw_id})
-        if not fw_dict:
-            raise ValueError('No Firework exists with id: {}'.format(fw_id))
-        # recreate launches from the launch collection
-        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}}))
-        for l in launches:
-            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
-        fw_dict['launches'] = launches
-        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['archived_launches']}}))
-        for l in launches:
-            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
-        fw_dict['archived_launches'] = launches
-        return fw_dict
-        """
-
-    def get_fw_by_id(self, fw_id):
+    def get_fw_by_id(self, fw_id, launch_idx=-1):
         """
         Given a Firework id, give back a Firework object.
 
@@ -300,7 +298,7 @@ class MongoLaunchPad(FWSerializable):
         Returns:
             Firework object
         """
-        return Firework.from_dict(self.get_fw_dict_by_id(fw_id))
+        return Firework.from_dict(self.get_fw_dict_by_id(fw_id, launch_idx))
 
     def get_wf_by_fw_id(self, fw_id):
         """
@@ -346,54 +344,21 @@ class MongoLaunchPad(FWSerializable):
                         links_dict['metadata'], links_dict['created_on'],
                         links_dict['updated_on'], fw_states)
 
-    def delete_wf(self, fw_id, delete_launch_dirs=False):
-        """
-        Delete the workflow containing firework with the given id.
-
-        Args:
-            fw_id (int): Firework id
-            delete_launch_dirs (bool): if True all the launch directories associated with
-                the WF will be deleted as well, if possible.
-        """
-        links_dict = self.workflows.find_one({'nodes': fw_id})
-        fw_ids = links_dict["nodes"]
-        potential_launch_ids = []
-        launch_ids = []
-        for i in fw_ids:
-            fw_dict = self.fireworks.find_one({'fw_id': i})
-            potential_launch_ids += fw_dict["launches"] + fw_dict['archived_launches']
-
-
-        # TODO THIS FUNCTION NEEDS TO BE CHANGED SIGNIFICANTLY TO REFLECT THE REMOVAL OF LAUNCHES
-        for i in potential_launch_ids:  # only remove launches if no other fws refer to them
-            if not self.fireworks.find_one({'$or': [{"launches": i}, {'archived_launches': i}],
-                                            'fw_id': {"$nin": fw_ids}}, {'launch_id': 1}):
-                launch_ids.append(i)
-
-        if delete_launch_dirs:
-            launch_dirs = []
-            for i in launch_ids:
-                # REALLY IMPORTANT TODO
-                # this could be an issue if Firework gets initialized with cwd and then deletes
-                # could end up deleting ~ or something drastic like that
-                # add instruction to sort launch_idx by descending
-                launch_dirs.append(self.fireworks.find_one({'fw_id': i},
-                    {'launch_dir': 1}, sort=("launch_idx", DESCENDING))['launch_dir'])
-            print("Remove folders %s" % launch_dirs)
-            for d in launch_dirs:
-                shutil.rmtree(d, ignore_errors=True)
-
-        print("Remove fws %s" % fw_ids)
-        print("Remove launches %s" % launch_ids)
-        print("Removing workflow.")
+    def _delete_wf(self, fw_id, fw_ids):
         if self.gridfs_fallback is not None:
-            for lid in launch_ids:
-                for f in self.gridfs_fallback.find({"metadata.launch_id": lid}):
+            for fw_id in fw_ids:
+                for f in self.gridfs_fallback.find({"metadata.fw_id": fw_id}):
                     self.gridfs_fallback.delete(f._id)
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
         self.workflows.delete_one({'nodes': fw_id})
 
-    def _get_wf_data(self, fw_id):
+    def _delete_launch_dirs(self, fw_ids):
+        launch_dirs = []
+        for fw_dict in self.fireworks.find({'fw_id': {'$in': fw_ids}}, {'launch_dir': 1}):
+            launch_dirs.append(fw_dict['launch_dir'])
+        return launch_dirs
+
+    def _get_wf_data(self, fw_id, mode="more"):
         wf_fields = ["state", "created_on", "name", "nodes"]
         fw_fields = ["state", "fw_id"]
         launch_fields = []
@@ -497,7 +462,7 @@ class MongoLaunchPad(FWSerializable):
 
         if GRIDFS_FALLBACK_COLLECTION is not None:
             files_collection = self.db["{}.files".format(GRIDFS_FALLBACK_COLLECTION)]
-            files_collection.create_index('metadata.launch_id', unique=True, background=bkground)
+            files_collection.create_index('metadata.fw_id', unique=True, background=bkground)
 
         for f in ('name', 'created_on', 'updated_on', 'nodes'):
             self.workflows.create_index(f, background=bkground)
@@ -573,7 +538,7 @@ class MongoLaunchPad(FWSerializable):
         """
         # TODO either remove launch_idx as a parameter or actually use it
         # rather than just getting the most reent launch index.
-        # Make use of launc_idx to make the searches safer. By sorting in descending
+        # Make use of launch_idx to make the searches safer. By sorting in descending
         # order of launch_idx, you get the most recent fw
         m_query = dict(query) if query else {}  # make a defensive copy
         m_query['state'] = 'READY'
@@ -604,129 +569,14 @@ class MongoLaunchPad(FWSerializable):
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
-    def get_fw_ids_from_reservation_id(self, reservation_id):
-        """
-        Given the reservation id, return the list of firework ids.
-
-        Args:
-            reservation_id (int)
-
-        Returns:
-            [int]: list of firework ids.
-        """
-        fw_ids = []
-        fws = self.fireworks.find({"state_history.reservation_id": reservation_id},
-                                      {'fw_id': 1})
-        # TODO AVOIDED DUPLICATES
-        return list(set([fw['fw_id'] for fw in fws]))
-
-    def cancel_reservation_by_reservation_id(self, reservation_id):
-        """
-        Given the reservation id, cancel the reservation and rerun the corresponding fireworks.
-        """
-        fw = self.fireworks.find_one({"state_history.reservation_id": reservation_id},
-                                      {'fw_id': 1})
-        if fw:
-            self.cancel_reservation(fw['fw_id'])
-        else:
-            self.m_logger.info("Can't find any reserved jobs with reservation id: {}".format(reservation_id))
-
-    def get_reservation_id_from_fw_id(self, fw_id):
-        """
-        Given the firework id, return the reservation id
-        """
-        # Should this require launch_idx?
-        fw = self.fireworks.find_one({'fw_id': fw_id}, sort={'launch_idx': DESCENDING})
-        if fw:
-            for d in fw['state_history']:
-                if 'reservation_id' in d:
-                    return d['reservation_id']
-
-    def cancel_reservation(self, fw_id):
-        """#
-        given the launch id, cancel the reservation and rerun the fireworks
-        """
-        # Should this require launch_idx? I think not because only most recent
-        # launch should be reserved. But maybe it's safer since this is called
-        # by cancel_reservation_by_reservation_id
-        m_fw = self.get_fw_by_id(fw_id)
-        m_fw.state = 'READY'
-        self.fireworks.find_one_and_replace({'fw_id': m_fw.fw_id, "state": "RESERVED"},
-                                           m_fw.to_db_dict(), upsert=True)
-
-        self.rerun_fw(m_fw.fw_id, rerun_duplicates=False)
-
-    def detect_unreserved(self, expiration_secs=RESERVATION_EXPIRATION_SECS, rerun=False):
-        """
-        Return the reserved launch ids that have not been updated for a while.
-
-        Args:
-            expiration_secs (seconds): time limit
-            rerun (bool): if True, the expired reservations are cancelled and the fireworks rerun.
-
-        Returns:
-            [int]: list of expired lacunh ids
-        """
-        # TODO might be good to move some of this into the abstract launchpad
-        # and have a get_bad_launch_data() function of sorts, can also be used
-        # for detect_lost_runs
-        bad_launch_ids = []
-        now_time = datetime.datetime.utcnow()
-        cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
-        bad_launch_data = self.fireworks.find({'state': 'RESERVED',
-                                              'state_history':
-                                                  {'$elemMatch':
-                                                       {'state': 'RESERVED',
-                                                        'updated_on': {'$lte': cutoff_timestr}
-                                                        }
-                                                   }
-                                              },
-                                             {'fw_id': 1})
-        # not sure if can just remove what was here
-        if rerun:
-            for fw_id in bad_launch_data:
-                self.cancel_reservation(fw_id)
-        return bad_launch_data
-
-    def set_reservation_id(self, fw_id, reservation_id, launch_idx=-1):
-        """
-        Set reservation id to the launch corresponding to the given launch id.
-
-        Args:
-            launch_id (int)
-            reservation_id (int)
-        """
-        m_fw = self.get_fw_by_id(fw_id)
-        m_fw.set_reservation_id(reservation_id)
-        self.fireworks.find_one_and_replace({'fw_id': fw_id, 'launch_idx': m_fw.launch_idx},
-                                            m_fw.to_db_dict())
-
-    def change_launch_dir(self, fw_id, launch_dir, launch_idx=-1):
-        """#
-        Change the launch directory corresponding to the given launch id.
-
-        Args:
-            launch_id (int)
-            launch_dir (str): path to the new launch directory.
-        """
-        m_fw = self.get_fw_by_id(fw_id, launch_idx)
-        m_fw.launch_dir = launch_dir
-        self.fireworks.find_one_and_replace({'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx},
-                                            m_fw.to_db_dict(), upsert=True)
-
-    def restore_backup_data(self, fw_id, launch_idx):
-        """
-        For the given launch id and firework id, restore the back up data.
-        """
-        if fw_id in self.backup_fw_data:
-            self.fireworks.find_one_and_replace({'fw_id': fw_id, 'launch_idx': launch_idx},
-                                                self.backup_fw_data[fw_id])
+    def _get_fw_dicts_from_reservation_id(self, reservation_id):
+        return self.fireworks.find({"state_history.reservation_id": reservation_id},
+                                      {'fw_id': 1}, sort={'launch_idx': DESCENDING})
 
     def _checkin_fw(self, m_fw, action, state):
         # might be able to remove DocumentTooLarge check if launches are all separate?
         try:
-            self.fireworks.find_one_and_replace({'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx},
-                                               m_fw.to_db_dict(), upsert=True)
+            self._raplace_fw(m_fw, upsert=True)
         except DocumentTooLarge as err:
             fw_db_dict = m_fw.to_db_dict()
             action_dict = fw_db_dict.get("action", None)
@@ -747,22 +597,48 @@ class MongoLaunchPad(FWSerializable):
             self.m_logger.warning("The size of the launch document was too large. Saving "
                                "the action in gridfs.")
 
-            self.fireworks.find_one_and_replace({'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx},
-                                               fw_db_dict, upsert=True)
+            self._raplace_fw(Firework.from_dict(fw_db_dict), upsert=True)
 
 
         # find all the fws that have this launch
         for fw in self._get_duplicates(m_fw.wf_id):
             self._refresh_wf(fw.fw_id)
 
-    def _find_fws(self, fw_id, launch_idx=-1, allowed_states=None, find_one=False):
-        query_dict = {'fw_id': fw_id, 'launch_idx': launch_idx}
+    def _find_fws(self, fw_id, launch_sort=-1, allowed_states=None):
+        query_dict = {'fw_id': fw_id}
         if not (allowed_states is None):
             query_dict['state'] = {'$in': [allowed_states]}
-        if find_one:
-            return self.fireworks.find_one(query_dict)
-        else:
-            return self.fireworks.find(query_dict)
+        return self.fireworks.find(query_dict, sort={'launch_idx': launch_sort})
+        #if find_one:
+        #    return self.fireworks.find_one(query_dict)
+        #else:
+        #    return self.fireworks.find(query_dict)
+
+    def _find_timeout_fws(self, state, expiration_secs, query=None):
+        now_time = datetime.datetime.utcnow()
+        cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
+        lostruns_query = {'state': state,
+                          'state_history':
+                              {'$elemMatch':
+                                   {'state': state,
+                                    'updated_on': {'$lte': cutoff_timestr}
+                                    }
+                               }
+                          }
+
+        if query:
+            fw_ids = [x["fw_id"] for x in self.fireworks.find(query,
+                                                          {"fw_id": 1})]
+            lostruns_query["fw_id"] = {"$in": fw_ids}
+
+        return self.fireworks.find(lostruns_query,
+                                   {'launch_idx': 1, 'fw_id': 1})
+
+    def _replace_fw(self, m_fw, state=None, upsert=False):
+        query = {'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx}
+        if state:
+            query['state'] = state
+        self.fireworks.find_one_and_replace(query, m_fw.to_db_dict(), upsert=upsert)
 
     def _update_fw(self, m_fw):
         # maybe need to include launch_idx?
@@ -821,10 +697,7 @@ class MongoLaunchPad(FWSerializable):
                     old_new[fw.fw_id] = new_id
                     fw.fw_id = new_id
 
-                self.fireworks.find_one_and_replace({'fw_id': fw.fw_id,\
-                                                    'launch_idx': fw.launch_idx},
-                                                    fw.to_db_dict(),
-                                                    upsert=True)
+                self._replace_fw(fw, upsert=True)
 
         return old_new
 
@@ -1000,31 +873,6 @@ class MongoLaunchPad(FWSerializable):
             priority
         """
         self.fireworks.find_one_and_update({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
-
-    def get_tracker_data(self, fw_id):
-        """
-        Args:
-            fw_id (id): firework id
-
-        Returns:
-            [dict]: list tracker dicts
-        """
-        data = []
-        for fw in self.fireworks.find({'fw_id': fw_id}):
-            if 'trackers' in fw:
-                trackers = [Tracker.from_dict(t) for t in fw['trackers']]
-                data.append({'fw_id': fw['fw_id'], 'trackers': trackers})
-        return data
-
-    def get_launchdir(self, fw_id, launch_idx=-1):
-        """
-        Returns the directory of the *most recent* launch of a fw_id
-        Args:
-            fw_id: (int) fw_id to get launch id for
-            launch_idx: (int) index of the launch to get. Default is -1, which is most recent.
-        """
-        fw = self.get_fw_by_id(fw_id, lauch_idx)
-        return fw.launch_dir
 
 
 class LazyFirework(object):
