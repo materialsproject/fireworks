@@ -943,6 +943,10 @@ class Workflow(FWSerializable):
                             for mod in m_launch.action.mod_spec:
                                 apply_mod(mod, new_wf.id_fw[root_id].spec)
 
+        # set the FW state variable for all new fw ids to be WAITING
+        for new_fw in new_wf.fws:
+            self.fw_states[new_fw.fw_id] = 'WAITING'  # this should get updated by refresh() below
+
         for new_fw in new_wf.fws:
             updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))
 
