@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.8.8**
+
+* fix insertion order bug in append_wf() for Py<=3.5 (thanks to M. Jager)
+* fix recover_launch with MSONable objects (G. Petretto)
+* option to set priority of an entire workflow at once (G. Petretto)
+
+
 **v1.8.7**
 
 * fix lpad webgui bug (thanks to J. Hörmann)
