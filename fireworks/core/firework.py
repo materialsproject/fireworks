@@ -699,7 +699,7 @@ class Workflow(FWSerializable):
         links_dict = links_dict if links_dict else {}
 
         # main dict containing mapping of an id to a Firework object
-        self.id_fw = {}
+        self.id_fw = OrderedDict()
         for fw in fireworks:
             if fw.fw_id in self.id_fw:
                 raise ValueError('FW ids must be unique!')
@@ -739,7 +739,7 @@ class Workflow(FWSerializable):
         if fw_states:
             self.fw_states = fw_states
         else:
-            self.fw_states = {key:self.id_fw[key].state for key in self.id_fw}
+            self.fw_states = {key: self.id_fw[key].state for key in self.id_fw}
 
     @property
     def fws(self):
