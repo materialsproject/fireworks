@@ -443,7 +443,7 @@ class LaunchPad(FWSerializable, ABC):
             delete_launch_dirs (bool): if True all the launch directories associated with
                 the WF will be deleted as well, if possible.
         """
-        links_dict = self._get_wf_data(self, fw_id, mode=less):
+        links_dict = self._find_wf(fw_id):
         fw_ids = links_dict["nodes"]
         potential_launch_ids = []
         # REMOVED ALL THE LAUNCH-RELATED STUFF HERE, REDUCING TO FIREWORKS
@@ -460,8 +460,8 @@ class LaunchPad(FWSerializable, ABC):
         self._delete_wf(fw_id, fw_ids)
 
     def checkin_fw(self, fw_id: int, launch_idx: int=-1,
-                          action: Optional[FWAction]=None,
-                          state: str='COMPLETED') -> Dict:
+                   action: Optional[FWAction]=None,
+                   state: str='COMPLETED') -> Dict:
         # TODO CHANGED launch => firework
 
         """
@@ -766,6 +766,63 @@ class LaunchPad(FWSerializable, ABC):
         if fw_id in self.backup_fw_data:
             self._replace_fw(Firework.from_dict(self.backup_fw_data[fw_id]))
 
+    def get_fw_by_id(self, fw_id: int, launch_idx: int=-1) -> Firework:
+        """
+        Given a Firework id, give back a Firework object.
+
+        Args:
+            fw_id (int): Firework id.
+
+        Returns:
+            Firework object
+        """
+        return Firework.from_dict(self.get_fw_dict_by_id(fw_id, launch_idx))
+
+    def get_wf_by_fw_id(self, fw_id: int) -> Workflow:
+        """
+        Given a Firework id, give back the Workflow containing that Firework.
+
+        Args:
+            fw_id (int)
+
+        Returns:
+            A Workflow object
+        """
+        links_dict = self._find_wf(fw_id)
+        if not links_dict:
+            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
+        fws = map(self.get_fw_by_id, links_dict["nodes"])
+        return Workflow(fws, links_dict['links'], links_dict['name'],
+                        links_dict['metadata'], links_dict['created_on'], links_dict['updated_on'])
+
+    def get_wf_by_fw_id_lzyfw(self, fw_id: int) -> Workflow:
+        """
+        Given a FireWork id, give back the Workflow containing that FireWork.
+
+        Args:
+            fw_id (int)
+
+        Returns:
+            A Workflow object
+        """
+        links_dict = self._find_wf(fw_id)
+        if not links_dict:
+            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
+
+        fws = []
+        for fw_id in links_dict['nodes']:
+            fws.append(self._get_lazy_firework(fw_id))
+        # Check for fw_states in links_dict to conform with pre-optimized workflows
+        if 'fw_states' in links_dict:
+            fw_states = dict([(int(k), v) for (k, v) in links_dict['fw_states'].items()])
+        else:
+            fw_states = None
+
+        return Workflow(fws, links_dict['links'], links_dict['name'],
+                        links_dict['metadata'], links_dict['created_on'],
+                        links_dict['updated_on'], fw_states)
+
+
 
     """ EXTERNALLY CALLABLE FUNCTIONS WITH ABSTRACT DECLARATIONS """
 
@@ -775,19 +832,18 @@ class LaunchPad(FWSerializable, ABC):
     @abstractmethod
     @property
     def workflow_count(self):
+        """
+        Number of workflows in the database
+        """
         pass
 
     @abstractmethod
     @property
     def firework_count(self):
+        """
+        Number of fireworks in the database
+        """
         pass
-
-    @abstractmethod
-    def get_fireworks(self):
-        pass
-
-    @abstractmethod
-    def get_workflows(self):
 
     @abstractmethod
     def update_spec(self, fw_ids: List[int],
@@ -826,45 +882,6 @@ class LaunchPad(FWSerializable, ABC):
         Args:
             fw_id (int): firework id
             priority
-        """
-        pass
-
-    @abstractmethod
-    def get_fw_by_id(self, fw_id: int, launch_idx: int=-1) -> Firework:
-        """
-        Given a Firework id, give back a Firework object.
-
-        Args:
-            fw_id (int): Firework id.
-
-        Returns:
-            Firework object
-        """
-        pass
-
-    @abstractmethod
-    def get_wf_by_fw_id(self, fw_id: int) -> Workflow:
-        """
-        Given a Firework id, give back the Workflow containing that Firework.
-
-        Args:
-            fw_id (int)
-
-        Returns:
-            A Workflow object
-        """
-        pass
-
-    @abstractmethod
-    def get_wf_by_fw_id_lzyfw(self, fw_id: int) -> Workflow:
-        """
-        Given a FireWork id, give back the Workflow containing that FireWork.
-
-        Args:
-            fw_id (int)
-
-        Returns:
-            A Workflow object
         """
         pass
 
@@ -1030,6 +1047,85 @@ class LaunchPad(FWSerializable, ABC):
         # Do a confirmed write and make sure state_history is preserved
         self.checkin_fw(fw_id, state='FIZZLED')
 
+    def _upsert_fws(self, fws: List[Firework], reassign_all: bool=False):
+        """
+        Insert the fireworks to the 'fireworks' collection.
+
+        Args:
+            fws ([Firework]): list of fireworks
+            reassign_all (bool): if True, reassign the firework ids. The ids are also reassigned
+                if the current firework ids are negative.
+
+        Returns:
+            dict: mapping between old and new Firework ids
+        """
+        old_new = {}
+        fws.sort(key=lambda x: x.launch_idx)
+        fws.sort(key=lambda x: x.fw_id)
+
+        if reassign_all:
+            used_ids = []
+
+            new_id = 0
+            prev_id = None
+            for fw in fws:
+                if fw.fw_id != prev_id:
+                    prev_id = fw.fw_id
+                    new_id  = self.get_new_fw_id() # used to get all ids at once
+                    fw.fw_id = new_id
+                    old_new[fw.fw_id] = new_id
+                    used_ids.append(new_id)
+            self._delete_fws(used_ids)
+            self._insert_fws(fws)
+        else:
+            for fw in fws:
+                prev_id = None
+                new_id = 0
+                if fw.fw_id < 0:
+                    if fw.fw_id != prev_id
+                        new_id = self.get_new_fw_id()
+                        prev_id = fw.fw_id
+                        old_new[fw.fw_id] = new_id
+                    fw.fw_id = new_id
+                self._replace_fw(fw, upsert=True, fw_id=prev_id)
+
+        return old_new
+
+    def _get_wf_data(self, wf_id: int, mode: str='more') -> Dict:
+        """
+        Helper function for get_wf_summary_dict
+        """
+        # TODO This function needs a lot of work and can probably be moved to abstract LaunchPad
+        wf_fields = ["state", "created_on", "name", "nodes"]
+        fw_fields = ["state", "fw_id"]
+        launch_fields = []
+
+        if mode != "less":
+            wf_fields.append("updated_on")
+            fw_fields.extend(["name", "launches"])
+            launch_fields.append("launch_dir")
+
+        if mode == "reservations":
+            launch_fields.append("state_history.reservation_id")
+
+        if mode == "all":
+            wf_fields = None
+            launch_fields = None
+
+        #wf = self.workflows.find_one({"nodes": fw_id}, projection=wf_fields)
+        wf = self._find_wf(fw_id, projection=wf_fields)
+        fw_data = []
+        id_name_map = {}
+        launch_ids = []
+        # need to fix this to include only the fireworks with the highest launch indexes
+        #for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}}, projection=fw_fields):
+        for fw in self._find_fws(wf["nodes"], projection=fw_fields+launch_fields)
+            fw_data.append(fw)
+            if mode != "less":
+                id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
+
+        wf["fw"] = fw_data
+        return wf
 
 
     """ INTERNAL FUNCTION WITH ABSTRACT DECLARATIONS """
@@ -1067,21 +1163,6 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _upsert_fws(self, fws: List[Firework]):
-        """
-        Insert the fireworks to the 'fireworks' collection.
-
-        Args:
-            fws ([Firework]): list of fireworks
-            reassign_all (bool): if True, reassign the firework ids. The ids are also reassigned
-                if the current firework ids are negative.
-
-        Returns:
-            dict: mapping between old and new Firework ids
-        """
-        pass
-
-    @abstractmethod
     def _get_a_fw_to_run(self, query: Optional[Dict]=None, fw_id: Optional[int]=None,
                          launch_idx: int=-1, checkout: bool=True) -> Firework:
         """
@@ -1108,13 +1189,6 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _get_wf_data(self, wf_id: int) -> Dict:
-        """
-        Helper function for get_wf_summary_dict
-        """
-        pass
-
-    @abstractmethod
     def _checkin_fw(self, fw: Firework, action: FWAction, state: str):
         """
         Helper function for complete_firework
@@ -1136,13 +1210,96 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _find_fws(self, fw_id: int, launch_sort: Optional[int]=None,
-                  allowed_states: Union[List[str], str, None]=None
-                  ) -> Union[List[Firework], Firework]:
+    def _find_fws(self, fw_id: Union[int,List[int]],
+                  launch_sort: Optional[int]=-1,
+                  allowed_states: Union[List[str], str, None]=None,
+                  projection: Optional[Dict]=None
+                  ) -> List[Firework]:
+        """
+        Find the fireworks with the given specifications
+
+        Args:
+            fw_id: firework id or list of firework ids
+            launch_sort (-1 or 1): whether to sort launch indexes
+                by DESCENDING (-1, default) or ASCENDING (1)
+            allowed_states (None): optional list of allowed
+                states for the fireworks
+            projection (None): Optional Mongo dict
+                to specify fields to return
+
+        Returns:
+            A list of fireworks matching the query info
+        """
         pass
 
     @abstractmethod
-    def _find_timeout_fws(self, state, expiration_secs, query=None):
+    def _find_timeout_fws(self, state: str, expiration_secs: int,
+                          query: Optional[Dict]=None):
+        """
+        Find fireworks that have timed out.
+
+        Args:
+            state (str): The Firework state to search for
+            expiration_secs (int): Fireworks that entered state
+                more than this many seconds ago are considered
+                timed out
+            query (None): Optional query info for the fireworks.
+        """
+        pass
+
+    @abstractmethod
+    def _find_wf(self, fw_id: int, projection: Optional[Dict]=None,
+                 sort: Optional[Dict]=None):
+        """
+        Find the workflow containing a given firework id.
+
+        Args:
+            fw_id: Firework id
+            projection (None): Optional Mongo-style field specification
+                for return value
+            sort (None): Optional Mongo-style sort specifications
+        """
+        pass
+
+    @abstractmethod
+    def _replace_fw(self, m_fw: Firework, state: Optional[str]=None,
+                    upsert: bool=False, fw_id: Optional[int]=None):
+        """
+        Replace a Firework in the database (generally used to update
+        many fields or change the fw_id of a firework).
+
+        Args:
+            m_fw: Firework to insert
+            state (None): If specified, only replace
+                the fw if it is in this state
+            upsert (False): Whether to upsert in the database
+            fw_id (None): If specified, search for this fw_id instead
+                of m_fw.fw_id. Use this is fw_id has changed (i.e.
+                fw_id is the old id and m_fw.fw_id is the new one)
+        """
+        pass
+
+    @abstractmethod
+    def get_fw_dict_by_id(self, fw_id: int, launch_idx: int=-1) -> Dict:
+        """
+        Given firework id, return firework dict.
+
+        Args:
+            fw_id (int): firework id
+            launch_idx (-1): Launch index, default latest launch.
+                If <0, gets the -launch_idx most recent launch.
+                If >0, searches for an fw with launch_idx
+
+        Returns:
+            dict
+        """
+        pass
+
+    @abstractmethod
+    def _get_lazy_firework(self, fw_id: int):
+        """
+        Returns whatever the specific launchpad implementation uses
+        """
         pass
 
 
@@ -1180,7 +1337,4 @@ class LaunchPad(FWSerializable, ABC):
         raise NotImplementedError
 
     def _check_fw_for_uniqueness(self, m_fw: Firework) -> bool:
-        raise NotImplementedError
-
-    def get_fw_dict_by_id(self, fw_id: int, launch_idx: int=-1) -> Dict:
         raise NotImplementedError

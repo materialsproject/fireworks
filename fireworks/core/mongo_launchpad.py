@@ -258,6 +258,9 @@ class MongoLaunchPad(FWSerializable):
         else:
             self.fireworks.insert_many(fw.to_db_dict() for fw in fws)
 
+    def _delete_fws(self, fw_ids):
+        self.fireworks.delete_many({'fw_id': {'$in': fw_ids}})
+
     def get_fw_dict_by_id(self, fw_id, launch_idx=-1):
         """
         Given firework id, return firework dict.
@@ -288,68 +291,15 @@ class MongoLaunchPad(FWSerializable):
 
         return fw_dict
 
-    def get_fw_by_id(self, fw_id, launch_idx=-1):
-        """
-        Given a Firework id, give back a Firework object.
-
-        Args:
-            fw_id (int): Firework id.
-
-        Returns:
-            Firework object
-        """
-        return Firework.from_dict(self.get_fw_dict_by_id(fw_id, launch_idx))
-
-    def get_wf_by_fw_id(self, fw_id):
-        """
-        Given a Firework id, give back the Workflow containing that Firework.
-
-        Args:
-            fw_id (int)
-
-        Returns:
-            A Workflow object
-        """
-        links_dict = self.workflows.find_one({'nodes': fw_id})
-        if not links_dict:
-            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
-        fws = map(self.get_fw_by_id, links_dict["nodes"])
-        return Workflow(fws, links_dict['links'], links_dict['name'],
-                        links_dict['metadata'], links_dict['created_on'], links_dict['updated_on'])
-
-    def get_wf_by_fw_id_lzyfw(self, fw_id):
-        """
-        Given a FireWork id, give back the Workflow containing that FireWork.
-
-        Args:
-            fw_id (int)
-
-        Returns:
-            A Workflow object
-        """
-        links_dict = self.workflows.find_one({'nodes': fw_id})
-        if not links_dict:
-            raise ValueError("Could not find a Workflow with fw_id: {}".format(fw_id))
-
-        fws = []
-        for fw_id in links_dict['nodes']:
-            fws.append(LazyFirework(fw_id, self.fireworks, self.gridfs_fallback))
-        # Check for fw_states in links_dict to conform with pre-optimized workflows
-        if 'fw_states' in links_dict:
-            fw_states = dict([(int(k), v) for (k, v) in links_dict['fw_states'].items()])
-        else:
-            fw_states = None
-
-        return Workflow(fws, links_dict['links'], links_dict['name'],
-                        links_dict['metadata'], links_dict['created_on'],
-                        links_dict['updated_on'], fw_states)
+    def _get_lazy_firework(self, fw_id):
+        return LazyFirework(fw_id, self.fireworks, self.gridfs_fallback)
 
     def _delete_wf(self, fw_id, fw_ids):
         if self.gridfs_fallback is not None:
             for fw_id in fw_ids:
                 for f in self.gridfs_fallback.find({"metadata.fw_id": fw_id}):
                     self.gridfs_fallback.delete(f._id)
-        self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
+        self._delete_fws(fw_ids)
         self.workflows.delete_one({'nodes': fw_id})
 
     def _delete_launch_dirs(self, fw_ids):
@@ -357,46 +307,6 @@ class MongoLaunchPad(FWSerializable):
         for fw_dict in self.fireworks.find({'fw_id': {'$in': fw_ids}}, {'launch_dir': 1}):
             launch_dirs.append(fw_dict['launch_dir'])
         return launch_dirs
-
-    def _get_wf_data(self, fw_id, mode="more"):
-        wf_fields = ["state", "created_on", "name", "nodes"]
-        fw_fields = ["state", "fw_id"]
-        launch_fields = []
-
-        if mode != "less":
-            wf_fields.append("updated_on")
-            fw_fields.extend(["name", "launches"])
-            launch_fields.append("launch_dir")
-
-        if mode == "reservations":
-            launch_fields.append("state_history.reservation_id")
-
-        if mode == "all":
-            wf_fields = None
-            launch_fields = None
-
-        wf = self.workflows.find_one({"nodes": fw_id}, projection=wf_fields)
-        fw_data = []
-        id_name_map = {}
-        launch_ids = []
-        # need to fix this to include only the fireworks with the highest launch indexes
-        for fw in self.fireworks.find({"fw_id": {"$in": wf["nodes"]}}, projection=fw_fields):
-            if launch_fields:
-                launch_ids.extend(fw["launches"])
-            fw_data.append(fw)
-            if mode != "less":
-                id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
-
-        if launch_fields:
-            launch_info = defaultdict(list)
-            for l in self.fireworks.find({'fw_id': {"$in": fw_ids}}, projection=launch_fields):
-                # logic here is unclear to me, not sure if this change works
-                launch_info[i].append(l)
-            for k, v in launch_info.items():
-                fw_data[k]["launches"] = v
-
-        wf["fw"] = fw_data
-        return wf
 
     def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
@@ -438,6 +348,7 @@ class MongoLaunchPad(FWSerializable):
         Returns:
             list: list of firework ids
         """
+        # TODO the query on this function could make use of mongo syntax
         wf_ids = []
         criteria = query if query else {}
         if count_only:
@@ -604,11 +515,19 @@ class MongoLaunchPad(FWSerializable):
         for fw in self._get_duplicates(m_fw.wf_id):
             self._refresh_wf(fw.fw_id)
 
-    def _find_fws(self, fw_id, launch_sort=-1, allowed_states=None):
-        query_dict = {'fw_id': fw_id}
+    def _find_fws(self, fw_id=None, launch_sort=-1, allowed_states=None,
+                    projection=None, sort=None, m_query=None):
+        query_dict = {}
+        if fw_id is not None:
+            if type(fw_id) == list:
+                fw_id = {'$in': fw_id}
+            query_dict['fw_id':] = fw_id
         if not (allowed_states is None):
             query_dict['state'] = {'$in': [allowed_states]}
-        return self.fireworks.find(query_dict, sort={'launch_idx': launch_sort})
+        if not (m_query is None):
+            query_dict.update(m_query)
+        return self.fireworks.find(query_dict, sort={'launch_idx': launch_sort},
+                                    projection=projection, sort=sort)
         #if find_one:
         #    return self.fireworks.find_one(query_dict)
         #else:
@@ -634,15 +553,21 @@ class MongoLaunchPad(FWSerializable):
         return self.fireworks.find(lostruns_query,
                                    {'launch_idx': 1, 'fw_id': 1})
 
-    def _replace_fw(self, m_fw, state=None, upsert=False):
-        query = {'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx}
+    def _find_wf(self, fw_id, projection=None, sort=None):
+        return self.workflows.find_one({'nodes': fw_id}, projection=projection, sort=sort)
+
+    def _replace_fw(self, m_fw, state=None, upsert=False, fw_id=None):
+        query = {'fw_id': fw_id or m_fw.fw_id, 'launch_idx': m_fw.launch_idx}
         if state:
             query['state'] = state
         self.fireworks.find_one_and_replace(query, m_fw.to_db_dict(), upsert=upsert)
 
-    def _update_fw(self, m_fw):
+    def _update_fw(self, m_fw, state=None):
         # maybe need to include launch_idx?
-        self.fireworks.update_one({'fw_id': m_fw.fw_id, 'state': 'RUNNING'},
+        query_dict = {'fw_id': m_fw.fw_id, 'state': m_fw.launch_idx}
+        if state:
+            query_dict['state'] = state
+        self.fireworks.update_one(query_dict,
                                  {'$set': {'state_history': m_fw.to_db_dict()['state_history'],
                                            'trackers': [t.to_dict() for t in m_fw.trackers]}})
 
@@ -659,47 +584,6 @@ class MongoLaunchPad(FWSerializable):
         except:
             raise ValueError("Could not get next FW id! If you have not yet initialized the database,"
                              " please do so by performing a database reset (e.g., lpad reset)")
-
-    def _upsert_fws(self, fws, reassign_all=False):
-        """# need to address enumerate for upsert
-        Insert the fireworks to the 'fireworks' collection.
-
-        Args:
-            fws ([Firework]): list of fireworks
-            reassign_all (bool): if True, reassign the firework ids. The ids are also reassigned
-                if the current firework ids are negative.
-
-        Returns:
-            dict: mapping between old and new Firework ids
-        """
-        old_new = {}
-        # sort the FWs by id, then the new FW_ids will match the order of the old ones...
-        fws.sort(key=lambda x: x.fw_id)
-
-        if reassign_all:
-            used_ids = []
-            # we can request multiple fw_ids up front
-            # this is the FIRST fw_id we should use
-            # TODO need to change this so multiple fireworks can have the same fw_id
-            first_new_id = self.get_new_fw_id(quantity=len(fws))
-
-            for new_id, fw  in enumerate(fws, start=first_new_id):
-                old_new[fw.fw_id] = new_id
-                fw.fw_id = new_id
-                used_ids.append(new_id)
-            # delete/add in bulk
-            self.fireworks.delete_many({'fw_id': {'$in': used_ids}})
-            self.fireworks.insert_many((fw.to_db_dict() for fw in fws))
-        else:
-            for fw in fws:
-                if fw.fw_id < 0:
-                    new_id = self.get_new_fw_id()
-                    old_new[fw.fw_id] = new_id
-                    fw.fw_id = new_id
-
-                self._replace_fw(fw, upsert=True)
-
-        return old_new
 
     def _get_duplicates(self, fw_id):
         """#
@@ -762,7 +646,8 @@ class MongoLaunchPad(FWSerializable):
                        }
         if not (state is None):
             command_dict['$set']['state'] = state
-        f = self.fireworks.find_one_and_update(query_dict, command_dict)
+        f = self.fireworks.find_one_and_update(query_dict, command_dict, sort={'launch_idx': DESCENDING})
+        launch_idx = f['launch_idx']
 
         if f:
             try:
@@ -776,10 +661,10 @@ class MongoLaunchPad(FWSerializable):
                 # some kind of internal error - an example is that fws serialization changed due to
                 # code updates and thus the Firework object can no longer be loaded from db description
                 # Action: *manually* mark the fw and workflow as FIZZLED
-                self.fireworks.find_one_and_update({"fw_id": fw_id}, {"$set": {"state": "FIZZLED"}})
-                self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED"}})
-                self.workflows.find_one_and_update({"nodes": fw_id},
-                                                   {"$set": {"fw_states.{}".format(fw_id): "FIZZLED"}})
+                self.fireworks.find_one_and_update({"fw_id": fw_id, 'launch_idx': launch_idx},
+                                                    {"$set": {"state": "FIZZLED"}})
+                self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED",\
+                                                   "fw_states.{}".format(fw_id): "FIZZLED"}})
                 import traceback
                 err_message = "Error refreshing workflow. The full stack trace is: {}".format(
                     traceback.format_exc())
@@ -807,7 +692,8 @@ class MongoLaunchPad(FWSerializable):
                 break
 
         assert query_node is not None
-        if not self.workflows.find_one({'nodes': query_node}):
+        #if not self.workflows.find_one({'nodes': query_node}):
+        if not self._find_wf(query_node):
             raise ValueError("BAD QUERY_NODE! {}".format(query_node))
         # redo the links and fw_states
         wf = wf.to_db_dict()
@@ -830,7 +716,8 @@ class MongoLaunchPad(FWSerializable):
             m_query = m_dupefinder.query(thief_fw.to_dict()["spec"])
             self.m_logger.debug('Querying for duplicates, fw_id: {}'.format(thief_fw.fw_id))
             # iterate through all potential duplicates in the DB
-            for potential_match in self.fireworks.find(m_query):
+            #for potential_match in self.fireworks.find(m_query):
+            for potential_match in self._find_fws(m_query=m_query):
                 self.m_logger.debug('Verifying for duplicates, fw_ids: {}, {}'.format(
                     thief_fw.fw_id, potential_match['fw_id']))
 
@@ -858,7 +745,7 @@ class MongoLaunchPad(FWSerializable):
                     thief_fw.add_duplicate(potential_match['fw_id'])
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
                     victim_fw.add_duplicate(thief_fw.fw_id)
-                    self._update_fw(victim_fw)
+                    self._update_fw(victim_fw, state='RUNNING')
                     stolen = True
                     self.m_logger.info('Duplicate found! fwids {} and {}'.format(
                         thief_fw.fw_id, potential_match['fw_id']))
