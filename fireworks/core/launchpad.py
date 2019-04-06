@@ -114,7 +114,7 @@ class LaunchPad(FWSerializable):
     def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
                  logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl=False,
                  ssl_ca_certs=None, ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None,
-                 authsource=None):
+                 authsource=None, connection_string=None):
         """
         Args:
             host (str): hostname
@@ -132,6 +132,7 @@ class LaunchPad(FWSerializable):
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
             authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if not set
+            connection_string (str): if set, will create the MongoClient from a connection string URI instead of the options above. A connection string looks like: "mongodb+srv://{{username}}:{{password}}@{{hostname}}/{{dbname}}"
         """
         self.host = host
         self.port = port
@@ -154,12 +155,21 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        self.connection = MongoClient(host, port, ssl=self.ssl,
-            ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
-            ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
-            socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=username, password=password,
-            authSource=self.authsource)
-        self.db = self.connection[name]
+        if connection_string:
+            self.connection = MongoClient(connection_string)
+            try:
+                option_idx = connection_string.index("?")
+                connection_string = connection_string[:option_idx]
+            except ValueError:
+                pass
+            self.db = self.connection[connection_string.split("/")[-1]]
+        else:
+            self.connection = MongoClient(host, port, ssl=self.ssl,
+                ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
+                ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
+                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=username, password=password,
+                authSource=self.authsource)
+            self.db = self.connection[name]
 
         self.fireworks = self.db.fireworks
         self.launches = self.db.launches
