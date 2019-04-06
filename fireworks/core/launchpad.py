@@ -136,7 +136,8 @@ class LaunchPad(FWSerializable):
 
         # detect if connection_string mode
         host_uri_mode = False
-        if host is not None and (host.startswith("mongodb://") or host.startswith("mongodb+srv://")):
+        if host is not None and (host.startswith("mongodb://") or
+                                 host.startswith("mongodb+srv://")):
             host_uri_mode = True
 
         self.host = host if (host or host_uri_mode) else "localhost"
@@ -170,10 +171,14 @@ class LaunchPad(FWSerializable):
             self.db = self.connection[host.split("/")[-1]]
         else:
             self.connection = MongoClient(self.host, self.port, ssl=self.ssl,
-                ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
-                ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
-                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=self.username, password=self.password,
-                authSource=self.authsource)
+                                          ssl_ca_certs=self.ssl_ca_certs,
+                                          ssl_certfile=self.ssl_certfile,
+                                          ssl_keyfile=self.ssl_keyfile,
+                                          ssl_pem_passphrase=self.ssl_pem_passphrase,
+                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
+                                          username=self.username,
+                                          password=self.password,
+                                          authSource=self.authsource)
             self.db = self.connection[self.name]
 
         self.fireworks = self.db.fireworks
@@ -237,6 +242,10 @@ class LaunchPad(FWSerializable):
 
     @classmethod
     def from_dict(cls, d):
+        port = d.get('port', None)
+        name = d.get('name', None)
+        username = d.get('username', None)
+        password = d.get('password', None)
         logdir = d.get('logdir', None)
         strm_lvl = d.get('strm_lvl', None)
         user_indices = d.get('user_indices', [])
@@ -247,7 +256,7 @@ class LaunchPad(FWSerializable):
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
         authsource= d.get('authsource', None)
-        return LaunchPad(d['host'], d['port'], d['name'], d['username'], d['password'],
+        return LaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
                          authsource)

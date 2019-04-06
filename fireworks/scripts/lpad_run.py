@@ -122,20 +122,27 @@ def get_lp(args):
 
 
 def init_yaml(args):
-    fields = (
-        ("host", "localhost"),
-        ("port", 27017),
-        ("name", "fireworks"),
-        ("username", None),
-        ("password", None),
-        ("ssl_ca_file", None))
+    if args.uri_format:
+        fields = (
+            ("host", None),
+            ("ssl_ca_file", None))
+    else:
+        fields = (
+            ("host", "localhost"),
+            ("port", 27017),
+            ("name", "fireworks"),
+            ("username", None),
+            ("password", None),
+            ("ssl_ca_file", None))
     doc = {}
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, v in fields:
         val = input("Enter {} (default: {}) : ".format(k, v))
         doc[k] = val if val else v
-    doc["port"] = int(doc["port"])  # enforce the port as an int
+    if "port" in doc:
+        doc["port"] = int(doc["port"])  # enforce the port as an int
+
     lp = LaunchPad.from_dict(doc)
     lp.to_file(args.config_file)
     print("\nConfiguration written to {}!".format(args.config_file))
@@ -725,6 +732,9 @@ def lpad():
 
     init_parser = subparsers.add_parser(
         'init', help='Initialize a Fireworks launchpad YAML file.')
+    init_parser.add_argument('-u', '--uri_format',
+                              action="store_true",
+                              help="Connect via a URI, see: https://docs.mongodb.com/manual/reference/connection-string/")
     init_parser.add_argument('--config-file', default=DEFAULT_LPAD_YAML,
                              type=str,
                              help="Filename to write to.")
