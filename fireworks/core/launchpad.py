@@ -111,13 +111,13 @@ class LaunchPad(FWSerializable):
     The LaunchPad manages the FireWorks database.
     """
 
-    def __init__(self, host='localhost', port=27017, name='fireworks', username=None, password=None,
+    def __init__(self, host=None, port=None, name=None, username=None, password=None,
                  logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl=False,
                  ssl_ca_certs=None, ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None,
-                 authsource=None, connection_string=None):
+                 authsource=None):
         """
         Args:
-            host (str): hostname
+            host (str): hostname. A MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
             port (int): port number
             name (str): database name
             username (str)
@@ -132,11 +132,16 @@ class LaunchPad(FWSerializable):
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
             authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if not set
-            connection_string (str): if set, will create the MongoClient from a connection string URI instead of the options above. A connection string looks like: "mongodb+srv://{{username}}:{{password}}@{{hostname}}/{{dbname}}"
         """
-        self.host = host
-        self.port = port
-        self.name = name
+
+        # detect if connection_string mode
+        host_uri_mode = False
+        if host is not None and (host.startswith("mongodb://") or host.startswith("mongodb+srv://")):
+            host_uri_mode = True
+
+        self.host = host if (host or host_uri_mode) else "localhost"
+        self.port = port if (port or host_uri_mode) else 27017
+        self.name = name if (name or host_uri_mode) else "fireworks"
         self.username = username
         self.password = password
         self.ssl = ssl
@@ -144,7 +149,7 @@ class LaunchPad(FWSerializable):
         self.ssl_certfile = ssl_certfile
         self.ssl_keyfile = ssl_keyfile
         self.ssl_pem_passphrase = ssl_pem_passphrase
-        self.authsource = authsource or name
+        self.authsource = authsource or self.name
 
         # set up logger
         self.logdir = logdir
@@ -155,21 +160,21 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        if connection_string:
-            self.connection = MongoClient(connection_string)
+        if host_uri_mode:
+            self.connection = MongoClient(host)
             try:
-                option_idx = connection_string.index("?")
-                connection_string = connection_string[:option_idx]
+                option_idx = host.index("?")
+                host = host[:option_idx]
             except ValueError:
                 pass
-            self.db = self.connection[connection_string.split("/")[-1]]
+            self.db = self.connection[host.split("/")[-1]]
         else:
-            self.connection = MongoClient(host, port, ssl=self.ssl,
+            self.connection = MongoClient(self.host, self.port, ssl=self.ssl,
                 ssl_ca_certs=self.ssl_ca_certs, ssl_certfile=self.ssl_certfile,
                 ssl_keyfile=self.ssl_keyfile, ssl_pem_passphrase=self.ssl_pem_passphrase,
-                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=username, password=password,
+                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS, username=self.username, password=self.password,
                 authSource=self.authsource)
-            self.db = self.connection[name]
+            self.db = self.connection[self.name]
 
         self.fireworks = self.db.fireworks
         self.launches = self.db.launches
