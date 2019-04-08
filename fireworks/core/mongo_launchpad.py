@@ -523,7 +523,10 @@ class MongoLaunchPad(FWSerializable):
                 fw_id = {'$in': fw_id}
             query_dict['fw_id':] = fw_id
         if not (allowed_states is None):
-            query_dict['state'] = {'$in': [allowed_states]}
+            if type(allowed_states) == str:
+                query_dict['state'] = {allowed_states}
+            else:
+                query_dict['state'] = {'$in': [allowed_states]}
         if not (m_query is None):
             query_dict.update(m_query)
         return self.fireworks.find(query_dict, sort={'launch_idx': launch_sort},
@@ -561,15 +564,6 @@ class MongoLaunchPad(FWSerializable):
         if state:
             query['state'] = state
         self.fireworks.find_one_and_replace(query, m_fw.to_db_dict(), upsert=upsert)
-
-    def _update_fw(self, m_fw, state=None):
-        # maybe need to include launch_idx?
-        query_dict = {'fw_id': m_fw.fw_id, 'state': m_fw.launch_idx}
-        if state:
-            query_dict['state'] = state
-        self.fireworks.update_one(query_dict,
-                                 {'$set': {'state_history': m_fw.to_db_dict()['state_history'],
-                                           'trackers': [t.to_dict() for t in m_fw.trackers]}})
 
     def get_new_fw_id(self, quantity=1):
         """
@@ -624,52 +618,30 @@ class MongoLaunchPad(FWSerializable):
             set_spec = {"$unset":{"spec._recovery":""}}
             self.fireworks.find_one_and_update({"fw_id":fw_id, "launch_idx": -1}, set_spec)
 
-    def _refresh_wf(self, fw_id, state=None, allowed_states=None):
-        """#
-        Update the FW state of all jobs in workflow.
+    def _internal_fizzle(self, fw_id, launch_idx=-1):
+        self.fireworks.find_one_and_update({"fw_id": fw_id},
+                                            {"$set": {"state": "FIZZLED"}},
+                                            sort={'launch_idx': DESCENDING})
+        self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED",\
+                                           "fw_states.{}".format(fw_id): "FIZZLED"}})
 
-        Args:
-            fw_id (int): the parent fw_id - children will be refreshed
-        """
-        # TODO: time how long it took to refresh the WF!
-        # TODO: need a try-except here, high probability of failure if incorrect action supplied
-        query_dict = {'fw_id': fw_id}
-        if not (allowed_states is None):
-            if type(allowed_states) == str:
-                query_dict['state'] = allowed_states
-            else:
-                query_dict['state'] = {'$in': allowed_states}
-        command_dict = {'$set':
-                           {
-                            'updated_on': datetime.datetime.utcnow()
-                           }
-                       }
-        if not (state is None):
+    def _update_fw(self, m_fw, state=None, allowed_states=None, launch_idx=-1,
+                    touch_history=True, checkpoint=None):
+        if type(m_fw) == int:
+            m_fw = self.get_fw_by_id(m_fw, launch_idx)
+        if touch_history:
+            m_fw.touch_history()
+        query_dict = {'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx}
+        if type(allowed_states) == list:
+            state = {'$in': state}
+        if allowed_states is not None:
+            query_dict['state'] = allowed_states
+        command_dict = {'$set': {'state_history': m_fw.to_db_dict()['state_history'],
+                                 'trackers': [t.to_dict() for t in m_fw.trackers]}}
+        if state is not None:
             command_dict['$set']['state'] = state
-        f = self.fireworks.find_one_and_update(query_dict, command_dict, sort={'launch_idx': DESCENDING})
-        launch_idx = f['launch_idx']
-
-        if f:
-            try:
-                with WFLock(self, fw_id):
-                    wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-                    updated_ids = wf.refresh(fw_id)
-                    self._update_wf(wf, updated_ids)
-            except LockedWorkflowError:
-                self.m_logger.info("fw_id {} locked. Can't refresh!".format(fw_id))
-            except:
-                # some kind of internal error - an example is that fws serialization changed due to
-                # code updates and thus the Firework object can no longer be loaded from db description
-                # Action: *manually* mark the fw and workflow as FIZZLED
-                self.fireworks.find_one_and_update({"fw_id": fw_id, 'launch_idx': launch_idx},
-                                                    {"$set": {"state": "FIZZLED"}})
-                self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED",\
-                                                   "fw_states.{}".format(fw_id): "FIZZLED"}})
-                import traceback
-                err_message = "Error refreshing workflow. The full stack trace is: {}".format(
-                    traceback.format_exc())
-                raise RuntimeError(err_message)
-        return f
+        self.fireworks.update_one(query_dict, command_dict)
+        return m_fw
 
     def _update_wf(self, wf, updated_ids):
         """
@@ -745,7 +717,8 @@ class MongoLaunchPad(FWSerializable):
                     thief_fw.add_duplicate(potential_match['fw_id'])
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
                     victim_fw.add_duplicate(thief_fw.fw_id)
-                    self._update_fw(victim_fw, state='RUNNING')
+                    #self._update_fw(victim_fw, state='RUNNING')
+                    # No idea why I added this line above, makes no sense
                     stolen = True
                     self.m_logger.info('Duplicate found! fwids {} and {}'.format(
                         thief_fw.fw_id, potential_match['fw_id']))

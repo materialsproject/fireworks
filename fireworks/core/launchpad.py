@@ -282,10 +282,12 @@ class LaunchPad(FWSerializable, ABC):
             fw_id(int): firework id
         """
         allowed_states =  ['WAITING', 'READY', 'RESERVED']
-        f = self._refresh_wf(fw_id, state='PAUSED', allowed_states=allowed_states)
-        if not f:
+        f = self._update_fw(fw_id, state='PAUSED', allowed_states=allowed_states)
+        if f:
+            self._refresh_wf(fw_id)
+        else:
             self.m_logger.error('No pausable (WAITING,READY,RESERVED) Firework exists with fw_id: {}'.format(fw_id))
-        return f
+        return f.to_db_dict()
 
 
     def defuse_fw(self, fw_id: int, rerun_duplicates: bool=True) -> Dict:
@@ -298,11 +300,15 @@ class LaunchPad(FWSerializable, ABC):
                 marked for rerun and then defused.
         """
         allowed_states = ['DEFUSED', 'WAITING', 'READY', 'FIZZLED', 'PAUSED']
-        f = self._refresh_wf(fw_id, state='DEFUSED', allowed_states=allowed_states)
-        if not f:
+        f = self._update_fw(fw_id, state='DEFUSED', allowed_states=allowed_states)
+        if f:
+            self._refresh_wf(fw_id)
+        else:
             self.rerun_fw(fw_id, rerun_duplicates)
-            f = self._refresh_wf(fw_id, state='DEFUSED', allowed_states=allowed_states)
-        return f
+            f = self._update_fw(fw_id, state='DEFUSED', allowed_states=allowed_states)
+            if f:
+                self._refresh_wf(fw_id)
+        return f.to_db_dict()
 
     def reignite_fw(self, fw_id: int) -> Dict:
         """
@@ -311,8 +317,9 @@ class LaunchPad(FWSerializable, ABC):
         Args:
             fw_id (int): firework id
         """
-        f = self._refresh_wf(fw_id, state='WAITING', allowed_states='DEFUSED')
-        return f
+        f = self._update_fw(fw_id, state='WAITING', allowed_states='DEFUSED')
+        self._refresh_wf(fw_id)
+        return f.to_db_dict()
 
     def resume_fw(self, fw_id: int) -> Dict:
         """
@@ -321,8 +328,9 @@ class LaunchPad(FWSerializable, ABC):
         Args:
             fw_id (int): firework id
         """
-        f = self._refresh_wf(fw_id, state='WAITING', allowed_states='PAUSED')
-        return f
+        f = self._update_fw(fw_id, state='WAITING', allowed_states='PAUSED')
+        self._refresh_wf(fw_id)
+        return f.to_db_dict()
 
     def rerun_fw(self, fw_id: int, launch_idx: int=-1, rerun_duplicates: bool=True,
                  recover_mode: Optional[str]=None) -> List[int]:
@@ -408,7 +416,8 @@ class LaunchPad(FWSerializable, ABC):
             # second set the state of all FWs to ARCHIVED
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf.fws:
-                self._refresh_wf(fw_id, state='ARCHIVED')
+                self._update_fw(state='ARCHIVED')
+                self._refresh_wf(fw_id)
 
     def pause_wf(self, fw_id: int):
         """
@@ -530,7 +539,7 @@ class LaunchPad(FWSerializable, ABC):
         m_fw.state = state
         m_fw.set_launch_dir(launch_dir)
         self._upsert_fws([m_fw])
-        self._refresh_wf(m_fw.fw_id, state=state)
+        self._refresh_wf(m_fw.fw_id)
 
         # update any duplicated runs
         # TODO CHANGED THIS TO USE _find_fws HELPER FUNCTION (ALSO DON'T BACKUP LAUNCH DATA)
@@ -540,7 +549,7 @@ class LaunchPad(FWSerializable, ABC):
                 fw = self.get_fw_by_id(fw_id)
                 fw.state = state
                 self._upsert_fws([fw])
-                self._refresh_wf(fw.fw_id, state=state)
+                self._refresh_wf(fw.fw_id)
 
         # Store backup copies of the initial data for retrieval in case of failure
         self.backup_fw_data[fw_id] = m_fw.to_db_dict()
@@ -822,7 +831,31 @@ class LaunchPad(FWSerializable, ABC):
                         links_dict['metadata'], links_dict['created_on'],
                         links_dict['updated_on'], fw_states)
 
+    def _refresh_wf(self, fw_id: int) -> Union[Dict, None]:
+        """#
+        Update the FW state of all jobs in workflow.
 
+        Args:
+            fw_id (int): the parent fw_id - children will be refreshed
+        """
+        # TODO: time how long it took to refresh the WF!
+        # TODO: need a try-except here, high probability of failure if incorrect action supplied
+        try:
+            with WFLock(self, fw_id):
+                wf = self.get_wf_by_fw_id_lzyfw(fw_id)
+                updated_ids = wf.refresh(fw_id)
+                self._update_wf(wf, updated_ids)
+        except LockedWorkflowError:
+            self.m_logger.info("fw_id {} locked. Can't refresh!".format(fw_id))
+        except:
+            # some kind of internal error - an example is that fws serialization changed due to
+            # code updates and thus the Firework object can no longer be loaded from db description
+            # Action: *manually* mark the fw and workflow as FIZZLED
+            self._internal_fizzle(fw_id)
+            import traceback
+            err_message = "Error refreshing workflow. The full stack trace is: {}".format(
+                traceback.format_exc())
+            raise RuntimeError(err_message)
 
     """ EXTERNALLY CALLABLE FUNCTIONS WITH ABSTRACT DECLARATIONS """
 
@@ -860,17 +893,6 @@ class LaunchPad(FWSerializable, ABC):
             mongo (bool): spec_document uses mongo syntax to directly update the spec
 
         TODO addres mongo variable, shouldn't be needed in general
-        """
-        pass
-
-    @abstractmethod
-    def _refresh_wf(self, fw_id: int, state: Optional[str]=None,
-                    allowed_states: Optional[str]=None) -> Union[Dict, None]:
-        """
-        Update the FW state of all jobs in workflow.
-
-        Args:
-            fw_id (int): the parent fw_id - children will be refreshed
         """
         pass
 
@@ -1151,7 +1173,12 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _update_fw(self, m_fw: Firework):
+    def _update_fw(self, m_fw, state=None, allowed_states=None, launch_idx=-1,
+                    touch_history=True, checkpoint=None):
+        pass
+
+    @abstractmethod
+    def _internal_fizzle(self, fw_id, launch_idx=-1):
         pass
 
     @abstractmethod
