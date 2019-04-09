@@ -2,6 +2,10 @@
 FireWorks Changelog
 ===================
 
+**v1.8.9**
+
+* added ability to connect via MongoDB URI and added 'lpad init -u' command.
+
 **v1.8.8**
 
 * fix insertion order bug in append_wf() for Py<=3.5 (thanks to M. Jager)
