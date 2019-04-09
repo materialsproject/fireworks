@@ -163,12 +163,8 @@ class LaunchPad(FWSerializable):
         # get connection
         if host_uri_mode:
             self.connection = MongoClient(host)
-            try:
-                option_idx = host.index("?")
-                host = host[:option_idx]
-            except ValueError:
-                pass
-            self.db = self.connection[host.split("/")[-1]]
+            dbname = host.split('/')[-1].split('?')[0]  # parse URI to extract dbname
+            self.db = self.connection[dbname]
         else:
             self.connection = MongoClient(self.host, self.port, ssl=self.ssl,
                                           ssl_ca_certs=self.ssl_ca_certs,

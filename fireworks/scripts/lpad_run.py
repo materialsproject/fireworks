@@ -125,7 +125,8 @@ def init_yaml(args):
     if args.uri_format:
         fields = (
             ("host", None),
-            ("ssl_ca_file", None))
+            ("ssl_ca_file", None),
+            ("authsource", None))
     else:
         fields = (
             ("host", "localhost"),
@@ -133,8 +134,13 @@ def init_yaml(args):
             ("name", "fireworks"),
             ("username", None),
             ("password", None),
-            ("ssl_ca_file", None))
+            ("ssl_ca_file", None),
+            ("authsource", None))
+
     doc = {}
+    if args.uri_format:
+        print("Note 1: You are in URI format mode. This means that all database parameters (username, password, host, port, database name, etc.) must be present in the URI. See: https://docs.mongodb.com/manual/reference/connection-string/ for details.")
+        print("Note 2: Enter your URI in under the 'host' parameter.")
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, v in fields:
