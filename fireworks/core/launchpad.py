@@ -442,7 +442,6 @@ class LaunchPad(FWSerializable, ABC):
         for fw in wf.fws:
             self.reignite_fw(fw.fw_id)
 
-    @abstractmethod
     def delete_wf(self, fw_id: int, delete_launch_dirs: bool=False):
         """
         Delete the workflow containing firework with the given id.
@@ -519,18 +518,17 @@ class LaunchPad(FWSerializable, ABC):
         # If this Launch was previously reserved, overwrite that reservation with this Launch
         # note that adding a new Launch is problematic from a duplicate run standpoint
         # TODO REPLACED LAUNCHES WITH FIREWORKS HERE
+
         prev_reservations = [fw for fw in self._find_duplicates(m_fw.fw_id) if fw.state == 'RESERVED']
         reserved_fw = None if not prev_reservations else prev_reservations[0]
         state_history = reserved_fw.state_history if reserved_fw else None
+        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] if '_trackers' in m_fw.spec else None
 
         # get new launch
         # TODO REMOVED LAUNCH ACCESS STUFF BELOW
-        trackers = [Tracker.from_dict(f) for f in m_fw.spec['_trackers']] \
-                    if '_trackers' in m_fw.spec else None
-
-        # insert the launch
-        #self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-        #                                   m_launch.to_db_dict(), upsert=True)
+        # this function should set the arguments in the Firework
+        m_fw.reset_launch(state, launch_dir, trackers, state_history, fworker, host, ip)
+        self._launch_fw(m_fw, reserved_fw)
 
         self.m_logger.debug('Created/updated Firework with fw_id: {}'.format(m_fw.fw_id))
         # TODO END REMOVED LAUNCH ACCESS
@@ -575,7 +573,7 @@ class LaunchPad(FWSerializable, ABC):
         for tracker in m_fw.trackers:
             tracker.track_file(m_fw.launch_dir)
         m_fw.touch_history(ptime, checkpoint=checkpoint)
-        self._update_fw(m_fw)
+        self._update_fw(m_fw, rouch_history=False)
 
     def get_tracker_data(self, fw_id: int, launch_idx=-1) -> List[Dict]:
         """
@@ -589,7 +587,8 @@ class LaunchPad(FWSerializable, ABC):
         for fw in self._find_fws(fw_id):
             if 'trackers' in fw:
                 trackers = [Tracker.from_dict(t) for t in fw['trackers']]
-                data.append({'fw_id': fw['fw_id'], 'trackers': trackers})
+                data.append({'fw_id': fw['fw_id'], 'launch_idx': fw['launch_dx'],
+                            'trackers': trackers})
         return data
 
     def detect_unreserved(self, expiration_secs: int=RESERVATION_EXPIRATION_SECS,
@@ -602,7 +601,7 @@ class LaunchPad(FWSerializable, ABC):
             rerun (bool): if True, the expired reservations are cancelled and the fireworks rerun.
 
         Returns:
-            [int]: list of expired lacunh ids
+            [int]: list of expired launch ids
         """
         # MOVED INITIAL QUERY FOR BAD RUNS TO A HELPER FUNCTION
         bad_launch_data = [fw['fw_id'] for fw in self._find_timeout_fws('RESERVED', expiration_secs)]
@@ -738,6 +737,7 @@ class LaunchPad(FWSerializable, ABC):
         # Should this require launch_idx? I think not because only most recent
         # launch should be reserved. But maybe it's safer since this is called
         # by cancel_reservation_by_reservation_id
+        # TODO Should this function touch the history of the fw?
         m_fw = self.get_fw_by_id(fw_id)
         m_fw.state = 'READY'
         self._replace_fw(m_fw, state='RESERVED', upsert=True)
@@ -766,6 +766,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         m_fw = self.get_fw_by_id(fw_id, launch_idx)
         m_fw.launch_dir = launch_dir
+        # this only edits a launch, should add a _get_launch and _replace_launch
         self._replace_fw(m_fw, upsert=True)
 
     def restore_backup_data(self, fw_id: int):
@@ -851,6 +852,11 @@ class LaunchPad(FWSerializable, ABC):
             # some kind of internal error - an example is that fws serialization changed due to
             # code updates and thus the Firework object can no longer be loaded from db description
             # Action: *manually* mark the fw and workflow as FIZZLED
+            # TODO THIS BEHAVIOR HAS CHANGED SLIGHTLY WITH MY REVISION, MIGHT SET
+            # THE FW TO DEFUSED OR JUST SET WORKFLOW STATE. I think there's a bug in the
+            # v1 code because if the Workflow is reinstantiated as an object its
+            # state won't be what's in the db because of the way the workflow
+            # state is determined
             self._internal_fizzle(fw_id)
             import traceback
             err_message = "Error refreshing workflow. The full stack trace is: {}".format(
@@ -903,7 +909,7 @@ class LaunchPad(FWSerializable, ABC):
 
         Args:
             fw_id (int): firework id
-            priority
+            priority (int): higher number -> higher priority
         """
         pass
 
@@ -1364,4 +1370,19 @@ class LaunchPad(FWSerializable, ABC):
         raise NotImplementedError
 
     def _check_fw_for_uniqueness(self, m_fw: Firework) -> bool:
-        raise NotImplementedError
+        """
+        Check if there are duplicates. If not unique, a new id is assigned and the workflow
+        refreshed.
+
+        Args:
+            m_fw (Firework)
+
+        Returns:
+            bool: True if the firework is unique
+        """
+        if not self._steal_launches(m_fw):
+            self.m_logger.debug('FW with id: {} is unique!'.format(m_fw.fw_id))
+            return True
+        self._upsert_fws([m_fw])  # update the DB with the new launches
+        self._refresh_wf(m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
+        return False
