@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.core package &#8212; FireWorks 1.8.9 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.9.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.9 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -899,18 +899,18 @@ for information on how to use this env variable in Firetasks.</li>
 <span id="fireworks-core-launchpad-module"></span><h2>fireworks.core.launchpad module<a class="headerlink" href="#module-fireworks.core.launchpad" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.launchpad.LaunchPad">
-<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LaunchPad</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>name=None</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em>, <em>authsource=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LaunchPad</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>name=None</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em>, <em>authsource=None</em>, <em>uri_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>The LaunchPad manages the FireWorks database.</p>
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>name=None</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em>, <em>authsource=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>name=None</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em>, <em>authsource=None</em>, <em>uri_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – hostname. A MongoDB connection string URI (<a class="reference external" href="https://docs.mongodb.com/manual/reference/connection-string/">https://docs.mongodb.com/manual/reference/connection-string/</a>) can be used instead of the remaining options below.</li>
+<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – hostname. If uri_mode is True, a MongoDB connection string URI (<a class="reference external" href="https://docs.mongodb.com/manual/reference/connection-string/">https://docs.mongodb.com/manual/reference/connection-string/</a>) can be used instead of the remaining options below.</li>
 <li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – port number</li>
 <li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – database name</li>
 <li><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
@@ -925,6 +925,7 @@ for information on how to use this env variable in Firetasks.</li>
 <li><strong>ssl_keyfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the client private key</li>
 <li><strong>ssl_pem_passphrase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – passphrase for the client private key</li>
 <li><strong>authsource</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – authsource parameter for MongoDB authentication; defaults to “name” (i.e., db name) if not set</li>
+<li><strong>uri_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if set True, all Mongo connection parameters occur through a MongoDB URI string (set as the host).</li>
 </ul>
 </td>
 </tr>
@@ -2232,7 +2233,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.8.9 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.0 documentation</a> &#187;</li> 
       </ul>
     </div>
 

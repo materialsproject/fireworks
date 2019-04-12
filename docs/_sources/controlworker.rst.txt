@@ -16,7 +16,7 @@ To set the directory where a Firework will execute:
 Potential pitfalls
 ------------------
 
-While setting execution directory is simple enough, we suggest that you avoid this feature of FireWorks unless absolutely necessary. Here are a few pitfalls to consider when using this feature:
+While setting execution directory is simple enough, there are a few pitfalls to consider when using this feature:
 
 #. If you have multiple Workers, make sure that the ``_launch_dir`` you set is accessible from all Workers. Or, set things up so that only the correct Worker will pull your job (see next section).
 #. If you direct multiple FireWorks into the same ``_launch_dir``, you might overwrite output files (like ``FW.json``).
