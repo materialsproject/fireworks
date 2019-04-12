@@ -114,10 +114,10 @@ class LaunchPad(FWSerializable):
     def __init__(self, host=None, port=None, name=None, username=None, password=None,
                  logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl=False,
                  ssl_ca_certs=None, ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None,
-                 authsource=None):
+                 authsource=None, uri_mode=False):
         """
         Args:
-            host (str): hostname. A MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
+            host (str): hostname. If uri_mode is True, a MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
             port (int): port number
             name (str): database name
             username (str)
@@ -132,17 +132,12 @@ class LaunchPad(FWSerializable):
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
             authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if not set
+            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as the host).
         """
 
-        # detect if connection_string mode
-        host_uri_mode = False
-        if host is not None and (host.startswith("mongodb://") or
-                                 host.startswith("mongodb+srv://")):
-            host_uri_mode = True
-
-        self.host = host if (host or host_uri_mode) else "localhost"
-        self.port = port if (port or host_uri_mode) else 27017
-        self.name = name if (name or host_uri_mode) else "fireworks"
+        self.host = host if (host or uri_mode) else "localhost"
+        self.port = port if (port or uri_mode) else 27017
+        self.name = name if (name or uri_mode) else "fireworks"
         self.username = username
         self.password = password
         self.ssl = ssl
@@ -151,6 +146,7 @@ class LaunchPad(FWSerializable):
         self.ssl_keyfile = ssl_keyfile
         self.ssl_pem_passphrase = ssl_pem_passphrase
         self.authsource = authsource or self.name
+        self.uri_mode = uri_mode
 
         # set up logger
         self.logdir = logdir
@@ -161,7 +157,7 @@ class LaunchPad(FWSerializable):
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
-        if host_uri_mode:
+        if uri_mode:
             self.connection = MongoClient(host)
             dbname = host.split('/')[-1].split('?')[0]  # parse URI to extract dbname
             self.db = self.connection[dbname]
@@ -209,7 +205,8 @@ class LaunchPad(FWSerializable):
             'ssl_certfile': self.ssl_certfile,
             'ssl_keyfile': self.ssl_keyfile,
             'ssl_pem_passphrase': self.ssl_pem_passphrase,
-            'authsource': self.authsource}
+            'authsource': self.authsource,
+            'uri_mode': self.uri_mode}
 
     def update_spec(self, fw_ids, spec_document, mongo=False):
         """
@@ -252,10 +249,11 @@ class LaunchPad(FWSerializable):
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
         authsource= d.get('authsource', None)
+        uri_mode = d.get('uri_mode', False)
         return LaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
-                         authsource)
+                         authsource, uri_mode)
 
     @classmethod
     def auto_load(cls):
