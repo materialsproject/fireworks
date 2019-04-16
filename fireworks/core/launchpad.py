@@ -349,9 +349,6 @@ class LaunchPad(FWSerializable, ABC):
             [int]: list of firework ids that were rerun
         """
         m_fw = self.get_fw_dict_by_id(fw_id, launch_idx)
-        m_fw = m_fw.copy()
-        m_fw.launch_idx += 1
-        self._upsert_fws(self, [m_fw])
 
         if not m_fw:
             raise ValueError("FW with id: {} not found!".format(fw_id))
@@ -528,7 +525,7 @@ class LaunchPad(FWSerializable, ABC):
         # TODO REMOVED LAUNCH ACCESS STUFF BELOW
         # this function should set the arguments in the Firework
         m_fw.reset_launch(state, launch_dir, trackers, state_history, fworker, host, ip)
-        self._launch_fw(m_fw, reserved_fw)
+        #self._launch_fw(m_fw, reserved_fw)
 
         self.m_logger.debug('Created/updated Firework with fw_id: {}'.format(m_fw.fw_id))
         # TODO END REMOVED LAUNCH ACCESS
@@ -573,7 +570,7 @@ class LaunchPad(FWSerializable, ABC):
         for tracker in m_fw.trackers:
             tracker.track_file(m_fw.launch_dir)
         m_fw.touch_history(ptime, checkpoint=checkpoint)
-        self._update_fw(m_fw, rouch_history=False)
+        self._update_fw(m_fw, touch_history=False)
 
     def get_tracker_data(self, fw_id: int, launch_idx=-1) -> List[Dict]:
         """
@@ -703,7 +700,7 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             [int]: list of firework ids.
         """
-        fws = self._get_fw_dicts_from_reservation_id(reservation_id)
+        fws = self._get_fw_ids_from_reservation_id(reservation_id)
         # TODO AVOIDED DUPLICATES
         return list(set([fw['fw_id'] for fw in fws]))
 
@@ -711,7 +708,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         Given the reservation id, cancel the reservation and rerun the corresponding fireworks.
         """
-        fw = self._get_fw_dicts_from_reservation_id(reservation_id)[0]
+        fw = self._get_fw_ids_from_reservation_id(reservation_id)[0]
         
         if fw:
             self.cancel_reservation(fw['fw_id'])
@@ -1123,7 +1120,6 @@ class LaunchPad(FWSerializable, ABC):
         """
         Helper function for get_wf_summary_dict
         """
-        # TODO This function needs a lot of work and can probably be moved to abstract LaunchPad
         wf_fields = ["state", "created_on", "name", "nodes"]
         fw_fields = ["state", "fw_id"]
         launch_fields = []

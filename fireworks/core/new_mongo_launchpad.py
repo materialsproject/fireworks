@@ -304,18 +304,24 @@ class LaunchPad(FWSerializable):
         if launch_idx == None:
             m_launches = self.launches.find({'fw_id': fw_id})
             if m_launches:
-                for m_launch in m_launches:
-                    m_launch["action"] = get_action_from_gridfs(m_launch.get("action"), self.gridfs_fallback)
+                for i, m_launch in enumerate(m_launches):
+                    m_launch["action"] = get_action_from_gridfs(m_launch.get("action"),
+                                                                self.gridfs_fallback)
                     if 'launch_id' in m_launch:
                         m_launch.pop('launch_id')
+                    m_launch['launch_idx'] = i
                 return m_launches
-        if launch_idx == -1:
-            launch = self.launches.find_one({'fw_id': fw_id}, sort=("launch_idx", DESCENDING))
-        elif launch_idx < 0:
-            launch = self.launches.find({'fw_id': fw_id}, sort=("launch_idx", DESCENDING))[-launch_idx]
         else:
-            launch = self.launches.find_one({'fw_id': fw_id, 'launch_idx': launch_idx})
-        if launch:
+            launch_ids = self.launches.find({'fw_id': fw_id}, projection={'launch_id': 1},
+                                            sort={'launch_id': ASCENDING})
+            launch_id = launch_ids[launch_idx]
+            launch = self.launches.find_one({'launch_id': launch_id})
+            launch['launch_idx'] = launch_idx if launch_idx >= 0\
+                                   else len(launch_ids)+launch_idx
+            if 'launch_id' in launch:
+                launch.pop('launch_id')
+            launch["action"] = get_action_from_gridfs(launch.get("action"),
+                                                      self.gridfs_fallback)
             return launch
         raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
@@ -329,19 +335,15 @@ class LaunchPad(FWSerializable):
         Returns:
             dict
         """
-
-        # fw_dict = self.fireworks.find_one({'fw_id': fw_id})
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})    
 
         if not fw_dict:
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
 
-        if fw_dict["STATE"] != "WAITING" and fw_dict["STATE"] != "READY":
-            launch = _get_launch_by_fw_id(fw_id, launch_idx)
-            if 'launch_id' in launch:
-                launch.pop('launch_id')
+        if fw_dict["STATE"] not in ["WAITING", "READY", "RESERVED"]:
+            launch = self._get_launch_by_fw_id(fw_id, launch_idx)
         else:
-            launch = _new_launch()
+            launch = Firework._new_launch()
 
         fw_dict['launch'] = launch
         fw_dict.pop('launches')
@@ -620,19 +622,28 @@ class LaunchPad(FWSerializable):
             query['state'] = state
         fw_dict = m_fw.to_db_dict()
         launch = fw_dict.pop['launch']
-        launch_ids = self.launches.find(query, projection={'launch_id': 1},
-                                        sort={'launch_id': ASCENDING})
+        
+        launch_ids = self.fireworks.find(query, projection={'launches': 1})['launches']
         if m_fw.launch_idx >= len(launch_ids):
             launch['launch_id'] = self.get_new_launch_id()
+            launch_ids.append(launch['launch_id'])
         else:
             launch['launch_id'] = launch_ids[m_fw.launch_idx]
+        fw_dict['launches'] = launch_ids
         fw = self.fireworks.find_one_and_replace(query, fw_dict, upsert=upsert)
         query = {'launch_id': launch['launch_id']}
         self.launches.find_one_and_replace(query, launch, upsert=upsert)
 
     def _get_fw_ids_from_reservation_id(self, reservation_id):
-        return self.launches.find({"state_history.reservation_id": reservation_id},
-                                      {'fw_id': 1}, sort={'launch_idx': DESCENDING})
+        fw_ids = []
+        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id},
+                                  {'launch_id': 1})['launch_id']
+        for fw in self.fireworks.find({'launches': l_id}, {'fw_id': 1}):
+            fw_ids.append(fw['fw_id'])
+        return fw_ids
+
+    def _get_next_launch_idx(fw_id):
+        return len(self.fireworks.find_one({'fw_id': fw_id}, projection=['launches'])['launches'])
 
     def _find_timeout_fws(self, state, expiration_secs, query=None):
         now_time = datetime.datetime.utcnow()
@@ -654,21 +665,23 @@ class LaunchPad(FWSerializable):
         fw_ids = self.launches.find(lostruns_query, {'fw_id': 1})
         return list(set([id_dict['fw_id'] for id_dict in fw_ids]))
 
+    """
     def _launch_fw(m_fw, reserved_fw):
         # This function does any database access/edit that requires knowing
         # reserved_fw.
         m_launch = m_fw.launch
         r_launch = None
         if reserved_fw:
-            r_launch = self.launches.find_one({'launch_idx': reserved_fw.launch_idx,
+            r_launch = self.launches.find_one({'launch_id': reserved_fw.launch_idx,
                                                 'fw_id': reserved_fw.fw_id})
         lid = self.get_new_launch_id() if (r_launch is None)\
                                 else r_launch['launch_id']
         # insert the launch (upsert->add regardless of whether launch_id already exists)
-        self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
+        self.launches.find_one_and_replace({'launch_id': lid},
                                            m_launch, upsert=True)
         self.m_logger.debug('Created/updated Launch with launch_id: {}'.format(launch_id))
         self.backup_launch_data[m_launch['launch_id']] = m_launch
+    """
 
     def _get_lazy_firework(self, fw_id):
         return LazyFirework(fw_id, self.fireworks, self.launches, self.gridfs_fallback)
@@ -731,9 +744,11 @@ class LaunchPad(FWSerializable):
         # need to refine structure of launch_idx/launch_id arg to get correct id
         if type(m_fw) == int:
             m_fw = self.get_fw_by_id(m_fw, launch_idx)
+        reset_launch = STATE_RANKS[state] > STATE_RANKS[m_fw.state]\
+                        and state in ['WAITING, READY, RESERVED']
         if touch_history:
-            if state == "WAITING":
-                m_fw.reset_launch(launch_idx=launch_idx+1)
+            if reset_launch:
+                m_fw.reset_launch(launch_idx=self._get_next_launch_idx(fw_id))
             m_fw.state = state
         query_dict = {'fw_id': m_fw.fw_id, 'launch_id': m_fw.launch['launch_id']}
         if type(allowed_states) == list:
@@ -748,12 +763,13 @@ class LaunchPad(FWSerializable):
         if state is not None:
             command_dict['$set']['state'] = state
             command_dict['$set']['updated_on'] = m_fw.updated_on
-        if state != 'WAITING':
+        if not reset_launch:
             self.fireworks.update_one(query_dict, command_dict_fw)
             self.launches.update_one(query_dict, command_dict_launch)
         else:
             # make a new fw and a new launch by upserting with a new launch_idx
-            self._replace_fw(m_fw, upsert=True)
+            #self._replace_fw(m_fw, upsert=True)
+            self.fireworks.update_one(query_dict, command_dict_fw)
         return m_fw
 
     def get_new_fw_id(self, quantity=1):
@@ -794,14 +810,19 @@ class LaunchPad(FWSerializable):
                 query_dict['state'] = {'$in': [allowed_states]}
         if not (m_query is None):
             query_dict.update(m_query)
-        fws = self.fireworks.find(query_dict, sort={'launch_idx': launch_sort},
+        fws = self.fireworks.find(query_dict,
                                     projection=projection, sort=sort)
+        sort['launch_id'] = launch_sort
         all_fws = []
         for fw in fws:
-            query_dict = {'fw_id': fw['fw_id'], 'launch_id': fw['launches']}
-            launches = self.launches.find(query_dict)
-            if not launches:
-                raise ValueError('FW has no launch data!')
+            query_dict = {'launch_id': {'$in': fw['launches']}}
+            launches = self.launches.find(query_dict, sort=sort)
+            query_dict['state'] = fw['state']
+            if self.launches.count(query_dict) == 0:
+                new_fw = dict(fw)
+                new_fw['launch'] = _new_launch()
+                all_fws.append(new_fw)
+                #raise ValueError('FW has no launch data!')
             for launch in launches:
                 new_fw = dict(fw)
                 new_fw['launch'] = launch
@@ -903,6 +924,26 @@ class LaunchPad(FWSerializable):
                                             sort={'launch_idx': DESCENDING})
         self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED",\
                                            "fw_states.{}".format(fw_id): "FIZZLED"}})
+
+    def _insert_fws(self, fws):
+        if type(fws) == FireWork:
+            
+        else:
+            self.fireworks.insert_many(fw.to_db_dict() for fw in fws)
+
+    def _delete_fws(self, fw_ids):
+        
+
+    def _replace_fws(self, fw_ids, fws):
+        self.fireworks.delete_many({'fw_id': {'$in': fw_ids}})
+        if type(fws) == FireWork:
+            fw_dict = fw.to_db_dict()
+            launch = fw_dict.pop('launch')
+            self.fireworks.insert_one(fw_dict)
+            self.fireworks.insert_one(fw.to_db_dict())
+        else:
+            self.fireworks.insert_many(fw.to_db_dict() for fw in fws)
+
 
     def _update_wf(self, wf, updated_ids):
         """

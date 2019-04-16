@@ -41,6 +41,18 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
+def _new_launch():
+    launch = {}
+    launch['state'] = None
+    launch['state_history'] = {}
+    launch['fworker'] = None
+    launch['host'] = None
+    launch['ip'] = None
+    launch['trackers'] = None
+    launch['action'] = None
+    launch['launch_idx'] = None
+    launch['fw_id'] = None
+
 class Firework(FWSerializable):
     """
     A Firework is a workflow step and might be contain several Firetasks.
@@ -60,6 +72,11 @@ class Firework(FWSerializable):
                  updated_on: datetime.datetime=None,
                  action: FWAction=None, state_history: dict=None):
 
+        # launch will contain launch_idx, launch_dir, state, created_on,
+        # updated_on, fworker, host, ip, trackers, action, state_history
+
+        # state, created_on, updated_on can be directly queried by Firework
+
         self.tasks = tasks
         self.spec = spec.copy() if spec else {}
         self.name = name or 'Unnamed FW'
@@ -71,11 +88,10 @@ class Firework(FWSerializable):
             NEGATIVE_FWID_CTR -= 1
             self.fw_id = NEGATIVE_FWID_CTR
 
-        self.launch_idx = 0
+        self.launch_idx = launch_idx
 
         self.launch_dir = launch_dir
 
-        self._state = state
         self.parents = parents if parents else []
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
@@ -103,7 +119,6 @@ class Firework(FWSerializable):
         if checkpoint:
             self.state_history[-1]['checkpoint'] = checkpoint
         self.state_history[-1]['updated_on'] = update_time
-        self.updated_on = update_time
 
     def _update_state_history(self, state: str):
         """
@@ -163,7 +178,10 @@ class Firework(FWSerializable):
         Returns:
             str: The current state of the Launch.
         """
-        return self._state
+        if self.state_history and len(self.state_history) > 0:
+            return self.state_history[-1]['state']
+        else:
+            return "WAITING"
 
     @state.setter
     def state(self, state: str):
@@ -173,7 +191,6 @@ class Firework(FWSerializable):
         Args:
             state (str): the state to set for the Launch
         """
-        self._state = state
         self._update_state_history(state)
 
     def set_launch_dir(self, launch_dir: str):
@@ -236,35 +253,47 @@ class Firework(FWSerializable):
             end = self.time_start if self.time_start else datetime.utcnow()
             return (end - start).total_seconds()
 
+    @property
+    @recursive_serialize
+    def launch(self):
+        launch = {}
+        launch['state'] = self.state
+        launch['state_history'] = self.state_history
+        launch['fworker'] = self.fworker
+        launch['host'] = self.host
+        launch['ip'] = self.ip
+        launch['trackers'] = self.trackers
+        launch['action'] = self.action
+        launch['launch_idx'] = self.launch_idx
+        launch['fw_id'] = self.fw_id
+        return launch
+
     @recursive_serialize
     def to_dict(self):
         # put tasks in a special location of the spec
         spec = self.spec
         spec['_tasks'] = [t.to_dict() for t in self.tasks]
-        m_dict = {'spec': spec,
-                  'name': self.name
-                  'fw_id': self.fw_id,
-                  'fworker': self.fworker,
-                  'launch_dir': self.launch_dir,
-                  'host': self.host,
-                  'ip': self.ip,
-                  'trackers': self.trackers,
-                  'action': self.action,
-                  'state': self.state,
-                  'state_history': self.state_history,
-                  'created_on': self.created_on,
+        m_dict = {'spec': spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
                   'updated_on': self.updated_on}
+
+        # keep export of new FWs to files clean
+        if self.state != 'WAITING':
+            m_dict['state'] = self.state
+
+        m_dict['name'] = self.name
+
+        m_dict['launch'] = self.launch
 
         return m_dict
 
     @recursive_serialize
     def to_db_dict(self):
         m_d = self.to_dict()
-        m_d['time_start'] = self.time_start
-        m_d['time_end'] = self.time_end
-        m_d['runtime_secs'] = self.runtime_secs
+        m_d['launch']['time_start'] = self.time_start
+        m_d['launch']['time_end'] = self.time_end
+        m_d['launch']['runtime_secs'] = self.runtime_secs
         if self.reservedtime_secs:
-            m_d['reservedtime_secs'] = self.reservedtime_secs
+            m_d['launch']['reservedtime_secs'] = self.reservedtime_secs
         return m_d
 
     @classmethod
@@ -272,18 +301,21 @@ class Firework(FWSerializable):
     def from_dict(cls, m_dict: dict):
         tasks = m_dict['spec']['_tasks']
         fw_id = m_dict.get('fw_id', -1)
-        launch_idx = m_dict.get('launch_idx', 0)
-        state = m_dict.get('state', 'WAITING')
-        created_on = m_dict.get('created_on')
-        updated_on = m_dict.get('updated_on')
         name = m_dict.get('name', None)
-        fworker = FWorker.from_dict(m_dict['fworker']) if m_dict['fworker'] else None
-        action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
-        trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get('trackers') else None
-        return Firework(tasks, m_dict['launch_dir'], m_dict['spec'], name, state,
-                        fworker, m_dict['host'], m_dict['ip'], trackers,
+
+        launch = m_dict['launch']
+        launch_idx = launch.get('launch_idx', 0)
+        state = launch.get('state', 'WAITING')
+        created_on = launch.get('created_on')
+        updated_on = launch.get('updated_on')
+        fworker = FWorker.from_dict(launch['fworker']) if launch['fworker'] else None
+        action = FWAction.from_dict(launch['action']) if launch.get('action') else None
+        trackers = [Tracker.from_dict(f) for f in launch['trackers']] if launch.get('trackers') else None
+
+        return Firework(tasks, launch['launch_dir'], m_dict['spec'], name, state,
+                        fworker, launch['host'], launch['ip'], trackers,
                         fw_id, launch_idx, m_dict['parents'], created_on, updated_on,
-                        action, m_dict['state_history'])
+                        action, launch['state_history'])
 
     def copy(self):
         return Firework.from_dict(self.to_dict())

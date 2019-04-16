@@ -433,7 +433,7 @@ class MongoLaunchPad(FWSerializable):
         self._refresh_wf(m_fw.fw_id)  # since we updated a state, we need to refresh the WF again
         return False
 
-    def _get_a_fw_to_run(self, query=None, fw_id=None, launch_idx=-1, checkout=True):
+    def _get_a_fw_to_run(self, query=None, fw_id=None, checkout=True):
         """
         Get the next ready firework to run.
 
@@ -480,9 +480,10 @@ class MongoLaunchPad(FWSerializable):
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
-    def _get_fw_dicts_from_reservation_id(self, reservation_id):
-        return self.fireworks.find({"state_history.reservation_id": reservation_id},
+    def _get_fw_ids_from_reservation_id(self, reservation_id):
+        ids = self.fireworks.find({"state_history.reservation_id": reservation_id},
                                       {'fw_id': 1}, sort={'launch_idx': DESCENDING})
+        return list(set([fid['fw_id'] for fid in ids]))
 
     def _checkin_fw(self, m_fw, action, state):
         # might be able to remove DocumentTooLarge check if launches are all separate?
@@ -560,7 +561,10 @@ class MongoLaunchPad(FWSerializable):
         return self.workflows.find_one({'nodes': fw_id}, projection=projection, sort=sort)
 
     def _replace_fw(self, m_fw, state=None, upsert=False, fw_id=None):
+        # NOTE state is the allowed_state(s) here, not the state to set
         query = {'fw_id': fw_id or m_fw.fw_id, 'launch_idx': m_fw.launch_idx}
+        if type(state) == list:
+            state = {'$in': state}
         if state:
             query['state'] = state
         self.fireworks.find_one_and_replace(query, m_fw.to_db_dict(), upsert=upsert)
@@ -630,17 +634,22 @@ class MongoLaunchPad(FWSerializable):
         if type(m_fw) == int:
             m_fw = self.get_fw_by_id(m_fw, launch_idx)
         if touch_history:
-            m_fw.touch_history()
+            if state == "WAITING":
+                m_fw.reset_launch(launch_idx=launch_idx+1)
+            m_fw.state = state
         query_dict = {'fw_id': m_fw.fw_id, 'launch_idx': m_fw.launch_idx}
         if type(allowed_states) == list:
-            state = {'$in': state}
+            state = {'$in': allowed_states}
         if allowed_states is not None:
             query_dict['state'] = allowed_states
         command_dict = {'$set': {'state_history': m_fw.to_db_dict()['state_history'],
                                  'trackers': [t.to_dict() for t in m_fw.trackers]}}
         if state is not None:
             command_dict['$set']['state'] = state
-        self.fireworks.update_one(query_dict, command_dict)
+        if state != 'WAITING':
+            self.fireworks.update_one(query_dict, command_dict)
+        else:
+            self._replace_fw(m_fw, upsert=True)
         return m_fw
 
     def _update_wf(self, wf, updated_ids):
