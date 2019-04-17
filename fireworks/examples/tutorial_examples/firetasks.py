@@ -3,7 +3,7 @@ This code is described in the Firetasks tutorial, https://materialsproject.githu
 """
 
 from fireworks import Firework, FWorker, LaunchPad
-from fireworks.core.rocket_launcher import launch_rocket
+from fireworks.scripts.rocket_launcher import launch_rocket
 from fw_tutorials.firetask.addition_task import AdditionTask
 
 if __name__ == "__main__":

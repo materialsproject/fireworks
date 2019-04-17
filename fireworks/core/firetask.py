@@ -25,6 +25,7 @@ from monty.os.path import zpath
 
 from six import add_metaclass
 
+from fireworks import Workflow
 from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
@@ -191,7 +192,7 @@ class FWAction(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict: dict) -> FWAction:
+    def from_dict(cls, m_dict: dict) -> 'FWAction':
         d = m_dict
         additions = [Workflow.from_dict(f) for f in d['additions']]
         detours = [Workflow.from_dict(f) for f in d['detours']]
@@ -211,3 +212,11 @@ class FWAction(FWSerializable):
 
     def __str__(self):
         return "FWAction\n" + pprint.pformat(self.to_dict())
+
+@add_metaclass(abc.ABCMeta)
+class FiretaskBase(Firetask):
+    pass
+
+@add_metaclass(abc.ABCMeta)
+class FireTaskBase(Firetask):
+    pass

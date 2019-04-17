@@ -21,9 +21,13 @@ import filecmp
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
 
+# change imports for testing
+#from fireworks import Firework, Workflow, FWorker
+#from fireworks.core.mongo_launchpad import MongoLaunchPad as LaunchPad
 from fireworks import Firework, Workflow, LaunchPad, FWorker
-from fireworks.core.rocket_launcher import rapidfire, launch_rocket
-from fireworks.queue.queue_launcher import setup_offline_job
+from fireworks.scripts.rocket_launcher import rapidfire, launch_rocket
+#from fireworks.queue.queue_launcher import setup_offline_job
+from fireworks.scripts.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask, SlowAdditionTask, WaitWFLockTask
 from fireworks.core.tests.tasks import DetoursTask

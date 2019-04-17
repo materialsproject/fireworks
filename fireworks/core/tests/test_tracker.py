@@ -23,7 +23,7 @@ import argparse
 
 from fireworks.core.firework import Firework, Tracker, FWorker, Workflow
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.rocket_launcher import launch_rocket
+from fireworks.scripts.rocket_launcher import launch_rocket
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.scripts.lpad_run import track_fws
 from fireworks.user_objects.firetasks.script_task import ScriptTask

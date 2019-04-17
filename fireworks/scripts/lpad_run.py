@@ -26,7 +26,7 @@ from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     LAUNCHPAD_LOC, FWORKER_LOC, WEBSERVER_PORT, WEBSERVER_HOST
 from fireworks.features.fw_report import FWReport
 from fireworks.features.introspect import Introspector
-from fireworks.core.launchpad import LaunchPad, WFLock
+from fireworks import LaunchPad, WFLock
 from fireworks.core.firework import Workflow, Firework
 from fireworks.core.fworker import FWorker
 from fireworks import __version__ as FW_VERSION

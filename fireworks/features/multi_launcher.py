@@ -12,7 +12,7 @@ import threading
 import time
 
 from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD, RAPIDFIRE_SLEEP_SECS
-from fireworks.core.rocket_launcher import rapidfire
+from fireworks.scripts.rocket_launcher import rapidfire
 from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi, get_my_host
 
 __author__ = 'Xiaohui Qu, Anubhav Jain'

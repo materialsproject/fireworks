@@ -24,7 +24,7 @@ import distutils.dir_util
 from monty.io import zopen
 from monty.serialization import loadfn, dumpfn
 
-from fireworks.core.firework import FWAction, Firework
+from fireworks import FWAction, Firework, Firetask, FWorker
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, \
     PRINT_FW_JSON, \
     PRINT_FW_YAML, STORE_PACKING_INFO, ROCKET_STREAM_LOGLEVEL
@@ -75,7 +75,7 @@ def start_ping_firework(launchpad: LaunchPad,
         return ping_stop
 
 
-def stop_backgrounds(ping_stop: Event, btask_stops: List[Event]):
+def stop_backgrounds(ping_stop: threading.Event, btask_stops: List[threading.Event]):
     fd = FWData()
     if fd.MULTIPROCESSING:
         fd.Running_IDs[os.getpid()] = None
@@ -87,7 +87,7 @@ def stop_backgrounds(ping_stop: Event, btask_stops: List[Event]):
 
 
 def background_task(btask: Firetask, spec: Dict,
-                    stop_event: Event, master_thread: Thread):
+                    stop_event: threading.Event, master_thread: threading.Thread):
     num_launched = 0
     while not stop_event.is_set() and master_thread.isAlive():
         for task in btask.tasks:

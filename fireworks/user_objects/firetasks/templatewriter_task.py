@@ -11,7 +11,7 @@ import os
 
 from jinja2 import Environment,FileSystemLoader
 
-from fireworks.core.firework import FiretaskBase
+from fireworks import FiretaskBase
 from fireworks.fw_config import TEMPLATE_DIR
 
 __author__ = 'Anubhav Jain'

@@ -4,7 +4,7 @@ import unittest
 import os
 
 from fireworks import Firework, LaunchPad, FWorker
-from fireworks.core.rocket_launcher import launch_rocket
+from fireworks.scripts.rocket_launcher import launch_rocket
 from fireworks.core.tests.tasks import ExceptionTestTask, MalformedAdditionTask
 
 

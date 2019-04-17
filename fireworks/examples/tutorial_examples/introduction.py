@@ -3,7 +3,7 @@ This code is described in the Introductory tutorial, https://materialsproject.gi
 """
 
 from fireworks import Firework, LaunchPad, ScriptTask
-from fireworks.core.rocket_launcher import launch_rocket
+from fireworks.scripts.rocket_launcher import launch_rocket
 
 if __name__ == "__main__":
     # set up the LaunchPad and reset it
