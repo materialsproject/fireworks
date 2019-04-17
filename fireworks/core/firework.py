@@ -23,6 +23,8 @@ from monty.os.path import zpath
 
 from six import add_metaclass
 
+from fireworks.core.firetask import Firetask, FWAction
+from fireworks import Workflow
 from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
@@ -30,7 +32,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_seriali
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -66,10 +68,10 @@ class Firework(FWSerializable):
     def __init__(self, tasks: List[Firetask], launch_dir: str=None,
                  spec: dict=None, name: str=None, state: str='WAITING',
                  fworker: FWorker=None, host: str=None, ip: str=None,
-                 trackers: List[Tracker]=None, fw_id: Optional[int]=None,
-                 launch_idx: int=0, parents: List[Firework]=None,
-                 created_on: datetime.datetime=None,
-                 updated_on: datetime.datetime=None,
+                 trackers: List['Tracker']=None, fw_id: Optional[int]=None,
+                 launch_idx: int=0, parents: List['Firework']=None,
+                 created_on: datetime=None,
+                 updated_on: datetime=None,
                  action: FWAction=None, state_history: dict=None):
 
         # launch will contain launch_idx, launch_dir, state, created_on,
@@ -96,6 +98,11 @@ class Firework(FWSerializable):
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
+        self._setup_launch(fworker, host, ip, trackers, action, state_history)
+
+        self.state = state
+
+    def _setup_launch(self, fworker, host, ip, trackers, action, state_history):
         self.fworker = fworker or FWorker()
         self.host = host or get_my_host()
         self.ip = ip or get_my_ip()
@@ -104,9 +111,18 @@ class Firework(FWSerializable):
         self.action = action if action else None
         self.state_history = state_history if state_history else []
 
+    def reset_launch(self, state: str, launch_dir: str, trackers: List['Tracker'],
+                     state_history: dict, fworker: FWorker, host: str,
+                     ip: str, launch_idx: int):
+
+        self._setup_launch(fworker, host, ip, trackers, action, state_history)
+        self.state = state
+        self.launch_dir = launch_dir
+        self.launch_idx = launch_idx
+
     # FUNCTIONS FOR ACCESSING AND UPDATING STATE HISTORY
 
-    def touch_history(self, update_time: datetime.datetime=None,
+    def touch_history(self, update_time: datetime=None,
                       checkpoint: dict=None):
         """
         Updates the update_on field of the state history of a Launch. Used to ping that a Launch
@@ -272,6 +288,7 @@ class Firework(FWSerializable):
     def to_dict(self):
         # put tasks in a special location of the spec
         spec = self.spec
+        print([t for t in self.tasks])
         spec['_tasks'] = [t.to_dict() for t in self.tasks]
         m_dict = {'spec': spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
                   'updated_on': self.updated_on}
@@ -302,20 +319,25 @@ class Firework(FWSerializable):
         tasks = m_dict['spec']['_tasks']
         fw_id = m_dict.get('fw_id', -1)
         name = m_dict.get('name', None)
+        state = m_dict['state']
+        created_on = m_dict['created_on']
+        updated_on = m_dict['updated_on']
 
-        launch = m_dict['launch']
+        launch = m_dict.get('launch', None)
         launch_idx = launch.get('launch_idx', 0)
-        state = launch.get('state', 'WAITING')
-        created_on = launch.get('created_on')
-        updated_on = launch.get('updated_on')
-        fworker = FWorker.from_dict(launch['fworker']) if launch['fworker'] else None
-        action = FWAction.from_dict(launch['action']) if launch.get('action') else None
-        trackers = [Tracker.from_dict(f) for f in launch['trackers']] if launch.get('trackers') else None
+        fworker = FWorker.from_dict(launch['fworker']) if launch.get('fworker', None) else None
+        action = FWAction.from_dict(launch['action']) if launch.get('action', None) else None
+        trackers = [Tracker.from_dict(f) for f in launch['trackers']]\
+                    if launch.get('trackers', None) else None
+        launch_dir = launch.get('launch_dir', None)
+        host = launch.get('host', None)
+        ip = launch.get('ip', None)
+        state_history = launch.get('state_history', None)
 
-        return Firework(tasks, launch['launch_dir'], m_dict['spec'], name, state,
-                        fworker, launch['host'], launch['ip'], trackers,
-                        fw_id, launch_idx, m_dict['parents'], created_on, updated_on,
-                        action, launch['state_history'])
+        return Firework(tasks, launch_dir, m_dict['spec'], name, state,
+                        fworker, host, ip, trackers, fw_id, launch_idx,
+                        m_dict['parents'], created_on, updated_on,
+                        action, state_history)
 
     def copy(self):
         return Firework.from_dict(self.to_dict())
@@ -380,7 +402,7 @@ class Tracker(FWSerializable, object):
         return m_dict
 
     @classmethod
-    def from_dict(cls, m_dict: dict) -> Tracker:
+    def from_dict(cls, m_dict: dict):
         return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''),
                        m_dict.get('allow_zipped', False))
 
