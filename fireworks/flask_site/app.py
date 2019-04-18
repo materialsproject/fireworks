@@ -2,7 +2,7 @@ import json
 import os
 from functools import wraps
 
-from flask import Flask, render_template, request, jsonify, Response, make_response
+from flask import Flask, render_template, request, Response, make_response
 from flask import redirect, url_for, abort, flash, session
 from flask_paginate import Pagination
 from pymongo import DESCENDING
@@ -14,6 +14,7 @@ from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.core.launchpad import LaunchPad
 from fireworks.fw_config import WEBSERVER_PERFWARNINGS
 import fireworks.flask_site.helpers as fwapp_util
+from fireworks.flask_site.util import jsonify
 
 app = Flask(__name__)
 app.use_reloader = True
