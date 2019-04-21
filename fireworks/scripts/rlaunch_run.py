@@ -12,7 +12,7 @@ import signal
 import sys
 
 from fireworks.fw_config import LAUNCHPAD_LOC, FWORKER_LOC, CONFIG_FILE_DIR
-from fireworks.core.launchpad import LaunchPad
+from fireworks import LaunchPad
 from fireworks.core.fworker import FWorker
 from fireworks.scripts.rocket_launcher import rapidfire, launch_rocket
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, get_fw_logger

@@ -149,6 +149,9 @@ class Rocket:
             print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
             return False
 
+        self.fw_id = m_fw.fw_id
+        fw_id = self.fw_id
+
         final_state = None
         ping_stop = None
         btask_stops = []
@@ -354,7 +357,7 @@ class Rocket:
             traceback.print_exc()
             stop_backgrounds(ping_stop, btask_stops)
             # restore initial state to prevent the raise of further exceptions
-            lp.restore_backup_data(fw_id, m_fw.fw_id)
+            lp.restore_backup_data(m_fw.fw_id)
 
             do_ping(lp, fw_id)  # one last ping, esp if there is a monitor
             # the action produced by the task is discarded

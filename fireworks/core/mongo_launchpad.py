@@ -27,14 +27,14 @@ from pymongo import DESCENDING, ASCENDING
 from pymongo.errors import DocumentTooLarge
 from monty.serialization import loadfn
 
-from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
+from fireworks.core.launchpad import LaunchPad, LockedWorkflowError, WFLock
 from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_SECS, \
     RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, WFLOCK_EXPIRATION_KILL, \
     MONGO_SOCKET_TIMEOUT_MS, GRIDFS_FALLBACK_COLLECTION
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
 from fireworks.core.firework import Firework, Workflow, FWAction, Tracker, FWorker
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.utilities.fw_serializers import recursive_dict
+from fireworks.utilities.fw_serializers import recursive_dict, _recursive_load
 
 
 __author__ = 'Anubhav Jain'
@@ -45,58 +45,6 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Jan 30, 2013'
 
 # TODO: lots of duplication reduction and cleanup possible
-
-class WFLock(object):
-    """
-    Lock a Workflow, i.e. for performing update operations
-    Raises a LockedWorkflowError if the lock couldn't be acquired withing expire_secs and kill==False.
-    Calling functions are responsible for handling the error in order to avoid database inconsistencies.
-    """
-
-    def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
-        """
-        Args:
-            lp (LaunchPad)
-            fw_id (int): Firework id
-            expire_secs (int): max waiting time in seconds.
-            kill (bool): force lock acquisition or not
-        """
-        self.lp = lp
-        self.fw_id = fw_id
-        self.expire_secs = expire_secs
-        self.kill = kill
-
-    def __enter__(self):
-        ctr = 0
-        waiting_time = 0
-        # acquire lock
-        links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id,
-                                                            'locked': {"$exists": False}},
-                                                           {'$set': {'locked': True}})
-        # could not acquire lock b/c WF is already locked for writing
-        while not links_dict:
-            ctr += 1
-            time_incr = ctr/10.0+random.random()/100.0
-            time.sleep(time_incr)  # wait a bit for lock to free up
-            waiting_time += time_incr
-            if waiting_time > self.expire_secs:  # too much time waiting, expire lock
-                wf = self.lp.workflows.find_one({'nodes': self.fw_id})
-                if not wf:
-                    raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
-                if self.kill:  # force lock acquisition
-                    self.lp.m_logger.warning('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
-                    links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id},
-                                                                       {'$set': {'locked': True}})
-                else:  # throw error if we don't want to force lock acquisition
-                    raise LockedWorkflowError("Could not get workflow - LOCKED: {}".format(self.fw_id))
-            else:
-                # retry lock
-                links_dict = self.lp.workflows.find_one_and_update(
-                    {'nodes': self.fw_id, 'locked': {"$exists": False}}, {'$set': {'locked': True}})
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.lp.workflows.find_one_and_update({"nodes": self.fw_id}, {"$unset": {"locked": True}})
-
 
 class MongoLaunchPad(LaunchPad, FWSerializable):
     """
@@ -278,12 +226,13 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
             allowed_states = {'$in': allowed_states}
         f = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}},
                                     {'launches':1})
-        query = {"launches": {"$in": f['launches']}}
-        if allowed_states:
-            query['state'] = allowed_states
-        if not include_self:
-            query['fw_id'] = {"$ne": fw_id}
+        duplicates = []
         if f:
+            query = {"launches": {"$in": f['launches']}}
+            if allowed_states:
+                query['state'] = allowed_states
+            if not include_self:
+                query['fw_id'] = {"$ne": fw_id}
             for d in self.fireworks.find(query, {"fw_id": 1}):
                 duplicates.append(d['fw_id'])
         return list(set(duplicates))
@@ -353,8 +302,9 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
                     m_launch['launch_idx'] = i
                 return m_launches
         else:
-            launch_ids = self.launches.find({'fw_id': fw_id}, projection={'launch_id': 1},
-                                            sort={'launch_id': ASCENDING})
+            launch_ids = self.fireworks.find_one({'fw_id': fw_id}, projection={'launches': 1})['launches']
+            if len(launch_ids) == 0:
+                return None
             launch_id = launch_ids[launch_idx]
             launch = self.launches.find_one({'launch_id': launch_id})
             launch['launch_idx'] = launch_idx if launch_idx >= 0\
@@ -381,10 +331,11 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         if not fw_dict:
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
 
+        launch = None
         if fw_dict["state"] not in ["WAITING", "READY"]:
             launch = self._get_launch_by_fw_id(fw_id, launch_idx)
-        else:
-            launch = {}
+        if launch is None:
+            launch = {"state": fw_dict["state"]}
 
         fw_dict['launch'] = launch
         fw_dict.pop('launches')
@@ -417,13 +368,13 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
 
     def _insert_wfs(self, wfs):
         if type(wfs) == Workflow:
-            self.workflows.insert_one(wf.to_db_dict())
+            self.workflows.insert_one(wfs.to_db_dict())
         else:
             self.workflows.insert_many(wf.to_db_dict() for wf in wfs)
 
     def _insert_fws(self, fws):
         if type(fws) == FireWork:
-            self.fireworks.insert_one(fw.to_db_dict())
+            self.fireworks.insert_one(fws.to_db_dict())
         else:
             self.fireworks.insert_many(fw.to_db_dict() for fw in fws)
 
@@ -442,7 +393,7 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
                 shutil.rmtree(d, ignore_errors=True)
         """
 
-    def _get_wf_data(self, wf_id, mode='more'):
+    def _get_wf_data(self, fw_id, mode='more'):
         # THIS OVERRIDES A DEFAULT _get_wf_data
         wf_fields = ["state", "created_on", "name", "nodes"]
         fw_fields = ["state", "fw_id"]
@@ -451,7 +402,7 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         if mode != "less":
             wf_fields.append("updated_on")
             fw_fields.extend(["name", "launches"])
-            launch_fields.append("launch_idx")
+            launch_fields.append("launch_id")
             launch_fields.append("launch_dir")
 
         if mode == "reservations":
@@ -483,7 +434,8 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         wf["fw"] = fw_data
         return wf
 
-    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False):
+    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False,
+                    launches_mode=False):
         """
         Return all the fw ids that match a query.
 
@@ -680,18 +632,22 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         if state:
             query['state'] = state
         fw_dict = m_fw.to_db_dict()
-        launch = fw_dict.pop['launch']
+        launch = fw_dict.pop('launch')
         
-        launch_ids = self.fireworks.find(query, projection={'launches': 1})['launches']
-        if m_fw.launch_idx >= len(launch_ids):
-            launch['launch_id'] = self.get_new_launch_id()
-            launch_ids.append(launch['launch_id'])
+        if launch['launch_idx'] is not None:
+            launches = self.fireworks.find_one(query, projection={'launches': 1})
+            launch_ids = launches['launches'] if launches else []
+            if m_fw.launch_idx >= len(launch_ids):
+                launch['launch_id'] = self.get_new_launch_id()
+                launch_ids.append(launch['launch_id'])
+            else:
+                launch['launch_id'] = launch_ids[m_fw.launch_idx]
+            lquery = {'launch_id': launch['launch_id']}
+            self.launches.find_one_and_replace(lquery, launch, upsert=upsert)
         else:
-            launch['launch_id'] = launch_ids[m_fw.launch_idx]
+            launch_ids = []
         fw_dict['launches'] = launch_ids
         fw = self.fireworks.find_one_and_replace(query, fw_dict, upsert=upsert)
-        query = {'launch_id': launch['launch_id']}
-        self.launches.find_one_and_replace(query, launch, upsert=upsert)
 
     def _get_fw_ids_from_reservation_id(self, reservation_id):
         fw_ids = []
@@ -701,7 +657,7 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
             fw_ids.append(fw['fw_id'])
         return fw_ids
 
-    def _get_next_launch_idx(fw_id):
+    def _get_next_launch_idx(self, fw_id):
         return len(self.fireworks.find_one({'fw_id': fw_id}, projection=['launches'])['launches'])
 
     def _find_timeout_fws(self, state, expiration_secs, query=None):
@@ -742,8 +698,9 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         self.backup_launch_data[m_launch['launch_id']] = m_launch
     """
 
-    def _get_lazy_firework(self, fw_id):
-        return LazyFirework(fw_id, self.fireworks, self.launches, self.gridfs_fallback)
+    def _get_lazy_firework(self, fw_id, launch_idx=-1):
+        return LazyFirework(fw_id, launch_idx, self.fireworks, self.launches, self.gridfs_fallback)
+        #return self.get_fw_by_id(fw_id, launch_idx)
 
     def _find_wf(self, fw_id, projection=None, sort=None):
         return self.workflows.find_one({'nodes': fw_id}, projection=projection, sort=sort)
@@ -762,6 +719,9 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         """
         # update the launch data to COMPLETED, set end time, etc
         m_launch = m_fw.launch
+        launch_ids = self.fireworks.find_one({'fw_id': m_fw.fw_id},
+                                            projection={'launches': 1})['launches']
+        m_launch['launch_id'] = launch_ids[m_fw.launch_idx]
 
         try:
             self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
@@ -789,27 +749,30 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
             self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
                                                launch_db_dict, upsert=True)
 
+        print (m_fw.state, m_launch['state'], m_launch['state_history'])
 
-        # find all the fws that have this launch
-        for fw in self.fireworks.find({'launch_id': m_launch['launch_id']}, {'fw_id': 1}):
-            fw_id = fw['fw_id']
-            self._refresh_wf(fw_id)
+        ids_to_refresh = []
+        for fw in self.fireworks.find({'launches': m_launch['launch_id']}, {'fw_id': 1}):
+            ids_to_refresh.append(fw['fw_id'])
 
         # change return type to dict to make return type serializable to support job packing
-        return m_launch
+        return m_launch, ids_to_refresh
 
     def _update_fw(self, m_fw, state=None, allowed_states=None, launch_idx=-1,
                     touch_history=True, checkpoint=None):
         # need to refine structure of launch_idx/launch_id arg to get correct id
         if type(m_fw) == int:
             m_fw = self.get_fw_by_id(m_fw, launch_idx)
-        reset_launch = STATE_RANKS[state] > STATE_RANKS[m_fw.state]\
-                        and STATE_RANKS[m_fw.state] <= 0
+        reset_launch = False
+        if state is not None:
+            STATE_RANKS = Firework.STATE_RANKS
+            reset_launch = STATE_RANKS[state] > STATE_RANKS[m_fw.state]\
+                            and STATE_RANKS[m_fw.state] <= 0
         if touch_history and state is not None:
             m_fw.state = state
-        query_dict = {'fw_id': m_fw.fw_id, 'launch_id': m_fw.launch['launch_id']}
+        query_dict = {'fw_id': m_fw.fw_id}
         if type(allowed_states) == list:
-            state = {'$in': state}
+            allowed_states = {'$in': allowed_states}
         if allowed_states is not None:
             query_dict['state'] = allowed_states
         launch = m_fw.launch
@@ -817,12 +780,15 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
                                  'trackers': [t.to_dict() for t in launch['trackers']]}}
                                  # maybe remove to_dict() above?
         command_dict_fw = {}
-        if state is not None:
-            command_dict['$set']['state'] = state
-            command_dict['$set']['updated_on'] = m_fw.updated_on
+        command_dict_fw['$set'] = {}
+        command_dict_fw['$set']['state'] = m_fw.state
+        command_dict_fw['$set']['updated_on'] = m_fw.updated_on
         if not reset_launch:
-            self.fireworks.update_one(query_dict, command_dict_fw)
-            self.launches.update_one(query_dict, command_dict_launch)
+            lids = self.fireworks.find_one_and_update(query_dict, command_dict_fw,
+                                            projection={'launches': 1})['launches']
+            if lids:
+                query_dict = {'launch_id': lids[launch_idx]}
+                self.launches.update_one(query_dict, command_dict_launch)
         else:
             # make a new fw and a new launch by upserting with a new launch_idx
             # self._replace_fw(m_fw, upsert=True)
@@ -857,10 +823,12 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
     def _find_fws(self, fw_id=None, launch_sort=-1, allowed_states=None,
                     projection=None, sort=None, m_query=None):
         query_dict = {}
+        if sort == None:
+            sort = []
         if fw_id is not None:
             if type(fw_id) == list:
                 fw_id = {'$in': fw_id}
-            query_dict['fw_id':] = fw_id
+            query_dict['fw_id'] = fw_id
         if not (allowed_states is None):
             if type(allowed_states) == str:
                 query_dict['state'] = allowed_states
@@ -870,7 +838,7 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
             query_dict.update(m_query)
         fws = self.fireworks.find(query_dict,
                                     projection=projection, sort=sort)
-        sort['launch_id'] = launch_sort
+        sort.append(('launch_id', launch_sort))
         all_fws = []
         for fw in fws:
             query_dict = {'launch_id': {'$in': fw['launches']}}
@@ -958,28 +926,9 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
 
         return reruns
 
-    def get_recovery(self, fw_id, launch_id='last'):
-        """
-        function to get recovery data for a given fw and launch
-        Args:
-            fw_id (int): fw id to get recovery data for
-            launch_id (int or 'last'): launch_id to get recovery data for, if 'last'
-                recovery data is generated from last launch
-        """
-        m_fw = self.get_fw_by_id(fw_id)
-        if launch_id == 'last':
-            launch = m_fw.launches[-1]
-        else:
-            launch = self.get_launch_by_id(launch_id)
-        recovery = launch.state_history[-1].get("checkpoint")
-        recovery.update({'_prev_dir': launch.launch_dir,
-                         '_launch_id': launch.launch_id})
-        return recovery
-
     def _internal_fizzle(self, fw_id, launch_idx=-1):
         self.fireworks.find_one_and_update({"fw_id": fw_id},
-                                            {"$set": {"state": "FIZZLED"}},
-                                            sort={'launch_idx': DESCENDING})
+                                            {"$set": {"state": "FIZZLED"}})
         self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED",\
                                            "fw_states.{}".format(fw_id): "FIZZLED"}})
         
@@ -1215,10 +1164,9 @@ class LazyFirework(object):
     """
 
     # Get these fields from DB when creating new FireWork object
-    db_fields = ('name', 'fw_id', 'spec', 'created_on', 'state')
-    db_launch_fields = ('launches', 'archived_launches')
+    db_fields = ('name', 'fw_id', 'spec', 'created_on', 'updated_on', 'state')
 
-    def __init__(self, fw_id, fw_coll, launch_coll, fallback_fs):
+    def __init__(self, fw_id, launch_idx, fw_coll, launch_coll, fallback_fs):
         """
         Args:
             fw_id (int): firework id
@@ -1227,8 +1175,9 @@ class LazyFirework(object):
         """
         # This is the only attribute known w/o a DB query
         self.fw_id = fw_id
+        self._launch_idx = launch_idx
         self._fwc, self._lc, self._ffs = fw_coll, launch_coll, fallback_fs
-        self._launches = {k: False for k in self.db_launch_fields}
+        self._launch = False
         self._fw, self._lids, self._state = None, None, None
 
     # FireWork methods
@@ -1245,8 +1194,9 @@ class LazyFirework(object):
 
     @state.setter
     def state(self, state):
-        self.partial_fw._state = state
-        self.partial_fw.updated_on = datetime.datetime.utcnow()
+        #self.partial_fw._state = state
+        #self.partial_fw.updated_on = datetime.datetime.utcnow()
+        self.full_fw.state = state
 
     def to_dict(self):
         return self.full_fw.to_dict()
@@ -1317,33 +1267,23 @@ class LazyFirework(object):
     # fetched individually from the DB (i.e. launch objects)
 
     @property
-    def launches(self):
-        return self._get_launch_data('launches')
+    def launch(self):
+        return self._get_launch_data()
 
-    @launches.setter
-    def launches(self, value):
-        self._launches['launches'] = True
-        self.partial_fw.launches = value
-
-    @property
-    def archived_launches(self):
-        return self._get_launch_data('archived_launches')
-
-    @archived_launches.setter
-    def archived_launches(self, value):
-        self._launches['archived_launches'] = True
-        self.partial_fw.archived_launches = value
+    @launch.setter
+    def launch(self, value):
+        self._launch = True
+        self.full_fw.launch = value
 
     # Lazy properties that idempotently instantiate a FireWork object
     @property
     def partial_fw(self):
         if not self._fw:
-            fields = list(self.db_fields) + list(self.db_launch_fields)
+            fields = list(self.db_fields) + ['launches']
             data = self._fwc.find_one({'fw_id': self.fw_id}, projection=fields)
             launch_data = {}  # move some data to separate launch dict
-            for key in self.db_launch_fields:
-                launch_data[key] = data[key]
-                del data[key]
+            launch_data = data['launches']
+            del data['launches']
             self._lids = launch_data
             self._fw = Firework.from_dict(data)
         return self._fw
@@ -1351,13 +1291,43 @@ class LazyFirework(object):
     @property
     def full_fw(self):
         #map(self._get_launch_data, self.db_launch_fields)
-        for launch_field in self.db_launch_fields:
-            self._get_launch_data(launch_field)
+        self._get_launch_data()
         return self._fw
+
+    @property
+    def action(self):
+        return self.full_fw.action
+
+    @property
+    def trackers(self):
+        return self.full_fw.trackers
+
+    @property
+    def host(self):
+        return self.full_fw.host
+
+    @property
+    def ip(self):
+        return self.full_fw.ip
+
+    @property
+    def fworker(self):
+        return self.full_fw.fworker
+
+    @property
+    def state_history(self):
+        return self.full_fw.state_history
+
+    @property
+    def launch_idx(self):
+        self.partial_fw
+        if self._launch_idx < 0:
+            self._launch_idx = len(self._lids) + self._launch_idx
+        return self._launch_idx
 
     # Get a type of Launch object
 
-    def _get_launch_data(self, name):
+    def _get_launch_data(self):
         """
         Pull launch data individually for each field.
 
@@ -1368,18 +1338,21 @@ class LazyFirework(object):
             Launch obj (also propagated to self._fw)
         """
         fw = self.partial_fw  # assure stage 1
-        if not self._launches[name]:
-            launch_ids = self._lids[name]
-            result = []
+        if not self._launch:
+            launch_ids = self._lids
             if launch_ids:
-                data = self._lc.find({'launch_id': {"$in": launch_ids}})
-                for ld in data:
-                    ld["action"] = get_action_from_gridfs(ld.get("action"), self._ffs)
-                    result.append(Launch.from_dict(ld))
+                launch_id = launch_ids[self._launch_idx]
+                ld = self._lc.find_one({'launch_id': launch_id})
+                ld["action"] = get_action_from_gridfs(ld.get("action"), self._ffs)
+                ld.pop('launch_id')
+                ld['launch_idx'] = self._launch_idx
+                ld = _recursive_load(ld)
 
-            setattr(fw, name, result)  # put into real FireWork obj
-            self._launches[name] = True
-        return getattr(fw, name)
+                fw._setup_launch(ld)  # put into real FireWork obj
+            else:
+                fw._setup_launch({})
+            self._launch = True
+        return fw.launch
 
 
 def get_action_from_gridfs(action_dict, fallback_fs):

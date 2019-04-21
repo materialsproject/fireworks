@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import os
 
-from fireworks.core.firework import FiretaskBase
+from fireworks import FiretaskBase
 from fireworks.utilities.filepad import FilePad
 
 __author__ = 'Kiran Mathew'

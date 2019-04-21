@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from fireworks.core.firework import FiretaskBase, FWAction
+from fireworks import FiretaskBase, FWAction
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'

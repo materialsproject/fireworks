@@ -429,9 +429,8 @@ class Workflow(FWSerializable):
 
         else:  # not DEFUSED/ARCHIVED, and all parents are done running. Now the state depends on the launch status
             # my state depends on launch whose state has the highest 'score' in STATE_RANKS
-            m_launch = self._get_representative_launch(fw)
-            m_state = m_launch.state if m_launch else 'READY'
-            m_action = m_launch.action if (m_launch and m_launch.state == "COMPLETED") else None
+            m_state = fw.state if fw.state != 'WAITING' else 'READY'
+            m_action = fw.action if (m_state == "COMPLETED") else None
 
             # report any FIZZLED parents if allow_fizzed allows us to handle FIZZLED jobs
             if fw.spec.get('_allow_fizzled_parents') and "_fizzled_parents" not in fw.spec:
@@ -445,7 +444,8 @@ class Workflow(FWSerializable):
         # Brings self.fw_states in sync with fw_states in db
         self.fw_states[fw_id] = m_state
 
-        if m_state != prev_state:
+        #if m_state != prev_state:
+        if True:
             updated_ids.add(fw_id)
 
             if m_state == 'COMPLETED':
@@ -535,7 +535,7 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict['nodes'])
         m_dict['name--id'] = self.name + '--' + str(nodes[0])
-        m_dict['launch_dirs'] = OrderedDict([(self._str_fw(x), [l.launch_dir for l in self.id_fw[x].launches])
+        m_dict['launch_dirs'] = OrderedDict([(self._str_fw(x), [self.id_fw[x].launch_dir])
                                              for x in nodes])
         m_dict['states'] = OrderedDict([(self._str_fw(x), self.id_fw[x].state) for x in nodes])
         m_dict['nodes'] = [self._str_fw(x) for x in nodes]
@@ -571,18 +571,21 @@ class Workflow(FWSerializable):
         Returns:
             Launch
         """
+        # TODO THIS FUNCTION IS BROKEN
+        """
         max_score = Firework.STATE_RANKS['ARCHIVED']  # state rank must be greater than this
-        m_launch = None
+        m_fw = None
         completed_launches = []
-        for l in fw.launches:
-            if Firework.STATE_RANKS[l.state] > max_score:
-                max_score = Firework.STATE_RANKS[l.state]
-                m_launch = l
-                if l.state == 'COMPLETED':
-                    completed_launches.append(l)
+        #for l in fw.launches:
+        if Firework.STATE_RANKS[fw.state] > max_score:
+            max_score = Firework.STATE_RANKS[fw.state]
+            m_fw = fw
+            if fw.state == 'COMPLETED':
+                completed_launches.append(l)
         if completed_launches:
             return max(completed_launches, key=lambda v: v.time_end)
         return m_launch
+        """
 
     @classmethod
     def from_wflow(cls, wflow):

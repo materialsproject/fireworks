@@ -102,6 +102,7 @@ def recursive_dict(obj, preserve_unicode=True):
 
 # TODO: is reconstitute_dates really needed? Can this method just do everything?
 def _recursive_load(obj):
+
     if obj is None:
         return None
 

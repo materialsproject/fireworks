@@ -53,6 +53,57 @@ class LockedWorkflowError(ValueError):
     """
     pass
 
+class WFLock(object):
+    """
+    Lock a Workflow, i.e. for performing update operations
+    Raises a LockedWorkflowError if the lock couldn't be acquired withing expire_secs and kill==False.
+    Calling functions are responsible for handling the error in order to avoid database inconsistencies.
+    """
+
+    def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
+        """
+        Args:
+            lp (LaunchPad)
+            fw_id (int): Firework id
+            expire_secs (int): max waiting time in seconds.
+            kill (bool): force lock acquisition or not
+        """
+        self.lp = lp
+        self.fw_id = fw_id
+        self.expire_secs = expire_secs
+        self.kill = kill
+
+    def __enter__(self):
+        ctr = 0
+        waiting_time = 0
+        # acquire lock
+        links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id,
+                                                            'locked': {"$exists": False}},
+                                                           {'$set': {'locked': True}})
+        # could not acquire lock b/c WF is already locked for writing
+        while not links_dict:
+            ctr += 1
+            time_incr = ctr/10.0+random.random()/100.0
+            time.sleep(time_incr)  # wait a bit for lock to free up
+            waiting_time += time_incr
+            if waiting_time > self.expire_secs:  # too much time waiting, expire lock
+                wf = self.lp.workflows.find_one({'nodes': self.fw_id})
+                if not wf:
+                    raise ValueError("Could not find workflow in database: {}".format(self.fw_id))
+                if self.kill:  # force lock acquisition
+                    self.lp.m_logger.warning('FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
+                    links_dict = self.lp.workflows.find_one_and_update({'nodes': self.fw_id},
+                                                                       {'$set': {'locked': True}})
+                else:  # throw error if we don't want to force lock acquisition
+                    raise LockedWorkflowError("Could not get workflow - LOCKED: {}".format(self.fw_id))
+            else:
+                # retry lock
+                links_dict = self.lp.workflows.find_one_and_update(
+                    {'nodes': self.fw_id, 'locked': {"$exists": False}}, {'$set': {'locked': True}})
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.lp.workflows.find_one_and_update({"nodes": self.fw_id}, {"$unset": {"locked": True}})
+
 class LaunchPad(FWSerializable, ABC):
 
     @abstractmethod
@@ -76,9 +127,13 @@ class LaunchPad(FWSerializable, ABC):
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         return LaunchPad()
 
-    """FUNCTIONS ACCESSED BY EXTERNAL CODE (lpad_run.py, rocket.py)"""
-
-    """FUNCTION DEFINED IN FULL HERE"""
+###################################################################
+# FUNCTIONS ACCESSED BY EXTERNAL CODE (lpad_run.py, rocket.py) #
+################################################################
+    
+#-------------------------------#
+# FUNCTION DEFINED IN FULL HERE #
+#-------------------------------#
 
     def reset(self, password: str, require_password: bool=True,
               max_reset_wo_password: int=25):
@@ -239,7 +294,7 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             dict: information about Workflow.
         """
-        wf = self._get_wf_data(self, fw_id, mode)
+        wf = self._get_wf_data(fw_id, mode)
 
         # Post process the summary dict so that it "looks" better.
         if mode == "less":
@@ -247,14 +302,16 @@ class LaunchPad(FWSerializable, ABC):
                                           else fw["state"][0] for fw in wf["fw"]])
             del wf["nodes"]
 
+        print("Getting summary dict")
+        print (wf["fw"])
         if mode == "more" or mode == "all":
             wf["states"] = OrderedDict()
-            wf["launch_dirs"] = OrderedDict()
+            wf["launch_dir"] = OrderedDict()
             for fw in wf["fw"]:
                 k = "%s--%d" % (fw["name"], fw["fw_id"])
                 wf["states"][k] = fw["state"]
                 # TODO EDITED launch_dirs -> launch_dir, l -> fw
-                wf["launch_dir"][k] = fw["launch_dir"]
+                wf["launch_dir"][k] = fw.get("launch_dir", None)
             del wf["nodes"]
 
         if mode == "all":
@@ -465,9 +522,9 @@ class LaunchPad(FWSerializable, ABC):
             for d in launch_dirs:
                 shutil.rmtree(d, ignore_errors=True)
 
-    def checkin_fw(self, fw_id: int, launch_idx: int=-1,
+    def checkin_fw(self, fw_id: int,
                    action: Optional[FWAction]=None,
-                   state: str='COMPLETED') -> Dict:
+                   state: str='COMPLETED', launch_idx: int=-1) -> Dict:
         # TODO CHANGED launch => firework
 
         """
@@ -483,10 +540,13 @@ class LaunchPad(FWSerializable, ABC):
         """
         # update the FW data to COMPLETED, set end time, etc
         m_fw = self.get_fw_by_id(fw_id, launch_idx)
-        m_fw.state = state
+        self._update_fw(m_fw, state="COMPLETED")
         if action:
             m_fw.action = action
-        self._checkin_fw(m_fw, action, state)
+        m_launch, fw_ids = self._checkin_fw(m_fw, action, state)
+
+        for fw_id in fw_ids:
+            self._refresh_wf(fw_id)
 
         # change return type to dict to make return type serializable to support job packing
         return m_fw.to_dict()
@@ -511,7 +571,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         m_fw = self._get_a_fw_to_run(fworker.query, fw_id=fw_id)
         if not m_fw:
-            return None, None
+            return None
 
         # If this Launch was previously reserved, overwrite that reservation with this Launch
         # note that adding a new Launch is problematic from a duplicate run standpoint
@@ -541,7 +601,7 @@ class LaunchPad(FWSerializable, ABC):
         # update any duplicated runs
         # TODO CHANGED THIS TO USE _find_fws HELPER FUNCTION (ALSO DON'T BACKUP LAUNCH DATA)
         if state == "RUNNING":
-            for fw in self._get_duplicates(fw_id, include_self=True,
+            for fw in self._get_duplicates(fw_id, include_self=False,
                     allowed_states=['WAITING', 'READY', 'RESERVED', 'FIZZLED']):
                 fw_id = fw['fw_id']
                 fw = self.get_fw_by_id(fw_id)
@@ -555,7 +615,7 @@ class LaunchPad(FWSerializable, ABC):
         self.m_logger.debug('{} FW with id: {}'.format(m_fw.state, m_fw.fw_id))
 
         # RETURN fw_id instead of launch_id
-        return m_fw, fw_id
+        return m_fw
 
     def ping_firework(self, fw_id: int, launch_idx: int=-1,
                       ptime: Optional[datetime.datetime]=None,
@@ -915,7 +975,7 @@ class LaunchPad(FWSerializable, ABC):
 
     @abstractmethod
     def get_fw_ids(self, query: Dict=None, sort: Optional[List[Tuple[str,str]]] =None,
-                   limit: int=0, count_only: bool=False) -> List[int]:
+                   limit: int=0, count_only: bool=False, launches_mode: bool=False) -> List[int]:
         """
         Return all the fw ids that match a query.
 
@@ -1082,7 +1142,6 @@ class LaunchPad(FWSerializable, ABC):
             dict: mapping between old and new Firework ids
         """
         old_new = {}
-        fws.sort(key=lambda x: x.launch_idx)
         fws.sort(key=lambda x: x.fw_id)
 
         if reassign_all:
@@ -1094,9 +1153,9 @@ class LaunchPad(FWSerializable, ABC):
                 if fw.fw_id != prev_id:
                     prev_id = fw.fw_id
                     new_id  = self.get_new_fw_id() # used to get all ids at once
-                    fw.fw_id = new_id
                     old_new[fw.fw_id] = new_id
                     used_ids.append(new_id)
+                fw.fw_id = new_id
             self._replace_fws(used_ids, fws, upsert=True)
         else:
             for fw in fws:
@@ -1113,7 +1172,7 @@ class LaunchPad(FWSerializable, ABC):
 
         return old_new
 
-    def _get_wf_data(self, wf_id: int, mode: str='more') -> Dict:
+    def _get_wf_data(self, fw_id: int, mode: str='more') -> Dict:
         """
         Helper function for get_wf_summary_dict
         """
@@ -1319,7 +1378,7 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _get_lazy_firework(self, fw_id: int):
+    def _get_lazy_firework(self, fw_id: int, launch_idx: int=-1):
         """
         Returns whatever the specific launchpad implementation uses
         """
