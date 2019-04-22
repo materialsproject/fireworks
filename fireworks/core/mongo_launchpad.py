@@ -46,7 +46,7 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: lots of duplication reduction and cleanup possible
 
-class MongoLaunchPad(LaunchPad, FWSerializable):
+class MongoLaunchPad(LaunchPad):
     """
     The LaunchPad manages the FireWorks database.
     """
@@ -196,18 +196,18 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
         authsource= d.get('authsource', None)
-        return LaunchPad(d['host'], port, name, username, password,
+        return MongoLaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
                          authsource)
 
     @property
     def workflow_count(self):
-        return self.workflows.count({})
+        return self.workflows.count_documents({})
 
     @property
     def firework_count(self):
-        return self.fireworks.count({})
+        return self.fireworks.count_documents({})
 
     def _reset(self):
         self.fireworks.delete_many({})
@@ -262,24 +262,6 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         else:
             set_spec = {"$unset":{"spec._recovery":""}}
             self.fireworks.find_one_and_update({"fw_id":fw_id}, set_spec)
-
-    def _get_launch_by_id(self, launch_id):
-        """
-        Given a Launch id, return launch info.
-
-        Args:
-            launch_id (int): launch id
-
-        Returns:
-            dict
-        """
-        m_launch = self.launches.find_one({'launch_id': launch_id})
-        if m_launch:
-            m_launch["action"] = get_action_from_gridfs(m_launch.get("action"), self.gridfs_fallback)
-            if 'launch_id' in m_launch:
-                m_launch.pop('launch_id')
-            return m_launch
-        raise ValueError('No Launch exists with launch_id: {}'.format(launch_id))
 
     def _get_launch_by_fw_id(self, fw_id, launch_idx=None):
         """
@@ -456,7 +438,7 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         if count_only:
             if limit:
                 return ValueError("Cannot count_only and limit at the same time!")
-            return getattr(self, coll).find(criteria, {}, sort=sort).count()
+            return getattr(self, coll).find(criteria, {}, sort=sort).count_documents()
 
         for fw in getattr(self, coll).find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
@@ -478,7 +460,8 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
         wf_ids = []
         criteria = query if query else {}
         if count_only:
-            return self.workflows.find(criteria, {"nodes": True}, sort=sort).limit(limit).count()
+            return self.workflows.find(criteria, {"nodes": True},
+                sort=sort).limit(limit).count_documents()
 
         for fw in self.workflows.find(criteria, {"nodes": True}, sort=sort).limit(limit):
             wf_ids.append(fw["nodes"][0])
@@ -741,15 +724,13 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
 
             # encoding required for python2/3 compatibility.
             action_id = self.gridfs_fallback.put(json.dumps(action_dict), encoding="utf-8",
-                                                 metadata={"launch_id": launch_id})
+                                                 metadata={"launch_id": m_launch['launch_id']})
             launch_db_dict["action"] = {"gridfs_id": str(action_id)}
             self.m_logger.warning("The size of the launch document was too large. Saving "
                                "the action in gridfs.")
 
             self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
                                                launch_db_dict, upsert=True)
-
-        print (m_fw.state, m_launch['state'], m_launch['state_history'])
 
         ids_to_refresh = []
         for fw in self.fireworks.find({'launches': m_launch['launch_id']}, {'fw_id': 1}):
@@ -844,7 +825,7 @@ class MongoLaunchPad(LaunchPad, FWSerializable):
             query_dict = {'launch_id': {'$in': fw['launches']}}
             launches = self.launches.find(query_dict, sort=sort)
             query_dict['state'] = fw['state']
-            if self.launches.count(query_dict) == 0:
+            if self.launches.count_documents(query_dict) == 0:
                 new_fw = dict(fw)
                 new_fw['launch'] = {}
                 all_fws.append(new_fw)

@@ -23,7 +23,7 @@ else:
 from fireworks.fw_config import QUEUEADAPTER_LOC, CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.queue.queue_launcher import rapidfire, launch_rocket_to_queue
+from fireworks.scripts.queue_launcher import rapidfire, launch_rocket_to_queue
 from fireworks.utilities.fw_serializers import load_object_from_file
 
 __authors__ = "Anubhav Jain, Shyue Ping Ong"

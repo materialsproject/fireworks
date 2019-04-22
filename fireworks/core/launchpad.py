@@ -32,10 +32,12 @@ from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_
     RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, WFLOCK_EXPIRATION_KILL, \
     MONGO_SOCKET_TIMEOUT_MS, GRIDFS_FALLBACK_COLLECTION
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
-from fireworks import Firework, Workflow, FWAction, Tracker, FWorker
+from fireworks.core.firework import Firework, Tracker, Workflow,\
+                                Firetask, FWAction
+from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
-from typing import List, Tuple, Dict, Union, Optional
+from typing import List, Tuple, Dict, Union, Optional, Any
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -124,8 +126,8 @@ class LaunchPad(FWSerializable, ABC):
     @classmethod
     def auto_load(cls):
         if LAUNCHPAD_LOC:
-            return LaunchPad.from_file(LAUNCHPAD_LOC)
-        return LaunchPad()
+            return cls.from_file(LAUNCHPAD_LOC)
+        return cls()
 
 ###################################################################
 # FUNCTIONS ACCESSED BY EXTERNAL CODE (lpad_run.py, rocket.py) #
@@ -303,7 +305,6 @@ class LaunchPad(FWSerializable, ABC):
             del wf["nodes"]
 
         print("Getting summary dict")
-        print (wf["fw"])
         if mode == "more" or mode == "all":
             wf["states"] = OrderedDict()
             wf["launch_dir"] = OrderedDict()
@@ -678,7 +679,7 @@ class LaunchPad(FWSerializable, ABC):
     def detect_lostruns(self, expiration_secs: int=RUN_EXPIRATION_SECS, fizzle: bool=False,
                         rerun: bool=False, max_runtime: Optional[int]=None,
                         min_runtime: Optional[int]=None, refresh: bool=False,
-                        query: Dict=None) -> Tuple[List[int], List[int], List[int]]:
+                        query: Any=None) -> Tuple[List[int], List[int], List[int]]:
         """
         Detect lost runs i.e running fireworks that haven't been updated within the specified
         time limit or running firework that has been marked fizzled or completed.
@@ -974,7 +975,7 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def get_fw_ids(self, query: Dict=None, sort: Optional[List[Tuple[str,str]]] =None,
+    def get_fw_ids(self, query: Any=None, sort: Optional[List[Tuple[str,str]]] =None,
                    limit: int=0, count_only: bool=False, launches_mode: bool=False) -> List[int]:
         """
         Return all the fw ids that match a query.
@@ -991,7 +992,7 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def get_wf_ids(self, query: Dict=None, sort: Optional[List[Tuple[str,str]]] =None,
+    def get_wf_ids(self, query: Any=None, sort: Optional[List[Tuple[str,str]]] =None,
                    limit: int=0, count_only: bool=False) -> List[int]:
         """
         Return one fw id for all workflows that match a query.

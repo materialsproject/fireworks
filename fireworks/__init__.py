@@ -6,10 +6,9 @@ FW_INSTALL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # These imports allow a much simpler import of core Fireworks functionality.
 # E.g., you can now do "from fireworks import Firework", instead of from
 # "fireworks.core.firework import Firework".
-from fireworks.core.workflow import Workflow
-from fireworks.core.firetask import Firetask, FWAction, FiretaskBase, FireTaskBase
-from fireworks.core.firework import Firework, Tracker
-from fireworks.core.workflow import Workflow
+from fireworks.core.firework import Firework, Tracker,\
+								Firetask, FWAction, FiretaskBase, FireTaskBase,\
+								Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.mongo_launchpad import MongoLaunchPad as LaunchPad
 from fireworks.core.mongo_launchpad import WFLock

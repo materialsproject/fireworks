@@ -24,7 +24,8 @@ import distutils.dir_util
 from monty.io import zopen
 from monty.serialization import loadfn, dumpfn
 
-from fireworks import FWAction, Firework, Firetask, FWorker
+from fireworks.core.firework import FWAction, Firetask, Firework
+from fireworks.core.fworker import FWorker
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, \
     PRINT_FW_JSON, \
     PRINT_FW_YAML, STORE_PACKING_INFO, ROCKET_STREAM_LOGLEVEL

@@ -16,7 +16,7 @@ from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.scripts.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
-from fireworks.queue.queue_launcher import setup_offline_job
+from fireworks.scripts.queue_launcher import setup_offline_job
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
 from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask

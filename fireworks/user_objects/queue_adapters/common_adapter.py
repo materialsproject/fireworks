@@ -14,7 +14,7 @@ import os
 import stat
 import re
 import subprocess
-from fireworks.queue.queue_adapter import QueueAdapterBase, Command
+from fireworks.core.queue import QueueAdapterBase, Command
 from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
