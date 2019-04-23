@@ -347,7 +347,7 @@ class LaunchPad(FWSerializable, ABC):
             self._refresh_wf(fw_id)
         else:
             self.m_logger.error('No pausable (WAITING,READY,RESERVED) Firework exists with fw_id: {}'.format(fw_id))
-        return f.to_db_dict()
+        return f.to_db_dict() if f else None
 
 
     def defuse_fw(self, fw_id: int, rerun_duplicates: bool=True) -> Dict:
@@ -364,11 +364,11 @@ class LaunchPad(FWSerializable, ABC):
         if f:
             self._refresh_wf(fw_id)
         else:
-            self.rerun_fw(fw_id, rerun_duplicates)
+            self.rerun_fw(fw_id, rerun_duplicates=rerun_duplicates)
             f = self._update_fw(fw_id, state='DEFUSED', allowed_states=allowed_states)
             if f:
                 self._refresh_wf(fw_id)
-        return f.to_db_dict()
+        return f.to_db_dict() if f else None
 
     def reignite_fw(self, fw_id: int) -> Dict:
         """
@@ -379,7 +379,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         f = self._update_fw(fw_id, state='WAITING', allowed_states='DEFUSED')
         self._refresh_wf(fw_id)
-        return f.to_db_dict()
+        return f.to_db_dict() if f else None
 
     def resume_fw(self, fw_id: int) -> Dict:
         """
@@ -390,7 +390,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         f = self._update_fw(fw_id, state='WAITING', allowed_states='PAUSED')
         self._refresh_wf(fw_id)
-        return f.to_db_dict()
+        return f.to_db_dict() if f else None
 
     def rerun_fw(self, fw_id: int, launch_idx: int=-1, rerun_duplicates: bool=True,
                  recover_mode: Optional[str]=None) -> List[int]:
@@ -420,7 +420,7 @@ class LaunchPad(FWSerializable, ABC):
         if rerun_duplicates:
             duplicates = self._get_duplicates(fw_id)
 
-        self._recover(fw_id, launch_idx)
+        self._recover(fw_id, launch_idx, recover_mode)
 
         # rerun this FW
         if m_fw['state'] in ['ARCHIVED', 'DEFUSED'] :
@@ -473,7 +473,7 @@ class LaunchPad(FWSerializable, ABC):
             # second set the state of all FWs to ARCHIVED
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf.fws:
-                self._update_fw(state='ARCHIVED')
+                self._update_fw(fw, state='ARCHIVED')
                 self._refresh_wf(fw_id)
 
     def pause_wf(self, fw_id: int):
@@ -665,7 +665,7 @@ class LaunchPad(FWSerializable, ABC):
             [int]: list of expired launch ids
         """
         # MOVED INITIAL QUERY FOR BAD RUNS TO A HELPER FUNCTION
-        bad_launch_data = [fw['fw_id'] for fw in self._find_timeout_fws('RESERVED', expiration_secs)]
+        bad_launch_data = [fw_id for fw_id in self._find_timeout_fws('RESERVED', expiration_secs)]
         # not sure if can just remove what was here
         rerun_ids = []
         if rerun:
@@ -706,22 +706,22 @@ class LaunchPad(FWSerializable, ABC):
 
         potential_lost_fw_ids = set()
         lost_fw_ids = []
+        lost_launch_idxs = {}
         
         # Check if each FIREWORK is bad. If so, append id to potential_lost_fw_ids
         # and fw_id is ONLY LOST if all its launch_idxs are lost
-        for fw_dict in bad_fw_data:
+        for fw_id in bad_fw_data:
             bad_fw = True
             if max_runtime or min_runtime:
                 bad_fw = False
-                m_fw = self.get_fw_by_id(fw_dict['fw_id'])
+                m_fw = self.get_fw_by_id(fw_id)
                 utime = m_fw._get_time('RUNNING', use_update_time=True)
                 ctime = m_fw._get_time('RUNNING', use_update_time=False)
                 if (not max_runtime or (utime-ctime).seconds <= max_runtime) and \
                         (not min_runtime or (utime-ctime).seconds >= min_runtime):
                     bad_fw = True
             if bad_fw:
-                potential_lost_fw_ids.add(fw_dict['fw_id'])
-                lost_fws.append(fw_dict)
+                potential_lost_fw_ids.add(fw_id)
                 if not lost_launch_idxs[fw_dict['fw_id']]:
                     lost_launch_idxs[fw_dict['fw_id']] = [fw_dict['launch_idx']]
                 else:
@@ -1115,7 +1115,8 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             (Firework, int): the checked out firework and the new launch id
         """
-        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
+        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip,
+                                fw_id=fw_id, state="RESERVED")
 
     def mark_fizzled(self, fw_id: int):
         """

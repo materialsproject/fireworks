@@ -244,9 +244,10 @@ class Firework(FWSerializable):
         self.launch_dir = launch_info.get('launch_dir', self.launch_dir)
         self.launch_idx = launch_info.get('launch_idx', self.launch_idx)
 
-    def reset_launch(self, state: str, launch_dir: str, trackers: List['Tracker'],
-                     state_history: dict, fworker: FWorker, host: str,
-                     ip: str, launch_idx: int):
+    def reset_launch(self, state: str='WAITING', launch_dir: str=None,
+                     trackers: List['Tracker']=None,
+                     state_history: dict=None, fworker: FWorker=None,
+                     host: str=None, ip: str=None, launch_idx: int=None):
 
         launch_info = {'fworker': fworker,
                        'host': host,
@@ -479,6 +480,27 @@ class Firework(FWSerializable):
                         #m_dict['parents'], created_on=created_on, updated_on=updated_on,
                         created_on=created_on, updated_on=updated_on,
                         action=action, state_history=state_history)
+
+    def _rerun(self):
+        """
+        Moves all Launches to archived Launches and resets the state to 'WAITING'. The Firework
+        can thus be re-run even if it was Launched in the past. This method should be called by
+        a Workflow because a refresh is needed after calling this method.
+        """
+        if self.state == 'FIZZLED':
+            last_launch = self.launch
+            if (EXCEPT_DETAILS_ON_RERUN and self.action and
+                self.action.stored_data.get('_exception', {}).get('_details')):
+                # add the exception details to the spec
+                self.spec['_exception_details'] = self.action.stored_data['_exception']['_details']
+            else:
+                # clean spec from stale details
+                self.spec.pop('_exception_details', None)
+
+        #self.archived_launches.extend(self.launches)
+        #self.archived_launches = list(set(self.archived_launches))  # filter duplicates
+        self.reset_launch(launch_idx=None)
+        #print("NEW LAUNCH IDX", self.launch_idx)
 
     def copy(self):
         return Firework.from_dict(self.to_dict())

@@ -453,13 +453,13 @@ def rerun_fws(args):
     if args.task_level:
         launch_ids = args.launch_id
         if launch_ids is None:
-            launch_ids = ['last']*len(fw_ids)
+            launch_ids = [-1]*len(fw_ids)
         elif len(launch_ids) != len(fw_ids):
             raise ValueError("Specify the same number of tasks and launches")
     else:
         launch_ids = [None]*len(fw_ids)
     for f, l in zip(fw_ids, launch_ids):
-        lp.rerun_fw(int(f), recover_launch=l, recover_mode=args.recover_mode)
+        lp.rerun_fw(int(f), launch_idx=l, recover_mode=args.recover_mode)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
