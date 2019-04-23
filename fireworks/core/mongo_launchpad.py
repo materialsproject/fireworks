@@ -248,16 +248,16 @@ class MongoLaunchPad(LaunchPad):
         """
         if launch_idx is not None:
             m_fw = self.get_fw_by_id(fw_id, launch_idx)
-            recovery = m_fw.state_history[-1].get("checkpoint")
-            if recovery:
-                recovery.update({'_prev_dir': m_fw.launch_dir,
-                                 '_launch_idx': m_fw.launch_idx})
-                # Launch recovery
-                recovery.update({'_mode': recover_mode})
-                set_spec = {'$set': {'spec._recovery': recovery}}
-                if recover_mode == 'prev_dir':
-                    prev_dir = m_fw.launch_dir
-                    set_spec['$set']['spec._launch_dir'] = prev_dir
+            recovery = m_fw.state_history[-1].get("checkpoint", {})
+            #if recovery:
+            recovery.update({'_prev_dir': m_fw.launch_dir,
+                             '_launch_idx': m_fw.launch_idx})
+            # Launch recovery
+            recovery.update({'_mode': recover_mode})
+            set_spec = {'$set': {'spec._recovery': recovery}}
+            if recover_mode == 'prev_dir':
+                prev_dir = m_fw.launch_dir
+                set_spec['$set']['spec._launch_dir'] = prev_dir
             else:
                 set_spec = {"$unset":{"spec._recovery":""}}
 
@@ -787,6 +787,7 @@ class MongoLaunchPad(LaunchPad):
         command_dict_launch = {'$set': {'state_history': launch['state_history'],
                                  'trackers': [t.to_dict() for t in launch['trackers']]}}
                                  # maybe remove to_dict() above?
+        
         command_dict_fw = {}
         command_dict_fw['$set'] = {}
         command_dict_fw['$set']['state'] = m_fw.state
@@ -799,7 +800,7 @@ class MongoLaunchPad(LaunchPad):
                 if launch_idx >= len(lids) or launch_idx < -len(lids):
                     raise ValueError("Bad launch index %d %d", launch_idx, len(lids))
                 query_dict = {'launch_id': lids[launch_idx]}
-                self.launches.update_one(query_dict, command_dict_launch)
+                res = self.launches.update_one(query_dict, command_dict_launch)
         else:
             # make a new fw and a new launch by upserting with a new launch_idx
             # self._replace_fw(m_fw, upsert=True)

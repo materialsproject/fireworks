@@ -8,6 +8,7 @@ from monty.os.path import zpath
 A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
 completes the Launch
 """
+import time
 
 from datetime import datetime
 import json
@@ -52,8 +53,8 @@ def ping_firework(launchpad: LaunchPad, fw_id: int,
                 stop_event: threading.Event,
                 master_thread: threading.Thread):
     while not stop_event.is_set() and master_thread.isAlive():
-        do_ping(launchpad, fw_id)
         stop_event.wait(PING_TIME_SECS)
+        do_ping(launchpad, fw_id)
 
 
 def start_ping_firework(launchpad: LaunchPad,
@@ -225,6 +226,7 @@ class Rocket:
 
             # set up heartbeat (pinging the server that we're still alive)
             ping_stop = start_ping_firework(lp, fw_id)
+            #time.sleep(5)
 
             # start background tasks
             if '_background_tasks' in my_spec:
