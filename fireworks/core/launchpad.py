@@ -541,7 +541,7 @@ class LaunchPad(FWSerializable, ABC):
         """
         # update the FW data to COMPLETED, set end time, etc
         m_fw = self.get_fw_by_id(fw_id, launch_idx)
-        self._update_fw(m_fw, state="COMPLETED")
+        self._update_fw(m_fw, state=state)
         if action:
             m_fw.action = action
         m_launch, fw_ids = self._checkin_fw(m_fw, action, state)

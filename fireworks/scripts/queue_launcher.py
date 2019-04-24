@@ -308,7 +308,4 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
 
 def setup_offline_job(launchpad, fw, launch_idx=-1):
     # separate this function out for reuse in unit testing
-    fw.to_file("FW.json")
-    with open('FW_offline.json', 'w') as f:
-        f.write('{"fw_id":%d, "launch_id":%d}' % (fw_id,launch_idx))
     launchpad.add_offline_run(fw.fw_id, launch_idx)

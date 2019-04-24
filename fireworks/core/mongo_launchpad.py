@@ -452,7 +452,7 @@ class MongoLaunchPad(LaunchPad):
         if count_only:
             if limit:
                 return ValueError("Cannot count_only and limit at the same time!")
-            return getattr(self, coll).find(criteria, {}, sort=sort).count_documents()
+            return getattr(self, coll).count_documents(criteria)
 
         for fw in getattr(self, coll).find(criteria, {"fw_id": True}, sort=sort).limit(limit):
             fw_ids.append(fw["fw_id"])
@@ -635,10 +635,9 @@ class MongoLaunchPad(LaunchPad):
         launch_idx = launch['launch_idx']
         #print("LAUNCH", launch)
         
-        if launch['launch_idx'] is not None:
+        if (launch['launch_idx'] is not None) and (launch['action'] is None):
             # prevent too-large file from being uploaded.
             # might need to stop replacing the launch
-            launch.pop('action')
             launches = self.fireworks.find_one(query, projection={'launches': 1})
             launch_ids = launches['launches'] if launches else []
             #print("LAUNCH IDS", launch_ids)
@@ -987,15 +986,13 @@ class MongoLaunchPad(LaunchPad):
             fw_id (id): firework id
             name (str)
         """
-        d = {'fw_id': fw_id}
-        d['launch_id'] = launch_id
-        d['name'] = name
-        d['created_on'] = datetime.datetime.utcnow().isoformat()
-        d['updated_on'] = datetime.datetime.utcnow().isoformat()
-        d['deprecated'] = False
-        d['completed'] = False
-        self.offline_runs.insert_one(d)
-
+        fw = self.get_fw_by_id(fw_id, launch_idx)
+        fw.state = "OFFLINE"
+        fw.to_file("FW.json")
+        with open('FW_offline.json', 'w') as f:
+            f.write('{"fw_id":%d, "launch_id":%d}' % (fw_id,launch_idx))
+        self._replace_fw(fw)
+        
     def recover_offline(self, launch_id, ignore_errors=False, print_errors=False):
         """
         Update the launch state using the offline data in FW_offline.json file.

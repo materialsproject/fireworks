@@ -1011,7 +1011,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
     def test_task_level_rerun_cp(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         self.assertEqual(os.getcwd(), MODULE_DIR)
-        self.lp.rerun_fw(1, recover_mode="cp")
+        self.lp.rerun_fw(1, launch_idx=-1, recover_mode="cp")
         self.lp.update_spec([1], {'skip_exception': True})
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         self.assertEqual(os.getcwd(), MODULE_DIR)
@@ -1024,7 +1024,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
     def test_task_level_rerun_prev_dir(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         self.assertEqual(os.getcwd(), MODULE_DIR)
-        self.lp.rerun_fw(1, recover_mode="prev_dir")
+        self.lp.rerun_fw(1, launch_idx=-1, recover_mode="prev_dir")
         self.lp.update_spec([1], {'skip_exception': True})
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(1)
@@ -1212,7 +1212,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fw = self.lp.reserve_fw(self.fworker, self.launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(self.launch_dir):
-            setup_offline_job(self.lp, fw, launch_id)
+            setup_offline_job(self.lp, fw)
 
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
@@ -1228,7 +1228,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fw = self.lp.reserve_fw(self.fworker, self.launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(self.launch_dir):
-            setup_offline_job(self.lp, fw, launch_id)
+            setup_offline_job(self.lp, fw)
 
         # remove the directory to cause an exception
         shutil.rmtree(self.launch_dir)
@@ -1298,11 +1298,11 @@ class GridfsStoredDataTest(unittest.TestCase):
 
         self.assertEqual(self.lp.get_fw_ids(count_only=True), 2001)
 
-        launch_full = self.lp.get_launch_by_id(1)
-        self.assertEqual(len(launch_full.action.detours), 2000)
+        launch_full = self.lp.get_fw_by_id(1).launch
+        self.assertEqual(len(launch_full['action']['detours']), 2000)
 
         wf = self.lp.get_wf_by_fw_id_lzyfw(1)
-        self.assertEqual(len(wf.id_fw[1].launches[0].action.detours), 2000)
+        self.assertEqual(len(wf.id_fw[1].launch['action']['detours']), 2000)
 
     def test_many_detours_offline(self):
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
@@ -1314,7 +1314,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         fw = self.lp.reserve_fw(self.fworker, launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(launch_dir):
-            setup_offline_job(self.lp, fw, launch_id)
+            setup_offline_job(self.lp, fw)
 
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
