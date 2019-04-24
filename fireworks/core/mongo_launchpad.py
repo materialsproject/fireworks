@@ -636,6 +636,9 @@ class MongoLaunchPad(LaunchPad):
         #print("LAUNCH", launch)
         
         if launch['launch_idx'] is not None:
+            # prevent too-large file from being uploaded.
+            # might need to stop replacing the launch
+            launch.pop('action')
             launches = self.fireworks.find_one(query, projection={'launches': 1})
             launch_ids = launches['launches'] if launches else []
             #print("LAUNCH IDS", launch_ids)
@@ -749,6 +752,7 @@ class MongoLaunchPad(LaunchPad):
             self.m_logger.warning("The size of the launch document was too large. Saving "
                                "the action in gridfs.")
 
+            print("LAUNCH DICT", launch_db_dict)
             self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
                                                launch_db_dict, upsert=True)
 
@@ -974,7 +978,7 @@ class MongoLaunchPad(LaunchPad):
         """
         self.fireworks.find_one_and_update({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
 
-    def add_offline_run(self, launch_id, fw_id, name):
+    def add_offline_run(self, fw_id, launch_idx=-1):
         """
         Add the launch and firework to the offline_run collection.
 

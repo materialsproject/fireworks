@@ -474,7 +474,7 @@ class LaunchPad(FWSerializable, ABC):
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf.fws:
                 self._update_fw(fw, state='ARCHIVED')
-                self._refresh_wf(fw_id)
+                self._refresh_wf(fw.fw_id)
 
     def pause_wf(self, fw_id: int):
         """
@@ -722,10 +722,10 @@ class LaunchPad(FWSerializable, ABC):
                     bad_fw = True
             if bad_fw:
                 potential_lost_fw_ids.add(fw_id)
-                if not lost_launch_idxs[fw_dict['fw_id']]:
-                    lost_launch_idxs[fw_dict['fw_id']] = [fw_dict['launch_idx']]
+                if not lost_launch_idxs[fw_id]:
+                    lost_launch_idxs[fw_id] = [m_fw.launch_idx]
                 else:
-                    lost_launch_idxs[fw_dict['fw_id']].append(fw_dict['launch_idx'])
+                    lost_launch_idxs[fw_id].append(m_fw.launch_idx)
 
         # Check if EVERY FIREWORK with a given fw_id failed. If so, add to lost_fw_ids
         for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
