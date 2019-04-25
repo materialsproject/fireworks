@@ -392,7 +392,7 @@ class LaunchPad(FWSerializable, ABC):
         self._refresh_wf(fw_id)
         return f.to_db_dict() if f else None
 
-    def rerun_fw(self, fw_id: int, launch_idx: int=-1, rerun_duplicates: bool=True,
+    def rerun_fw(self, fw_id: int, launch_idx: int=None, rerun_duplicates: bool=True,
                  recover_mode: Optional[str]=None) -> List[int]:
         # TODO REMOVED recover_launch ARGUMENT FROM THIS FUNCTION
 

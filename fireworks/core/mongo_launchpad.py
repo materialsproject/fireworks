@@ -176,6 +176,7 @@ class MongoLaunchPad(LaunchPad):
         allowed_states = ["READY", "WAITING", "FIZZLED", "DEFUSED", "PAUSED"]
         self.fireworks.update_many({'fw_id': {"$in": fw_ids},
                                     'state': {"$in": allowed_states}}, mod_spec)
+
         for fw in self.fireworks.find({'fw_id': {"$in": fw_ids}, 'state': {"$nin": allowed_states}},
                                       {"fw_id": 1, "state": 1}):
             self.m_logger.warning("Cannot update spec of fw_id: {} with state: {}. "
@@ -258,8 +259,6 @@ class MongoLaunchPad(LaunchPad):
             if recover_mode == 'prev_dir':
                 prev_dir = m_fw.launch_dir
                 set_spec['$set']['spec._launch_dir'] = prev_dir
-            else:
-                set_spec = {"$unset":{"spec._recovery":""}}
 
         # If no launch recovery specified, unset the firework recovery spec
         else:
