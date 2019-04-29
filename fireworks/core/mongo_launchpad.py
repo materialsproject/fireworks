@@ -785,7 +785,7 @@ class MongoLaunchPad(LaunchPad):
         
         launch = m_fw.launch
         command_dict_launch = {'$set': {'state_history': launch['state_history'],
-                                 'trackers': [t.to_dict() for t in launch['trackers']]}}
+                                 'trackers': [t for t in launch['trackers']]}}
                                  # maybe remove to_dict() above?
         
         command_dict_fw = {}
@@ -989,8 +989,8 @@ class MongoLaunchPad(LaunchPad):
         """
         #fw = self.get_fw_by_id(fw_id, launch_idx)
         # need to change this when fworker gets integrated
-        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id, state='RUNNING')
-        fw.state = "OFFLINE-RUNNING"
+        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id, state='RESERVED')
+        fw.state = "OFFLINE-RESERVED"
         fw.to_file("FW.json")
         with open('FW_offline.json', 'w') as f:
             f.write('{"fw_id":%d, "launch_id":%d}' % (fw_id,fw.launch_idx))

@@ -36,6 +36,7 @@ from monty.os import cd
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+TESTUSR = "myuser1"
 
 
 class AuthenticationTest(unittest.TestCase):
@@ -47,16 +48,17 @@ class AuthenticationTest(unittest.TestCase):
         try:
             client = MongoClient()
             client.not_the_admin_db.command(
-                "createUser", "myuser", pwd="mypassword", roles=['dbOwner'])
-        except Exception:
-            raise unittest.SkipTest(
-                'MongoDB is not running in localhost:27017! Skipping tests.')
+                "createUser", TESTUSR, pwd="mypassword", roles=['dbOwner'])
+        except Exception as e:
+            raise e
+            #raise unittest.SkipTest(
+            #    'MongoDB is not running in localhost:27017! Skipping tests.')
 
     def test_no_admin_privileges_for_plebs(self):
         """Normal users can not authenticate against the admin db.
         """
         with self.assertRaises(OperationFailure):
-            lp = LaunchPad(name="admin", username="myuser",
+            lp = LaunchPad(name="admin", username=TESTUSR,
                            password="mypassword", authsource="admin")
             lp.db.collection.count()
 
@@ -64,7 +66,7 @@ class AuthenticationTest(unittest.TestCase):
         """A user should be able to authenticate against a database that they
         are a user of.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+        lp = LaunchPad(name="not_the_admin_db", username=TESTUSR,
                        password="mypassword", authsource="not_the_admin_db")
         lp.db.collection.count()
 
@@ -72,7 +74,7 @@ class AuthenticationTest(unittest.TestCase):
         """The default behavior is to authenticate against the db that the user
         is trying to access.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+        lp = LaunchPad(name="not_the_admin_db", username=TESTUSR,
                        password="mypassword")
         lp.db.collection.count()
 
@@ -1240,7 +1242,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         fw = self.lp.get_fw_by_id(fw.fw_id)
 
-        #self.assertEqual(fw.state, 'RESERVED')
+        self.assertEqual(fw.state, 'OFFLINE-RESERVED')
 
         #fizzle
         self.assertIsNotNone(self.lp.recover_offline(fw.fw_id, ignore_errors=False))

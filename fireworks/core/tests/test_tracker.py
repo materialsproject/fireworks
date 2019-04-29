@@ -22,7 +22,7 @@ import sys
 import argparse
 
 from fireworks.core.firework import Firework, Tracker, FWorker, Workflow
-from fireworks.core.launchpad import LaunchPad
+from fireworks.core.mongo_launchpad import MongoLaunchPad as LaunchPad
 from fireworks.scripts.rocket_launcher import launch_rocket
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.scripts.lpad_run import track_fws
@@ -41,8 +41,9 @@ class TrackerTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None,require_password=False)
-        except:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+        except Exception as e:
+            raise e
+            #raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
