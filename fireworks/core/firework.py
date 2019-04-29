@@ -176,7 +176,8 @@ class Firework(FWSerializable):
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
                    'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
-                   'COMPLETED': 5}
+                   'COMPLETED': 5,
+                   'OFFLINE-READY': 2, 'OFFLINE-RESERVED': 3, 'OFFLINE-RUNNING': 4}
 
     def __init__(self, tasks: Union[Firetask, List[Firetask]],
                  launch_dir: Optional[str]=None, spec: Optional[dict]=None,
@@ -500,7 +501,6 @@ class Firework(FWSerializable):
         #self.archived_launches.extend(self.launches)
         #self.archived_launches = list(set(self.archived_launches))  # filter duplicates
         self.reset_launch(launch_idx=None)
-        #print("NEW LAUNCH IDX", self.launch_idx)
 
     def copy(self):
         return Firework.from_dict(self.to_dict())

@@ -712,9 +712,9 @@ class LaunchPad(FWSerializable, ABC):
         # and fw_id is ONLY LOST if all its launch_idxs are lost
         for fw_id in bad_fw_data:
             bad_fw = True
+            m_fw = self.get_fw_by_id(fw_id)
             if max_runtime or min_runtime:
                 bad_fw = False
-                m_fw = self.get_fw_by_id(fw_id)
                 utime = m_fw._get_time('RUNNING', use_update_time=True)
                 ctime = m_fw._get_time('RUNNING', use_update_time=False)
                 if (not max_runtime or (utime-ctime).seconds <= max_runtime) and \
@@ -722,21 +722,21 @@ class LaunchPad(FWSerializable, ABC):
                     bad_fw = True
             if bad_fw:
                 potential_lost_fw_ids.add(fw_id)
-                if not lost_launch_idxs[fw_id]:
+                if not lost_launch_idxs.get(fw_id):
                     lost_launch_idxs[fw_id] = [m_fw.launch_idx]
                 else:
                     lost_launch_idxs[fw_id].append(m_fw.launch_idx)
 
         # Check if EVERY FIREWORK with a given fw_id failed. If so, add to lost_fw_ids
         for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
-            fws = self.fireworks._find_fws(fw_id)
+            fws = self._find_fws(fw_id)
             # only RUNNING FireWorks can be "lost", i.e. not defused or archived
-            not_lost = [f['launch_idx'] for f in fws if x not in lost_launch_idxs[fw_id]]
+            not_lost = [f['launch']['launch_idx'] for f in fws if f['launch']['launch_idx'] not in lost_launch_idxs[fw_id]]
             if len(not_lost) == 0:  # all launches are lost - we are lost!
                 lost_fw_ids.append(fw_id)
             else:
                 for l_idx in not_lost:
-                    l_state = self.get_fw_dict_by_id(fw_id, launch_idx=l_idx).state
+                    l_state = self.get_fw_dict_by_id(fw_id, launch_idx=l_idx)['state']
                     if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
                         break
                 else:
@@ -1118,7 +1118,7 @@ class LaunchPad(FWSerializable, ABC):
         return self.checkout_fw(fworker, launch_dir, host=host, ip=ip,
                                 fw_id=fw_id, state="RESERVED")
 
-    def mark_fizzled(self, fw_id: int):
+    def mark_fizzled(self, fw_id: int, launch_idx: int=-1):
         """
         Mark the firework corresponding to the given id as FIZZLED.
 
@@ -1129,7 +1129,7 @@ class LaunchPad(FWSerializable, ABC):
             dict: updated firework
         """
         # Do a confirmed write and make sure state_history is preserved
-        self.checkin_fw(fw_id, state='FIZZLED')
+        self.checkin_fw(fw_id, state='FIZZLED', launch_idx=launch_idx)
 
     def _upsert_fws(self, fws: List[Firework], reassign_all: bool=False):
         """

@@ -323,7 +323,7 @@ class MongoLaunchPad(LaunchPad):
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
 
         launch = None
-        if fw_dict["state"] not in ["WAITING", "READY"]:
+        if launch_idx and fw_dict["state"] not in ["WAITING", "READY"]:
             launch = self._get_launch_by_fw_id(fw_id, launch_idx)
         if launch is None:
             launch = {"state": fw_dict["state"]}
@@ -631,15 +631,13 @@ class MongoLaunchPad(LaunchPad):
         launch = fw_dict.pop('launch')
         #if launch['launch_idx'] == -1:
         #    launch['launch_idx'] = self._get_next_launch_idx(m_fw.fw_id)
-        launch_idx = launch['launch_idx']
-        #print("LAUNCH", launch)
+        launch_idx = launch.pop('launch_idx')
         
-        if (launch['launch_idx'] is not None) and (launch['action'] is None):
+        if (launch_idx is not None) and (launch['action'] is None):
             # prevent too-large file from being uploaded.
             # might need to stop replacing the launch
             launches = self.fireworks.find_one(query, projection={'launches': 1})
             launch_ids = launches['launches'] if launches else []
-            #print("LAUNCH IDS", launch_ids)
             if launch_idx >= len(launch_ids):
                 launch['launch_id'] = self.get_new_launch_id()
                 launch_ids.append(launch['launch_id'])
@@ -725,38 +723,38 @@ class MongoLaunchPad(LaunchPad):
         m_launch = m_fw.launch
         launch_ids = self.fireworks.find_one({'fw_id': m_fw.fw_id},
                                             projection={'launches': 1})['launches']
-        m_launch['launch_id'] = launch_ids[m_fw.launch_idx]
-
-        try:
-            self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
-                                               m_launch, upsert=True)
-        except DocumentTooLarge as err:
-            launch_db_dict = m_launch
-            action_dict = launch_db_dict.get("action", None)
-            if not action_dict:
-                # in case the action is empty and it is not the source of
-                # the error, raise the exception again.
-                raise
-            if self.gridfs_fallback is None:
-                err.args = (err.args[0]
-                            + '. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml'
-                              ' to a value different from None',)
-                raise err
-
-            # encoding required for python2/3 compatibility.
-            action_id = self.gridfs_fallback.put(json.dumps(action_dict), encoding="utf-8",
-                                                 metadata={"launch_id": m_launch['launch_id']})
-            launch_db_dict["action"] = {"gridfs_id": str(action_id)}
-            self.m_logger.warning("The size of the launch document was too large. Saving "
-                               "the action in gridfs.")
-
-            print("LAUNCH DICT", launch_db_dict)
-            self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
-                                               launch_db_dict, upsert=True)
-
         ids_to_refresh = []
-        for fw in self.fireworks.find({'launches': m_launch['launch_id']}, {'fw_id': 1}):
-            ids_to_refresh.append(fw['fw_id'])
+
+        if (m_fw.launch_idx is not None):
+            m_launch['launch_id'] = launch_ids[m_fw.launch_idx]
+            try:
+                self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
+                                                   m_launch, upsert=True)
+            except DocumentTooLarge as err:
+                launch_db_dict = m_launch
+                action_dict = launch_db_dict.get("action", None)
+                if not action_dict:
+                    # in case the action is empty and it is not the source of
+                    # the error, raise the exception again.
+                    raise
+                if self.gridfs_fallback is None:
+                    err.args = (err.args[0]
+                                + '. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml'
+                                  ' to a value different from None',)
+                    raise err
+
+                # encoding required for python2/3 compatibility.
+                action_id = self.gridfs_fallback.put(json.dumps(action_dict), encoding="utf-8",
+                                                     metadata={"launch_id": m_launch['launch_id']})
+                launch_db_dict["action"] = {"gridfs_id": str(action_id)}
+                self.m_logger.warning("The size of the launch document was too large. Saving "
+                                   "the action in gridfs.")
+
+                self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
+                                                   launch_db_dict, upsert=True)
+
+            for fw in self.fireworks.find({'launches': m_launch['launch_id']}, {'fw_id': 1}):
+                ids_to_refresh.append(fw['fw_id'])
 
         # change return type to dict to make return type serializable to support job packing
         return m_launch, ids_to_refresh
@@ -834,8 +832,9 @@ class MongoLaunchPad(LaunchPad):
             raise ValueError("Could not get next launch id! If you have not yet initialized the "
                              "database, please do so by performing a database reset (e.g., lpad reset)")
 
-    def _find_fws(self, fw_id=None, launch_sort=-1, allowed_states=None,
+    def _find_fws(self, fw_id=None, allowed_states=None,
                     projection=None, sort=None, m_query=None):
+        launch_sort=1
         query_dict = {}
         if sort == None:
             sort = []
@@ -857,8 +856,11 @@ class MongoLaunchPad(LaunchPad):
         for fw in fws:
             query_dict = {'launch_id': {'$in': fw['launches']}}
             launches = self.launches.find(query_dict, sort=sort)
+            for i, launch in enumerate(launches):
+                launch['launch_idx'] = i
             query_dict['state'] = fw['state']
             if self.launches.count_documents(query_dict) == 0:
+                print("NO LAUNCHES FOUND")
                 new_fw = dict(fw)
                 new_fw['launch'] = {}
                 all_fws.append(new_fw)
@@ -985,14 +987,16 @@ class MongoLaunchPad(LaunchPad):
             fw_id (id): firework id
             name (str)
         """
-        fw = self.get_fw_by_id(fw_id, launch_idx)
-        fw.state = "OFFLINE"
+        #fw = self.get_fw_by_id(fw_id, launch_idx)
+        # need to change this when fworker gets integrated
+        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id, state='RUNNING')
+        fw.state = "OFFLINE-RUNNING"
         fw.to_file("FW.json")
         with open('FW_offline.json', 'w') as f:
-            f.write('{"fw_id":%d, "launch_id":%d}' % (fw_id,launch_idx))
+            f.write('{"fw_id":%d, "launch_id":%d}' % (fw_id,fw.launch_idx))
         self._replace_fw(fw)
         
-    def recover_offline(self, launch_id, ignore_errors=False, print_errors=False):
+    def recover_offline(self, fw_id, ignore_errors=False, print_errors=False):
         """
         Update the launch state using the offline data in FW_offline.json file.
 
@@ -1005,65 +1009,69 @@ class MongoLaunchPad(LaunchPad):
             firework id if the recovering fails otherwise None
         """
         # get the launch directory
-        m_launch = self.get_launch_by_id(launch_id)
+        #m_launch = self.get_launch_by_fw_id(fw_id, -1)
+        m_fw = self.get_fw_by_id(fw_id)
         try:
-            self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
+            self.m_logger.debug("RECOVERING fw_id: {}".format(m_fw.fw_id))
             # look for ping file - update the Firework if this is the case
-            ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
+            ping_loc = os.path.join(m_fw.launch_dir, "FW_ping.json")
             if os.path.exists(ping_loc):
                 ping_dict = loadfn(ping_loc)
-                self.ping_launch(launch_id, ptime=ping_dict['ping_time'])
+                self.ping_firework(fw_id, ptime=ping_dict['ping_time'])
 
             # look for action in FW_offline.json
-            offline_loc = zpath(os.path.join(m_launch.launch_dir,
+            offline_loc = zpath(os.path.join(m_fw.launch_dir,
                                              "FW_offline.json"))
             with zopen(offline_loc) as f:
                 offline_data = loadfn(offline_loc)
                 if 'started_on' in offline_data:
-                    m_launch.state = 'RUNNING'
-                    for s in m_launch.state_history:
-                        if s['state'] == 'RUNNING':
+                    m_fw.state = 'OFFLINE-RUNNING'
+                    for s in m_fw.state_history:
+                        if s['state'] == 'OFFLINE-RUNNING':
                             s['created_on'] = reconstitute_dates(offline_data['started_on'])
-                    l = self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                                           m_launch.to_db_dict(), upsert=True)
-                    fw_id = l['fw_id']
-                    f = self.fireworks.find_one_and_update({'fw_id': fw_id},
-                                                           {'$set':
-                                                                {'state': 'RUNNING',
-                                                                 'updated_on': datetime.datetime.utcnow()
-                                                                 }
-                                                            })
-                    if f:
-                        self._refresh_wf(fw_id)
+                    self._update_fw(m_fw)
+                    #l = self.launches.find_one_and_replace({'launch_id': m_fw.launch},
+                    #                                       m_launch.to_db_dict(), upsert=True)
+                    #fw_id = l['fw_id']
+                    #f = self.fireworks.find_one_and_update({'fw_id': fw_id},
+                    #                                       {'$set':
+                    #                                            {'state': 'RUNNING',
+                    #                                             'updated_on': datetime.datetime.utcnow()
+                    #                                             }
+                    #                                        })
+                    #if f:
+                    self._refresh_wf(fw_id)
 
+                # could cause file size problems doing this before checking for FWAction
                 if 'checkpoint' in offline_data:
-                    m_launch.touch_history(checkpoint=offline_data['checkpoint'])
-                    self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                                       m_launch.to_db_dict(), upsert=True)
+                    m_fw.touch_history(checkpoint=offline_data['checkpoint'])
+                    self._update_fw(m_fw, touch_history=False)
 
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
-                    m_launch = Launch.from_dict(
-                        self.complete_launch(launch_id, fwaction, state))
-                    for s in m_launch.state_history:
+                    # start here
+                    m_fw = Firework.from_dict(
+                        self.checkin_fw(m_fw.fw_id, fwaction, state, m_fw.launch_idx))
+                    for s in m_fw.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = reconstitute_dates(offline_data['completed_on'])
-                    self.launches.find_one_and_update({'launch_id': m_launch.launch_id},
-                                                      {'$set':
-                                                           {'state_history': m_launch.state_history}
-                                                      })
-                    self.offline_runs.update_one({"launch_id": launch_id},
-                                                 {"$set": {"completed": True}})
+                    #self.launches.find_one_and_update({'launch_id': m_fw.launch_id},
+                    #                                  {'$set':
+                    #                                       {'state_history': m_launch.state_history}
+                    #                                  })
+                    self._update_fw(m_fw, state=offline_data['state'], touch_history=False)
+                    #self.offline_runs.update_one({"launch_id": launch_id},
+                    #                             {"$set": {"completed": True}})
 
             # update the updated_on
-            self.offline_runs.update_one({"launch_id": launch_id},
-                                         {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
+            #self.offline_runs.update_one({"launch_id": launch_id},
+            #                             {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
             return None
         except:
             if print_errors:
-                self.m_logger.error("failed recovering launch_id {}.\n{}".format(
-                    launch_id, traceback.format_exc()))
+                self.m_logger.error("failed recovering fw_id {}-{}.\n{}".format(
+                    m_fw.fw_id, m_fw.launch_idx, traceback.format_exc()))
             if not ignore_errors:
                 traceback.print_exc()
                 m_action = FWAction(stored_data={'_message': 'runtime error during task',
@@ -1071,9 +1079,9 @@ class MongoLaunchPad(LaunchPad):
                                                  '_exception': {'_stacktrace': traceback.format_exc(),
                                                                 '_details': None}},
                                     exit=True)
-                self.complete_launch(launch_id, m_action, 'FIZZLED')
-                self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed": True}})
-            return m_launch.fw_id
+                self.checkin_fw(m_fw.fw_id, m_action, 'FIZZLED', m_fw.launch_idx)
+                #self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed": True}})
+            return m_fw.fw_id
 
     def forget_offline(self, launchid_or_fwid, launch_mode=True):
         """

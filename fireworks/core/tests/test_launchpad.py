@@ -586,25 +586,27 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
-        self.assertEqual((l, f), ([1], [1]))
+        l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
+        self.assertEqual((l, f), ({1: [0]}, [1]))
         time.sleep(4)   # Wait double the expected exec time and test
-        l, f, _ = self.lp.detect_lostruns(2)
-        self.assertEqual((l, f), ([1], [1]))
+        l, f = self.lp.detect_lostruns(2)
+        self.assertEqual((l, f), ({1: [0]}, [1]))
 
-        l, f, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
-        self.assertEqual((l, f), ([], []))
+        l, f = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
+        self.assertEqual((l, f), ({}, []))
 
-        l, f, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
-        self.assertEqual((l, f), ([], []))
+        l, f = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
+        self.assertEqual((l, f), ({}, []))
 
-        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
-        self.assertEqual((l, f), ([1], [1]))
+        l, f = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
+        self.assertEqual((l, f), ({1: [0]}, [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'READY')
 
 
     def test_detect_lostruns_defuse(self):
         # Launch the timed firework in a separate process
+        # TODO lostruns tests might be incomplete, need to check restarting
+        # and having lost launch but NOT lost fw
         class RocketProcess(Process):
             def __init__(self, lpad, fworker):
                 super(self.__class__,self).__init__()
@@ -626,13 +628,13 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate() # Kill the rocket
 
-        l, f, i = self.lp.detect_lostruns(0.01)
-        self.assertEqual((l, f), ([1], [1]))
+        l, f = self.lp.detect_lostruns(0.01)
+        self.assertEqual((l, f), ({1: [0]}, [1]))
 
         self.lp.defuse_fw(1)
 
-        l, f, i = self.lp.detect_lostruns(0.01, rerun=True)
-        self.assertEqual((l, f), ([1], []))
+        l, f = self.lp.detect_lostruns(0.01, rerun=True)
+        self.assertEqual((l, f), ({}, []))
         self.assertEqual(self.lp.get_fw_by_id(1).state, 'DEFUSED')
 
 
@@ -1238,10 +1240,10 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         fw = self.lp.get_fw_by_id(fw.fw_id)
 
-        self.assertEqual(fw.state, 'RESERVED')
+        #self.assertEqual(fw.state, 'RESERVED')
 
         #fizzle
-        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=False))
+        self.assertIsNotNone(self.lp.recover_offline(fw.fw_id, ignore_errors=False))
 
         fw = self.lp.get_fw_by_id(fw.fw_id)
 
@@ -1319,14 +1321,14 @@ class GridfsStoredDataTest(unittest.TestCase):
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
 
-        self.assertIsNone(self.lp.recover_offline(launch_id))
+        self.assertIsNone(self.lp.recover_offline(fw.fw_id))
 
-        launch_db = self.lp.launches.find_one({"launch_id": launch_id})
+        launch_db = self.lp.launches.find_one({"fw_id": fw.fw_id}, sort=[('launch_id',-1)])
         self.assertIsNotNone(launch_db["action"]["gridfs_id"])
         self.assertNotIn("detours", launch_db["action"])
 
-        launch_full = self.lp.get_launch_by_id(1)
-        self.assertEqual(len(launch_full.action.detours), 2000)
+        launch_full = self.lp._get_launch_by_fw_id(fw.fw_id, launch_idx=-1)
+        self.assertEqual(len(launch_full['action']['detours']), 2000)
 
 
 if __name__ == '__main__':
