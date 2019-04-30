@@ -753,7 +753,7 @@ class MongoLaunchPad(LaunchPad):
 
     def _update_fw(self, m_fw: Firework, state: str=None,
                    allowed_states: List[str]=None, launch_idx: int=-1,
-                    touch_history: bool=True, checkpoint: Dict=None) -> Firework:
+                   touch_history: bool=True, checkpoint: Dict=None) -> Firework:
         # need to refine structure of launch_idx/launch_id arg to get correct id
         if type(m_fw) == int:
             m_fw = self.get_fw_by_id(m_fw, launch_idx)
@@ -779,7 +779,6 @@ class MongoLaunchPad(LaunchPad):
         launch = m_fw.launch
         command_dict_launch = {'$set': {'state_history': launch['state_history'],
                                  'trackers': [t for t in launch['trackers']]}}
-                                 # maybe remove to_dict() above?
         
         command_dict_fw = {}
         command_dict_fw['$set'] = {}
