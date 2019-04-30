@@ -36,7 +36,7 @@ from monty.os import cd
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-TESTUSR = "myuser1"
+TESTUSR = "muser"
 
 
 class AuthenticationTest(unittest.TestCase):

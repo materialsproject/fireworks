@@ -103,6 +103,8 @@ MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 # a dynamically generated document exceeds the 16MB limit. Functionality disabled if None.
 GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
 
+DEFAULT_DATABASE_TYPE = "mongodb"
+
 
 def override_user_settings():
     module_dir = os.path.dirname(os.path.abspath(__file__))
