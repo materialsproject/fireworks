@@ -14,6 +14,7 @@ from fireworks import explicit_serialize, FWAction
 from fireworks.core.firework import Firework, Workflow, FiretaskBase, BackgroundTask
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
+from fireworks import LaunchPad
 from fireworks.scripts.rocket_launcher import launch_rocket, rapidfire
 from fireworks.scripts.queue_launcher import setup_offline_job
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
