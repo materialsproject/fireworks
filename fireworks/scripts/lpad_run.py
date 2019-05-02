@@ -255,12 +255,10 @@ def get_fws(args):
             d = fw.to_dict()
             d['state'] = d.get('state', 'WAITING')
             if args.display_format == 'more' or args.display_format == 'less':
-                if 'archived_launches' in d:
-                    del d['archived_launches']
                 del d['spec']
             if args.display_format == 'less':
-                if 'launches' in d:
-                    del d['launches']
+                if 'launch' in d:
+                    del d['launch']
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
