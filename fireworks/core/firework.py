@@ -462,7 +462,7 @@ class Firework(FWSerializable):
         tasks = m_dict['spec']['_tasks']
         fw_id = m_dict.get('fw_id', -1)
         name = m_dict.get('name', None)
-        state = m_dict['state']
+        state = m_dict.get('state', 'WAITING')
 
         launch = m_dict.get('launch', {})
         created_on = m_dict.get('created_on')
