@@ -179,8 +179,6 @@ class MongoTests(unittest.TestCase):
         for fw_id in fw_ids:
             fw = self.lp.recover_offline(fw_id)
 
-        print(list(self.lp.fireworks.find({}, {'state': 1, 'name': 1, 'fw_id': 1})))
-
         # launch child job
         os.chdir(os.path.join(cur_dir, "launcher_3"))
         #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
@@ -279,7 +277,6 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
-        print(fw.action)
         self.assertEqual(self.lp.get_fw_by_id(1).action.stored_data['next_fibnum'], 1)
         self.assertEqual(self.lp.get_fw_by_id(2).action.stored_data['next_fibnum'], 2)
         self.assertEqual(self.lp.get_fw_by_id(3).action.stored_data, {})

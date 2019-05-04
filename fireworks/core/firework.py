@@ -984,7 +984,6 @@ class Workflow(FWSerializable):
         # Brings self.fw_states in sync with fw_states in db
         self.fw_states[fw_id] = m_state
 
-        print("REFRESH FW IN WF", fw.fw_id, fw.state)
         #if m_state != prev_state:
         if True:
             updated_ids.add(fw_id)
@@ -994,7 +993,6 @@ class Workflow(FWSerializable):
 
             # refresh all the children that could possibly now be READY to run
             # note that "FIZZLED" is for _allow_fizzled_parents children
-            print("UPDATING CHILDREN", fw.fw_id, fw.state)
             if m_state in ['COMPLETED', 'FIZZLED']:
                 for child_id in self.links[fw_id]:
                     updated_ids = updated_ids.union(self.refresh(child_id, updated_ids))

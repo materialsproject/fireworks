@@ -281,7 +281,6 @@ class Rocket:
                 except BaseException as e:
                     traceback.print_exc()
                     tb = traceback.format_exc()
-                    print(tb)
                     stop_backgrounds(ping_stop, btask_stops)
                     do_ping(lp, fw_id)  # one last ping, esp if there is a monitor
                     # If the exception is serializable, save its details

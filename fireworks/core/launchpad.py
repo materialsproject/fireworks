@@ -540,19 +540,12 @@ class LaunchPad(FWSerializable, ABC):
             dict: updated firework
         """
         # update the FW data to COMPLETED, set end time, etc
-        if state == 'FIZZLED':
-            print("FW FIZZLED!!!")
-            import traceback
-            print(traceback.format_exc())
 
         m_fw = self.get_fw_by_id(fw_id, launch_idx)
-        print("CHECKIN STEP", m_fw.state, m_fw.launch_idx, launch_idx)
         self._update_fw(m_fw, state=state)
         if action:
             m_fw.action = action
         m_launch, fw_ids = self._checkin_fw(m_fw, action, state)
-
-        print("CHECKIN STPE", m_launch['state'], m_launch.get('launch_idx'))
 
         for fw_id in fw_ids:
             self._refresh_wf(fw_id)
@@ -578,7 +571,6 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             (Firework, int): firework and the new FW id (TODO PERVIOUSLY launchd id)
         """
-        print("FWORKER QUERY", fworker.query)
         m_fw = self._get_a_fw_to_run(fworker.query, fw_id=fw_id)
         if not m_fw:
             return None
