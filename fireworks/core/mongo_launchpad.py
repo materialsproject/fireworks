@@ -294,7 +294,11 @@ class MongoLaunchPad(LaunchPad):
         if launch_idx == None:
             #m_launches = self.launches.find({'fw_id': fw_id})
             m_launches = []
-            launch_ids = self.fireworks.find_one({'fw_id': fw_id})['launches']
+            fw = self.fireworks.find_one({'fw_id': fw_id}, {'launches': 1})
+            if fw:
+                launch_ids = fw['launches']
+            else:
+                raise ValueError("No fw with this id")
             if launch_ids:
                 for i, lid in enumerate(launch_ids):
                     m_launch = self.launches.find_one({'launch_id': lid})
@@ -307,11 +311,13 @@ class MongoLaunchPad(LaunchPad):
             return m_launches
         else:
             launch_ids = self.fireworks.find_one({'fw_id': fw_id}, projection={'launches': 1})['launches']
+            print("LIDS", launch_ids)
             if len(launch_ids) == 0:
                 return None
             if launch_idx >= len(launch_ids) or launch_idx < -len(launch_ids):
                 raise ValueError("Bad launch index %d %d" % (launch_idx, len(launch_ids)))
             launch_id = launch_ids[launch_idx]
+            print("USING LID", launch_id)
             launch = self.launches.find_one({'launch_id': launch_id})
             launch['launch_idx'] = launch_idx if launch_idx >= 0\
                                    else len(launch_ids)+launch_idx
@@ -319,6 +325,7 @@ class MongoLaunchPad(LaunchPad):
                 launch.pop('launch_id')
             launch["action"] = get_action_from_gridfs(launch.get("action"),
                                                       self.gridfs_fallback)
+            print("FINISHING", launch['launch_idx'])
             return launch
         raise ValueError('No Launch exists with launch_idx: {}'.format(launch_idx))
 
@@ -338,7 +345,7 @@ class MongoLaunchPad(LaunchPad):
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
 
         launch = None
-        if launch_idx and fw_dict["state"] not in ["WAITING", "READY"]:
+        if (launch_idx is not None) and fw_dict["state"] not in ["WAITING", "READY"]:
             launch = self._get_launch_by_fw_id(fw_id, launch_idx)
         if launch is None:
             launch = {"state": fw_dict["state"]}
@@ -566,6 +573,7 @@ class MongoLaunchPad(LaunchPad):
         m_query = dict(query) if query else {}  # make a defensive copy
         m_query['state'] = 'READY'
         sortby = [("spec._priority", DESCENDING)]
+        print("HERE IS THE INITIAL QUERY", query, m_query)
 
         if SORT_FWS.upper() == "FIFO":
             sortby.append(("created_on", ASCENDING))
@@ -579,6 +587,7 @@ class MongoLaunchPad(LaunchPad):
         while True:
             # check out the matching firework, depending on the query set by the FWorker
             if checkout:
+                print("HERE IS THE QUERY", m_query)
                 m_fw = self.fireworks.find_one_and_update(m_query,
                                                           {'$set': {'state': 'RESERVED',
                                                            'updated_on': datetime.datetime.utcnow()}},
@@ -718,6 +727,7 @@ class MongoLaunchPad(LaunchPad):
         ids_to_refresh = []
 
         if (m_fw.launch_idx is not None):
+            print("CHECKING IN")
             m_launch['launch_id'] = launch_ids[m_fw.launch_idx]
             try:
                 self.launches.find_one_and_replace({'launch_id': m_launch['launch_id']},
@@ -953,13 +963,18 @@ class MongoLaunchPad(LaunchPad):
                 if verified:
                     # steal the launches
                     victim_fw = self.get_fw_by_id(potential_match['fw_id'])
-                    thief_launches = [l.launch_id for l in thief_fw.launches]
-                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
-                    for launch in valuable_launches:
-                        thief_fw.launches.append(launch)
+                    thief_lids = self.fireworks.find_one({'fw_id': thief_fw.fw_id}, {'launches':1})['launches']
+                    victim_lids = self.fireworks.find_one({'fw_id': victim_fw.fw_id}, {'launches':1})['launches']
+                    valuable_lids = [lid for lid in victim_lids if lid not in thief_lids]
+                    #valuable_launches = self.launches.find({'launch_id': {'$in': valuable_lids}})
+                    best_launch = None
+                    #for launch in valuable_launches:
+                    for lid in valuable_lids:
+                        thief_lids.append(lid)
                         stolen = True
                         self.m_logger.info('Duplicate found! fwids {} and {}'.format(
                             thief_fw.fw_id, potential_match['fw_id']))
+                    self.fireworks.update_one({'fw_id': thief_fw.fw_id}, {'$set': {'launches': thief_lids}})
         return stolen
 
     def set_priority(self, fw_id: int, priority: int):
@@ -972,7 +987,10 @@ class MongoLaunchPad(LaunchPad):
         """
         self.fireworks.find_one_and_update({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
 
-    def add_offline_run(self, fw_id: int, launch_idx: int=-1):
+    def get_offline_fwids(self):
+        res = self.fireworks.find({'state': {'$in': ['OFFLINE-RESERVED', 'OFFLINE-RUNNING']}})
+
+    def add_offline_run(self, fw_id: int=None, launch_idx: int=-1):
         """
         Add the launch and firework to the offline_run collection.
 
@@ -983,12 +1001,15 @@ class MongoLaunchPad(LaunchPad):
         """
         #fw = self.get_fw_by_id(fw_id, launch_idx)
         # need to change this when fworker gets integrated
-        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id, state='RESERVED')
-        fw.state = "OFFLINE-RESERVED"
+        #fw = self.get_fw_by_id(fw_id, launch_idx)
+        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id=fw_id, state='RESERVED')
+        fw.state = "OFFLINE-%s" % fw.state
         fw.to_file("FW.json")
         with open('FW_offline.json', 'w') as f:
-            f.write('{"fw_id":%d, "launch_id":%d}' % (fw_id,fw.launch_idx))
+            f.write('{"fw_id":%d, "launch_id":%d}' % (fw.fw_id, fw.launch_idx))
+            print("CHECK DAT", fw.fw_id, fw.launch_idx)
         self._replace_fw(fw)
+        return fw
         
     def recover_offline(self, fw_id: int, ignore_errors: bool=False,
                         print_errors: bool=False) -> Optional[int]:
@@ -1006,6 +1027,7 @@ class MongoLaunchPad(LaunchPad):
         # get the launch directory
         #m_launch = self.get_launch_by_fw_id(fw_id, -1)
         m_fw = self.get_fw_by_id(fw_id)
+        print("RECOVERING", m_fw.fw_id, m_fw.launch_idx)
         try:
             self.m_logger.debug("RECOVERING fw_id: {}".format(m_fw.fw_id))
             # look for ping file - update the Firework if this is the case
@@ -1036,18 +1058,22 @@ class MongoLaunchPad(LaunchPad):
                     #                                        })
                     #if f:
                     self._refresh_wf(fw_id)
+                print("RECOVERING", m_fw.fw_id, m_fw.launch_idx, self.get_fw_by_id(m_fw.fw_id).launch_idx)
 
                 # could cause file size problems doing this before checking for FWAction
                 if 'checkpoint' in offline_data:
                     m_fw.touch_history(checkpoint=offline_data['checkpoint'])
                     self._update_fw(m_fw, touch_history=False)
-
+                print("RECOVERING", m_fw.fw_id, m_fw.launch_idx, self.get_fw_by_id(m_fw.fw_id).launch_idx)
                 if 'fwaction' in offline_data:
                     fwaction = FWAction.from_dict(offline_data['fwaction'])
                     state = offline_data['state']
                     # start here
+                    print("RECOVERINGF", m_fw.fw_id, m_fw.launch_idx, self.get_fw_by_id(m_fw.fw_id).launch_idx)
+                    print("RECOVERINGG", m_fw.fw_id, m_fw.launch_idx, self.get_fw_by_id(m_fw.fw_id, m_fw.launch_idx).launch_idx)
                     m_fw = Firework.from_dict(
                         self.checkin_fw(m_fw.fw_id, fwaction, state, m_fw.launch_idx))
+                    print("RECOVERINGG", m_fw.fw_id, m_fw.launch_idx, self.get_fw_by_id(m_fw.fw_id).launch_idx)
                     for s in m_fw.state_history:
                         if s['state'] == offline_data['state']:
                             s['created_on'] = reconstitute_dates(offline_data['completed_on'])

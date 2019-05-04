@@ -1216,7 +1216,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fw = self.lp.reserve_fw(self.fworker, self.launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(self.launch_dir):
-            setup_offline_job(self.lp, fw)
+            setup_offline_job(self.lp, fw.fw_id)
 
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
@@ -1232,7 +1232,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fw = self.lp.reserve_fw(self.fworker, self.launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(self.launch_dir):
-            setup_offline_job(self.lp, fw)
+            setup_offline_job(self.lp, fw.fw_id)
 
         # remove the directory to cause an exception
         shutil.rmtree(self.launch_dir)
@@ -1318,7 +1318,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         fw = self.lp.reserve_fw(self.fworker, launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(launch_dir):
-            setup_offline_job(self.lp, fw)
+            setup_offline_job(self.lp, fw.fw_id)
 
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)

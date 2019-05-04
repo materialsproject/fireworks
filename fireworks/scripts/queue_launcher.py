@@ -123,7 +123,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             with cd(launcher_dir):
 
                 if '--offline' in qadapter['rocket_launch']:
-                    setup_offline_job(launchpad, fw, launch_id)
+                    setup_offline_job(launchpad, fw.fw_id)
 
                 l_logger.debug('writing queue script')
                 with open(SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -306,6 +306,6 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
                        'check queue adapter and queue server status!')
 
 
-def setup_offline_job(launchpad, fw, launch_idx=-1):
+def setup_offline_job(launchpad, fw_id=None, launch_idx=-1):
     # separate this function out for reuse in unit testing
-    launchpad.add_offline_run(fw.fw_id, launch_idx)
+    return launchpad.add_offline_run(fw_id, launch_idx)

@@ -181,17 +181,16 @@ class Firework(FWSerializable):
                    'OFFLINE-READY': 2, 'OFFLINE-RESERVED': 3, 'OFFLINE-RUNNING': 4}
 
     def __init__(self, tasks: Union[Firetask, List[Firetask]],
-                 launch_dir: Optional[str]=None, spec: Optional[dict]=None,
-                 name: Optional[str]=None, state: str='WAITING',
+                 spec: Optional[dict]=None, name: Optional[str]=None,
+                 state: str='WAITING', created_on: Optional[datetime]=None,
+                 fw_id: Optional[int]=None, parents: Union[None, 'Firework', List['Firework']]=None,
+                 updated_on: Optional[datetime]=None,
                  fworker: Optional[FWorker]=None,
                  host: Optional[str]=None, ip: Optional[str]=None,
                  trackers: Optional[List['Tracker']]=None,
-                 fw_id: Optional[int]=None,
                  launch_idx: Optional[int]=None,
-                 parents: Union[None, 'Firework', List['Firework']]=None,
-                 created_on: Optional[datetime]=None,
-                 updated_on: Optional[datetime]=None,
                  action: Optional['FWAction']=None,
+                 launch_dir: Optional[str]=None, 
                  state_history: Optional[dict]=None):
 
         # launch will contain launch_idx, launch_dir, state, created_on,
@@ -477,11 +476,11 @@ class Firework(FWSerializable):
         ip = launch.get('ip', None)
         state_history = launch.get('state_history', None)
 
-        return Firework(tasks, launch_dir, m_dict['spec'], name, state,
-                        fworker, host, ip, trackers, fw_id, launch_idx,
-                        #m_dict['parents'], created_on=created_on, updated_on=updated_on,
-                        created_on=created_on, updated_on=updated_on,
-                        action=action, state_history=state_history)
+        return Firework(tasks=tasks, spec=m_dict['spec'], name=name, state=state,
+                        created_on=created_on, fw_id=fw_id, updated_on=updated_on,
+                        fworker=fworker, host=host, ip=ip, trackers=trackers,
+                        launch_idx=launch_idx, action=action,
+                        launch_dir=launch_dir, state_history=state_history)
 
     def _rerun(self):
         """
@@ -921,14 +920,14 @@ class Workflow(FWSerializable):
                 self.links[fw_id].append(root_id)  # add the root id as my child
                 if pull_spec_mods:  # re-apply some actions of the parent
                     m_fw = self.id_fw[fw_id]  # get the parent FW
-                    m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
-                    if m_launch:
+                    #m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
+                    if m_fw:
                         # pull spec update
-                        if m_launch.state == 'COMPLETED' and m_launch.action.update_spec:
-                            new_wf.id_fw[root_id].spec.update(m_launch.action.update_spec)
+                        if m_fw.state == 'COMPLETED' and m_fw.action.update_spec:
+                            new_wf.id_fw[root_id].spec.update(m_fw.action.update_spec)
                         # pull spec mods
-                        if m_launch.state == 'COMPLETED' and m_launch.action.mod_spec:
-                            for mod in m_launch.action.mod_spec:
+                        if m_fw.state == 'COMPLETED' and m_fw.action.mod_spec:
+                            for mod in m_fw.action.mod_spec:
                                 apply_mod(mod, new_wf.id_fw[root_id].spec)
 
         for new_fw in new_wf.fws:
@@ -985,6 +984,7 @@ class Workflow(FWSerializable):
         # Brings self.fw_states in sync with fw_states in db
         self.fw_states[fw_id] = m_state
 
+        print("REFRESH FW IN WF", fw.fw_id, fw.state)
         #if m_state != prev_state:
         if True:
             updated_ids.add(fw_id)
@@ -994,6 +994,7 @@ class Workflow(FWSerializable):
 
             # refresh all the children that could possibly now be READY to run
             # note that "FIZZLED" is for _allow_fizzled_parents children
+            print("UPDATING CHILDREN", fw.fw_id, fw.state)
             if m_state in ['COMPLETED', 'FIZZLED']:
                 for child_id in self.links[fw_id]:
                     updated_ids = updated_ids.union(self.refresh(child_id, updated_ids))

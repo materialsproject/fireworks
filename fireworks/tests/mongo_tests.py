@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 import json
-
+import subprocess
 from multiprocessing import Pool
 import os
 import random
@@ -126,7 +126,7 @@ class MongoTests(unittest.TestCase):
 
         fw = self.lp.reserve_fw(self.fworker, os.getcwd())
 
-        setup_offline_job(self.lp, fw, launch_id)
+        setup_offline_job(self.lp, fw.fw_id)
 
         launch_rocket(None, self.fworker)
 
@@ -140,8 +140,7 @@ class MongoTests(unittest.TestCase):
             fwp = json.load(f)
             self.assertIsNotNone(fwp["ping_time"])
 
-        l = self.lp.offline_runs.find_one({"completed": False, "deprecated": False}, {"launch_id": 1})
-        self.lp.recover_offline(l['launch_id'])
+        self.lp.recover_offline(fw.fw_id)
         self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data['stdout'], 'test1\n')
 
     def test_offline_fw_passinfo(self):
@@ -159,36 +158,43 @@ class MongoTests(unittest.TestCase):
         os.mkdir(os.path.join(cur_dir, "launcher_2"))
         os.mkdir(os.path.join(cur_dir, "launcher_3"))
 
+        fw_ids = []
+
         # launch two parent jobs
         os.chdir(os.path.join(cur_dir, "launcher_1"))
-        fw = self.lp.reserve_fw(self.fworker, os.getcwd())
-        setup_offline_job(self.lp, fw, launch_id)
+        #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
+        fw = setup_offline_job(self.lp)
         launch_rocket(None, self.fworker)
+        fw_ids.append(fw.fw_id)
 
         os.chdir(os.path.join(cur_dir, "launcher_2"))
-        fw = self.lp.reserve_fw(self.fworker, os.getcwd())
-        setup_offline_job(self.lp, fw, launch_id)
+        #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
+        fw = setup_offline_job(self.lp)
         launch_rocket(None, self.fworker)
+        fw_ids.append(fw.fw_id)
+
+        time.sleep(3)
 
         # recover jobs
-        for l in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
-            fw = self.lp.recover_offline(l['launch_id'])
+        for fw_id in fw_ids:
+            fw = self.lp.recover_offline(fw_id)
+
+        print(list(self.lp.fireworks.find({}, {'state': 1, 'name': 1, 'fw_id': 1})))
 
         # launch child job
         os.chdir(os.path.join(cur_dir, "launcher_3"))
-        fw = self.lp.reserve_fw(self.fworker, os.getcwd())
+        #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
+        fw = setup_offline_job(self.lp, fw)
         last_fw_id = fw.fw_id
-        setup_offline_job(self.lp, fw, launch_id)
         launch_rocket(None, self.fworker)
 
         # recover jobs
-        for l in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
-            fw = self.lp.recover_offline(l['launch_id'])
+        fw = self.lp.recover_offline(fw.fw_id)
 
         # confirm the sum in the child job
         child_fw = self.lp.get_fw_by_id(last_fw_id)
         self.assertEqual(set(child_fw.spec['input_array']), set([2, 3, 4]))
-        self.assertEqual(child_fw.launches[0].action.stored_data["sum"], 9)
+        self.assertEqual(child_fw.action.stored_data["sum"], 9)
 
     def test_multi_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'",
@@ -261,10 +267,10 @@ class MongoTests(unittest.TestCase):
         wf = Workflow([fw1, fw2], {-1: -2})
         self.lp.add_wf(wf)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-2).action.stored_data['stdout'],
+        self.assertEqual(self.lp.get_fw_by_id(fw1.fw_id, launch_idx=-1).action.stored_data['stdout'],
                          'test1\n')
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data['stdout'],
+        self.assertEqual(self.lp.get_fw_by_id(fw2.fw_id, launch_idx=-1).action.stored_data['stdout'],
                          'test2\n')
 
     def test_fibadder(self):
@@ -273,9 +279,10 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(fw)
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-3).action.stored_data['next_fibnum'], 1)
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-2).action.stored_data['next_fibnum'], 2)
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data, {})
+        print(fw.action)
+        self.assertEqual(self.lp.get_fw_by_id(1).action.stored_data['next_fibnum'], 1)
+        self.assertEqual(self.lp.get_fw_by_id(2).action.stored_data['next_fibnum'], 2)
+        self.assertEqual(self.lp.get_fw_by_id(3).action.stored_data, {})
         self.assertFalse(self.lp.run_exists())
 
     def test_parallel_fibadder(self):
@@ -310,7 +317,7 @@ class MongoTests(unittest.TestCase):
         fw = Firework(t)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-2).action.stored_data['data'], "hello")
+        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data['data'], "hello")
         self.lp.add_wf(fw)
         launch_rocket(self.lp, FWorker(env={"hello": "world"}))
         self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data[
@@ -407,8 +414,8 @@ class MongoTests(unittest.TestCase):
         fw1 = Firework([DummyLPTask()], spec={"_add_launchpad_and_fw_id": True})
         self.lp.add_wf(fw1)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data['fw_id'], 1)
-        self.assertIsNotNone(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data['host'])
+        self.assertEqual(self.lp.get_fw_by_id(fw1.fw_id, launch_idx=-1).action.stored_data['fw_id'], 1)
+        self.assertIsNotNone(self.lp.get_fw_by_id(fw1.fw_id, launch_idx=-1).action.stored_data['host'])
 
     def test_spec_copy(self):
         task1 = ScriptTask.from_str('echo "Task 1"')
@@ -465,7 +472,7 @@ class MongoTests(unittest.TestCase):
             'stdout'], 'test1\n')
         self.lp.delete_wf(fw.fw_id)
         self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
-        self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
+        self.assertRaises(ValueError, self.lp._get_launch_by_fw_id, fw.fw_id)
 
     def test_duplicate_delete_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {'store_stdout': True})
