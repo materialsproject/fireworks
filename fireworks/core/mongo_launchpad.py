@@ -63,7 +63,8 @@ class MongoLaunchPad(LaunchPad):
                  ssl_ca_certs: str=None, ssl_certfile: str=None,
                  ssl_keyfile: str=None, ssl_pem_passphrase: str=None,
                  authsource: str=None,
-                 fworker: Optional[Union[str, Dict]]=None):
+                 worker_name: str="Automatically generated Worker",
+                 category: str='', query: Dict=None, env:Dict=None):
         """
         Args:
             host (str): hostname. A MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
@@ -143,11 +144,12 @@ class MongoLaunchPad(LaunchPad):
         self.backup_launch_data = {}
         self.backup_fw_data = {}
 
-        if type(fworker) == str:
-            fworker = loadfn(fworker)
-        self.fworker = fworker or {'name': 'my first fireworker',
-                                   'category': '',
-                                   'query': {}}
+        if self.worker_name == "AUTOLOAD":
+
+            self.worker_name = worker_name
+            self.category = category
+            self._query = query if query else {}
+            self.env = env if env else {}
 
     def to_dict(self) -> Dict:
         """
@@ -168,7 +170,11 @@ class MongoLaunchPad(LaunchPad):
             'ssl_certfile': self.ssl_certfile,
             'ssl_keyfile': self.ssl_keyfile,
             'ssl_pem_passphrase': self.ssl_pem_passphrase,
-            'authsource': self.authsource}
+            'authsource': self.authsource,
+            'worker_name': self.worker_name,
+            'category': self.category,
+            'query': self._query,
+            'env': self.env}
 
     def update_spec(self, fw_ids: List[int], spec_document: Dict, mongo: bool=False):
         """
@@ -211,11 +217,39 @@ class MongoLaunchPad(LaunchPad):
         ssl_certfile = d.get('ssl_certfile', None)
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
-        authsource= d.get('authsource', None)
+        authsource = d.get('authsource', None)
+        worker_name = d.get('worker_name', "Automatically generated Worker")
+        category = d.get('category', '')
+        query = d.get('query', None)
+        env = d.get('env', None)
         return MongoLaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
-                         authsource)
+                         authsource, worker_name, category, query, env)
+
+    @property
+    def query(self):
+        """
+        Returns updated query dict.
+        """
+        q = dict(self._query)
+        fworker_check = [{"spec._fworker": {"$exists": False}},
+                         {"spec._fworker": None},
+                         {"spec._fworker": self.name}]
+        if '$or' in q:
+            q['$and'] = q.get('$and', [])
+            q['$and'].extend([{'$or': q.pop('$or')}, {'$or': fworker_check}])
+        else:
+            q['$or'] = fworker_check
+        if self.category and isinstance(self.category, six.string_types):
+            if self.category == "__none__":
+                q['spec._category'] = {"$exists": False}
+            else:
+                q['spec._category'] = self.category
+        elif self.category:  # category is list of str
+            q['spec._category'] = {"$in": self.category}
+
+        return q
 
     @property
     def workflow_count(self) -> int:
