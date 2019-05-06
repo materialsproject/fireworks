@@ -34,7 +34,6 @@ from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
 from fireworks.core.firework import Firework, Tracker, Workflow,\
                                 Firetask, FWAction
-from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 from typing import List, Tuple, Dict, Union, Optional, Any
@@ -553,7 +552,7 @@ class LaunchPad(FWSerializable, ABC):
         # change return type to dict to make return type serializable to support job packing
         return m_fw.to_dict()
 
-    def checkout_fw(self, fworker: FWorker, launch_dir: str, fw_id: int=None,
+    def checkout_fw(self, launch_dir: str, fw_id: int=None,
                     host: Optional[str]=None, ip: Optional[str]=None,
                     state: str="RUNNING") -> Tuple[Firework, int]:
         """
@@ -561,7 +560,6 @@ class LaunchPad(FWSerializable, ABC):
         return it to the caller. The caller is responsible for running the Firework.
 
         Args:
-            fworker (FWorker): A FWorker instance
             launch_dir (str): the dir the FW will be run in (for creating a Launch object)
             fw_id (int): Firework id
             host (str): the host making the request (for creating a Launch object)
@@ -571,7 +569,7 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             (Firework, int): firework and the new FW id (TODO PERVIOUSLY launchd id)
         """
-        m_fw = self._get_a_fw_to_run(fworker.query, fw_id=fw_id)
+        m_fw = self._get_a_fw_to_run(fw_id=fw_id)
         if not m_fw:
             return None
 
@@ -587,7 +585,7 @@ class LaunchPad(FWSerializable, ABC):
         # get new launch
         # TODO REMOVED LAUNCH ACCESS STUFF BELOW
         # this function should set the arguments in the Firework
-        m_fw.reset_launch(state, launch_dir, trackers, state_history, fworker, host, ip,
+        m_fw.reset_launch(state, launch_dir, trackers, state_history, self.fworker, host, ip,
                           self._get_next_launch_idx(m_fw.fw_id))
         #self._launch_fw(m_fw, reserved_fw)
 
@@ -1065,28 +1063,28 @@ class LaunchPad(FWSerializable, ABC):
 
     """ INTERNAL FUNCTIONS FULLY DEFINED HERE """
 
-    def run_exists(self, fworker: Optional[FWorker]=None) -> bool:
+    def run_exists(self) -> bool:
         """
         Checks to see if the database contains any FireWorks that are ready to run.
 
         Returns:
             bool: True if the database contains any FireWorks that are ready to run.
         """
-        q = fworker.query if fworker else {}
-        return bool(self._get_a_fw_to_run(query=q, checkout=False))
+        q = self.query
+        return bool(self._get_a_fw_to_run(query=self.query, checkout=False))
 
-    def future_run_exists(self, fworker: Optional[FWorker]=None) -> bool:
+    def future_run_exists(self) -> bool:
         """Check if database has any current OR future Fireworks available
 
         Returns:
             bool: True if database has any ready or waiting Fireworks.
         """
-        if self.run_exists(fworker):
+        if self.run_exists():
             # check first to see if any are READY
             return True
         else:
             # retrieve all [RUNNING/RESERVED] fireworks
-            q = fworker.query if fworker else {}
+            q = self.query
             q.update({'state': {'$in': ['RUNNING', 'RESERVED']}})
             active = self.get_fw_ids(q)
             # then check if they have WAITING children
@@ -1100,14 +1098,13 @@ class LaunchPad(FWSerializable, ABC):
             # there is no future work to do
             return False
 
-    def reserve_fw(self, fworker: FWorker, launch_dir: str,
+    def reserve_fw(self, launch_dir: str,
                    host: Optional[str]=None, ip: Optional[str]=None,
                    fw_id: int=None) -> Tuple[Firework, int]:
         """
         Checkout the next ready firework and mark the launch reserved.
 
         Args:
-            fworker (FWorker)
             launch_dir (str): path to the launch directory.
             host (str): hostname
             ip (str): ip address
@@ -1116,7 +1113,7 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             (Firework, int): the checked out firework and the new launch id
         """
-        return self.checkout_fw(fworker, launch_dir, host=host, ip=ip,
+        return self.checkout_fw(launch_dir, host=host, ip=ip,
                                 fw_id=fw_id, state="RESERVED")
 
     def mark_fizzled(self, fw_id: int, launch_idx: int=-1):

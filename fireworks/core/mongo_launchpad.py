@@ -34,9 +34,9 @@ from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_
     RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, WFLOCK_EXPIRATION_KILL, \
     MONGO_SOCKET_TIMEOUT_MS, GRIDFS_FALLBACK_COLLECTION
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
-from fireworks.core.firework import Firework, Workflow, FWAction, Tracker, FWorker
+from fireworks.core.firework import Firework, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.utilities.fw_serializers import recursive_dict, _recursive_load
+from fireworks.utilities.fw_serializers import recursive_dict, _recursive_load, DATETIME_HANDLER
 
 from typing import TypeVar, List, Tuple, Dict, Union, Optional, Any
 
@@ -64,7 +64,7 @@ class MongoLaunchPad(LaunchPad):
                  ssl_keyfile: str=None, ssl_pem_passphrase: str=None,
                  authsource: str=None,
                  worker_name: str="Automatically generated Worker",
-                 category: str='', query: Dict=None, env:Dict=None):
+                 category: str='', query: Dict=None, env: Dict=None):
         """
         Args:
             host (str): hostname. A MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
@@ -144,12 +144,10 @@ class MongoLaunchPad(LaunchPad):
         self.backup_launch_data = {}
         self.backup_fw_data = {}
 
-        if self.worker_name == "AUTOLOAD":
-
-            self.worker_name = worker_name
-            self.category = category
-            self._query = query if query else {}
-            self.env = env if env else {}
+        self.worker_name = worker_name
+        self.category = category
+        self._query = query if query else {}
+        self.env = env if env else {}
 
     def to_dict(self) -> Dict:
         """
@@ -227,6 +225,9 @@ class MongoLaunchPad(LaunchPad):
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
                          authsource, worker_name, category, query, env)
 
+    def get_worker_query(self):
+        return self.query
+
     @property
     def query(self):
         """
@@ -250,6 +251,13 @@ class MongoLaunchPad(LaunchPad):
             q['spec._category'] = {"$in": self.category}
 
         return q
+
+    @property
+    def fworker(self):
+        return {'name': self.worker_name,
+                'category': self.category,
+                'query': json.dumps(self._query, default=DATETIME_HANDLER),
+                'env': self.env}
 
     @property
     def workflow_count(self) -> int:
@@ -1027,9 +1035,8 @@ class MongoLaunchPad(LaunchPad):
             name (str)
         """
         #fw = self.get_fw_by_id(fw_id, launch_idx)
-        # need to change this when fworker gets integrated
         #fw = self.get_fw_by_id(fw_id, launch_idx)
-        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id=fw_id, state='RESERVED')
+        fw = self.checkout_fw(os.getcwd(), fw_id=fw_id, state='RESERVED')
         fw.state = "OFFLINE-%s" % fw.state
         fw.to_file("FW.json")
         with open('FW_offline.json', 'w') as f:
@@ -1306,6 +1313,24 @@ class LazyFirework(object):
     @property
     def fworker(self):
         return self.full_fw.fworker
+
+    """
+    @property
+    def worker_name(self):
+        return self.full_fw.worker_name
+
+    @property
+    def category(self):
+        return self.full_fw.category
+
+    @property
+    def query(self):
+        return self.full_fw.query
+
+    @property
+    def env(self):
+        return self.full_fw.env
+    """
 
     @property
     def state_history(self):

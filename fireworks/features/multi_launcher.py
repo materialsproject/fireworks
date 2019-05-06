@@ -48,13 +48,12 @@ def ping_multilaunch(port, stop_event):
         stop_event.wait(PING_TIME_SECS)
 
 
-def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout,
+def rapidfire_process(nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout,
                       running_ids_dict, local_redirect):
     """
     Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
     Args:
-        fworker (FWorker): object
         nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
         sleep (int): secs to sleep between rapidfire loop iterations
         loglvl (str): level at which to output logs to stdout
@@ -77,7 +76,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     sleep_time = sleep if sleep else RAPIDFIRE_SLEEP_SECS
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
-    rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
+    rapidfire(launchpad, m_dir=None, nlaunches=nlaunches,
               max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout,
               local_redirect=local_redirect)
     while nlaunches == 0:
@@ -89,7 +88,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
             log_multi(l_logger, 'Sleeping for {} secs before resubmit sub job'.format(sleep_time))
             time.sleep(sleep_time)
             log_multi(l_logger, 'Resubmit sub job')
-            rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
+            rapidfire(launchpad, m_dir=None, nlaunches=nlaunches,
                       max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout,
                       local_redirect=local_redirect)
         else:
@@ -97,13 +96,12 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     log_multi(l_logger, 'Sub job finished')
 
 
-def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, timeout=None,
+def start_rockets(nlaunches, sleep, loglvl, port, node_lists, sub_nproc_list, timeout=None,
                   running_ids_dict=None, local_redirect=False):
     """
     Create each sub job and start a rocket launch in each one
 
     Args:
-        fworker (FWorker): object
         nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
         sleep (int): secs to sleep between rapidfire loop iterations
         loglvl (str): level at which to output logs to stdout
@@ -117,7 +115,7 @@ def start_rockets(fworker, nlaunches, sleep, loglvl, port, node_lists, sub_nproc
         ([multiprocessing.Process]) all the created processes
     """
     processes = [Process(target=rapidfire_process,
-                         args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout,
+                         args=(nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout,
                                running_ids_dict, local_redirect))
                  for nl, sub_nproc in zip(node_lists, sub_nproc_list)]
     for p in processes:
@@ -154,7 +152,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
 
 
 # TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??
-def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_time,
+def launch_multiprocess(launchpad, loglvl, nlaunches, num_jobs, sleep_time,
                         total_node_list=None, ppn=1, timeout=None, exclude_current_node=False,
                         local_redirect=False):
     """
@@ -162,7 +160,6 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
 
     Args:
         launchpad (LaunchPad)
-        fworker (FWorker)
         loglvl (str): level at which to output logs
         nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
         num_jobs(int): number of sub jobs
@@ -193,7 +190,7 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
     running_ids_dict = manager.dict()
     print("IDS2", running_ids_dict)
     # launch rapidfire processes
-    processes = start_rockets(fworker, nlaunches, sleep_time, loglvl, port, node_lists,
+    processes = start_rockets(nlaunches, sleep_time, loglvl, port, node_lists,
                               sub_nproc_list, timeout=timeout, running_ids_dict=running_ids_dict,
                               local_redirect=local_redirect)
     FWData().Running_IDs = running_ids_dict
