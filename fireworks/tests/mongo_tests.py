@@ -173,8 +173,6 @@ class MongoTests(unittest.TestCase):
         launch_rocket(None, self.fworker)
         fw_ids.append(fw.fw_id)
 
-        time.sleep(3)
-
         # recover jobs
         for fw_id in fw_ids:
             fw = self.lp.recover_offline(fw_id)
@@ -496,6 +494,8 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         # TODO: if test keeps failing on Travis, add an explicit check of nlaunches>0 in the database here
         # this will ensure the first Rocket is actually in the DB
+        while self.lp.launches.count() == 0:
+            time.sleep(0.01)
         launch_rocket(self.lp, self.fworker)
 
         time.sleep(1)

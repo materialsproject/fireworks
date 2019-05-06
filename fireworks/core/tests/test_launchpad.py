@@ -36,7 +36,7 @@ from monty.os import cd
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-TESTUSR = "muser"
+TESTUSR = "myuser"
 
 
 class AuthenticationTest(unittest.TestCase):
@@ -53,6 +53,14 @@ class AuthenticationTest(unittest.TestCase):
             raise e
             #raise unittest.SkipTest(
             #    'MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            client = MongoClient()
+            client.not_the_admin_db.command("dropUser", TESTUSR)
+        except Exception as e:
+            raise e
 
     def test_no_admin_privileges_for_plebs(self):
         """Normal users can not authenticate against the admin db.
@@ -889,6 +897,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
     def test_rerun_timed_fws(self):
         # Launch all fireworks in a separate process
+        self.lp.workflows.create_index('fw_states', unique=False, background=True)
         class RapidfireProcess(Process):
             def __init__(self, lpad, fworker):
                 super(self.__class__,self).__init__()

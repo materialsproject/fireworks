@@ -37,11 +37,11 @@ def ping_multilaunch(port, stop_event):
 
     lp = ds.LaunchPad()
     while not stop_event.is_set():
-        for pid, lid in fd.Running_IDs.items():
-            if lid:
+        for pid, fw_id in fd.Running_IDs.items():
+            if fw_id:
                 try:
                     os.kill(pid, 0)  # throws OSError if the process is dead
-                    lp.ping_launch(lid)
+                    lp.ping_firework(fw_id)
                 except OSError:  # means this process is dead!
                     fd.Running_IDs[pid] = None
 
@@ -73,6 +73,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
     FWData().NODE_LIST = node_list
     FWData().SUB_NPROCS = sub_nproc
     FWData().Running_IDs = running_ids_dict
+    print("IDS", running_ids_dict)
     sleep_time = sleep if sleep else RAPIDFIRE_SLEEP_SECS
     l_dir = launchpad.get_logdir() if launchpad else None
     l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
@@ -190,11 +191,13 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
 
     manager = Manager()
     running_ids_dict = manager.dict()
+    print("IDS2", running_ids_dict)
     # launch rapidfire processes
     processes = start_rockets(fworker, nlaunches, sleep_time, loglvl, port, node_lists,
                               sub_nproc_list, timeout=timeout, running_ids_dict=running_ids_dict,
                               local_redirect=local_redirect)
     FWData().Running_IDs = running_ids_dict
+    print("IDS3", running_ids_dict)
 
     # start pinging service
     ping_stop = threading.Event()
