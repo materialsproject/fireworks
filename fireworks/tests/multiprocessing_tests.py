@@ -9,7 +9,7 @@ import shutil
 import unittest
 from unittest import TestCase
 
-from fireworks import LaunchPad, Firework, FWorker
+from fireworks import LaunchPad, Firework
 from fireworks.core.firework import Workflow
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -34,7 +34,6 @@ class TestCheckoutFW(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
@@ -67,7 +66,7 @@ class TestCheckoutFW(TestCase):
         self.lp.add_wf(Firework(ScriptTask.from_str(
             shell_cmd='echo "hello 2"',
             parameters={"stdout_file": "task.out"}), fw_id=2))
-        launch_multiprocess(self.lp, FWorker(), 'DEBUG', 0, 2, 10)
+        launch_multiprocess(self.lp, 'DEBUG', 0, 2, 10)
         fw1 = self.lp.get_fw_by_id(1)
         fw2 = self.lp.get_fw_by_id(2)
         self.assertEqual(fw1.state_history[-1]["state"],
@@ -85,7 +84,6 @@ class TestEarlyExit(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
@@ -127,7 +125,7 @@ class TestEarlyExit(TestCase):
                        fw_id=4)
         wf = Workflow([fw1, fw2, fw3, fw4], {1: [2, 3], 2: [4], 3: [4]})
         self.lp.add_wf(wf)
-        launch_multiprocess(self.lp, FWorker(), 'DEBUG', 0, 2, sleep_time=0.5)
+        launch_multiprocess(self.lp, 'DEBUG', 0, 2, sleep_time=0.5)
         fw2 = self.lp.get_fw_by_id(2)
         fw3 = self.lp.get_fw_by_id(3)
         with open(os.path.join(fw2.launch_dir, "task.out")) as f:

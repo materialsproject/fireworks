@@ -9,6 +9,7 @@ from monty.os.path import zpath
 The LaunchPad manages the Fireworks database.
 """
 
+import six
 import datetime
 import json
 import os
@@ -227,6 +228,9 @@ class MongoLaunchPad(LaunchPad):
 
     def get_worker_query(self):
         return self.query
+
+    def get_env(self):
+        return self.env
 
     @property
     def query(self):

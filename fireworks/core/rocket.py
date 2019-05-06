@@ -237,7 +237,7 @@ class Rocket:
                 m_fw.to_file('FW.yaml')
 
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
-            my_spec["_fw_env"] = lp.get_worker_query().get('env') if lp else None
+            my_spec["_fw_env"] = lp.get_env() or None
 
             # set up heartbeat (pinging the server that we're still alive)
             ping_stop = start_ping_firework(lp, fw_id)
