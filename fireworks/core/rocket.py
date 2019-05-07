@@ -244,7 +244,6 @@ class Rocket:
 
             # set up heartbeat (pinging the server that we're still alive)
             ping_stop = start_ping_firework(lp, fw_id)
-            #time.sleep(5)
 
             # start background tasks
             if '_background_tasks' in my_spec:

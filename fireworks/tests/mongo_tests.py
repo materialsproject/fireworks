@@ -160,13 +160,11 @@ class MongoTests(unittest.TestCase):
 
         # launch two parent jobs
         os.chdir(os.path.join(cur_dir, "launcher_1"))
-        #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
         fw = setup_offline_job(self.lp)
         launch_rocket(None)
         fw_ids.append(fw.fw_id)
 
         os.chdir(os.path.join(cur_dir, "launcher_2"))
-        #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
         fw = setup_offline_job(self.lp)
         launch_rocket(None)
         fw_ids.append(fw.fw_id)
@@ -177,7 +175,6 @@ class MongoTests(unittest.TestCase):
 
         # launch child job
         os.chdir(os.path.join(cur_dir, "launcher_3"))
-        #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
         fw = setup_offline_job(self.lp)
         last_fw_id = fw.fw_id
         launch_rocket(None)
