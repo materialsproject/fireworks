@@ -178,7 +178,7 @@ class MongoTests(unittest.TestCase):
         # launch child job
         os.chdir(os.path.join(cur_dir, "launcher_3"))
         #fw = self.lp.reserve_fw(self.fworker, os.getcwd())
-        fw = setup_offline_job(self.lp, fw.fw_id)
+        fw = setup_offline_job(self.lp)
         last_fw_id = fw.fw_id
         launch_rocket(None)
 
@@ -310,6 +310,8 @@ class MongoTests(unittest.TestCase):
         fw = Firework(t)
         self.lp.add_wf(fw)
         launch_rocket(self.lp)
+        print(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action,
+            self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.to_dict())
         self.assertEqual(self.lp.get_fw_by_id(fw.fw_id, launch_idx=-1).action.stored_data['data'], "hello")
         self.lp.add_wf(fw)
         self.lp.env = {"hello": "world"}

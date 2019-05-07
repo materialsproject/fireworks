@@ -226,10 +226,10 @@ class MongoLaunchPad(LaunchPad):
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
                          authsource, worker_name, category, query, env)
 
-    def get_worker_query(self):
+    def get_worker_query(self) -> Dict:
         return self.query
 
-    def get_env(self):
+    def get_env(self) -> Dict:
         return self.env
 
     @property
