@@ -1251,7 +1251,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         fw = self.lp.get_fw_by_id(fw.fw_id)
 
-        self.assertEqual(fw.state, 'OFFLINE-RESERVED')
+        self.assertEqual(fw.state, 'OFFLINE')
 
         #fizzle
         self.assertIsNotNone(self.lp.recover_offline(fw.fw_id, ignore_errors=False))

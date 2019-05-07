@@ -852,19 +852,18 @@ class MongoLaunchPad(LaunchPad):
         all_fws = []
         for fw in fws:
             query_dict = {'launch_id': {'$in': fw['launches']}}
-            launches = self.launches.find(query_dict, sort=sort)
+            query_dict['state'] = fw['state']
+            launches = list(self.launches.find(query_dict, sort=sort))
             for i, launch in enumerate(launches):
                 launch['launch_idx'] = i
-            query_dict['state'] = fw['state']
+                new_fw = dict(fw)
+                new_fw['launch'] = launch
+                all_fws.append(new_fw)
             if self.launches.count_documents(query_dict) == 0:
                 new_fw = dict(fw)
                 new_fw['launch'] = {}
                 all_fws.append(new_fw)
                 #raise ValueError('FW has no launch data!')
-            for launch in launches:
-                new_fw = dict(fw)
-                new_fw['launch'] = launch
-                all_fws.append(new_fw)
         return all_fws
 
     def _internal_fizzle(self, fw_id: int, launch_idx: int=-1):
@@ -981,7 +980,7 @@ class MongoLaunchPad(LaunchPad):
         self.fireworks.find_one_and_update({"fw_id": fw_id}, {'$set': {'spec._priority': priority}})
 
     def get_offline_fwids(self):
-        res = self.fireworks.find({'state': {'$in': ['OFFLINE-RESERVED', 'OFFLINE-RUNNING']}})
+        res = self.fireworks.find({'state': 'OFFLINE'})
 
     def add_offline_run(self, fw_id: int=None, launch_idx: int=-1):
         """
@@ -996,7 +995,7 @@ class MongoLaunchPad(LaunchPad):
         # need to change this when fworker gets integrated
         #fw = self.get_fw_by_id(fw_id, launch_idx)
         fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id=fw_id, state='RESERVED')
-        fw.state = "OFFLINE-%s" % fw.state
+        fw.state = "OFFLINE"
         fw.to_file("FW.json")
         with open('FW_offline.json', 'w') as f:
             f.write('{"fw_id":%d, "launch_id":%d}' % (fw.fw_id, fw.launch_idx))
@@ -1033,9 +1032,9 @@ class MongoLaunchPad(LaunchPad):
             with zopen(offline_loc) as f:
                 offline_data = loadfn(offline_loc)
                 if 'started_on' in offline_data:
-                    m_fw.state = 'OFFLINE-RUNNING'
+                    m_fw.state = 'OFFLINE'
                     for s in m_fw.state_history:
-                        if s['state'] == 'OFFLINE-RUNNING':
+                        if s['state'] == 'OFFLINE':
                             s['created_on'] = reconstitute_dates(offline_data['started_on'])
                     self._update_fw(m_fw)
                     #l = self.launches.find_one_and_replace({'launch_id': m_fw.launch},
@@ -1091,7 +1090,7 @@ class MongoLaunchPad(LaunchPad):
                 #self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed": True}})
             return m_fw.fw_id
 
-    def forget_offline(self, launchid_or_fwid: int, launch_mode: bool=True):
+    def forget_offline(self, fw_id: int):
         """
         Unmark the offline run for the given launch or firework id.
 
@@ -1099,8 +1098,7 @@ class MongoLaunchPad(LaunchPad):
             launchid_or_fwid (int): launch od or firework id
             launch_mode (bool): if True then launch id is given.
         """
-        q = {"launch_id": launchid_or_fwid} if launch_mode else {"fw_id": launchid_or_fwid}
-        self.offline_runs.update_many(q, {"$set": {"deprecated": True}})
+        self.rerun_fw(fw_id)
 
     def log_message(self, level: str, message: str):
         """

@@ -680,7 +680,7 @@ class LaunchPad(FWSerializable, ABC):
     def detect_lostruns(self, expiration_secs: int=RUN_EXPIRATION_SECS, fizzle: bool=False,
                         rerun: bool=False, max_runtime: Optional[int]=None,
                         min_runtime: Optional[int]=None, refresh: bool=False,
-                        query: Any=None) -> Tuple[List[int], List[int], List[int]]:
+                        query: Any=None, lost_criterion='most_recent_lost') -> Tuple[List[int], List[int], List[int]]:
         """
         Detect lost runs i.e running fireworks that haven't been updated within the specified
         time limit or running firework that has been marked fizzled or completed.
@@ -693,6 +693,9 @@ class LaunchPad(FWSerializable, ABC):
             min_runtime (seconds): minimum run time
             refresh (bool): if True, refresh the workflow with inconsistent fireworks.
             query (dict): restrict search to FWs matching this query
+            lost_criterion (str): 'most_recent_lost' or 'all_lost', determines
+                whether a Firework is "lost" if its most recent launch has failed
+                or if all its launches have failed. Default 'most_recent_lost'
 
         Returns:
             ([int], [int], [int]): tuple of list of lost fw ids, lost firework ids and
@@ -711,37 +714,49 @@ class LaunchPad(FWSerializable, ABC):
         
         # Check if each FIREWORK is bad. If so, append id to potential_lost_fw_ids
         # and fw_id is ONLY LOST if all its launch_idxs are lost
+        print(bad_fw_data)
         for fw_id in bad_fw_data:
-            bad_fw = True
-            m_fw = self.get_fw_by_id(fw_id)
-            if max_runtime or min_runtime:
-                bad_fw = False
-                utime = m_fw._get_time('RUNNING', use_update_time=True)
-                ctime = m_fw._get_time('RUNNING', use_update_time=False)
-                if (not max_runtime or (utime-ctime).seconds <= max_runtime) and \
-                        (not min_runtime or (utime-ctime).seconds >= min_runtime):
-                    bad_fw = True
-            if bad_fw:
-                potential_lost_fw_ids.add(fw_id)
-                if not lost_launch_idxs.get(fw_id):
-                    lost_launch_idxs[fw_id] = [m_fw.launch_idx]
-                else:
-                    lost_launch_idxs[fw_id].append(m_fw.launch_idx)
+            for launch_idx in range(self._get_next_launch_idx(fw_id)):
+                bad_fw = True
+                m_fw = self.get_fw_by_id(fw_id, launch_idx)
+                if max_runtime or min_runtime:
+                    bad_fw = False
+                    utime = m_fw._get_time('RUNNING', use_update_time=True)
+                    ctime = m_fw._get_time('RUNNING', use_update_time=False)
+                    if (not max_runtime or (utime-ctime).seconds <= max_runtime) and \
+                            (not min_runtime or (utime-ctime).seconds >= min_runtime):
+                        bad_fw = True
+                if bad_fw:
+                    potential_lost_fw_ids.add(fw_id)
+                    if not lost_launch_idxs.get(fw_id):
+                        lost_launch_idxs[fw_id] = [m_fw.launch_idx]
+                    else:
+                        lost_launch_idxs[fw_id].append(m_fw.launch_idx)
 
         # Check if EVERY FIREWORK with a given fw_id failed. If so, add to lost_fw_ids
+        print(potential_lost_fw_ids)
         for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
             fws = self._find_fws(fw_id)
+            fw = self.get_fw_by_id(fw_id)
+            print("FWS", fws, fw, fw.launch_idx, fw.state)
             # only RUNNING FireWorks can be "lost", i.e. not defused or archived
             not_lost = [f['launch']['launch_idx'] for f in fws if f['launch']['launch_idx'] not in lost_launch_idxs[fw_id]]
-            if len(not_lost) == 0:  # all launches are lost - we are lost!
-                lost_fw_ids.append(fw_id)
-            else:
-                for l_idx in not_lost:
-                    l_state = self.get_fw_dict_by_id(fw_id, launch_idx=l_idx)['state']
-                    if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
-                        break
+            if lost_criterion == 'all_lost':
+                if len(not_lost) == 0:  # all launches are lost - we are lost!
+                    lost_fw_ids.append(fw_id)
                 else:
-                    lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
+                    for l_idx in not_lost:
+                        l_state = self.get_fw_dict_by_id(fw_id, launch_idx=l_idx)['state']
+                        if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
+                            break
+                    else:
+                        lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
+            else:
+                print("LAUNCH IDXS", [f['launch']['launch_idx'] for f in fws])
+                launch_idxs = sorted([f['launch']['launch_idx'] for f in fws])
+                print("LAUNCH IDXS", launch_idxs)
+                if not (launch_idxs[-1] in not_lost):
+                    lost_fw_ids.append(fw_id)
 
         # fizzle and rerun
         if fizzle or rerun:

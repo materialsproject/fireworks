@@ -177,8 +177,7 @@ class Firework(FWSerializable):
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
                    'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
-                   'COMPLETED': 5,
-                   'OFFLINE-READY': 2, 'OFFLINE-RESERVED': 3, 'OFFLINE-RUNNING': 4}
+                   'COMPLETED': 5, 'OFFLINE': 4}
 
     def __init__(self, tasks: Union[Firetask, List[Firetask]],
                  spec: Optional[dict]=None, name: Optional[str]=None,
