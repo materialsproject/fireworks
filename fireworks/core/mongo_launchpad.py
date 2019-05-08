@@ -132,7 +132,6 @@ class MongoLaunchPad(LaunchPad):
 
         self.fireworks = self.db.fireworks
         self.launches = self.db.launches
-        self.offline_runs = self.db.offline_runs
         self.fw_id_assigner = self.db.fw_id_assigner
         self.workflows = self.db.workflows
         if GRIDFS_FALLBACK_COLLECTION:
@@ -229,7 +228,6 @@ class MongoLaunchPad(LaunchPad):
         self.fireworks.delete_many({})
         self.launches.delete_many({})
         self.workflows.delete_many({})
-        #self.offline_runs.delete_many({})
         self._restart_ids(1, 1)
         if self.gridfs_fallback is not None:
             self.db.drop_collection("{}.chunks".format(GRIDFS_FALLBACK_COLLECTION))
@@ -374,7 +372,6 @@ class MongoLaunchPad(LaunchPad):
                 for f in self.gridfs_fallback.find({"metadata.launch_id": lid}):
                     self.gridfs_fallback.delete(f._id)
         self.launches.delete_many({'launch_id': {"$in": launch_ids}})
-        self.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
         self.workflows.delete_one({'nodes': fw_id})
 
