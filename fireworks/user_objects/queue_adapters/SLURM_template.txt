@@ -9,6 +9,7 @@
 #SBATCH --gres=$${gres}
 #SBATCH --qos=$${qos}
 #SBATCH --time=$${walltime}
+#SBATCH --time-min=$${time_min}
 #SBATCH --partition=$${queue}
 #SBATCH --account=$${account}
 #SBATCH --job-name=$${job_name}
