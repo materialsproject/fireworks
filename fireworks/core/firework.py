@@ -29,7 +29,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_seriali
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional, Union, Any
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -130,7 +130,7 @@ class Firetask(defaultdict, FWSerializable):
 class BackgroundTask(FWSerializable, object):
     _fw_name = 'BackgroundTask'
 
-    def __init__(self, tasks: List[Firetask], num_launches: int=0,
+    def __init__(self, tasks: Union[Firetask, List[Firetask]], num_launches: int=0,
                  sleep_time: float=60, run_on_finish: bool=False):
         """
         Args:
@@ -303,7 +303,8 @@ class Firework(FWSerializable):
             if state in ['RUNNING', 'RESERVED']:
                 self.touch_history()  # add updated_on key
 
-    def _get_time(self, states: List[str], use_update_time: bool=False) -> datetime:
+    def _get_time(self, states: Union[str, List[str]],
+                  use_update_time: bool=False) -> Union[datetime, None]:
         """
         Internal method to help get the time of various events in the Launch (e.g. RUNNING)
         from the state history.
@@ -417,7 +418,7 @@ class Firework(FWSerializable):
 
     @property
     @recursive_serialize
-    def launch(self) -> Dict:
+    def launch(self) -> Dict[str, Any]:
         launch = {}
         launch['state'] = self.state
         launch['state_history'] = self.state_history
@@ -432,7 +433,7 @@ class Firework(FWSerializable):
         return launch
 
     @recursive_serialize
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         # put tasks in a special location of the spec
         spec = self.spec
         spec['_tasks'] = [t.to_dict() for t in self.tasks]
@@ -451,7 +452,7 @@ class Firework(FWSerializable):
         return m_dict
 
     @recursive_serialize
-    def to_db_dict(self) -> Dict:
+    def to_db_dict(self) -> Dict[str, Any]:
         m_d = self.to_dict()
         m_d['launch']['time_start'] = self.time_start
         m_d['launch']['time_end'] = self.time_end

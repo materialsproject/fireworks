@@ -9,6 +9,7 @@ from monty.os.path import zpath
 The LaunchPad manages the FireWorks database.
 """
 
+import six
 import datetime
 import json
 import os
@@ -35,6 +36,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_date
 from fireworks.core.firework import Firework, Tracker, Workflow,\
                                 Firetask, FWAction
 from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.fw_serializers import recursive_dict, _recursive_load, DATETIME_HANDLER
 
 from typing import List, Tuple, Dict, Union, Optional, Any
 
@@ -107,14 +109,10 @@ class WFLock(object):
 
 class LaunchPad(FWSerializable, ABC):
 
-    @abstractmethod
-    def __init__(*args, **kwargs):
-        pass
-
     """THE FOLLOWING ARE BASIC FWSerializable FUNCTIONS"""
 
     @abstractmethod
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         pass
 
     @classmethod
@@ -128,16 +126,53 @@ class LaunchPad(FWSerializable, ABC):
             return cls.from_file(LAUNCHPAD_LOC)
         return cls()
 
-###################################################################
+################################################################
 # FUNCTIONS ACCESSED BY EXTERNAL CODE (lpad_run.py, rocket.py) #
 ################################################################
     
-#-------------------------------#
-# FUNCTION DEFINED IN FULL HERE #
-#-------------------------------#
+#--------------------------------#
+# FUNCTIONS DEFINED IN FULL HERE #
+#--------------------------------#
 
-    def reset(self, password: str, require_password: bool=True,
-              max_reset_wo_password: int=25):
+    def get_worker_query(self) -> Dict:
+        return self.query
+
+    def get_env(self) -> Dict:
+        return self.env
+
+    @property
+    def query(self) -> Dict:
+        """
+        Returns updated query dict for the computing resource.
+        """
+        q = dict(self._query)
+        fworker_check = [{"spec._fworker": {"$exists": False}},
+                         {"spec._fworker": None},
+                         {"spec._fworker": self.name}]
+        if '$or' in q:
+            q['$and'] = q.get('$and', [])
+            q['$and'].extend([{'$or': q.pop('$or')}, {'$or': fworker_check}])
+        else:
+            q['$or'] = fworker_check
+        if self.category and isinstance(self.category, six.string_types):
+            if self.category == "__none__":
+                q['spec._category'] = {"$exists": False}
+            else:
+                q['spec._category'] = self.category
+        elif self.category:  # category is list of str
+            q['spec._category'] = {"$in": self.category}
+
+        return q
+
+    @property
+    def fworker(self) -> Dict:
+        return {'name': self.worker_name,
+                'category': self.category,
+                'query': json.dumps(self._query, default=DATETIME_HANDLER),
+                'env': self.env}
+
+    def reset(self, password: str, require_password: bool = True,
+              max_reset_wo_password: int = 25):
         """
         Create a new FireWorks database. This will overwrite the existing FireWorks database! To
         safeguard against accidentally erasing an existing database, a password must be entered.
@@ -162,7 +197,7 @@ class LaunchPad(FWSerializable, ABC):
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
-    def maintain(self, infinite: bool=True, maintain_interval: Optional[int]=None):
+    def maintain(self, infinite: bool = True, maintain_interval: Optional[int] = None):
         """
         Perform launchpad maintenance: detect lost runs and unreserved RESERVE launches.
 
@@ -197,7 +232,7 @@ class LaunchPad(FWSerializable, ABC):
             self.m_logger.debug('Sleeping for {} secs...'.format(maintain_interval))
             time.sleep(maintain_interval)
 
-    def add_wf(self, wf: Union[Workflow, Firework], reassign_all: bool=True) -> Dict:
+    def add_wf(self, wf: Union[Workflow, Firework], reassign_all: bool = True) -> Dict:
         """
         Add workflow(or firework) to the launchpad. The firework ids will be reassigned.
 
@@ -266,7 +301,7 @@ class LaunchPad(FWSerializable, ABC):
         return None
 
     def append_wf(self, new_wf: Workflow, fw_ids: List[int],
-                  detour: bool=False, pull_spec_mods: bool=True):
+                  detour: bool = False, pull_spec_mods: bool = True):
         """
         Append a new workflow on top of an existing workflow.
 
@@ -283,7 +318,7 @@ class LaunchPad(FWSerializable, ABC):
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)
 
-    def get_wf_summary_dict(self, fw_id: int, mode: str="more") -> Dict:
+    def get_wf_summary_dict(self, fw_id: int, mode: str = "more") -> Dict:
         """
         A much faster way to get summary information about a Workflow by querying only for
         needed information.
@@ -349,7 +384,7 @@ class LaunchPad(FWSerializable, ABC):
         return f.to_db_dict() if f else None
 
 
-    def defuse_fw(self, fw_id: int, rerun_duplicates: bool=True) -> Dict:
+    def defuse_fw(self, fw_id: int, rerun_duplicates: bool = True) -> Dict:
         """
         Given the firework id, defuse the firework and refresh the workflow.
 
@@ -391,8 +426,8 @@ class LaunchPad(FWSerializable, ABC):
         self._refresh_wf(fw_id)
         return f.to_db_dict() if f else None
 
-    def rerun_fw(self, fw_id: int, launch_idx: int=None, rerun_duplicates: bool=True,
-                 recover_mode: Optional[str]=None) -> List[int]:
+    def rerun_fw(self, fw_id: int, launch_idx: int = None, rerun_duplicates: bool = True,
+                 recover_mode: Optional[str] = None) -> List[int]:
         # TODO REMOVED recover_launch ARGUMENT FROM THIS FUNCTION
 
         """
@@ -442,7 +477,7 @@ class LaunchPad(FWSerializable, ABC):
 
         return reruns
 
-    def defuse_wf(self, fw_id: int, defuse_all_states: bool=True):
+    def defuse_wf(self, fw_id: int, defuse_all_states: bool = True):
         """
         Defuse the workflow containing the given firework id.
 
@@ -498,7 +533,7 @@ class LaunchPad(FWSerializable, ABC):
         for fw in wf.fws:
             self.reignite_fw(fw.fw_id)
 
-    def delete_wf(self, fw_id: int, delete_launch_dirs: bool=False):
+    def delete_wf(self, fw_id: int, delete_launch_dirs: bool = False):
         """
         Delete the workflow containing firework with the given id.
 
@@ -523,8 +558,8 @@ class LaunchPad(FWSerializable, ABC):
                 shutil.rmtree(d, ignore_errors=True)
 
     def checkin_fw(self, fw_id: int,
-                   action: Optional[FWAction]=None,
-                   state: str='COMPLETED', launch_idx: int=-1) -> Dict:
+                   action: Optional[FWAction] = None,
+                   state: str = 'COMPLETED', launch_idx: int = -1) -> Dict:
         # TODO CHANGED launch => firework
 
         """
@@ -544,7 +579,7 @@ class LaunchPad(FWSerializable, ABC):
         self._update_fw(m_fw, state=state)
         if action:
             m_fw.action = action
-        m_launch, fw_ids = self._checkin_fw(m_fw, action, state)
+        m_launch, fw_ids = self._checkin_fw(m_fw, state)
 
         for fw_id in fw_ids:
             self._refresh_wf(fw_id)
@@ -552,9 +587,9 @@ class LaunchPad(FWSerializable, ABC):
         # change return type to dict to make return type serializable to support job packing
         return m_fw.to_dict()
 
-    def checkout_fw(self, launch_dir: str, fw_id: int=None,
-                    host: Optional[str]=None, ip: Optional[str]=None,
-                    state: str="RUNNING") -> Tuple[Firework, int]:
+    def checkout_fw(self, launch_dir: str, fw_id: int = None,
+                    host: Optional[str] = None, ip: Optional[str] = None,
+                    state: str = "RUNNING") -> Tuple[Firework, int]:
         """
         Checkout the next ready firework, mark it with the given state(RESERVED or RUNNING) and
         return it to the caller. The caller is responsible for running the Firework.
@@ -617,9 +652,9 @@ class LaunchPad(FWSerializable, ABC):
         # RETURN fw_id instead of launch_id
         return m_fw
 
-    def ping_firework(self, fw_id: int, launch_idx: int=-1,
-                      ptime: Optional[datetime.datetime]=None,
-                      checkpoint: Dict=None):
+    def ping_firework(self, fw_id: int, launch_idx: int = -1,
+                      ptime: Optional[datetime.datetime] = None,
+                      checkpoint: Dict = None):
         # TODO REPLACED LAUNCH WITH FIREWORK IN THIS FUNCTION
         """
         Ping that a Launch is still alive: updates the 'update_on 'field of the state history of a
@@ -635,7 +670,7 @@ class LaunchPad(FWSerializable, ABC):
         m_fw.touch_history(ptime, checkpoint=checkpoint)
         self._update_fw(m_fw, touch_history=False)
 
-    def get_tracker_data(self, fw_id: int, launch_idx=-1) -> List[Dict]:
+    def get_tracker_data(self, fw_id: int, launch_idx = -1) -> List[Dict]:
         """
         Args:
             fw_id (id): firework id
@@ -651,8 +686,8 @@ class LaunchPad(FWSerializable, ABC):
                             'trackers': trackers})
         return data
 
-    def detect_unreserved(self, expiration_secs: int=RESERVATION_EXPIRATION_SECS,
-                          rerun: bool=False) -> List[int]:
+    def detect_unreserved(self, expiration_secs: int = RESERVATION_EXPIRATION_SECS,
+                          rerun: bool = False) -> List[int]:
         """
         Return the reserved fw ids that have not been updated for a while.
 
@@ -675,10 +710,10 @@ class LaunchPad(FWSerializable, ABC):
                     rerun_ids.append(fw_id)
         return bad_launch_data
 
-    def detect_lostruns(self, expiration_secs: int=RUN_EXPIRATION_SECS, fizzle: bool=False,
-                        rerun: bool=False, max_runtime: Optional[int]=None,
-                        min_runtime: Optional[int]=None, refresh: bool=False,
-                        query: Any=None) -> Tuple[List[int], List[int], List[int]]:
+    def detect_lostruns(self, expiration_secs: int = RUN_EXPIRATION_SECS, fizzle: bool = False,
+                        rerun: bool = False, max_runtime: Optional[int] = None,
+                        min_runtime: Optional[int] = None, refresh: bool = False,
+                        query: Any = None) -> Tuple[List[int], List[int], List[int]]:
         """
         Detect lost runs i.e running fireworks that haven't been updated within the specified
         time limit or running firework that has been marked fizzled or completed.
@@ -804,7 +839,7 @@ class LaunchPad(FWSerializable, ABC):
 
         self.rerun_fw(m_fw.fw_id, rerun_duplicates=False)
 
-    def set_reservation_id(self, fw_id: int, reservation_id: int, launch_idx: int=-1):
+    def set_reservation_id(self, fw_id: int, reservation_id: int, launch_idx: int = -1):
         """
         Set reservation id to the launch corresponding to the given launch id.
 
@@ -816,7 +851,7 @@ class LaunchPad(FWSerializable, ABC):
         m_fw.set_reservation_id(reservation_id)
         self._replace_fw(m_fw)
 
-    def change_launch_dir(self, fw_id: int, launch_dir: str, launch_idx: int=-1):
+    def change_launch_dir(self, fw_id: int, launch_dir: str, launch_idx: int = -1):
         """
         Change the launch directory corresponding to the given launch id.
 
@@ -836,7 +871,7 @@ class LaunchPad(FWSerializable, ABC):
         if fw_id in self.backup_fw_data:
             self._replace_fw(Firework.from_dict(self.backup_fw_data[fw_id]))
 
-    def get_fw_by_id(self, fw_id: int, launch_idx: int=-1) -> Firework:
+    def get_fw_by_id(self, fw_id: int, launch_idx: int = -1) -> Firework:
         """
         Given a Firework id, give back a Firework object.
 
@@ -923,14 +958,16 @@ class LaunchPad(FWSerializable, ABC):
                 traceback.format_exc())
             raise RuntimeError(err_message)
 
-    """ EXTERNALLY CALLABLE FUNCTIONS WITH ABSTRACT DECLARATIONS """
+#------------------------------------------#
+# ABSTRACT FUNCTIONS (EXTERNALLY CALLABLE) #
+#------------------------------------------#
 
     # TODO NOTE: CHANGED THESE FUNCTION SIGNATURES TO TAKE fw_id's
     # INSTEAD OF launch_id's ETC.
 
     @property
     @abstractmethod
-    def workflow_count(self):
+    def workflow_count(self) -> int:
         """
         Number of workflows in the database
         """
@@ -938,7 +975,7 @@ class LaunchPad(FWSerializable, ABC):
 
     @property
     @abstractmethod
-    def firework_count(self):
+    def firework_count(self) -> int:
         """
         Number of fireworks in the database
         """
@@ -946,7 +983,7 @@ class LaunchPad(FWSerializable, ABC):
 
     @abstractmethod
     def update_spec(self, fw_ids: List[int],
-                    spec_document: Dict):
+                    spec_document: Dict) -> None:
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -956,9 +993,6 @@ class LaunchPad(FWSerializable, ABC):
                 the spec key are allowed. So if you supply {"_tasks.1.parameter": "hello"},
                 you are effectively modifying spec._tasks.1.parameter in the actual fireworks
                 collection.
-            mongo (bool): spec_document uses mongo syntax to directly update the spec
-
-        TODO addres mongo variable, shouldn't be needed in general
         """
         pass
 
@@ -974,8 +1008,9 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def get_fw_ids(self, query: Any=None, sort: Optional[List[Tuple[str,str]]] =None,
-                   limit: int=0, count_only: bool=False, launches_mode: bool=False) -> List[int]:
+    def get_fw_ids(self, query: Any = None, sort: Optional[List[Tuple[str,str]]] = None,
+                   limit: int = 0, count_only: bool = False,
+                   launches_mode: bool = False) -> List[int]:
         """
         Return all the fw ids that match a query.
 
@@ -991,8 +1026,8 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def get_wf_ids(self, query: Any=None, sort: Optional[List[Tuple[str,str]]] =None,
-                   limit: int=0, count_only: bool=False) -> List[int]:
+    def get_wf_ids(self, query: Any = None, sort: Optional[List[Tuple[str,str]]] = None,
+                   limit: int = 0, count_only: bool = False) -> List[int]:
         """
         Return one fw id for all workflows that match a query.
 
@@ -1008,7 +1043,7 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def tuneup(self, bkground: bool=True):
+    def tuneup(self, bkground: bool = True):
         """
         Database tuneup: build indexes
         """
@@ -1028,8 +1063,8 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def recover_offline(self, fw_id: int, ignore_errors: bool=False,
-                        print_errors: bool=False) -> int:
+    def recover_offline(self, fw_id: int, ignore_errors: bool = False,
+                        print_errors: bool = False) -> int:
         """
         Update the firework state using the offline data in FW_offline.json file.
 
@@ -1057,11 +1092,13 @@ class LaunchPad(FWSerializable, ABC):
     # add a _reset_warning that optionally gets called at the beginning of the reset
     #   function. This will replace the reset function in lapd_runs.py
 
+#############################
+# INTERNAL HELPER FUNCTIONS #
+#############################
 
-
-    """ INTERNAL FUNCTIONS """
-
-    """ INTERNAL FUNCTIONS FULLY DEFINED HERE """
+#---------------------------------------#
+# INTERNAL FUNCTIONS FULLY DEFINED HERE #
+#---------------------------------------#
 
     def run_exists(self) -> bool:
         """
@@ -1099,8 +1136,8 @@ class LaunchPad(FWSerializable, ABC):
             return False
 
     def reserve_fw(self, launch_dir: str,
-                   host: Optional[str]=None, ip: Optional[str]=None,
-                   fw_id: int=None) -> Tuple[Firework, int]:
+                   host: Optional[str] = None, ip: Optional[str] = None,
+                   fw_id: int = None) -> Tuple[Firework, int]:
         """
         Checkout the next ready firework and mark the launch reserved.
 
@@ -1116,7 +1153,7 @@ class LaunchPad(FWSerializable, ABC):
         return self.checkout_fw(launch_dir, host=host, ip=ip,
                                 fw_id=fw_id, state="RESERVED")
 
-    def mark_fizzled(self, fw_id: int, launch_idx: int=-1):
+    def mark_fizzled(self, fw_id: int, launch_idx: int = -1):
         """
         Mark the firework corresponding to the given id as FIZZLED.
 
@@ -1129,7 +1166,7 @@ class LaunchPad(FWSerializable, ABC):
         # Do a confirmed write and make sure state_history is preserved
         self.checkin_fw(fw_id, state='FIZZLED', launch_idx=launch_idx)
 
-    def _upsert_fws(self, fws: List[Firework], reassign_all: bool=False):
+    def _upsert_fws(self, fws: List[Firework], reassign_all: bool = False):
         """
         Insert the fireworks to the 'fireworks' collection.
 
@@ -1172,7 +1209,7 @@ class LaunchPad(FWSerializable, ABC):
 
         return old_new
 
-    def _get_wf_data(self, fw_id: int, mode: str='more') -> Dict:
+    def _get_wf_data(self, fw_id: int, mode: str = 'more') -> Dict:
         """
         Helper function for get_wf_summary_dict
         """
@@ -1207,8 +1244,9 @@ class LaunchPad(FWSerializable, ABC):
         wf["fw"] = fw_data
         return wf
 
-
-    """ INTERNAL FUNCTION WITH ABSTRACT DECLARATIONS """
+#-----------------------------------------------#
+# INTERNAL FUNCTIONS WITH ABSTRACT DECLARATIONS #
+#-----------------------------------------------#
 
     @abstractmethod
     def _reset(self):
@@ -1231,12 +1269,17 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _update_fw(self, m_fw, state=None, allowed_states=None, launch_idx=-1,
-                    touch_history=True, checkpoint=None):
+    def _update_fw(self, m_fw: Firework, state: str = None,
+                   allowed_states: List[str] = None, launch_idx: int = -1,
+                   touch_history: bool = True, checkpoint: Dict = None) -> Firework:
+        """
+        Helper function to update the state, state history, and checkpoint
+        of a Firework.
+        """
         pass
 
     @abstractmethod
-    def _internal_fizzle(self, fw_id, launch_idx=-1):
+    def _internal_fizzle(self, fw_id: int, launch_idx: int = -1):
         pass
 
     @abstractmethod
@@ -1248,8 +1291,9 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _get_a_fw_to_run(self, query: Optional[Dict]=None, fw_id: Optional[int]=None,
-                         launch_idx: int=-1, checkout: bool=True) -> Firework:
+    def _get_a_fw_to_run(self, query: Optional[Dict] = None,
+                         fw_id: Optional[int] = None,
+                         checkout: bool = True) -> Firework:
         """
         Get the next ready firework to run.
 
@@ -1270,15 +1314,15 @@ class LaunchPad(FWSerializable, ABC):
         pass
 
     @abstractmethod
-    def _checkin_fw(self, fw: Firework, action: FWAction, state: str):
+    def _checkin_fw(self, fw: Firework, state: str):
         """
         Helper function for complete_firework
         """
         pass
 
     @abstractmethod
-    def _get_duplicates(self, fw_id: int, include_self: bool=False,
-                        allowed_states: Union[List[str], str, None]=None) -> Union[List[int], None]:
+    def _get_duplicates(self, fw_id: int, include_self: bool = False,
+                        allowed_states: Union[List[str], str, None] = None) -> Union[List[int], None]:
         """
         Find duplicates of the Firework with id fw_id
         """
