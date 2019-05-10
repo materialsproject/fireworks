@@ -899,7 +899,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
                 rapidfire(self.lpad)
         rp = RapidfireProcess(self.lp)
         rp.start()
-        time.sleep(1)   # Wait 1 sec  and kill the running fws
+        time.sleep(1.2)   # Wait 1 sec  and kill the running fws
         rp.terminate()
         # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
@@ -907,6 +907,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
+            print(fw_state, fw_cache_state)
             self.assertEqual(fw_state, fw_cache_state)
 
         # Detect lost runs
@@ -1104,7 +1105,7 @@ class WFLockTest(unittest.TestCase):
             if 'SkipTest' in stacktrace:
                 self.skipTest("The test didn't run correctly")
 
-        self.assertEqual(fast_fw.state, 'RUNNING')
+        self.assertEqual(fast_fw.state, 'COMPLETED')
 
         child_fw = self.lp.get_fw_by_id(3)
 

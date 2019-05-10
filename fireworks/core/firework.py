@@ -956,7 +956,7 @@ class Workflow(FWSerializable):
         updated_ids = updated_ids if updated_ids else set()
 
         fw = self.id_fw[fw_id]
-        prev_state = fw.state
+        prev_state = self.fw_states.get(fw.fw_id)
 
         # if we're paused, defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED' or fw.state == 'PAUSED':
@@ -990,8 +990,8 @@ class Workflow(FWSerializable):
         # Brings self.fw_states in sync with fw_states in db
         self.fw_states[fw_id] = m_state
 
-        #if m_state != prev_state:
-        if True:
+        if m_state != prev_state:
+        #if True:
             updated_ids.add(fw_id)
 
             if m_state == 'COMPLETED':
