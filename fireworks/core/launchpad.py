@@ -170,7 +170,7 @@ class LaunchPad(FWSerializable):
                                           socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
                                           username=self.username,
                                           password=self.password,
-                                          authSource=self.authsource)
+                                          authsource=self.authsource)
             self.db = self.connection[self.name]
 
         self.fireworks = self.db.fireworks
