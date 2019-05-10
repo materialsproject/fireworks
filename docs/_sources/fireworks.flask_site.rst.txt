@@ -28,6 +28,14 @@ fireworks.flask\_site.helpers module
     :undoc-members:
     :show-inheritance:
 
+fireworks.flask\_site.util module
+---------------------------------
+
+.. automodule:: fireworks.flask_site.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

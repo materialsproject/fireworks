@@ -2,10 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v1.9.1**
+
+* fix webgui JSON issue (D. Winston)
+* add time_min to SLURM template (M. Horton)
+
 **v1.9.0**
 
 * fix backward compatibility issues in using a MongoDB URI, added a separate "uri_mode" parameter. (thanks to M. Bercx for pointing out)
-
 
 **v1.8.9**
 
