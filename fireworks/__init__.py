@@ -9,7 +9,6 @@ FW_INSTALL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from fireworks.core.firework import Firework, Tracker,\
 								Firetask, FWAction, FiretaskBase, FireTaskBase,\
 								Workflow
-from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import WFLock, LaunchPad
 from fireworks.utilities.fw_utilities import explicit_serialize
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask

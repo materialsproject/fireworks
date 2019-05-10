@@ -28,5 +28,5 @@ class DupeFinderExact(DupeFinderBase):
 
         Returns:
             dict: mongo query
-      """
+        """
         return {"$and": [{"launches": {"$ne": []}}, {"spec": spec}]}

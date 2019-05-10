@@ -9,6 +9,7 @@ from monty.os.path import zpath
 The LaunchPad manages the Fireworks database.
 """
 
+import six
 import datetime
 import json
 import os
@@ -34,9 +35,9 @@ from fireworks.fw_config import LAUNCHPAD_LOC, SORT_FWS, RESERVATION_EXPIRATION_
     RUN_EXPIRATION_SECS, MAINTAIN_INTERVAL, WFLOCK_EXPIRATION_SECS, WFLOCK_EXPIRATION_KILL, \
     MONGO_SOCKET_TIMEOUT_MS, GRIDFS_FALLBACK_COLLECTION
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
-from fireworks.core.firework import Firework, Workflow, FWAction, Tracker, FWorker
+from fireworks.core.firework import Firework, Workflow, FWAction, Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.utilities.fw_serializers import recursive_dict, _recursive_load
+from fireworks.utilities.fw_serializers import recursive_dict, _recursive_load, DATETIME_HANDLER
 
 from typing import TypeVar, List, Tuple, Dict, Union, Optional, Any
 
@@ -56,14 +57,16 @@ class MongoLaunchPad(LaunchPad):
     The LaunchPad manages the Fireworks database.
     """
 
-    def __init__(self, host: str=None, port: int=None, name: str=None,
-                 username: str=None, password: str=None,
-                 logdir: str=None, strm_lvl: str=None, user_indices: list=None,
-                 wf_user_indices: list=None, ssl: bool=False,
-                 ssl_ca_certs: str=None, ssl_certfile: str=None,
-                 ssl_keyfile: str=None, ssl_pem_passphrase: str=None,
-                 authsource: str=None,
-                 fworker: Optional[Union[str, Dict]]=None):
+    def __init__(self, host: str = None, port: int = None, name: str = None,
+                 username: str = None, password: str = None,
+                 logdir: str = None, strm_lvl: str = None, user_indices: list = None,
+                 wf_user_indices: list = None, ssl: bool = False,
+                 ssl_ca_certs: str = None, ssl_certfile: str = None,
+                 ssl_keyfile: str = None, ssl_pem_passphrase: str = None,
+                 authsource: str = None,
+                 worker_name: str = "Automatically generated Worker",
+                 category: Union[str, List[str]] = '',
+                 query: Dict = None, env: Dict = None) -> None:
         """
         Args:
             host (str): hostname. A MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
@@ -80,7 +83,19 @@ class MongoLaunchPad(LaunchPad):
             ssl_certfile (str): path to the client certificate to be used for mongodb connection
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
-            authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if not set
+            authsource (str): authsource parameter for MongoDB authentication;
+                defaults to "name" (i.e., db name) if not set
+            worker_name (str): the name of the resource, should be unique
+            category (str or [str]): a String describing a specific category of
+                job to pull, does not need to be unique. If the FWorker should
+                pull jobs of multiple categories, use a list of str.
+            query (dict): a dict query that restricts the type of
+                Firework this resource will run
+            env (dict): a dict of special environment variables for the resource.
+                This env is passed to running Firetasks as a _fw_env in the
+                fw_spec, which provides for abstraction of resource-specific
+                commands or settings.  See :class:`fireworks.core.firework.FiretaskBase`
+                for information on how to use this env variable in Firetasks.
         """
 
         # detect if connection_string mode
@@ -142,11 +157,10 @@ class MongoLaunchPad(LaunchPad):
         self.backup_launch_data = {}
         self.backup_fw_data = {}
 
-        if type(fworker) == str:
-            fworker = loadfn(fworker)
-        self.fworker = fworker or {'name': 'my first fireworker',
-                                   'category': '',
-                                   'query': {}}
+        self.worker_name = worker_name
+        self.category = category
+        self._query = query if query else {}
+        self.env = env if env else {}
 
     def to_dict(self) -> Dict:
         """
@@ -167,9 +181,14 @@ class MongoLaunchPad(LaunchPad):
             'ssl_certfile': self.ssl_certfile,
             'ssl_keyfile': self.ssl_keyfile,
             'ssl_pem_passphrase': self.ssl_pem_passphrase,
-            'authsource': self.authsource}
+            'authsource': self.authsource,
+            'worker_name': self.worker_name,
+            'category': self.category,
+            'query': self._query,
+            'env': self.env}
 
-    def update_spec(self, fw_ids: List[int], spec_document: Dict, mongo: bool=False):
+    def update_spec(self, fw_ids: List[int], spec_document: Dict,
+                    mongo: bool = False) -> None:
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -210,11 +229,15 @@ class MongoLaunchPad(LaunchPad):
         ssl_certfile = d.get('ssl_certfile', None)
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
-        authsource= d.get('authsource', None)
+        authsource = d.get('authsource', None)
+        worker_name = d.get('worker_name', "Automatically generated Worker")
+        category = d.get('category', '')
+        query = d.get('query', None)
+        env = d.get('env', None)
         return MongoLaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
-                         authsource)
+                         authsource, worker_name, category, query, env)
 
     @property
     def workflow_count(self) -> int:
@@ -224,7 +247,7 @@ class MongoLaunchPad(LaunchPad):
     def firework_count(self) -> int:
         return self.fireworks.count_documents({})
 
-    def _reset(self):
+    def _reset(self) -> None:
         self.fireworks.delete_many({})
         self.launches.delete_many({})
         self.workflows.delete_many({})
@@ -235,8 +258,8 @@ class MongoLaunchPad(LaunchPad):
         self.tuneup()
         self.m_logger.info('LaunchPad was RESET.')
 
-    def _get_duplicates(self, fw_id: int, include_self: bool=False,
-                        allowed_states: List[str]=None) -> List[int]:
+    def _get_duplicates(self, fw_id: int, include_self: bool = False,
+                        allowed_states: List[str] = None) -> List[int]:
         if type(allowed_states) == str:
             allowed_states = {'$in': allowed_states}
         f = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}},
@@ -252,7 +275,8 @@ class MongoLaunchPad(LaunchPad):
                 duplicates.append(d['fw_id'])
         return list(set(duplicates))
 
-    def _recover(self, fw_id: int, launch_idx: int=None, recover_mode: str='prev_dir'):
+    def _recover(self, fw_id: int, launch_idx: int = None,
+                 recover_mode: str = 'prev_dir') -> None:
         """
         Function to get recovery data for a given fw
         Args:
@@ -279,7 +303,7 @@ class MongoLaunchPad(LaunchPad):
         
         self.fireworks.find_one_and_update({"fw_id":fw_id}, set_spec)
 
-    def _get_launch_by_fw_id(self, fw_id: int, launch_idx: int=None) -> Dict:
+    def _get_launch_by_fw_id(self, fw_id: int, launch_idx: int=None) -> Union[Dict, List[Dict]]:
         """
         Given a Firework id, return launches.
 
@@ -287,7 +311,8 @@ class MongoLaunchPad(LaunchPad):
             launch_id (int): launch id
 
         Returns:
-            dict
+            dict or [dict]. If launch_idx is specified, single dict
+                is returned without the internal launch_id value
         """
         if launch_idx == None:
             #m_launches = self.launches.find({'fw_id': fw_id})
@@ -431,7 +456,7 @@ class MongoLaunchPad(LaunchPad):
                 fw_data[k]["launches"] = v
 
         wf["fw"] = fw_data
-        return wf
+        return wf, id_name_map
 
     def get_fw_ids(self, query: Dict=None, sort: List[Tuple]=None,
                    limit: int=0, count_only: bool=False,
@@ -549,15 +574,16 @@ class MongoLaunchPad(LaunchPad):
         self.m_logger.debug(
             'RESTARTED fw_id, launch_id to ({}, {})'.format(next_fw_id, next_launch_id))
 
-    def _get_a_fw_to_run(self, query: Dict=None, fw_id: int=None,
-                         launch_idx: int=-1, checkout: bool=True) -> Firework:
+    def _get_a_fw_to_run(self, query: Optional[Dict] = None,
+                         fw_id: Optional[int] = None,
+                         checkout: bool = True) -> Firework:
         """
         Get the next ready firework to run.
 
         Args:
             query (dict)
             fw_id (int): If given the query is updated.
-                Note: We want to return None if this specific FW  doesn't exist anymore. This is
+                Note: We want to return None if this specific FW doesn't exist anymore. This is
                 because our queue params might have been tailored to this FW.
             checkout (bool): if True, check out the matching firework and set state=RESERVED
 
@@ -699,13 +725,13 @@ class MongoLaunchPad(LaunchPad):
                  sort: List[Tuple]=None) -> Dict:
         return self.workflows.find_one({'nodes': fw_id}, projection=projection, sort=sort)
 
-    def _checkin_fw(self, m_fw: Firework, action: FWAction=None,
+    def _checkin_fw(self, m_fw: Firework,
                     state: str='COMPLETED') -> Tuple[Dict, List[int]]:
         """
         Internal method used to mark a Firework's Launch as completed.
 
         Args:
-            launch_id (int)
+            m_fw (Firework): the Firework to check in
             action (FWAction): the FWAction of what to do next
             state (str): COMPLETED or FIZZLED
 
@@ -752,9 +778,13 @@ class MongoLaunchPad(LaunchPad):
         # change return type to dict to make return type serializable to support job packing
         return m_launch, ids_to_refresh
 
-    def _update_fw(self, m_fw: Firework, state: str=None,
-                   allowed_states: List[str]=None, launch_idx: int=-1,
-                   touch_history: bool=True, checkpoint: Dict=None) -> Firework:
+    def _update_fw(self, m_fw: Firework, state: str = None,
+                   allowed_states: List[str] = None, launch_idx: int = -1,
+                   touch_history: bool = True, checkpoint: Dict = None) -> Firework:
+        """
+        Helper function to update the state, state history, and checkpoint
+        of a Firework.
+        """
         # need to refine structure of launch_idx/launch_id arg to get correct id
         if type(m_fw) == int:
             m_fw = self.get_fw_by_id(m_fw, launch_idx)
@@ -887,7 +917,7 @@ class MongoLaunchPad(LaunchPad):
 
     def _update_wf(self, wf: Workflow, updated_ids: List[int]):
         """
-        Update the workflow with the update firework ids.
+        Update the workflow with the updated firework ids.
         Note: must be called within an enclosing WFLock
 
         Args:
@@ -984,14 +1014,10 @@ class MongoLaunchPad(LaunchPad):
         Add the launch and firework to the offline_run collection.
 
         Args:
-            launch_id (int): launch id
-            fw_id (id): firework id
-            name (str)
+            fw_id (int): Firework id
+            launch_idx (int): launch index
         """
-        #fw = self.get_fw_by_id(fw_id, launch_idx)
-        # need to change this when fworker gets integrated
-        #fw = self.get_fw_by_id(fw_id, launch_idx)
-        fw = self.checkout_fw(FWorker(), os.getcwd(), fw_id=fw_id, state='RESERVED')
+        fw = self.checkout_fw(os.getcwd(), fw_id=fw_id, state='RESERVED')
         fw.state = "OFFLINE"
         fw.to_file("FW.json")
         with open('FW_offline.json', 'w') as f:
@@ -1120,12 +1146,14 @@ class LazyFirework(object):
 
     def __init__(self, fw_id: int, launch_idx: int,
                  fw_coll: Collection, launch_coll: Collection,
-                 fallback_fs: Collection):
+                 fallback_fs: gridfs.GridFS):
         """
         Args:
             fw_id (int): firework id
+            launch_idx (int): launch index
             fw_coll (pymongo.collection): fireworks collection
             launch_coll (pymongo.collection): launches collection
+            fallback_fs (gridfs.GridFS): gridfs fallback collection
         """
         # This is the only attribute known w/o a DB query
         self.fw_id = fw_id

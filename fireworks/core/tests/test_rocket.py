@@ -3,7 +3,7 @@ from __future__ import unicode_literals, division
 import unittest
 import os
 
-from fireworks import Firework, LaunchPad, FWorker
+from fireworks import Firework, LaunchPad
 from fireworks.scripts.rocket_launcher import launch_rocket
 from fireworks.core.tests.tasks import ExceptionTestTask, MalformedAdditionTask
 
@@ -17,7 +17,6 @@ class RocketTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lp = None
-        cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
@@ -42,7 +41,7 @@ class RocketTest(unittest.TestCase):
         error_test_dict = {'error': 'description', 'error_code': 1}
         fw = Firework(ExceptionTestTask(exc_details=error_test_dict))
         self.lp.add_wf(fw)
-        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp)
 
         # Check data in the exception
         fw = self.lp.get_fw_by_id(1)
@@ -53,7 +52,7 @@ class RocketTest(unittest.TestCase):
     def test_postproc_exception(self):
         fw = Firework(MalformedAdditionTask())
         self.lp.add_wf(fw)
-        launch_rocket(self.lp, self.fworker)
+        launch_rocket(self.lp)
         fw = self.lp.get_fw_by_id(1)
 
         self.assertEqual(fw.state, 'FIZZLED')

@@ -28,7 +28,6 @@ from fireworks.features.fw_report import FWReport
 from fireworks.features.introspect import Introspector
 from fireworks import LaunchPad, WFLock
 from fireworks.core.firework import Workflow, Firework
-from fireworks.core.fworker import FWorker
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -563,8 +562,6 @@ def add_scripts(args):
     lp.add_wf(Workflow(fws, links, args.wf_name))
 
 
-# TODO remove the offline utilites for the time being, should not be
-# necessary with the new fireworks
 def recover_offline(args):
     lp = get_lp(args)
     fworker_name = FWorker.from_file(args.fworker_file).name if args.fworker_file else None
@@ -1052,8 +1049,6 @@ def lpad():
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
     recover_parser.add_argument('-i', '--ignore_errors', help='ignore errors', action='store_true')
-    recover_parser.add_argument('-w', '--fworker_file', help='path to fworker file. An empty string '
-                                                             'will match all the workers', default=FWORKER_LOC)
     recover_parser.add_argument('-pe', '--print-errors', help='print errors', action='store_true')
     recover_parser.set_defaults(func=recover_offline)
 

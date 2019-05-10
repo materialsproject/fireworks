@@ -117,16 +117,14 @@ class Rocket:
     The Rocket fetches a workflow step from the FireWorks database and executes it.
     """
 
-    def __init__(self, launchpad: LaunchPad, fworker: FWorker, fw_id: int):
+    def __init__(self, launchpad: LaunchPad, fw_id: int):
         """
         Args:
         launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
             If none, reads FireWorks from FW.json and writes to FWAction.json
-        fworker (FWorker): A FWorker object describing the computing resource
         fw_id (int): id of a specific Firework to run (quit if it cannot be found)
         """
         self.launchpad = launchpad
-        self.fworker = fworker
         self.fw_id = fw_id
 
     def run(self, pdb_on_exception: bool = False) -> bool:
@@ -149,7 +147,7 @@ class Rocket:
 
         # check a FW job out of the launchpad
         if lp:
-            m_fw = lp.checkout_fw(self.fworker, launch_dir, self.fw_id)
+            m_fw = lp.checkout_fw(launch_dir, self.fw_id)
         else:  # offline mode
             m_fw = Firework.from_file(os.path.join(os.getcwd(), "FW.json"))
 
@@ -162,7 +160,7 @@ class Rocket:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
         if not m_fw:
-            print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
+            print("No FireWorks are ready to run and match query! {}".format(self.launchpad.get_worker_query()))
             return False
 
         self.fw_id = m_fw.fw_id
@@ -239,11 +237,13 @@ class Rocket:
                 m_fw.to_file('FW.yaml')
 
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
-            my_spec["_fw_env"] = self.fworker.env
+            if lp:
+                my_spec["_fw_env"] = lp.get_env()
+            else:
+                my_spec["_fw_env"] = None
 
             # set up heartbeat (pinging the server that we're still alive)
             ping_stop = start_ping_firework(lp, fw_id)
-            #time.sleep(5)
 
             # start background tasks
             if '_background_tasks' in my_spec:
@@ -273,7 +273,7 @@ class Rocket:
                         t.launchpad = self.launchpad
 
                 if my_spec.get("_add_fworker"):
-                    t.fworker = self.fworker
+                    t.fworker = self.launchpad.fworker
                 # END TODO
 
                 try:
@@ -469,7 +469,7 @@ class Rocket:
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
 
         if my_spec.get("_preserve_fworker"):
-            fwaction.update_spec['_fworker'] = self.fworker.name
+            fwaction.update_spec['_fworker'] = self.launchpad.fworker.get('name') if self.launchpad else None
 
         if my_spec.get("_files_out"):
             # One potential area of conflict is if a fw depends on two fws
