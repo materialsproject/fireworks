@@ -504,7 +504,7 @@ class MongoTests(unittest.TestCase):
         # TODO: if test keeps failing on Travis, add an explicit check of nlaunches>0 in the database here
         # this will ensure the first Rocket is actually in the DB
         while self.lp.launches.count() == 0:
-            time.sleep(0.01)
+            time.sleep(1)
         launch_rocket(self.lp)
 
         time.sleep(1)
@@ -513,6 +513,9 @@ class MongoTests(unittest.TestCase):
             print("TOO MANY LAUNCHES FOUND!")
             print("--------")
             for d in self.lp.launches.find():
+                print(d)
+            print("--------")
+            for d in self.lp.fireworks.find():
                 print(d)
             print("--------")
         self.assertEqual(self.lp.launches.count(), 1)
