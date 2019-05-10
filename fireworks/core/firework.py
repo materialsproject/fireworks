@@ -451,11 +451,14 @@ class Firework(FWSerializable):
 
         return m_dict
 
-    @recursive_serialize
     def to_db_dict(self) -> Dict[str, Any]:
         m_d = self.to_dict()
         m_d['launch']['time_start'] = self.time_start
+        if m_d['launch']['time_start'] is not None:
+            m_d['launch']['time_start'] = m_d['launch']['time_start'].isoformat()
         m_d['launch']['time_end'] = self.time_end
+        if m_d['launch']['time_end'] is not None:
+            m_d['launch']['time_end'] = m_d['launch']['time_end'].isoformat()
         m_d['launch']['runtime_secs'] = self.runtime_secs
         if self.reservedtime_secs:
             m_d['launch']['reservedtime_secs'] = self.reservedtime_secs

@@ -458,7 +458,7 @@ class MongoLaunchPad(LaunchPad):
                 fw_data[k]["launches"] = v
 
         wf["fw"] = fw_data
-        return wf
+        return wf, id_name_map
 
     def get_fw_ids(self, query: Dict=None, sort: List[Tuple]=None,
                    limit: int=0, count_only: bool=False,

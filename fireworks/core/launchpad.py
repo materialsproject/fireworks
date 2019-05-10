@@ -330,7 +330,7 @@ class LaunchPad(FWSerializable, ABC):
         Returns:
             dict: information about Workflow.
         """
-        wf = self._get_wf_data(fw_id, mode)
+        wf, id_name_map = self._get_wf_data(fw_id, mode)
 
         # Post process the summary dict so that it "looks" better.
         if mode == "less":
@@ -1242,7 +1242,7 @@ class LaunchPad(FWSerializable, ABC):
                 id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
 
         wf["fw"] = fw_data
-        return wf
+        return wf, id_name_map
 
 #-----------------------------------------------#
 # INTERNAL FUNCTIONS WITH ABSTRACT DECLARATIONS #
