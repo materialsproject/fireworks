@@ -5,7 +5,7 @@ This code is described in the Dynamic Workflow tutorial, https://materialsprojec
 from fireworks import ScriptTask
 from fireworks.core.firework import Firework, Workflow
 from fireworks.core.launchpad import LaunchPad
-from fireworks.core.rocket_launcher import rapidfire
+from fireworks.scripts.rocket_launcher import rapidfire
 
 from fw_tutorials.dynamic_wf.printjob_task import PrintJobTask
 

@@ -21,7 +21,7 @@ NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
 USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
-                 'fw_tutorials', 'fireworks.features']
+                 'fw_tutorials', 'fireworks.features', 'fireworks.core']
 
 # if you update a _fw_name, you can use this to record the change and maintain deserialization
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
@@ -102,6 +102,8 @@ MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 # name of the collection that will be used to store information in case the size of
 # a dynamically generated document exceeds the 16MB limit. Functionality disabled if None.
 GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
+
+DEFAULT_DATABASE_TYPE = "mongodb"
 
 
 def override_user_settings():

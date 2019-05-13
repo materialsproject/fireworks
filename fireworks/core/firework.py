@@ -6,14 +6,10 @@ from copy import deepcopy
 
 
 """
-This module contains some of the most central FireWorks classes:
+This module contains:
 
-    - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
-    - A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
-    - A Launch describes the run of a Firework on a computing resource.
-    - A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
-    - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after
-        a job completes.
+    - A Firework defines a workflow step and contains one or more Firetasks along with
+        a description of its run on a computing resource.
 """
 
 from collections import defaultdict, OrderedDict
@@ -28,11 +24,12 @@ from monty.os.path import zpath
 from six import add_metaclass
 
 from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
-from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
+
+from typing import List, Dict, Optional, Union, Any
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -43,8 +40,26 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
+def _new_launch():
+    launch = {}
+    launch['state'] = None
+    launch['state_history'] = {}
+    launch['fworker'] = None
+    launch['host'] = None
+    launch['ip'] = None
+    launch['trackers'] = None
+    launch['action'] = None
+    launch['launch_idx'] = None
+    launch['fw_id'] = None
+    return launch
+
+
+##############################################################################
+#                           FIRETASK CLASSES                                 #
+##############################################################################
+
 @add_metaclass(abc.ABCMeta)
-class FiretaskBase(defaultdict, FWSerializable):
+class Firetask(defaultdict, FWSerializable):
     """
     FiretaskBase is used like an abstract class that defines a computing task
     (Firetask). All Firetasks should inherit from FiretaskBase.
@@ -112,107 +127,80 @@ class FiretaskBase(defaultdict, FWSerializable):
         return (t[0], (self.to_dict(),), t[2], t[3], t[4])
 
 
-class FWAction(FWSerializable):
-    """
-    A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
-    Firetask completes). The FWAction allows a user to store rudimentary output data as well
-    as return commands that alter the workflow.
-    """
+class BackgroundTask(FWSerializable, object):
+    _fw_name = 'BackgroundTask'
 
-    def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, additions=None,
-                 detours=None, defuse_children=False, defuse_workflow=False):
+    def __init__(self, tasks: Union[Firetask, List[Firetask]], num_launches: int=0,
+                 sleep_time: float=60, run_on_finish: bool=False):
         """
         Args:
-            stored_data (dict): data to store from the run. Does not affect the operation of FireWorks.
-            exit (bool): if set to True, any remaining Firetasks within the same Firework are skipped.
-            update_spec (dict): specifies how to update the child FW's spec
-            mod_spec ([dict]): update the child FW's spec using the DictMod language (more flexible
-                than update_spec)
-            additions ([Workflow]): a list of WFs/FWs to add as children
-            detours ([Workflow]): a list of WFs/FWs to add as children (they will inherit the
-                current FW's children)
-            defuse_children (bool): defuse all the original children of this Firework
-            defuse_workflow (bool): defuse all incomplete steps of this workflow
+            tasks [Firetask]: a list of Firetasks to perform
+            num_launches (int): the total number of times to run the process (0=infinite)
+            sleep_time (int): sleep time in seconds between background runs
+            run_on_finish (bool): always run this task upon completion of Firework
         """
-        mod_spec = mod_spec if mod_spec is not None else []
-        additions = additions if additions is not None else []
-        detours = detours if detours is not None else []
-
-        self.stored_data = stored_data if stored_data else {}
-        self.exit = exit
-        self.update_spec = update_spec if update_spec else {}
-        self.mod_spec = mod_spec if isinstance(mod_spec, (list, tuple)) else [mod_spec]
-        self.additions = additions if isinstance(additions, (list, tuple)) else [additions]
-        self.detours = detours if isinstance(detours, (list, tuple)) else [detours]
-        self.defuse_children = defuse_children
-        self.defuse_workflow = defuse_workflow
+        self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
+        self.num_launches = num_launches
+        self.sleep_time = sleep_time
+        self.run_on_finish = run_on_finish
 
     @recursive_serialize
-    def to_dict(self):
-        return {'stored_data': self.stored_data,
-                'exit': self.exit,
-                'update_spec': self.update_spec,
-                'mod_spec': self.mod_spec,
-                'additions': self.additions,
-                'detours': self.detours,
-                'defuse_children': self.defuse_children,
-                'defuse_workflow': self.defuse_workflow}
+    @serialize_fw
+    def to_dict(self) -> Dict:
+        return {'tasks': self.tasks, 'num_launches': self.num_launches,
+                'sleep_time': self.sleep_time, 'run_on_finish': self.run_on_finish}
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict):
-        d = m_dict
-        additions = [Workflow.from_dict(f) for f in d['additions']]
-        detours = [Workflow.from_dict(f) for f in d['detours']]
-        return FWAction(d['stored_data'], d['exit'], d['update_spec'],
-                        d['mod_spec'], additions, detours,
-                        d['defuse_children'], d.get('defuse_workflow', False))
+    def from_dict(cls, m_dict: Dict) -> 'BackgroundTask':
+        return BackgroundTask(m_dict['tasks'], m_dict['num_launches'],
+                              m_dict['sleep_time'], m_dict['run_on_finish'])
 
-    @property
-    def skip_remaining_tasks(self):
-        """
-        If the FWAction gives any dynamic action, we skip the subsequent Firetasks
+@add_metaclass(abc.ABCMeta)
+class FiretaskBase(Firetask):
+    pass
 
-        Returns:
-            bool
-        """
-        return self.exit or self.detours or self.additions or self.defuse_children or self.defuse_workflow
+@add_metaclass(abc.ABCMeta)
+class FireTaskBase(Firetask):
+    pass
 
-    def __str__(self):
-        return "FWAction\n" + pprint.pformat(self.to_dict())
-
+##############################################################################
+#                           FIREWORK CLASS                                   #
+##############################################################################
 
 class Firework(FWSerializable):
     """
     A Firework is a workflow step and might be contain several Firetasks.
+    It contains the Firetasks to be executed and the state of the execution.
     """
 
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
                    'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
-                   'COMPLETED': 5}
+                   'COMPLETED': 5, 'OFFLINE': 4}
 
-    # note: if you modify this signature, you must also modify LazyFirework
-    def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,
-                 state='WAITING', created_on=None, fw_id=None, parents=None, updated_on=None):
-        """
-        Args:
-            tasks (Firetask or [Firetask]): a list of Firetasks to run in sequence.
-            spec (dict): specification of the job to run. Used by the Firetask.
-            launches ([Launch]): a list of Launch objects of this Firework.
-            archived_launches ([Launch]): a list of archived Launch objects of this Firework.
-            state (str): the state of the FW (e.g. WAITING, RUNNING, COMPLETED, ARCHIVED)
-            created_on (datetime): time of creation
-            fw_id (int): an identification number for this Firework.
-            parents (Firework or [Firework]): list of parent FWs this FW depends on.
-            updated_on (datetime): last time the STATE was updated.
-        """
+    def __init__(self, tasks: Union[Firetask, List[Firetask]],
+                 spec: Optional[dict]=None, name: Optional[str]=None,
+                 state: str='WAITING', created_on: Optional[datetime]=None,
+                 fw_id: Optional[int]=None, parents: Union[None, 'Firework', List['Firework']]=None,
+                 updated_on: Optional[datetime]=None,
+                 fworker: Optional[Dict]=None,
+                 host: Optional[str]=None, ip: Optional[str]=None,
+                 trackers: Optional[List['Tracker']]=None,
+                 launch_idx: Optional[int]=None,
+                 action: Optional['FWAction']=None,
+                 launch_dir: Optional[str]=None, 
+                 state_history: Optional[dict]=None,
+                 worker_name: str="Automatically generated Worker",
+                 category: str='', query: Dict=None, env: Dict=None):
 
-        tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
+        # launch will contain launch_idx, launch_dir, state, created_on,
+        # updated_on, fworker, host, ip, trackers, action, state_history
 
-        self.tasks = tasks
+        # state, created_on, updated_on can be directly queried by Firework
+
+        self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
         self.spec = spec.copy() if spec else {}
-
-        self.name = name or 'Unnamed FW'  # do it this way to prevent None
+        self.name = name or 'Unnamed FW'
         # names
         if fw_id is not None:
             self.fw_id = fw_id
@@ -221,57 +209,286 @@ class Firework(FWSerializable):
             NEGATIVE_FWID_CTR -= 1
             self.fw_id = NEGATIVE_FWID_CTR
 
-        self.launches = launches if launches else []
-        self.archived_launches = archived_launches if archived_launches else []
-        self.created_on = created_on or datetime.utcnow()
-        self.updated_on = updated_on or datetime.utcnow()
+        self.launch_idx = launch_idx
+
+        self.launch_dir = launch_dir
 
         parents = [parents] if isinstance(parents, Firework) else parents
         self.parents = parents if parents else []
+        self.created_on = created_on or datetime.utcnow()
+        self.updated_on = updated_on or datetime.utcnow()
 
-        self._state = state
+        launch_info = {'fworker': fworker,
+                       'host': host,
+                       'ip': ip,
+                       'trackers': trackers,
+                       'state_history': state_history,
+                       'action': action}
+        self._setup_launch(launch_info)
 
-    @property
-    def state(self):
-        """
-        Returns:
-            str: The current state of the Firework
-        """
-        return self._state
+        self.state = state
 
-    @state.setter
-    def state(self, state):
+    @recursive_deserialize
+    def _setup_launch(self, launch_info):
+        self.fworker = launch_info.get('fworker', None) or None
+        self.host = launch_info.get('host', None) or get_my_host()
+        self.ip = launch_info.get('ip', None) or get_my_ip()
+        self.trackers = launch_info.get('trackers', None) or []
+
+        self.action = launch_info.get('action', None)
+        self.state_history = launch_info.get('state_history', None) or []
+
+        if type(self.action) == dict:
+            self.action = FWAction.from_dict(self.action)
+
+        self.state = launch_info.get('state', self.state)
+        self.launch_dir = launch_info.get('launch_dir', self.launch_dir)
+        self.launch_idx = launch_info.get('launch_idx', self.launch_idx)
+
+    def reset_launch(self, state: str='WAITING', launch_dir: str=None,
+                     trackers: List['Tracker']=None,
+                     state_history: dict=None, fworker: dict=None,
+                     host: str=None, ip: str=None, launch_idx: int=None):
+
+        launch_info = {'fworker': fworker,
+                       'host': host,
+                       'ip': ip,
+                       'trackers': trackers,
+                       'state_history': state_history,
+                       'state': state,
+                       'launch_dir': launch_dir,
+                       'launch_idx': launch_idx}
+        self._setup_launch(launch_info)
+
+    #@property
+    #def fworker(self):
+    #    raise NotImplementedError("Firework does not have an FWorker")
+
+    # FUNCTIONS FOR ACCESSING AND UPDATING STATE HISTORY
+
+    def touch_history(self, update_time: datetime=None,
+                      checkpoint: dict=None):
         """
-        Setter for the the FW state, which triggers updated_on change
+        Updates the update_on field of the state history of a Launch. Used to ping that a Launch
+        is still alive.
 
         Args:
-            state (str): the state to set for the FW
+            update_time (datetime)
         """
-        self._state = state
-        self.updated_on = datetime.utcnow()
+        update_time = update_time or datetime.utcnow()
+        if checkpoint:
+            self.state_history[-1]['checkpoint'] = checkpoint
+        self.state_history[-1]['updated_on'] = update_time
+
+    def _update_state_history(self, state: str):
+        """
+        Internal method to update the state history whenever the Launch state is modified.
+
+        Args:
+            state (str)
+        """
+        now_time = datetime.utcnow()
+        self.updated_on = now_time
+        if len(self.state_history) > 0:
+            last_state = self.state_history[-1]['state']
+            last_checkpoint = self.state_history[-1].get('checkpoint', None)
+        else:
+            last_state, last_checkpoint = None, None
+        if state != last_state:
+            new_history_entry = {'state': state, 'created_on': now_time}
+            if state != "COMPLETED" and last_checkpoint:
+                new_history_entry.update({'checkpoint': last_checkpoint})
+            self.state_history.append(new_history_entry)
+            if state in ['RUNNING', 'RESERVED']:
+                self.touch_history()  # add updated_on key
+
+    def _get_time(self, states: Union[str, List[str]],
+                  use_update_time: bool=False) -> Union[datetime, None]:
+        """
+        Internal method to help get the time of various events in the Launch (e.g. RUNNING)
+        from the state history.
+
+        Args:
+            states (list/tuple): match one of these states
+            use_update_time (bool): use the "updated_on" time rather than "created_on"
+
+        Returns:
+            (datetime)
+        """
+        states = states if isinstance(states, (list, tuple)) else [states]
+        for data in self.state_history:
+            if data['state'] in states:
+                if use_update_time:
+                    return data['updated_on']
+                return data['created_on']
+
+    def set_reservation_id(self, reservation_id: int):
+        """
+        Adds the job_id to the reservation.
+
+        Args:
+            reservation_id (int or str): the id of the reservation (e.g., queue reservation)
+        """
+        for data in self.state_history:
+            if data['state'] == 'RESERVED' and 'reservation_id' not in data:
+                data['reservation_id'] = str(reservation_id)
+                break
+
+    @property
+    def state(self) -> str:
+        """
+        Returns:
+            str: The current state of the Launch.
+        """
+        if self.state_history and len(self.state_history) > 0:
+            return self.state_history[-1]['state']
+        else:
+            return "WAITING"
+
+    @state.setter
+    def state(self, state: str):
+        """
+        Setter for the the Launch's state. Automatically triggers an update to state_history.
+
+        Args:
+            state (str): the state to set for the Launch
+        """
+        self._update_state_history(state)
+
+    def set_launch_dir(self, launch_dir: str):
+        """
+        Update the launch_dir. Might change this to a setter later
+        """
+        self.launch_dir = launch_dir
+
+    @property
+    def time_start(self) -> datetime:
+        """
+        Returns:
+            datetime: the time the Launch started RUNNING
+        """
+        return self._get_time('RUNNING')
+
+    @property
+    def time_end(self) -> datetime:
+        """
+        Returns:
+            datetime: the time the Launch was COMPLETED or FIZZLED
+        """
+        return self._get_time(['COMPLETED', 'FIZZLED'])
+
+    @property
+    def time_reserved(self) -> datetime:
+        """
+        Returns:
+            datetime: the time the Launch was RESERVED in the queue
+        """
+        return self._get_time('RESERVED')
+
+    @property
+    def last_pinged(self) -> datetime:
+        """
+        Returns:
+            datetime: the time the Launch last pinged a heartbeat that it was still running
+        """
+        return self._get_time('RUNNING', True)
+
+    @property
+    def runtime_secs(self) -> float:
+        """
+        Returns:
+            float: the number of seconds that the Launch ran for.
+        """
+        start = self.time_start
+        end = self.time_end
+        if start and end:
+            return (end - start).total_seconds()
+
+    @property
+    def reservedtime_secs(self) -> float:
+        """
+        Returns:
+            float: number of seconds the Launch was stuck as RESERVED in a queue.
+        """
+        start = self.time_reserved
+        if start:
+            end = self.time_start if self.time_start else datetime.utcnow()
+            return (end - start).total_seconds()
+
+    @property
+    @recursive_serialize
+    def launch(self) -> Dict[str, Any]:
+        launch = {}
+        launch['state'] = self.state
+        launch['state_history'] = self.state_history
+        launch['fworker'] = self.fworker
+        launch['host'] = self.host
+        launch['ip'] = self.ip
+        launch['trackers'] = self.trackers
+        launch['action'] = self.action
+        launch['launch_idx'] = self.launch_idx
+        launch['launch_dir'] = self.launch_dir
+        launch['fw_id'] = self.fw_id
+        return launch
 
     @recursive_serialize
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         # put tasks in a special location of the spec
         spec = self.spec
         spec['_tasks'] = [t.to_dict() for t in self.tasks]
         m_dict = {'spec': spec, 'fw_id': self.fw_id, 'created_on': self.created_on,
                   'updated_on': self.updated_on}
 
-        # only serialize these fields if non-empty
-        if len(list(self.launches)) > 0:
-            m_dict['launches'] = self.launches
-
-        if len(list(self.archived_launches)) > 0:
-            m_dict['archived_launches'] = self.archived_launches
-
         # keep export of new FWs to files clean
-        if self.state != 'WAITING':
-            m_dict['state'] = self.state
+        #if self.state != 'WAITING':
+        #    m_dict['state'] = self.state
+        m_dict['state'] = self.state
 
         m_dict['name'] = self.name
 
+        m_dict['launch'] = self.launch
+
         return m_dict
+
+    def to_db_dict(self) -> Dict[str, Any]:
+        m_d = self.to_dict()
+        m_d['launch']['time_start'] = self.time_start
+        if m_d['launch']['time_start'] is not None:
+            m_d['launch']['time_start'] = m_d['launch']['time_start'].isoformat()
+        m_d['launch']['time_end'] = self.time_end
+        if m_d['launch']['time_end'] is not None:
+            m_d['launch']['time_end'] = m_d['launch']['time_end'].isoformat()
+        m_d['launch']['runtime_secs'] = self.runtime_secs
+        if self.reservedtime_secs:
+            m_d['launch']['reservedtime_secs'] = self.reservedtime_secs
+        return m_d
+
+    @classmethod
+    @recursive_deserialize
+    def from_dict(cls, m_dict: dict) -> 'Firework':
+        tasks = m_dict['spec']['_tasks']
+        fw_id = m_dict.get('fw_id', -1)
+        name = m_dict.get('name', None)
+        state = m_dict.get('state', 'WAITING')
+
+        launch = m_dict.get('launch', {})
+        created_on = m_dict.get('created_on')
+        updated_on = m_dict.get('updated_on')
+        launch_idx = launch.get('launch_idx', None)
+        fworker = launch.get('fworker', None)
+        action = FWAction.from_dict(launch['action']) if launch.get('action', None) else None
+        trackers = [Tracker.from_dict(f) for f in launch['trackers']]\
+                    if launch.get('trackers', None) else None
+        launch_dir = launch.get('launch_dir', None)
+        host = launch.get('host', None)
+        ip = launch.get('ip', None)
+        state_history = launch.get('state_history', None)
+
+        return Firework(tasks=tasks, spec=m_dict['spec'], name=name, state=state,
+                        created_on=created_on, fw_id=fw_id, updated_on=updated_on,
+                        fworker=fworker, host=host, ip=ip, trackers=trackers,
+                        launch_idx=launch_idx, action=action,
+                        launch_dir=launch_dir, state_history=state_history)
 
     def _rerun(self):
         """
@@ -280,45 +497,21 @@ class Firework(FWSerializable):
         a Workflow because a refresh is needed after calling this method.
         """
         if self.state == 'FIZZLED':
-            last_launch = self.launches[-1]
-            if (EXCEPT_DETAILS_ON_RERUN and last_launch.action and
-                last_launch.action.stored_data.get('_exception', {}).get('_details')):
+            last_launch = self.launch
+            if (EXCEPT_DETAILS_ON_RERUN and self.action and
+                self.action.stored_data.get('_exception', {}).get('_details')):
                 # add the exception details to the spec
-                self.spec['_exception_details'] = last_launch.action.stored_data['_exception']['_details']
+                self.spec['_exception_details'] = self.action.stored_data['_exception']['_details']
             else:
                 # clean spec from stale details
                 self.spec.pop('_exception_details', None)
 
-        self.archived_launches.extend(self.launches)
-        self.archived_launches = list(set(self.archived_launches))  # filter duplicates
-        self.launches = []
-        self.state = 'WAITING'
+        #self.archived_launches.extend(self.launches)
+        #self.archived_launches = list(set(self.archived_launches))  # filter duplicates
+        self.reset_launch(launch_idx=None)
 
-    def to_db_dict(self):
-        """
-        Return firework dict with updated launches and state.
-        """
-        m_dict = self.to_dict()
-        # the launches are stored separately
-        m_dict['launches'] = [l.launch_id for l in self.launches]
-        # the archived launches are stored separately
-        m_dict['archived_launches'] = [l.launch_id for l in self.archived_launches]
-        m_dict['state'] = self.state
-        return m_dict
-
-    @classmethod
-    @recursive_deserialize
-    def from_dict(cls, m_dict):
-        tasks = m_dict['spec']['_tasks']
-        launches = [Launch.from_dict(tmp) for tmp in m_dict.get('launches', [])]
-        archived_launches = [Launch.from_dict(tmp) for tmp in m_dict.get('archived_launches', [])]
-        fw_id = m_dict.get('fw_id', -1)
-        state = m_dict.get('state', 'WAITING')
-        created_on = m_dict.get('created_on')
-        updated_on = m_dict.get('updated_on')
-        name = m_dict.get('name', None)
-        return Firework(tasks, m_dict['spec'], name, launches, archived_launches, state, created_on,
-                        fw_id, updated_on=updated_on)
+    def copy(self) -> 'Firework':
+        return Firework.from_dict(self.to_dict())
 
     def __str__(self):
         return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
@@ -331,7 +524,8 @@ class Tracker(FWSerializable, object):
 
     MAX_TRACKER_LINES = 1000
 
-    def __init__(self, filename, nlines=TRACKER_LINES, content='', allow_zipped=False):
+    def __init__(self, filename: str, nlines: int=TRACKER_LINES,
+                 content: str='', allow_zipped: bool=False):
         """
         Args:
             filename (str)
@@ -347,7 +541,7 @@ class Tracker(FWSerializable, object):
         self.content = content
         self.allow_zipped = allow_zipped
 
-    def track_file(self, launch_dir=None):
+    def track_file(self, launch_dir: str=None) -> str:
         """
         Reads the monitored file and returns back the last N lines
 
@@ -372,225 +566,23 @@ class Tracker(FWSerializable, object):
             self.content = '\n'.join(reversed(lines))
         return self.content
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         m_dict = {'filename': self.filename, 'nlines': self.nlines, 'allow_zipped': self.allow_zipped}
         if self.content:
             m_dict['content'] = self.content
         return m_dict
 
     @classmethod
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict: dict):
         return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''),
                        m_dict.get('allow_zipped', False))
 
     def __str__(self):
         return '### Filename: {}\n{}'.format(self.filename, self.content)
 
-
-class Launch(FWSerializable, object):
-    """
-    A Launch encapsulates data about a specific run of a Firework on a computing resource.
-    """
-
-    def __init__(self, state, launch_dir, fworker=None, host=None, ip=None, trackers=None,
-                 action=None, state_history=None, launch_id=None, fw_id=None):
-        """
-        Args:
-            state (str): the state of the Launch (e.g. RUNNING, COMPLETED)
-            launch_dir (str): the directory where the Launch takes place
-            fworker (FWorker): The FireWorker running the Launch
-            host (str): the hostname where the launch took place (set automatically if None)
-            ip (str): the IP address where the launch took place (set automatically if None)
-            trackers ([Tracker]): File Trackers for this Launch
-            action (FWAction): the output of the Launch
-            state_history ([dict]): a history of all states of the Launch and when they occurred
-            launch_id (int): launch_id set by the LaunchPad
-            fw_id (int): id of the Firework this Launch is running
-        """
-        if state not in Firework.STATE_RANKS:
-            raise ValueError("Invalid launch state: {}".format(state))
-        self.launch_dir = launch_dir
-        self.fworker = fworker or FWorker()
-        self.host = host or get_my_host()
-        self.ip = ip or get_my_ip()
-        self.trackers = trackers if trackers else []
-        self.action = action if action else None
-        self.state_history = state_history if state_history else []
-        self.state = state
-        self.launch_id = launch_id
-        self.fw_id = fw_id
-
-    def touch_history(self, update_time=None, checkpoint=None):
-        """
-        Updates the update_on field of the state history of a Launch. Used to ping that a Launch
-        is still alive.
-
-        Args:
-            update_time (datetime)
-        """
-        update_time = update_time or datetime.utcnow()
-        if checkpoint:
-            self.state_history[-1]['checkpoint'] = checkpoint
-        self.state_history[-1]['updated_on'] = update_time
-
-    def set_reservation_id(self, reservation_id):
-        """
-        Adds the job_id to the reservation.
-
-        Args:
-            reservation_id (int or str): the id of the reservation (e.g., queue reservation)
-        """
-        for data in self.state_history:
-            if data['state'] == 'RESERVED' and 'reservation_id' not in data:
-                data['reservation_id'] = str(reservation_id)
-                break
-
-    @property
-    def state(self):
-        """
-        Returns:
-            str: The current state of the Launch.
-        """
-        return self._state
-
-    @state.setter
-    def state(self, state):
-        """
-        Setter for the the Launch's state. Automatically triggers an update to state_history.
-
-        Args:
-            state (str): the state to set for the Launch
-        """
-        self._state = state
-        self._update_state_history(state)
-
-    @property
-    def time_start(self):
-        """
-        Returns:
-            datetime: the time the Launch started RUNNING
-        """
-        return self._get_time('RUNNING')
-
-    @property
-    def time_end(self):
-        """
-        Returns:
-            datetime: the time the Launch was COMPLETED or FIZZLED
-        """
-        return self._get_time(['COMPLETED', 'FIZZLED'])
-
-    @property
-    def time_reserved(self):
-        """
-        Returns:
-            datetime: the time the Launch was RESERVED in the queue
-        """
-        return self._get_time('RESERVED')
-
-    @property
-    def last_pinged(self):
-        """
-        Returns:
-            datetime: the time the Launch last pinged a heartbeat that it was still running
-        """
-        return self._get_time('RUNNING', True)
-
-    @property
-    def runtime_secs(self):
-        """
-        Returns:
-            int: the number of seconds that the Launch ran for.
-        """
-        start = self.time_start
-        end = self.time_end
-        if start and end:
-            return (end - start).total_seconds()
-
-    @property
-    def reservedtime_secs(self):
-        """
-        Returns:
-            int: number of seconds the Launch was stuck as RESERVED in a queue.
-        """
-        start = self.time_reserved
-        if start:
-            end = self.time_start if self.time_start else datetime.utcnow()
-            return (end - start).total_seconds()
-
-    @recursive_serialize
-    def to_dict(self):
-        return {'fworker': self.fworker,
-                'fw_id': self.fw_id,
-                'launch_dir': self.launch_dir,
-                'host': self.host,
-                'ip': self.ip,
-                'trackers': self.trackers,
-                'action': self.action,
-                'state': self.state,
-                'state_history': self.state_history,
-                'launch_id': self.launch_id}
-
-    @recursive_serialize
-    def to_db_dict(self):
-        m_d = self.to_dict()
-        m_d['time_start'] = self.time_start
-        m_d['time_end'] = self.time_end
-        m_d['runtime_secs'] = self.runtime_secs
-        if self.reservedtime_secs:
-            m_d['reservedtime_secs'] = self.reservedtime_secs
-        return m_d
-
-    @classmethod
-    @recursive_deserialize
-    def from_dict(cls, m_dict):
-        fworker = FWorker.from_dict(m_dict['fworker']) if m_dict['fworker'] else None
-        action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
-        trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get('trackers') else None
-        return Launch(m_dict['state'], m_dict['launch_dir'], fworker,
-                      m_dict['host'], m_dict['ip'], trackers, action,
-                      m_dict['state_history'], m_dict['launch_id'], m_dict['fw_id'])
-
-    def _update_state_history(self, state):
-        """
-        Internal method to update the state history whenever the Launch state is modified.
-
-        Args:
-            state (str)
-        """
-        if len(self.state_history) > 0:
-            last_state = self.state_history[-1]['state']
-            last_checkpoint = self.state_history[-1].get('checkpoint', None)
-        else:
-            last_state, last_checkpoint = None, None
-        if state != last_state:
-            now_time = datetime.utcnow()
-            new_history_entry = {'state': state, 'created_on': now_time}
-            if state != "COMPLETED" and last_checkpoint:
-                new_history_entry.update({'checkpoint': last_checkpoint})
-            self.state_history.append(new_history_entry)
-            if state in ['RUNNING', 'RESERVED']:
-                self.touch_history()  # add updated_on key
-
-    def _get_time(self, states, use_update_time=False):
-        """
-        Internal method to help get the time of various events in the Launch (e.g. RUNNING)
-        from the state history.
-
-        Args:
-            states (list/tuple): match one of these states
-            use_update_time (bool): use the "updated_on" time rather than "created_on"
-
-        Returns:
-            (datetime)
-        """
-        states = states if isinstance(states, (list, tuple)) else [states]
-        for data in self.state_history:
-            if data['state'] in states:
-                if use_update_time:
-                    return data['updated_on']
-                return data['created_on']
-
+##############################################################################
+#                           WORKFLOW CLASS                                   #
+##############################################################################
 
 class Workflow(FWSerializable):
     """
@@ -622,7 +614,7 @@ class Workflow(FWSerializable):
                     del self[k]
 
         @property
-        def nodes(self):
+        def nodes(self) -> List[int]:
             """ Return list of all nodes"""
             allnodes = list(self.keys())
             for v in self.values():
@@ -630,7 +622,7 @@ class Workflow(FWSerializable):
             return list(set(allnodes))
 
         @property
-        def parent_links(self):
+        def parent_links(self) -> Dict:
             """
             Return a dict of child and its parents.
 
@@ -643,7 +635,7 @@ class Workflow(FWSerializable):
                     child_parents[child].append(parent)
             return dict(child_parents)
 
-        def to_dict(self):
+        def to_dict(self) -> Dict:
             """
             Convert to str form for Mongo, which cannot have int keys.
 
@@ -652,7 +644,7 @@ class Workflow(FWSerializable):
             """
             return dict([(str(k), v) for (k, v) in self.items()])
 
-        def to_db_dict(self):
+        def to_db_dict(self) -> Dict:
             """
             Convert to str form for Mongo, which cannot have int keys .
 
@@ -666,10 +658,10 @@ class Workflow(FWSerializable):
             return m_dict
 
         @classmethod
-        def from_dict(cls, m_dict):
+        def from_dict(cls, m_dict) -> 'Workflow.Links':
             return Workflow.Links(m_dict)
 
-        def __setstate__(self, state):
+        def __setstate__(self, state: str):
             for k, v in state:
                 self[k] = v
 
@@ -682,8 +674,10 @@ class Workflow(FWSerializable):
             state = list(self.items())
             return NestedClassGetter(), (Workflow, self.__class__.__name__, ), state
 
-    def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
-                 updated_on=None, fw_states=None):
+    def __init__(self, fireworks: List[Firework], links_dict: Dict=None,
+                 name: str=None, metadata: Dict=None,
+                 created_on: datetime=None, updated_on: datetime=None,
+                 fw_states: Dict=None):
         """
         Args:
             fireworks ([Firework]): all FireWorks in this workflow.
@@ -742,14 +736,14 @@ class Workflow(FWSerializable):
             self.fw_states = {key:self.id_fw[key].state for key in self.id_fw}
 
     @property
-    def fws(self):
+    def fws(self) -> List[Firework]:
         """
         Return list of all fireworks
         """
         return list(self.id_fw.values())
 
     @property
-    def state(self):
+    def state(self) -> str:
         """
         Returns:
             state (str): state of workflow
@@ -787,7 +781,7 @@ class Workflow(FWSerializable):
             m_state = 'RESERVED'
         return m_state
 
-    def apply_action(self, action, fw_id):
+    def apply_action(self, action: 'FWAction', fw_id: int) -> List[int]:
         """
         Apply a FWAction on a Firework in the Workflow.
 
@@ -848,12 +842,12 @@ class Workflow(FWSerializable):
 
         return list(set(updated_ids))
 
-    def rerun_fw(self, fw_id, updated_ids=None):
+    def rerun_fw(self, fw_id: int, updated_ids: List[int]=None) -> List[int]:
         """
         Archives the launches of a Firework so that it can be re-run.
 
         Args:
-            fw_id (int): id of firework to tbe rerun
+            fw_id (int): id of firework to be rerun
             updated_ids (set(int)): set of fireworks id to rerun
 
         Returns:
@@ -876,7 +870,8 @@ class Workflow(FWSerializable):
 
         return updated_ids
 
-    def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=False):
+    def append_wf(self, new_wf: 'Workflow', fw_ids: List[int], detour: bool=False,
+                  pull_spec_mods: bool=False) -> List[int]:
         """
         Method to add a workflow as a child to a Firework
         Note: detours must have children that have STATE_RANK that is WAITING or below
@@ -933,14 +928,14 @@ class Workflow(FWSerializable):
                 self.links[fw_id].append(root_id)  # add the root id as my child
                 if pull_spec_mods:  # re-apply some actions of the parent
                     m_fw = self.id_fw[fw_id]  # get the parent FW
-                    m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
-                    if m_launch:
+                    #m_launch = self._get_representative_launch(m_fw)  # get Launch of parent
+                    if m_fw:
                         # pull spec update
-                        if m_launch.state == 'COMPLETED' and m_launch.action.update_spec:
-                            new_wf.id_fw[root_id].spec.update(m_launch.action.update_spec)
+                        if m_fw.state == 'COMPLETED' and m_fw.action.update_spec:
+                            new_wf.id_fw[root_id].spec.update(m_fw.action.update_spec)
                         # pull spec mods
-                        if m_launch.state == 'COMPLETED' and m_launch.action.mod_spec:
-                            for mod in m_launch.action.mod_spec:
+                        if m_fw.state == 'COMPLETED' and m_fw.action.mod_spec:
+                            for mod in m_fw.action.mod_spec:
                                 apply_mod(mod, new_wf.id_fw[root_id].spec)
 
         for new_fw in new_wf.fws:
@@ -948,7 +943,7 @@ class Workflow(FWSerializable):
 
         return updated_ids
 
-    def refresh(self, fw_id, updated_ids=None):
+    def refresh(self, fw_id: int, updated_ids: List[int]=None) -> List[int]:
         """
         Refreshes the state of a Firework and any affected children.
 
@@ -963,7 +958,7 @@ class Workflow(FWSerializable):
         updated_ids = updated_ids if updated_ids else set()
 
         fw = self.id_fw[fw_id]
-        prev_state = fw.state
+        prev_state = self.fw_states.get(fw.fw_id)
 
         # if we're paused, defused or archived, just skip altogether
         if fw.state == 'DEFUSED' or fw.state == 'ARCHIVED' or fw.state == 'PAUSED':
@@ -982,9 +977,8 @@ class Workflow(FWSerializable):
 
         else:  # not DEFUSED/ARCHIVED, and all parents are done running. Now the state depends on the launch status
             # my state depends on launch whose state has the highest 'score' in STATE_RANKS
-            m_launch = self._get_representative_launch(fw)
-            m_state = m_launch.state if m_launch else 'READY'
-            m_action = m_launch.action if (m_launch and m_launch.state == "COMPLETED") else None
+            m_state = fw.state if fw.state != 'WAITING' else 'READY'
+            m_action = fw.action if (m_state == "COMPLETED") else None
 
             # report any FIZZLED parents if allow_fizzed allows us to handle FIZZLED jobs
             if fw.spec.get('_allow_fizzled_parents') and "_fizzled_parents" not in fw.spec:
@@ -999,6 +993,7 @@ class Workflow(FWSerializable):
         self.fw_states[fw_id] = m_state
 
         if m_state != prev_state:
+        #if True:
             updated_ids.add(fw_id)
 
             if m_state == 'COMPLETED':
@@ -1015,7 +1010,7 @@ class Workflow(FWSerializable):
         return updated_ids
 
     @property
-    def root_fw_ids(self):
+    def root_fw_ids(self) -> List[int]:
         """
         Gets root FireWorks of this workflow (those with no parents).
 
@@ -1028,7 +1023,7 @@ class Workflow(FWSerializable):
         return list(root_ids)
 
     @property
-    def leaf_fw_ids(self):
+    def leaf_fw_ids(self) -> List[int]:
         """
         Gets leaf FireWorks of this workflow (those with no children).
 
@@ -1041,7 +1036,7 @@ class Workflow(FWSerializable):
                 leaf_ids.append(id)
         return leaf_ids
 
-    def _reassign_ids(self, old_new):
+    def _reassign_ids(self, old_new: Dict):
         """
         Internal method to reassign Firework ids, e.g. due to database insertion.
 
@@ -1066,7 +1061,7 @@ class Workflow(FWSerializable):
             new_fw_states[old_new.get(fwid, fwid)] = fw_state
         self.fw_states = new_fw_states
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         return {'fws': [f.to_dict() for f in self.id_fw.values()],
                 'links': self.links.to_dict(),
                 'name': self.name,
@@ -1074,7 +1069,7 @@ class Workflow(FWSerializable):
                 'updated_on': self.updated_on,
                 'created_on': self.created_on}
 
-    def to_db_dict(self):
+    def to_db_dict(self) -> Dict:
         m_dict = self.links.to_db_dict()
         m_dict['metadata'] = self.metadata
         m_dict['state'] = self.state
@@ -1084,11 +1079,11 @@ class Workflow(FWSerializable):
         m_dict['fw_states'] = dict([(str(k), v) for (k, v) in self.fw_states.items()])
         return m_dict
 
-    def to_display_dict(self):
+    def to_display_dict(self) -> Dict:
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict['nodes'])
         m_dict['name--id'] = self.name + '--' + str(nodes[0])
-        m_dict['launch_dirs'] = OrderedDict([(self._str_fw(x), [l.launch_dir for l in self.id_fw[x].launches])
+        m_dict['launch_dirs'] = OrderedDict([(self._str_fw(x), [self.id_fw[x].launch_dir])
                                              for x in nodes])
         m_dict['states'] = OrderedDict([(self._str_fw(x), self.id_fw[x].state) for x in nodes])
         m_dict['nodes'] = [self._str_fw(x) for x in nodes]
@@ -1099,7 +1094,7 @@ class Workflow(FWSerializable):
         m_dict['states_list'] = '-'.join([a[0:4] for a in m_dict['states'].values()])
         return m_dict
 
-    def _str_fw(self, fw_id):
+    def _str_fw(self, fw_id: int) -> str:
         """
         Get a string representation of the firework with the given id.
 
@@ -1111,34 +1106,8 @@ class Workflow(FWSerializable):
         """
         return self.id_fw[int(fw_id)].name + '--' + str(fw_id)
 
-    @staticmethod
-    def _get_representative_launch(fw):
-        """
-        Returns a representative launch(one with the largest state rank) for the given firework.
-        If there are multiple COMPLETED launches, the one with the most recent update time is
-        returned.
-
-        Args:
-            fw (Firework)
-
-        Returns:
-            Launch
-        """
-        max_score = Firework.STATE_RANKS['ARCHIVED']  # state rank must be greater than this
-        m_launch = None
-        completed_launches = []
-        for l in fw.launches:
-            if Firework.STATE_RANKS[l.state] > max_score:
-                max_score = Firework.STATE_RANKS[l.state]
-                m_launch = l
-                if l.state == 'COMPLETED':
-                    completed_launches.append(l)
-        if completed_launches:
-            return max(completed_launches, key=lambda v: v.time_end)
-        return m_launch
-
     @classmethod
-    def from_wflow(cls, wflow):
+    def from_wflow(cls, wflow: 'Workflow') -> 'Workflow':
         """
         Create a fresh Workflow from an existing one.
 
@@ -1152,7 +1121,7 @@ class Workflow(FWSerializable):
         new_wf.reset(reset_ids=True)
         return new_wf
 
-    def reset(self, reset_ids=True):
+    def reset(self, reset_ids: bool=True):
         """
         Reset the states of all Fireworks in this workflow to 'WAITING'.
 
@@ -1174,7 +1143,7 @@ class Workflow(FWSerializable):
         self.fw_states = {key: self.id_fw[key].state for key in self.id_fw}
 
     @classmethod
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict: Dict) -> 'Workflow':
         """
         Return Workflow from its dict representation.
 
@@ -1195,7 +1164,8 @@ class Workflow(FWSerializable):
             return Workflow.from_Firework(Firework.from_dict(m_dict))
 
     @classmethod
-    def from_Firework(cls, fw, name=None, metadata=None):
+    def from_Firework(cls, fw: Firework, name: str=None,
+                      metadata: Dict=None) -> Firework:
         """
         Return Workflow from the given Firework.
 
@@ -1214,7 +1184,7 @@ class Workflow(FWSerializable):
     def __str__(self):
         return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)
 
-    def remove_fws(self, fw_ids):
+    def remove_fws(self, fw_ids: List[int]):
         """
         Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
         parents of the removed fireworks become the parents of the children fireworks (only if the
@@ -1256,6 +1226,73 @@ class Workflow(FWSerializable):
         self.links = new_wf.links
 
 
-# old spelling
-class FireTaskBase(FiretaskBase):
-    pass
+class FWAction(FWSerializable):
+    """
+    A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
+    Firetask completes). The FWAction allows a user to store rudimentary output data as well
+    as return commands that alter the workflow.
+    """
+
+    def __init__(self, stored_data: dict=None, exit: bool=False,
+                 update_spec: dict=None, mod_spec: List[dict]=None,
+                 additions: List['Workflow']=None, detours: List['Workflow']=None,
+                 defuse_children: bool=False, defuse_workflow: bool=False):
+        """
+        Args:
+            stored_data (dict): data to store from the run. Does not affect the operation of FireWorks.
+            exit (bool): if set to True, any remaining Firetasks within the same Firework are skipped.
+            update_spec (dict): specifies how to update the child FW's spec
+            mod_spec ([dict]): update the child FW's spec using the DictMod language (more flexible
+                than update_spec)
+            additions ([Workflow]): a list of WFs/FWs to add as children
+            detours ([Workflow]): a list of WFs/FWs to add as children (they will inherit the
+                current FW's children)
+            defuse_children (bool): defuse all the original children of this Firework
+            defuse_workflow (bool): defuse all incomplete steps of this workflow
+        """
+        mod_spec = mod_spec if mod_spec is not None else []
+        additions = additions if additions is not None else []
+        detours = detours if detours is not None else []
+
+        self.stored_data = stored_data if stored_data else {}
+        self.exit = exit
+        self.update_spec = update_spec if update_spec else {}
+        self.mod_spec = mod_spec if isinstance(mod_spec, (list, tuple)) else [mod_spec]
+        self.additions = additions if isinstance(additions, (list, tuple)) else [additions]
+        self.detours = detours if isinstance(detours, (list, tuple)) else [detours]
+        self.defuse_children = defuse_children
+        self.defuse_workflow = defuse_workflow
+
+    @recursive_serialize
+    def to_dict(self) -> dict:
+        return {'stored_data': self.stored_data,
+                'exit': self.exit,
+                'update_spec': self.update_spec,
+                'mod_spec': self.mod_spec,
+                'additions': self.additions,
+                'detours': self.detours,
+                'defuse_children': self.defuse_children,
+                'defuse_workflow': self.defuse_workflow}
+
+    @classmethod
+    @recursive_deserialize
+    def from_dict(cls, m_dict: dict) -> 'FWAction':
+        d = m_dict
+        additions = [Workflow.from_dict(f) for f in d['additions']]
+        detours = [Workflow.from_dict(f) for f in d['detours']]
+        return FWAction(d['stored_data'], d['exit'], d['update_spec'],
+                        d['mod_spec'], additions, detours,
+                        d['defuse_children'], d.get('defuse_workflow', False))
+
+    @property
+    def skip_remaining_tasks(self) -> bool:
+        """
+        If the FWAction gives any dynamic action, we skip the subsequent Firetasks
+
+        Returns:
+            bool
+        """
+        return self.exit or self.detours or self.additions or self.defuse_children or self.defuse_workflow
+
+    def __str__(self):
+        return "FWAction\n" + pprint.pformat(self.to_dict())

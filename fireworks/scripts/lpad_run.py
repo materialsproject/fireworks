@@ -26,9 +26,8 @@ from fireworks.fw_config import RESERVATION_EXPIRATION_SECS, \
     LAUNCHPAD_LOC, FWORKER_LOC, WEBSERVER_PORT, WEBSERVER_HOST
 from fireworks.features.fw_report import FWReport
 from fireworks.features.introspect import Introspector
-from fireworks.core.launchpad import LaunchPad, WFLock
+from fireworks import LaunchPad, WFLock
 from fireworks.core.firework import Workflow, Firework
-from fireworks.core.fworker import FWorker
 from fireworks import __version__ as FW_VERSION
 from fireworks import FW_INSTALL_DIR
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -71,6 +70,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     Returns:
         list of ids
     """
+    # TODO launches mode is not longer necessary here
     if args.fw_id and sum([bool(x) for x in [args.name, args.state, args.query]]) >= 1:
         raise ValueError('Cannot specify both fw_id and name/state/query)')
 
@@ -79,6 +79,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
         return pw_check(args.fw_id, args, skip_pw)
     if args.query:
         query = ast.literal_eval(args.query)
+    # remove ref to launches_mode
     if args.name and 'launches_mode' in args and not args.launches_mode:
         query['name'] = args.name
     if args.state:
@@ -101,6 +102,8 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
 
 def get_lp(args):
+    # TODO add a launchpad_type argument to determine which type of lpad
+    # is to be initialized
     try:
         if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
             args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
@@ -145,7 +148,7 @@ def reset(args):
     lp = get_lp(args)
     if not args.password:
         if input('Are you sure? This will RESET {} workflows and all data. (Y/N)'.format(
-                lp.workflows.count()))[0].upper() == 'Y':
+                lp.workflow_count))[0].upper() == 'Y':
             args.password=datetime.datetime.now().strftime('%Y-%m-%d')
         else:
             raise ValueError('Operation aborted by user.')
@@ -200,6 +203,8 @@ def add_wf_dir(args):
 
 
 def get_fws(args):
+    # TODO This section should be agnostic to the query format.
+    # Need to change get_fw_ids to have a general query format...
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
@@ -249,12 +254,10 @@ def get_fws(args):
             d = fw.to_dict()
             d['state'] = d.get('state', 'WAITING')
             if args.display_format == 'more' or args.display_format == 'less':
-                if 'archived_launches' in d:
-                    del d['archived_launches']
                 del d['spec']
             if args.display_format == 'less':
-                if 'launches' in d:
-                    del d['launches']
+                if 'launch' in d:
+                    del d['launch']
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
@@ -263,12 +266,14 @@ def get_fws(args):
 
 
 def update_fws(args):
+    # TODO remove args.mongo
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     lp.update_spec(fw_ids, json.loads(args.update),args.mongo)
 
 
 def get_wfs(args):
+    # TODO query format agnostic
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
@@ -295,6 +300,7 @@ def get_wfs(args):
         sort = None
 
     ids = lp.get_wf_ids(query, sort, args.max, count_only=args.display_format == 'count')
+    print(ids)
     if args.display_format == 'ids':
         wfs = ids
     elif args.display_format == 'count':
@@ -394,7 +400,6 @@ def archive(args):
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished archiving {} WFs'.format(len(fw_ids)))
 
-
 def reignite_wfs(args):
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
@@ -439,18 +444,19 @@ def resume_fws(args):
 
 
 def rerun_fws(args):
+    # TODO switch launch_id to launch_idx (or just remove references to launches?)
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     if args.task_level:
         launch_ids = args.launch_id
         if launch_ids is None:
-            launch_ids = ['last']*len(fw_ids)
+            launch_ids = [-1]*len(fw_ids)
         elif len(launch_ids) != len(fw_ids):
             raise ValueError("Specify the same number of tasks and launches")
     else:
         launch_ids = [None]*len(fw_ids)
     for f, l in zip(fw_ids, launch_ids):
-        lp.rerun_fw(int(f), recover_launch=l, recover_mode=args.recover_mode)
+        lp.rerun_fw(int(f), launch_idx=l, recover_mode=args.recover_mode)
         lp.m_logger.debug('Processed fw_id: {}'.format(f))
     lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
 
@@ -588,6 +594,7 @@ def forget_offline(args):
     lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
 
 
+# TODO make FWReport and Introspector compatible with the new LaunchPad
 def report(args):
     lp=get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
@@ -635,7 +642,7 @@ def track_fws(args):
                     output.append('## Launch id: {}'.format(d['launch_id']))
                     output.append(str(t))
         if output:
-            name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})['name']
+            name = lp.get_fw_by_id(f).name # changed this to avoid accessing fireworks directly
             output.insert(0, '# FW id: {}, FW name: {}'.format(f, name))
             if first_print:
                 first_print = False
@@ -1042,8 +1049,6 @@ def lpad():
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')
     recover_parser.add_argument('-i', '--ignore_errors', help='ignore errors', action='store_true')
-    recover_parser.add_argument('-w', '--fworker_file', help='path to fworker file. An empty string '
-                                                             'will match all the workers', default=FWORKER_LOC)
     recover_parser.add_argument('-pe', '--print-errors', help='print errors', action='store_true')
     recover_parser.set_defaults(func=recover_offline)
 

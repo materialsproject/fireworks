@@ -10,7 +10,7 @@ import time
 
 from monty.shutil import compress_dir, decompress_dir
 
-from fireworks.core.firework import FiretaskBase
+from fireworks import FiretaskBase
 
 __author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'

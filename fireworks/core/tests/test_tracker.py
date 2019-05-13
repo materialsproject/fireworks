@@ -21,9 +21,9 @@ import shutil
 import sys
 import argparse
 
-from fireworks.core.firework import Firework, Tracker, FWorker, Workflow
-from fireworks.core.launchpad import LaunchPad
-from fireworks.core.rocket_launcher import launch_rocket
+from fireworks.core.firework import Firework, Tracker, Workflow
+from fireworks.core.mongo_launchpad import MongoLaunchPad as LaunchPad
+from fireworks.scripts.rocket_launcher import launch_rocket
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.scripts.lpad_run import track_fws
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -37,12 +37,12 @@ class TrackerTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lp = None
-        cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None,require_password=False)
-        except:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+        except Exception as e:
+            raise e
+            #raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -84,7 +84,7 @@ class TrackerTest(unittest.TestCase):
 
             fw = Firework(fts, spec={'_trackers':[self.tracker1]}, fw_id=20, name='test_fw')
             self.lp.add_wf(fw)
-            launch_rocket(self.lp, self.fworker)
+            launch_rocket(self.lp)
 
             #print (self.tracker1.track_file())
             self.assertEqual('98\n99',self.tracker1.track_file())
@@ -116,7 +116,7 @@ class TrackerTest(unittest.TestCase):
                 print("===========================================")
                 print("Bad rocket launched. The failure below is OK")
                 print("===========================================")
-                launch_rocket(self.lp, self.fworker)
+                launch_rocket(self.lp)
             except:
                 pass
 
@@ -154,7 +154,7 @@ class TrackerTest(unittest.TestCase):
             add_wf(50, self.dest2, self.tracker2, 'b_test')
 
             try:
-                launch_multiprocess(self.lp, self.fworker, 'ERROR',
+                launch_multiprocess(self.lp, 'ERROR',
                                     0, 2, 0, ppn=2)
             except:
                 pass

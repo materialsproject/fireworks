@@ -3,7 +3,7 @@ This code is described in the Dynamic Workflow tutorial, https://materialsprojec
 """
 
 from fireworks import Firework, FWorker, LaunchPad
-from fireworks.core.rocket_launcher import rapidfire
+from fireworks.scripts.rocket_launcher import rapidfire
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 
 if __name__ == "__main__":

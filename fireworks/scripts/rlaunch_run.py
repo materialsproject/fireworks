@@ -12,9 +12,8 @@ import signal
 import sys
 
 from fireworks.fw_config import LAUNCHPAD_LOC, FWORKER_LOC, CONFIG_FILE_DIR
-from fireworks.core.launchpad import LaunchPad
-from fireworks.core.fworker import FWorker
-from fireworks.core.rocket_launcher import rapidfire, launch_rocket
+from fireworks import LaunchPad
+from fireworks.scripts.rocket_launcher import rapidfire, launch_rocket
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, get_fw_logger
 from fireworks.features.multi_launcher import launch_multiprocess
 
@@ -85,7 +84,6 @@ def rlaunch():
                               action="store_true")
 
     parser.add_argument('-l', '--launchpad_file', help='path to launchpad file')
-    parser.add_argument('-w', '--fworker_file', help='path to fworker file')
     parser.add_argument('-c', '--config_dir', help='path to a directory containing the config file '
                                                    '(used if -l, -w unspecified)',
                         default=CONFIG_FILE_DIR)
@@ -112,11 +110,6 @@ def rlaunch():
     elif not args.launchpad_file:
         args.launchpad_file = LAUNCHPAD_LOC
 
-    if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, 'my_fworker.yaml')):
-        args.fworker_file = os.path.join(args.config_dir, 'my_fworker.yaml')
-    elif not args.fworker_file:
-        args.fworker_file = FWORKER_LOC
-
     args.loglvl = 'CRITICAL' if args.silencer else args.loglvl
 
     if args.command == 'singleshot' and args.offline:
@@ -125,11 +118,6 @@ def rlaunch():
         launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(
             strm_lvl=args.loglvl)
 
-    if args.fworker_file:
-        fworker = FWorker.from_file(args.fworker_file)
-    else:
-        fworker = FWorker()
-
     # prime addr lookups
     _log = get_fw_logger("rlaunch", stream_level="INFO")
     _log.info("Hostname/IP lookup (this will take a few seconds)")
@@ -137,7 +125,7 @@ def rlaunch():
     get_my_ip()
 
     if args.command == 'rapidfire':
-        rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=args.nlaunches,
+        rapidfire(launchpad, m_dir=None, nlaunches=args.nlaunches,
                   max_loops=args.max_loops, sleep_time=args.sleep, strm_lvl=args.loglvl,
                   timeout=args.timeout,local_redirect=args.local_redirect)
     elif args.command == 'multi':
@@ -147,12 +135,12 @@ def rlaunch():
                 args.nodefile = os.environ[args.nodefile]
             with open(args.nodefile, 'r') as f:
                 total_node_list = [line.strip() for line in f.readlines()]
-        launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,
+        launch_multiprocess(launchpad, args.loglvl, args.nlaunches, args.num_jobs,
                             args.sleep, total_node_list, args.ppn, timeout=args.timeout,
                             exclude_current_node=args.exclude_current_node,
                             local_redirect=args.local_redirect)
     else:
-        launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
+        launch_rocket(launchpad, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
 
 if __name__ == '__main__':
     rlaunch()

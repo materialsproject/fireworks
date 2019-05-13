@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 import os
-from fireworks.queue.queue_adapter import QueueAdapterBase
+from fireworks.core.queue import QueueAdapterBase
 import getpass
 
 __author__ = 'Shreyas Cholia, Anubhav Jain'

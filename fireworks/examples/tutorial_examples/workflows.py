@@ -3,7 +3,7 @@ This code is described in the Workflow tutorial, https://materialsproject.github
 """
 
 from fireworks import Firework, Workflow, FWorker, LaunchPad, ScriptTask
-from fireworks.core.rocket_launcher import rapidfire
+from fireworks.scripts.rocket_launcher import rapidfire
 
 if __name__ == "__main__":
     # set up the LaunchPad and reset it

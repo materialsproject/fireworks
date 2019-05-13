@@ -16,7 +16,6 @@ from datetime import datetime
 
 from monty.os import cd, makedirs_p
 
-from fireworks.core.fworker import FWorker
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir, get_slug
 from fireworks.fw_config import SUBMIT_SCRIPT_NAME, ALWAYS_CREATE_NEW_BLOCK, QUEUE_RETRY_ATTEMPTS, \
@@ -30,7 +29,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Dec 12, 2012'
 
 
-def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reserve=False,
+def launch_rocket_to_queue(launchpad, qadapter, launcher_dir='.', reserve=False,
                            strm_lvl='INFO', create_launcher_dir=False, fill_mode=False,
                            fw_id=None):
     """
@@ -38,7 +37,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
 
     Args:
         launchpad (LaunchPad)
-        fworker (FWorker)
         qadapter (QueueAdapterBase)
         launcher_dir (str): The directory where to submit the job
         reserve (bool): Whether to queue in reservation mode
@@ -48,7 +46,6 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             (only in non-reservation mode)
         fw_id (int): specific fw_id to reserve (reservation mode only)
     """
-    fworker = fworker if fworker else FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger('queue.launcher', l_dir=launchpad.logdir, stream_level=strm_lvl)
 
@@ -73,13 +70,13 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     if fw_id and not reserve:
         raise ValueError("qlaunch for specific fireworks may only be used in reservation mode.")
 
-    if fill_mode or launchpad.run_exists(fworker):
+    if fill_mode or launchpad.run_exists():
         launch_id = None
         try:
             if reserve:
                 if fw_id:
                     l_logger.debug('finding a FW to reserve...')
-                fw, launch_id = launchpad.reserve_fw(fworker, launcher_dir, fw_id=fw_id)
+                fw, launch_id = launchpad.reserve_fw(launcher_dir, fw_id=fw_id)
                 if not fw:
                     l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
                     return False
@@ -123,7 +120,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
             with cd(launcher_dir):
 
                 if '--offline' in qadapter['rocket_launch']:
-                    setup_offline_job(launchpad, fw, launch_id)
+                    setup_offline_job(launchpad, fw.fw_id)
 
                 l_logger.debug('writing queue script')
                 with open(SUBMIT_SCRIPT_NAME, 'w') as f:
@@ -157,7 +154,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         return None  # note: this is a hack (rather than False) to indicate a soft failure to rapidfire()
 
 
-def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0,
+def rapidfire(launchpad, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0,
               njobs_block=500, sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None,
               fill_mode=False):
     """
@@ -165,7 +162,6 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
 
     Args:
         launchpad (LaunchPad)
-        fworker (FWorker)
         qadapter (QueueAdapterBase)
         launch_dir (str): directory where we want to write the blocks
         nlaunches (int): total number of launches desired; "infinite" for loop, 0 for one round
@@ -206,7 +202,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
-            while (launchpad.run_exists(fworker) or
+            while (launchpad.run_exists() or
                    (fill_mode and not reserve)):
 
                 if timeout and (datetime.now() - start_time).total_seconds() >= timeout:
@@ -227,7 +223,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                     block_dir = create_datestamp_dir(launch_dir, l_logger)
 
                 # launch a single job
-                return_code = launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve,
+                return_code = launch_rocket_to_queue(launchpad, qadapter, block_dir, reserve,
                                               strm_lvl, True, fill_mode)
                 if return_code is None:
                     l_logger.info('No READY jobs detected...')
@@ -250,7 +246,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
 
             if (nlaunches > 0 and num_launched == nlaunches) or \
                     (timeout and (datetime.now() - start_time).total_seconds()
-                     >= timeout) or (nlaunches == 0 and not launchpad.future_run_exists(fworker)):
+                     >= timeout) or (nlaunches == 0 and not launchpad.future_run_exists()):
                 break
 
             l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
@@ -306,9 +302,6 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
                        'check queue adapter and queue server status!')
 
 
-def setup_offline_job(launchpad, fw, launch_id):
+def setup_offline_job(launchpad, fw_id=None, launch_idx=-1):
     # separate this function out for reuse in unit testing
-    fw.to_file("FW.json")
-    with open('FW_offline.json', 'w') as f:
-        f.write('{"launch_id":%s}' % launch_id)
-    launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)
+    return launchpad.add_offline_run(fw_id, launch_idx)
