@@ -20,6 +20,8 @@
 #SBATCH --signal=$${signal}
 #SBATCH --mem=$${mem}
 #SBATCH --mem-per-cpu=$${mem_per_cpu}
+#SBATCH --mail-type=$${mail_type}
+#SBATCH --mail-user=$${mail_user}
 
 
 $${pre_rocket}
