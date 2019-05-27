@@ -101,23 +101,28 @@ class GetFilesByQueryTask(FiretaskBase):
     optional_params = ["filepad_file", "dest_dir", "new_file_names"]
 
     def run_task(self, fw_spec):
+        from pprint import pprint
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
         query = self.get("query", {})
 
-        def nested2plain(prefix, d):
+        def nested2plain(d, prefix=''):
             r = {}
+            if prefix is not '':
+                prefix = prefix + '.'
             for k, v in d.items():
+                #print(k,':',v)
                 if type(v) is dict:
-                    r.update( nested2plain(prefix + '.' + k, v ) )
+                    r.update( nested2plain(v, prefix + k) )
                 else:
-                    r.update(k,v)
+                    r.update( {prefix + k: v} )
             return r
 
         query = nested2plain(query) 
+        pprint(query)
 
-        l = fp.get_file_by_query(query)
+        l = fpad.get_file_by_query(query)
         for i, (file_contents, doc) in enumerate(l):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             # if content of db is non-ascii, but filesystem standard is, then encoding must be specified:
