@@ -81,6 +81,36 @@ class GetFilesTask(FiretaskBase):
             with open(os.path.join(dest_dir, file_name), "w", encoding="utf-8") as f:
                 f.write(file_contents.decode())
 
+class GetFilesByQueryTask(FiretaskBase):
+    """
+    A Firetask to fetch files from the filepad and write it to specified directory (current working
+    directory if not specified)
+
+    Required params:
+        - query ([str]): mongo db query identifying files to fetch
+
+    Optional params:
+        - filepad_file (str): path to the filepad db config file
+        - dest_dir (str): destination directory, default is the current working
+          directory.
+        - new_file_names ([str]): if provided, the retrieved files will be
+          renamed. Not recommended as order and number of queried files not fixed.
+    """
+    _fw_name = 'GetFilesByQueryTask'
+    required_params = ["query"]
+    optional_params = ["filepad_file", "dest_dir", "new_file_names"]
+
+    def run_task(self, fw_spec):
+        fpad = get_fpad(self.get("filepad_file", None))
+        dest_dir = self.get("dest_dir", os.path.abspath("."))
+        new_file_names = self.get("new_file_names", [])
+
+        l = fp.get_file_by_query(query)
+        for i, (file_contents, doc) in enumerate(l):
+            file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
+            # if content of db is non-ascii, but filesystem standard is, then encoding must be specified:
+            with open(os.path.join(dest_dir, file_name), "w", encoding="utf-8") as f:
+                f.write(file_contents.decode())
 
 class DeleteFilesTask(FiretaskBase):
     """
