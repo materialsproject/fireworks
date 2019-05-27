@@ -110,7 +110,7 @@ class GetFilesByQueryTask(FiretaskBase):
             r = {}
             for k, v in d.items():
                 if type(v) is dict:
-                    r.update( nested2plain(prefix + '.' + k, v ) 
+                    r.update( nested2plain(prefix + '.' + k, v ) )
                 else:
                     r.update(k,v)
             return r
