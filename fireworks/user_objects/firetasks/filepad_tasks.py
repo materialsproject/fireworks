@@ -104,6 +104,18 @@ class GetFilesByQueryTask(FiretaskBase):
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
+        query = self.get("query", {})
+
+        def nested2plain(prefix, d):
+            r = {}
+            for k, v in d.items():
+                if type(v) is dict:
+                    r.update( nested2plain(prefix + '.' + k, v ) 
+                else:
+                    r.update(k,v)
+            return r
+
+        query = nested2plain(query) 
 
         l = fp.get_file_by_query(query)
         for i, (file_contents, doc) in enumerate(l):
