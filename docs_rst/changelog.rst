@@ -2,6 +2,12 @@
 FireWorks Changelog
 ===================
 
+**v1.9.2**
+
+* code cleanups (should not affect any functions)
+* Add mail_type and mail_user to SLURM template for notifications (M. Horton)
+
+
 **v1.9.1**
 
 * fix webgui JSON issue (D. Winston)
