@@ -51,18 +51,20 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     You can set parameters of a Firetask like you'd use a dict.
     """
-    required_params = []  # list of str of required parameters to check for consistency upon init
+    required_params = None  # list of str of required parameters to check for consistency upon init
     optional_params = None  # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
 
-        for k in self.required_params:
+        required_params = self.required_params or []
+
+        for k in required_params:
             if k not in self:
                 raise ValueError("{}: Required parameter {} not specified!".format(self, k))
 
         if self.optional_params is not None:
-            allowed_params = self.required_params + self.optional_params
+            allowed_params = required_params + self.optional_params
             for k in kwargs:
                 if k not in allowed_params:
                     raise ValueError("Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(self.__class__, k, allowed_params))
