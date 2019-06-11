@@ -61,13 +61,13 @@ class FiretaskBase(defaultdict, FWSerializable):
 
         for k in required_params:
             if k not in self:
-                raise ValueError("{}: Required parameter {} not specified!".format(self, k))
+                raise RuntimeError("{}: Required parameter {} not specified!".format(self, k))
 
         if self.optional_params is not None:
             allowed_params = required_params + self.optional_params
             for k in kwargs:
                 if k not in allowed_params:
-                    raise ValueError("Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(self.__class__, k, allowed_params))
+                    raise RuntimeError("Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(self.__class__, k, allowed_params))
 
     @abc.abstractmethod
     def run_task(self, fw_spec):
