@@ -52,8 +52,8 @@ class FiretaskBaseTest(unittest.TestCase):
             required_params = ["param1"]
             optional_params = ["param2"]
 
-        self.assertRaises(RuntimeError, DummyTask, {})
-        self.assertRaises(RuntimeError, DummyTask, param1=3, param3=5)
+        self.assertRaises(RuntimeError, DummyTask, param2=3)  # missing required param
+        self.assertRaises(RuntimeError, DummyTask, param1=3, param3=5)  # extraneous param
         DummyTask(param1=1)  # OK
         DummyTask(param1=1, param2=1)  # OK
 
