@@ -31,7 +31,7 @@ class FiretaskBaseTest(unittest.TestCase):
             def run_task(self, fw_spec):
                 return self["hello"]
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(RuntimeError):
             DummyTask()
         d = DummyTask(hello="world")
         self.assertEqual(d.run_task({}), "world")
