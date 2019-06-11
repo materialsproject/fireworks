@@ -45,6 +45,18 @@ class FiretaskBaseTest(unittest.TestCase):
         d = DummyTask2()
         self.assertRaises(NotImplementedError, d.run_task, {})
 
+    def test_param_checks(self):
+
+        class DummyTask(FiretaskBase):
+            _fw_name = "DummyTask"
+            required_params = ["param1"]
+            optional_params = ["param2"]
+
+        self.assertRaises(ValueError, DummyTask, {})
+        self.assertRaises(ValueError, DummyTask, param1=3, param3=5)
+        DummyTask(param1=1)  # OK
+        DummyTask(param1=1, param2=1)  # OK
+
 
 class PickleTask(FiretaskBase):
     required_params = ["test"]
