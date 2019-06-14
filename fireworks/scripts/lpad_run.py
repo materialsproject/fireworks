@@ -865,6 +865,10 @@ def lpad():
     pause_fw_parser.add_argument(*state_args, **state_kwargs)
     pause_fw_parser.add_argument(*query_args, **query_kwargs)
     pause_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
+    pause_fw_parser.add_argument('--password', help="Today's date, e.g. 2012-02-25. "
+                                                    "Password or positive response to input "
+                                                    "prompt required when modifying more than {} "
+                                                    "entries.".format(PW_CHECK_NUM))
     pause_fw_parser.set_defaults(func=pause_fws)
 
 
