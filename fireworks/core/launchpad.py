@@ -1099,7 +1099,8 @@ class LaunchPad(FWSerializable):
         self.complete_launch(launch_id, state='FIZZLED')
 
     def detect_lostruns(self, expiration_secs=RUN_EXPIRATION_SECS, fizzle=False, rerun=False,
-                        max_runtime=None, min_runtime=None, refresh=False, query=None):
+                        max_runtime=None, min_runtime=None, refresh=False, query=None,
+                        launch_query=None):
         """
         Detect lost runs i.e running fireworks that haven't been updated within the specified
         time limit or running firework whose launch has been marked fizzed or completed.
@@ -1112,6 +1113,7 @@ class LaunchPad(FWSerializable):
             min_runtime (seconds): minimum run time
             refresh (bool): if True, refresh the workflow with inconsistent fireworks.
             query (dict): restrict search to FWs matching this query
+            launch_query (dict): restrict search to launches matching this query (e.g. host restriction)
 
         Returns:
             ([int], [int], [int]): tuple of list of lost launch ids, lost firework ids and
@@ -1123,14 +1125,13 @@ class LaunchPad(FWSerializable):
         now_time = datetime.datetime.utcnow()
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
 
-        lostruns_query = {'state': 'RUNNING',
-                          'state_history':
-                              {'$elemMatch':
-                                   {'state': 'RUNNING',
-                                    'updated_on': {'$lte': cutoff_timestr}
-                                    }
-                               }
-                          }
+        lostruns_query = launch_query or {}
+        lostruns_query["state"] = "RUNNING"
+        lostruns_query["state_history"] = {'$elemMatch': {'state': 'RUNNING',
+                                                          'updated_on': {
+                                                              '$lte': cutoff_timestr}
+                                                          }
+                                           }
 
         if query:
             fw_ids = [x["fw_id"] for x in self.fireworks.find(query,

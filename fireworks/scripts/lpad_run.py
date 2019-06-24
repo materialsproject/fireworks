@@ -358,9 +358,10 @@ def get_children(links, start, max_depth):
 def detect_lostruns(args):
     lp = get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
+    launch_query = ast.literal_eval(args.launch_query) if args.host else None
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun,
                                     max_runtime=args.max_runtime, min_runtime=args.min_runtime,
-                                    refresh=args.refresh, query=query)
+                                    refresh=args.refresh, query=query, launch_query=launch_query)
     lp.m_logger.debug('Detected {} lost launches: {}'.format(len(fl), fl))
     lp.m_logger.info('Detected {} lost FWs: {}'.format(len(ff), ff))
     lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
@@ -1023,6 +1024,8 @@ def lpad():
                                                       'at least this long (seconds)', type=int)
     fizzled_parser.add_argument('-q', '--query',
                                 help='restrict search to only FWs matching this query')
+    fizzled_parser.add_argument('-lq', '--launch_query',
+                                help='restrict search to only launches matching this query')
     fizzled_parser.set_defaults(func=detect_lostruns)
 
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
