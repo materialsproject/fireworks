@@ -59,6 +59,7 @@ Thanks for helpful discussions:
 * Akira Takahashi
 * J. Hörmann
 * Marnik Bercx
+* Martin Siron
 * User: Primer
 * User: tahorst
 

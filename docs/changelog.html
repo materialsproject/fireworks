@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FireWorks Changelog &#8212; FireWorks 1.9.2 documentation</title>
+    <title>FireWorks Changelog &#8212; FireWorks 1.9.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -43,6 +43,16 @@
             
   <div class="section" id="fireworks-changelog">
 <h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.9.3</strong></p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">if you set <code class="docutils literal notranslate"><span class="pre">optional_params</span></code> in your FireTask, these will be strictly checked in FWS v1.9.3 and greater!</p>
+</div>
+<ul class="simple">
+<li>strict checking of <code class="docutils literal notranslate"><span class="pre">optional_params</span></code> in a FireTask. If (and only if) <code class="docutils literal notranslate"><span class="pre">optional_params</span></code> is set, any parameter passed to a FireTask outside of <code class="docutils literal notranslate"><span class="pre">required_params</span></code> and <code class="docutils literal notranslate"><span class="pre">optional_params</span></code> will throw an error. If you want to merely suggest potential optional parameters without strict checking, we suggest you rename to <code class="docutils literal notranslate"><span class="pre">other_params</span></code> as was done for <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code>.</li>
+<li>add option for detect_lostruns command to set launch restrictions (e.g., restrict to certain host) (thanks to M. Siron for suggestion)</li>
+<li>Add <code class="docutils literal notranslate"><span class="pre">core_spec</span></code> to SLURM template (M. Horton)</li>
+</ul>
 <p><strong>v1.9.2</strong></p>
 <ul class="simple">
 <li>code cleanups (should not affect any functions)</li>
@@ -1142,7 +1152,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>
 

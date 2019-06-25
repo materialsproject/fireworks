@@ -2,6 +2,14 @@
 FireWorks Changelog
 ===================
 
+**v1.9.3**
+
+.. caution:: if you set ``optional_params`` in your FireTask, these will be strictly checked in FWS v1.9.3 and greater!
+
+* strict checking of ``optional_params`` in a FireTask. If (and only if) ``optional_params`` is set, any parameter passed to a FireTask outside of ``required_params`` and ``optional_params`` will throw an error. If you want to merely suggest potential optional parameters without strict checking, we suggest you rename to ``other_params`` as was done for ``ScriptTask``.
+* add option for detect_lostruns command to set launch restrictions (e.g., restrict to certain host) (thanks to M. Siron for suggestion)
+* Add ``core_spec`` to SLURM template (M. Horton)
+
 **v1.9.2**
 
 * code cleanups (should not affect any functions)
