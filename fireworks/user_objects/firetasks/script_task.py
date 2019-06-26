@@ -156,8 +156,10 @@ class PyTask(FiretaskBase):
     """
     _fw_name = 'PyTask'
     required_params = ['func']
-    optional_params = ['args', 'kwargs', 'auto_kwargs', 'stored_data_varname',
-                       'inputs', 'outputs', 'chunk_number']
+    other_params = ['args', 'kwargs', 'auto_kwargs', 'stored_data_varname',
+                    'inputs', 'outputs', 'chunk_number']
+    # note that we are not using "optional_params" because we do not want to do
+    # strict parameter checking in FireTaskBase due to "auto_kwargs" option
 
     def run_task(self, fw_spec):
         toks = self['func'].rsplit('.', 1)
@@ -180,7 +182,7 @@ class PyTask(FiretaskBase):
             kwargs = {k: v for k, v in self.items()
                       if not (k.startswith('_')
                               or k in self.required_params
-                              or k in self.optional_params)}
+                              or k in self.other_params)}
         else:
             kwargs = self.get('kwargs', {})
 

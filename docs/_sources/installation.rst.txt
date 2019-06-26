@@ -9,7 +9,7 @@ Install MongoDB
 
 FireWorks requires a single MongoDB instance to store and access your workflows. You can either install MongoDB yourself and run/maintain the server, or use a cloud provider (which often provide for small amounts of data for free). For testing things out locally, running MongoDB yourself and on your local machine may be your best bet. For production, or for running on supercomputing centers on which you are unable to install MongoDB, you likely want to use a cloud service provider. You could also maintain your own MongoDB server or contact your sysadmin for help.
 
-To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mongodb.org>`_.
+To install MongoDB *locally*, follow the instructions at `MongoDB <http://www.mongodb.org>`_. This is pretty simple and typically works well if everything you do is confined to your local machine (or for first learning FireWorks locally), but configuration for access from outside machines can be tricky.
 
 To access via a *cloud provider*, you might try `mLab <http://mlab.com/>`_, `MongoDB Atlas <https://www.mongodb.com/cloud/atlas>`_, or search for a different one. If you are using mLab, here are a few notes:
 

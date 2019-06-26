@@ -31,7 +31,7 @@ class FiretaskBaseTest(unittest.TestCase):
             def run_task(self, fw_spec):
                 return self["hello"]
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(RuntimeError):
             DummyTask()
         d = DummyTask(hello="world")
         self.assertEqual(d.run_task({}), "world")
@@ -44,6 +44,18 @@ class FiretaskBaseTest(unittest.TestCase):
 
         d = DummyTask2()
         self.assertRaises(NotImplementedError, d.run_task, {})
+
+    def test_param_checks(self):
+
+        class DummyTask(FiretaskBase):
+            _fw_name = "DummyTask"
+            required_params = ["param1"]
+            optional_params = ["param2"]
+
+        self.assertRaises(RuntimeError, DummyTask, param2=3)  # missing required param
+        self.assertRaises(RuntimeError, DummyTask, param1=3, param3=5)  # extraneous param
+        DummyTask(param1=1)  # OK
+        DummyTask(param1=1, param2=1)  # OK
 
 
 class PickleTask(FiretaskBase):

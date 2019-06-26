@@ -51,15 +51,23 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     You can set parameters of a Firetask like you'd use a dict.
     """
-    # Specify required parameters with class variable. Consistency will be checked upon init.
-    required_params = []
+    required_params = None  # list of str of required parameters to check for consistency upon init
+    optional_params = None  # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
 
-        for k in self.required_params:
+        required_params = self.required_params or []
+
+        for k in required_params:
             if k not in self:
-                raise ValueError("{}: Required parameter {} not specified!".format(self, k))
+                raise RuntimeError("{}: Required parameter {} not specified!".format(self, k))
+
+        if self.optional_params is not None:
+            allowed_params = required_params + self.optional_params
+            for k in kwargs:
+                if k not in allowed_params:
+                    raise RuntimeError("Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(self.__class__, k, allowed_params))
 
     @abc.abstractmethod
     def run_task(self, fw_spec):
@@ -699,7 +707,7 @@ class Workflow(FWSerializable):
         links_dict = links_dict if links_dict else {}
 
         # main dict containing mapping of an id to a Firework object
-        self.id_fw = {}
+        self.id_fw = OrderedDict()
         for fw in fireworks:
             if fw.fw_id in self.id_fw:
                 raise ValueError('FW ids must be unique!')
@@ -739,7 +747,7 @@ class Workflow(FWSerializable):
         if fw_states:
             self.fw_states = fw_states
         else:
-            self.fw_states = {key:self.id_fw[key].state for key in self.id_fw}
+            self.fw_states = {key: self.id_fw[key].state for key in self.id_fw}
 
     @property
     def fws(self):
@@ -757,7 +765,9 @@ class Workflow(FWSerializable):
         m_state = 'READY'
         #states = [fw.state for fw in self.fws]
         states = self.fw_states.values()
-        leaf_states = (self.fw_states[fw_id] for fw_id in self.leaf_fw_ids)
+        leaf_fw_ids = self.leaf_fw_ids  # to save recalculating this
+
+        leaf_states = (self.fw_states[fw_id] for fw_id in leaf_fw_ids)
         if all(s == 'COMPLETED' for s in leaf_states):
             m_state = 'COMPLETED'
         elif all(s == 'ARCHIVED' for s in states):
@@ -767,32 +777,15 @@ class Workflow(FWSerializable):
         elif any(s == 'PAUSED' for s in states):
             m_state = 'PAUSED'
         elif any(s == 'FIZZLED' for s in states):
-            # When _allow_fizzled_parents is set for some fireworks, the workflow is running if a
-            # given fizzled firework has all its childs COMPLETED, RUNNING, RESERVED or READY.
-            # For each fizzled fw, we thus have to check the states of their children
             fizzled_ids = (fw_id for fw_id, state in self.fw_states.items()
-                           if state not in ['READY', 'RUNNING', 'COMPLETED', 'RESERVED'])
+                           if state == 'FIZZLED')
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
-                if fizzled_id in self.leaf_fw_ids:
+                if (fizzled_id in leaf_fw_ids or
+                    # Otherwise all children must be ok with the fizzled parent
+                    not all(self.id_fw[child_id].spec.get('_allow_fizzled_parents', False)
+                            for child_id in self.links[fizzled_id])):
                     m_state = 'FIZZLED'
-                    break
-                childs_ids = self.links[fizzled_id]
-                mybreak = False
-                for child_id in childs_ids:
-                    # If one of the childs of a fizzled fw is also fizzled, then the workflow is fizzled
-                    # WARNING: this does not handle the case in which the childs of this child
-                    #          might be not fizzled one would need some recursive check here, but
-                    #          we can assume that _allow_fizzled_parents is usually not set twice
-                    #          in a row (in a child as well as in a "grandchild" of a given fw).
-                    #          Anyway, if in the end the workflow reaches completion, its state
-                    #          will be COMPLETED as it will be set as such by the first check on
-                    #          COMPLETED states of all leaf fireworks.
-                    if self.fw_states[child_id] == 'FIZZLED':
-                        mybreak = True
-                        m_state = 'FIZZLED'
-                        break
-                if mybreak:
                     break
             else:
                 m_state = 'RUNNING'
@@ -880,13 +873,16 @@ class Workflow(FWSerializable):
         m_fw._rerun()
         updated_ids.add(fw_id)
 
+        # refresh the states of the current fw before rerunning the children
+        # so that they get the correct state of the parent.
+        updated_ids.union(self.refresh(fw_id, updated_ids))
+
         # re-run all the children
         for child_id in self.links[fw_id]:
             if self.id_fw[child_id].state != 'WAITING':
                 updated_ids = updated_ids.union(self.rerun_fw(child_id, updated_ids))
 
-        # refresh the WF to get the states updated
-        return self.refresh(fw_id, updated_ids)
+        return updated_ids
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=False):
         """
@@ -954,6 +950,10 @@ class Workflow(FWSerializable):
                         if m_launch.state == 'COMPLETED' and m_launch.action.mod_spec:
                             for mod in m_launch.action.mod_spec:
                                 apply_mod(mod, new_wf.id_fw[root_id].spec)
+
+        # set the FW state variable for all new fw ids to be WAITING
+        for new_fw in new_wf.fws:
+            self.fw_states[new_fw.fw_id] = 'WAITING'  # this should get updated by refresh() below
 
         for new_fw in new_wf.fws:
             updated_ids = self.refresh(new_fw.fw_id, set(updated_ids))

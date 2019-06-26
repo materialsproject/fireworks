@@ -109,7 +109,7 @@ Template files are not restricted to simple variable substitutions with curly br
 
 #. Now, try deleting the line containing the ``optparam`` and repeating the launch process. You'll see that the lines pertaining to the ``OPTIONAL PARAMETER`` are no longer written!
 
-Therefore, with Jinja2's templating language we can write fairly general templates. While variable substitutions, *if/then* statements, and *for loops* should cover the majority of cases, you can see even more features in the `official Jinja2 documentation <http://jinja.pocoo.org>`_. For example, you can use template inheritance or insert templates into other templates.
+Therefore, with Jinja2's templating language we can write fairly general templates. While variable substitutions, *if/then* statements, and *for loops* should cover the majority of cases, you can see even more features in the `official Jinja2 documentation <http://jinja.pocoo.org>`_.
 
 Writing your own templates
 ==========================

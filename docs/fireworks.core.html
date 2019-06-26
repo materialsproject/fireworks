@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.core package &#8212; FireWorks 1.7.6 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 1.9.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -144,8 +144,13 @@ current FW’s children)</li>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="fireworks.core.firework.FiretaskBase.optional_params">
+<code class="descname">optional_params</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.optional_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="fireworks.core.firework.FiretaskBase.required_params">
-<code class="descname">required_params</code><em class="property"> = []</em><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.required_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">required_params</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.required_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -224,7 +229,17 @@ these multiple resources.</td>
 <dl class="attribute">
 <dt id="fireworks.core.firework.Firework.state">
 <code class="descname">state</code><a class="headerlink" href="#fireworks.core.firework.Firework.state" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Returns* – str* – The current state of the Firework</p>
+<dd><p>The current state of the Firework</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -278,19 +293,49 @@ these multiple resources.</td>
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.last_pinged">
 <code class="descname">last_pinged</code><a class="headerlink" href="#fireworks.core.firework.Launch.last_pinged" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id3"><span class="problematic" id="id4">**</span></a>Returns* – datetime* – the time the Launch last pinged a heartbeat that it was still running</p>
+<dd><p>the time the Launch last pinged a heartbeat that it was still running</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">datetime</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.reservedtime_secs">
 <code class="descname">reservedtime_secs</code><a class="headerlink" href="#fireworks.core.firework.Launch.reservedtime_secs" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id5"><span class="problematic" id="id6">**</span></a>Returns* – int* – number of seconds the Launch was stuck as RESERVED in a queue.</p>
+<dd><p>number of seconds the Launch was stuck as RESERVED in a queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.runtime_secs">
 <code class="descname">runtime_secs</code><a class="headerlink" href="#fireworks.core.firework.Launch.runtime_secs" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id7"><span class="problematic" id="id8">**</span></a>Returns* – int* – the number of seconds that the Launch ran for.</p>
+<dd><p>the number of seconds that the Launch ran for.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -310,25 +355,65 @@ these multiple resources.</td>
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.state">
 <code class="descname">state</code><a class="headerlink" href="#fireworks.core.firework.Launch.state" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id9"><span class="problematic" id="id10">**</span></a>Returns* – str* – The current state of the Launch.</p>
+<dd><p>The current state of the Launch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.time_end">
 <code class="descname">time_end</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_end" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id11"><span class="problematic" id="id12">**</span></a>Returns* – datetime* – the time the Launch was COMPLETED or FIZZLED</p>
+<dd><p>the time the Launch was COMPLETED or FIZZLED</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">datetime</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.time_reserved">
 <code class="descname">time_reserved</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_reserved" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id13"><span class="problematic" id="id14">**</span></a>Returns* – datetime* – the time the Launch was RESERVED in the queue</p>
+<dd><p>the time the Launch was RESERVED in the queue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">datetime</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fireworks.core.firework.Launch.time_start">
 <code class="descname">time_start</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_start" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id15"><span class="problematic" id="id16">**</span></a>Returns* – datetime* – the time the Launch started RUNNING</p>
+<dd><p>the time the Launch started RUNNING</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">datetime</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -728,7 +813,17 @@ children dont have any other parents).</p>
 <dl class="attribute">
 <dt id="fireworks.core.firework.Workflow.state">
 <code class="descname">state</code><a class="headerlink" href="#fireworks.core.firework.Workflow.state" title="Permalink to this definition">¶</a></dt>
-<dd><p><a href="#id17"><span class="problematic" id="id18">**</span></a>Returns* – state (str)* – state of workflow</p>
+<dd><p>state of workflow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">state (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>)</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -809,18 +904,18 @@ for information on how to use this env variable in Firetasks.</li>
 <span id="fireworks-core-launchpad-module"></span><h2>fireworks.core.launchpad module<a class="headerlink" href="#module-fireworks.core.launchpad" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.launchpad.LaunchPad">
-<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LaunchPad</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>name='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LaunchPad</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>name=None</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em>, <em>authsource=None</em>, <em>uri_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>The LaunchPad manages the FireWorks database.</p>
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>name='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>host=None</em>, <em>port=None</em>, <em>name=None</em>, <em>username=None</em>, <em>password=None</em>, <em>logdir=None</em>, <em>strm_lvl=None</em>, <em>user_indices=None</em>, <em>wf_user_indices=None</em>, <em>ssl=False</em>, <em>ssl_ca_certs=None</em>, <em>ssl_certfile=None</em>, <em>ssl_keyfile=None</em>, <em>ssl_pem_passphrase=None</em>, <em>authsource=None</em>, <em>uri_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – hostname</li>
+<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – hostname. If uri_mode is True, a MongoDB connection string URI (<a class="reference external" href="https://docs.mongodb.com/manual/reference/connection-string/">https://docs.mongodb.com/manual/reference/connection-string/</a>) can be used instead of the remaining options below.</li>
 <li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – port number</li>
 <li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – database name</li>
 <li><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
@@ -834,6 +929,8 @@ for information on how to use this env variable in Firetasks.</li>
 <li><strong>ssl_certfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the client certificate to be used for mongodb connection</li>
 <li><strong>ssl_keyfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the client private key</li>
 <li><strong>ssl_pem_passphrase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – passphrase for the client private key</li>
+<li><strong>authsource</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – authsource parameter for MongoDB authentication; defaults to “name” (i.e., db name) if not set</li>
+<li><strong>uri_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if set True, all Mongo connection parameters occur through a MongoDB URI string (set as the host).</li>
 </ul>
 </td>
 </tr>
@@ -1079,7 +1176,7 @@ the WF will be deleted as well, if possible.</li>
 
 <dl class="method">
 <dt id="fireworks.core.launchpad.LaunchPad.detect_lostruns">
-<code class="descname">detect_lostruns</code><span class="sig-paren">(</span><em>expiration_secs=14400</em>, <em>fizzle=False</em>, <em>rerun=False</em>, <em>max_runtime=None</em>, <em>min_runtime=None</em>, <em>refresh=False</em>, <em>query=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_lostruns" title="Permalink to this definition">¶</a></dt>
+<code class="descname">detect_lostruns</code><span class="sig-paren">(</span><em>expiration_secs=14400</em>, <em>fizzle=False</em>, <em>rerun=False</em>, <em>max_runtime=None</em>, <em>min_runtime=None</em>, <em>refresh=False</em>, <em>query=None</em>, <em>launch_query=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_lostruns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect lost runs i.e running fireworks that haven’t been updated within the specified
 time limit or running firework whose launch has been marked fizzed or completed.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1094,6 +1191,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <li><strong>min_runtime</strong> (<em>seconds</em>) – minimum run time</li>
 <li><strong>refresh</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if True, refresh the workflow with inconsistent fireworks.</li>
 <li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – restrict search to FWs matching this query</li>
+<li><strong>launch_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – restrict search to launches matching this query (e.g. host restriction)</li>
 </ul>
 </td>
 </tr>
@@ -1503,11 +1601,7 @@ needed information.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – firework id</li>
-<li><strong>defuse_all_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – </li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – firework id</td>
 </tr>
 </tbody>
 </table>
@@ -1771,14 +1865,14 @@ collection.</li>
 
 <dl class="class">
 <dt id="fireworks.core.launchpad.LazyFirework">
-<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LazyFirework</code><span class="sig-paren">(</span><em>fw_id</em>, <em>fw_coll</em>, <em>launch_coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">fireworks.core.launchpad.</code><code class="descname">LazyFirework</code><span class="sig-paren">(</span><em>fw_id</em>, <em>fw_coll</em>, <em>launch_coll</em>, <em>fallback_fs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A LazyFirework only has the fw_id, and retrieves other data just-in-time.
 This representation can speed up Workflow loading as only “important” FWs need to be
 fully loaded.</p>
 <dl class="method">
 <dt id="fireworks.core.launchpad.LazyFirework.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>fw_id</em>, <em>fw_coll</em>, <em>launch_coll</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>fw_id</em>, <em>fw_coll</em>, <em>launch_coll</em>, <em>fallback_fs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1907,6 +2001,35 @@ Calling functions are responsible for handling the error in order to avoid datab
 
 </dd></dl>
 
+<dl class="function">
+<dt id="fireworks.core.launchpad.get_action_from_gridfs">
+<code class="descclassname">fireworks.core.launchpad.</code><code class="descname">get_action_from_gridfs</code><span class="sig-paren">(</span><em>action_dict</em>, <em>fallback_fs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.get_action_from_gridfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to obtain the correct dictionary of the FWAction associated
+with a launch. If necessary retrieves the information from gridfs based
+on its identifier, otherwise simply returns the dictionary in input.
+Should be used when accessing a launch to ensure the presence of the
+correct action dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>action_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – the dictionary contained in the “action” key of a launch
+document.</li>
+<li><strong>fallback_fs</strong> (<em>GridFS</em>) – the GridFS with the actions exceeding the 16MB limit.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the dictionary of the action.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-fireworks.core.rocket">
 <span id="fireworks-core-rocket-module"></span><h2>fireworks.core.rocket module<a class="headerlink" href="#module-fireworks.core.rocket" title="Permalink to this headline">¶</a></h2>
@@ -1948,7 +2071,7 @@ a caught exception.  Default False.</td>
 
 <dl class="staticmethod">
 <dt id="fireworks.core.rocket.Rocket.update_checkpoint">
-<em class="property">static </em><code class="descname">update_checkpoint</code><span class="sig-paren">(</span><em>launch_dir</em>, <em>launch_id</em>, <em>checkpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">update_checkpoint</code><span class="sig-paren">(</span><em>launchpad</em>, <em>launch_dir</em>, <em>launch_id</em>, <em>checkpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to update checkpoint</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2069,7 +2192,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">fireworks.core package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
@@ -2116,13 +2239,13 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -43,6 +43,8 @@ Additional contributions from:
 * Matt Horton
 * Eric Sivonxay
 * Matt Henderson
+* Steven Torrisi
+* Eli Ateljevich
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh
@@ -54,6 +56,10 @@ Thanks for helpful discussions:
 * Stephen Bailey
 * Deborah Bard
 * Arun Gopalan
+* Akira Takahashi
+* J. Hörmann
+* Marnik Bercx
+* Martin Siron
 * User: Primer
 * User: tahorst
 

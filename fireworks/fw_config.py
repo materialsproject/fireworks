@@ -99,6 +99,10 @@ WEBSERVER_PERFWARNINGS = False # enable performance-related warnings
 # documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
 MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 
+# name of the collection that will be used to store information in case the size of
+# a dynamically generated document exceeds the 16MB limit. Functionality disabled if None.
+GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
+
 
 def override_user_settings():
     module_dir = os.path.dirname(os.path.abspath(__file__))

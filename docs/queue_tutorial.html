@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Launch Rockets through a queue &#8212; FireWorks 1.7.6 documentation</title>
+    <title>Launch Rockets through a queue &#8212; FireWorks 1.9.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="worker_tutorial.html" title="Worker Tutorial"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -143,7 +143,7 @@
 <li><p class="first">After your queue manager runs your job, you should see the file <code class="docutils literal notranslate"><span class="pre">howdy.txt</span></code> in the current directory.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Here, it is possible you have errors in connecting to your database. The first thing to double-check is that you are correctly referencing the correct <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code> file in the <code class="docutils literal notranslate"><span class="pre">rocket_launch</span></code> command of your <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code> and that this file is properly set up to connect to the correct host/port with the right credentials. The second thing to verify is whether your MongoDB server can accept inbound connections. This is typically not a problem if you use a cloud service like <code class="docutils literal notranslate"><span class="pre">mlab</span></code>, but can be tricky if you are hosting your own MongoDB server. You should try connecting to your server from outside computers and see if it works using the credentials/information in your <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code>. Third, in some cases, firewall issues on shared resources prevent your compute node from accessing the LaunchPad hosted on your FireServer - meaning the outgoing connection is blocked. You should confirm that your compute nodes can access external database servers. You might try to submit an <em>interactive job</em> to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try accessing your LaunchPad: <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">-l</span> <span class="pre">my_launchpad.yaml</span> <span class="pre">get_fw</span> <span class="pre">1</span></code>. If you cannot access the LaunchPad from your compute node, the first thing to do is contact a system administrator for assistance. If you are convinced that there is no way for the compute nodes to access a network, you might try <a class="reference internal" href="offline_tutorial.html"><span class="doc">running FireWorks in offline mode</span></a>.</p>
+<p class="last">Here, it is possible you have errors in connecting to your database. The first thing to double-check is that you are correctly referencing the correct <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code> file in the <code class="docutils literal notranslate"><span class="pre">rocket_launch</span></code> command of your <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code> and that this file is properly set up to connect to the correct host/port with the right credentials. The second thing to verify is whether your MongoDB server can accept inbound connections. This is typically not a problem if you use a cloud service like <a class="reference external" href="http://mlab.com/">mLab</a> or <code class="docutils literal notranslate"><span class="pre">MongoDB</span> <span class="pre">Atlas</span></code>, but can be tricky if you are hosting your own MongoDB server. You should try connecting to your server from outside computers and see if it works using the credentials/information in your <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code>. Third, in some cases, firewall issues on shared resources prevent your compute node from accessing the LaunchPad hosted on your FireServer - meaning the outgoing connection is blocked. You should confirm that your compute nodes can access external database servers. You might try to submit an <em>interactive job</em> to your queue that allows you to type shell commands inside a running job. Once on the compute node, you can try accessing your LaunchPad: <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">-l</span> <span class="pre">my_launchpad.yaml</span> <span class="pre">get_fw</span> <span class="pre">1</span></code>. If you cannot access the LaunchPad from your compute node, the first thing to do is contact a system administrator for assistance. If you are convinced that there is no way for the compute nodes to access a network, you might try <a class="reference internal" href="offline_tutorial.html"><span class="doc">running FireWorks in offline mode</span></a>.</p>
 </div>
 </li>
 </ol>
@@ -328,6 +328,10 @@ official documentation</a>:</p>
 </li>
 </ol>
 </div>
+<div class="section" id="submitting-to-the-queue-with-python">
+<h2>Submitting to the queue with Python<a class="headerlink" href="#submitting-to-the-queue-with-python" title="Permalink to this headline">¶</a></h2>
+<p>Although most people will submit jobs to the queue with the command line, you can also submit jobs via Python. The example is similar to previous tutorials for running the <code class="docutils literal notranslate"><span class="pre">rapidfire</span></code> command, however you want to replace <code class="docutils literal notranslate"><span class="pre">fireworks.core.rocket_launcher.rapidfire</span></code> with <code class="docutils literal notranslate"><span class="pre">fireworks.core.queue_launcher.rapidfire</span></code> and adjust the parameters accordingly.</p>
+</div>
 <div class="section" id="limitations-and-next-steps">
 <h2>Limitations and Next Steps<a class="headerlink" href="#limitations-and-next-steps" title="Permalink to this headline">¶</a></h2>
 <p>The information in this tutorial might be all you need to automate your application. However, as we noted previously, there are some limitations to running under a model in which FireWorks is completely unaware of the existence of queues. In the simple queue execution model, limitations include:</p>
@@ -364,7 +368,7 @@ official documentation</a>:</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Launch Rockets through a queue</a><ul>
 <li><a class="reference internal" href="#launch-a-single-job-through-a-queue">Launch a single job through a queue</a><ul>
@@ -382,6 +386,7 @@ official documentation</a>:</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#more-information">More information</a></li>
+<li><a class="reference internal" href="#submitting-to-the-queue-with-python">Submitting to the queue with Python</a></li>
 <li><a class="reference internal" href="#limitations-and-next-steps">Limitations and Next Steps</a><ul>
 <li><a class="reference internal" href="#next-step-reserving-fireworks-to-overcome-limitations">Next step: reserving FireWorks to overcome limitations</a></li>
 </ul>
@@ -434,13 +439,13 @@ official documentation</a>:</p>
         <li class="right" >
           <a href="worker_tutorial.html" title="Worker Tutorial"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.7.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

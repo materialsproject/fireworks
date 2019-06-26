@@ -4,11 +4,13 @@
 #SBATCH --ntasks=$${ntasks}
 #SBATCH --ntasks-per-node=$${ntasks_per_node}
 #SBATCH --ntasks-per-core=$${ntasks_per_core}
+#SBATCH --core-spec=$${core_spec}
 #SBATCH --exclude=$${exclude_nodes}
 #SBATCH --cpus-per-task=$${cpus_per_task}
 #SBATCH --gres=$${gres}
 #SBATCH --qos=$${qos}
 #SBATCH --time=$${walltime}
+#SBATCH --time-min=$${time_min}
 #SBATCH --partition=$${queue}
 #SBATCH --account=$${account}
 #SBATCH --job-name=$${job_name}
@@ -17,6 +19,11 @@
 #SBATCH --error=$${job_name}-%j.error
 #SBATCH --constraint=$${constraint}
 #SBATCH --signal=$${signal}
+#SBATCH --mem=$${mem}
+#SBATCH --mem-per-cpu=$${mem_per_cpu}
+#SBATCH --mail-type=$${mail_type}
+#SBATCH --mail-user=$${mail_user}
+
 
 $${pre_rocket}
 cd $${launch_dir}

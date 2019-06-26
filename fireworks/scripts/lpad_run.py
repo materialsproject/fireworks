@@ -16,6 +16,7 @@ import json
 import datetime
 import traceback
 from six.moves import input, zip
+from flask import g
 
 from pymongo import DESCENDING, ASCENDING
 import ruamel.yaml as yaml
@@ -121,20 +122,35 @@ def get_lp(args):
 
 
 def init_yaml(args):
-    fields = (
-        ("host", "localhost"),
-        ("port", 27017),
-        ("name", "fireworks"),
-        ("username", None),
-        ("password", None),
-        ("ssl_ca_file", None))
+    if args.uri_mode:
+        fields = (
+            ("host", None, "Example: mongodb+srv://USER:PASSWORD@CLUSTERNAME.mongodb.net/fireworks"),
+            ("ssl_ca_file", None, "Path to any client certificate to be used for mongodb connection"),
+            ("authsource", None, "Database used for authentication, if not connection db. e.g., for MongoDB Atlas this is sometimes 'admin'."))
+    else:
+        fields = (
+            ("host", "localhost", "Example: 'localhost' or 'mongodb+srv://CLUSTERNAME.mongodb.net'"),
+            ("port", 27017, ""),
+            ("name", "fireworks", "Database under which to store the fireworks collections"),
+            ("username", None, "Username for MongoDB authentication"),
+            ("password", None, "Password for MongoDB authentication"),
+            ("ssl_ca_file", None, "Path to any client certificate to be used for Mongodb connection"),
+            ("authsource", None, "Database used for authentication, if not connection db. e.g., for MongoDB Atlas this is sometimes 'admin'."))
+
     doc = {}
+    if args.uri_mode:
+        print("Note 1: You are in URI format mode. This means that all database parameters (username, password, host, port, database name, etc.) must be present in the URI. See: https://docs.mongodb.com/manual/reference/connection-string/ for details.")
+        print("(Enter your connection URI in under the 'host' parameter)")
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
-    for k, v in fields:
-        val = input("Enter {} (default: {}) : ".format(k, v))
-        doc[k] = val if val else v
-    doc["port"] = int(doc["port"])  # enforce the port as an int
+    for k, default, helptext in fields:
+        val = input("Enter {} parameter. (default: {}). {}: ".format(k, default, helptext))
+        doc[k] = val if val else default
+    if "port" in doc:
+        doc["port"] = int(doc["port"])  # enforce the port as an int
+    if args.uri_mode:
+        doc["uri_mode"] = True
+
     lp = LaunchPad.from_dict(doc)
     lp.to_file(args.config_file)
     print("\nConfiguration written to {}!".format(args.config_file))
@@ -342,9 +358,10 @@ def get_children(links, start, max_depth):
 def detect_lostruns(args):
     lp = get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
+    launch_query = ast.literal_eval(args.launch_query) if args.host else None
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun,
                                     max_runtime=args.max_runtime, min_runtime=args.min_runtime,
-                                    refresh=args.refresh, query=query)
+                                    refresh=args.refresh, query=query, launch_query=launch_query)
     lp.m_logger.debug('Detected {} lost launches: {}'.format(len(fl), fl))
     lp.m_logger.info('Detected {} lost FWs: {}'.format(len(ff), ff))
     lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
@@ -470,7 +487,7 @@ def unlock(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         with WFLock(lp, f, expire_secs=0, kill=True):
-            lp.m_logger.warn('FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {}'.format(f))
+            lp.m_logger.warning('FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {}'.format(f))
             lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
     lp.m_logger.info('Finished unlocking {} Workflows'.format(len(fw_ids)))
 
@@ -483,14 +500,21 @@ def get_qid(args):
 
 def cancel_qid(args):
     lp = get_lp(args)
-    lp.m_logger.warn("WARNING: cancel_qid does not actually remove jobs from the queue "
+    lp.m_logger.warning("WARNING: cancel_qid does not actually remove jobs from the queue "
                      "(e.g., execute qdel), this must be done manually!")
     lp.cancel_reservation_by_reservation_id(args.qid)
 
 
 def set_priority(args):
+    wf_mode = args.wf
     lp = get_lp(args)
-    fw_ids = parse_helper(lp, args)
+    fw_ids = parse_helper(lp, args, wf_mode=wf_mode)
+    if wf_mode:
+        all_fw_ids = set()
+        for fw_id in fw_ids:
+            wf = lp.get_wf_by_fw_id_lzyfw(fw_id)
+            all_fw_ids.update(wf.id_fw.keys())
+        fw_ids = list(all_fw_ids)
     for f in fw_ids:
         lp.set_priority(f, args.priority)
         lp.m_logger.debug("Processed fw_id {}".format(f))
@@ -498,8 +522,16 @@ def set_priority(args):
 
 
 def webgui(args):
-    os.environ["FWDB_CONFIG"] = json.dumps(get_lp(args).to_dict())
     from fireworks.flask_site.app import app
+    app.lp = get_lp(args)
+
+    if any([args.webgui_username, args.webgui_password]) and not \
+            all([args.webgui_username, args.webgui_password]):
+        raise ValueError("Must set BOTH a webgui_username and webgui_password!")
+
+    app.config["WEBGUI_USERNAME"] = args.webgui_username
+    app.config["WEBGUI_PASSWORD"] = args.webgui_password
+
     if args.wflowquery:
         app.BASE_Q_WF = json.loads(args.wflowquery)
     if args.fwquery:
@@ -518,7 +550,6 @@ def webgui(args):
         webbrowser.open("http://{}:{}".format(args.host, args.port))
         p1.join()
     else:
-        #from fireworks.flask_site.app import bootstrap_app
         #try:
         #    from fireworks.flask_site.gunicorn import (
         #        StandaloneApplication, number_of_workers)
@@ -531,14 +562,13 @@ def webgui(args):
         #    'bind': '%s:%s' % (args.host, args.port),
         #    'workers': nworkers,
         #}
-        #StandaloneApplication(bootstrap_app, options).run()
+        #StandaloneApplication(app, options).run()
         from flask import Flask
         from werkzeug.serving import run_simple
         application = Flask(__name__)
         application.secret_key = os.environ.get("FWAPP_SECRET_KEY", os.urandom(24))
         from fireworks.flask_site.app import main_bp
-        JPY_USER = os.environ.get('JPY_USER')
-        PROXY_URL_PREFIX = '/fwproxy/{}'.format(JPY_USER) if JPY_USER else ''
+        PROXY_URL_PREFIX = '/fireworks'
         application.register_blueprint(main_bp, url_prefix=PROXY_URL_PREFIX)
         run_simple(args.host, args.port, application, use_reloader=args.debug,
                    use_debugger=args.debug, use_evalex=args.debug, threaded=True)
@@ -720,6 +750,9 @@ def lpad():
 
     init_parser = subparsers.add_parser(
         'init', help='Initialize a Fireworks launchpad YAML file.')
+    init_parser.add_argument('-u', '--uri_mode',
+                              action="store_true",
+                              help="Connect via a URI, see: https://docs.mongodb.com/manual/reference/connection-string/")
     init_parser.add_argument('--config-file', default=DEFAULT_LPAD_YAML,
                              type=str,
                              help="Filename to write to.")
@@ -1000,6 +1033,8 @@ def lpad():
                                                       'at least this long (seconds)', type=int)
     fizzled_parser.add_argument('-q', '--query',
                                 help='restrict search to only FWs matching this query')
+    fizzled_parser.add_argument('-lq', '--launch_query',
+                                help='restrict search to only launches matching this query')
     fizzled_parser.set_defaults(func=detect_lostruns)
 
     priority_parser = subparsers.add_parser('set_priority', help='modify the priority of one or more FireWorks')
@@ -1013,6 +1048,8 @@ def lpad():
                                                     "Password or positive response to input prompt "
                                                     "required when modifying more than {} "
                                                     "entries.".format(PW_CHECK_NUM))
+    priority_parser.add_argument('-wf', action='store_true',
+                                 help='the priority will be set for all the fireworks of the matching workflows')
     priority_parser.set_defaults(func=set_priority)
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing '
@@ -1036,6 +1073,10 @@ def lpad():
     webgui_parser.add_argument('--nworkers', type=arg_positive_int, help='Number of worker processes for server mode')
     webgui_parser.add_argument('--fwquery', help='additional query filter for FireWorks as JSON string')
     webgui_parser.add_argument('--wflowquery', help='additional query filter for Workflows as JSON string')
+    webgui_parser.add_argument('--webgui_username',
+                               help='Optional username needed to access webgui', type=str, default=None)
+    webgui_parser.add_argument('--webgui_password',
+                               help='Optional password needed to access webgui', type=str, default=None)
     webgui_parser.set_defaults(func=webgui)
 
     recover_parser = subparsers.add_parser('recover_offline', help='recover offline workflows')

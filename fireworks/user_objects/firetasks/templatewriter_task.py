@@ -9,7 +9,7 @@ Context using Jinja2's templating engine.
 
 import os
 
-from jinja2 import Template
+from jinja2 import Environment,FileSystemLoader
 
 from fireworks.core.firework import FiretaskBase
 from fireworks.fw_config import TEMPLATE_DIR
@@ -42,7 +42,8 @@ class TemplateWriterTask(FiretaskBase):
             self._load_params(self)
 
         with open(self.template_file) as f:
-            t = Template(f.read())
+            t = Environment(loader=FileSystemLoader(self.template_dir),
+                            autoescape=True).from_string(f.read())
             output = t.render(self.context)
 
             write_mode = 'w+' if self.append_file else 'w'

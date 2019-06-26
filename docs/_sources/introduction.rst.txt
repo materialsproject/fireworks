@@ -25,7 +25,7 @@ In this tutorial, we refer to the machine or infrastructure you use to host mong
 
    .. note:: If MongoDB is outputting a lot of text, you might want to start it in a dedicated Terminal window or use the ``--quiet`` option. You may also wish to set up your Mongo config in a file and use the --config option.
 
-   .. note:: If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type ``lpad init``. This will set up a file that points to your remote database. You can now run ``lpad`` commands from within this directory. Alternatively, use the ``lpad -l`` option to point to this file or set up this file as your default db location using the :doc:`FW config </config_tutorial>`.
+   .. note:: If your MongoDB database is located on a different computer from your FireWorks installation, navigate to the computer containing the FireWorks installation and type ``lpad init`` or ``lpad init -u``. Use the ``-u`` option only if you want to put all parameters (username, password, database name, etc.) within a single URI (see `MongoDB connection URI <https://docs.mongodb.com/manual/reference/connection-string/>`_). Running the appropriate ``lpad init`` command successfully will set up a file that points to your remote database (usually called ``my_launchpad.yaml``). You can now run ``lpad`` commands from within this directory and FireWorks will automatically detect this file. Alternatively, use the ``lpad -l`` option to point to this file or set up this file as your default db location using the :doc:`FW config </config_tutorial>`.
 
 #. Navigate to the FireWorks introduction directory::
 

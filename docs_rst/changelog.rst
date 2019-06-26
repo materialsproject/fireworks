@@ -2,6 +2,100 @@
 FireWorks Changelog
 ===================
 
+**v1.9.3**
+
+.. caution:: if you set ``optional_params`` in your FireTask, these will be strictly checked in FWS v1.9.3 and greater!
+
+* strict checking of ``optional_params`` in a FireTask. If (and only if) ``optional_params`` is set, any parameter passed to a FireTask outside of ``required_params`` and ``optional_params`` will throw an error. If you want to merely suggest potential optional parameters without strict checking, we suggest you rename to ``other_params`` as was done for ``ScriptTask``.
+* add option for detect_lostruns command to set launch restrictions (e.g., restrict to certain host) (thanks to M. Siron for suggestion)
+* Add ``core_spec`` to SLURM template (M. Horton)
+
+**v1.9.2**
+
+* code cleanups (should not affect any functions)
+* Add mail_type and mail_user to SLURM template for notifications (M. Horton)
+
+
+**v1.9.1**
+
+* fix webgui JSON issue (D. Winston)
+* add time_min to SLURM template (M. Horton)
+
+**v1.9.0**
+
+* fix backward compatibility issues in using a MongoDB URI, added a separate "uri_mode" parameter. (thanks to M. Bercx for pointing out)
+
+**v1.8.9**
+
+* added ability to connect via MongoDB URI and added 'lpad init -u' command.
+
+**v1.8.8**
+
+* fix insertion order bug in append_wf() for Py<=3.5 (thanks to M. Jager)
+* fix recover_launch with MSONable objects (G. Petretto)
+* option to set priority of an entire workflow at once (G. Petretto)
+
+
+**v1.8.7**
+
+* fix lpad webgui bug (thanks to J. Hörmann)
+
+**v1.8.6**
+
+* fix authsource in updated authentication (M. Dylla)
+* doc update for PyTask (I. Kondov)
+
+**v1.8.5**
+
+.. caution:: the code to authenticate to databases was changed in this version. If you encounter problems after updating, contact the help group.
+
+* save action in GridFS if Launch document too large (G. Petretto)
+* fixed Jinja functionality in TemplateWriterTask (E. Ateljevich)
+* update authentication method to not use deprecated db.authenticate
+* small updates to tutorials / docs to reflect user questions
+
+**v1.8.4**
+
+.. warning:: this version changes the manner in which one authenticates to the web gui via Python (command line is unaffected). You no longer set environment variables. See docs on the web gui for more information.
+
+* improve the way lpad webgui handles arguments (no more environment variables!)
+* allow a user to set a username/password to webgui from the command line
+
+**v1.8.3**
+
+* better Dupefinder.verify() (thanks to A. Takahashi)
+* fix missing fw_id parameter passing in qlaunch command (thanks to A. Takahashi)
+
+**v1.8.2**
+
+* call Dupefinder.verify() properly (thanks to A. Takahashi)
+* allow authsource on LaunchPad (thanks to agrav, C. Pashartis)
+* better contribution docs (A. Dunn, A. Jain)
+* webgui bugfix (D. Winston)
+* better FilePad authentication and docs
+
+**v1.8.1**
+
+* bugfix on FW rerun where child states were not updated properly (G. Petretto)
+* Added --mem and --mem-per-cpu to SLURM template (S. Torrisi)
+* update paramiko version for better security
+
+**v1.8.0**
+
+* bugfix remote_keyfile option to qlaunch (thanks to A. Takahashi)
+
+**v1.7.9**
+
+* add remote_keyfile option to qlaunch
+
+**v1.7.8**
+
+* upgrade to use Fabric 2 for Py3 compatibility (R. Gowers)
+
+**v1.7.7**
+
+* fix bug in Workflow.state pertaining to when _allow_fizzled_parents is set (R. Gowers)
+* minor docfix (R. Gowers)
 
 **v1.7.6**
 

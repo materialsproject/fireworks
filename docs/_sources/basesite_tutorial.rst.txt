@@ -38,4 +38,19 @@ As a more advanced option, the framework now allows users to search fireworks an
 Authentication
 ==============
 
-You can add authentication by setting the ``FWAPP_AUTH_USERNAME`` and ``FWAPP_AUTH_PASSWORD`` environment variables.
+You can add basic authentication to the web app by using the ``--webgui_username`` and ``--webgui_password`` options, e.g.::
+
+   lpad webgui --webgui_username MY_USERNAME --webgui_password MY_PASSWORD
+
+Running the Flask app via Python
+================================
+
+If you want to run the Flask app via Python you should do something like::
+
+   from fireworks import LaunchPad
+   from fireworks.flask_site.app import app
+
+   app.lp = LaunchPad()  # change the LaunchPad info if needed
+   app.config["WEBGUI_USERNAME"] = "MY_APP_USERNAME"  # optional basic password-protection
+   app.config["WEBGUI_PASSWORD"] = "MY_APP_PASSWORD"  # optional basic password-protection
+   app.run(debug=True)

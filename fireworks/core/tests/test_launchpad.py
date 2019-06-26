@@ -18,16 +18,59 @@ import datetime
 from multiprocessing import Process
 import filecmp
 
+from pymongo import MongoClient
+from pymongo.errors import OperationFailure
+
 from fireworks import Firework, Workflow, LaunchPad, FWorker
 from fireworks.core.rocket_launcher import rapidfire, launch_rocket
 from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask, SlowAdditionTask, WaitWFLockTask
+from fireworks.core.tests.tasks import DetoursTask
 import fireworks.fw_config
 from monty.os import cd
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+class AuthenticationTest(unittest.TestCase):
+    """Tests whether users are authenticating agains the correct mongo dbs.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            client = MongoClient()
+            client.not_the_admin_db.command(
+                "createUser", "myuser", pwd="mypassword", roles=['dbOwner'])
+        except Exception:
+            raise unittest.SkipTest(
+                'MongoDB is not running in localhost:27017! Skipping tests.')
+
+    def test_no_admin_privileges_for_plebs(self):
+        """Normal users can not authenticate against the admin db.
+        """
+        with self.assertRaises(OperationFailure):
+            lp = LaunchPad(name="admin", username="myuser",
+                           password="mypassword", authsource="admin")
+            lp.db.collection.count()
+
+    def test_authenticating_to_users_db(self):
+        """A user should be able to authenticate against a database that they
+        are a user of.
+        """
+        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+                       password="mypassword", authsource="not_the_admin_db")
+        lp.db.collection.count()
+
+    def test_authsource_infered_from_db_name(self):
+        """The default behavior is to authenticate against the db that the user
+        is trying to access.
+        """
+        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+                       password="mypassword")
+        lp.db.collection.count()
 
 
 class LaunchPadTest(unittest.TestCase):
@@ -452,8 +495,17 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         first_ldir = launches[0].launch_dir
         ts = datetime.datetime.utcnow()
 
+        # check that all the zeus children are completed
+        completed = set(self.lp.get_fw_ids({'state':'COMPLETED'}))
+        self.assertTrue(completed.issuperset(set(self.zeus_child_fw_ids)))
+
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
+
+        # now the children should be waiting
+        completed = set(self.lp.get_fw_ids({'state':'WAITING'}))
+        self.assertTrue(completed.issuperset(set(self.zeus_child_fw_ids)))
+
         rapidfire(self.lp, self.fworker,m_dir=MODULE_DIR)
 
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
@@ -1192,6 +1244,87 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(launch_id)
 
         self.assertEqual(fw.state, 'FIZZLED')
+
+
+class GridfsStoredDataTest(unittest.TestCase):
+    """
+    Tests concerning the storage of data in Gridfs when the size of the
+    documents exceed the 16MB limit.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lp = None
+        cls.fworker = FWorker()
+        try:
+            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
+            cls.lp.reset(password=None, require_password=False)
+        except:
+            raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.lp:
+            cls.lp.connection.drop_database(TESTDB_NAME)
+
+    def setUp(self):
+        self.old_wd = os.getcwd()
+
+    def tearDown(self):
+        self.lp.reset(password=None,require_password=False)
+        # Delete launch locations
+        if os.path.exists(os.path.join('FW.json')):
+            os.remove('FW.json')
+        os.chdir(self.old_wd)
+        for ldir in glob.glob(os.path.join(MODULE_DIR,"launcher_*")):
+            shutil.rmtree(ldir)
+
+    def test_many_detours(self):
+        task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
+        fw = Firework([task])
+        self.lp.add_wf(fw)
+
+        rapidfire(self.lp, self.fworker, nlaunches=1)
+
+        fw = self.lp.get_fw_by_id(1)
+
+        self.assertEqual(fw.state, 'COMPLETED')
+
+        launch_db = self.lp.launches.find_one({"launch_id":1})
+        self.assertIsNotNone(launch_db["action"]["gridfs_id"])
+        self.assertNotIn("detours", launch_db["action"])
+
+        self.assertEqual(self.lp.get_fw_ids(count_only=True), 2001)
+
+        launch_full = self.lp.get_launch_by_id(1)
+        self.assertEqual(len(launch_full.action.detours), 2000)
+
+        wf = self.lp.get_wf_by_fw_id_lzyfw(1)
+        self.assertEqual(len(wf.id_fw[1].launches[0].action.detours), 2000)
+
+    def test_many_detours_offline(self):
+        task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
+        fw = Firework([task])
+        self.lp.add_wf(fw)
+
+        launch_dir = os.path.join(MODULE_DIR, "launcher_offline")
+        os.makedirs(launch_dir)
+        fw, launch_id = self.lp.reserve_fw(self.fworker, launch_dir)
+        fw = self.lp.get_fw_by_id(1)
+        with cd(launch_dir):
+            setup_offline_job(self.lp, fw, launch_id)
+
+            # launch rocket without launchpad to trigger offline mode
+            launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
+
+        self.assertIsNone(self.lp.recover_offline(launch_id))
+
+        launch_db = self.lp.launches.find_one({"launch_id": launch_id})
+        self.assertIsNotNone(launch_db["action"]["gridfs_id"])
+        self.assertNotIn("detours", launch_db["action"])
+
+        launch_full = self.lp.get_launch_by_id(1)
+        self.assertEqual(len(launch_full.action.detours), 2000)
 
 
 if __name__ == '__main__':

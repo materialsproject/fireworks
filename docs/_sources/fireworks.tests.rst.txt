@@ -44,6 +44,14 @@ fireworks.tests.test\_fw\_config module
     :undoc-members:
     :show-inheritance:
 
+fireworks.tests.test\_workflow module
+-------------------------------------
+
+.. automodule:: fireworks.tests.test_workflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
