@@ -22,6 +22,11 @@ app.secret_key = os.environ.get(
     "FWAPP_SECRET_KEY",
     os.urandom(24))
 
+# Allow application to run under a service prefix in JupyterHub
+if os.environ.get("JUPYTERHUB_SERVICE_PREFIX"):
+    base_url = os.environ.get("JUPYTERHUB_SERVICE_PREFIX")
+    app.config["APPLICATION_ROOT"] = base_url
+
 hello = __name__
 app.BASE_Q = {}
 app.BASE_Q_WF = {}
