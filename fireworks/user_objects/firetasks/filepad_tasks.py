@@ -77,9 +77,11 @@ class GetFilesTask(FiretaskBase):
         for i, l in enumerate(self["identifiers"]):
             file_contents, doc = fpad.get_file(identifier=l)
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
-            # if content of db is non-ascii, but filesystem standard is, then encoding must be specified:
-            with open(os.path.join(dest_dir, file_name), "w", encoding="utf-8") as f:
-                f.write(file_contents.decode())
+            # Instead of worrying about encoding, just write binary data.
+            # Handling encoding correctly for text files is no longer
+            # a responsibility of Fireworks here.
+            with open(os.path.join(dest_dir, file_name), "wb") as f:
+                f.write(file_contents)
 
 class GetFilesByQueryTask(FiretaskBase):
     """
@@ -107,27 +109,30 @@ class GetFilesByQueryTask(FiretaskBase):
         new_file_names = self.get("new_file_names", [])
         query = self.get("query", {})
 
+        # convert nested dicts to MongoDB query, i.e.
+        # { 'metadata' : { 'key': 'value' } --> { 'metadata.key': 'value' }
+        # ATTENTION: this does not work for more sophisticated queries
+        # such as { 'identifier': { '$in': [ 'id1', 'id2' ] } }
+        # TODO: find proper query translation method
         def nested2plain(d, prefix=''):
             r = {}
             if prefix is not '':
                 prefix = prefix + '.'
             for k, v in d.items():
-                #print(k,':',v)
                 if type(v) is dict:
                     r.update( nested2plain(v, prefix + k) )
                 else:
                     r.update( {prefix + k: v} )
             return r
 
-        query = nested2plain(query) 
+        query = nested2plain(query)
         pprint(query)
 
         l = fpad.get_file_by_query(query)
         for i, (file_contents, doc) in enumerate(l):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
-            # if content of db is non-ascii, but filesystem standard is, then encoding must be specified:
-            with open(os.path.join(dest_dir, file_name), "w", encoding="utf-8") as f:
-                f.write(file_contents.decode())
+            with open(os.path.join(dest_dir, file_name), "wb") as f:
+                f.write(file_contents)
 
 class DeleteFilesTask(FiretaskBase):
     """
