@@ -110,7 +110,7 @@ class FilePad(MSONable):
                      "original_file_path": path,
                      "metadata": metadata,
                      "compressed": compress}
-        with open(path, "r") as f:
+        with open(path, "rb") as f:
             contents = f.read()
             return self._insert_contents(contents, identifier, root_data, compress)
 
@@ -234,7 +234,7 @@ class FilePad(MSONable):
 
     def _insert_to_gridfs(self, contents, compress):
         if compress:
-            contents = zlib.compress(contents.encode(), compress)
+            contents = zlib.compress(contents, compress)
         # insert to gridfs
         return str(self.gridfs.put(contents))
 
@@ -271,7 +271,7 @@ class FilePad(MSONable):
             return None, None
         old_gfs_id = doc["gfs_id"]
         self.gridfs.delete(old_gfs_id)
-        gfs_id = self._insert_to_gridfs(open(path, "r").read(), compress)
+        gfs_id = self._insert_to_gridfs(open(path, "rb").read(), compress)
         doc["gfs_id"] = gfs_id
         doc["compressed"] = compress
         return old_gfs_id, gfs_id
