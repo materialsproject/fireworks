@@ -569,6 +569,7 @@ def webgui(args):
         application.secret_key = os.environ.get("FWAPP_SECRET_KEY", os.urandom(24))
         from fireworks.flask_site.app import main_bp
         PROXY_URL_PREFIX = '/fireworks'
+        application.config["APPLICATION_ROOT"] = os.environ.get("JUPYTERHUB_SERVICE_PREFIX")
         application.register_blueprint(main_bp, url_prefix=PROXY_URL_PREFIX)
         run_simple(args.host, args.port, application, use_reloader=args.debug,
                    use_debugger=args.debug, use_evalex=args.debug, threaded=True)
