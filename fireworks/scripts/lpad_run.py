@@ -550,29 +550,29 @@ def webgui(args):
         webbrowser.open("http://{}:{}".format(args.host, args.port))
         p1.join()
     else:
-        #try:
-        #    from fireworks.flask_site.gunicorn import (
-        #        StandaloneApplication, number_of_workers)
-        #except ImportError:
-        #    import sys
-        #    sys.exit("Gunicorn is required for server mode. "
-        #             "Install using `pip install gunicorn`.")
-        #nworkers = args.nworkers if args.nworkers else number_of_workers()
-        #options = {
-        #    'bind': '%s:%s' % (args.host, args.port),
-        #    'workers': nworkers,
-        #}
-        #StandaloneApplication(app, options).run()
-        from flask import Flask
-        from werkzeug.serving import run_simple
-        application = Flask(__name__)
-        application.secret_key = os.environ.get("FWAPP_SECRET_KEY", os.urandom(24))
-        from fireworks.flask_site.app import main_bp
-        PROXY_URL_PREFIX = '/fireworks'
-        application.config["APPLICATION_ROOT"] = os.environ.get("JUPYTERHUB_SERVICE_PREFIX")
-        application.register_blueprint(main_bp, url_prefix=PROXY_URL_PREFIX)
-        run_simple(args.host, args.port, application, use_reloader=args.debug,
-                   use_debugger=args.debug, use_evalex=args.debug, threaded=True)
+        try:
+            from fireworks.flask_site.gunicorn import (
+                StandaloneApplication, number_of_workers)
+        except ImportError:
+            import sys
+            sys.exit("Gunicorn is required for server mode. "
+                     "Install using `pip install gunicorn`.")
+        nworkers = args.nworkers if args.nworkers else number_of_workers()
+        options = {
+            'bind': '%s:%s' % (args.host, args.port),
+            'workers': nworkers,
+        }
+        StandaloneApplication(app, options).run()
+        #from flask import Flask
+        #from werkzeug.serving import run_simple
+        #application = Flask(__name__)
+        #application.secret_key = os.environ.get("FWAPP_SECRET_KEY", os.urandom(24))
+        #from fireworks.flask_site.app import main_bp
+        #PROXY_URL_PREFIX = '/fireworks'
+        #application.config["APPLICATION_ROOT"] = os.environ.get("JUPYTERHUB_SERVICE_PREFIX")
+        #application.register_blueprint(main_bp, url_prefix=PROXY_URL_PREFIX)
+        #run_simple(args.host, args.port, application, use_reloader=args.debug,
+        #           use_debugger=args.debug, use_evalex=args.debug, threaded=True)
 
 
 def add_scripts(args):
