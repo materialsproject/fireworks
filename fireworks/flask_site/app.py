@@ -29,7 +29,6 @@ app = Flask(__name__)
 if os.environ.get("FW_APPLICATION_ROOT"):
     app.config["APPLICATION_ROOT"] = os.environ.get("FW_APPLICATION_ROOT")
 
-app.register_blueprint(main_bp, url_prefix=app.config["APPLICATION_ROOT"])
 
 app.use_reloader = True
 app.secret_key = os.environ.get(
@@ -415,6 +414,8 @@ def simple(coll, interval, num_intervals):
     response = make_response(png_output.getvalue())
     response.headers['Content-Type'] = 'image/png'
     return response
+
+app.register_blueprint(main_bp, url_prefix=app.config["APPLICATION_ROOT"])
 
 
 if __name__ == "__main__":
