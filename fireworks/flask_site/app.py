@@ -21,15 +21,20 @@ tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 stat_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 main_bp = Blueprint('fw_webgui_main', __name__, template_folder=tmpl_dir, static_folder=stat_dir)
 
+
 app = Flask(__name__)
-app.use_reloader = True
-app.secret_key = os.environ.get(
-    "FWAPP_SECRET_KEY",
-    os.urandom(24))
+
 
 # Allow application to run under a service prefix url
 if os.environ.get("FW_APPLICATION_ROOT"):
     app.config["APPLICATION_ROOT"] = os.environ.get("FW_APPLICATION_ROOT")
+
+app.register_blueprint(main_bp, url_prefix=app.config["APPLICATION_ROOT"])
+
+app.use_reloader = True
+app.secret_key = os.environ.get(
+    "FWAPP_SECRET_KEY",
+    os.urandom(24))
 
 hello = __name__
 app.BASE_Q = {}
