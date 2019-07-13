@@ -11,6 +11,7 @@ import zlib
 import os
 
 from pymongo import MongoClient
+import pymongo
 import gridfs
 
 from monty.serialization import loadfn
