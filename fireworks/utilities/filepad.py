@@ -152,7 +152,7 @@ class FilePad(MSONable):
             list: list of all (file content as a string, document dictionary)
         """
         all_files = []
-        if sort is None:
+        if sort_key is None:
             cursor = self.filepad.find(query)
         else:
             cursor = self.filepad.find(query).sort(sort_key,sort_direction)
