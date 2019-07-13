@@ -92,6 +92,9 @@ class GetFilesByQueryTask(FiretaskBase):
         - query ([str]): mongo db query identifying files to fetch
 
     Optional params:
+        - sort_key (str): sort key, don't sort per default
+        - sort_direction (int): sort direction, default 'pymongo-DESCENDING'
+        - limit (int): maximum number of files to write, default: no limit
         - filepad_file (str): path to the filepad db config file
         - dest_dir (str): destination directory, default is the current working
           directory.
@@ -100,14 +103,19 @@ class GetFilesByQueryTask(FiretaskBase):
     """
     _fw_name = 'GetFilesByQueryTask'
     required_params = ["query"]
-    optional_params = ["filepad_file", "dest_dir", "new_file_names"]
+    optional_params = ["sort_key","sort_direction", "limit",
+        "filepad_file", "dest_dir", "new_file_names"]
 
     def run_task(self, fw_spec):
+        import pymongo
         from pprint import pprint
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
         query = self.get("query", {})
+        sort_key = self.get("query", None)
+        sort_direction = self.get("query", pymongo.DESCENDING)
+        limit = self.get("limit",None)
 
         # convert nested dicts to MongoDB query, i.e.
         # { 'metadata' : { 'key': 'value' } --> { 'metadata.key': 'value' }
@@ -128,8 +136,10 @@ class GetFilesByQueryTask(FiretaskBase):
         query = nested2plain(query)
         pprint(query)
 
-        l = fpad.get_file_by_query(query)
+        l = fpad.get_file_by_query(query,sort_key,sort_direction)
         for i, (file_contents, doc) in enumerate(l):
+            if isinstance(limit, int) and i >= limit:
+                break # maximum number of files reached
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             with open(os.path.join(dest_dir, file_name), "wb") as f:
                 f.write(file_contents)

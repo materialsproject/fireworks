@@ -138,17 +138,24 @@ class FilePad(MSONable):
         doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._get_file_contents(doc)
 
-    def get_file_by_query(self, query):
+    def get_file_by_query(self, query, sort_key=None,
+                          sort_direction=pymongo.DESCENDING):
         """
 
         Args:
-            query (dict): pymongo query dict
+            query (dict):                   pymongo query dict
+            sort_key (str, optional):       sort key, default None
+            sort_direction (int, optional): default pymongo.DESCENDING
 
         Returns:
             list: list of all (file content as a string, document dictionary)
         """
         all_files = []
-        for d in self.filepad.find(query):
+        if sort is None:
+            cursor = self.filepad.find(query)
+        else:
+            cursor = self.filepad.find(query).sort(sort_key,sort_direction)
+        for d in cursor:
             all_files.append(self._get_file_contents(d))
         return all_files
 
