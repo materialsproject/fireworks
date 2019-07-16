@@ -77,7 +77,7 @@ $('#json').JSONView('toggle', 2);
     <ul class="inline">
         {% for s in all_states %}
         <li>
-            <a href="/fw/{{s}}">
+            <a href="{{ url_for('fw_webgui_main.home') }}fw/{{s}}">
                 <span class="label {{ s }}">
                     {{ s }}
                 </span>
