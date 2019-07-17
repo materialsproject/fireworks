@@ -86,7 +86,7 @@ class GetFilesByQueryTask(FiretaskBase):
     directory if not specified)
 
     Required params:
-        - query ([str]): mongo db query identifying files to fetch
+        - query (dict): mongo db query identifying files to fetch
 
     Optional params:
         - sort_key (str): sort key, don't sort per default
@@ -109,11 +109,9 @@ class GetFilesByQueryTask(FiretaskBase):
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
         query = self.get("query", {})
-        sort_key = self.get("query", None)
-        sort_direction = self.get("query", pymongo.DESCENDING)
+        sort_key = self.get("sort_key", None)
+        sort_direction = self.get("sort_direction", pymongo.DESCENDING)
         limit = self.get("limit",None)
-
-        query = nested2plain(query)
 
         l = fpad.get_file_by_query(query,sort_key,sort_direction)
         for i, (file_contents, doc) in enumerate(l[:limit]):
@@ -146,19 +144,3 @@ def get_fpad(fpad_file):
         return FilePad.from_db_file(fpad_file)
     else:
         return FilePad.auto_load()
-
-# convert nested dicts to MongoDB query, i.e.
-# { 'metadata' : { 'key': 'value' } --> { 'metadata.key': 'value' }
-# ATTENTION: this does not work for more sophisticated queries
-# such as { 'identifier': { '$in': [ 'id1', 'id2' ] } }
-# TODO: find proper query translation method
-def nested2plain(d, prefix=''):
-    r = {}
-    if prefix is not '':
-        prefix = prefix + '.'
-    for k, v in d.items():
-        if type(v) is dict:
-            r.update( nested2plain(v, prefix + k) )
-        else:
-            r.update( {prefix + k: v} )
-    return r
