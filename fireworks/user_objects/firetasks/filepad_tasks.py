@@ -90,7 +90,7 @@ class GetFilesByQueryTask(FiretaskBase):
 
     Optional params:
         - sort_key (str): sort key, don't sort per default
-        - sort_direction (int): sort direction, default 'pymongo-DESCENDING'
+        - sort_direction (int): sort direction, default 'pymongo.DESCENDING'
         - limit (int): maximum number of files to write, default: no limit
         - filepad_file (str): path to the filepad db config file
         - dest_dir (str): destination directory, default is the current working
@@ -105,7 +105,6 @@ class GetFilesByQueryTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         import pymongo
-        from pprint import pprint
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
@@ -114,24 +113,7 @@ class GetFilesByQueryTask(FiretaskBase):
         sort_direction = self.get("query", pymongo.DESCENDING)
         limit = self.get("limit",None)
 
-        # convert nested dicts to MongoDB query, i.e.
-        # { 'metadata' : { 'key': 'value' } --> { 'metadata.key': 'value' }
-        # ATTENTION: this does not work for more sophisticated queries
-        # such as { 'identifier': { '$in': [ 'id1', 'id2' ] } }
-        # TODO: find proper query translation method
-        def nested2plain(d, prefix=''):
-            r = {}
-            if prefix is not '':
-                prefix = prefix + '.'
-            for k, v in d.items():
-                if type(v) is dict:
-                    r.update( nested2plain(v, prefix + k) )
-                else:
-                    r.update( {prefix + k: v} )
-            return r
-
         query = nested2plain(query)
-        pprint(query)
 
         l = fpad.get_file_by_query(query,sort_key,sort_direction)
         for i, (file_contents, doc) in enumerate(l):
@@ -166,3 +148,19 @@ def get_fpad(fpad_file):
         return FilePad.from_db_file(fpad_file)
     else:
         return FilePad.auto_load()
+
+# convert nested dicts to MongoDB query, i.e.
+# { 'metadata' : { 'key': 'value' } --> { 'metadata.key': 'value' }
+# ATTENTION: this does not work for more sophisticated queries
+# such as { 'identifier': { '$in': [ 'id1', 'id2' ] } }
+# TODO: find proper query translation method
+def nested2plain(d, prefix=''):
+    r = {}
+    if prefix is not '':
+        prefix = prefix + '.'
+    for k, v in d.items():
+        if type(v) is dict:
+            r.update( nested2plain(v, prefix + k) )
+        else:
+            r.update( {prefix + k: v} )
+    return r
