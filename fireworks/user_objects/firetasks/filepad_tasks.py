@@ -116,9 +116,7 @@ class GetFilesByQueryTask(FiretaskBase):
         query = nested2plain(query)
 
         l = fpad.get_file_by_query(query,sort_key,sort_direction)
-        for i, (file_contents, doc) in enumerate(l):
-            if isinstance(limit, int) and i >= limit:
-                break # maximum number of files reached
+        for i, (file_contents, doc) in enumerate(l[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             with open(os.path.join(dest_dir, file_name), "wb") as f:
                 f.write(file_contents)
