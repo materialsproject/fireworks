@@ -358,7 +358,7 @@ def get_children(links, start, max_depth):
 def detect_lostruns(args):
     lp = get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
-    launch_query = ast.literal_eval(args.launch_query) if args.host else None
+    launch_query = ast.literal_eval(args.launch_query) if args.launch_query else None
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun,
                                     max_runtime=args.max_runtime, min_runtime=args.min_runtime,
                                     refresh=args.refresh, query=query, launch_query=launch_query)
