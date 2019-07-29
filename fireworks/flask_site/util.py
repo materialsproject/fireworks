@@ -1,5 +1,5 @@
 import datetime
-import json
+import simplejson as json
 
 from bson.objectid import ObjectId
 from flask.globals import current_app
