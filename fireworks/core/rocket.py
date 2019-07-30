@@ -445,7 +445,7 @@ class Rocket:
 
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
-            this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir}
+            this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir, "state":m_fw.state}
             if this_job_info not in job_info:
                 job_info.append(this_job_info)
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
