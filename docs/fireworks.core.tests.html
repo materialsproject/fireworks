@@ -1,18 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.core.tests package &#8212; FireWorks 1.9.3 documentation</title>
+    <meta charset="utf-8" />
+    <title>fireworks.core.tests package &#8212; FireWorks 1.9.4 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -28,7 +27,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.4 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -46,24 +45,22 @@
 <span id="fireworks-core-tests-tasks-module"></span><h2>fireworks.core.tests.tasks module<a class="headerlink" href="#module-fireworks.core.tests.tasks" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.DetoursTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">DetoursTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DetoursTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">DetoursTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DetoursTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="attribute">
 <dt id="fireworks.core.tests.tasks.DetoursTask.optional_params">
-<code class="descname">optional_params</code><em class="property"> = ['n_detours', 'data_per_detour']</em><a class="headerlink" href="#fireworks.core.tests.tasks.DetoursTask.optional_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">optional_params</code><em class="property"> = ['n_detours', 'data_per_detour']</em><a class="headerlink" href="#fireworks.core.tests.tasks.DetoursTask.optional_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.DetoursTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DetoursTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DetoursTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -72,31 +69,29 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.DoNothingTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">DoNothingTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DoNothingTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">DoNothingTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DoNothingTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.DoNothingTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DoNothingTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.DoNothingTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -105,36 +100,34 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.ExceptionTestTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">ExceptionTestTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExceptionTestTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">ExceptionTestTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExceptionTestTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="attribute">
 <dt id="fireworks.core.tests.tasks.ExceptionTestTask.exec_counter">
-<code class="descname">exec_counter</code><em class="property"> = 0</em><a class="headerlink" href="#fireworks.core.tests.tasks.ExceptionTestTask.exec_counter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exec_counter</code><em class="property"> = 0</em><a class="headerlink" href="#fireworks.core.tests.tasks.ExceptionTestTask.exec_counter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.ExceptionTestTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExceptionTestTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExceptionTestTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -143,36 +136,34 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.ExecutionCounterTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">ExecutionCounterTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExecutionCounterTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">ExecutionCounterTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExecutionCounterTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="attribute">
 <dt id="fireworks.core.tests.tasks.ExecutionCounterTask.exec_counter">
-<code class="descname">exec_counter</code><em class="property"> = 0</em><a class="headerlink" href="#fireworks.core.tests.tasks.ExecutionCounterTask.exec_counter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exec_counter</code><em class="property"> = 0</em><a class="headerlink" href="#fireworks.core.tests.tasks.ExecutionCounterTask.exec_counter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.ExecutionCounterTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExecutionCounterTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.ExecutionCounterTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -181,31 +172,29 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.MalformedAdditionTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">MalformedAdditionTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.MalformedAdditionTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">MalformedAdditionTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.MalformedAdditionTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.MalformedAdditionTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.MalformedAdditionTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.MalformedAdditionTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -214,48 +203,46 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="exception">
 <dt id="fireworks.core.tests.tasks.SerializableException">
-<em class="property">exception </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">SerializableException</code><span class="sig-paren">(</span><em>exc_details</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SerializableException" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">SerializableException</code><span class="sig-paren">(</span><em class="sig-param">exc_details</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SerializableException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.SerializableException.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>exc_details</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SerializableException.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">exc_details</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SerializableException.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.SerializableException.to_dict">
-<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SerializableException.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SerializableException.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.SlowAdditionTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">SlowAdditionTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowAdditionTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">SlowAdditionTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowAdditionTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.SlowAdditionTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowAdditionTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowAdditionTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -264,31 +251,29 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.SlowTodictTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">SlowTodictTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">SlowTodictTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.SlowTodictTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -297,36 +282,34 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.SlowTodictTask.to_dict">
-<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.TodictErrorTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">TodictErrorTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.TodictErrorTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">TodictErrorTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.TodictErrorTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.TodictErrorTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.TodictErrorTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.TodictErrorTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -335,36 +318,34 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.TodictErrorTask.to_dict">
-<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.TodictErrorTask.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.TodictErrorTask.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.tasks.WaitWFLockTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.tasks.</code><code class="descname">WaitWFLockTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.WaitWFLockTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.tasks.</code><code class="sig-name descname">WaitWFLockTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.WaitWFLockTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.tasks.WaitWFLockTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.WaitWFLockTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.WaitWFLockTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -373,12 +354,12 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -388,57 +369,55 @@ these multiple resources.</td>
 <span id="fireworks-core-tests-test-firework-module"></span><h2>fireworks.core.tests.test_firework module<a class="headerlink" href="#module-fireworks.core.tests.test_firework" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.tests.test_firework.FiretaskBaseTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_firework.</code><code class="descname">FiretaskBaseTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_firework.</code><code class="sig-name descname">FiretaskBaseTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.FiretaskBaseTest.test_init">
-<code class="descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks">
-<code class="descname">test_param_checks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_param_checks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_firework.FiretaskPickleTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_firework.</code><code class="descname">FiretaskPickleTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_firework.</code><code class="sig-name descname">FiretaskPickleTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.FiretaskPickleTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.FiretaskPickleTest.test_init">
-<code class="descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.test_init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.test_init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_firework.PickleTask">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_firework.</code><code class="descname">PickleTask</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_firework.</code><code class="sig-name descname">PickleTask</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="attribute">
 <dt id="fireworks.core.tests.test_firework.PickleTask.required_params">
-<code class="descname">required_params</code><em class="property"> = ['test']</em><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.required_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">required_params</code><em class="property"> = ['test']</em><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.required_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.PickleTask.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -447,31 +426,29 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_firework.Task1">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_firework.</code><code class="descname">Task1</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task1" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_firework.</code><code class="sig-name descname">Task1</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.Task1.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task1.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task1.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -480,31 +457,29 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_firework.Task2">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_firework.</code><code class="descname">Task2</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task2" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_firework.</code><code class="sig-name descname">Task2</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.Task2.run_task">
-<code class="descname">run_task</code><span class="sig-paren">(</span><em>fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task2.run_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task2.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -513,46 +488,46 @@ settings. For example, “foo” may be named “foo1” in resource
 “foo”: “foo1”}, which maps an abstract variable “foo” to the
 relevant “foo1” or “foo2”. You can then write a task that
 uses fw_spec[“_fw_env”][“foo”] that will work across all
-these multiple resources.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(FWAction)</td>
-</tr>
-</tbody>
-</table>
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_firework.WorkflowTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_firework.</code><code class="descname">WorkflowTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_firework.</code><code class="sig-name descname">WorkflowTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.WorkflowTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.WorkflowTest.test_copy">
-<code class="descname">test_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_copy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that we can produce a copy of a Workflow but that the copy
 has unique fw_ids.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.WorkflowTest.test_init">
-<code class="descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.WorkflowTest.test_remove_leaf_fws">
-<code class="descname">test_remove_leaf_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_leaf_fws" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_remove_leaf_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_leaf_fws" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_firework.WorkflowTest.test_remove_root_fws">
-<code class="descname">test_remove_root_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_root_fws" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_remove_root_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_root_fws" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -562,32 +537,32 @@ has unique fw_ids.</p>
 <span id="fireworks-core-tests-test-launchpad-module"></span><h2>fireworks.core.tests.test_launchpad module<a class="headerlink" href="#module-fireworks.core.tests.test_launchpad" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.AuthenticationTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">AuthenticationTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">AuthenticationTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>Tests whether users are authenticating agains the correct mongo dbs.</p>
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db">
-<code class="descname">test_authenticating_to_users_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_authenticating_to_users_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db" title="Permalink to this definition">¶</a></dt>
 <dd><p>A user should be able to authenticate against a database that they
 are a user of.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name">
-<code class="descname">test_authsource_infered_from_db_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_authsource_infered_from_db_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default behavior is to authenticate against the db that the user
 is trying to access.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs">
-<code class="descname">test_no_admin_privileges_for_plebs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_no_admin_privileges_for_plebs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normal users can not authenticate against the admin db.</p>
 </dd></dl>
 
@@ -595,434 +570,434 @@ is trying to access.</p>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">GridfsStoredDataTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">GridfsStoredDataTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>Tests concerning the storage of data in Gridfs when the size of the
 documents exceed the 16MB limit.</p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours">
-<code class="descname">test_many_detours</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_many_detours</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline">
-<code class="descname">test_many_detours_offline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_many_detours_offline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">LaunchPadDefuseReigniteRerunArchiveDeleteTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">LaunchPadDefuseReigniteRerunArchiveDeleteTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf">
-<code class="descname">test_archive_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_archive_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw">
-<code class="descname">test_defuse_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion">
-<code class="descname">test_defuse_fw_after_completion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_fw_after_completion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf">
-<code class="descname">test_defuse_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run">
-<code class="descname">test_defuse_wf_after_partial_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_wf_after_partial_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf">
-<code class="descname">test_delete_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_delete_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files">
-<code class="descname">test_delete_wf_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_delete_wf_and_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw">
-<code class="descname">test_pause_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_pause_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf">
-<code class="descname">test_pause_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_pause_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw">
-<code class="descname">test_reignite_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_reignite_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf">
-<code class="descname">test_reignite_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_reignite_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2">
-<code class="descname">test_rerun_fws2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_rerun_fws2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">LaunchPadLostRunsDetectTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">LaunchPadLostRunsDetectTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns">
-<code class="descname">test_detect_lostruns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_detect_lostruns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse">
-<code class="descname">test_detect_lostruns_defuse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_detect_lostruns_defuse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_state_after_run_start">
-<code class="descname">test_state_after_run_start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_state_after_run_start" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_state_after_run_start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_state_after_run_start" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">LaunchPadOfflineTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">LaunchPadOfflineTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test__recover_completed">
-<code class="descname">test__recover_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test__recover_completed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test__recover_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test__recover_completed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test_recover_errors">
-<code class="descname">test_recover_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test_recover_errors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_recover_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test_recover_errors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">LaunchPadRerunExceptionTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">LaunchPadRerunExceptionTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun">
-<code class="descname">test_except_details_on_rerun</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_except_details_on_rerun</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun">
-<code class="descname">test_task_level_rerun</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_task_level_rerun</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp">
-<code class="descname">test_task_level_rerun_cp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_task_level_rerun_cp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir">
-<code class="descname">test_task_level_rerun_prev_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_task_level_rerun_prev_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">LaunchPadTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">LaunchPadTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wf">
-<code class="descname">test_add_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_add_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wfs">
-<code class="descname">test_add_wfs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wfs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_add_wfs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wfs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_dict_from_file">
-<code class="descname">test_dict_from_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_dict_from_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_dict_from_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_dict_from_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_pw_check">
-<code class="descname">test_pw_check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_pw_check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_pw_check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_pw_check" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_reset">
-<code class="descname">test_reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">WFLockTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">WFLockTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_completed">
-<code class="descname">test_fix_db_inconsistencies_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_completed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_fix_db_inconsistencies_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_completed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_fizzled">
-<code class="descname">test_fix_db_inconsistencies_fizzled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_fizzled" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_fix_db_inconsistencies_fizzled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_fizzled" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_launchpad.</code><code class="descname">WorkflowFireworkStatesTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_launchpad.</code><code class="sig-name descname">WorkflowFireworkStatesTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>Class to test the firework states locally cached in workflow.
 The states have to be in sync with the actual firework state.</p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_archive_wf">
-<code class="descname">test_archive_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_archive_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_archive_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_archive_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw">
-<code class="descname">test_defuse_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw_after_completion">
-<code class="descname">test_defuse_fw_after_completion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw_after_completion" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_fw_after_completion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw_after_completion" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_wf">
-<code class="descname">test_defuse_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_defuse_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_fw">
-<code class="descname">test_reignite_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_reignite_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_wf">
-<code class="descname">test_reignite_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_reignite_wf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_wf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_fws">
-<code class="descname">test_rerun_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_fws" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_rerun_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_fws" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_timed_fws">
-<code class="descname">test_rerun_timed_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_timed_fws" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_rerun_timed_fws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_timed_fws" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1032,40 +1007,40 @@ The states have to be in sync with the actual firework state.</p>
 <span id="fireworks-core-tests-test-rocket-module"></span><h2>fireworks.core.tests.test_rocket module<a class="headerlink" href="#module-fireworks.core.tests.test_rocket" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.tests.test_rocket.RocketTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_rocket.</code><code class="descname">RocketTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_rocket.</code><code class="sig-name descname">RocketTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_rocket.RocketTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_rocket.RocketTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_rocket.RocketTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_rocket.RocketTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_rocket.RocketTest.test_postproc_exception">
-<code class="descname">test_postproc_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.test_postproc_exception" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_postproc_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.test_postproc_exception" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_rocket.RocketTest.test_serializable_exception">
-<code class="descname">test_serializable_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.test_serializable_exception" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_serializable_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_rocket.RocketTest.test_serializable_exception" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1075,47 +1050,47 @@ The states have to be in sync with the actual firework state.</p>
 <span id="fireworks-core-tests-test-tracker-module"></span><h2>fireworks.core.tests.test_tracker module<a class="headerlink" href="#module-fireworks.core.tests.test_tracker" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest">
-<em class="property">class </em><code class="descclassname">fireworks.core.tests.test_tracker.</code><code class="descname">TrackerTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.tests.test_tracker.</code><code class="sig-name descname">TrackerTest</code><span class="sig-paren">(</span><em class="sig-param">methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.setUpClass">
-<em class="property">classmethod </em><code class="descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.setUpClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">setUpClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.setUpClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.tearDown" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.tearDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.tearDownClass">
-<em class="property">classmethod </em><code class="descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">tearDownClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.tearDownClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.test_tracker">
-<code class="descname">test_tracker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.test_tracker" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_tracker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.test_tracker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Launch a workflow and track the files</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.test_tracker_failed_fw">
-<code class="descname">test_tracker_failed_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.test_tracker_failed_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_tracker_failed_fw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.test_tracker_failed_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a bad firetask to workflow and test the tracking</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fireworks.core.tests.test_tracker.TrackerTest.test_tracker_mlaunch">
-<code class="descname">test_tracker_mlaunch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.test_tracker_mlaunch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">test_tracker_mlaunch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_tracker.TrackerTest.test_tracker_mlaunch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the tracker for mlaunch</p>
 </dd></dl>
 
@@ -1155,13 +1130,11 @@ The states have to be in sync with the actual firework state.</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -1179,13 +1152,13 @@ The states have to be in sync with the actual firework state.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.4 documentation</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

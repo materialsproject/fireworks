@@ -2,6 +2,13 @@
 FireWorks Changelog
 ===================
 
+**v1.9.4**
+
+* filepad tasks to get files by query (Github user: J. Hörmann)
+* the _pass_job_info command now also passes the FW state of the parent (M. Siron)
+* bugfix for detect_lostruns command (P. Huck)
+* http/https fix for web gui (D. Winston)
+
 **v1.9.3**
 
 .. caution:: if you set ``optional_params`` in your FireTask, these will be strictly checked in FWS v1.9.3 and greater!
