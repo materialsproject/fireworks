@@ -80,6 +80,44 @@ class GetFilesTask(FiretaskBase):
             with open(os.path.join(dest_dir, file_name), "w") as f:
                 f.write(file_contents.decode())
 
+class GetFilesByQueryTask(FiretaskBase):
+    """
+    A Firetask to fetch files from the filepad and write it to specified directory (current working
+    directory if not specified)
+
+    Required params:
+        - query (dict): mongo db query identifying files to fetch
+
+    Optional params:
+        - sort_key (str): sort key, don't sort per default
+        - sort_direction (int): sort direction, default 'pymongo.DESCENDING'
+        - limit (int): maximum number of files to write, default: no limit
+        - filepad_file (str): path to the filepad db config file
+        - dest_dir (str): destination directory, default is the current working
+          directory.
+        - new_file_names ([str]): if provided, the retrieved files will be
+          renamed. Not recommended as order and number of queried files not fixed.
+    """
+    _fw_name = 'GetFilesByQueryTask'
+    required_params = ["query"]
+    optional_params = ["sort_key","sort_direction", "limit",
+        "filepad_file", "dest_dir", "new_file_names"]
+
+    def run_task(self, fw_spec):
+        import pymongo
+        fpad = get_fpad(self.get("filepad_file", None))
+        dest_dir = self.get("dest_dir", os.path.abspath("."))
+        new_file_names = self.get("new_file_names", [])
+        query = self.get("query", {})
+        sort_key = self.get("sort_key", None)
+        sort_direction = self.get("sort_direction", pymongo.DESCENDING)
+        limit = self.get("limit",None)
+
+        l = fpad.get_file_by_query(query,sort_key,sort_direction)
+        for i, (file_contents, doc) in enumerate(l[:limit]):
+            file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
+            with open(os.path.join(dest_dir, file_name), "wb") as f:
+                f.write(file_contents)
 
 class DeleteFilesTask(FiretaskBase):
     """
