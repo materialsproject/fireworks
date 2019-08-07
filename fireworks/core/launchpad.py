@@ -1173,6 +1173,18 @@ class LaunchPad(FWSerializable):
         if fizzle or rerun:
             for lid in lost_launch_ids:
                 self.mark_fizzled(lid)
+
+                # Check, whether this launch was an offline launch.
+                # If so, forget offline launch in order to stop recovering this
+                # launch's offline data.
+                offline_runs_query_results = self.offline_runs.find(
+                    {"launch_id": lid, "deprecated": False}, {"launch_id": 1} )
+                    # could we have an empty projection here in order to just
+                    # check whether launch is in offline_runs collection or not?
+                if offline_runs_query_results.count() > 0:
+                    self.forget_offline(lid,launch_mode=True)
+                    # forget_offline marks the offline run as "deprecated"
+
                 if rerun:
                     fw_id = self.launches.find_one({"launch_id": lid}, {"fw_id": 1})['fw_id']
                     if fw_id in lost_fw_ids:
@@ -1679,15 +1691,45 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
             # look for ping file - update the Firework if this is the case
             ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
-            if os.path.exists(ping_loc):
-                ping_dict = loadfn(ping_loc)
-                self.ping_launch(launch_id, ptime=ping_dict['ping_time'])
 
             # look for action in FW_offline.json
             offline_loc = zpath(os.path.join(m_launch.launch_dir,
                                              "FW_offline.json"))
-
             offline_data = loadfn(offline_loc)
+
+            checkpoint = offline_data['checkpoint'] \
+              if 'checkpoint' in offline_data else None
+
+            if os.path.exists(ping_loc): # ping_launch only updates RUNNING
+                ping_dict = loadfn(ping_loc)
+                # Set update_on in state_history to datetime in ping file
+                # and update in launches collection together with tracked files.
+                # Also set checkpoint information if found in FW_offline.json:
+                self.ping_launch(launch_id, ptime=ping_dict['ping_time'],
+                  checkpoint=checkoint)
+            elif checkpoint:
+                # If no FW_ping.json exists, state must be other than RUNNING?
+                #
+                # In this case, set update_on in state_history to current datetime
+                # and append checkpoint information if found in FW_offline.json:
+                m_launch.touch_history(checkpoint=offline_data['checkpoint'])
+                self.launches.find_one_and_replace(
+                  {'launch_id': m_launch.launch_id},
+                  m_launch.to_db_dict(), upsert=True)
+            # a) ping_launch and b) touch_history + find_one_and_replace do very
+            # similar things. To me, the only difference seems to be trackers
+            # being updated within a) ping_launch, while that does not happen
+            # for case b). But why use update_one within a) ping_launch, while
+            # using find_one_and_replace here directly for checkpoint update b)?
+
+            # What is different here now is that no touch_history is called
+            # directly if an FW_ping.json file exists. checkpoint data in state
+            # history used to be updated after the following piece of code,
+            # now it's done above. Would that break anything?
+
+            # When calling ping_launch above, the local m_launch object and its
+            # state history are not affected.
+
             if 'started_on' in offline_data:
                 m_launch.state = 'RUNNING'
                 for s in m_launch.state_history:
@@ -1704,11 +1746,6 @@ class LaunchPad(FWSerializable):
                                                         })
                 if f:
                     self._refresh_wf(fw_id)
-
-            if 'checkpoint' in offline_data:
-                m_launch.touch_history(checkpoint=offline_data['checkpoint'])
-                self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                                   m_launch.to_db_dict(), upsert=True)
 
             if 'fwaction' in offline_data:
                 fwaction = FWAction.from_dict(offline_data['fwaction'])
@@ -1974,7 +2011,7 @@ def get_action_from_gridfs(action_dict, fallback_fs):
     on its identifier, otherwise simply returns the dictionary in input.
     Should be used when accessing a launch to ensure the presence of the
     correct action dictionary.
-    
+
     Args:
         action_dict (dict): the dictionary contained in the "action" key of a launch
             document.
