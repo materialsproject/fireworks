@@ -1729,12 +1729,18 @@ class LaunchPad(FWSerializable):
 
             # When calling ping_launch above, the local m_launch object and its
             # state history are not affected.
+            # Thus, get the updated launch again from database:
+            m_launch = self.get_launch_by_id(launch_id)
 
             if 'started_on' in offline_data:
                 m_launch.state = 'RUNNING'
+                # The folllowing seems to touch not only the current, but all
+                # "RUNNING" history entries. Is that supposed to work like this?
                 for s in m_launch.state_history:
                     if s['state'] == 'RUNNING':
                         s['created_on'] = reconstitute_dates(offline_data['started_on'])
+                        # Why use reconstitute_dates here, but not in
+                        # Launch.touch_history ?
                 l = self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
                                                        m_launch.to_db_dict(), upsert=True)
                 fw_id = l['fw_id']
