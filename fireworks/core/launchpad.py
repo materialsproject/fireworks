@@ -1706,7 +1706,7 @@ class LaunchPad(FWSerializable):
                 # and update in launches collection together with tracked files.
                 # Also set checkpoint information if found in FW_offline.json:
                 self.ping_launch(launch_id, ptime=ping_dict['ping_time'],
-                  checkpoint=checkoint)
+                  checkpoint=checkpoint)
             elif checkpoint:
                 # If no FW_ping.json exists, state must be other than RUNNING?
                 #
