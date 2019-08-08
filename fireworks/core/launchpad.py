@@ -1712,7 +1712,7 @@ class LaunchPad(FWSerializable):
                 #
                 # In this case, set update_on in state_history to current datetime
                 # and append checkpoint information if found in FW_offline.json:
-                m_launch.touch_history(checkpoint=offline_data['checkpoint'])
+                m_launch.touch_history(checkpoint=checkpoint)
                 self.launches.find_one_and_replace(
                   {'launch_id': m_launch.launch_id},
                   m_launch.to_db_dict(), upsert=True)
