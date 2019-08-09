@@ -1173,6 +1173,14 @@ class LaunchPad(FWSerializable):
         if fizzle or rerun:
             for lid in lost_launch_ids:
                 self.mark_fizzled(lid)
+
+                # for offline runs, you want to forget about the run
+                # see: https://groups.google.com/forum/#!topic/fireworkflows/oimFmE5tZ4E
+                offline_run = self.offline_runs.find(
+                    {"launch_id": lid, "deprecated": False}).count() > 0
+                if offline_run:
+                    self.forget_offline(lid, launch_mode=True)
+
                 if rerun:
                     fw_id = self.launches.find_one({"launch_id": lid}, {"fw_id": 1})['fw_id']
                     if fw_id in lost_fw_ids:
