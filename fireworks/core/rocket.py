@@ -434,7 +434,7 @@ class Rocket:
         if launchpad:
             launchpad.ping_launch(launch_id, checkpoint=checkpoint)
         else:
-            fpath = zpath("FW_offline.json")
+            fpath = zpath(os.path.join(launch_dir, "FW_offline.json"))
             with zopen(fpath) as f_in:
                 d = json.loads(f_in.read())
                 d['checkpoint'] = checkpoint
