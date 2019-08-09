@@ -55,7 +55,7 @@ class AddFilesTask(FiretaskBase):
 
 class GetFilesTask(FiretaskBase):
     """
-    A Firetask to fetch files from the filepad and write it to specified directory(current working
+    A Firetask to fetch files from the filepad and write it to specified directory (current working
     directory if not specified)
 
     Required params:
@@ -77,11 +77,13 @@ class GetFilesTask(FiretaskBase):
         for i, l in enumerate(self["identifiers"]):
             file_contents, doc = fpad.get_file(identifier=l)
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
-            # Instead of worrying about encoding, just write binary data.
-            # Handling encoding correctly for text files is no longer
-            # a responsibility of Fireworks here.
-            with open(os.path.join(dest_dir, file_name), "wb") as f:
-                f.write(file_contents)
+            if fpad.text_mode:
+                with open(os.path.join(dest_dir, file_name), "w") as f:
+                    f.write(file_contents.decode())
+            else:
+                with open(os.path.join(dest_dir, file_name), "wb") as f:
+                    f.write(file_contents)
+
 
 class GetFilesByQueryTask(FiretaskBase):
     """

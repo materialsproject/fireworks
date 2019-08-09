@@ -30,7 +30,7 @@ class FilePad(MSONable):
 
     def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
                  password=None, filepad_coll_name="filepad", gridfs_coll_name="filepad_gfs", logdir=None,
-                 strm_lvl=None):
+                 strm_lvl=None, text_mode=False):
         """
         Args:
             host (str): hostname
@@ -42,6 +42,7 @@ class FilePad(MSONable):
             gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
             strm_lvl (str): the logger stream level
+            text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if working only with text files between Windows and Unix systems
         """
         self.host = host
         self.port = int(port)
@@ -49,6 +50,7 @@ class FilePad(MSONable):
         self.username = username
         self.password = password
         self.gridfs_coll_name = gridfs_coll_name
+        self.text_mode = text_mode
         try:
             self.connection = MongoClient(self.host, self.port)
             self.db = self.connection[database]
@@ -111,7 +113,9 @@ class FilePad(MSONable):
                      "original_file_path": path,
                      "metadata": metadata,
                      "compressed": compress}
-        with open(path, "rb") as f:
+
+        read_mode = "r" if self.text_mode else "rb"
+        with open(path, read_mode) as f:
             contents = f.read()
             return self._insert_contents(contents, identifier, root_data, compress)
 
@@ -242,6 +246,8 @@ class FilePad(MSONable):
 
     def _insert_to_gridfs(self, contents, compress):
         if compress:
+            if self.text_mode:
+                contents = contents.encode()
             contents = zlib.compress(contents, compress)
         # insert to gridfs
         return str(self.gridfs.put(contents))
@@ -279,7 +285,8 @@ class FilePad(MSONable):
             return None, None
         old_gfs_id = doc["gfs_id"]
         self.gridfs.delete(old_gfs_id)
-        gfs_id = self._insert_to_gridfs(open(path, "rb").read(), compress)
+        read_mode = "r" if self.text_mode else "rb"
+        gfs_id = self._insert_to_gridfs(open(path, read_mode).read(), compress)
         doc["gfs_id"] = gfs_id
         doc["compressed"] = compress
         return old_gfs_id, gfs_id
@@ -305,9 +312,11 @@ class FilePad(MSONable):
         coll_name = creds.get("filepad", "filepad")
         gfs_name = creds.get("filepad_gridfs", "filepad_gfs")
 
+        text_mode = creds.get("text_mode", False)
+
         return cls(creds.get("host", "localhost"), int(creds.get("port", 27017)),
                    creds.get("name", "fireworks"), user, password, coll_name,
-                   gfs_name)
+                   gfs_name, text_mode=text_mode)
 
     @classmethod
     def auto_load(cls):
