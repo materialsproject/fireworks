@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import warnings
+
 from monty.io import zopen
 from monty.os.path import zpath
 
@@ -1685,22 +1687,57 @@ class LaunchPad(FWSerializable):
         m_launch = self.get_launch_by_id(launch_id)
         try:
             self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
-            # look for ping file - update the Firework if this is the case
-            ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
-            if os.path.exists(ping_loc):
-                ping_dict = loadfn(ping_loc)
-                self.ping_launch(launch_id, ptime=ping_dict['ping_time'])
 
-            # look for action in FW_offline.json
             offline_loc = zpath(os.path.join(m_launch.launch_dir,
                                              "FW_offline.json"))
 
             offline_data = loadfn(offline_loc)
-            if 'started_on' in offline_data:
-                m_launch.state = 'RUNNING'
+
+            if 'started_on' in offline_data:  # started running at some point
+                already_running = False
                 for s in m_launch.state_history:
                     if s['state'] == 'RUNNING':
                         s['created_on'] = reconstitute_dates(offline_data['started_on'])
+                        already_running = True
+
+                if not already_running:
+                    m_launch.state = "RUNNING"  # this should also add a history item
+
+                checkpoint = offline_data['checkpoint'] if 'checkpoint' in offline_data else None
+
+                # look for ping file - update the Firework if this is the case
+                ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
+                if os.path.exists(ping_loc):
+                    ping_dict = loadfn(ping_loc)
+                    self.ping_launch(launch_id, ptime=ping_dict['ping_time'], checkpoint=checkpoint)
+                else:
+                    warnings.warn(
+                        "Unable to find FW_ping.json in {}! State history updated_on might be incorrect, trackers may not update.".format(
+                            m_launch.launch_dir))
+                    m_launch.touch_history(checkpoint=checkpoint)
+
+            if 'fwaction' in offline_data:
+                fwaction = FWAction.from_dict(offline_data['fwaction'])
+                m_launch.state = offline_data['state']
+                self.launches.find_one_and_replace(
+                    {'launch_id': m_launch.launch_id}, m_launch.to_db_dict(),
+                    upsert=True)
+
+                m_launch = Launch.from_dict(self.complete_launch(launch_id, fwaction, m_launch.state))
+
+                for s in m_launch.state_history:
+                    if s['state'] == offline_data['state']:
+                        s['created_on'] = reconstitute_dates(offline_data['completed_on'])
+                self.launches.find_one_and_update(
+                    {'launch_id': m_launch.launch_id},
+                    {'$set':
+                         {'state_history': m_launch.state_history}
+                     })
+
+                self.offline_runs.update_one({"launch_id": launch_id},
+                                             {"$set": {"completed": True}})
+
+            else:
                 l = self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
                                                        m_launch.to_db_dict(), upsert=True)
                 fw_id = l['fw_id']
@@ -1713,30 +1750,11 @@ class LaunchPad(FWSerializable):
                 if f:
                     self._refresh_wf(fw_id)
 
-            if 'checkpoint' in offline_data:
-                m_launch.touch_history(checkpoint=offline_data['checkpoint'])
-                self.launches.find_one_and_replace({'launch_id': m_launch.launch_id},
-                                                   m_launch.to_db_dict(), upsert=True)
-
-            if 'fwaction' in offline_data:
-                fwaction = FWAction.from_dict(offline_data['fwaction'])
-                state = offline_data['state']
-                m_launch = Launch.from_dict(
-                    self.complete_launch(launch_id, fwaction, state))
-                for s in m_launch.state_history:
-                    if s['state'] == offline_data['state']:
-                        s['created_on'] = reconstitute_dates(offline_data['completed_on'])
-                self.launches.find_one_and_update({'launch_id': m_launch.launch_id},
-                                                  {'$set':
-                                                       {'state_history': m_launch.state_history}
-                                                  })
-                self.offline_runs.update_one({"launch_id": launch_id},
-                                             {"$set": {"completed": True}})
-
             # update the updated_on
             self.offline_runs.update_one({"launch_id": launch_id},
                                          {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}})
             return None
+
         except:
             if print_errors:
                 self.m_logger.error("failed recovering launch_id {}.\n{}".format(
