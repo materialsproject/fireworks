@@ -26,9 +26,9 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
             return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
         my_list = []
         for k in curr_doc:
-            for val in flatten_to_keys(curr_doc[k], curr_recurs+1, max_recurs):
-                dot_char = '' if curr_recurs==1 else '.'
-                my_list.append(dot_char+k+val)
+            for val in flatten_to_keys(curr_doc[k], curr_recurs + 1, max_recurs):
+                dot_char = '' if curr_recurs == 1 else '.'
+                my_list.append(dot_char + k + val)
 
         return my_list
 
@@ -37,10 +37,10 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
         for k in curr_doc:
             if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
                 return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
-            my_list.append(separator_str+str(k))
+            my_list.append(separator_str + str(k))
         return my_list
 
-    return [separator_str+str(curr_doc)]
+    return [separator_str + str(curr_doc)]
 
 
 def collect_stats(list_keys, filter_truncated=True):
@@ -69,13 +69,13 @@ def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5)
     all_keys = set(all_keys)
     for k in all_keys:
         if k in statsdict1:
-            diff_dict[k] += (statsdict1[k]/numsamples1) * 100
+            diff_dict[k] += (statsdict1[k] / numsamples1) * 100
 
         if k in statsdict2:
-            diff_dict[k] -= (statsdict2[k]/numsamples2) * 100
+            diff_dict[k] -= (statsdict2[k] / numsamples2) * 100
 
         if abs(diff_dict[k]) < threshold:
-            del(diff_dict[k])
+            del (diff_dict[k])
 
     return diff_dict
 
@@ -112,9 +112,9 @@ class Introspector:
 
         sort_field = "time_end" if coll == "launches" else "updated_on"
         if rsort:
-            sort_key=[(sort_field, DESCENDING)]
+            sort_key = [(sort_field, DESCENDING)]
         else:
-            sort_key=None
+            sort_key = None
 
         # get stats on fizzled docs
         fizzled_keys = []
@@ -131,7 +131,8 @@ class Introspector:
                 for t in doc['spec']['_tasks']:
                     fizzled_keys.append('_fw_name{}{}'.format(separator_str, t['_fw_name']))
             elif state_key == "action.stored_data._exception._stacktrace":
-                stacktrace = doc.get("action", {}).get("stored_data", {}).get("_exception", {}).get("_stacktrace", "<NO_STACKTRACE>")
+                stacktrace = doc.get("action", {}).get("stored_data", {}).get("_exception", {}).get("_stacktrace",
+                                                                                                    "<NO_STACKTRACE>")
                 fizzled_keys.append('_stacktrace{}{}'.format(separator_str, stacktrace))
             else:
                 fizzled_keys.extend(flatten_to_keys(doc[state_key]))

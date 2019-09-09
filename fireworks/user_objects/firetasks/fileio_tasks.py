@@ -143,7 +143,7 @@ class FileTransferTask(FiretaskBase):
                         dest = abspath(expanduser(expandvars(self['dest']))) if shell_interpret else self['dest']
                     FileTransferTask.fn_list[mode](src, dest)
 
-            except:
+            except Exception:
                 traceback.print_exc()
                 if max_retry:
 
@@ -195,7 +195,7 @@ class CompressDirTask(FiretaskBase):
         compression = self.get("compression", "gz")
         try:
             compress_dir(dest, compression=compression)
-        except:
+        except Exception:
             if not ignore_errors:
                 raise ValueError("There was an error performing compression {} in {}.".format(
                     compression, dest))
@@ -219,7 +219,7 @@ class DecompressDirTask(FiretaskBase):
         dest = self.get("dest", os.getcwd())
         try:
             decompress_dir(dest)
-        except:
+        except Exception:
             if not ignore_errors:
                 raise ValueError(
                     "There was an error performing decompression in %s." % dest)

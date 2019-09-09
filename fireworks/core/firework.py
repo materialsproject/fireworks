@@ -625,7 +625,7 @@ class Workflow(FWSerializable):
                     else:  # maybe it's a String?
                         try:
                             self[int(k)] = self[k]  # k must be int
-                        except:
+                        except Exception:
                             pass  # garbage input
                     del self[k]
 

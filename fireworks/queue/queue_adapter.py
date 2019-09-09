@@ -74,7 +74,7 @@ class Command(object):
                     self.output = self.output.decode("utf-8")
                 if isinstance(self.error, bytes):
                     self.error = self.error.decode("utf-8")
-            except:
+            except Exception:
                 self.error = traceback.format_exc()
                 self.status = -1
         # default stdout and stderr
@@ -132,7 +132,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             # set substitution dict for replacements into the template
             subs_dict = {k: v for k, v in self.items()
                          if v is not None}  # clean null values
-                         
+
             # warn user if they specify a key not present in template
             for subs_key in subs_dict.keys():
                 if subs_key not in template_keys and not \

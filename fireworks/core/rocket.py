@@ -179,7 +179,7 @@ class Rocket:
                 if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
                     try:
                         os.rmdir(prev_dir)
-                    except:
+                    except Exception:
                         pass
 
             recovery = m_fw.spec.get('_recovery', None)
@@ -243,7 +243,7 @@ class Rocket:
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
                 Rocket.update_checkpoint(lp, launch_dir, launch_id, checkpoint)
- 
+
                 if lp:
                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
@@ -280,7 +280,7 @@ class Rocket:
 
                     try:
                         m_task = t.to_dict()
-                    except:
+                    except Exception:
                         m_task = None
 
                     m_action = FWAction(stored_data={'_message': 'runtime error during task',
@@ -377,7 +377,7 @@ class Rocket:
                                self.fw_id, final_state, e, self.fw_id))
             return True
 
-        except:
+        except Exception:
             # problems while processing the results. high probability of malformed data.
             traceback.print_exc()
             stop_backgrounds(ping_stop, btask_stops)
@@ -394,7 +394,7 @@ class Rocket:
 
             try:
                 m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
-            except:
+            except Exception:
                 traceback.print_exc()
 
             if lp:

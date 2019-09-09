@@ -19,7 +19,7 @@ class UpdateCollectionTests(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod

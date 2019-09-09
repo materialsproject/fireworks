@@ -54,12 +54,12 @@ class FilePad(MSONable):
         try:
             self.connection = MongoClient(self.host, self.port)
             self.db = self.connection[database]
-        except:
+        except Exception:
             raise Exception("connection failed")
         try:
             if self.username:
                 self.db.authenticate(self.username, self.password)
-        except:
+        except Exception:
             raise Exception("authentication failed")
 
         # set collections: filepad and gridfs

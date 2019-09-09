@@ -127,10 +127,12 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
         l_logger: the logger to use
         prefix: the prefix for the new dir, default="block_"
     """
+
     def get_path():
         time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
         block_path = prefix + time_now
         return os.path.join(root_dir, block_path)
+
     ctn = 0
     max_try = 10
     full_path = None
@@ -140,7 +142,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
             full_path = None
             import time
             import random
-            time.sleep(random.random()/3+0.1)
+            time.sleep(random.random() / 3 + 0.1)
             continue
         else:
             try:
@@ -159,12 +161,13 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
 
 _g_ip, _g_host = None, None
 
+
 def get_my_ip():
     global _g_ip
     if _g_ip is None:
         try:
             _g_ip = socket.gethostbyname(socket.gethostname())
-        except:
+        except Exception:
             _g_ip = '127.0.0.1'
     return _g_ip
 
@@ -211,6 +214,7 @@ class NestedClassGetter(object):
     and the name of the nested class as the second argument,
     returns an instance of the nested class.
     """
+
     def __call__(self, containing_class, class_name):
         nested_class = getattr(containing_class, class_name)
         # return an instance of a nested_class. Some more intelligence could be
@@ -270,7 +274,7 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
         for i, j in enumerate(wf.links[k]):
             if not points_map.get(j, None):
                 points_map[j] = (
-                (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
+                    (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
     for k in keys:
@@ -293,6 +297,7 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
 
     if save_as:
         plt.savefig(save_as)
+
 
 @contextlib.contextmanager
 def redirect_local():

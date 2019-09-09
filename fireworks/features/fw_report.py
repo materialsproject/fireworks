@@ -8,7 +8,6 @@ from fireworks import Firework
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 
-
 # indices for parsing a datetime string in format 2015-09-28T12:00:07.772058
 DATE_KEYS = {"years": 4, "months": 7, "days": 10, "hours": 13, "minutes": 16}
 
@@ -64,13 +63,13 @@ class FWReport:
         match_q = additional_query if additional_query else {}
         if num_intervals:
             now_time = datetime.utcnow()
-            start_time = now_time - relativedelta(**{interval:num_intervals})
+            start_time = now_time - relativedelta(**{interval: num_intervals})
             date_q = {"$gte": start_time.isoformat()} if string_type_dates else {"$gte": start_time}
             match_q.update({time_field: date_q})
 
         pipeline.append({"$match": match_q})
         pipeline.append({"$project": {"state": 1, "_id": 0,
-                                      "date_key": {"$substr": ["$"+time_field, 0, date_key_idx]}}})
+                                      "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}})
         pipeline.append({"$group": {"_id": {"state:": "$state", "date_key": "$date_key"},
                                     "count": {"$sum": 1}, "state": {"$first": "$state"}}})
         pipeline.append({"$group": {"_id": {"_id_date_key": "$_id.date_key"},
@@ -98,8 +97,8 @@ class FWReport:
                 new_states[s] = count
                 total_count += count
 
-            completed_score = 0 if completed_cnt == 0 else (completed_cnt/(completed_cnt+fizzled_cnt))
-            completed_score = round(completed_score, 3)*100
+            completed_score = 0 if completed_cnt == 0 else (completed_cnt / (completed_cnt + fizzled_cnt))
+            completed_score = round(completed_score, 3) * 100
             decorated_list.append({"date_key": x["date_key"], "states": new_states,
                                    "count": total_count, "completed_score": completed_score})
         return decorated_list
@@ -122,15 +121,15 @@ class FWReport:
         """
         results = self.get_stats(coll, interval, num_intervals, **kwargs)
         state_to_color = {"RUNNING": "#F4B90B",
-                      "WAITING": "#1F62A2",
-                      "FIZZLED": "#DB0051",
-                      "READY": "#2E92F2",
-                      "COMPLETED": "#24C75A",
-                      "RESERVED": "#BB8BC1",
-                      "ARCHIVED": "#7F8287",
-                      "DEFUSED": "#B7BCC3",
-                      "PAUSED": "#FFCFCA"
-                      }
+                          "WAITING": "#1F62A2",
+                          "FIZZLED": "#DB0051",
+                          "READY": "#2E92F2",
+                          "COMPLETED": "#24C75A",
+                          "RESERVED": "#BB8BC1",
+                          "ARCHIVED": "#7F8287",
+                          "DEFUSED": "#B7BCC3",
+                          "PAUSED": "#FFCFCA"
+                          }
         states = states or state_to_color.keys()
 
         from matplotlib.figure import Figure
@@ -146,7 +145,7 @@ class FWReport:
             if any(data[state]):
                 if style is 'bar':
                     ax.bar(range(len(bottom)), data[state], bottom=bottom,
-                            color=state_to_color[state], label=state)
+                           color=state_to_color[state], label=state)
                 elif style is 'fill':
                     ax.fill_between(range(len(bottom)),
                                     bottom, [x + y for x, y in
@@ -158,7 +157,7 @@ class FWReport:
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
         ax.set_xlabel("{} ago".format(interval), fontsize=18)
-        ax.set_xlim([-0.5, num_intervals-0.5])
+        ax.set_xlim([-0.5, num_intervals - 0.5])
         ax.set_ylabel("number of {}".format(coll), fontsize=18)
         ax.tick_params(labelsize=14)
         ax.legend(fontsize=13)

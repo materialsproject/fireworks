@@ -64,7 +64,7 @@ else:
 try:
     import numpy as np
     NUMPY_INSTALLED = True
-except:
+except Exception:
     NUMPY_INSTALLED = False
 
 
@@ -124,7 +124,7 @@ def _recursive_load(obj):
         try:
             # convert String to datetime if really datetime
             return reconstitute_dates(obj)
-        except:
+        except Exception:
             # convert unicode to ASCII if not really unicode
             if obj == obj.encode('ascii', 'ignore'):
                 return str(obj)
@@ -420,10 +420,10 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, six.string_types):
         try:
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
-        except:
+        except Exception:
             try:
                 return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S")
-            except:
+            except Exception:
                 pass
     return obj_dict
 

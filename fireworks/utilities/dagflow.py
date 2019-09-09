@@ -7,6 +7,7 @@ __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 from itertools import combinations
 from igraph import Graph
 
+
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
     visualization of workflows. """
@@ -84,10 +85,10 @@ class DAGFlow(Graph):
                 step_data.extend(task_input(true_task, spec))
                 if 'outputs' in true_task:
                     assert isinstance(true_task['outputs'], list), (
-                        'outputs must be a list in fw_id ' + str(step['id']))
+                            'outputs must be a list in fw_id ' + str(step['id']))
                 if 'inputs' in true_task:
                     assert isinstance(true_task['inputs'], list), (
-                        'inputs must be a list in fw_id ' + str(step['id']))
+                            'inputs must be a list in fw_id ' + str(step['id']))
             step['data'] = list(set(step_data))
 
         return cls(steps=steps, links=links, name=name)
@@ -218,7 +219,7 @@ class DAGFlow(Graph):
         """ Returns a partial list of cycles in case of erroneous workflow """
         if self.is_dag():
             return []
-        for deg in range(2, len(self.vs)+1):
+        for deg in range(2, len(self.vs) + 1):
             lst = self.get_subisomorphisms_vf2(Graph.Ring(deg, directed=True))
             flatten = lambda l: [item for sublist in l for item in sublist]
             if flatten(lst):
