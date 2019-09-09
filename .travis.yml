@@ -8,7 +8,7 @@ install:
 before_script:
   - python setup.py develop
 script:
-  - pytest --nocapture --with-coverage fireworks
+  - pytest fireworks
   - source fireworks/tests/cmd_line_test.sh
 after_success:
   - coveralls
