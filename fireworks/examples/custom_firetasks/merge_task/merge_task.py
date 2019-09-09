@@ -7,6 +7,7 @@ __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 A workflow where 2 parent Fireworks (A and B) merge into a common child C.
 """
 
+
 @explicit_serialize
 class TaskA(FiretaskBase):
 
@@ -22,6 +23,7 @@ class TaskB(FiretaskBase):
         print("This is task B")
         return FWAction(update_spec={"param_B": 20})
 
+
 @explicit_serialize
 class TaskC(FiretaskBase):
 
@@ -29,6 +31,7 @@ class TaskC(FiretaskBase):
         print("This is task C.")
         print("Task A gave me: {}".format(fw_spec["param_A"]))
         print("Task B gave me: {}".format(fw_spec["param_B"]))
+
 
 if __name__ == "__main__":
     # set up the LaunchPad and reset it

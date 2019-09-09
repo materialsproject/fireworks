@@ -228,7 +228,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
 
                 # launch a single job
                 return_code = launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve,
-                                              strm_lvl, True, fill_mode)
+                                                     strm_lvl, True, fill_mode)
                 if return_code is None:
                     l_logger.info('No READY jobs detected...')
                     break

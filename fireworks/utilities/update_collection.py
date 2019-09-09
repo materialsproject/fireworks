@@ -6,6 +6,7 @@ __author__ = 'Alireza Faghaninia, Anubhav Jain'
 __email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
 __date__ = 'Dec 08, 2016'
 
+
 def update_launchpad_data(lp, replacements, **kwargs):
     """
     If you want to update a text string in your entire FireWorks database with a replacement, use this method.

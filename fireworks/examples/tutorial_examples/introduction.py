@@ -1,5 +1,6 @@
 """
-This code is described in the Introductory tutorial, https://materialsproject.github.io/fireworks/introduction.html
+This code is described in the Introductory tutorial,
+https://materialsproject.github.io/fireworks/introduction.html
 """
 
 from fireworks import Firework, LaunchPad, ScriptTask
