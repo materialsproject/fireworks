@@ -269,13 +269,15 @@ class FWStats:
         :param match: (dict) Query for the match step in Mongodb aggregation framework.
         :param project: (dict) Query for the project step in Mongodb aggregation framework
         :param unwind: (dict) Query for the unwind step in Mongodb aggregation framework
-        :param group_op: (dict) Additional operations to generate values in the group step in Mongodb aggregation framework.
+        :param group_op: (dict) Additional operations to generate values in the group step in Mongodb aggregation
+            framework.
         :param sort: (tuple) Defines how to sort the aggregation results. Default is to sort by field in group_by.
         :param return_query_only:  (bool) If only return the query expression for aggregation. Default is False.
         :return: (list) Aggregation results if the operation is successful.
         """
         for arg in [match, project, unwind, group_op]:
-            if arg is None: arg = {}
+            if arg is None:
+                arg = {}
         group_op.update({"_id": "$" + group_by})
         if sort is None:
             sort_query = ("_id", 1)

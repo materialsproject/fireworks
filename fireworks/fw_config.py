@@ -93,7 +93,7 @@ WEBSERVER_HOST = "127.0.0.1"  # default host on which the Flask web server runs
 
 WEBSERVER_PORT = 5000  # default port on which the Flask web server runs
 
-WEBSERVER_PERFWARNINGS = False # enable performance-related warnings
+WEBSERVER_PERFWARNINGS = False  # enable performance-related warnings
 
 # value of socketTimeoutMS when connection to mongoDB.  See pymongo official
 # documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
@@ -117,7 +117,7 @@ def override_user_settings():
         if fp not in config_paths and os.path.exists(fp):
             config_paths.append(fp)
 
-    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in\
+    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in \
             config_paths:
         config_paths.append(os.environ["FW_CONFIG_FILE"])
 

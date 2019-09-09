@@ -105,8 +105,8 @@ class GetFilesByQueryTask(FiretaskBase):
     """
     _fw_name = 'GetFilesByQueryTask'
     required_params = ["query"]
-    optional_params = ["sort_key","sort_direction", "limit",
-        "filepad_file", "dest_dir", "new_file_names"]
+    optional_params = ["sort_key", "sort_direction", "limit",
+                       "filepad_file", "dest_dir", "new_file_names"]
 
     def run_task(self, fw_spec):
         import pymongo
@@ -116,13 +116,14 @@ class GetFilesByQueryTask(FiretaskBase):
         query = self.get("query", {})
         sort_key = self.get("sort_key", None)
         sort_direction = self.get("sort_direction", pymongo.DESCENDING)
-        limit = self.get("limit",None)
+        limit = self.get("limit", None)
 
-        l = fpad.get_file_by_query(query,sort_key,sort_direction)
+        l = fpad.get_file_by_query(query, sort_key, sort_direction)
         for i, (file_contents, doc) in enumerate(l[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             with open(os.path.join(dest_dir, file_name), "wb") as f:
                 f.write(file_contents)
+
 
 class DeleteFilesTask(FiretaskBase):
     """

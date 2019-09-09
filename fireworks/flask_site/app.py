@@ -317,8 +317,7 @@ def wf_metadata_find(key, value, state):
             page = int(request.args.get('page', 1))
         except ValueError:
             page = 1
-        rows = list(db.find(q).sort([('_id', DESCENDING)]). \
-                    skip(page - 1).limit(PER_PAGE))
+        rows = list(db.find(q).sort([('_id', DESCENDING)]).skip(page - 1).limit(PER_PAGE))
         for r in rows:
             r["fw_id"] = r["nodes"][0]
         pagination = Pagination(page=page, total=wf_count,

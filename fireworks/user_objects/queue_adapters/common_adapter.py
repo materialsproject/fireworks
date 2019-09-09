@@ -108,7 +108,8 @@ class CommonAdapter(QueueAdapterBase):
             if self.get('queue'):
                 status_cmd.extend(['-p', self['queue']])
         elif self.q_type == "LoadSharingFacility":
-            # use no header and the wide format so that there is one line per job, and display only running and pending jobs
+            # use no header and the wide format so that there is one line per job, and display only running and
+            # pending jobs
             status_cmd.extend(['-p', '-r', '-o', 'jobID user queue', '-noheader', '-u', username])
         elif self.q_type == "Cobalt":
             header = "JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"

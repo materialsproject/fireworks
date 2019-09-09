@@ -127,7 +127,8 @@ def init_yaml(args):
             ("host", None, "Example: mongodb+srv://USER:PASSWORD@CLUSTERNAME.mongodb.net/fireworks"),
             ("ssl_ca_file", None, "Path to any client certificate to be used for mongodb connection"),
             ("authsource", None,
-             "Database used for authentication, if not connection db. e.g., for MongoDB Atlas this is sometimes 'admin'."))
+             "Database used for authentication, if not connection db. e.g., for MongoDB Atlas this is sometimes "
+             "'admin'."))
     else:
         fields = (
             ("host", "localhost", "Example: 'localhost' or 'mongodb+srv://CLUSTERNAME.mongodb.net'"),
@@ -137,12 +138,15 @@ def init_yaml(args):
             ("password", None, "Password for MongoDB authentication"),
             ("ssl_ca_file", None, "Path to any client certificate to be used for Mongodb connection"),
             ("authsource", None,
-             "Database used for authentication, if not connection db. e.g., for MongoDB Atlas this is sometimes 'admin'."))
+             "Database used for authentication, if not connection db. e.g., for MongoDB Atlas this is sometimes "
+             "'admin'."))
 
     doc = {}
     if args.uri_mode:
         print(
-            "Note 1: You are in URI format mode. This means that all database parameters (username, password, host, port, database name, etc.) must be present in the URI. See: https://docs.mongodb.com/manual/reference/connection-string/ for details.")
+            "Note 1: You are in URI format mode. This means that all database parameters (username, password, host, "
+            "port, database name, etc.) must be present in the URI. See: "
+            "https://docs.mongodb.com/manual/reference/connection-string/ for details.")
         print("(Enter your connection URI in under the 'host' parameter)")
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
@@ -750,7 +754,8 @@ def lpad():
         'init', help='Initialize a Fireworks launchpad YAML file.')
     init_parser.add_argument('-u', '--uri_mode',
                              action="store_true",
-                             help="Connect via a URI, see: https://docs.mongodb.com/manual/reference/connection-string/")
+                             help="Connect via a URI, see: "
+                                  "https://docs.mongodb.com/manual/reference/connection-string/")
     init_parser.add_argument('--config-file', default=DEFAULT_LPAD_YAML,
                              type=str,
                              help="Filename to write to.")
@@ -776,14 +781,17 @@ def lpad():
     check_wf_parser = subparsers.add_parser('check_wflow', help='validate and graph a workflow from launchpad')
     check_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
     check_wf_parser.add_argument('-g', '--graph', type=str,
-                                 help='graph the workflow in DOT format; allowed views: dataflow, controlflow, combined.',
+                                 help='graph the workflow in DOT format; allowed views: dataflow, controlflow, '
+                                      'combined.',
                                  dest='view', default=None)
     check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot',
                                  default='workflow.dot')
     check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
 
     get_launchdir_parser = subparsers.add_parser('get_launchdir',
-                                                 help='get the directory of the most recent launch of the given fw_id. A common usage is "cd `get_launchdir <FW_ID>`" to change the working directory that of the FW launch')
+                                                 help='get the directory of the most recent launch of the given fw_id.'
+                                                      ' A common usage is "cd `get_launchdir <FW_ID>`" to change the '
+                                                      'working directory that of the FW launch')
     get_launchdir_parser.add_argument('fw_id', type=int, help='fw_id to chdir to')
     get_launchdir_parser.add_argument('--launch_idx', type=int,
                                       help='the index of the launch to get (default of -1 is most recent launch)',
@@ -1075,9 +1083,11 @@ def lpad():
 
     webgui_parser = subparsers.add_parser('webgui', help='launch the web GUI')
     webgui_parser.add_argument("--port", dest="port", type=int, default=WEBSERVER_PORT,
-                               help="Port to run the web server on (default: 5000 or WEBSERVER_PORT arg in FW_config.yaml)")
+                               help="Port to run the web server on (default: 5000 or WEBSERVER_PORT arg in "
+                                    "FW_config.yaml)")
     webgui_parser.add_argument("--host", dest="host", type=str, default=WEBSERVER_HOST,
-                               help="Host to run the web server on (default: 127.0.0.1 or WEBSERVER_HOST arg in FW_config.yaml)")
+                               help="Host to run the web server on (default: 127.0.0.1 or WEBSERVER_HOST arg in "
+                                    "FW_config.yaml)")
     webgui_parser.add_argument('--debug', help='print debug messages', action='store_true')
     webgui_parser.add_argument('-s', '--server_mode', help='run in server mode (skip opening the browser)',
                                action='store_true')

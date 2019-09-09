@@ -9,6 +9,7 @@ before_script:
   - python setup.py develop
 script:
   - pytest fireworks
+  - pycodestyle fireworks
   - source fireworks/tests/cmd_line_test.sh
 after_success:
   - coveralls

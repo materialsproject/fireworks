@@ -13,6 +13,7 @@ __maintainer__ = 'Anubhav Jain'
 __email__ = 'ajain@lbl.gov'
 __date__ = 'Nov 21, 2013'
 
+
 class PBSAdapterNEWT(QueueAdapterBase):
     """
     A special PBS adapter that works via the NEWT interface (https://newt.nersc.gov)
@@ -29,7 +30,8 @@ class PBSAdapterNEWT(QueueAdapterBase):
     def submit_to_queue(self, script_file):
         self._init_auth_session()
         jobfile = os.path.join(os.getcwd(), script_file)
-        r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/queue/{}/".format(self.resource), {"jobfile": jobfile})
+        r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/queue/{}/".format(self.resource),
+                                         {"jobfile": jobfile})
         return int(r.json()['jobid'].split('.')[0])
 
     def get_njobs_in_queue(self, username=None):
@@ -58,7 +60,8 @@ class PBSAdapterNEWT(QueueAdapterBase):
         pw_iterations = 0
         while pw_iterations < max_pw_requests:
             password = getpass.getpass()
-            r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/auth", {"username": username, "password": password})
+            r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/auth",
+                                             {"username": username, "password": password})
             if r.json()['auth'] and r.json()['username'] == username:
                 return
             pw_iterations += 1

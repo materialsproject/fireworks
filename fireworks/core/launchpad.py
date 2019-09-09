@@ -119,7 +119,9 @@ class LaunchPad(FWSerializable):
                  authsource=None, uri_mode=False):
         """
         Args:
-            host (str): hostname. If uri_mode is True, a MongoDB connection string URI (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining options below.
+            host (str): hostname. If uri_mode is True, a MongoDB connection string URI
+                (https://docs.mongodb.com/manual/reference/connection-string/) can be used instead of the remaining
+                options below.
             port (int): port number
             name (str): database name
             username (str)
@@ -133,8 +135,10 @@ class LaunchPad(FWSerializable):
             ssl_certfile (str): path to the client certificate to be used for mongodb connection
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
-            authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if not set
-            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as the host).
+            authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
+                not set
+            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
+                the host).
         """
 
         self.host = host if (host or uri_mode) else "localhost"
@@ -292,8 +296,8 @@ class LaunchPad(FWSerializable):
             self.m_logger.info('LaunchPad was RESET.')
         elif not require_password:
             raise ValueError("Password check cannot be overridden since the size of DB ({} workflows) "
-                             "is greater than the max_reset_wo_password parameter ({}).".format(
-                self.fireworks.count(), max_reset_wo_password))
+                             "is greater than the max_reset_wo_password parameter ({}).".format(self.fireworks.count(),
+                                                                                                max_reset_wo_password))
         else:
             raise ValueError("Invalid password! Password is today's date: {}".format(m_password))
 
@@ -1612,7 +1616,9 @@ class LaunchPad(FWSerializable):
                 except NotImplementedError:
                     verified = True  # no dupefinder.verify() implemented, skip verification
 
-                except Exception:  # we want to catch any exceptions from testing an empty dict, which the dupefinder might not be designed for
+                except Exception:
+                    # we want to catch any exceptions from testing an empty dict, which the dupefinder might not be
+                    # designed for
                     pass
 
                 if not verified:
@@ -1710,7 +1716,8 @@ class LaunchPad(FWSerializable):
                     self.ping_launch(launch_id, ptime=ping_dict['ping_time'], checkpoint=checkpoint)
                 else:
                     warnings.warn(
-                        "Unable to find FW_ping.json in {}! State history updated_on might be incorrect, trackers may not update.".format(
+                        "Unable to find FW_ping.json in {}! State history updated_on might be incorrect, trackers "
+                        "may not update.".format(
                             m_launch.launch_dir))
                     m_launch.touch_history(checkpoint=checkpoint)
 
@@ -1728,9 +1735,7 @@ class LaunchPad(FWSerializable):
                         s['created_on'] = reconstitute_dates(offline_data['completed_on'])
                 self.launches.find_one_and_update(
                     {'launch_id': m_launch.launch_id},
-                    {'$set':
-                         {'state_history': m_launch.state_history}
-                     })
+                    {'$set': {'state_history': m_launch.state_history}})
 
                 self.offline_runs.update_one({"launch_id": launch_id},
                                              {"$set": {"completed": True}})
@@ -1740,11 +1745,8 @@ class LaunchPad(FWSerializable):
                                                        m_launch.to_db_dict(), upsert=True)
                 fw_id = l['fw_id']
                 f = self.fireworks.find_one_and_update({'fw_id': fw_id},
-                                                       {'$set':
-                                                            {'state': 'RUNNING',
-                                                             'updated_on': datetime.datetime.utcnow()
-                                                             }
-                                                        })
+                                                       {'$set': {'state': 'RUNNING',
+                                                                 'updated_on': datetime.datetime.utcnow()}})
                 if f:
                     self._refresh_wf(fw_id)
 

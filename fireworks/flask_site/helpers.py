@@ -4,7 +4,7 @@ def get_totals(states, lp):
     for state in states:
         fw_stats[state] = lp.get_fw_ids(query={'state': state}, count_only=True)
         wf_stats[state] = lp.get_wf_ids(query={'state': state}, count_only=True)
-    return {"fw_stats": fw_stats, "wf_stats":wf_stats}
+    return {"fw_stats": fw_stats, "wf_stats": wf_stats}
 
 
 def fw_filt_given_wf_filt(filt, lp):
@@ -19,6 +19,7 @@ def wf_filt_given_fw_filt(filt, lp):
     for doc in lp.fireworks.find(filt, {'_id': 0, 'fw_id': 1}):
         wf_ids.add(doc['fw_id'])
     return {"nodes": {"$in": list(wf_ids)}}
+
 
 def uses_index(filt, coll):
     ii = coll.index_information()

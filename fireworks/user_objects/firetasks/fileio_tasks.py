@@ -55,7 +55,6 @@ class FileDeleteTask(FiretaskBase):
     _fw_name = 'FileDeleteTask'
     required_params = ["files_to_delete"]
 
-
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
         ignore_errors = self.get('ignore_errors', True)
@@ -89,13 +88,13 @@ class FileTransferTask(FiretaskBase):
     optional_params = ["server", "user", "key_filename", "max_retry", "retry_delay"]
 
     fn_list = {
-            "move": shutil.move,
-            "mv": shutil.move,
-            "copy": shutil.copy,
-            "cp": shutil.copy,
-            "copy2": shutil.copy2,
-            "copytree": shutil.copytree,
-            "copyfile": shutil.copyfile,
+        "move": shutil.move,
+        "mv": shutil.move,
+        "copy": shutil.copy,
+        "cp": shutil.copy,
+        "copy2": shutil.copy2,
+        "copytree": shutil.copytree,
+        "copyfile": shutil.copyfile,
     }
 
     def run_task(self, fw_spec):
@@ -128,7 +127,7 @@ class FileTransferTask(FiretaskBase):
                             sftp.mkdir(dest)
 
                         for f in os.listdir(src):
-                            if os.path.isfile(os.path.join(src,f)):
+                            if os.path.isfile(os.path.join(src, f)):
                                 sftp.put(os.path.join(src, f), os.path.join(dest, f))
                     else:
                         if not self._rexists(sftp, dest):
