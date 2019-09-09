@@ -4,7 +4,7 @@ jobs:
   py3test:
     working_directory: ~/fireworks
     docker:
-      - image: circleci/python:3.7.3
+      - image: materialsvirtuallab/circle-ci-pmg-py3:3.7.3
       - image: circleci/mongo:latest
     steps:
       - checkout
