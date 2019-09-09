@@ -21,6 +21,8 @@ jobs:
       - run:
           name: Run fireworks tests
           command: |
+            export PATH=$HOME/miniconda3/bin:$PATH
+            source activate test-environment
             pip install --quiet -e .
             pytest fireworks
 
