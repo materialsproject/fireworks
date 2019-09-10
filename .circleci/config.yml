@@ -25,7 +25,9 @@ jobs:
             source activate test-environment
             pip install --quiet -e .
             pytest fireworks
+            echo "Checking code style..."
             pycodestyle fireworks
+            echo "Done..."
   py2test:
     working_directory: ~/fireworks
     docker:
