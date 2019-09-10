@@ -139,7 +139,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     launchpad.set_reservation_id(launch_id, reservation_id)
             return reservation_id
 
-        except:
+        except Exception:
             log_exception(l_logger, 'Error writing/submitting queue script!')
             if reserve and launch_id is not None:
                 try:
@@ -147,7 +147,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                         fw.fw_id, launch_id))
                     launchpad.cancel_reservation(launch_id)
                     launchpad.forget_offline(launch_id)
-                except:
+                except Exception:
                     log_exception(l_logger, 'Error unreserving FW with fw_id {}'.format(fw.fw_id))
 
             return False
@@ -228,7 +228,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
 
                 # launch a single job
                 return_code = launch_rocket_to_queue(launchpad, fworker, qadapter, block_dir, reserve,
-                                              strm_lvl, True, fill_mode)
+                                                     strm_lvl, True, fill_mode)
                 if return_code is None:
                     l_logger.info('No READY jobs detected...')
                     break
@@ -257,7 +257,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             time.sleep(sleep_time)
             l_logger.info('Checking for Rockets to run...')
 
-    except:
+    except Exception:
         log_exception(l_logger, 'Error with queue launcher rapid fire!')
 
 
@@ -296,7 +296,7 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
                 l_logger.info('{} jobs in queue. '
                               'Maximum allowed by user: {}'.format(jobs_in_queue, njobs_queue))
                 return jobs_in_queue
-        except:
+        except Exception:
             log_exception(l_logger, 'Could not get number of jobs in queue! '
                                     'Sleeping {} secs...zzz...'.format(RETRY_INTERVAL))
         time.sleep(RETRY_INTERVAL)

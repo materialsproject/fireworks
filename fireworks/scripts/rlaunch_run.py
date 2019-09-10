@@ -33,7 +33,6 @@ def handle_interrupt(signum, frame):
 
 
 def rlaunch():
-
     m_description = 'This program launches one or more Rockets. A Rocket retrieves a job from the ' \
                     'central database and runs it. The "single-shot" option launches a single Rocket, ' \
                     'whereas the "rapidfire" option loops until all FireWorks are completed.'
@@ -139,7 +138,7 @@ def rlaunch():
     if args.command == 'rapidfire':
         rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=args.nlaunches,
                   max_loops=args.max_loops, sleep_time=args.sleep, strm_lvl=args.loglvl,
-                  timeout=args.timeout,local_redirect=args.local_redirect)
+                  timeout=args.timeout, local_redirect=args.local_redirect)
     elif args.command == 'multi':
         total_node_list = None
         if args.nodefile:
@@ -153,6 +152,7 @@ def rlaunch():
                             local_redirect=args.local_redirect)
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
+
 
 if __name__ == '__main__':
     rlaunch()

@@ -80,7 +80,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
               max_loops=-1, sleep_time=sleep, strm_lvl=loglvl, timeout=timeout,
               local_redirect=local_redirect)
     while nlaunches == 0:
-        time.sleep(1.5) # wait for LaunchPad to be initialized
+        time.sleep(1.5)  # wait for LaunchPad to be initialized
         launch_ids = FWData().Running_IDs.values()
         live_ids = list(set(launch_ids) - {None})
         if len(live_ids) > 0:
@@ -140,12 +140,12 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     if total_node_list:
         orig_node_list = sorted(list(set(total_node_list)))
         nnodes = len(orig_node_list)
-        if nnodes%num_jobs != 0:
+        if nnodes % num_jobs != 0:
             raise ValueError("can't allocate nodes, {} can't be divided by {}".format(
                 nnodes, num_jobs))
-        sub_nnodes = nnodes//num_jobs
+        sub_nnodes = nnodes // num_jobs
         sub_nproc_list = [sub_nnodes * ppn] * num_jobs
-        node_lists = [orig_node_list[i:i+sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
+        node_lists = [orig_node_list[i:i + sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
     else:
         sub_nproc_list = [ppn] * num_jobs
         node_lists = [None] * num_jobs

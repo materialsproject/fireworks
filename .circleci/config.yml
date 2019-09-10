@@ -1,22 +1,59 @@
 version: 2
 
 jobs:
-  build:
+  py3test:
     working_directory: ~/fireworks
     docker:
-      - image: circleci/python:3.6.2
+      - image: materialsvirtuallab/circle-ci-pmg-py3:3.7.3
       - image: circleci/mongo:latest
     steps:
       - checkout
       - run:
-          name: Make tox env and setup mongo
           command: |
-            mkdir ~/tox_env
-            python -m venv ~/tox_env
-            source ~/tox_env/bin/activate
-            pip install tox tox-pyenv
+            export PATH=$HOME/miniconda3/bin:$PATH
+            conda config --set always_yes yes --set changeps1 no
+            conda update -q conda
+            conda info -a
+            conda create -q -n test-environment python=3.7
+            source activate test-environment
+            conda update --quiet --all
+            pip install --quiet --ignore-installed -r requirements.txt -r requirements-ci.txt
       - run:
           name: Run fireworks tests
           command: |
-            source ~/tox_env/bin/activate
-            tox
+            export PATH=$HOME/miniconda3/bin:$PATH
+            source activate test-environment
+            pip install --quiet -e .
+            pytest fireworks
+            pycodestyle fireworks
+  py2test:
+    working_directory: ~/fireworks
+    docker:
+      - image: materialsvirtuallab/circle-ci-pmg-py3:3.7.3
+      - image: circleci/mongo:latest
+    steps:
+      - checkout
+      - run:
+          command: |
+            export PATH=$HOME/miniconda3/bin:$PATH
+            conda config --set always_yes yes --set changeps1 no
+            conda update -q conda
+            conda info -a
+            conda create -q -n test-environment python=2.7
+            source activate test-environment
+            conda update --quiet --all
+            pip install --quiet --ignore-installed -r requirements.txt -r requirements-ci.txt
+      - run:
+          name: Run fireworks tests
+          command: |
+            export PATH=$HOME/miniconda3/bin:$PATH
+            source activate test-environment
+            pip install --quiet -e .
+            pytest fireworks
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - py3test
+      - py2test

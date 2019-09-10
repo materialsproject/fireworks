@@ -20,7 +20,6 @@ from monty.json import MSONable
 from fireworks.fw_config import LAUNCHPAD_LOC
 from fireworks.utilities.fw_utilities import get_fw_logger
 
-
 __author__ = 'Kiran Mathew'
 __email__ = 'kmathew@lbl.gov'
 __credits__ = 'Anubhav Jain'
@@ -42,7 +41,8 @@ class FilePad(MSONable):
             gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
             strm_lvl (str): the logger stream level
-            text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if working only with text files between Windows and Unix systems
+            text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if
+                working only with text files between Windows and Unix systems
         """
         self.host = host
         self.port = int(port)
@@ -54,12 +54,12 @@ class FilePad(MSONable):
         try:
             self.connection = MongoClient(self.host, self.port)
             self.db = self.connection[database]
-        except:
+        except Exception:
             raise Exception("connection failed")
         try:
             if self.username:
                 self.db.authenticate(self.username, self.password)
-        except:
+        except Exception:
             raise Exception("authentication failed")
 
         # set collections: filepad and gridfs
@@ -159,7 +159,7 @@ class FilePad(MSONable):
         if sort_key is None:
             cursor = self.filepad.find(query)
         else:
-            cursor = self.filepad.find(query).sort(sort_key,sort_direction)
+            cursor = self.filepad.find(query).sort(sort_key, sort_direction)
         for d in cursor:
             all_files.append(self._get_file_contents(d))
         return all_files

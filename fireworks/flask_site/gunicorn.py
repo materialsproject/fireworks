@@ -31,6 +31,7 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
     def load(self):
         return self.application
 
+
 if __name__ == '__main__':
     options = {
         'bind': '%s:%s' % ('127.0.0.1', '8080'),

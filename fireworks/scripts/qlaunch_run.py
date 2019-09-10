@@ -13,6 +13,7 @@ import time
 
 try:
     import fabric
+
     if int(fabric.__version__.split('.')[0]) < 2:
         raise ImportError
 except ImportError:
@@ -69,6 +70,7 @@ def do_launch(args):
     else:
         launch_rocket_to_queue(launchpad, fworker, queueadapter,
                                args.launch_dir, args.reserve, args.loglvl, False, args.fill_mode, args.fw_id)
+
 
 def qlaunch():
     m_description = 'This program is used to submit jobs to a queueing system. ' \
@@ -149,8 +151,8 @@ def qlaunch():
     rapid_parser.add_argument('--timeout', help='timeout (secs) after which to quit (default None)',
                               default=None, type=int)
     rapid_parser.add_argument('--sleep', help='sleep time between loops', default=None, type=int)
-    
-    single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode', 
+
+    single_parser.add_argument('-f', '--fw_id', help='specific fw_id to run in reservation mode',
                                default=None, type=int)
 
     try:

@@ -82,7 +82,7 @@ class LaunchPadTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -184,7 +184,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -303,7 +303,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertIn(self.zeus_fw_id,completed_ids)
             self.assertTrue(self.zeus_child_fw_ids.issubset(completed_ids))
 
-        except:
+        except Exception:
             raise
 
 
@@ -328,7 +328,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             fws_no_run = set(self.lp.get_fw_ids({'state':{'$nin':['COMPLETED']}}))
             self.assertIn(self.zeus_fw_id,fws_no_run)
             self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
-        except:
+        except Exception:
             raise
 
     def test_defuse_fw_after_completion(self):
@@ -535,7 +535,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -678,7 +678,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -791,7 +791,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
                 fw_state = fws[fw_id].state
                 fw_cache_state = wf.fw_states[fw_id]
                 self.assertEqual(fw_state, fw_cache_state)
-        except:
+        except Exception:
             raise
 
     def test_defuse_fw_after_completion(self):
@@ -953,7 +953,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -1043,7 +1043,7 @@ class WFLockTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -1175,7 +1175,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod
@@ -1259,7 +1259,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl='ERROR')
             cls.lp.reset(password=None, require_password=False)
-        except:
+        except Exception:
             raise unittest.SkipTest('MongoDB is not running in localhost:27017! Skipping tests.')
 
     @classmethod

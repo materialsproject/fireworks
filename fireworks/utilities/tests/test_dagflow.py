@@ -15,7 +15,7 @@ class DAGFlowTest(unittest.TestCase):
     def setUp(self):
         try:
             from fireworks.utilities.dagflow import DAGFlow
-        except:
+        except Exception:
             raise unittest.SkipTest("Skipping test, DagFlow not installed")
 
         self.fw1 = Firework(

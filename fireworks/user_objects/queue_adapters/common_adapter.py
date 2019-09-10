@@ -83,7 +83,7 @@ class CommonAdapter(QueueAdapterBase):
             # 99% of the time you just get:
             # Cobalt: "199768"
             # but there's a version that also includes project and queue
-            # information on preceeding lines and both of those  might 
+            # information on preceeding lines and both of those  might
             # contain a number in any position.
             re_string = r"(\b\d+\b)"
         else:
@@ -108,10 +108,11 @@ class CommonAdapter(QueueAdapterBase):
             if self.get('queue'):
                 status_cmd.extend(['-p', self['queue']])
         elif self.q_type == "LoadSharingFacility":
-            #use no header and the wide format so that there is one line per job, and display only running and pending jobs
-            status_cmd.extend(['-p','-r','-o', 'jobID user queue', '-noheader', '-u', username])
+            # use no header and the wide format so that there is one line per job, and display only running and
+            # pending jobs
+            status_cmd.extend(['-p', '-r', '-o', 'jobID user queue', '-noheader', '-u', username])
         elif self.q_type == "Cobalt":
-            header="JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
+            header = "JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
             status_cmd.extend(['--header', header, '-u', username])
         elif self.q_type == 'SGE':
             status_cmd.extend(['-u', username])
@@ -134,7 +135,7 @@ class CommonAdapter(QueueAdapterBase):
 
         if self.q_type == 'SLURM':
             # subtract one due to trailing '\n' and split behavior
-            return len(output_str.split('\n'))-1
+            return len(output_str.split('\n')) - 1
 
         if self.q_type == "LoadLeveler":
             if 'There is currently no job status to report' in output_str:
@@ -164,10 +165,10 @@ class CommonAdapter(QueueAdapterBase):
             if l.lower().startswith("job"):
                 if self.q_type == "Cobalt":
                     # Cobalt capitalzes headers
-                    l=l.lower()
+                    l = l.lower()
                 header = l.split()
                 if self.q_type == "PBS":
-                    #PBS has a ridiculous two word "Job ID" in header
+                    # PBS has a ridiculous two word "Job ID" in header
                     state_index = header.index("S") - 1
                     queue_index = header.index("Queue") - 1
                 else:
@@ -201,14 +202,14 @@ class CommonAdapter(QueueAdapterBase):
         try:
             if self.q_type == "Cobalt":
                 # Cobalt requires scripts to be executable
-                os.chmod(script_file,stat.S_IRWXU|stat.S_IRGRP|stat.S_IXGRP)
+                os.chmod(script_file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP)
             cmd = [submit_cmd, script_file]
-            #For most of the queues handled by common_adapter, it's best to simply submit the file name
-            #as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
-            #when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
+            # For most of the queues handled by common_adapter, it's best to simply submit the file name
+            # as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
+            # when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
             if self.q_type == 'LoadSharingFacility':
                 with open(script_file, 'r') as inputFile:
-                    p = subprocess.Popen([submit_cmd],stdin=inputFile,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+                    p = subprocess.Popen([submit_cmd], stdin=inputFile, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             else:
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()

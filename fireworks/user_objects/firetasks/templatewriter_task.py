@@ -9,7 +9,7 @@ Context using Jinja2's templating engine.
 
 import os
 
-from jinja2 import Environment,FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 
 from fireworks.core.firework import FiretaskBase
 from fireworks.fw_config import TEMPLATE_DIR

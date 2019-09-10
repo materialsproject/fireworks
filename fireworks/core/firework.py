@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from copy import deepcopy
 
-
 """
 This module contains some of the most central FireWorks classes:
 
@@ -52,7 +51,9 @@ class FiretaskBase(defaultdict, FWSerializable):
     You can set parameters of a Firetask like you'd use a dict.
     """
     required_params = None  # list of str of required parameters to check for consistency upon init
-    optional_params = None  # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
+
+    # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
+    optional_params = None
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
@@ -67,7 +68,9 @@ class FiretaskBase(defaultdict, FWSerializable):
             allowed_params = required_params + self.optional_params
             for k in kwargs:
                 if k not in allowed_params:
-                    raise RuntimeError("Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(self.__class__, k, allowed_params))
+                    raise RuntimeError(
+                        "Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(
+                            self.__class__, k, allowed_params))
 
     @abc.abstractmethod
     def run_task(self, fw_spec):
@@ -195,7 +198,7 @@ class Firework(FWSerializable):
     A Firework is a workflow step and might be contain several Firetasks.
     """
 
-    STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED' : 0,
+    STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED': 0,
                    'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
                    'COMPLETED': 5}
 
@@ -290,7 +293,7 @@ class Firework(FWSerializable):
         if self.state == 'FIZZLED':
             last_launch = self.launches[-1]
             if (EXCEPT_DETAILS_ON_RERUN and last_launch.action and
-                last_launch.action.stored_data.get('_exception', {}).get('_details')):
+                    last_launch.action.stored_data.get('_exception', {}).get('_details')):
                 # add the exception details to the spec
                 self.spec['_exception_details'] = last_launch.action.stored_data['_exception']['_details']
             else:
@@ -625,7 +628,7 @@ class Workflow(FWSerializable):
                     else:  # maybe it's a String?
                         try:
                             self[int(k)] = self[k]  # k must be int
-                        except:
+                        except Exception:
                             pass  # garbage input
                     del self[k]
 
@@ -688,7 +691,7 @@ class Workflow(FWSerializable):
             arguments
             """
             state = list(self.items())
-            return NestedClassGetter(), (Workflow, self.__class__.__name__, ), state
+            return NestedClassGetter(), (Workflow, self.__class__.__name__,), state
 
     def __init__(self, fireworks, links_dict=None, name=None, metadata=None, created_on=None,
                  updated_on=None, fw_states=None):
@@ -763,7 +766,7 @@ class Workflow(FWSerializable):
             state (str): state of workflow
         """
         m_state = 'READY'
-        #states = [fw.state for fw in self.fws]
+        # states = [fw.state for fw in self.fws]
         states = self.fw_states.values()
         leaf_fw_ids = self.leaf_fw_ids  # to save recalculating this
 
@@ -782,9 +785,9 @@ class Workflow(FWSerializable):
             for fizzled_id in fizzled_ids:
                 # If a fizzled fw is a leaf fw, then the workflow is fizzled
                 if (fizzled_id in leaf_fw_ids or
-                    # Otherwise all children must be ok with the fizzled parent
-                    not all(self.id_fw[child_id].spec.get('_allow_fizzled_parents', False)
-                            for child_id in self.links[fizzled_id])):
+                        # Otherwise all children must be ok with the fizzled parent
+                        not all(self.id_fw[child_id].spec.get('_allow_fizzled_parents', False)
+                                for child_id in self.links[fizzled_id])):
                     m_state = 'FIZZLED'
                     break
             else:

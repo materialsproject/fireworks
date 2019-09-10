@@ -6,6 +6,7 @@ __author__ = 'Alireza Faghaninia, Anubhav Jain'
 __email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
 __date__ = 'Dec 08, 2016'
 
+
 def update_launchpad_data(lp, replacements, **kwargs):
     """
     If you want to update a text string in your entire FireWorks database with a replacement, use this method.
@@ -36,7 +37,8 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
         collection_name (str): name of a MongoDB collection to update
         replacements (dict): e.g. {"old_path1": "new_path1", "scratch/":"project/"}
         query (dict): criteria for query, default None if you want all documents to be updated
-        dry_run (bool): if True, only a new collection with new paths is created and original "collection" is not replaced
+        dry_run (bool): if True, only a new collection with new paths is created and original "collection" is not
+            replaced
         force_clear (bool): careful! If True, the collection "{}_temp_refactor".format(collection) is removed!
     Returns:
          None, but if dry_run==False it replaces the collection with the updated one

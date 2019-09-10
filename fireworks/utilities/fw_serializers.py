@@ -43,7 +43,6 @@ import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
 
-
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
 __version__ = '0.1'
@@ -63,8 +62,9 @@ else:
 
 try:
     import numpy as np
+
     NUMPY_INSTALLED = True
-except:
+except Exception:
     NUMPY_INSTALLED = False
 
 
@@ -124,7 +124,7 @@ def _recursive_load(obj):
         try:
             # convert String to datetime if really datetime
             return reconstitute_dates(obj)
-        except:
+        except Exception:
             # convert unicode to ASCII if not really unicode
             if obj == obj.encode('ascii', 'ignore'):
                 return str(obj)
@@ -137,6 +137,7 @@ def recursive_serialize(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
+
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict = recursive_dict(m_dict)
@@ -150,6 +151,7 @@ def recursive_deserialize(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
+
     def _decorator(self, *args, **kwargs):
         new_args = [a for a in args]
         new_args[0] = {k: _recursive_load(v) for k, v in args[0].items()}
@@ -164,6 +166,7 @@ def serialize_fw(func):
     a decorator to add FW serializations keys
     see documentation of FWSerializable for more details
     """
+
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
         m_dict['_fw_name'] = self.fw_name
@@ -231,7 +234,7 @@ class FWSerializable(object):
         elif f_format == 'yaml':
             # start with the JSON format, and convert to YAML
             return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                             allow_unicode=True)
+                                  allow_unicode=True)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
 
@@ -341,7 +344,7 @@ def load_object(obj_dict):
     # failing that, look for the object within all of USER_PACKAGES
     # this will be slow, but only needed the first time
 
-    found_objects = [] # used to make sure we don't find multiple hits
+    found_objects = []  # used to make sure we don't find multiple hits
     for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
         for _, mod_name, is_pkg in pkgutil.walk_packages(
@@ -363,8 +366,7 @@ def load_object(obj_dict):
         return found_objects[0][0]
     elif len(found_objects) > 0:
         raise ValueError(
-            'load_object() found multiple objects with cls._fw_name {} -- {}'
-            .format(fw_name, found_objects))
+            'load_object() found multiple objects with cls._fw_name {} -- {}'.format(fw_name, found_objects))
 
     raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
 
@@ -420,10 +422,10 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, six.string_types):
         try:
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
-        except:
+        except Exception:
             try:
                 return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S")
-            except:
+            except Exception:
                 pass
     return obj_dict
 

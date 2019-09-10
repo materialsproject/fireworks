@@ -179,7 +179,7 @@ class Rocket:
                 if not os.listdir(prev_dir) and REMOVE_USELESS_DIRS:
                     try:
                         os.rmdir(prev_dir)
-                    except:
+                    except Exception:
                         pass
 
             recovery = m_fw.spec.get('_recovery', None)
@@ -192,15 +192,15 @@ class Rocket:
                 all_mod_spec.extend(recovery.get('_all_mod_spec'))
                 if lp:
                     l_logger.log(
-                                logging.INFO,
-                                'Recovering from task number {} in folder {}.'.format(starting_task,
-                                                                                      recovery_dir))
+                        logging.INFO,
+                        'Recovering from task number {} in folder {}.'.format(starting_task,
+                                                                              recovery_dir))
                 if recovery_mode == 'cp' and launch_dir != recovery_dir:
                     if lp:
                         l_logger.log(
-                                    logging.INFO,
-                                    'Copying data from recovery folder {} to folder {}.'.format(recovery_dir,
-                                                                                                launch_dir))
+                            logging.INFO,
+                            'Copying data from recovery folder {} to folder {}.'.format(recovery_dir,
+                                                                                        launch_dir))
                     distutils.dir_util.copy_tree(recovery_dir, launch_dir, update=1)
 
             else:
@@ -215,7 +215,7 @@ class Rocket:
                         shutil.copyfileobj(fin, fout)
 
             if lp:
-                message = 'RUNNING fw_id: {} in directory: {}'.\
+                message = 'RUNNING fw_id: {} in directory: {}'. \
                     format(m_fw.fw_id, os.getcwd())
                 l_logger.log(logging.INFO, message)
 
@@ -243,9 +243,9 @@ class Rocket:
                               '_all_update_spec': all_update_spec,
                               '_all_mod_spec': all_mod_spec}
                 Rocket.update_checkpoint(lp, launch_dir, launch_id, checkpoint)
- 
+
                 if lp:
-                   l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
+                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
                     t.fw_id = m_fw.fw_id
@@ -275,12 +275,12 @@ class Rocket:
                     except BaseException as e:
                         if lp:
                             l_logger.log(logging.WARNING,
-                                        "Exception couldn't be serialized: %s " % e)
+                                         "Exception couldn't be serialized: %s " % e)
                         exception_details = None
 
                     try:
                         m_task = t.to_dict()
-                    except:
+                    except Exception:
                         m_task = None
 
                     m_action = FWAction(stored_data={'_message': 'runtime error during task',
@@ -371,13 +371,13 @@ class Rocket:
         except LockedWorkflowError as e:
             l_logger.log(logging.DEBUG, traceback.format_exc())
             l_logger.log(logging.WARNING,
-                           "Firework {} reached final state {} but couldn't complete the update of "
-                           "the database. Reason: {}\nRefresh the WF to recover the result "
-                           "(lpad admin refresh -i {}).".format(
-                               self.fw_id, final_state, e, self.fw_id))
+                         "Firework {} reached final state {} but couldn't complete the update of "
+                         "the database. Reason: {}\nRefresh the WF to recover the result "
+                         "(lpad admin refresh -i {}).".format(
+                             self.fw_id, final_state, e, self.fw_id))
             return True
 
-        except:
+        except Exception:
             # problems while processing the results. high probability of malformed data.
             traceback.print_exc()
             stop_backgrounds(ping_stop, btask_stops)
@@ -394,7 +394,7 @@ class Rocket:
 
             try:
                 m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
-            except:
+            except Exception:
                 traceback.print_exc()
 
             if lp:
@@ -403,10 +403,10 @@ class Rocket:
                 except LockedWorkflowError as e:
                     l_logger.log(logging.DEBUG, traceback.format_exc())
                     l_logger.log(logging.WARNING,
-                                   "Firework {} fizzled but couldn't complete the update of the database."
-                                   " Reason: {}\nRefresh the WF to recover the result "
-                                   "(lpad admin refresh -i {}).".format(
-                                       self.fw_id, final_state, e, self.fw_id))
+                                 "Firework {} fizzled but couldn't complete the update of the database."
+                                 " Reason: {}\nRefresh the WF to recover the result "
+                                 "(lpad admin refresh -i {}).".format(
+                                     self.fw_id, final_state, e, self.fw_id))
                     return True
             else:
                 fpath = zpath("FW_offline.json")
@@ -445,7 +445,7 @@ class Rocket:
 
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
-            this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir, "state":m_fw.state}
+            this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir, "state": m_fw.state}
             if this_job_info not in job_info:
                 job_info.append(this_job_info)
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
@@ -463,9 +463,9 @@ class Rocket:
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
                     filepath = sorted(files)[-1]
-                    fwaction.mod_spec.append( {
-                      "_set": {"_files_prev->{:s}".format(k): filepath }
-                    } )
+                    fwaction.mod_spec.append({
+                        "_set": {"_files_prev->{:s}".format(k): filepath}
+                    })
         elif "_files_prev" in my_spec:
             # This ensures that _files_prev are not passed from Firework to
             # Firework. We do not want output files from fw1 to be used by fw3
