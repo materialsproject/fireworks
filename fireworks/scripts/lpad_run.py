@@ -102,8 +102,11 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
 def get_lp(args):
     try:
-        if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
-            args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
+        if not args.launchpad_file:
+            if os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
+                args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
+            else:
+                args.launchpad_file = LAUNCHPAD_LOC
 
         if args.launchpad_file:
             return LaunchPad.from_file(args.launchpad_file)
@@ -1073,7 +1076,7 @@ def lpad():
 
     parser.add_argument('-l', '--launchpad_file', help='path to LaunchPad file containing '
                                                        'central DB connection info',
-                        default=LAUNCHPAD_LOC)
+                        default=None)
     parser.add_argument('-c', '--config_dir',
                         help='path to a directory containing the LaunchPad file (used if -l unspecified)',
                         default=CONFIG_FILE_DIR)

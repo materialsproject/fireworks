@@ -451,11 +451,13 @@ class LaunchPad(FWSerializable):
         if not fw_dict:
             raise ValueError('No Firework exists with id: {}'.format(fw_id))
         # recreate launches from the launch collection
-        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}}))
+        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['launches']}},
+                                           sort=[("launch_id", ASCENDING)]))
         for l in launches:
             l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
         fw_dict['launches'] = launches
-        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['archived_launches']}}))
+        launches = list(self.launches.find({'launch_id': {"$in": fw_dict['archived_launches']}},
+                                           sort=[("launch_id", ASCENDING)]))
         for l in launches:
             l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
         fw_dict['archived_launches'] = launches
@@ -1454,7 +1456,7 @@ class LaunchPad(FWSerializable):
             recover_launch ('last' or int): launch_id for last recovery, if set to
                 'last' (default), recovery will find the last available launch.
                 If it is an int, will recover that specific launch
-            recover_mode ('prev_dir' or 'copy'): flag to indicate whether to copy
+            recover_mode ('prev_dir' or 'cp'): flag to indicate whether to copy
                 or run recovery fw in previous directory
 
         Returns:
