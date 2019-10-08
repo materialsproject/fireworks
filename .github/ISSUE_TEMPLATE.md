@@ -1,5 +1,5 @@
 Please submit help issues to:
-https://groups.google.com/forum/#!forum/fireworkflows
+https://hackingmaterials.discourse.group/c/fireworks
 
 The Github issues is no longer used except for internal development purposes.
 
