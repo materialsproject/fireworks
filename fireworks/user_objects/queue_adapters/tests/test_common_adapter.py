@@ -121,7 +121,7 @@ JobId   User    Queue     Jobname  Nodes  Procs  Mode    WallTime  State    RunT
         sbatch_output = """
 SOME PREAMBLE
 Submitted batch job 1234"""
-        self.assertEqual(p._parse_jobid(sbatch_output), 1234)
+        self.assertEqual(p._parse_jobid(sbatch_output), '1234')
         p = CommonAdapter(
             q_type="Cobalt",
             q_name="hello",
