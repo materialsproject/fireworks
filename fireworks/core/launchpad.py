@@ -116,7 +116,7 @@ class LaunchPad(FWSerializable):
     def __init__(self, host=None, port=None, name=None, username=None, password=None,
                  logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl=False,
                  ssl_ca_certs=None, ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None,
-                 authsource=None, uri_mode=False):
+                 authsource=None, authmechanism=None, uri_mode=False):
         """
         Args:
             host (str): hostname. If uri_mode is True, a MongoDB connection string URI
@@ -135,7 +135,9 @@ class LaunchPad(FWSerializable):
             ssl_certfile (str): path to the client certificate to be used for mongodb connection
             ssl_keyfile (str): path to the client private key
             ssl_pem_passphrase (str): passphrase for the client private key
-            authsource (str): authsource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
+            authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
+                not set
+            authmechanism (str): authMechanism parameter for MongoDB authentication; defaults to 'DEFAULT' if
                 not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
@@ -152,6 +154,7 @@ class LaunchPad(FWSerializable):
         self.ssl_keyfile = ssl_keyfile
         self.ssl_pem_passphrase = ssl_pem_passphrase
         self.authsource = authsource or self.name
+        self.authmechanism = authmechanism
         self.uri_mode = uri_mode
 
         # set up logger
@@ -176,7 +179,8 @@ class LaunchPad(FWSerializable):
                                           socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
                                           username=self.username,
                                           password=self.password,
-                                          authsource=self.authsource)
+                                          authSource=self.authsource,
+                                          authMechanism=self.authmechanism)
             self.db = self.connection[self.name]
 
         self.fireworks = self.db.fireworks
@@ -212,6 +216,7 @@ class LaunchPad(FWSerializable):
             'ssl_keyfile': self.ssl_keyfile,
             'ssl_pem_passphrase': self.ssl_pem_passphrase,
             'authsource': self.authsource,
+            'authmechanism': self.authmechanism,
             'uri_mode': self.uri_mode}
 
     def update_spec(self, fw_ids, spec_document, mongo=False):
@@ -256,11 +261,12 @@ class LaunchPad(FWSerializable):
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
         authsource = d.get('authsource', None)
+        authmechanism = d.get('authmechanism', None)
         uri_mode = d.get('uri_mode', False)
         return LaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
-                         authsource, uri_mode)
+                         authsource, authmechanism, uri_mode)
 
     @classmethod
     def auto_load(cls):
