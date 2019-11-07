@@ -78,10 +78,10 @@ If the MongoDB server is configured with TLS/SSL launchpad file
     authsource: <string> # alternative authentication database (optional)
     authmechanism: <string> # alternative authentication mechanism (optional)
 
-.. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted and the remaining TLS/SSL settings are optional, depending on the specific server policies.
+.. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted, ``ssl_ca_certs`` must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.
 
-.. note:: If ``ssl_certfile`` is set and ``ssl_keyfile`` is not set then the file specified by ``ssl_certfile`` must contain the private key
+.. note:: If ``ssl_certfile`` is set and ``ssl_keyfile`` is not set then the file specified by ``ssl_certfile`` must contain the private key.
 
-.. note:: If your private key is encrypted and  ``ssl_pem_passphrase`` is not set then **lpad**, **rlaunch** and **qlaunch** will prompt for the passphase.
+.. note:: If the private key is encrypted and  ``ssl_pem_passphrase`` is not set then **lpad**, **rlaunch** and **qlaunch** will prompt for the passphase.
 
-.. note:: If ``authmechanism`` is ``MONGODB-X509`` then ``authsource`` must be set to ``$external`` and ``username`` and ``password`` must not be set.
+.. note:: If ``authmechanism`` is ``MONGODB-X509`` then ``authsource`` must be set to ``$external``, and ``username`` and ``password`` must not be set.
