@@ -3,7 +3,7 @@
 FireWorks stores, executes, and manages calculation workflows.
 
 - **Website (including documentation):** https://materialsproject.github.io/fireworks/
-- **Help/Support:** https://hackingmaterials.discourse.group/c/fireworks
+- **Help/Support:** https://discuss.matsci.org/c/fireworks
 - **Source:** https://github.com/materialsproject/fireworks/
 
 If you like FireWorks, you might also like [rocketsled](https://github.com/hackingmaterials/rocketsled).

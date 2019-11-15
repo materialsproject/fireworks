@@ -7,7 +7,7 @@ We love your input! We want to make contributing to FireWorks as easy and transp
 * Becoming a maintainer
 
 ## Reporting bugs, getting help, and discussion
-At any time, feel free to start a thread on our [Discourse forum](https://hackingmaterials.discourse.group/c/fireworks).
+At any time, feel free to start a thread on our [Discourse forum](https://discuss.matsci.org/c/fireworks).
 
 If you are making a bug report, incorporate as many elements of the following as possible to ensure a timely response and avoid the need for followups:
 * A quick summary and/or background
