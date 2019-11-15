@@ -157,7 +157,8 @@ class LaunchPad(FWSerializable):
                 not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
-            mongoclient_kwargs (dict): A list of any other custom keyword arguments to passed into the MongoClient connection (non-URI mode only)
+            mongoclient_kwargs (dict): A list of any other custom keyword arguments to be
+                passed into the MongoClient connection (non-URI mode only)
         """
 
         self.host = host if (host or uri_mode) else "localhost"
@@ -1288,8 +1289,7 @@ class LaunchPad(FWSerializable):
                     for l_id in not_lost:
                         l_state = self.launches.find_one({"launch_id": l_id},
                                                          {"state": 1})['state']
-                        if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS[
-                            'FIZZLED']:
+                        if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS['FIZZLED']:
                             break
                     else:
                         lost_fw_ids.append(
