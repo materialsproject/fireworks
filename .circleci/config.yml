@@ -4,15 +4,15 @@ jobs:
   py3test:
     working_directory: ~/fireworks
     docker:
+      - image: materialsvirtuallab/circle-ci-pmg-py3:3.7.3
       - image: circleci/mongo:latest
-      - image: continuumio/miniconda3
     steps:
       - checkout
       - run:
           command: |
             export PATH=$HOME/miniconda3/bin:$PATH
             conda config --set always_yes yes --set changeps1 no
-            conda update conda
+            conda update -q conda
             conda info -a
             conda create -q -n test-environment python=3.7
             source activate test-environment
@@ -31,7 +31,7 @@ jobs:
   py2test:
     working_directory: ~/fireworks
     docker:
-      - image: materialsvirtuallab/circle-ci-pmg-py3:3.7.3
+      - image: continuumio/miniconda3:4.6.14
       - image: circleci/mongo:latest
     steps:
       - checkout
@@ -57,5 +57,4 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - py3test
       - py2test
