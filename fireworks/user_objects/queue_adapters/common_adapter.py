@@ -71,12 +71,10 @@ class CommonAdapter(QueueAdapterBase):
 
     def _parse_jobid(self, output_str):
         if self.q_type == "SLURM":
-            if isinstance(output_str, bytes):  # Py3 compatibility
-                output_str = output_str.decode('utf-8')
-            for l in output_str.split("\n"):
-                if l.startswith("Submitted batch job"):
-                    return int(l.split()[-1])
-        if self.q_type == "LoadLeveler":
+            # The line can contain more text after the id.
+            # Match after the standard "Submitted batch job" string
+            re_string = r"Submitted batch job\s+(\d+)"
+        elif self.q_type == "LoadLeveler":
             # Load Leveler: "llsubmit: The job "abc.123" has been submitted"
             re_string = r"The job \"(.*?)\" has been submitted"
         elif self.q_type == "Cobalt":
