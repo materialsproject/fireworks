@@ -5,6 +5,7 @@ jobs:
     working_directory: ~/fireworks
     docker:
       - image: circleci/mongo:latest
+      - image: continuumio/miniconda3
     steps:
       - checkout
       - run:
