@@ -116,7 +116,7 @@ class LaunchPad(FWSerializable):
     def __init__(self, host=None, port=None, name=None, username=None, password=None,
                  logdir=None, strm_lvl=None, user_indices=None, wf_user_indices=None, ssl=False,
                  ssl_ca_certs=None, ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None,
-                 authsource=None, authmechanism=None, uri_mode=False, mongoclient_kwargs=None):
+                 authsource=None, uri_mode=False, mongoclient_kwargs=None):
         """
         Args:
             host (str): hostname. If uri_mode is True, a MongoDB connection string URI
@@ -137,8 +137,6 @@ class LaunchPad(FWSerializable):
             ssl_pem_passphrase (str): passphrase for the client private key
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
                 not set
-            authmechanism (str): authMechanism parameter for MongoDB authentication; defaults to 'DEFAULT' if
-                not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
             mongoclient_kwargs (dict): A list of any other custom keyword arguments to passed into the MongoClient connection (non-URI mode only)
@@ -155,7 +153,6 @@ class LaunchPad(FWSerializable):
         self.ssl_keyfile = ssl_keyfile
         self.ssl_pem_passphrase = ssl_pem_passphrase
         self.authsource = authsource or self.name
-        self.authmechanism = authmechanism
         self.mongoclient_kwargs = mongoclient_kwargs or {}
         self.uri_mode = uri_mode
 
@@ -182,7 +179,6 @@ class LaunchPad(FWSerializable):
                                           username=self.username,
                                           password=self.password,
                                           authSource=self.authsource,
-                                          authMechanism=self.authmechanism,
                                           **self.mongoclient_kwargs)
             self.db = self.connection[self.name]
 
@@ -219,7 +215,6 @@ class LaunchPad(FWSerializable):
             'ssl_keyfile': self.ssl_keyfile,
             'ssl_pem_passphrase': self.ssl_pem_passphrase,
             'authsource': self.authsource,
-            'authmechanism': self.authmechanism,
             'uri_mode': self.uri_mode,
             'mongoclient_kwargs': self.mongoclient_kwargs}
 
@@ -266,13 +261,12 @@ class LaunchPad(FWSerializable):
         ssl_keyfile = d.get('ssl_keyfile', None)
         ssl_pem_passphrase = d.get('ssl_pem_passphrase', None)
         authsource = d.get('authsource', None)
-        authmechanism = d.get('authmechanism', None)
         uri_mode = d.get('uri_mode', False)
         mongoclient_kwargs = d.get('mongoclient_kwargs', None)
         return LaunchPad(d['host'], port, name, username, password,
                          logdir, strm_lvl, user_indices, wf_user_indices, ssl,
                          ssl_ca_certs, ssl_certfile, ssl_keyfile, ssl_pem_passphrase,
-                         authsource, authmechanism, uri_mode, mongoclient_kwargs)
+                         authsource, uri_mode, mongoclient_kwargs)
 
     @classmethod
     def auto_load(cls):

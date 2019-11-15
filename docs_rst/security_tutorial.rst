@@ -76,7 +76,8 @@ If the MongoDB server is configured with TLS/SSL launchpad file
     ssl_keyfile: <string> # path to the client private key (optional)
     ssl_pem_passphrase: <string> # passphrase for the client private key (optional)
     authsource: <string> # alternative authentication database (optional)
-    authmechanism: <string> # alternative authentication mechanism (optional)
+    mongoclient_kwargs:
+        authMechanism: <string> # alternative authentication mechanism (optional)
 
 .. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted, ``ssl_ca_certs`` must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.
 
@@ -85,3 +86,8 @@ If the MongoDB server is configured with TLS/SSL launchpad file
 .. note:: If the private key is encrypted and  ``ssl_pem_passphrase`` is not set then **lpad**, **rlaunch** and **qlaunch** will prompt for the passphase.
 
 .. note:: If ``authmechanism`` is ``MONGODB-X509`` then ``authsource`` must be set to ``$external``, and ``username`` and ``password`` must not be set.
+
+Other Mongoclient options
+=========================
+
+The ``mongoclient_kwargs`` option can be used to set any other desired options for the MongoClient. The format is a dictionary (see ``authMechanism`` above for an example).
