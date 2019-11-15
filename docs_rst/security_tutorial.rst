@@ -71,9 +71,23 @@ If the MongoDB server is configured with TLS/SSL launchpad file
 ``my_launchpad.yaml`` (or whatever launchpad file is specified after the ``-l`` option or in the configuration file) has to include further information in the following lines::
 
     ssl: <bool> # whether to use TLS/SSL for connection to MongoDB, default: false
-    ssl_ca_certs: <path to the CA certificate to be used for connection>
-    ssl_certfile: <path to the client certificate to be used for connection>
-    ssl_keyfile: <path to the client private key (optional)>
-    ssl_pem_passphrase: <passphrase for the client private key (optional)>
+    ssl_ca_certs: <string> # path to the CA certificate to be used for connection
+    ssl_certfile: <string> # path to the client certificate (optional)
+    ssl_keyfile: <string> # path to the client private key (optional)
+    ssl_pem_passphrase: <string> # passphrase for the client private key (optional)
+    authsource: <string> # alternative authentication database (optional)
+    mongoclient_kwargs:
+        authMechanism: <string> # alternative authentication mechanism (optional)
 
-.. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted and the remaining TLS/SSL settings are optional, depending on the specific server policies.
+.. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted, ``ssl_ca_certs`` must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.
+
+.. note:: If ``ssl_certfile`` is set and ``ssl_keyfile`` is not set then the file specified by ``ssl_certfile`` must contain the private key.
+
+.. note:: If the private key is encrypted and  ``ssl_pem_passphrase`` is not set then **lpad**, **rlaunch** and **qlaunch** will prompt for the passphase.
+
+.. note:: If ``authmechanism`` is ``MONGODB-X509`` then ``authsource`` must be set to ``$external``, and ``username`` and ``password`` must not be set.
+
+Other Mongoclient options
+=========================
+
+The ``mongoclient_kwargs`` option can be used to set any other desired options for the MongoClient. The format is a dictionary (see ``authMechanism`` above for an example).
