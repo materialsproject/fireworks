@@ -2,6 +2,19 @@
 FireWorks Changelog
 ===================
 
+**v1.9.5**
+
+* document new help forum!
+* ability to add custom kwargs to the LaunchPad MongoClient using the YAML format (thanks to I. Kondov for pointing in this direction)
+* restore "text_mode" for anyone having problems with the new binary FilePad
+* rework lostruns recovery
+* actually use launch_dir in update_checkpoint (hopefully shouldn't change any behavior)
+* prevent "zombie" reruns of offline runs when marking them as fizzled or rerun. (thanks to jotelha for suggestion)
+* Use mod_spec instead of update_spec to pass on out-/infiles along Fireworks (J. Hörmann)
+* allow binary files in FilePad / handle filepad files as binary always (J. Hörmann)
+* update SLURM job id parsing (G. Petretto)
+* update dependencies
+
 **v1.9.4**
 
 * filepad tasks to get files by query (Github user: J. Hörmann)

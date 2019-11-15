@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Configuring Security &#8212; FireWorks 1.9.4 documentation</title>
+    <title>Configuring Security &#8212; FireWorks 1.9.5 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="tracker_tutorial.html" title="Tracking an output file during execution"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -124,16 +124,35 @@
 <p>If the MongoDB server is configured with TLS/SSL launchpad file
 <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code> (or whatever launchpad file is specified after the <code class="docutils literal notranslate"><span class="pre">-l</span></code> option or in the configuration file) has to include further information in the following lines:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssl</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># whether to use TLS/SSL for connection to MongoDB, default: false</span>
-<span class="n">ssl_ca_certs</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">CA</span> <span class="n">certificate</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">connection</span><span class="o">&gt;</span>
-<span class="n">ssl_certfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">client</span> <span class="n">certificate</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">connection</span><span class="o">&gt;</span>
-<span class="n">ssl_keyfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">client</span> <span class="n">private</span> <span class="n">key</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span><span class="o">&gt;</span>
-<span class="n">ssl_pem_passphrase</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">passphrase</span> <span class="k">for</span> <span class="n">the</span> <span class="n">client</span> <span class="n">private</span> <span class="n">key</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="n">ssl_ca_certs</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the CA certificate to be used for connection</span>
+<span class="n">ssl_certfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the client certificate (optional)</span>
+<span class="n">ssl_keyfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the client private key (optional)</span>
+<span class="n">ssl_pem_passphrase</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># passphrase for the client private key (optional)</span>
+<span class="n">authsource</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># alternative authentication database (optional)</span>
+<span class="n">mongoclient_kwargs</span><span class="p">:</span>
+    <span class="n">authMechanism</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># alternative authentication mechanism (optional)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">ssl</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code> or omitted then all remaining TLS/SSL settings <strong>must</strong> be omitted. If <code class="docutils literal notranslate"><span class="pre">ssl</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code> then the connection will be encrypted and the remaining TLS/SSL settings are optional, depending on the specific server policies.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ssl</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code> or omitted then all remaining TLS/SSL settings <strong>must</strong> be omitted. If <code class="docutils literal notranslate"><span class="pre">ssl</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code> then the connection will be encrypted, <code class="docutils literal notranslate"><span class="pre">ssl_ca_certs</span></code> must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ssl_certfile</span></code> is set and <code class="docutils literal notranslate"><span class="pre">ssl_keyfile</span></code> is not set then the file specified by <code class="docutils literal notranslate"><span class="pre">ssl_certfile</span></code> must contain the private key.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the private key is encrypted and  <code class="docutils literal notranslate"><span class="pre">ssl_pem_passphrase</span></code> is not set then <strong>lpad</strong>, <strong>rlaunch</strong> and <strong>qlaunch</strong> will prompt for the passphase.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">authmechanism</span></code> is <code class="docutils literal notranslate"><span class="pre">MONGODB-X509</span></code> then <code class="docutils literal notranslate"><span class="pre">authsource</span></code> must be set to <code class="docutils literal notranslate"><span class="pre">$external</span></code>, and <code class="docutils literal notranslate"><span class="pre">username</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code> must not be set.</p>
+</div>
+</div>
+<div class="section" id="other-mongoclient-options">
+<h2>Other Mongoclient options<a class="headerlink" href="#other-mongoclient-options" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">mongoclient_kwargs</span></code> option can be used to set any other desired options for the MongoClient. The format is a dictionary (see <code class="docutils literal notranslate"><span class="pre">authMechanism</span></code> above for an example).</p>
 </div>
 </div>
 
@@ -149,6 +168,7 @@
 <li><a class="reference internal" href="#create-an-authenticated-user-in-the-admin-database">Create an authenticated user in the admin database</a></li>
 <li><a class="reference internal" href="#add-username-and-password-keys-to-your-launchpad-file">Add username and password keys to your LaunchPad file</a></li>
 <li><a class="reference internal" href="#add-tls-ssl-configuration-to-your-launchpad-file">Add TLS/SSL configuration to your LaunchPad file</a></li>
+<li><a class="reference internal" href="#other-mongoclient-options">Other Mongoclient options</a></li>
 </ul>
 </li>
 </ul>
@@ -195,7 +215,7 @@
         <li class="right" >
           <a href="tracker_tutorial.html" title="Tracking an output file during execution"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
       </ul>
     </div>
 

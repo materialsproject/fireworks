@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>FireWorks Changelog &#8212; FireWorks 1.9.4 documentation</title>
+    <title>FireWorks Changelog &#8212; FireWorks 1.9.5 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -42,6 +42,19 @@
             
   <div class="section" id="fireworks-changelog">
 <h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.9.5</strong></p>
+<ul class="simple">
+<li><p>document new help forum!</p></li>
+<li><p>ability to add custom kwargs to the LaunchPad MongoClient using the YAML format (thanks to I. Kondov for pointing in this direction)</p></li>
+<li><p>restore “text_mode” for anyone having problems with the new binary FilePad</p></li>
+<li><p>rework lostruns recovery</p></li>
+<li><p>actually use launch_dir in update_checkpoint (hopefully shouldn’t change any behavior)</p></li>
+<li><p>prevent “zombie” reruns of offline runs when marking them as fizzled or rerun. (thanks to jotelha for suggestion)</p></li>
+<li><p>Use mod_spec instead of update_spec to pass on out-/infiles along Fireworks (J. Hörmann)</p></li>
+<li><p>allow binary files in FilePad / handle filepad files as binary always (J. Hörmann)</p></li>
+<li><p>update SLURM job id parsing (G. Petretto)</p></li>
+<li><p>update dependencies</p></li>
+</ul>
 <p><strong>v1.9.4</strong></p>
 <ul class="simple">
 <li><p>filepad tasks to get files by query (Github user: J. Hörmann)</p></li>
@@ -1156,7 +1169,7 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
       </ul>
     </div>
 
