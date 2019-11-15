@@ -183,7 +183,7 @@ class LaunchPad(FWSerializable):
                                           password=self.password,
                                           authSource=self.authsource,
                                           authMechanism=self.authmechanism,
-                                          **mongoclient_kwargs)
+                                          **self.mongoclient_kwargs)
             self.db = self.connection[self.name]
 
         self.fireworks = self.db.fireworks
