@@ -169,7 +169,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         qadapter (QueueAdapterBase)
         launch_dir (str): directory where we want to write the blocks
         nlaunches (int): total number of launches desired; "infinite" for loop, 0 for one round
-        njobs_queue (int): stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit
+        njobs_queue (int): stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
+            If 0 skips the check on the number of jobs in the queue.
         njobs_block (int): automatically write a new block when njobs_block jobs are in a single block
         sleep_time (int): secs to sleep between rapidfire loop iterations
         reserve (bool): Whether to queue in reservation mode
@@ -202,8 +203,10 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
             block_dir = create_datestamp_dir(launch_dir, l_logger)
 
         while True:
-            # get number of jobs in queue
-            jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
+            # get number of jobs in queue if a maximum has been set.
+            jobs_in_queue = 0
+            if njobs_queue:
+                jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
             while (launchpad.run_exists(fworker) or
@@ -244,7 +247,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue += 1
                 job_counter += 1
-                if job_counter % QSTAT_FREQUENCY == 0:
+                if job_counter % QSTAT_FREQUENCY == 0 and njobs_queue:
                     job_counter = 0
                     jobs_in_queue = _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger)
 

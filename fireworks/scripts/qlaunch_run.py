@@ -140,7 +140,7 @@ def qlaunch():
                         action='store_true')
 
     rapid_parser.add_argument('-m', '--maxjobs_queue',
-                              help='maximum jobs to keep in queue for this user', default=0,
+                              help='maximum jobs to keep in queue for this user. 0 for no limit', default=0,
                               type=int)
     rapid_parser.add_argument('-b', '--maxjobs_block',
                               help='maximum jobs to put in a block',
