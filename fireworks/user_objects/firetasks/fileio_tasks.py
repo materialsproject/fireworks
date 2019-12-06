@@ -33,6 +33,7 @@ class FileWriteTask(FiretaskBase):
     """
     _fw_name = 'FileWriteTask'
     required_params = ["files_to_write"]
+    optional_params = ["dest"]
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
@@ -54,6 +55,7 @@ class FileDeleteTask(FiretaskBase):
     """
     _fw_name = 'FileDeleteTask'
     required_params = ["files_to_delete"]
+    optional_params = ["dest", "ignore_errors"]
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
@@ -84,7 +86,7 @@ class FileTransferTask(FiretaskBase):
         - retry_delay: (int) number of seconds to wait between retries; defaults to `10`
     """
     _fw_name = 'FileTransferTask'
-    required_params = ["mode", "files"]
+    required_params = ["mode", "files", "dest"]
     optional_params = ["server", "user", "key_filename", "max_retry", "retry_delay"]
 
     fn_list = {
