@@ -375,7 +375,7 @@ class Tracker(FWSerializable, object):
         if self.allow_zipped:
             m_file = zpath(m_file)
         if os.path.exists(m_file):
-            with zopen(m_file, "rt") as f:
+            with zopen(m_file, "rt", errors='surrogateescape') as f:
                 for l in reverse_readline(f):
                     lines.append(l)
                     if len(lines) == self.nlines:
