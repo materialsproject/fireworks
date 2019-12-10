@@ -116,11 +116,15 @@ class GetFilesByQueryTask(FiretaskBase):
     """
     _fw_name = 'GetFilesByQueryTask'
     required_params = ["query"]
-    optional_params = ["sort_key","sort_direction", "limit",
-        "filepad_file", "dest_dir", "new_file_names", "meta_file_suffix"]
+    optional_params = [
+        "dest_dir", "filepad_file",
+        "fizzle_degenerate_file_name", "fizzle_empty_result",
+        "limit", "meta_file", "meta_file_suffix", "new_file_names",
+        "sort_direction", "sort_key"]
 
     def run_task(self, fw_spec):
-        import pymongo, json, yaml
+        import pymongo, json
+        from ruamel.yaml import YAML
         from fireworks.utilities.dict_mods import arrow_to_dot
 
         fpad                        = get_fpad(self.get("filepad_file",
@@ -141,7 +145,7 @@ class GetFilesByQueryTask(FiretaskBase):
 
         assert isinstance(query,dict)
         query = arrow_to_dot(query)
-
+        
         l = fpad.get_file_by_query(query,sort_key,sort_direction)
         assert isinstance(l, list)
 
@@ -163,12 +167,10 @@ class GetFilesByQueryTask(FiretaskBase):
                 f.write(file_contents)
 
             if meta_file:
-              meta_file_name = file_name + meta_file_suffix
-              try:
+                meta_file_name = file_name + meta_file_suffix
                 with open(os.path.join(dest_dir, meta_file_name), "w") as f:
-                    yaml.dump(doc["metadata"], f, default_flow_style=False)
-              except:
-                pass # ignore error writing metadata, TODO: warn
+                    yaml = YAML()
+                    yaml.dump(doc["metadata"], f)
 
 class DeleteFilesTask(FiretaskBase):
     """
