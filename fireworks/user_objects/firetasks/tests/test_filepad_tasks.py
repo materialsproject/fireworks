@@ -6,8 +6,9 @@ __author__ = 'Kiran Mathew'
 
 import unittest
 import os
+import yaml
 
-from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask
+from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask, GetFilesByQueryTask
 from fireworks.utilities.filepad import FilePad
 
 
@@ -46,6 +47,38 @@ class FilePadTasksTest(unittest.TestCase):
         identifiers = ["write"]
         new_file_names = ["write_2.yaml"]
         t = GetFilesTask(identifiers=identifiers, dest_dir=dest_dir, new_file_names=new_file_names)
+        t.run_task({})
+        write_file_contents, _ = self.fp.get_file("write")
+        self.assertEqual(write_file_contents,
+                         open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
+        os.remove(os.path.join(dest_dir, new_file_names[0]))
+
+    def test_getfilesbyquerytask_run(self):
+        t = AddFilesTask(paths=self.paths, identifiers=self.identifiers,
+          metadata={'key': 'value'})
+        t.run_task({})
+        dest_dir = os.path.abspath(".")
+        identifiers = ["write"]
+        new_file_names = ["write_2.yaml"]
+        t = GetFilesByQueryTask(
+          query={'metadata->key': 'value'},
+          dest_dir=dest_dir, new_file_names=new_file_names)
+        t.run_task({})
+        write_file_contents, _ = self.fp.get_file("write")
+        self.assertEqual(write_file_contents,
+                         open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
+        os.remove(os.path.join(dest_dir, new_file_names[0]))
+
+    def test_getfilesbyquerytask_metafile_run(self):
+        t = AddFilesTask(paths=self.paths, identifiers=self.identifiers,
+          metadata={'key': 'value'})
+        t.run_task({})
+        dest_dir = os.path.abspath(".")
+        identifiers = ["write"]
+        new_file_names = ["write_2.yaml"]
+        t = GetFilesByQueryTask(
+          query={'metadata->key': 'value'}, meta_file=True,
+          dest_dir=dest_dir, new_file_names=new_file_names)
         t.run_task({})
         write_file_contents, _ = self.fp.get_file("write")
         self.assertEqual(write_file_contents,
