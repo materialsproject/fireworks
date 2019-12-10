@@ -108,6 +108,8 @@ class GetFilesByQueryTask(FiretaskBase):
           directory.
         - new_file_names ([str]): if provided, the retrieved files will be
           renamed. Not recommended as order and number of queried files not fixed.
+        - meta_file (bool): default: False. If True, then metadata of queried files written to
+          a .yaml file of same name as file itself, suffixed by...
         - meta_file_suffix (str): if not None, metadata for each file is written
           to a YAML file of the same name, suffixed by this string.
           Default: ".meta.yaml"
@@ -134,6 +136,7 @@ class GetFilesByQueryTask(FiretaskBase):
         fizzle_empty_result         = self.get("fizzle_empty_result", True)
         fizzle_degenerate_file_name = self.get("fizzle_degenerate_file_name",
                                                 True)
+        meta_file                   = self.get("meta_file",False)
         meta_file_suffix            = self.get("meta_file_suffix",".meta.yaml")
 
         assert isinstance(query,dict)
@@ -159,12 +162,13 @@ class GetFilesByQueryTask(FiretaskBase):
             with open(os.path.join(dest_dir, file_name), "wb") as f:
                 f.write(file_contents)
 
-            meta_file_name = file_name + meta_file_suffix
-            try:
-              with open(os.path.join(dest_dir, meta_file_name), "w") as f:
-                  yaml.dump(doc["metadata"], f, default_flow_style=False)
-            except:
-              pass # ignore error writing metadata, TODO: warn
+            if meta_file:
+              meta_file_name = file_name + meta_file_suffix
+              try:
+                with open(os.path.join(dest_dir, meta_file_name), "w") as f:
+                    yaml.dump(doc["metadata"], f, default_flow_style=False)
+              except:
+                pass # ignore error writing metadata, TODO: warn
 
 class DeleteFilesTask(FiretaskBase):
     """
