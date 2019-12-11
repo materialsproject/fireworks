@@ -87,13 +87,14 @@ class GetFilesTask(FiretaskBase):
 
 class GetFilesByQueryTask(FiretaskBase):
     """
-    A Firetask to fetch files from the filepad and write it to specified directory (current working
-    directory if not specified)
+    A Firetask to query files from the filepad and write them to specified
+    directory (current working directory if not specified).
 
     Required params:
         - query (dict): mongo db query identifying files to fetch.
           Same as within fireworks.utilities.dict_mods, use '->' in dict keys
           for querying nested documents, instead of MongoDB '.' (dot) seperator.
+          Do use '.' and NOT '->' within the 'sort_key' field.
 
     Optional params:
         - sort_key (str): sort key, don't sort per default
@@ -113,6 +114,19 @@ class GetFilesByQueryTask(FiretaskBase):
         - meta_file_suffix (str): if not None, metadata for each file is written
           to a YAML file of the same name, suffixed by this string.
           Default: ".meta.yaml"
+
+    The options 'fizzle_degenerate_file_name', 'limit', 'sort_key', and
+    'sort_direction' are all inntended to help dealing with the following
+    special case: Querying by metadata leads to an a priori unknown
+    number of files in the general case. Thus, it is advisable to either
+    'limit' the number of files and/or avoid explicitly specifying a list
+    of 'new_file_names'. In the latter case, files will be written to
+    'dest_dir' using their 'original_file_name' recorded within the
+    attached FilePad object. When more than one queried file share the same
+    'original_file_name', the order of processing matters: subsequent files will
+    overwrite their predecessor of same name. 'sort_key' and 'sort_direction'
+    can help to assure deterministic behavior, e.g. by always processing newer
+    files later.
     """
     _fw_name = 'GetFilesByQueryTask'
     required_params = ["query"]
