@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-__author__ = 'Kiran Mathew'
+__author__ = 'Kiran Mathew, Johannes Hoermann'
 
 import unittest
 import os
