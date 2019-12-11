@@ -7,8 +7,8 @@ import os
 from fireworks.core.firework import FiretaskBase
 from fireworks.utilities.filepad import FilePad
 
-__author__ = 'Kiran Mathew'
-__email__ = 'kmathew@lbl.gov'
+__author__ = 'Kiran Mathew, Johannes Hoermann'
+__email__ = 'kmathew@lbl.gov, johannes.hoermann@imtek.uni-freiburg.de'
 __credits__ = 'Anubhav Jain'
 
 
@@ -145,7 +145,7 @@ class GetFilesByQueryTask(FiretaskBase):
 
         assert isinstance(query,dict)
         query = arrow_to_dot(query)
-        
+
         l = fpad.get_file_by_query(query,sort_key,sort_direction)
         assert isinstance(l, list)
 
