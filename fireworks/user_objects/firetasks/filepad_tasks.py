@@ -137,25 +137,23 @@ class GetFilesByQueryTask(FiretaskBase):
         "sort_direction", "sort_key"]
 
     def run_task(self, fw_spec):
-        import pymongo, json
+        import pymongo
+        import json
         from ruamel.yaml import YAML
         from fireworks.utilities.dict_mods import arrow_to_dot
 
-        fpad                        = get_fpad(self.get("filepad_file",
-                                                None))
-        dest_dir                    = self.get("dest_dir",
-                                                os.path.abspath("."))
-        new_file_names              = self.get("new_file_names", [])
-        query                       = self.get("query", {})
-        sort_key                    = self.get("sort_key", None)
-        sort_direction              = self.get("sort_direction",
-                                                pymongo.DESCENDING)
-        limit                       = self.get("limit",None)
-        fizzle_empty_result         = self.get("fizzle_empty_result", True)
+        fpad = get_fpad(self.get("filepad_file", None))
+        dest_dir = self.get("dest_dir", os.path.abspath("."))
+        new_file_names = self.get("new_file_names", [])
+        query = self.get("query", {})
+        sort_key = self.get("sort_key", None)
+        sort_direction = self.get("sort_direction", pymongo.DESCENDING)
+        limit = self.get("limit",None)
+        fizzle_empty_result = self.get("fizzle_empty_result", True)
         fizzle_degenerate_file_name = self.get("fizzle_degenerate_file_name",
-                                                True)
-        meta_file                   = self.get("meta_file",False)
-        meta_file_suffix            = self.get("meta_file_suffix",".meta.yaml")
+            True)
+        meta_file = self.get("meta_file",False)
+        meta_file_suffix = self.get("meta_file_suffix",".meta.yaml")
 
         assert isinstance(query,dict)
         query = arrow_to_dot(query)
@@ -163,12 +161,11 @@ class GetFilesByQueryTask(FiretaskBase):
         l = fpad.get_file_by_query(query,sort_key,sort_direction)
         assert isinstance(l, list)
 
-        if fizzle_empty_result and ( len(l) == 0 ):
+        if fizzle_empty_result and (len(l) == 0):
             raise ValueError("Query yielded empty result! (query: {:s})".format(
-              json.dumps(query)
-            ))
+                json.dumps(query)))
 
-        unique_file_names = set() # track all used file names
+        unique_file_names = set()  # track all used file names
         for i, (file_contents, doc) in enumerate(l[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             if fizzle_degenerate_file_name and (file_name in unique_file_names):
@@ -185,6 +182,7 @@ class GetFilesByQueryTask(FiretaskBase):
                 with open(os.path.join(dest_dir, meta_file_name), "w") as f:
                     yaml = YAML()
                     yaml.dump(doc["metadata"], f)
+
 
 class DeleteFilesTask(FiretaskBase):
     """
