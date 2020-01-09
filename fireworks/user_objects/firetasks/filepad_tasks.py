@@ -148,17 +148,17 @@ class GetFilesByQueryTask(FiretaskBase):
         query = self.get("query", {})
         sort_key = self.get("sort_key", None)
         sort_direction = self.get("sort_direction", pymongo.DESCENDING)
-        limit = self.get("limit",None)
+        limit = self.get("limit", None)
         fizzle_empty_result = self.get("fizzle_empty_result", True)
-        fizzle_degenerate_file_name = self.get("fizzle_degenerate_file_name",
-            True)
-        meta_file = self.get("meta_file",False)
-        meta_file_suffix = self.get("meta_file_suffix",".meta.yaml")
+        fizzle_degenerate_file_name = self.get(
+          "fizzle_degenerate_file_name", True)
+        meta_file = self.get("meta_file", False)
+        meta_file_suffix = self.get("meta_file_suffix", ".meta.yaml")
 
-        assert isinstance(query,dict)
+        assert isinstance(query, dict)
         query = arrow_to_dot(query)
 
-        l = fpad.get_file_by_query(query,sort_key,sort_direction)
+        l = fpad.get_file_by_query(query, sort_key, sort_direction)
         assert isinstance(l, list)
 
         if fizzle_empty_result and (len(l) == 0):
@@ -169,9 +169,10 @@ class GetFilesByQueryTask(FiretaskBase):
         for i, (file_contents, doc) in enumerate(l[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             if fizzle_degenerate_file_name and (file_name in unique_file_names):
-                raise ValueError(' '.join(("The local file name {:s} is used",
-                  "a second time by result {:d}/{:d}! (query: {:s})")).format(
-                    file_name, i, len(l), json.dumps(query)))
+                raise ValueError(' '.join((
+                    "The local file name {:s} is used",
+                    "a second time by result {:d}/{:d}! (query: {:s})")).format(
+                        file_name, i, len(l), json.dumps(query)))
 
             unique_file_names.add(file_name)
             with open(os.path.join(dest_dir, file_name), "wb") as f:
