@@ -181,6 +181,7 @@ class CommonAdapter(QueueAdapterBase):
                     # note: the entire queue name might be cutoff from the output if long queue name
                     # so we are only ensuring that our queue matches up until cutoff point
                     if "queue" in self :
+                        # if "queue" is not in self, an error('NoneType' object is not subscriptable) will occure
                         if self["queue"][0:len(toks[queue_index])] in toks[queue_index]:
                             count += 1
 
