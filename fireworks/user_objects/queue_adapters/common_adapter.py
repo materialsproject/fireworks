@@ -180,8 +180,9 @@ class CommonAdapter(QueueAdapterBase):
                 if toks[state_index] != "C":
                     # note: the entire queue name might be cutoff from the output if long queue name
                     # so we are only ensuring that our queue matches up until cutoff point
-                    if "queue" in self and self["queue"][0:len(toks[queue_index])] in toks[queue_index]:
-                        count += 1
+                    if "queue" in self :
+                        if self["queue"][0:len(toks[queue_index])] in toks[queue_index]:
+                            count += 1
 
         return count
 
