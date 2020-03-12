@@ -33,6 +33,8 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_seriali
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
+from dataclasses import asdict, is_dataclass
+
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -51,26 +53,31 @@ class FiretaskBase(defaultdict, FWSerializable):
     You can set parameters of a Firetask like you'd use a dict.
     """
     required_params = None  # list of str of required parameters to check for consistency upon init
-
     # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
     optional_params = None
 
     def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
+        self.__post_init__(*args, **kwargs)
 
-        required_params = self.required_params or []
+    def __post_init__(self, *args, **kwargs):
+        if not is_dataclass(self):
+            dict.__init__(self, *args, **kwargs)
 
-        for k in required_params:
-            if k not in self:
-                raise RuntimeError("{}: Required parameter {} not specified!".format(self, k))
+            required_params = self.required_params or []
 
-        if self.optional_params is not None:
-            allowed_params = required_params + self.optional_params
-            for k in kwargs:
-                if k not in allowed_params:
+            for k in required_params:
+                if k not in self:
                     raise RuntimeError(
-                        "Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(
-                            self.__class__, k, allowed_params))
+                        "{}: Required parameter {} not specified!".format(self,
+                                                                          k))
+
+            if self.optional_params is not None:
+                allowed_params = required_params + self.optional_params
+                for k in kwargs:
+                    if k not in allowed_params:
+                        raise RuntimeError(
+                            "Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(
+                                self.__class__, k, allowed_params))
 
     @abc.abstractmethod
     def run_task(self, fw_spec):
@@ -99,15 +106,21 @@ class FiretaskBase(defaultdict, FWSerializable):
     @serialize_fw
     @recursive_serialize
     def to_dict(self):
-        return dict(self)
+        if is_dataclass(self):
+            return asdict(self)
+        else:
+            return dict(self)
 
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
-        return cls(m_dict)
+        if is_dataclass(cls):
+            return cls(**{k: v for k, v in m_dict.items() if k != "_fw_name"})
+        else:
+            return cls(m_dict)
 
     def __repr__(self):
-        return '<{}>:{}'.format(self.fw_name, dict(self))
+        return '<{}>:{}'.format(self.fw_name, self.to_dict())
 
     # not strictly needed here for pickle/unpickle, but complements __setstate__
     def __getstate__(self):
@@ -115,12 +128,46 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     # added to support pickle/unpickle
     def __setstate__(self, state):
-        self.__init__(state)
+        if is_dataclass(self):
+            return self.from_dict(state)
+        else:
+            self.__init__(state)
 
     # added to support pickle/unpickle
     def __reduce__(self):
         t = defaultdict.__reduce__(self)
-        return (t[0], (self.to_dict(),), t[2], t[3], t[4])
+        mdict = {k: v for k, v in self.to_dict().items() if k != "_fw_name"}
+        return t[0], (mdict, ), t[2], t[3], t[4]
+
+    def __setattr__(self, name, value):
+        if not is_dataclass(self):
+            self[name] = value
+        else:
+            super(FiretaskBase, self).__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+        else:
+            super(FiretaskBase, self).__getattribute__(name)
+
+    def __setitem__(self, key, value):
+        if is_dataclass(self):
+            self.__setattr__(key, value)
+        else:
+            super(FiretaskBase, self).__setitem__(key, value)
+
+    def __getitem__(self, key):
+        if is_dataclass(self):
+            return self.__getattribute__(key)
+        else:
+            return super(FiretaskBase, self).__getitem__(key)
+
+    def __get__(self, key, *args, **kwargs):
+        if is_dataclass(self):
+            return asdict(self).get(key, *args, **kwargs)
+        else:
+            super(FiretaskBase, self).get(key, *args, **kwargs)
 
 
 class FWAction(FWSerializable):
