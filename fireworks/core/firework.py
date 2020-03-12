@@ -76,7 +76,8 @@ class FiretaskBase(defaultdict, FWSerializable):
                 for k in kwargs:
                     if k not in allowed_params:
                         raise RuntimeError(
-                            "Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(
+                            "Invalid keyword argument specified for: {}. You "
+                            "specified: {}. Allowed values are: {}.".format(
                                 self.__class__, k, allowed_params))
 
     @abc.abstractmethod
