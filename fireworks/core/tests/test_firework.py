@@ -74,7 +74,8 @@ class FiretaskPickleTest(unittest.TestCase):
 
     def test_init(self):
         self.assertIsInstance(self.upkl_task, PickleTask)
-        self.assertEqual(PickleTask.from_dict(self.task.to_dict()), self.upkl_task)
+        self.assertEqual(PickleTask.from_dict(self.task.to_dict()).to_dict(),
+                         self.upkl_task.to_dict())
         self.assertEqual(dir(self.task), dir(self.upkl_task))
 
         result_task = self.task.run_task({})
@@ -132,7 +133,7 @@ class WorkflowTest(unittest.TestCase):
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
 
         wf_copy = Workflow.from_wflow(wf)
-        
+
         # now we compare to the original to make sure dependencies are same.
         # have to do gymnastics because ids will NOT be the same
         # but names are retained
