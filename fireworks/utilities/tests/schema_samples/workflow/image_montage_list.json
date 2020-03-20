@@ -1,0 +1,52 @@
+{
+  "name": "Montage a series of images",
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Montage step",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["tiles"],
+            "outputs": ["montaged image"],
+            "command_spec": {
+                "command": ["montage", "-mode", "concatenate", "-tile", "2x2"],
+                "tiles": "input files",
+                "montaged image": {
+                    "target": {
+                        "type": "path",
+                        "value": "."
+                    }
+                }
+            }
+          }
+        ],
+        "input files": [
+            { "source": {
+                "type": "path",
+                "value": "tile-0.png"
+                }
+            },
+            { "source": {
+                "type": "path",
+                "value": "tile-1.png"
+                }
+            },
+            { "source": {
+                "type": "path",
+                "value": "tile-2.png"
+                }
+            },
+            { "source": {
+                "type": "path",
+                "value": "tile-3.png"
+                }
+            }
+        ]
+      }
+    }
+  ],
+  "links": {},
+  "metadata": {}
+}

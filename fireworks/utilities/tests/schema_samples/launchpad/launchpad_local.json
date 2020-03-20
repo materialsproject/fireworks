@@ -1,0 +1,9 @@
+{
+    "host": "localhost",
+    "port": 27017,
+    "name": "fireworks",
+    "username": null,
+    "password": null,
+    "logdir": null,
+    "strm_lvl": "DEBUG"
+}

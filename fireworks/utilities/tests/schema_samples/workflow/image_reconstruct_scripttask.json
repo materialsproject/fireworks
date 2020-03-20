@@ -1,0 +1,110 @@
+{
+    "fws": [
+        {
+            "fw_id": 1,
+            "name": "Rotate 90 degrees anti-clockwise",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -rotate -90 inputs/3_files_and_commands/A/piece-2.png output.png"
+                    }
+                ],
+                "_files_out": {
+                    "top left": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 2,
+            "name": "Flip vertically",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -flip inputs/3_files_and_commands/A/piece-1.png output.png"
+                    }
+                ],
+                "_files_out": {
+                    "bottom right": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 3,
+            "name": "Flop horizontally",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -flop input.png output.png"
+                    }
+                ],
+                "_files_in": {
+                    "top left": "input.png"
+                },
+                "_files_out": {
+                    "top right": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 4,
+            "name": "Flop horizontally",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -flop input.png output.png"
+                    }
+                ],
+                "_files_in": {
+                    "bottom right": "input.png"
+                },
+                "_files_out": {
+                    "bottom left": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 5,
+            "name": "Put the four pieces together",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "montage -mode concatenate -tile 2x2 file1.png file2.png file3.png file4.png output.png"
+                    }
+                ],
+                "_files_in": {
+                    "top left": "file1.png",
+                    "top right": "file2.png",
+                    "bottom left": "file3.png",
+                    "bottom right": "file4.png"
+                },
+                "_files_out": {
+                    "montaged image": "output.png"
+                }
+            }
+        }
+    ],
+    "links": {
+        "1": [
+            3,
+            5
+        ],
+        "2": [
+            4,
+            5
+        ],
+        "3": [
+            5
+        ],
+        "4": [
+            5
+        ],
+        "5": []
+    },
+    "metadata": {},
+    "name": "Image reconstruction"
+}

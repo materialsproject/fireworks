@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/LaunchPad",
+  "LaunchPad": {
+    "type": "object",
+    "oneOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "uri_mode": {
+            "enum": [
+              null,
+              false
+            ],
+            "default": false
+          },
+          "host": {
+            "$ref": "generic.json#/Hostname"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "password": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "logdir": {
+            "oneOf": [
+              {
+                "$ref": "generic.json#/AbsoluteFilePath"
+              },
+              {
+                "const": null
+              }
+            ]
+          },
+          "strm_lvl": {
+            "$ref": "generic.json#/LoggingLevel"
+          },
+          "user_indices": {
+            "type": "array"
+          },
+          "wf_user_indices": {
+            "type": "array"
+          },
+          "ssl": {
+            "type": "boolean"
+          },
+          "ssl_ca_certs": {
+            "$ref": "generic.json#/AbsoluteFilePath"
+          },
+          "ssl_certfile": {
+            "$ref": "generic.json#/AbsoluteFilePath"
+          },
+          "ssl_keyfile": {
+            "$ref": "generic.json#/AbsoluteFilePath"
+          },
+          "ssl_pem_passphrase": {
+            "type": "string"
+          },
+          "authsource": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mongoclient_kwargs": {
+            "type": "object",
+            "properties": {
+              "authmechanism": {
+                "enum": [
+                  "SCRAM-SHA-256",
+                  "SCRAM-SHA-1",
+                  "MONGODB-CR",
+                  "GSSAPI",
+                  "MONGODB-X509",
+                  "PLAIN",
+                  null
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "additionalProperties": false,
+        "properties": {
+          "host": {
+            "type": "string",
+            "format": "uri"
+          },
+          "uri_mode": {
+            "const": true
+          }
+        },
+        "required": [
+          "host",
+          "uri_mode"
+        ]
+      }
+    ]
+  }
+}

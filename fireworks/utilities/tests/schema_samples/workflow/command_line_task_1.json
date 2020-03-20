@@ -1,0 +1,93 @@
+{
+  "name": "CommandLineTask demo",
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Run a command and store the result",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["date option"],
+            "outputs": ["time stamp file"],
+            "command_spec": {
+              "command": ["date"],
+              "date option": {
+                "binding": {
+                  "prefix": "--iso",
+                  "separator": "="
+                },
+                "source": {
+                  "type": "data",
+                  "value": "second"
+                }
+              },
+              "time stamp file": {
+                "source": {
+                  "type": "stdout"
+                },
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Run a command with the result of the parent firework",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["time stamp file"],
+            "outputs": ["time stamp string"],
+            "command_spec": {
+              "command": ["cat"],
+              "time stamp file": {
+                "source": "time stamp file",
+                "target": {
+                  "type": "stdin"
+                }
+              },
+              "time stamp string": {
+                "source": {
+                  "type": "stdout"
+                },
+                "target": {
+                  "type": "data"
+                }
+              }
+            }
+          },
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["time stamp", "new file"],
+            "outputs": [],
+            "command_spec": {
+              "command": ["touch"],
+              "time stamp": {
+                "binding": {
+                  "prefix": "--date",
+                  "separator": "="
+                },
+                "source": "time stamp string"
+              },
+              "new file": {
+                "source": {
+                  "type": "data",
+                  "value": "new_file"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "links": {"1": [2], "2": []},
+  "metadata": {}
+}

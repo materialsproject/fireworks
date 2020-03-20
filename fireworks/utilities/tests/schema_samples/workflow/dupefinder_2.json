@@ -1,0 +1,139 @@
+{
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Roast coffee",
+      "spec": {
+        "_dupefinder": {
+          "_fw_name": "DupeFinderExact"
+        },
+        "_tasks": [
+          {
+            "_fw_name": "PyTask",
+            "func": "auxiliary.print_func",
+            "inputs": [
+              "fresh coffee beans"
+            ],
+            "outputs": [
+              "roasted coffee beans"
+            ]
+          }
+        ],
+        "fresh coffee beans": "top coffee selection"
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Grind coffee",
+      "spec": {
+        "_dupefinder": {
+          "_fw_name": "DupeFinderExact"
+        },
+        "_tasks": [
+          {
+            "_fw_name": "PyTask",
+            "func": "auxiliary.print_func",
+            "inputs": [
+              "roasted coffee beans"
+            ],
+            "outputs": [
+              "coffee powder"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 3,
+      "name": "Brew coffee",
+      "spec": {
+        "_dupefinder": {
+          "_fw_name": "DupeFinderExact"
+        },
+        "_tasks": [
+          {
+            "_fw_name": "PyTask",
+            "func": "auxiliary.print_func",
+            "inputs": [
+              "coffee powder",
+              "water"
+            ],
+            "outputs": [
+              "pure coffee"
+            ]
+          }
+        ],
+        "water": "workflowing water"
+      }
+    },
+    {
+      "fw_id": 4,
+      "name": "Add extras",
+      "spec": {
+        "_dupefinder": {
+          "_fw_name": "DupeFinderExact"
+        },
+        "_tasks": [
+          {
+            "_fw_name": "PyTask",
+            "func": "auxiliary.print_func",
+            "inputs": [
+              "pure coffee",
+              "milk"
+            ],
+            "outputs": [
+              "cappuccino"
+            ]
+          }
+        ],
+        "milk": "milky way milk"
+      }
+    },
+    {
+      "fw_id": 5,
+      "name": "Bake a mocca cake",
+      "spec": {
+        "_dupefinder": {
+          "_fw_name": "DupeFinderExact"
+        },
+        "_tasks": [
+          {
+            "_fw_name": "PyTask",
+            "func": "auxiliary.print_func",
+            "inputs": [
+              "pure coffee",
+              "other stuff"
+            ],
+            "outputs": [
+              "mocca cake"
+            ]
+          }
+        ],
+        "other stuff": [
+          "eggs",
+          "sugar",
+          "flour",
+          "butter",
+          "milk",
+          "chocolate"
+        ]
+      }
+    }
+  ],
+  "links": {
+    "1": [
+      2
+    ],
+    "2": [
+      3
+    ],
+    "3": [
+      4,
+      5
+    ],
+    "4": [],
+    "5": []
+  },
+  "metadata": {},
+  "name": "The coffee workflow"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Store and retrieve files",
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Store a file to file system",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "FileTransferTask",
+            "files": [
+              "tile-1.png",
+              "tile-2.png"
+            ],
+            "dest": "/tmp",
+            "mode": "copy"
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Retrieve a file from file systems",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "FileTransferTask",
+            "files": [
+              {
+                "src": "/tmp/tile-1.png",
+                "dest": "."
+              },
+              {
+                "src": "/tmp/tile-2.png",
+                "dest": "."
+              }
+            ],
+            "mode": "move"
+          }
+        ]
+      }
+    }
+  ],
+  "links": {
+    "1": [
+      2
+    ],
+    "2": []
+  },
+  "metadata": {}
+}

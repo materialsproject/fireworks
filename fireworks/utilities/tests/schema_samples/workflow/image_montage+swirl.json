@@ -1,0 +1,84 @@
+{
+  "name": "Image montage and subseqient swirl",
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Montage a series of images",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["top left", "top right", "bottom left", "bottom right"],
+            "outputs": ["montaged image"],
+            "command_spec": {
+                "command": ["montage", "-mode", "concatenate", "-tile", "2x2"],
+                "top left": {
+                    "source": {
+                        "type": "path",
+                        "value": "tile-0.png"
+                    }
+                },
+                "top right": {
+                    "source": {
+                        "type": "path",
+                        "value": "tile-1.png"
+                    }
+                },
+                "bottom left": {
+                    "source": {
+                        "type": "path",
+                        "value": "tile-2.png"
+                    }
+                },
+                "bottom right": {
+                    "source": {
+                        "type": "path",
+                        "value": "tile-3.png"
+                    }
+                },
+                "montaged image": {
+                    "target": {
+                        "type": "path",
+                        "value": "/tmp"
+                    }
+                }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Swirl an image",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["swirl angle", "montaged image"],
+            "outputs": ["swirled image"],
+            "command_spec": {
+                "command": ["convert", "-swirl"],
+                "montaged image": {
+                    "source": "montaged image"
+                },
+                "swirl angle": {
+                    "source": {
+                        "type": "data",
+                        "value": "90"
+                    }
+                },
+                "swirled image": {
+                    "target": {
+                        "type": "path",
+                        "value": "."
+                    }
+                }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "links": {"1": [2], "2": []},
+  "metadata": {}
+}

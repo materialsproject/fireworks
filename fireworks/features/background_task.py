@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, serialize_fw, \
     recursive_deserialize
+from fireworks.utilities.json_schema import resolve_validate
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2014, The Materials Project'
@@ -38,5 +39,6 @@ class BackgroundTask(FWSerializable, object):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'BackgroundTask')
         return BackgroundTask(m_dict['tasks'], m_dict['num_launches'],
                               m_dict['sleep_time'], m_dict['run_on_finish'])

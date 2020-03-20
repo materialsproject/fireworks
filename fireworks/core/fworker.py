@@ -13,6 +13,7 @@ import json
 from fireworks.fw_config import FWORKER_LOC
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \
     recursive_deserialize, DATETIME_HANDLER
+from fireworks.utilities.json_schema import resolve_validate
 
 __author__ = 'Anubhav Jain'
 __credits__ = 'Michael Kocher'
@@ -54,6 +55,7 @@ class FWorker(FWSerializable):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'FWorker')
         return FWorker(m_dict['name'], m_dict['category'], json.loads(m_dict['query']), m_dict.get("env"))
 
     @property

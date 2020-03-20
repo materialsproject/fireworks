@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/Spec",
+  "Spec": {
+    "type": "object",
+    "additionalProperties": true,
+    "properties": {
+      "_tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "firetask.json#/Firetask"
+        },
+        "minItems": 1
+      },
+      "_background_tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "backgroundtask.json#/BackgroundTask"
+        },
+        "minItems": 1
+      },
+      "_priority": {
+        "type": "number"
+      },
+      "_pass_job_info": {
+        "type": "boolean",
+        "default": false
+      },
+      "_launch_dir": {
+        "$ref": "generic.json#/AbsoluteFilePath"
+      },
+      "_fworker": {
+        "type": "string"
+      },
+      "_category": {
+        "type": "string"
+      },
+      "_queueadapter": {
+        "$ref": "qadapter.json#/QueueAdapter"
+      },
+      "_dupefinder": {
+        "$ref": "dupefinder.json#/DupeFinder"
+      },
+      "_allow_fizzled_parents": {
+        "type": "boolean",
+        "default": false
+      },
+      "_add_fworker": {
+        "type": "boolean",
+        "default": false
+      },
+      "_preserve_fworker": {
+        "type": "boolean",
+        "default": false
+      },
+      "_add_launchpad_and_fw_id": {
+        "type": "boolean",
+        "default": false
+      },
+      "_files_in": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "generic.json#/FilePath"
+        }
+      },
+      "_files_out": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "generic.json#/FilePath"
+        }
+      },
+      "_trackers": {
+        "type": "array",
+        "items": {
+          "$ref": "tracker.json#/Tracker"
+        }
+      }
+    },
+    "required": [
+      "_tasks"
+    ],
+    "title": "Spec object"
+  }
+}

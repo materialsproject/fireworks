@@ -7,6 +7,7 @@ This module contains the base class for implementing Duplicate Finders
 """
 
 from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
+from fireworks.utilities.json_schema import resolve_validate
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -55,4 +56,5 @@ class DupeFinderBase(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'DupeFinder')
         return cls()

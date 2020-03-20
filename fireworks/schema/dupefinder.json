@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/DupeFinder",
+  "DupeFinder": {
+    "type": "object",
+    "oneOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "_fw_name": {
+            "const": "DupeFinderExact"
+          }
+        }
+      },
+      {
+        "additionalProperties": true,
+        "properties": {
+          "_fw_name": {
+            "not": {
+              "const": "DupeFinderExact"
+            }
+          }
+        }
+      }
+    ],
+    "required": [
+      "_fw_name"
+    ],
+    "title": "DupeFinder object"
+  }
+}

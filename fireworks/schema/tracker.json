@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/Tracker",
+  "Tracker": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "$ref": "generic.json#/Filename"
+      },
+      "nlines": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000
+      }
+    },
+    "required": [
+      "filename",
+      "nlines"
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Foreach task demo",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ForeachTask",
+            "task": {
+                "_fw_name": "CommandLineTask",
+                "inputs": ["array input"],
+                "outputs": ["file set"],
+                "command_spec": {
+                    "command": ["echo"],
+                    "array input": "array input",
+                    "file set": {
+                        "source": {
+                            "type": "stdout"
+                        },
+                        "target": {
+                            "type": "path",
+                            "value": "/tmp"
+                        }
+                    }
+                }
+            },
+            "split": "array input"
+          }
+        ],
+        "array input": [
+            {
+                "source": {
+                    "type": "data",
+                    "value": 1
+                }
+            },
+            {
+                "source": {
+                    "type": "data",
+                    "value": "string"
+                }
+            }
+        ]
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Concatenate the files into a string",
+      "spec": {
+         "_tasks": [
+            {
+                "_fw_name": "PyTask", 
+                "func": "auxiliary.print_func", 
+                "inputs": [
+                    "file set"
+                ]
+            },
+            {
+                "_fw_name": "CommandLineTask", 
+                "inputs": ["file set"], 
+                "outputs": [
+                    "stdout dump"
+                ],
+                "command_spec": {
+                    "command": ["cat"],
+                    "file set": "file set",
+                    "stdout dump": {
+                        "target": {
+                            "type": "data",
+                            "value": "stdout dump"
+                        },
+                        "source": {
+                            "type": "stdout"
+                        }
+                    }
+                }
+            },
+            {
+                "_fw_name": "PyTask", 
+                "func": "auxiliary.print_func", 
+                "inputs": [
+                    "stdout dump"
+                ]
+            }
+         ]
+      }
+    }
+  ],
+  "links": {"1": [2]},
+  "metadata": {},
+  "name": "A more complex workflow"
+}

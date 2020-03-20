@@ -1,0 +1,34 @@
+{
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "First act",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": "echo 'To be, or not to be,'"
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Second act",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": "echo 'that is the question:'"
+          }
+        ]
+      }
+    }
+  ],
+  "links": {
+    "1": [
+      2
+    ]
+  },
+  "name": "Hamlet workflow"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/BackgroundTask",
+  "BackgroundTask": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "BackgroundTask"
+      },
+      "num_launches": {
+        "type": "integer",
+        "default": 0
+      },
+      "run_on_finish": {
+        "type": "boolean",
+        "default": false
+      },
+      "sleep_time": {
+        "type": "number",
+        "default": 60
+      },
+      "tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "firetask.json#/Firetask"
+        },
+        "minItems": 1
+      }
+    },
+    "required": [
+      "_fw_name",
+      "tasks"
+    ],
+    "title": "BackgroundTask object"
+  }
+}

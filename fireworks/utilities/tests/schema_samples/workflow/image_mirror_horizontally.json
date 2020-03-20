@@ -1,0 +1,36 @@
+{
+  "name": "Mirror an image horizontally",
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Mirror horizontally",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "CommandLineTask",
+            "inputs": ["image to flop"],
+            "outputs": ["flopped image"],
+            "command_spec": {
+                "command": ["convert", "-flop"],
+                "flopped image": {
+                    "target": {
+                        "type": "path",
+                        "value": "."
+                    }
+                },
+                "image to flop": {
+                    "source": "image to flop"
+                }
+            }
+          }
+        ],
+        "image to flop": {
+            "type": "path",
+            "value": "piece-1.png"
+        }
+      }
+    }
+  ],
+  "links": {},
+  "metadata": {}
+}

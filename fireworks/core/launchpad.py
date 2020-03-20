@@ -40,6 +40,7 @@ from fireworks.core.firework import Firework, Launch, Workflow, FWAction, \
     Tracker
 from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.utilities.fw_serializers import recursive_dict
+from fireworks.utilities.json_schema import resolve_validate
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2013, The Materials Project'
@@ -270,6 +271,7 @@ class LaunchPad(FWSerializable):
 
     @classmethod
     def from_dict(cls, d):
+        resolve_validate(d, 'LaunchPad')
         port = d.get('port', None)
         name = d.get('name', None)
         username = d.get('username', None)

@@ -1,0 +1,102 @@
+{
+    "fws": [
+        {
+            "fw_id": 1,
+            "name": "Swirl 90",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -swirl 90 /tmp/capitalA.png output.png"
+                    }
+                ],
+                "_files_out": {
+                    "swirl 90": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 2,
+            "name": "Swirl 180",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -swirl 180 /tmp/capitalA.png output.png"
+                    }
+                ],
+                "_files_out": {
+                    "swirl 180": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 3,
+            "name": "Swirl 270",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -swirl 270 /tmp/capitalA.png output.png"
+                    }
+                ],
+                "_files_out": {
+                    "swirl 270": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 4,
+            "name": "Swirl 360",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -swirl 360 /tmp/capitalA.png output.png"
+                    }
+                ],
+                "_files_out": {
+                    "swirl 360": "output.png"
+                }
+            }
+        },
+        {
+            "fw_id": 5,
+            "name": "Make an animation from a list of images",
+            "spec": {
+                "_tasks": [
+                    {
+                        "_fw_name": "ScriptTask",
+                        "script": "convert -delay 10 -loop 0 /tmp/capitalA.png f1 f2 f3 f4 f3 f2 f1 /tmp/capitalA.png output.gif"
+                    }
+                ],
+                "_files_in": {
+                    "swirl 90": "f1",
+                    "swirl 180": "f2",
+                    "swirl 270": "f3",
+                    "swirl 360": "f4"
+                },
+                "_files_out": {
+                    "animated image": "output.gif"
+                }
+            }
+        }
+    ],
+    "links": {
+        "1": [
+            5
+        ],
+        "2": [
+            5
+        ],
+        "3": [
+            5
+        ],
+        "4": [
+            5
+        ],
+        "5": []
+    },
+    "metadata": {},
+    "name": "Swirl an image in different angles"
+}

@@ -32,6 +32,7 @@ from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
+from fireworks.utilities.json_schema import resolve_validate
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -104,6 +105,7 @@ class FiretaskBase(defaultdict, FWSerializable):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'Firetask')
         return cls(m_dict)
 
     def __repr__(self):
@@ -172,6 +174,7 @@ class FWAction(FWSerializable):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'FWAction')
         d = m_dict
         additions = [Workflow.from_dict(f) for f in d['additions']]
         detours = [Workflow.from_dict(f) for f in d['detours']]
@@ -320,6 +323,7 @@ class Firework(FWSerializable):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'Firework')
         tasks = m_dict['spec']['_tasks']
         launches = [Launch.from_dict(tmp) for tmp in m_dict.get('launches', [])]
         archived_launches = [Launch.from_dict(tmp) for tmp in m_dict.get('archived_launches', [])]
@@ -391,6 +395,7 @@ class Tracker(FWSerializable, object):
 
     @classmethod
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'Tracker')
         return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''),
                        m_dict.get('allow_zipped', False))
 
@@ -555,6 +560,7 @@ class Launch(FWSerializable, object):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
+        resolve_validate(m_dict, 'Launch')
         fworker = FWorker.from_dict(m_dict['fworker']) if m_dict['fworker'] else None
         action = FWAction.from_dict(m_dict['action']) if m_dict.get('action') else None
         trackers = [Tracker.from_dict(f) for f in m_dict['trackers']] if m_dict.get('trackers') else None
@@ -678,6 +684,7 @@ class Workflow(FWSerializable):
 
         @classmethod
         def from_dict(cls, m_dict):
+            resolve_validate(m_dict, 'Links')
             return Workflow.Links(m_dict)
 
         def __setstate__(self, state):
@@ -1199,6 +1206,7 @@ class Workflow(FWSerializable):
         Returns:
             Workflow
         """
+        resolve_validate(m_dict, 'Workflow')
         # accept
         if 'fws' in m_dict:
             created_on = m_dict.get('created_on')

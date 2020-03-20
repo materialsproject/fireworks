@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/Firework",
+  "Firework": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "fw_id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string"
+      },
+      "spec": {
+        "$ref": "spec.json#/Spec"
+      },
+      "created_on": {
+        "$ref": "generic.json#/Datetime"
+      },
+      "updated_on": {
+        "$ref": "generic.json#/Datetime"
+      },
+      "state": {
+        "$ref": "#/definitions/State"
+      },
+      "launches": {
+        "type": "array",
+        "items": {
+          "$ref": "launch.json#/Launch"
+        }
+      }
+    },
+    "required": [
+      "fw_id",
+      "spec"
+    ],
+    "title": "Firework object"
+  },
+  "definitions": {
+    "State": {
+      "type": "string",
+      "enum": [
+        "ARCHIVED",
+        "COMPLETED",
+        "DEFUSED",
+        "FIZZLED",
+        "READY",
+        "RESERVED",
+        "RUNNING",
+        "WAITING"
+      ]
+    }
+  }
+}

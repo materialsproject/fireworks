@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/Workflow",
+  "Workflow": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "fws": {
+        "type": "array",
+        "items": {
+          "$ref": "firework.json#/Firework"
+        },
+        "minItems": 1
+      },
+      "links": {
+        "$ref": "links.json#/Links"
+      },
+      "metadata": {
+        "$ref": "#/definitions/Metadata"
+      },
+      "updated_on": {
+        "$ref": "generic.json#/Datetime"
+      },
+      "created_on": {
+        "$ref": "generic.json#/Datetime"
+      }
+    },
+    "required": [
+      "fws",
+      "links",
+      "metadata"
+    ],
+    "title": "Workflow object"
+  },
+  "definitions": {
+    "Metadata": {
+      "type": "object",
+      "title": "Metadata object"
+    }
+  }
+}

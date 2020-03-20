@@ -1,0 +1,135 @@
+{
+  "name": "F1 pitstop simulation",
+  "fws": [
+    {
+      "fw_id": 1,
+      "name": "Breaks",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Breaks on\""
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 2,
+      "name": "Lift car",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Car lifted\""
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 3,
+      "name": "Refuel",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Refueling ...\"",
+              "sleep 20"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 4,
+      "name": "Exchange tires",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Releasing old tires ...\"",
+              "sleep 2"
+            ]
+          },
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Removing old tires ...\"",
+              "sleep 2"
+            ]
+          },
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Installing new tires ...\"",
+              "sleep 2"
+            ]
+          },
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Locking new tires ...\"",
+              "sleep 2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 5,
+      "name": "Lower car",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Car lowered\""
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 6,
+      "name": "First gear",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"First gear\""
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fw_id": 7,
+      "name": "Go",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "ScriptTask",
+            "script": [
+              "echo \"Car running\""
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "links": {
+    "1": [2, 3],
+    "2": [4],
+    "3": [7],
+    "4": [5],
+    "5": [6],
+    "6": [7]
+  },
+  "metadata": {}
+}
