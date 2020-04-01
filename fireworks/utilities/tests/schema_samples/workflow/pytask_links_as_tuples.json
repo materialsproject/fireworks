@@ -8,8 +8,12 @@
           {
             "_fw_name": "PyTask",
             "func": "auxiliary.print_func",
-            "inputs": ["fresh coffee beans"],
-            "outputs": ["roasted coffee beans"]
+            "inputs": [
+              "fresh coffee beans"
+            ],
+            "outputs": [
+              "roasted coffee beans"
+            ]
           }
         ],
         "fresh coffee beans": "top coffee selection"
@@ -23,8 +27,12 @@
           {
             "_fw_name": "PyTask",
             "func": "auxiliary.print_func",
-            "inputs": ["roasted coffee beans"],
-            "outputs": ["coffee powder"]
+            "inputs": [
+              "roasted coffee beans"
+            ],
+            "outputs": [
+              "coffee powder"
+            ]
           }
         ]
       }
@@ -37,8 +45,13 @@
           {
             "_fw_name": "PyTask",
             "func": "auxiliary.print_func",
-            "inputs": ["coffee powder", "water"],
-            "outputs": ["pure coffee"]
+            "inputs": [
+              "coffee powder",
+              "water"
+            ],
+            "outputs": [
+              "pure coffee"
+            ]
           }
         ],
         "water": "workflowing water"
@@ -52,15 +65,39 @@
           {
             "_fw_name": "PyTask",
             "func": "auxiliary.print_func",
-            "inputs": ["pure coffee", "milk"],
-            "outputs": ["cappuccino"]
+            "inputs": [
+              "pure coffee",
+              "milk"
+            ],
+            "outputs": [
+              "cappuccino"
+            ]
           }
         ],
         "milk": "milky way milk"
       }
     }
   ],
-  "links": [[0, [1]], [1, [2]], [2, [3]]],
+  "links": [
+    [
+      0,
+      [
+        1
+      ]
+    ],
+    [
+      1,
+      [
+        2
+      ]
+    ],
+    [
+      2,
+      [
+        3
+      ]
+    ]
+  ],
   "metadata": {},
   "name": "The coffee workflow"
 }

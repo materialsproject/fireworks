@@ -8,31 +8,39 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["swirl angle", "original image"],
-            "outputs": ["swirled image"],
+            "inputs": [
+              "swirl angle",
+              "original image"
+            ],
+            "outputs": [
+              "swirled image"
+            ],
             "command_spec": {
-                "command": ["convert", "-swirl"],
-                "original image": {
-                    "source": "image to swirl"
-                },
-                "swirl angle": {
-                    "source": {
-                        "type": "data",
-                        "value": "90"
-                    }
-                },
-                "swirled image": {
-                    "target": {
-                        "type": "path",
-                        "value": "./"
-                    }
+              "command": [
+                "convert",
+                "-swirl"
+              ],
+              "original image": {
+                "source": "image to swirl"
+              },
+              "swirl angle": {
+                "source": {
+                  "type": "data",
+                  "value": "90"
                 }
+              },
+              "swirled image": {
+                "target": {
+                  "type": "path",
+                  "value": "./"
+                }
+              }
             }
           }
         ],
         "image to swirl": {
-            "type": "path",
-            "value": "capitalA.png"
+          "type": "path",
+          "value": "capitalA.png"
         }
       }
     }

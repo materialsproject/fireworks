@@ -1,47 +1,47 @@
 {
   "fws": [
     {
-      "fw_id": 2, 
-      "name": "A list of firetasks (ScriptTask and SingleTask)", 
+      "fw_id": 2,
+      "name": "A list of firetasks (ScriptTask and SingleTask)",
       "spec": {
         "_tasks": [
           {
-            "_fw_name": "ScriptTask", 
+            "_fw_name": "ScriptTask",
             "script": [
               "echo \"Data passed by the previous firework:\""
-            ], 
+            ],
             "use_shell": true
-          }, 
+          },
           {
-            "_fw_name": "{{fw_custom_tasks.SingleTask}}", 
-            "args": "returned data", 
+            "_fw_name": "{{fw_custom_tasks.SingleTask}}",
+            "args": "returned data",
             "function": "fw_task_functions_test.test_func"
           }
         ]
       }
-    }, 
+    },
     {
-      "fw_id": 1, 
-      "name": "SingleTask demo", 
+      "fw_id": 1,
+      "name": "SingleTask demo",
       "spec": {
         "_tasks": [
           {
-            "_fw_name": "{{fw_custom_tasks.SingleTask}}", 
-            "args": "data", 
-            "function": "fw_task_functions_test.test_func", 
+            "_fw_name": "{{fw_custom_tasks.SingleTask}}",
+            "args": "data",
+            "function": "fw_task_functions_test.test_func",
             "output": "returned data"
           }
-        ], 
+        ],
         "data": 7
       }
     }
-  ], 
+  ],
   "links": {
     "1": [
       2
-    ], 
+    ],
     "2": []
-  }, 
-  "metadata": {}, 
+  },
+  "metadata": {},
   "name": "A simple workflow"
 }

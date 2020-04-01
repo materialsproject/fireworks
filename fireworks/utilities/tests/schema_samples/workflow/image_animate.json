@@ -8,40 +8,53 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["image 1", "image 2", "image 3", "image 4"],
-            "outputs": ["animation"],
+            "inputs": [
+              "image 1",
+              "image 2",
+              "image 3",
+              "image 4"
+            ],
+            "outputs": [
+              "animation"
+            ],
             "command_spec": {
-                "command": ["convert", "-delay", "10", "-loop", "0"],
-                "image 1": {
-                    "source": {
-                        "type": "path",
-                        "value": "tile-0.png"
-                    }
-                },
-                "image 2": {
-                    "source": {
-                        "type": "path",
-                        "value": "tile-1.png"
-                    }
-                },
-                "image 3": {
-                    "source": {
-                        "type": "path",
-                        "value": "tile-2.png"
-                    }
-                },
-                "image 4": {
-                    "source": {
-                        "type": "path",
-                        "value": "tile-3.png"
-                    }
-                },
-                "animation": {
-                    "target": {
-                        "type": "path",
-                        "value": "./animation.gif"
-                    }
+              "command": [
+                "convert",
+                "-delay",
+                "10",
+                "-loop",
+                "0"
+              ],
+              "image 1": {
+                "source": {
+                  "type": "path",
+                  "value": "tile-0.png"
                 }
+              },
+              "image 2": {
+                "source": {
+                  "type": "path",
+                  "value": "tile-1.png"
+                }
+              },
+              "image 3": {
+                "source": {
+                  "type": "path",
+                  "value": "tile-2.png"
+                }
+              },
+              "image 4": {
+                "source": {
+                  "type": "path",
+                  "value": "tile-3.png"
+                }
+              },
+              "animation": {
+                "target": {
+                  "type": "path",
+                  "value": "./animation.gif"
+                }
+              }
             }
           }
         ]

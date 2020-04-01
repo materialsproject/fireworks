@@ -5,11 +5,18 @@
     "_tasks": [
       {
         "_fw_name": "LambdaTask",
-        "inputs": ["data"],
+        "inputs": [
+          "data"
+        ],
         "expression": "lambda arr: [pow(x,2) for x in arr]",
-        "outputs": ["new data"]
+        "outputs": [
+          "new data"
+        ]
       }
     ],
-    "data": [7, 8]
+    "data": [
+      7,
+      8
+    ]
   }
 }

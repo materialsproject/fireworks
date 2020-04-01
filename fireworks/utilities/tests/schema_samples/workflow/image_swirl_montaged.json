@@ -9,8 +9,12 @@
           {
             "_fw_name": "PyTask",
             "func": "auxiliary.print_func",
-            "inputs": ["montaged image"],
-            "outputs": ["montaged image"]
+            "inputs": [
+              "montaged image"
+            ],
+            "outputs": [
+              "montaged image"
+            ]
           }
         ]
       }
@@ -22,25 +26,33 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["swirl angle", "original image"],
-            "outputs": ["swirl 90"],
+            "inputs": [
+              "swirl angle",
+              "original image"
+            ],
+            "outputs": [
+              "swirl 90"
+            ],
             "command_spec": {
-                "command": ["convert", "-swirl"],
-                "original image": {
-                    "source": "montaged image"
-                },
-                "swirl angle": {
-                    "source": {
-                        "type": "data",
-                        "value": "90"
-                    }
-                },
-                "swirl 90": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
+              "command": [
+                "convert",
+                "-swirl"
+              ],
+              "original image": {
+                "source": "montaged image"
+              },
+              "swirl angle": {
+                "source": {
+                  "type": "data",
+                  "value": "90"
                 }
+              },
+              "swirl 90": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
+                }
+              }
             }
           }
         ]
@@ -53,25 +65,33 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["swirl angle", "original image"],
-            "outputs": ["swirl 180"],
+            "inputs": [
+              "swirl angle",
+              "original image"
+            ],
+            "outputs": [
+              "swirl 180"
+            ],
             "command_spec": {
-                "command": ["convert", "-swirl"],
-                "original image": {
-                    "source": "montaged image"
-                },
-                "swirl angle": {
-                    "source": {
-                        "type": "data",
-                        "value": "180"
-                    }
-                },
-                "swirl 180": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
+              "command": [
+                "convert",
+                "-swirl"
+              ],
+              "original image": {
+                "source": "montaged image"
+              },
+              "swirl angle": {
+                "source": {
+                  "type": "data",
+                  "value": "180"
                 }
+              },
+              "swirl 180": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
+                }
+              }
             }
           }
         ]
@@ -84,25 +104,33 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["swirl angle", "original image"],
-            "outputs": ["swirl 270"],
+            "inputs": [
+              "swirl angle",
+              "original image"
+            ],
+            "outputs": [
+              "swirl 270"
+            ],
             "command_spec": {
-                "command": ["convert", "-swirl"],
-                "original image": {
-                    "source": "montaged image"
-                },
-                "swirl angle": {
-                    "source": {
-                        "type": "data",
-                        "value": "270"
-                    }
-                },
-                "swirl 270": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
+              "command": [
+                "convert",
+                "-swirl"
+              ],
+              "original image": {
+                "source": "montaged image"
+              },
+              "swirl angle": {
+                "source": {
+                  "type": "data",
+                  "value": "270"
                 }
+              },
+              "swirl 270": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
+                }
+              }
             }
           }
         ]
@@ -115,25 +143,33 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["swirl angle", "original image"],
-            "outputs": ["swirl 360"],
+            "inputs": [
+              "swirl angle",
+              "original image"
+            ],
+            "outputs": [
+              "swirl 360"
+            ],
             "command_spec": {
-                "command": ["convert", "-swirl"],
-                "original image": {
-                    "source": "montaged image"
-                },
-                "swirl angle": {
-                    "source": {
-                        "type": "data",
-                        "value": "360"
-                    }
-                },
-                "swirl 360": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
+              "command": [
+                "convert",
+                "-swirl"
+              ],
+              "original image": {
+                "source": "montaged image"
+              },
+              "swirl angle": {
+                "source": {
+                  "type": "data",
+                  "value": "360"
                 }
+              },
+              "swirl 360": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
+                }
+              }
             }
           }
         ]
@@ -147,40 +183,48 @@
           {
             "_fw_name": "CommandLineTask",
             "inputs": [
-                "original image",
-                "swirl 90",
-                "swirl 180",
-                "swirl 270",
-                "swirl 360",
-                "swirl 270",
-                "swirl 180",
-                "swirl 90",
-                "original image"
+              "original image",
+              "swirl 90",
+              "swirl 180",
+              "swirl 270",
+              "swirl 360",
+              "swirl 270",
+              "swirl 180",
+              "swirl 90",
+              "original image"
             ],
-            "outputs": ["animation"],
+            "outputs": [
+              "animation"
+            ],
             "command_spec": {
-                "command": ["convert", "-delay", "10", "-loop", "0"],
-                "original image": {
-                    "source": "montaged image"
-                },
-                "swirl 360": {
-                    "source": "swirl 360"
-                },
-                "swirl 270": {
-                    "source": "swirl 270"
-                },
-                "swirl 180": {
-                    "source": "swirl 180"
-                },
-                "swirl 90": {
-                    "source": "swirl 90"
-                },
-                "animation": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp/capitalA-swirled-animated.gif"
-                    }
+              "command": [
+                "convert",
+                "-delay",
+                "10",
+                "-loop",
+                "0"
+              ],
+              "original image": {
+                "source": "montaged image"
+              },
+              "swirl 360": {
+                "source": "swirl 360"
+              },
+              "swirl 270": {
+                "source": "swirl 270"
+              },
+              "swirl 180": {
+                "source": "swirl 180"
+              },
+              "swirl 90": {
+                "source": "swirl 90"
+              },
+              "animation": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp/capitalA-swirled-animated.gif"
                 }
+              }
             }
           }
         ]
@@ -188,12 +232,26 @@
     }
   ],
   "links": {
-    "-1": [-5],
-    "-2": [-5],
-    "-3": [-5],
-    "-4": [-5],
+    "-1": [
+      -5
+    ],
+    "-2": [
+      -5
+    ],
+    "-3": [
+      -5
+    ],
+    "-4": [
+      -5
+    ],
     "-5": [],
-    "-6": [-1, -2, -3, -4, -5]
+    "-6": [
+      -1,
+      -2,
+      -3,
+      -4,
+      -5
+    ]
   },
   "metadata": {}
 }

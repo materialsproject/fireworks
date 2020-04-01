@@ -8,25 +8,32 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["image to flip"],
-            "outputs": ["flipped image"],
+            "inputs": [
+              "image to flip"
+            ],
+            "outputs": [
+              "flipped image"
+            ],
             "command_spec": {
-                "command": ["convert", "-flip"],
-                "flipped image": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
-                },
-                "image to flip": {
-                    "source": "image to flip"
+              "command": [
+                "convert",
+                "-flip"
+              ],
+              "flipped image": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
                 }
+              },
+              "image to flip": {
+                "source": "image to flip"
+              }
             }
           }
         ],
         "image to flip": {
-            "type": "path",
-            "value": "piece-1.png"
+          "type": "path",
+          "value": "piece-1.png"
         }
       }
     }

@@ -16,7 +16,6 @@
         "func": "fw_task_functions_test.test_func"
       }
     ],
-    "parameters": {
-    }
+    "parameters": {}
   }
 }

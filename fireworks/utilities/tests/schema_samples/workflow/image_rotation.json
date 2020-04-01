@@ -8,31 +8,39 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["rotation angle", "original image"],
-            "outputs": ["rotated image"],
+            "inputs": [
+              "rotation angle",
+              "original image"
+            ],
+            "outputs": [
+              "rotated image"
+            ],
             "command_spec": {
-                "command": ["convert", "-rotate"],
-                "rotation angle": {
-                    "source": {
-                        "type": "data",
-                        "value": -90
-                    }
-                },
-                "rotated image": {
-                    "target": {
-                        "type": "path",
-                        "value": "./"
-                    }
-                },
-                "original image": {
-                    "source": "original image"
+              "command": [
+                "convert",
+                "-rotate"
+              ],
+              "rotation angle": {
+                "source": {
+                  "type": "data",
+                  "value": -90
                 }
+              },
+              "rotated image": {
+                "target": {
+                  "type": "path",
+                  "value": "./"
+                }
+              },
+              "original image": {
+                "source": "original image"
+              }
             }
           }
         ],
         "original image": {
-            "type": "path",
-            "value": "piece-2.png"
+          "type": "path",
+          "value": "piece-2.png"
         }
       }
     }

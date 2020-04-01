@@ -1,7 +1,7 @@
 {
-    "name": "batch",
-    "category": [
-        "vasp"
-    ],
-    "query": "{}"
+  "name": "batch",
+  "category": [
+    "vasp"
+  ],
+  "query": "{}"
 }

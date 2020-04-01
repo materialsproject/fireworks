@@ -1,32 +1,32 @@
 {
-    "fws": [
-        {
-            "fw_id": -2,
-            "name": "Bake a mocha cake",
-            "spec": {
-                "_tasks": [
-                    {
-                        "_fw_name": "PyTask",
-                        "func": "auxiliary.print_func",
-                        "inputs": [
-                            "pure coffee",
-                            "other stuff"
-                        ],
-                        "outputs": [
-                            "mocha cake"
-                        ]
-                    }
-                ],
-                "other stuff": [
-                    "eggs",
-                    "sugar",
-                    "flour",
-                    "butter",
-                    "milk",
-                    "chocolate"
-                ]
-            }
-        }
-    ],
-    "metadata": {}
+  "fws": [
+    {
+      "fw_id": -2,
+      "name": "Bake a mocha cake",
+      "spec": {
+        "_tasks": [
+          {
+            "_fw_name": "PyTask",
+            "func": "auxiliary.print_func",
+            "inputs": [
+              "pure coffee",
+              "other stuff"
+            ],
+            "outputs": [
+              "mocha cake"
+            ]
+          }
+        ],
+        "other stuff": [
+          "eggs",
+          "sugar",
+          "flour",
+          "butter",
+          "milk",
+          "chocolate"
+        ]
+      }
+    }
+  ],
+  "metadata": {}
 }

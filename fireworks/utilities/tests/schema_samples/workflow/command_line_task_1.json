@@ -8,10 +8,16 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["date option"],
-            "outputs": ["time stamp file"],
+            "inputs": [
+              "date option"
+            ],
+            "outputs": [
+              "time stamp file"
+            ],
             "command_spec": {
-              "command": ["date"],
+              "command": [
+                "date"
+              ],
               "date option": {
                 "binding": {
                   "prefix": "--iso",
@@ -43,10 +49,16 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["time stamp file"],
-            "outputs": ["time stamp string"],
+            "inputs": [
+              "time stamp file"
+            ],
+            "outputs": [
+              "time stamp string"
+            ],
             "command_spec": {
-              "command": ["cat"],
+              "command": [
+                "cat"
+              ],
               "time stamp file": {
                 "source": "time stamp file",
                 "target": {
@@ -65,10 +77,15 @@
           },
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["time stamp", "new file"],
+            "inputs": [
+              "time stamp",
+              "new file"
+            ],
             "outputs": [],
             "command_spec": {
-              "command": ["touch"],
+              "command": [
+                "touch"
+              ],
               "time stamp": {
                 "binding": {
                   "prefix": "--date",
@@ -88,6 +105,11 @@
       }
     }
   ],
-  "links": {"1": [2], "2": []},
+  "links": {
+    "1": [
+      2
+    ],
+    "2": []
+  },
   "metadata": {}
 }

@@ -8,15 +8,23 @@
           {
             "_fw_name": "ForeachTask",
             "task": {
-                "_fw_name": "PyTask",
-                "func": "auxiliary.print_func",
-                "inputs": ["coffee beans"],
-                "outputs": ["coffee powder"]
+              "_fw_name": "PyTask",
+              "func": "auxiliary.print_func",
+              "inputs": [
+                "coffee beans"
+              ],
+              "outputs": [
+                "coffee powder"
+              ]
             },
             "split": "coffee beans"
           }
         ],
-        "coffee beans": ["arabica", "robusta", "liberica"]
+        "coffee beans": [
+          "arabica",
+          "robusta",
+          "liberica"
+        ]
       }
     },
     {
@@ -27,10 +35,15 @@
           {
             "_fw_name": "ForeachTask",
             "task": {
-                "_fw_name": "PyTask",
-                "func": "auxiliary.print_func",
-                "inputs": ["coffee powder", "water"],
-                "outputs": ["pure coffee"]
+              "_fw_name": "PyTask",
+              "func": "auxiliary.print_func",
+              "inputs": [
+                "coffee powder",
+                "water"
+              ],
+              "outputs": [
+                "pure coffee"
+              ]
             },
             "split": "coffee powder"
           }
@@ -46,7 +59,9 @@
           {
             "_fw_name": "PyTask",
             "func": "auxiliary.print_func",
-            "inputs": ["pure coffee"]
+            "inputs": [
+              "pure coffee"
+            ]
           }
         ]
       }

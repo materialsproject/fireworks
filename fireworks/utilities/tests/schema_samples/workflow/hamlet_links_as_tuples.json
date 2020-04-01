@@ -25,7 +25,14 @@
       }
     }
   ],
-  "links": [[1, [2]]],
+  "links": [
+    [
+      1,
+      [
+        2
+      ]
+    ]
+  ],
   "metadata": {},
   "name": "Hamlet workflow"
 }

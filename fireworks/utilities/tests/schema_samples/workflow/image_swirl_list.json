@@ -6,57 +6,65 @@
       "name": "Swirl image",
       "spec": {
         "_tasks": [
-            {
-                "_fw_name": "ForeachTask",
-                "split": "swirl angles",
-                "task": {
-                    "_fw_name": "CommandLineTask",
-                    "inputs": ["swirl angles", "original image"],
-                    "outputs": ["swirled images"],
-                    "command_spec": {
-                        "command": ["convert", "-swirl"],
-                        "original image": {
-                            "source": {
-                                "type": "path",
-                                "value": "/tmp/capitalA.png"
-                            }
-                        },
-                        "swirl angles": "swirl angles",
-                        "swirled images": {
-                            "target": {
-                                "type": "path",
-                                "value": "/tmp"
-                            }
-                        }
-                    }
+          {
+            "_fw_name": "ForeachTask",
+            "split": "swirl angles",
+            "task": {
+              "_fw_name": "CommandLineTask",
+              "inputs": [
+                "swirl angles",
+                "original image"
+              ],
+              "outputs": [
+                "swirled images"
+              ],
+              "command_spec": {
+                "command": [
+                  "convert",
+                  "-swirl"
+                ],
+                "original image": {
+                  "source": {
+                    "type": "path",
+                    "value": "/tmp/capitalA.png"
+                  }
+                },
+                "swirl angles": "swirl angles",
+                "swirled images": {
+                  "target": {
+                    "type": "path",
+                    "value": "/tmp"
+                  }
                 }
+              }
             }
+          }
         ],
         "swirl angles": [
-            {
-                "source": {
-                    "type": "data",
-                    "value": "90"
-                }
-            },
-            {
-                "source": {
-                    "type": "data",
-                    "value": "180"
-                }
-            },
-            {
-                "source": {
-                    "type": "data",
-                    "value": "270"
-                }
-            },
-            {
-                "source": {
-                    "type": "data",
-                    "value": "360"
-                }
+          {
+            "source": {
+              "type": "data",
+              "value": "90"
             }
+          },
+          {
+            "source": {
+              "type": "data",
+              "value": "180"
+            }
+          },
+          {
+            "source": {
+              "type": "data",
+              "value": "270"
+            }
+          },
+          {
+            "source": {
+              "type": "data",
+              "value": "360"
+            }
+          }
         ]
       }
     },
@@ -68,32 +76,45 @@
           {
             "_fw_name": "CommandLineTask",
             "inputs": [
-                "original image",
-                "swirled images",
-                "original image"
+              "original image",
+              "swirled images",
+              "original image"
             ],
-            "outputs": ["animation"],
+            "outputs": [
+              "animation"
+            ],
             "command_spec": {
-                "command": ["convert", "-delay", "10", "-loop", "0"],
-                "original image": {
-                    "source": {
-                        "type": "path",
-                        "value": "/tmp/capitalA.png"
-                    }
-                },
-                "swirled images": "swirled images",
-                "animation": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp/capitalA-swirled-animated.gif"
-                    }
+              "command": [
+                "convert",
+                "-delay",
+                "10",
+                "-loop",
+                "0"
+              ],
+              "original image": {
+                "source": {
+                  "type": "path",
+                  "value": "/tmp/capitalA.png"
                 }
+              },
+              "swirled images": "swirled images",
+              "animation": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp/capitalA-swirled-animated.gif"
+                }
+              }
             }
           }
         ]
       }
     }
   ],
-  "links": {"1": [2], "2": []},
+  "links": {
+    "1": [
+      2
+    ],
+    "2": []
+  },
   "metadata": {}
 }

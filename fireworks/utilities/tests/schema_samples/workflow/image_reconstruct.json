@@ -8,7 +8,10 @@
         "_tasks": [
           {
             "_fw_name": "FileTransferTask",
-            "files": ["piece-1.png", "piece-2.png"],
+            "files": [
+              "piece-1.png",
+              "piece-2.png"
+            ],
             "dest": "/tmp",
             "mode": "copy"
           }
@@ -22,31 +25,39 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["rotation angle", "piece 2"],
-            "outputs": ["top left"],
+            "inputs": [
+              "rotation angle",
+              "piece 2"
+            ],
+            "outputs": [
+              "top left"
+            ],
             "command_spec": {
-                "command": ["convert", "-rotate"],
-                "rotation angle": {
-                    "source": {
-                        "type": "data",
-                        "value": -90
-                    }
-                },
-                "top left": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
-                },
-                "piece 2": {
-                    "source": "piece 2"
+              "command": [
+                "convert",
+                "-rotate"
+              ],
+              "rotation angle": {
+                "source": {
+                  "type": "data",
+                  "value": -90
                 }
+              },
+              "top left": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
+                }
+              },
+              "piece 2": {
+                "source": "piece 2"
+              }
             }
           }
         ],
         "piece 2": {
-            "type": "path",
-            "value": "/tmp/piece-2.png"
+          "type": "path",
+          "value": "/tmp/piece-2.png"
         }
       }
     },
@@ -57,25 +68,32 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["piece 1"],
-            "outputs": ["bottom right"],
+            "inputs": [
+              "piece 1"
+            ],
+            "outputs": [
+              "bottom right"
+            ],
             "command_spec": {
-                "command": ["convert", "-flip"],
-                "bottom right": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
-                },
-                "piece 1": {
-                    "source": "piece 1"
+              "command": [
+                "convert",
+                "-flip"
+              ],
+              "bottom right": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
                 }
+              },
+              "piece 1": {
+                "source": "piece 1"
+              }
             }
           }
         ],
         "piece 1": {
-            "type": "path",
-            "value": "/tmp/piece-1.png"
+          "type": "path",
+          "value": "/tmp/piece-1.png"
         }
       }
     },
@@ -86,19 +104,26 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["top left"],
-            "outputs": ["top right"],
+            "inputs": [
+              "top left"
+            ],
+            "outputs": [
+              "top right"
+            ],
             "command_spec": {
-                "command": ["convert", "-flop"],
-                "top right": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
-                },
-                "top left": {
-                    "source": "top left"
+              "command": [
+                "convert",
+                "-flop"
+              ],
+              "top right": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
                 }
+              },
+              "top left": {
+                "source": "top left"
+              }
             }
           }
         ]
@@ -111,19 +136,26 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["bottom right"],
-            "outputs": ["bottom left"],
+            "inputs": [
+              "bottom right"
+            ],
+            "outputs": [
+              "bottom left"
+            ],
             "command_spec": {
-                "command": ["convert", "-flop"],
-                "bottom left": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
-                },
-                "bottom right": {
-                    "source": "bottom right"
+              "command": [
+                "convert",
+                "-flop"
+              ],
+              "bottom left": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
                 }
+              },
+              "bottom right": {
+                "source": "bottom right"
+              }
             }
           }
         ]
@@ -136,34 +168,67 @@
         "_tasks": [
           {
             "_fw_name": "CommandLineTask",
-            "inputs": ["top left", "top right", "bottom left", "bottom right"],
-            "outputs": ["montaged image"],
+            "inputs": [
+              "top left",
+              "top right",
+              "bottom left",
+              "bottom right"
+            ],
+            "outputs": [
+              "montaged image"
+            ],
             "command_spec": {
-                "command": ["montage", "-mode", "concatenate", "-tile", "2x2"],
-                "top left": {
-                    "source": "top left"
-                },
-                "top right": {
-                    "source": "top right"
-                },
-                "bottom left": {
-                    "source": "bottom left"
-                },
-                "bottom right": {
-                    "source": "bottom right"
-                },
-                "montaged image": {
-                    "target": {
-                        "type": "path",
-                        "value": "/tmp"
-                    }
+              "command": [
+                "montage",
+                "-mode",
+                "concatenate",
+                "-tile",
+                "2x2"
+              ],
+              "top left": {
+                "source": "top left"
+              },
+              "top right": {
+                "source": "top right"
+              },
+              "bottom left": {
+                "source": "bottom left"
+              },
+              "bottom right": {
+                "source": "bottom right"
+              },
+              "montaged image": {
+                "target": {
+                  "type": "path",
+                  "value": "/tmp"
                 }
+              }
             }
           }
         ]
       }
     }
   ],
-  "links": {"0": [1, 2], "1": [3, 5], "2": [4, 5], "3": [5], "4": [5], "5": []},
+  "links": {
+    "0": [
+      1,
+      2
+    ],
+    "1": [
+      3,
+      5
+    ],
+    "2": [
+      4,
+      5
+    ],
+    "3": [
+      5
+    ],
+    "4": [
+      5
+    ],
+    "5": []
+  },
   "metadata": {}
 }
