@@ -458,7 +458,7 @@ class Rocket:
             # and both fws generate the exact same file. That can lead to
             # overriding. But as far as I know, this is an illogical use
             # of a workflow, so I can't see it happening in normal use.
-            filepaths = {}
+            # filepaths = {}
             for k, v in my_spec.get("_files_out").items():
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
@@ -466,10 +466,17 @@ class Rocket:
                     fwaction.mod_spec.append({
                         "_set": {"_files_prev->{:s}".format(k): filepath}
                     })
-        elif "_files_prev" in my_spec:
+        # elif "_files_prev" in my_spec:
             # This ensures that _files_prev are not passed from Firework to
             # Firework. We do not want output files from fw1 to be used by fw3
             # in the sequence of fw1->fw2->fw3
-            fwaction.update_spec["_files_prev"] = {}
+            # fwaction.update_spec["_files_prev"] = {}
+            # In the diamond-like case
+            # fw1 -------> fw3
+            #  |            ^
+            #  |-----fw2----|
+            # where fw1 has _files_out FILE and both fw2 and fw3 have _in_files
+            # FILE, but fw2 has no files_out, fw3 will NOT receive FILE, as
+            # fw2 deletes it from fw3's _files_prev entries
 
         return fwaction
