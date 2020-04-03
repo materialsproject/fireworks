@@ -26,7 +26,7 @@ class JSONSchemaTest(unittest.TestCase):
     # 1) deserialization before validation (with status Fail)
     # 2) runtime errors after validation (with status Error)
     skip_list_1 = [
-      'dupefinder_1.json', # Validation error: {"_fw_name": "DupeFinderExact"} is not of type 'object'
+      # 'dupefinder_1.json', # Validation error: {"_fw_name": "DupeFinderExact"} is not of type 'object'
       'dupefinder_2.json', # Validation error: {"_fw_name": "DupeFinderExact"} is not of type 'object'
       'background_task.json', # Validation error: {"tasks": [{"_fw_name": "ScriptTask", "script": ["echo \"hello from BACKGROUND thread"], "use_shell": true}], "num_launches": 0, "sleep_time": 10, "run_on_finish": false, "_fw_name": "BackgroundTask"} is not of type 'object'
     ]
