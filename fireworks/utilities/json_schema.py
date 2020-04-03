@@ -12,6 +12,7 @@ import jsonschema
 FW_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FW_SCHEMA_DIR = os.path.join(FW_ROOT_DIR, 'schema')
 
+
 def resolve_validate(instance, schema_name):
     """ JSON schema validator working with relative paths """
     schema_file = schema_name.lower() + '.json'
