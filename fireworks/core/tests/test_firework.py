@@ -126,7 +126,7 @@ class WorkflowTest(unittest.TestCase):
         fws = []
         for i in range(5):
             fw = Firework([PyTask(func="print", args=[i])], fw_id=i,
-                          name=i)
+                          name=str(i))
             fws.append(fw)
 
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
