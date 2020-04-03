@@ -5,7 +5,7 @@
     "type": "object",
     "properties": {
       "filename": {
-        "$ref": "generic.json#/Filename"
+        "$ref": "generic.json#/FilePath"
       },
       "nlines": {
         "type": "integer",

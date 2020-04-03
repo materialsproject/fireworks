@@ -38,7 +38,7 @@
       "trackers": {
         "type": "array",
         "items": {
-          "$ref": "tracker.json#/definitions/Tracker"
+          "$ref": "tracker.json#/Tracker"
         }
       },
       "state_history": {

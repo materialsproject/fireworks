@@ -61,16 +61,40 @@
             "type": "boolean"
           },
           "ssl_ca_certs": {
-            "$ref": "generic.json#/AbsoluteFilePath"
+            "oneOf": [
+              {
+                "$ref": "generic.json#/AbsoluteFilePath"
+              },
+              {
+                "const": null
+              }
+            ]
           },
           "ssl_certfile": {
-            "$ref": "generic.json#/AbsoluteFilePath"
+            "oneOf": [
+              {
+                "$ref": "generic.json#/AbsoluteFilePath"
+              },
+              {
+                "const": null
+              }
+            ]
           },
           "ssl_keyfile": {
-            "$ref": "generic.json#/AbsoluteFilePath"
+            "oneOf": [
+              {
+                "$ref": "generic.json#/AbsoluteFilePath"
+              },
+              {
+                "const": null
+              }
+            ]
           },
           "ssl_pem_passphrase": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "authsource": {
             "type": "string",

@@ -28,7 +28,14 @@
         "items": {
           "$ref": "launch.json#/Launch"
         }
-      }
+      },
+      "archived_launches": {
+        "type": "array",
+        "items": {
+          "$ref": "launch.json#/Launch"
+        }
+      },
+      "_id" : {}
     },
     "required": [
       "fw_id",

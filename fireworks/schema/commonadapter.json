@@ -70,7 +70,7 @@
       },
       "walltime": {
         "type": "string",
-        "format": "time"
+        "pattern": "^(\\d+\\-)?(((\\d+:)?\\d+:)?\\d+)$"
       },
       "rocket_launch": {
         "type": "string",

@@ -1206,7 +1206,7 @@ class Workflow(FWSerializable):
         Returns:
             Workflow
         """
-        resolve_validate(m_dict, 'Workflow')
+        resolve_validate(m_dict, 'Firework_Workflow')
         # accept
         if 'fws' in m_dict:
             created_on = m_dict.get('created_on')
