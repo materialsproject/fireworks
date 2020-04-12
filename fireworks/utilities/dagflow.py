@@ -4,7 +4,9 @@ __author__ = 'Ivan Kondov'
 __email__ = 'ivan.kondov@kit.edu'
 __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
+import warnings
 from itertools import combinations
+import igraph
 from igraph import Graph
 
 
@@ -16,8 +18,8 @@ class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
     visualization of workflows. """
 
-    def __init__(self, steps, links=None, nlinks=None, name=None):
-        Graph.__init__(self, directed=True, graph_attrs={'name': name})
+    def __init__(self, steps, links=None, nlinks=None, name=None, **kwargs):
+        Graph.__init__(self, directed=True, graph_attrs={'name': name}, **kwargs)
 
         for step in steps:
             self._set_io_fields(step)
@@ -232,6 +234,15 @@ class DAGFlow(Graph):
         cycs = [[self.vs[ind]['id'] for ind in cycle] for cycle in cycs]
         return cycs
 
+    def _get_roots(self):
+        """Returns all roots (i.e. vertices without incoming edges)"""
+        return [i for i, v in enumerate(self.degree(mode=igraph.IN)) if v == 0]
+
+    def _get_leaves(self):
+        """Returns all leaves (i.e. vertices without outgoing edges)"""
+        return [i for i, v in enumerate(self.degree(mode=igraph.OUT)) if v == 0]
+
+
     def delete_ctrlflow_links(self):
         """ Deletes graph edges corresponding to control flow links """
         lst = [link.index for link in list(self.es) if link['label'] == ' ']
@@ -317,3 +328,92 @@ class DAGFlow(Graph):
                 if isinstance(val, bool):
                     del vertex[key]
         graph.write_dot(filename)
+
+
+def plot_wf(wf, view='combined', **kwargs):
+    """Plot workflow via igraph.plot.
+
+    Parameters:
+        wf
+        view: str, same as in 'to_dot'
+
+    Other **kwargs can be any igraph plotting style keyword, overrides default.
+    See https://igraph.org/python/doc/tutorial/tutorial.html for possible
+    keywords. See `plot_wf` code for defaults.
+
+    Returns:
+        igraph.drawing.Plot"""
+    import igraph
+    import matplotlib
+
+    dagf = DAGFlow.from_fireworks(wf)
+    dagf.add_step_labels()
+
+    # copied from to_dot
+    if view == 'controlflow':
+        dagf.delete_dataflow_links()
+    elif view == 'dataflow':
+        dagf.delete_ctrlflow_links()
+    elif view == 'combined':
+        dlinks = []
+        for vertex1, vertex2 in combinations(dagf.vs.indices, 2):
+            clinks = list(set(dagf.incident(vertex1, mode='ALL'))
+                          & set(dagf.incident(vertex2, mode='ALL')))
+            if len(clinks) > 1:
+                for link in clinks:
+                    if dagf.es[link]['label'] == ' ':
+                        dlinks.append(link)
+        dagf.delete_edges(dlinks)
+
+    # remove non-string, non-numeric attributes because write_dot() warns
+    for vertex in dagf.vs:
+        for key, val in vertex.attributes().items():
+            if not isinstance(val, (str, int, float, complex)):
+                del vertex[key]
+            if isinstance(val, bool):
+                del vertex[key]
+
+    # plotting defaults
+    visual_style = {}
+
+    # generic plotting defaults
+    visual_style["layout"] = dagf.layout_kamada_kawai()
+    visual_style["bbox"] = (700, 500)
+    visual_style["margin"] = [200, 100, 200, 100]
+
+    # vertex defaults
+    dagf_roots = dagf._get_roots()
+    dagf_leaves = dagf._get_leaves()
+
+    # code "roots" red, "leaves" green, any other blue
+    def color_coding(v):
+        if v in dagf_roots:
+            return matplotlib.colors.cnames['indianred']
+        elif v in dagf_leaves:
+            return matplotlib.colors.cnames['forestgreen']
+        else:
+            return matplotlib.colors.cnames['lightsteelblue']
+
+    visual_style["vertex_color"] = [color_coding(v) for v in range(dagf.vcount())]
+
+    visual_style["vertex_label_angle"] = -3.14/4.0
+    visual_style["vertex_size"] = 8
+    visual_style["vertex_shape"] = 'rectangle'
+    visual_style["vertex_label_size"] = 10
+    visual_style["vertex_label_dist"] = 4
+
+    # edge defaults
+    visual_style["edge_color"] = 'black'
+    visual_style["edge_width"] = 1
+    visual_style["edge_arrow_size"] = 1
+    visual_style["edge_arrow_width"] = 1
+    visual_style["edge_label_size"] = 8
+
+    visual_style.update(kwargs)
+
+    # special treatment
+    if 'layout' in kwargs and isinstance(kwargs['layout'], str):
+        # tree.layout_reingold_tilford(root=[0]))
+         visual_style["layout"] = dagf.layout(kwargs['layout'])
+
+    return igraph.plot(dagf, **visual_style)
