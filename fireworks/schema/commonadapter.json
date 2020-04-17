@@ -59,12 +59,18 @@
         "$ref": "generic.json#/AbsoluteFilePath"
       },
       "job_name": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "default": null,
         "minLength": 1
       },
       "account": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "default": null,
         "minLength": 1
       },
@@ -77,11 +83,17 @@
         "minLength": 1
       },
       "pre_rocket": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "default": null
       },
       "post_rocket": {
-        "type": ["string", "null"],
+        "type": [
+          "string",
+          "null"
+        ],
         "default": null
       },
       "ppn": {

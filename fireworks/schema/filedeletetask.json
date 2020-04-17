@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/FileDeleteTask",
+  "FileDeleteTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "FileDeleteTask"
+      },
+      "files_to_delete": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      },
+      "dest": {
+        "$ref": "generic.json#/FilePath",
+        "default": "./"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "files_to_delete"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/DeleteFilesTask",
+  "DeleteFilesTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "DeleteFilesTask"
+      },
+      "identifiers": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/Identifier"
+        },
+        "uniqueItems": true
+      },
+      "filepad_file": {
+        "$ref": "generic.json#/AbsoluteFilePath"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "identifiers"
+    ]
+  }
+}

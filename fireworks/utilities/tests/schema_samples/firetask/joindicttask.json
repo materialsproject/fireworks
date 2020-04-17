@@ -1,0 +1,11 @@
+{
+  "_fw_name": "JoinDictTask",
+  "inputs": [
+    "coffee beans",
+    "water"
+  ],
+  "output": "items needed",
+  "rename": {
+    "water": "fresh water"
+  }
+}

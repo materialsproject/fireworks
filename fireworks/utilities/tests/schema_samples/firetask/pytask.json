@@ -1,0 +1,12 @@
+{
+  "_fw_name": "PyTask",
+  "func": "auxiliary.print_func",
+  "inputs": [
+    "coffee powder",
+    "water"
+  ],
+  "outputs": [
+    "black coffee"
+  ],
+  "kwargs": {}
+}

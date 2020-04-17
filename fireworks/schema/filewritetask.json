@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/FileWriteTask",
+  "FileWriteTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "FileWriteTask"
+      },
+      "files_to_write": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "filename": {
+              "$ref": "generic.json#/Filename"
+            },
+            "contents": {
+              "type": "string"
+            }
+          }
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      },
+      "dest": {
+        "$ref": "generic.json#/FilePath",
+        "default": "./"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "files_to_write"
+    ]
+  }
+}

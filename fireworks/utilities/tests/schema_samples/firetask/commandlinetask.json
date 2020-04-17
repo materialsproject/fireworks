@@ -1,0 +1,26 @@
+{
+  "_fw_name": "CommandLineTask",
+  "inputs": [
+    "input string"
+  ],
+  "outputs": [
+    "output file"
+  ],
+  "command_spec": {
+    "command": [
+      "echo"
+    ],
+    "input string": {
+      "source": "input string"
+    },
+    "output file": {
+      "source": {
+        "type": "stdout"
+      },
+      "target": {
+        "type": "path",
+        "value": "/tmp"
+      }
+    }
+  }
+}

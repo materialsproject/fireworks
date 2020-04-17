@@ -15,6 +15,7 @@ import fireworks
 import fireworks.user_objects.queue_adapters.common_adapter
 from fireworks.utilities.json_schema import resolve_validate
 from fireworks.utilities.json_schema import FW_SCHEMA_DIR
+from fireworks.utilities.fw_serializers import load_object_from_file
 
 class JSONSchemaTest(unittest.TestCase):
     """ run tests for DAGFlow class """
@@ -24,31 +25,48 @@ class JSONSchemaTest(unittest.TestCase):
 
     # skip due to runtime errors after validation (with status Error)
     skip_list = [
-      'customtask.json', # ModuleNotFoundError: No module named 'fw_custom_tasks'
-      'lambda_task.json', # ValueError: load_object() could not find a class with cls._fw_name LambdaTask
-      'launchpad_ssl_x509.json', # FileNotFoundError: [Errno 2] No such file or directory: '/path/to/cacert.pem'
-      'launchpad_ssl.json', # FileNotFoundError: [Errno 2] No such file or directory: '/path/to/cacert.pem'
-      'file_transfer_task_2.json', # Required parameter dest not specified! the example from https://materialsproject.github.io/fireworks/fileiotasks.html does not work
-      'file_transfer_task.json' # Required parameter dest not specified! the example from https://materialsproject.github.io/fireworks/fileiotasks.html does not work
+        'customtask.json',
+        'lambda_task.json',
+        'launchpad_ssl_x509.json',
+        'launchpad_ssl.json',
+        'file_transfer_task_2.json',
+        'file_transfer_task.json',
+        'filetransfertask1.json'
     ]
 
     def test_validate_schema(self):
         """ validate the schema against the metaschema """
         schemas = [
+            'addfilestask.json',
+            'archivedirtask.json',
             'backgroundtask.json',
+            'commandlinetask.json',
             'commonadapter.json',
+            'compressdirtask.json',
+            'deletefilestask.json',
             'dupefinder.json',
+            'filedeletetask.json',
+            'filetransfertask.json',
+            'filewritetask.json',
             'firetask.json',
             'firework.json',
             'firework_workflow.json',
+            'foreachtask.json',
             'fwaction.json',
             'fwconfig.json',
             'fworker.json',
             'generic.json',
+            'getfilestask.json',
+            'importdatatask.json',
+            'joindicttask.json',
+            'joinlisttask.json',
             'launch.json',
             'launchpad.json',
             'links.json',
+            'pytask.json',
+            'scripttask.json',
             'spec.json',
+            'templatewritertask.json',
             'tracker.json',
             'workflow.json'
         ]
@@ -62,7 +80,8 @@ class JSONSchemaTest(unittest.TestCase):
 
     def test_validate(self):
         """ validate a set of samples against the schema directly """
-        schemas = ['Firework', 'Workflow', 'LaunchPad', 'FWorker', 'CommonAdapter']
+        schemas = ['Firetask', 'Firework', 'Workflow', 'LaunchPad', 'FWorker',
+                   'CommonAdapter']
         for schema in schemas:
             path = os.path.join(self.samples_dir, schema.lower())
             for wf_file in os.listdir(path):
@@ -80,6 +99,19 @@ class JSONSchemaTest(unittest.TestCase):
                 inst = json.load(fileh)
                 with self.assertRaises(ValidationError):
                     resolve_validate(inst, 'Workflow')
+
+    def test_validate_load_object_from_file(self):
+        """ test the validator in load_object_from_file() """
+        schemas = ['Firetask', 'CommonAdapter']
+        for schema in schemas:
+            path = os.path.join(self.samples_dir, schema.lower())
+            for sfile in os.listdir(path):
+                if sfile in self.skip_list:
+                    continue
+                try:
+                    load_object_from_file(os.path.join(path, sfile))
+                except ValidationError as err:
+                    self.fail('Validation error: '+err.message)
 
     def _validate_from_dict(self, module, classname):
         """ validate a set of samples against the schema via from_dict() """

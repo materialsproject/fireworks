@@ -1,0 +1,9 @@
+{
+  "_fw_name": "ScriptTask",
+  "script": [
+    "echo 'To be, or not to be,'",
+    "echo 'that is the question:'"
+  ],
+  "stdout_file": "hamlet.txt",
+  "store_stderr": true
+}

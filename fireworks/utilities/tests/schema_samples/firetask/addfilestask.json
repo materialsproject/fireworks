@@ -1,0 +1,11 @@
+{
+  "_fw_name": "AddFilesTask",
+  "paths": [
+    "output_file"
+  ],
+  "compress": true,
+  "metadata": {
+    "property": "property 1",
+    "parameter": "parameter 2"
+  }
+}

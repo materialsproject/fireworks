@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/JoinListTask",
+  "JoinListTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "JoinListTask"
+      },
+      "inputs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      },
+      "output": {
+        "$ref": "generic.json#/Identifier"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "inputs",
+      "output"
+    ]
+  }
+}

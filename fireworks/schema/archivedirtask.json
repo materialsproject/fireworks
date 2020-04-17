@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/ArchiveDirTask",
+  "ArchiveDirTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "ArchiveDirTask"
+      },
+      "base_name": {
+        "$ref": "generic.json#/FilePath"
+      },
+      "format": {
+        "enum": [
+          "zip",
+          "tar",
+          "bztar",
+          "gztar"
+        ],
+        "default": "gztar"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "base_name"
+    ]
+  }
+}

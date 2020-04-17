@@ -1,0 +1,8 @@
+{
+  "_fw_name": "JoinListTask",
+  "inputs": [
+    "coffee beans",
+    "water"
+  ],
+  "output": "items needed"
+}

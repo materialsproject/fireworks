@@ -1,0 +1,29 @@
+{
+  "_fw_name": "ForeachTask",
+  "split": "array_X",
+  "task": {
+    "_fw_name": "ForeachTask",
+    "split": "array_Y",
+    "inputs": [
+      "array_X",
+      "array_Y"
+    ],
+    "outputs": [
+      "joined_data"
+    ],
+    "task": {
+      "_fw_name": "PyTask",
+      "func": "auxiliary.print_func",
+      "kwargs": {
+        "sleep": 1
+      },
+      "inputs": [
+        "array_X",
+        "array_Y"
+      ],
+      "outputs": [
+        "joined_data"
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/ImportDataTask",
+  "ImportDataTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "ImportDataTask"
+      },
+      "filename": {
+        "$ref": "generic.json#/FilePath"
+      },
+      "mapstring": {
+        "type": "string",
+        "pattern": "^([^/]+/?[^/]+)+$"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "filename",
+      "mapstring"
+    ]
+  }
+}

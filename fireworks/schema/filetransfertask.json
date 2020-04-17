@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/FileTransferTask",
+  "FileTransferTask": {
+    "type": "object",
+    "oneOf": [
+      {
+        "$ref": "#/definitions/FileTransferTaskType1"
+      },
+      {
+        "$ref": "#/definitions/FileTransferTaskType2"
+      }
+    ]
+  },
+  "definitions": {
+    "FileTransferTaskType1": {
+      "additionalProperties": false,
+      "properties": {
+        "_fw_name": {
+          "const": "FileTransferTask"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "src": {
+                "$ref": "generic.json#/FilePath"
+              },
+              "dest": {
+                "$ref": "generic.json#/FilePath"
+              }
+            },
+            "required": [
+              "src",
+              "dest"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "mode": {
+          "enum": [
+            "move",
+            "copy",
+            "copy2",
+            "copytree",
+            "copyfile",
+            "rtransfer"
+          ],
+          "default": "move"
+        },
+        "ignore_errors": {
+          "type": "boolean",
+          "default": false
+        },
+        "shell_interpret": {
+          "type": "boolean",
+          "default": true
+        },
+        "key_filename": {
+          "$ref": "generic.json#/FilePath"
+        },
+        "server": {
+          "anyOf": [
+            {
+              "$ref": "generic.json#/Hostname"
+            },
+            {
+              "$ref": "generic.json#/IPAddress"
+            }
+          ]
+        }
+      },
+      "required": [
+        "_fw_name",
+        "files"
+      ]
+    },
+    "FileTransferTaskType2": {
+      "additionalProperties": false,
+      "properties": {
+        "_fw_name": {
+          "const": "FileTransferTask"
+        },
+        "dest": {
+          "$ref": "generic.json#/FilePath"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "generic.json#/FilePath"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "mode": {
+          "enum": [
+            "move",
+            "copy",
+            "copy2",
+            "copytree",
+            "copyfile",
+            "rtransfer"
+          ],
+          "default": "move"
+        },
+        "ignore_errors": {
+          "type": "boolean",
+          "default": false
+        },
+        "shell_interpret": {
+          "type": "boolean",
+          "default": true
+        },
+        "key_filename": {
+          "$ref": "generic.json#/FilePath"
+        },
+        "server": {
+          "anyOf": [
+            {
+              "$ref": "generic.json#/Hostname"
+            },
+            {
+              "$ref": "generic.json#/IPAddress"
+            }
+          ]
+        }
+      },
+      "required": [
+        "_fw_name",
+        "dest",
+        "files"
+      ]
+    }
+  }
+}

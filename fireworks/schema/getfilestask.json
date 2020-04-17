@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/GetFilesTask",
+  "GetFilesTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "GetFilesTask"
+      },
+      "identifiers": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/Identifier"
+        },
+        "uniqueItems": true
+      },
+      "filepad_file": {
+        "$ref": "generic.json#/AbsoluteFilePath"
+      },
+      "dest_dir": {
+        "$ref": "generic.json#/FilePath"
+      },
+      "new_file_names": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/Filename"
+        },
+        "uniqueItems": true
+      }
+    },
+    "required": [
+      "_fw_name",
+      "identifiers"
+    ]
+  }
+}

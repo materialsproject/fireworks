@@ -383,19 +383,19 @@ def load_object_from_file(filename, f_format=None):
         f_format (str): the serialization format (default is auto-detect based on
             filename extension)
     """
-    m_dict = {}
     if f_format is None:
         f_format = filename.split('.')[-1]
 
     with open(filename, 'r', **ENCODING_PARAMS) as f:
         if f_format == 'json':
-            m_dict = reconstitute_dates(json.loads(f.read()))
+            dct = json.loads(f.read())
         elif f_format == 'yaml':
-            m_dict = reconstitute_dates(yaml.safe_load(f))
+            dct = yaml.safe_load(f)
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 
-    return load_object(m_dict)
+    resolve_validate(dct, dct['_fw_name'])
+    return load_object(reconstitute_dates(dct))
 
 
 def _search_module_for_obj(m_module, obj_dict):

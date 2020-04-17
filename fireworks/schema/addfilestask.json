@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/AddFilesTask",
+  "AddFilesTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "AddFilesTask"
+      },
+      "paths": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/FilePath"
+        },
+        "uniqueItems": true
+      },
+      "identifiers": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/Identifier"
+        },
+        "uniqueItems": true
+      },
+      "filepad_file": {
+        "$ref": "generic.json#/AbsoluteFilePath"
+      },
+      "compress": {
+        "type": "boolean"
+      },
+      "metadata": {
+        "type": "object",
+        "title": "Metadata object"
+      }
+    },
+    "required": [
+      "_fw_name",
+      "paths"
+    ]
+  }
+}

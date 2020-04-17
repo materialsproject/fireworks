@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/CompressDirTask",
+  "CompressDirTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "CompressDirTask"
+      },
+      "compression": {
+        "enum": [
+          "gz",
+          "bz2"
+        ],
+        "default": "gz"
+      },
+      "dest": {
+        "$ref": "generic.json#/FilePath",
+        "default": "./"
+      },
+      "ignore_errors": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": [
+      "_fw_name"
+    ]
+  }
+}

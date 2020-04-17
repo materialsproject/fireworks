@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/ScriptTask",
+  "ScriptTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "ScriptTask"
+      },
+      "script": {
+        "type": [
+          "string",
+          "array"
+        ],
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1
+      },
+      "defuse_bad_rc": {
+        "type": "boolean",
+        "default": false
+      },
+      "fizzle_bad_rc": {
+        "type": "boolean",
+        "default": false
+      },
+      "use_shell": {
+        "type": "boolean",
+        "default": true
+      },
+      "shell_exe": {
+        "$ref": "generic.json#/AbsoluteFilePath",
+        "default": null
+      },
+      "stdin_file": {
+        "$ref": "generic.json#/FilePath",
+        "default": null
+      },
+      "stdin_key": {
+        "type": "string",
+        "default": null
+      },
+      "store_stdout": {
+        "type": "boolean",
+        "default": false
+      },
+      "stdout_file": {
+        "$ref": "generic.json#/FilePath",
+        "default": null
+      },
+      "store_stderr": {
+        "type": "boolean",
+        "default": false
+      },
+      "stderr_file": {
+        "$ref": "generic.json#/FilePath",
+        "default": null
+      },
+      "_use_global_spec": {
+        "const": false
+      }
+    },
+    "required": [
+      "_fw_name",
+      "script"
+    ]
+  }
+}

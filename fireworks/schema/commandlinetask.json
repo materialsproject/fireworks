@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/CommandLineTask",
+  "CommandLineTask": {
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "CommandLineTask"
+      },
+      "command_spec": {
+        "type": "object",
+        "additionalProperties": {
+          "OneOf": [
+            {
+              "$ref": "generic.json#/Identifier"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "binding": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "prefix": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "separator": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    }
+                  }
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "enum": [
+                            "path",
+                            "identifier",
+                            "stdin",
+                            "stdout",
+                            "stderr",
+                            null
+                          ]
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "const": "data"
+                        },
+                        "value": {
+                          "type": [
+                            "string",
+                            "integer",
+                            "number"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "$ref": "generic.json#/Identifier"
+                    }
+                  ]
+                },
+                "target": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "path",
+                        "data",
+                        "identifier",
+                        "stdin",
+                        "stdout",
+                        "stderr",
+                        null
+                      ]
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "properties": {
+          "command": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "command"
+        ]
+      },
+      "inputs": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/Identifier"
+        },
+        "default": []
+      },
+      "outputs": {
+        "type": "array",
+        "items": {
+          "$ref": "generic.json#/Identifier"
+        },
+        "default": [],
+        "uniqueItems": true
+      },
+      "chunk_number": {
+        "oneOf": [
+          {
+            "type": "integer",
+            "minimum": 0
+          },
+          {
+            "const": null
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "_fw_name",
+      "command_spec"
+    ]
+  }
+}

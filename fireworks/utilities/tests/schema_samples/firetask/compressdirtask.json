@@ -1,0 +1,5 @@
+{
+  "_fw_name": "CompressDirTask",
+  "compression": "bz2",
+  "dest": "/tmp/compressed_dir"
+}

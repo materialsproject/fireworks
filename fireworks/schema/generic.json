@@ -29,6 +29,13 @@
     "format": "ipv4"
   },
   "LoggingLevel": {
-    "enum": ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"]
+    "enum": [
+      "CRITICAL",
+      "ERROR",
+      "WARNING",
+      "INFO",
+      "DEBUG",
+      "NOTSET"
+    ]
   }
 }
