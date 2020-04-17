@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/TestSerializer",
+  "TestSerializer": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "TestSerializer Name"
+      },
+      "a": {
+        "type": [
+          "string",
+          "object"
+        ]
+      },
+      "m_date": {}
+    },
+    "required": [
+      "_fw_name",
+      "a",
+      "m_date"
+    ],
+    "title": "TestSerializer object"
+  }
+}

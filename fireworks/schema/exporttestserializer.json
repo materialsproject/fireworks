@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/ExportTestSerializer",
+  "ExportTestSerializer": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "_fw_name": {
+        "const": "TestSerializer Export Name"
+      },
+      "a": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "required": [
+      "_fw_name",
+      "a"
+    ],
+    "title": "ExportTestSerializer object"
+  }
+}
