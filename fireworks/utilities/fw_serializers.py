@@ -42,6 +42,7 @@ import six
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
+from fireworks.utilities.json_schema import resolve_validate
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -251,12 +252,13 @@ class FWSerializable(object):
             FWSerializable
         """
         if f_format == 'json':
-            return cls.from_dict(reconstitute_dates(json.loads(f_str)))
+            dct = json.loads(f_str)
         elif f_format == 'yaml':
-            return cls.from_dict(reconstitute_dates(
-                yaml.safe_load(f_str)))
+            dct = yaml.safe_load(f_str)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
+        resolve_validate(dct, cls.__name__)
+        return cls.from_dict(reconstitute_dates(dct))
 
     def to_file(self, filename, f_format=None, **kwargs):
         """

@@ -22,16 +22,8 @@ class JSONSchemaTest(unittest.TestCase):
     samples_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                'schema_samples')
 
-    # skip reasons:
-    # 1) deserialization before validation (with status Fail)
-    # 2) runtime errors after validation (with status Error)
-    skip_list_1 = [
-      # 'dupefinder_1.json', # Validation error: {"_fw_name": "DupeFinderExact"} is not of type 'object'
-      'dupefinder_2.json', # Validation error: {"_fw_name": "DupeFinderExact"} is not of type 'object'
-      'background_task.json', # Validation error: {"tasks": [{"_fw_name": "ScriptTask", "script": ["echo \"hello from BACKGROUND thread"], "use_shell": true}], "num_launches": 0, "sleep_time": 10, "run_on_finish": false, "_fw_name": "BackgroundTask"} is not of type 'object'
-    ]
-
-    skip_list_2 = [
+    # skip due to runtime errors after validation (with status Error)
+    skip_list = [
       'customtask.json', # ModuleNotFoundError: No module named 'fw_custom_tasks'
       'lambda_task.json', # ValueError: load_object() could not find a class with cls._fw_name LambdaTask
       'launchpad_ssl_x509.json', # FileNotFoundError: [Errno 2] No such file or directory: '/path/to/cacert.pem'
@@ -94,7 +86,7 @@ class JSONSchemaTest(unittest.TestCase):
         cls = getattr(sys.modules[module], classname)
         path = os.path.join(self.samples_dir, classname.lower())
         for sfile in os.listdir(path):
-            if sfile in self.skip_list_1+self.skip_list_2:
+            if sfile in self.skip_list:
                 continue
             with open(os.path.join(path, sfile), 'r') as fileh:
                 inst_dict = json.load(fileh)
@@ -108,7 +100,7 @@ class JSONSchemaTest(unittest.TestCase):
         cls = getattr(sys.modules[module], classname)
         path = os.path.join(self.samples_dir, classname.lower())
         for sfile in os.listdir(path):
-            if sfile in self.skip_list_1+self.skip_list_2:
+            if sfile in self.skip_list:
                 continue
             cls = getattr(sys.modules[module], classname)
             try:
@@ -119,14 +111,6 @@ class JSONSchemaTest(unittest.TestCase):
     def test_workflow_from_dict(self):
         """ validate Workflow schema from dict """
         self._validate_from_dict('fireworks', 'Workflow')
-
-    def test_firework_from_dict(self):
-        """ validate Firework schema from dict """
-        self._validate_from_dict('fireworks', 'Firework')
-
-    def test_fworker_from_dict(self):
-        """ validate FWorker schema from dict """
-        self._validate_from_dict('fireworks', 'FWorker')
 
     def test_qadapter_from_dict(self):
         """ validate CommonAdapter schema from dict """
