@@ -50,7 +50,6 @@ class JSONSchemaTest(unittest.TestCase):
             'filewritetask.json',
             'firetask.json',
             'firework.json',
-            'firework_workflow.json',
             'foreachtask.json',
             'fwaction.json',
             'fwconfig.json',
