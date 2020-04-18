@@ -13,26 +13,12 @@ from jsonschema.exceptions import SchemaError
 from jsonschema import Draft7Validator
 import fireworks
 import fireworks.user_objects.queue_adapters.common_adapter
-from fireworks.utilities.json_schema import resolve_validate
+from fireworks.utilities import json_schema
 from fireworks.utilities.json_schema import FW_SCHEMA_DIR
 from fireworks.utilities.fw_serializers import load_object_from_file
 
 class JSONSchemaTest(unittest.TestCase):
-    """ run tests for DAGFlow class """
-
-    samples_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               'schema_samples')
-
-    # skip due to runtime errors after validation (with status Error)
-    skip_list = [
-        'customtask.json',
-        'lambda_task.json',
-        'launchpad_ssl_x509.json',
-        'launchpad_ssl.json',
-        'file_transfer_task_2.json',
-        'file_transfer_task.json',
-        'filetransfertask1.json'
-    ]
+    """ validate the FireWorks JSON schema """
 
     def test_validate_schema(self):
         """ validate the schema against the metaschema """
@@ -77,6 +63,23 @@ class JSONSchemaTest(unittest.TestCase):
             except SchemaError as err:
                 self.fail('Schema validation error: '+err.message)
 
+class JSONSchemaValidatorTest(unittest.TestCase):
+    """ test the FireWorks schema validator using sample documents """
+
+    samples_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'schema_samples')
+
+    # skip due to runtime errors after validation (with status Error)
+    skip_list = [
+        'customtask.json',
+        'lambda_task.json',
+        'launchpad_ssl_x509.json',
+        'launchpad_ssl.json',
+        'file_transfer_task_2.json',
+        'file_transfer_task.json',
+        'filetransfertask1.json'
+    ]
+
     def test_validate(self):
         """ validate a set of samples against the schema directly """
         schemas = ['Firetask', 'Firework', 'Workflow', 'LaunchPad', 'FWorker',
@@ -86,7 +89,7 @@ class JSONSchemaTest(unittest.TestCase):
             for wf_file in os.listdir(path):
                 with open(os.path.join(path, wf_file), 'r') as fileh:
                     try:
-                        resolve_validate(json.load(fileh), schema)
+                        json_schema.validate(json.load(fileh), schema)
                     except ValidationError as err:
                         self.fail('Validation error: '+err.message)
 
@@ -97,7 +100,7 @@ class JSONSchemaTest(unittest.TestCase):
             with open(os.path.join(path, wf_file), 'r') as fileh:
                 inst = json.load(fileh)
                 with self.assertRaises(ValidationError):
-                    resolve_validate(inst, 'Workflow')
+                    json_schema.validate(inst, 'Workflow')
 
     def test_validate_load_object_from_file(self):
         """ test the validator in load_object_from_file() """
@@ -139,13 +142,10 @@ class JSONSchemaTest(unittest.TestCase):
             except ValidationError as err:
                 self.fail('Validation error: '+err.message)
 
-    def test_workflow_from_dict(self):
-        """ validate Workflow schema from dict """
-        self._validate_from_dict('fireworks', 'Workflow')
-
     def test_qadapter_from_dict(self):
         """ validate CommonAdapter schema from dict """
-        self._validate_from_dict('fireworks.user_objects.queue_adapters.common_adapter', 'CommonAdapter')
+        modulename = 'fireworks.user_objects.queue_adapters.common_adapter'
+        self._validate_from_dict(modulename, 'CommonAdapter')
 
     def test_lpad_from_dict(self):
         """ validate LaunchPad schema from dict """
@@ -165,7 +165,8 @@ class JSONSchemaTest(unittest.TestCase):
 
     def test_qadapter_from_file(self):
         """ validate CommonAdapter schema from file """
-        self._validate_from_file('fireworks.user_objects.queue_adapters.common_adapter', 'CommonAdapter')
+        modulename = 'fireworks.user_objects.queue_adapters.common_adapter'
+        self._validate_from_file(modulename, 'CommonAdapter')
 
     def test_lpad_from_file(self):
         """ validate LaunchPad schema from file """

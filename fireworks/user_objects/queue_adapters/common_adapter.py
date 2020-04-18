@@ -17,7 +17,7 @@ import subprocess
 from fireworks.queue.queue_adapter import QueueAdapterBase, Command
 from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
-from fireworks.utilities.json_schema import resolve_validate
+from fireworks.utilities import json_schema
 
 __author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong, David Waroquiers, Felix Brockherde'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -292,7 +292,7 @@ class CommonAdapter(QueueAdapterBase):
 
     @classmethod
     def from_dict(cls, m_dict):
-        resolve_validate(m_dict, 'CommonAdapter')
+        json_schema.validate(m_dict, 'CommonAdapter')
         return cls(
             q_type=m_dict["_fw_q_type"],
             q_name=m_dict.get("_fw_q_name"),
