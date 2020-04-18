@@ -116,7 +116,10 @@
               }
             }
           }
-        }
+        },
+        "required": [
+          "host"
+        ]
       },
       {
         "additionalProperties": false,
