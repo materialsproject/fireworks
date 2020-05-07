@@ -330,7 +330,7 @@ class DAGFlow(Graph):
         graph.write_dot(filename)
 
 
-def plot_wf(wf, view='combined', **kwargs):
+def plot_wf(wf, view='combined', labels=False, **kwargs):
     """Plot workflow via igraph.plot.
 
     Parameters:
@@ -347,7 +347,8 @@ def plot_wf(wf, view='combined', **kwargs):
     import matplotlib
 
     dagf = DAGFlow.from_fireworks(wf)
-    dagf.add_step_labels()
+    if labels:
+        dagf.add_step_labels()
 
     # copied from to_dot
     if view == 'controlflow':
@@ -385,12 +386,12 @@ def plot_wf(wf, view='combined', **kwargs):
     dagf_roots = dagf._get_roots()
     dagf_leaves = dagf._get_leaves()
 
-    # code "roots" red, "leaves" green, any other blue
+    # code "roots" green (start), "leaves" red (end), any other blue
     def color_coding(v):
         if v in dagf_roots:
-            return matplotlib.colors.cnames['indianred']
-        elif v in dagf_leaves:
             return matplotlib.colors.cnames['forestgreen']
+        elif v in dagf_leaves:
+            return matplotlib.colors.cnames['indianred']
         else:
             return matplotlib.colors.cnames['lightsteelblue']
 
