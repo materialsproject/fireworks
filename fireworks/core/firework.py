@@ -32,7 +32,6 @@ from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
-from fireworks.utilities import json_schema
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -392,7 +391,6 @@ class Tracker(FWSerializable, object):
 
     @classmethod
     def from_dict(cls, m_dict):
-        json_schema.validate(m_dict, 'Tracker')
         return Tracker(m_dict['filename'], m_dict['nlines'], m_dict.get('content', ''),
                        m_dict.get('allow_zipped', False))
 
@@ -680,7 +678,6 @@ class Workflow(FWSerializable):
 
         @classmethod
         def from_dict(cls, m_dict):
-            json_schema.validate(m_dict, 'Links')
             return Workflow.Links(m_dict)
 
         def __setstate__(self, state):

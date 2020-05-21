@@ -3,6 +3,7 @@
 __author__ = 'Ivan Kondov'
 __copyright__ = 'Copyright 2020, Karlsruhe Institute of Technology'
 __email__ = 'ivan.kondov@kit.edu'
+__maintainer__ = 'Ivan Kondov'
 
 import os
 import json

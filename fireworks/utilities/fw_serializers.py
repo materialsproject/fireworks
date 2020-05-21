@@ -42,6 +42,7 @@ import six
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
+from fireworks.fw_config import JSON_SCHEMA_VALIDATE, JSON_SCHEMA_VALIDATE_LIST
 from fireworks.utilities import json_schema
 
 __author__ = 'Anubhav Jain'
@@ -259,7 +260,8 @@ class FWSerializable(object):
             dct = yaml.safe_load(f_str)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
-        json_schema.validate(dct, cls.__name__)
+        if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
+            json_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
 
     def to_file(self, filename, f_format=None, **kwargs):
@@ -397,7 +399,8 @@ def load_object_from_file(filename, f_format=None):
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 
     classname = FW_NAME_UPDATES.get(dct['_fw_name'], dct['_fw_name'])
-    json_schema.validate(dct, classname)
+    if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
+        json_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
 
 
