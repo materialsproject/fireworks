@@ -9,15 +9,15 @@ import uuid
 import unittest
 from fireworks import PyTask, Firework, Workflow
 
+try:
+    from fireworks.utilities.dagflow import DAGFlow
+except ImportError:
+    raise unittest.SkipTest('Skipping because python-igraph not installed')
+
 class DAGFlowTest(unittest.TestCase):
     """ run tests for DAGFlow class """
 
     def setUp(self):
-        try:
-            from fireworks.utilities.dagflow import DAGFlow
-        except Exception:
-            raise unittest.SkipTest("Skipping test, DagFlow not installed")
-
         self.fw1 = Firework(
             PyTask(
                 func='math.pow',
@@ -85,7 +85,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_input(self):
         """ missing input """
-
         fw2 = Firework(
             PyTask(
                 func='math.pow',
