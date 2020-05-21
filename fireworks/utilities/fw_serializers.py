@@ -181,9 +181,7 @@ def serialize_fw(func):
 class FWSerializable(object):
     """
     To create a serializable object within FireWorks, you should subclass this
-    class and implement the to_dict() and from_dict() methods. Additionally,
-    you must provide a JSON schema for your subclass. The JSON schemas of
-    all currently provided subclasses are located in folder `fireworks/schema`.
+    class and implement the to_dict() and from_dict() methods.
 
     If you want the load_object() implicit de-serialization to work, you must
     also:

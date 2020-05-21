@@ -44,7 +44,7 @@ SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
 PRINT_FW_JSON = True
 PRINT_FW_YAML = False
 
-JSON_SCHEMA_VALIDATE = True
+JSON_SCHEMA_VALIDATE = False
 JSON_SCHEMA_VALIDATE_LIST = ['CommonAdapter', 'Firework', 'FWAction', 'FWorker',
                              'LaunchPad', 'Workflow']
 
