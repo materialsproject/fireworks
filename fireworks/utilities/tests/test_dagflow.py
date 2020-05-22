@@ -9,10 +9,12 @@ import uuid
 import unittest
 from fireworks import PyTask, Firework, Workflow
 
+
 try:
     from fireworks.utilities.dagflow import DAGFlow
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     raise unittest.SkipTest('Skipping because python-igraph not installed')
+
 
 class DAGFlowTest(unittest.TestCase):
     """ run tests for DAGFlow class """
