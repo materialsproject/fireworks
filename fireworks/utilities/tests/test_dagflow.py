@@ -11,9 +11,11 @@ from fireworks import PyTask, Firework, Workflow
 
 
 try:
-    from fireworks.utilities.dagflow import DAGFlow
+    __import__('igraph', fromlist=['Graph'])
 except (ImportError, ModuleNotFoundError):
     raise unittest.SkipTest('Skipping because python-igraph not installed')
+else:
+    from fireworks.utilities.dagflow import DAGFlow
 
 
 class DAGFlowTest(unittest.TestCase):
