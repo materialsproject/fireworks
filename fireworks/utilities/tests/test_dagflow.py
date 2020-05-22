@@ -10,18 +10,15 @@ import unittest
 from fireworks import PyTask, Firework, Workflow
 
 
-try:
-    __import__('igraph', fromlist=['Graph'])
-except (ImportError, ModuleNotFoundError):
-    raise unittest.SkipTest('Skipping because python-igraph not installed')
-else:
-    from fireworks.utilities.dagflow import DAGFlow
-
-
 class DAGFlowTest(unittest.TestCase):
     """ run tests for DAGFlow class """
 
     def setUp(self):
+        try:
+            __import__('igraph', fromlist=['Graph'])
+        except (ImportError, ModuleNotFoundError):
+            raise unittest.SkipTest('Skipping because python-igraph not installed')
+
         self.fw1 = Firework(
             PyTask(
                 func='math.pow',
@@ -50,6 +47,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_ok(self):
         """ construct and replicate """
+        from fireworks.utilities.dagflow import DAGFlow
         wfl = Workflow(
             [self.fw1, self.fw2, self.fw3],
             {self.fw1: [self.fw2], self.fw2: [self.fw3], self.fw3: []}
@@ -59,6 +57,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_loop(self):
         """ loop in graph """
+        from fireworks.utilities.dagflow import DAGFlow
         wfl = Workflow(
             [self.fw1, self.fw2, self.fw3],
             {self.fw1: self.fw2, self.fw2: self.fw3, self.fw3: self.fw1}
@@ -70,6 +69,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_cut(self):
         """ disconnected graph """
+        from fireworks.utilities.dagflow import DAGFlow
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2})
         msg = 'The workflow graph must be connected'
         with self.assertRaises(AssertionError) as context:
@@ -78,6 +78,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_link(self):
         """ wrong links """
+        from fireworks.utilities.dagflow import DAGFlow
         wfl = Workflow(
             [self.fw1, self.fw2, self.fw3],
             {self.fw1: [self.fw2, self.fw3]}
@@ -89,6 +90,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_input(self):
         """ missing input """
+        from fireworks.utilities.dagflow import DAGFlow
         fw2 = Firework(
             PyTask(
                 func='math.pow',
@@ -106,6 +108,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_output(self):
         """ clashing inputs """
+        from fireworks.utilities.dagflow import DAGFlow
         fw2 = Firework(
             PyTask(
                 func='math.pow',
@@ -124,6 +127,7 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_view(self):
         """ visualize the workflow graph """
+        from fireworks.utilities.dagflow import DAGFlow
         wfl = Workflow(
             [self.fw1, self.fw2, self.fw3],
             {self.fw1: [self.fw2], self.fw2: [self.fw3], self.fw3: []}
