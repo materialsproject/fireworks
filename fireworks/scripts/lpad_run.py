@@ -10,6 +10,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 
 from argparse import ArgumentParser, ArgumentTypeError
 import os
+import shutil
 import time
 import ast
 import json
@@ -691,6 +692,116 @@ def maintain(args):
     lp.maintain(args.infinite, args.maintain_interval)
 
 
+def orphaned(args):
+    # get_fws
+    lp = get_lp(args)
+    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
+    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
+        args.query = '{}'
+        args.display_format = args.display_format if args.display_format else 'ids'
+    if sum([bool(x) for x in [args.fw_id, args.name, args.qid]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, qid)')
+    else:
+        args.display_format = args.display_format if args.display_format else 'more'
+
+    if args.fw_id:
+        query = {'fw_id': {"$in": args.fw_id}}
+    elif args.name and not args.launches_mode:
+        query = {'name': args.name}
+    elif args.state:
+        query = {'state': args.state}
+    elif args.query:
+        query = ast.literal_eval(args.query)
+    else:
+        query = None
+
+    if args.sort:
+        sort = [(args.sort, ASCENDING)]
+    elif args.rsort:
+        sort = [(args.rsort, DESCENDING)]
+    else:
+        sort = None
+
+    if args.qid:
+        fw_ids = lp.get_fw_ids_from_reservation_id(args.qid)
+        if query:
+            query['fw_id'] = {"$in": fw_ids}
+            fw_ids = lp.get_fw_ids(query, sort, args.max, launches_mode=args.launches_mode)
+    else:
+        fw_ids = lp.get_fw_ids(query, sort, args.max,
+                            launches_mode=args.launches_mode)
+
+    # get_wfs
+    orphaned_fw_ids = []
+    for fw_id in fw_ids:
+        query = {'nodes': fw_id}
+        wf_ids = lp.get_wf_ids(query)
+        if len(wf_ids) == 0:
+            orphaned_fw_ids.append(fw_id)
+
+    fws = []
+    if args.display_format == 'ids':
+        fws = orphaned_fw_ids
+    elif args.display_format == 'count':
+        fws = [orphaned_fw_ids]
+    else:
+        for id in orphaned_fw_ids:
+            fw = lp.get_fw_by_id(id)
+            d = fw.to_dict()
+            d['state'] = d.get('state', 'WAITING')
+            if args.display_format == 'more' or args.display_format == 'less':
+                if 'archived_launches' in d:
+                    del d['archived_launches']
+                del d['spec']
+            if args.display_format == 'less':
+                if 'launches' in d:
+                    del d['launches']
+            fws.append(d)
+    if len(fws) == 1:
+        fws = orphaned_fw_ids[0]
+
+    if args.remove:  # snippet from lpad.delete_wf
+        lp.m_logger.info('Found {} orphaned fw_ids: {}'.format(
+            len(orphaned_fw_ids), orphaned_fw_ids))
+        potential_launch_ids = []
+        launch_ids = []
+        for i in orphaned_fw_ids:
+            fw_dict = lp.fireworks.find_one({'fw_id': i})
+            potential_launch_ids += fw_dict["launches"] + fw_dict[
+                'archived_launches']
+
+        for i in potential_launch_ids:  # only remove launches if no other fws refer to them
+            if not lp.fireworks.find_one(
+                    {'$or': [{"launches": i}, {'archived_launches': i}],
+                     'fw_id': {"$nin": orphaned_fw_ids}}, {'launch_id': 1}):
+                launch_ids.append(i)
+
+        if args.delete_launch_dirs:
+            launch_dirs = []
+            for i in launch_ids:
+                launch_dirs.append(
+                    lp.launches.find_one({'launch_id': i}, {'launch_dir': 1})[
+                        'launch_dir'])
+            lp.m_logger.info("Remove folders {}".format(launch_dirs))
+            for d in launch_dirs:
+                shutil.rmtree(d, ignore_errors=True)
+
+        lp.m_logger.info("Remove fws {}".format(orphaned_fw_ids))
+        lp.m_logger.info("Remove launches {}".format(launch_ids))
+        if lp.gridfs_fallback is not None:
+            for lid in launch_ids:
+                for f in lp.gridfs_fallback.find({"metadata.launch_id": lid}):
+                    lp.gridfs_fallback.delete(f._id)
+        lp.launches.delete_many({'launch_id': {"$in": launch_ids}})
+        lp.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
+        lp.fireworks.delete_many({"fw_id": {"$in": orphaned_fw_ids}})
+        # lp.workflows.delete_one({'nodes': fw_id})
+    else:
+        print(args.output(fws))
+
+
+
 def get_output_func(format):
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
@@ -1128,6 +1239,29 @@ def lpad():
     maintain_parser.add_argument('--maintain_interval', help='sleep time between maintenance loops (infinite mode)',
                                  default=MAINTAIN_INTERVAL, type=int)
     maintain_parser.set_defaults(func=maintain)
+
+    orphaned_parser = admin_subparser.add_parser('orphaned', help='Find orphaned FireWorks')
+    orphaned_parser.add_argument(*fw_id_args, **fw_id_kwargs)
+    orphaned_parser.add_argument('-n', '--name', help='get FWs with this name')
+    orphaned_parser.add_argument(*state_args, **state_kwargs)
+    orphaned_parser.add_argument(*query_args, **query_kwargs)
+    orphaned_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
+    orphaned_parser.add_argument(*qid_args, **qid_kwargs)
+    orphaned_parser.add_argument(*disp_args, **disp_kwargs)
+    orphaned_parser.add_argument('-m', '--max', help='limit results', default=0,
+                                 type=int)
+    orphaned_parser.add_argument('--sort', help='Sort results',
+                                 choices=["created_on", "updated_on"])
+    orphaned_parser.add_argument('--rsort', help='Reverse sort results',
+                                 choices=["created_on", "updated_on"])
+    orphaned_parser.add_argument('--remove', help='delete orphaned',
+                                 action='store_true')
+    orphaned_parser.add_argument('--ldirs', help="the launch directories "
+                                 "associated with the orphaned Fireworks will "
+                                 "be deleted as well, if possible",
+                                 dest="delete_launch_dirs",
+                                 action='store_true')
+    orphaned_parser.set_defaults(func=orphaned)
 
     tuneup_parser = admin_subparser.add_parser('tuneup',
                                                help='Tune-up the database (should be performed during '
