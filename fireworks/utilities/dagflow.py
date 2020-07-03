@@ -242,7 +242,6 @@ class DAGFlow(Graph):
         """Returns all leaves (i.e. vertices without outgoing edges)"""
         return [i for i, v in enumerate(self.degree(mode=igraph.OUT)) if v == 0]
 
-
     def delete_ctrlflow_links(self):
         """ Deletes graph edges corresponding to control flow links """
         lst = [link.index for link in list(self.es) if link['label'] == ' ']
@@ -343,8 +342,7 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
 
     Returns:
         igraph.drawing.Plot"""
-    import igraph
-    import matplotlib
+    import matplotlib  # only needed for color-coding with favorite named colors
 
     dagf = DAGFlow.from_fireworks(wf)
     if labels:
@@ -415,6 +413,6 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
     # special treatment
     if 'layout' in kwargs and isinstance(kwargs['layout'], str):
         # tree.layout_reingold_tilford(root=[0]))
-         visual_style["layout"] = dagf.layout(kwargs['layout'])
+        visual_style["layout"] = dagf.layout(kwargs['layout'])
 
     return igraph.plot(dagf, **visual_style)
