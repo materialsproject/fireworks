@@ -730,7 +730,7 @@ def orphaned(args):
             fw_ids = lp.get_fw_ids(query, sort, args.max, launches_mode=args.launches_mode)
     else:
         fw_ids = lp.get_fw_ids(query, sort, args.max,
-                            launches_mode=args.launches_mode)
+                               launches_mode=args.launches_mode)
 
     # get_wfs
     orphaned_fw_ids = []
@@ -799,7 +799,6 @@ def orphaned(args):
         # lp.workflows.delete_one({'nodes': fw_id})
     else:
         print(args.output(fws))
-
 
 
 def get_output_func(format):
