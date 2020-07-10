@@ -1,5 +1,5 @@
 ruamel.yaml==0.16.5
-pymongo==3.9.0
+pymongo==3.10.0
 Jinja2==2.10.3
 six==1.13.0
 monty==3.0.2
