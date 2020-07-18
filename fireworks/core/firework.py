@@ -818,9 +818,8 @@ class Workflow(FWSerializable):
         """
         updated_ids = []
 
-        # TODO: wouldn't it be better to update specs after inserting additions
-        # and detours in order to propagate modified specs to new FireWorks
-        # as well?
+        # note: update specs before inserting additions to give user more control
+        # see: https://github.com/materialsproject/fireworks/pull/407
 
         # update the spec of the children FireWorks
         if action.update_spec and action.propagate:
