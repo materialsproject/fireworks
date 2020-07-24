@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.9.5 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.9.6 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="FireWorks Changelog" href="changelog.html" />
@@ -35,7 +36,8 @@
         <li class="right" >
           <a href="reference.html" title="Reference material"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Comprehensive Guide to Writing Firetasks with Python</a></li> 
       </ul>
     </div>  
 
@@ -228,7 +230,7 @@ complete definition of expected input and output files, a very common use case i
 <ul>
 <li><p>You can omit the <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> parameter altogether, and the code will then use the Class name as the identifier. However, note that this is dangerous as changing your Class name later on can break your code. In addition, if you have two Firetasks with the same name the code will throw an error.</p></li>
 <li><p>(or) You can omit the <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> <strong>and</strong> add an <code class="docutils literal notranslate"><span class="pre">&#64;explicit_serialize</span></code> decorator to your Class. This will identify your class by the module name AND class name. This prevents namespace collisions, AND it allows you to skip registering your Firetask! However, the serialization is even more sensitive to refactoring: moving your Class to a different module will break the code, as will renaming it. Here’s an example of how to use the decorator:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks.utilities.fw_utilities</span> <span class="k">import</span> <span class="n">explicit_serialize</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks.utilities.fw_utilities</span> <span class="kn">import</span> <span class="n">explicit_serialize</span>
 
 <span class="nd">@explicit_serialize</span>
 <span class="k">class</span> <span class="nc">PrintFW</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
@@ -243,6 +245,7 @@ complete definition of expected input and output files, a very common use case i
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -289,7 +292,7 @@ complete definition of expected input and output files, a very common use case i
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -309,13 +312,14 @@ complete definition of expected input and output files, a very common use case i
         <li class="right" >
           <a href="reference.html" title="Reference material"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Comprehensive Guide to Writing Firetasks with Python</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
