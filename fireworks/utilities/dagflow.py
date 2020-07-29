@@ -7,8 +7,10 @@ __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 from itertools import combinations
 from igraph import Graph
 
+
 DF_TASKS = ['PyTask', 'CommandLineTask', 'ForeachTask', 'JoinDictTask',
             'JoinListTask']
+
 
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
