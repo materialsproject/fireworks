@@ -189,7 +189,7 @@ def add_wf(args):
         fwf = Workflow.from_file(f)
         if args.check:
             from fireworks.utilities.dagflow import DAGFlow
-            DAGFlow.from_fireworks(fwf)
+            DAGFlow.from_fireworks(fwf).check()
         lp.add_wf(fwf)
 
 
@@ -211,10 +211,7 @@ def dump_wf(args):
 def check_wf(args):
     from fireworks.utilities.dagflow import DAGFlow
     lp = get_lp(args)
-    dagf = DAGFlow.from_fireworks(lp.get_wf_by_fw_id(args.fw_id))
-    if args.view is not None:
-        dagf.add_step_labels()
-        dagf.to_dot(args.dot_file, view=args.view)
+    DAGFlow.from_fireworks(lp.get_wf_by_fw_id(args.fw_id)).check()
 
 
 def add_wf_dir(args):
@@ -781,15 +778,9 @@ def lpad():
                               action='store_true')
     addwf_parser.set_defaults(func=add_wf, check=False)
 
-    check_wf_parser = subparsers.add_parser('check_wflow', help='validate and graph a workflow from launchpad')
+    check_wf_parser = subparsers.add_parser('check_wflow', help='check a workflow from launchpad')
     check_wf_parser.add_argument('-i', '--fw_id', type=int, help='the id of a firework from the workflow')
-    check_wf_parser.add_argument('-g', '--graph', type=str,
-                                 help='graph the workflow in DOT format; allowed views: dataflow, controlflow, '
-                                      'combined.',
-                                 dest='view', default=None)
-    check_wf_parser.add_argument('-f', '--dot_file', help='path to store the workflow graph, default: workflow.dot',
-                                 default='workflow.dot')
-    check_wf_parser.set_defaults(func=check_wf, control_flow=False, data_flow=False)
+    check_wf_parser.set_defaults(func=check_wf)
 
     get_launchdir_parser = subparsers.add_parser('get_launchdir',
                                                  help='get the directory of the most recent launch of the given fw_id.'
