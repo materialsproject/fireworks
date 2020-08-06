@@ -1245,7 +1245,7 @@ class LaunchPad(FWSerializable):
             rerun (bool): if True, the expired reservations are cancelled and the fireworks rerun.
 
         Returns:
-            [int]: list of expired lacunh ids
+            [int]: list of expired launch ids
         """
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
