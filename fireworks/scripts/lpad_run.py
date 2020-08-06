@@ -335,14 +335,14 @@ def get_fws_in_wfs(args):
         ids = lp.get_fw_ids_from_reservation_id(args.qid)
         if fw_query:
             fw_query['fw_id'] = {"$in": ids}
-            ids = lp.get_fws_ids_in_wfs(wf_query=wf_query, fw_query=fw_query,
-                                        sort=sort, limit=args.max,
-                                        launches_mode=args.launches_mode)
+            ids = lp.get_fw_ids_in_wfs(wf_query=wf_query, fw_query=fw_query,
+                                       sort=sort, limit=args.max,
+                                       launches_mode=args.launches_mode)
     else:
-        ids = lp.get_fws_ids_in_wfs(wf_query=wf_query, fw_query=fw_query,
-                                    sort=sort, limit=args.max,
-                                    count_only=args.display_format == 'count',
-                                    launches_mode=args.launches_mode)
+        ids = lp.get_fw_ids_in_wfs(wf_query=wf_query, fw_query=fw_query,
+                                   sort=sort, limit=args.max,
+                                   count_only=args.display_format == 'count',
+                                   launches_mode=args.launches_mode)
 
     fws = []
     if args.display_format == 'ids':
@@ -852,6 +852,11 @@ def lpad():
     fw_prefixed_query_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in query_args]
     fw_prefixed_query_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_query_args]
 
+    # filter all long options, i.e. '--fw_id' and strip off preceding '--'
+    fw_id_options = [re.sub('^--(.*)$', '\\1', opt)
+                     for opt in [*fw_id_args, *wf_prefixed_fw_id_args, *fw_prefixed_fw_id_args]
+                     if re.match('^--.*$', opt)]
+
     version_parser = subparsers.add_parser(
         'version',
         help='Print the version and location of FireWorks')
@@ -1320,12 +1325,13 @@ def lpad():
         # if no command supplied, print help
         parser.print_help()
     else:
-        if hasattr(args, "fw_id") and args.fw_id is not None and \
-                isinstance(args.fw_id, six.string_types):
-            if "," in args.fw_id:
-                args.fw_id = [int(x) for x in args.fw_id.split(",")]
-            else:
-                args.fw_id = [int(args.fw_id)]
+        for opt in fw_id_options:
+            if hasattr(args, opt) and getattr(args, opt) is not None and \
+                    isinstance(getattr(args, opt), six.string_types):
+                if "," in getattr(args, opt):
+                    setattr(args, opt, [int(x) for x in getattr(args, opt).split(",")])
+                else:
+                    setattr(args, opt, [int(getattr(args, opt))])
 
         args.func(args)
 

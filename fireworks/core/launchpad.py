@@ -770,7 +770,7 @@ class LaunchPad(FWSerializable):
 
         return wf_ids
 
-    def get_fws_ids_in_wfs(self, wf_query=None, fw_query=None, sort=None,
+    def get_fw_ids_in_wfs(self, wf_query=None, fw_query=None, sort=None,
                            limit=0, count_only=False, launches_mode=False):
         """
         Return all fw ids that match fw_query within workflows that match wf_query.
@@ -821,6 +821,8 @@ class LaunchPad(FWSerializable):
 
         if count_only:
             aggregation.append({'$count': 'count'})
+            self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+
             cursor = self.workflows.aggregate(aggregation)
             return list(cursor)[0]['count']
 
@@ -829,9 +831,10 @@ class LaunchPad(FWSerializable):
 
         aggregation.append({'$project': {'fw_id': True, '_id': False}})
 
-        if limit is not None:
+        if limit is not None and limit > 0:
             aggregation.append({'$limit': limit})
 
+        self.m_logger.debug("Aggregation '{}'.".format(aggregation))
         cursor = self.workflows.aggregate(aggregation)
         return [fw["fw_id"] for fw in cursor]
 
