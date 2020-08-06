@@ -10,6 +10,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 
 from argparse import ArgumentParser, ArgumentTypeError
 import os
+import re
 import time
 import ast
 import json
@@ -260,6 +261,89 @@ def get_fws(args):
     else:
         ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count',
                             launches_mode=args.launches_mode)
+    fws = []
+    if args.display_format == 'ids':
+        fws = ids
+    elif args.display_format == 'count':
+        fws = [ids]
+    else:
+        for id in ids:
+            fw = lp.get_fw_by_id(id)
+            d = fw.to_dict()
+            d['state'] = d.get('state', 'WAITING')
+            if args.display_format == 'more' or args.display_format == 'less':
+                if 'archived_launches' in d:
+                    del d['archived_launches']
+                del d['spec']
+            if args.display_format == 'less':
+                if 'launches' in d:
+                    del d['launches']
+            fws.append(d)
+    if len(fws) == 1:
+        fws = fws[0]
+
+    print(args.output(fws))
+
+
+def get_fws_in_wfs(args):
+    # get_wfs
+    lp = get_lp(args)
+    if sum([bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
+    if sum([bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]]) == 0:
+        args.wf_query = '{}'
+
+    if args.wf_fw_id:
+        wf_query = {'nodes': {"$in": args.wf_fw_id}}
+    elif args.wf_name:
+        wf_query = {'name': args.wf_name}
+    elif args.wf_state:
+        wf_query = {'state': args.wf_state}
+    else:
+        wf_query = ast.literal_eval(args.wf_query)
+
+    # get_fws
+    if sum([bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
+    if sum([bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]]) == 0:
+        args.fw_query = '{}'
+        args.display_format = args.display_format if args.display_format else 'ids'
+    if sum([bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]]) > 1:
+        raise ValueError('Please specify exactly one of (fw_id, name, qid)')
+    else:
+        args.display_format = args.display_format if args.display_format else 'more'
+
+    if args.fw_fw_id:
+        fw_query = {'fw_id': {"$in": args.fw_fw_id}}
+    elif args.fw_name and not args.launches_mode:
+        fw_query = {'name': args.fw_name}
+    elif args.fw_state:
+        fw_query = {'state': args.fw_state}
+    elif args.fw_query:
+        fw_query = ast.literal_eval(args.fw_query)
+    else:
+        fw_query = None
+
+    if args.sort:
+        sort = [(args.sort, ASCENDING)]
+    elif args.rsort:
+        sort = [(args.rsort, DESCENDING)]
+    else:
+        sort = None
+
+    if args.qid:
+        ids = lp.get_fw_ids_from_reservation_id(args.qid)
+        if fw_query:
+            fw_query['fw_id'] = {"$in": ids}
+            ids = lp.get_fws_ids_in_wfs(wf_query=wf_query, fw_query=fw_query,
+                                        sort=sort, limit=args.max,
+                                        launches_mode=args.launches_mode)
+    else:
+        ids = lp.get_fws_ids_in_wfs(wf_query=wf_query, fw_query=fw_query,
+                                    sort=sort, limit=args.max,
+                                    count_only=args.display_format == 'count',
+                                    launches_mode=args.launches_mode)
+
     fws = []
     if args.display_format == 'ids':
         fws = ids
@@ -745,6 +829,29 @@ def lpad():
     qid_args = ["--qid"]
     qid_kwargs = {"help": "Query by reservation id of job in queue"}
 
+    # for using fw- and wf-specific options on one command line, distinguish by prefix fw and wf
+    # prefix short one-dash options with 'wf', i.e. '-i' -> '-wfi'
+    # prefix long two-dash options with 'wf_', i.e. '--fw_id' -> '--wf_fw_id'
+    wf_prefixed_fw_id_args = [re.sub('^-([^-].*)$','-wf\\1',s) for s in fw_id_args]
+    wf_prefixed_fw_id_args = [re.sub('^--(.*)$','--wf_\\1',s) for s in wf_prefixed_fw_id_args]
+
+    wf_prefixed_state_args = [re.sub('^-([^-].*)$','-wf\\1',s) for s in state_args]
+    wf_prefixed_state_args = [re.sub('^--(.*)$','--wf_\\1',s) for s in wf_prefixed_state_args]
+
+    wf_prefixed_query_args = [re.sub('^-([^-].*)$','-wf\\1',s) for s in query_args]
+    wf_prefixed_query_args = [re.sub('^--(.*)$','--wf_\\1',s) for s in wf_prefixed_query_args]
+
+    # prefix short one-dash options with 'fw', i.e. '-i' -> '-fwi'
+    # prefix long two-dash options with 'fw_', i.e. '--fw_id' -> '--fw_fw_id'
+    fw_prefixed_fw_id_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in fw_id_args]
+    fw_prefixed_fw_id_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_fw_id_args]
+
+    fw_prefixed_state_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in state_args]
+    fw_prefixed_state_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_state_args]
+
+    fw_prefixed_query_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in query_args]
+    fw_prefixed_query_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_query_args]
+
     version_parser = subparsers.add_parser(
         'version',
         help='Print the version and location of FireWorks')
@@ -831,6 +938,29 @@ def lpad():
     get_fw_parser.add_argument('--rsort', help='Reverse sort results',
                                choices=["created_on", "updated_on"])
     get_fw_parser.set_defaults(func=get_fws)
+
+    get_fw_in_wf_parser = subparsers.add_parser(
+        'get_fws_in_wflows', help='get information about FireWorks in Workflows')
+
+    get_fw_in_wf_parser.add_argument(*wf_prefixed_fw_id_args, **fw_id_kwargs)
+    get_fw_in_wf_parser.add_argument('-wfn', '--wf_name', help='get WFs with this name')
+    get_fw_in_wf_parser.add_argument(*wf_prefixed_state_args, **state_kwargs)
+    get_fw_in_wf_parser.add_argument(*wf_prefixed_query_args, **query_kwargs)
+
+    get_fw_in_wf_parser.add_argument(*fw_prefixed_fw_id_args, **fw_id_kwargs)
+    get_fw_in_wf_parser.add_argument('-fwn', '--fw_name', help='get FWs with this name')
+    get_fw_in_wf_parser.add_argument(*fw_prefixed_state_args, **state_kwargs)
+    get_fw_in_wf_parser.add_argument(*fw_prefixed_query_args, **query_kwargs)
+    get_fw_in_wf_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
+    get_fw_in_wf_parser.add_argument(*qid_args, **qid_kwargs)
+    get_fw_in_wf_parser.add_argument(*disp_args, **disp_kwargs)
+    get_fw_in_wf_parser.add_argument('-m', '--max', help='limit results', default=0,
+                               type=int)
+    get_fw_in_wf_parser.add_argument('--sort', help='Sort results',
+                               choices=["created_on", "updated_on"])
+    get_fw_in_wf_parser.add_argument('--rsort', help='Reverse sort results',
+                               choices=["created_on", "updated_on"])
+    get_fw_in_wf_parser.set_defaults(func=get_fws_in_wfs)
 
     trackfw_parser = subparsers.add_parser('track_fws', help='Track FireWorks')
     trackfw_parser.add_argument(*fw_id_args, **fw_id_kwargs)

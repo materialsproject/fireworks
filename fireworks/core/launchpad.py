@@ -770,6 +770,71 @@ class LaunchPad(FWSerializable):
 
         return wf_ids
 
+    def get_fws_ids_in_wfs(self, wf_query=None, fw_query=None, sort=None,
+                           limit=0, count_only=False, launches_mode=False):
+        """
+        Return all fw ids that match fw_query within workflows that match wf_query.
+
+        Args:
+            wf_query (dict): representing a Mongo query on workflows
+            fw_query (dict): representing a Mongo query on Fireworks
+            sort [(str,str)]: sort argument in Pymongo format
+            limit (int): limit the results
+            count_only (bool): only return the count rather than explicit ids
+            launches_mode (bool): query the launches collection instead of fireworks
+
+        Returns:
+            list: list of firework ids matching the query
+        """
+        coll = "launches" if launches_mode else "fireworks"
+        if launches_mode:
+            lids = self._get_active_launch_ids()
+            if fw_query is None:
+                fw_query = {}
+            fw_query["launch_id"] = {"$in": lids}
+
+        if count_only:
+            if limit:
+                return ValueError(
+                    "Cannot count_only and limit at the same time!")
+
+        aggregation = []
+
+        if wf_query is not None:
+            aggregation.append({'$match': wf_query},)
+
+        aggregation.extend([
+            {'$project': {'nodes': True, '_id': False}},
+            {'$unwind': '$nodes'},
+            {'$lookup': {
+                'from': coll,  # fireworks or launches
+                'localField': 'nodes',
+                'foreignField': 'fw_id',
+                'as': 'fireworks'}},
+            {'$project': {'fireworks': 1, '_id': 0}},
+            {'$unwind': '$fireworks'},
+            {'$replaceRoot': {'newRoot': '$fireworks'}},
+        ])
+
+        if fw_query is not None:
+            aggregation.append({'$match': fw_query})
+
+        if count_only:
+            aggregation.append({'$count': 'count'})
+            cursor = self.workflows.aggregate(aggregation)
+            return list(cursor)[0]['count']
+
+        if sort is not None:
+            aggregation.append({'$sort': sort})
+
+        aggregation.append({'$project': {'fw_id': True, '_id': False}})
+
+        if limit is not None:
+            aggregation.append({'$limit': limit})
+
+        cursor = self.workflows.aggregate(aggregation)
+        return [fw["fw_id"] for fw in cursor]
+
     def run_exists(self, fworker=None):
         """
         Checks to see if the database contains any FireWorks that are ready to run.
