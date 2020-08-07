@@ -88,7 +88,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
     if hasattr(args, "sort") and args.sort:
         sort = [(args.sort, ASCENDING)]
-    elif hasattr(args, "sort") and args.rsort:
+    elif hasattr(args, "rsort") and args.rsort:
         sort = [(args.rsort, DESCENDING)]
     else:
         sort = None
