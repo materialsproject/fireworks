@@ -631,10 +631,10 @@ class LaunchPad(FWSerializable):
             fw_id (int): Firework id
             delete_launch_dirs (bool): if True all the launch directories associated with
                 the WF will be deleted as well, if possible.
-        """
+        delete_launch_dirs"""
         links_dict = self.workflows.find_one({'nodes': fw_id})
         fw_ids = links_dict["nodes"]
-        self.delete_fws(self, fw_ids, delete_launch_dirs=delete_launch_dirs)
+        self.delete_fws(fw_ids, delete_launch_dirs=delete_launch_dirs)
         print("Removing workflow.")
         self.workflows.delete_one({'nodes': fw_id})
 
