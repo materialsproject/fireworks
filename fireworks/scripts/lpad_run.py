@@ -225,8 +225,17 @@ def add_wf_dir(args):
         lp.add_wf(fwf)
 
 
-def get_fws(args):
-    lp = get_lp(args)
+def get_fw_ids_helper(lp, args, count_only=None):
+    """Build fws query from command line options and submit.
+
+    Parameters:
+        lp (fireworks.core.firework.Launchpad)
+        args (argparse.Namespace)
+        count_only (bool): if None, then looked up in args.
+
+    Returns:
+        [int]: resulting fw_ids or count of fws in query.
+    """
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
@@ -255,6 +264,8 @@ def get_fws(args):
     else:
         sort = None
 
+    if count_only is None:
+        count_only = (args.display_format == 'count')
     if args.qid:
         ids = lp.get_fw_ids_from_reservation_id(args.qid)
         if query:
@@ -262,8 +273,13 @@ def get_fws(args):
             ids = lp.get_fw_ids(query, sort, args.max, launches_mode=args.launches_mode)
 
     else:
-        ids = lp.get_fw_ids(query, sort, args.max, count_only=args.display_format == 'count',
+        ids = lp.get_fw_ids(query, sort, args.max, count_only=count_only,
                             launches_mode=args.launches_mode)
+    return ids
+
+
+def get_fws_helper(lp, ids, args):
+    """Get fws from ids in a representation according to args.display_format."""
     fws = []
     if args.display_format == 'ids':
         fws = ids
@@ -284,7 +300,13 @@ def get_fws(args):
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
+    return fws
 
+
+def get_fws(args):
+    lp = get_lp(args)
+    ids = get_fw_ids_helper(lp, args)
+    fws = get_fws_helper(lp, ids, args)
     print(args.output(fws))
 
 
@@ -695,42 +717,7 @@ def maintain(args):
 def orphaned(args):
     # get_fws
     lp = get_lp(args)
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
-        raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
-        args.query = '{}'
-        args.display_format = args.display_format if args.display_format else 'ids'
-    if sum([bool(x) for x in [args.fw_id, args.name, args.qid]]) > 1:
-        raise ValueError('Please specify exactly one of (fw_id, name, qid)')
-    else:
-        args.display_format = args.display_format if args.display_format else 'more'
-
-    if args.fw_id:
-        query = {'fw_id': {"$in": args.fw_id}}
-    elif args.name and not args.launches_mode:
-        query = {'name': args.name}
-    elif args.state:
-        query = {'state': args.state}
-    elif args.query:
-        query = ast.literal_eval(args.query)
-    else:
-        query = None
-
-    if args.sort:
-        sort = [(args.sort, ASCENDING)]
-    elif args.rsort:
-        sort = [(args.rsort, DESCENDING)]
-    else:
-        sort = None
-
-    if args.qid:
-        fw_ids = lp.get_fw_ids_from_reservation_id(args.qid)
-        if query:
-            query['fw_id'] = {"$in": fw_ids}
-            fw_ids = lp.get_fw_ids(query, sort, args.max, launches_mode=args.launches_mode)
-    else:
-        fw_ids = lp.get_fw_ids(query, sort, args.max,
-                               launches_mode=args.launches_mode)
+    fw_ids = get_fw_ids_helper(lp, args, count_only=False)
 
     # get_wfs
     orphaned_fw_ids = []
@@ -740,63 +727,11 @@ def orphaned(args):
         if len(wf_ids) == 0:
             orphaned_fw_ids.append(fw_id)
 
-    fws = []
-    if args.display_format == 'ids':
-        fws = orphaned_fw_ids
-    elif args.display_format == 'count':
-        fws = [orphaned_fw_ids]
-    else:
-        for id in orphaned_fw_ids:
-            fw = lp.get_fw_by_id(id)
-            d = fw.to_dict()
-            d['state'] = d.get('state', 'WAITING')
-            if args.display_format == 'more' or args.display_format == 'less':
-                if 'archived_launches' in d:
-                    del d['archived_launches']
-                del d['spec']
-            if args.display_format == 'less':
-                if 'launches' in d:
-                    del d['launches']
-            fws.append(d)
-    if len(fws) == 1:
-        fws = orphaned_fw_ids[0]
-
-    if args.remove:  # snippet from lpad.delete_wf
+    fws = get_fws_helper(lp, orphaned_fw_ids, args)
+    if args.remove:
         lp.m_logger.info('Found {} orphaned fw_ids: {}'.format(
             len(orphaned_fw_ids), orphaned_fw_ids))
-        potential_launch_ids = []
-        launch_ids = []
-        for i in orphaned_fw_ids:
-            fw_dict = lp.fireworks.find_one({'fw_id': i})
-            potential_launch_ids += fw_dict["launches"] + fw_dict[
-                'archived_launches']
-
-        for i in potential_launch_ids:  # only remove launches if no other fws refer to them
-            if not lp.fireworks.find_one(
-                    {'$or': [{"launches": i}, {'archived_launches': i}],
-                     'fw_id': {"$nin": orphaned_fw_ids}}, {'launch_id': 1}):
-                launch_ids.append(i)
-
-        if args.delete_launch_dirs:
-            launch_dirs = []
-            for i in launch_ids:
-                launch_dirs.append(
-                    lp.launches.find_one({'launch_id': i}, {'launch_dir': 1})[
-                        'launch_dir'])
-            lp.m_logger.info("Remove folders {}".format(launch_dirs))
-            for d in launch_dirs:
-                shutil.rmtree(d, ignore_errors=True)
-
-        lp.m_logger.info("Remove fws {}".format(orphaned_fw_ids))
-        lp.m_logger.info("Remove launches {}".format(launch_ids))
-        if lp.gridfs_fallback is not None:
-            for lid in launch_ids:
-                for f in lp.gridfs_fallback.find({"metadata.launch_id": lid}):
-                    lp.gridfs_fallback.delete(f._id)
-        lp.launches.delete_many({'launch_id': {"$in": launch_ids}})
-        lp.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
-        lp.fireworks.delete_many({"fw_id": {"$in": orphaned_fw_ids}})
-        # lp.workflows.delete_one({'nodes': fw_id})
+        lp.delete_fws(orphaned_fw_ids, delete_launch_dirs=args.delete_launch_dirs)
     else:
         print(args.output(fws))
 
