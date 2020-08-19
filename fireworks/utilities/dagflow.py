@@ -9,10 +9,27 @@ from itertools import combinations
 import igraph
 from igraph import Graph
 
-
 DF_TASKS = ['PyTask', 'CommandLineTask', 'ForeachTask', 'JoinDictTask',
             'JoinListTask']
 
+DEFAULT_IGRAPH_VISUAL_SYTLE = {
+    "bbox": (700, 500),
+    "margin": [200, 100, 200, 100],
+
+    # vertex defaults
+    "vertex_label_angle": -3.14/4.0,
+    "vertex_size": 8,
+    "vertex_shape": 'rectangle',
+    "vertex_label_size": 10,
+    "vertex_label_dist": 4,
+
+    # edge defaults
+    "edge_color": 'black',
+    "edge_width": 1,
+    "edge_arrow_size": 1,
+    "edge_arrow_width": 1,
+    "edge_label_size": 8,
+}
 
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
@@ -330,19 +347,20 @@ class DAGFlow(Graph):
 
 
 def plot_wf(wf, view='combined', labels=False, **kwargs):
-    """Plot workflow via igraph.plot.
+    """Plot workflow DAG via igraph.plot.
 
-    Parameters:
-        wf
-        view: str, same as in 'to_dot'
+    Args:
+        wf (Workflow)
+        view (str): same as in 'to_dot'. Default: 'combined'
+        labels (bool): show a FW's name and id as labels in graph
 
     Other **kwargs can be any igraph plotting style keyword, overrides default.
     See https://igraph.org/python/doc/tutorial/tutorial.html for possible
     keywords. See `plot_wf` code for defaults.
 
     Returns:
-        igraph.drawing.Plot"""
-    import matplotlib  # only needed for color-coding with favorite named colors
+        igraph.drawing.Plot
+    """
 
     dagf = DAGFlow.from_fireworks(wf)
     if labels:
@@ -373,46 +391,43 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
                 del vertex[key]
 
     # plotting defaults
-    visual_style = {}
+    visual_style = DEFAULT_IGRAPH_VISUAL_SYTLE.copy()
 
     # generic plotting defaults
     visual_style["layout"] = dagf.layout_kamada_kawai()
-    visual_style["bbox"] = (700, 500)
-    visual_style["margin"] = [200, 100, 200, 100]
 
     # vertex defaults
     dagf_roots = dagf._get_roots()
     dagf_leaves = dagf._get_leaves()
 
     # code "roots" green (start), "leaves" red (end), any other blue
-    def color_coding(v):
-        if v in dagf_roots:
-            return matplotlib.colors.cnames['forestgreen']
-        elif v in dagf_leaves:
-            return matplotlib.colors.cnames['indianred']
-        else:
-            return matplotlib.colors.cnames['lightsteelblue']
+    try:
+        import matplotlib
+        # only needed for color-coding with favorite named colors, not imported
+        # in top level as matplotlib is no Fireworks requirement.
+
+        def color_coding(v):
+            if v in dagf_roots:
+                return matplotlib.colors.cnames['forestgreen']
+            elif v in dagf_leaves:
+                return matplotlib.colors.cnames['indianred']
+            else:
+                return matplotlib.colors.cnames['lightsteelblue']
+    except ImportError:
+        def color_coding(v):
+            if v in dagf_roots:
+                return '#228B22'
+            elif v in dagf_leaves:
+                return '#CD5C5C'
+            else:
+                return '#B0C4DE'
 
     visual_style["vertex_color"] = [color_coding(v) for v in range(dagf.vcount())]
-
-    visual_style["vertex_label_angle"] = -3.14/4.0
-    visual_style["vertex_size"] = 8
-    visual_style["vertex_shape"] = 'rectangle'
-    visual_style["vertex_label_size"] = 10
-    visual_style["vertex_label_dist"] = 4
-
-    # edge defaults
-    visual_style["edge_color"] = 'black'
-    visual_style["edge_width"] = 1
-    visual_style["edge_arrow_size"] = 1
-    visual_style["edge_arrow_width"] = 1
-    visual_style["edge_label_size"] = 8
 
     visual_style.update(kwargs)
 
     # special treatment
     if 'layout' in kwargs and isinstance(kwargs['layout'], str):
-        # tree.layout_reingold_tilford(root=[0]))
         visual_style["layout"] = dagf.layout(kwargs['layout'])
 
     return igraph.plot(dagf, **visual_style)
