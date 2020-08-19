@@ -13,23 +13,30 @@ DF_TASKS = ['PyTask', 'CommandLineTask', 'ForeachTask', 'JoinDictTask',
             'JoinListTask']
 
 DEFAULT_IGRAPH_VISUAL_SYTLE = {
-    "bbox": (700, 500),
+    "bbox": (1280, 800),
     "margin": [200, 100, 200, 100],
-
-    # vertex defaults
-    "vertex_label_angle": -3.14/4.0,
-    "vertex_size": 8,
-    "vertex_shape": 'rectangle',
-    "vertex_label_size": 10,
-    "vertex_label_dist": 4,
-
-    # edge defaults
-    "edge_color": 'black',
-    "edge_width": 1,
-    "edge_arrow_size": 1,
-    "edge_arrow_width": 1,
-    "edge_label_size": 8,
+    "vertex_label_dist": 2,
 }
+
+# for graph visualization, code "roots" green (start), "leaves" red (end),
+# any other blue
+try:
+    import matplotlib
+    # only needed for color-coding with favorite named colors, not imported
+    # in top level as matplotlib is no Fireworks requirement.
+
+    DEFAULT_IGRAPH_VERTEX_COLOR_CODING = {
+        'root': matplotlib.colors.cnames['forestgreen'],
+        'leaf': matplotlib.colors.cnames['indianred'],
+        'other': matplotlib.colors.cnames['lightsteelblue'],
+    }
+except ImportError:
+    DEFAULT_IGRAPH_VERTEX_COLOR_CODING = {
+        'root': '#228B22',
+        'leaf': '#CD5C5C',
+        'other': '#B0C4DE',
+    }
+
 
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
@@ -400,27 +407,13 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
     dagf_roots = dagf._get_roots()
     dagf_leaves = dagf._get_leaves()
 
-    # code "roots" green (start), "leaves" red (end), any other blue
-    try:
-        import matplotlib
-        # only needed for color-coding with favorite named colors, not imported
-        # in top level as matplotlib is no Fireworks requirement.
-
-        def color_coding(v):
-            if v in dagf_roots:
-                return matplotlib.colors.cnames['forestgreen']
-            elif v in dagf_leaves:
-                return matplotlib.colors.cnames['indianred']
-            else:
-                return matplotlib.colors.cnames['lightsteelblue']
-    except ImportError:
-        def color_coding(v):
-            if v in dagf_roots:
-                return '#228B22'
-            elif v in dagf_leaves:
-                return '#CD5C5C'
-            else:
-                return '#B0C4DE'
+    def color_coding(v):
+        if v in dagf_roots:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING['root']
+        elif v in dagf_leaves:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING['leaf']
+        else:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING['other']
 
     visual_style["vertex_color"] = [color_coding(v) for v in range(dagf.vcount())]
 
