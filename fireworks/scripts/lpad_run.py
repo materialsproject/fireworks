@@ -248,6 +248,7 @@ def print_fws(ids, lp, args):
 
     print(args.output(fws))
 
+
 def get_fws(args):
     lp = get_lp(args)
     if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
@@ -463,7 +464,6 @@ def detect_unreserved(args):
             fw_ids.append(launch.fw_id)
         print_fws(fw_ids, lp, args)
     print(lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun))
-
 
 
 def tuneup(args):
