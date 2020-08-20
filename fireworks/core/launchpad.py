@@ -771,7 +771,7 @@ class LaunchPad(FWSerializable):
         return wf_ids
 
     def get_fw_ids_in_wfs(self, wf_query=None, fw_query=None, sort=None,
-                           limit=0, count_only=False, launches_mode=False):
+                          limit=0, count_only=False, launches_mode=False):
         """
         Return all fw ids that match fw_query within workflows that match wf_query.
 

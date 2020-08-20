@@ -832,25 +832,25 @@ def lpad():
     # for using fw- and wf-specific options on one command line, distinguish by prefix fw and wf
     # prefix short one-dash options with 'wf', i.e. '-i' -> '-wfi'
     # prefix long two-dash options with 'wf_', i.e. '--fw_id' -> '--wf_fw_id'
-    wf_prefixed_fw_id_args = [re.sub('^-([^-].*)$','-wf\\1',s) for s in fw_id_args]
-    wf_prefixed_fw_id_args = [re.sub('^--(.*)$','--wf_\\1',s) for s in wf_prefixed_fw_id_args]
+    wf_prefixed_fw_id_args = [re.sub('^-([^-].*)$', '-wf\\1', s) for s in fw_id_args]
+    wf_prefixed_fw_id_args = [re.sub('^--(.*)$', '--wf_\\1', s) for s in wf_prefixed_fw_id_args]
 
-    wf_prefixed_state_args = [re.sub('^-([^-].*)$','-wf\\1',s) for s in state_args]
-    wf_prefixed_state_args = [re.sub('^--(.*)$','--wf_\\1',s) for s in wf_prefixed_state_args]
+    wf_prefixed_state_args = [re.sub('^-([^-].*)$', '-wf\\1', s) for s in state_args]
+    wf_prefixed_state_args = [re.sub('^--(.*)$', '--wf_\\1', s) for s in wf_prefixed_state_args]
 
-    wf_prefixed_query_args = [re.sub('^-([^-].*)$','-wf\\1',s) for s in query_args]
-    wf_prefixed_query_args = [re.sub('^--(.*)$','--wf_\\1',s) for s in wf_prefixed_query_args]
+    wf_prefixed_query_args = [re.sub('^-([^-].*)$', '-wf\\1', s) for s in query_args]
+    wf_prefixed_query_args = [re.sub('^--(.*)$', '--wf_\\1', s) for s in wf_prefixed_query_args]
 
     # prefix short one-dash options with 'fw', i.e. '-i' -> '-fwi'
     # prefix long two-dash options with 'fw_', i.e. '--fw_id' -> '--fw_fw_id'
-    fw_prefixed_fw_id_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in fw_id_args]
-    fw_prefixed_fw_id_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_fw_id_args]
+    fw_prefixed_fw_id_args = [re.sub('^-([^-].*)$', '-fw\\1', s) for s in fw_id_args]
+    fw_prefixed_fw_id_args = [re.sub('^--(.*)$', '--fw_\\1', s) for s in fw_prefixed_fw_id_args]
 
-    fw_prefixed_state_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in state_args]
-    fw_prefixed_state_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_state_args]
+    fw_prefixed_state_args = [re.sub('^-([^-].*)$', '-fw\\1', s) for s in state_args]
+    fw_prefixed_state_args = [re.sub('^--(.*)$', '--fw_\\1', s) for s in fw_prefixed_state_args]
 
-    fw_prefixed_query_args = [re.sub('^-([^-].*)$','-fw\\1',s) for s in query_args]
-    fw_prefixed_query_args = [re.sub('^--(.*)$','--fw_\\1',s) for s in fw_prefixed_query_args]
+    fw_prefixed_query_args = [re.sub('^-([^-].*)$', '-fw\\1', s) for s in query_args]
+    fw_prefixed_query_args = [re.sub('^--(.*)$', '--fw_\\1', s) for s in fw_prefixed_query_args]
 
     # filter all long options, i.e. '--fw_id' and strip off preceding '--'
     fw_id_options = [re.sub('^--(.*)$', '\\1', opt)
@@ -960,11 +960,11 @@ def lpad():
     get_fw_in_wf_parser.add_argument(*qid_args, **qid_kwargs)
     get_fw_in_wf_parser.add_argument(*disp_args, **disp_kwargs)
     get_fw_in_wf_parser.add_argument('-m', '--max', help='limit results', default=0,
-                               type=int)
+                                     type=int)
     get_fw_in_wf_parser.add_argument('--sort', help='Sort results',
-                               choices=["created_on", "updated_on"])
+                                     choices=["created_on", "updated_on"])
     get_fw_in_wf_parser.add_argument('--rsort', help='Reverse sort results',
-                               choices=["created_on", "updated_on"])
+                                     choices=["created_on", "updated_on"])
     get_fw_in_wf_parser.set_defaults(func=get_fws_in_wfs)
 
     trackfw_parser = subparsers.add_parser('track_fws', help='Track FireWorks')
