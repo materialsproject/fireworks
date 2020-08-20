@@ -12,7 +12,7 @@ from igraph import Graph
 DF_TASKS = ['PyTask', 'CommandLineTask', 'ForeachTask', 'JoinDictTask',
             'JoinListTask']
 
-DEFAULT_IGRAPH_VISUAL_SYTLE = {
+DEFAULT_IGRAPH_VISUAL_STYLE = {
     "bbox": (1280, 800),
     "margin": [200, 100, 200, 100],
     "vertex_label_dist": 2,
@@ -398,7 +398,7 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
                 del vertex[key]
 
     # plotting defaults
-    visual_style = DEFAULT_IGRAPH_VISUAL_SYTLE.copy()
+    visual_style = DEFAULT_IGRAPH_VISUAL_STYLE.copy()
 
     # generic plotting defaults
     visual_style["layout"] = dagf.layout_kamada_kawai()
