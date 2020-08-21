@@ -131,7 +131,8 @@ class FWAction(FWSerializable):
     """
 
     def __init__(self, stored_data=None, exit=False, update_spec=None, mod_spec=None, additions=None,
-                 detours=None, defuse_children=False, defuse_workflow=False):
+                 detours=None, defuse_children=False, defuse_workflow=False,
+                 propagate=False):
         """
         Args:
             stored_data (dict): data to store from the run. Does not affect the operation of FireWorks.
@@ -144,6 +145,9 @@ class FWAction(FWSerializable):
                 current FW's children)
             defuse_children (bool): defuse all the original children of this Firework
             defuse_workflow (bool): defuse all incomplete steps of this workflow
+            propagate (bool): apply any update_spec and mod_spec modifications
+                not only to direct children, but to all dependent FireWorks
+                down to the Workflow's leaves.
         """
         mod_spec = mod_spec if mod_spec is not None else []
         additions = additions if additions is not None else []
@@ -157,6 +161,7 @@ class FWAction(FWSerializable):
         self.detours = detours if isinstance(detours, (list, tuple)) else [detours]
         self.defuse_children = defuse_children
         self.defuse_workflow = defuse_workflow
+        self.propagate = propagate
 
     @recursive_serialize
     def to_dict(self):
@@ -167,7 +172,8 @@ class FWAction(FWSerializable):
                 'additions': self.additions,
                 'detours': self.detours,
                 'defuse_children': self.defuse_children,
-                'defuse_workflow': self.defuse_workflow}
+                'defuse_workflow': self.defuse_workflow,
+                'propagate': self.propagate}
 
     @classmethod
     @recursive_deserialize
@@ -177,7 +183,8 @@ class FWAction(FWSerializable):
         detours = [Workflow.from_dict(f) for f in d['detours']]
         return FWAction(d['stored_data'], d['exit'], d['update_spec'],
                         d['mod_spec'], additions, detours,
-                        d['defuse_children'], d.get('defuse_workflow', False))
+                        d['defuse_children'], d.get('defuse_workflow', False),
+                        d.get('propagate', False))
 
     @property
     def skip_remaining_tasks(self):
@@ -811,18 +818,49 @@ class Workflow(FWSerializable):
         """
         updated_ids = []
 
+        # note: update specs before inserting additions to give user more control
+        # see: https://github.com/materialsproject/fireworks/pull/407
+
         # update the spec of the children FireWorks
-        if action.update_spec:
+        if action.update_spec and action.propagate:
+            # Traverse whole sub-workflow down to leaves.
+            visited_cfid = set()  # avoid double-updating for diamond deps
+
+            def recursive_update_spec(fw_id):
+                for cfid in self.links[fw_id]:
+                    if cfid not in visited_cfid:
+                        visited_cfid.add(cfid)
+                        self.id_fw[cfid].spec.update(action.update_spec)
+                        updated_ids.append(cfid)
+                        recursive_update_spec(cfid)
+
+            recursive_update_spec(fw_id)
+        elif action.update_spec:
+            # Update only direct children.
+            # Kept original code here for "backwards readability".
             for cfid in self.links[fw_id]:
                 self.id_fw[cfid].spec.update(action.update_spec)
                 updated_ids.append(cfid)
 
         # update the spec of the children FireWorks using DictMod language
-        if action.mod_spec:
+        if action.mod_spec and action.propagate:
+            visited_cfid = set()
+
+            def recursive_mod_spec(fw_id):
+                for cfid in self.links[fw_id]:
+                    if cfid not in visited_cfid:
+                        visited_cfid.add(cfid)
+                        for mod in action.mod_spec:
+                            apply_mod(mod, self.id_fw[cfid].spec)
+                        updated_ids.append(cfid)
+                        recursive_mod_spec(cfid)
+
+            recursive_mod_spec(fw_id)
+        elif action.mod_spec:
             for cfid in self.links[fw_id]:
                 for mod in action.mod_spec:
                     apply_mod(mod, self.id_fw[cfid].spec)
-                    updated_ids.append(cfid)
+                updated_ids.append(cfid)  # seems to me the indentation had been wrong here
 
         # defuse children
         if action.defuse_children:

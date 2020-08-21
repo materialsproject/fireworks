@@ -2,6 +2,15 @@
 FireWorks Changelog
 ===================
 
+**v1.9.6**
+
+* avoid checking the number of jobs in the queue if not needed (G. Petretto)
+* Avoid failures due to encoding issues in tracker (J. Hörmann)
+* Filepad accessible via TLS/SSL encrypted connection (J. Hörmann)
+* llow propagating modified spec not only to direct children, but along all decendants down to workflow leaves by adding a 'propagate' flag to FWAction. (J. Hörmann)
+* update some dependency versions
+* misc fixes and updates (mamachra, J. Hörmann, I. Kondov, A. Jain)
+
 **v1.9.5**
 
 * document new help forum!

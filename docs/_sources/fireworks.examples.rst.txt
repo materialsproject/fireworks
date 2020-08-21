@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    fireworks.examples.custom_firetasks
    fireworks.examples.tutorial_examples

@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    fireworks.user_objects.dupefinders
    fireworks.user_objects.firetasks

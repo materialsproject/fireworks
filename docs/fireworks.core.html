@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>fireworks.core package &#8212; FireWorks 1.9.5 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fireworks.core package &#8212; FireWorks 1.9.6 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -27,7 +28,8 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.core package</a></li> 
       </ul>
     </div>  
 
@@ -60,16 +62,16 @@
 </div>
 <div class="section" id="module-fireworks.core.firework">
 <span id="fireworks-core-firework-module"></span><h2>fireworks.core.firework module<a class="headerlink" href="#module-fireworks.core.firework" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.FWAction">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FWAction</code><span class="sig-paren">(</span><em class="sig-param">stored_data=None</em>, <em class="sig-param">exit=False</em>, <em class="sig-param">update_spec=None</em>, <em class="sig-param">mod_spec=None</em>, <em class="sig-param">additions=None</em>, <em class="sig-param">detours=None</em>, <em class="sig-param">defuse_children=False</em>, <em class="sig-param">defuse_workflow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FWAction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stored_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exit</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">update_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mod_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">additions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">detours</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">defuse_children</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">defuse_workflow</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">propagate</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
 Firetask completes). The FWAction allows a user to store rudimentary output data as well
 as return commands that alter the workflow.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FWAction.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stored_data=None</em>, <em class="sig-param">exit=False</em>, <em class="sig-param">update_spec=None</em>, <em class="sig-param">mod_spec=None</em>, <em class="sig-param">additions=None</em>, <em class="sig-param">detours=None</em>, <em class="sig-param">defuse_children=False</em>, <em class="sig-param">defuse_workflow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stored_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exit</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">update_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mod_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">additions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">detours</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">defuse_children</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">defuse_workflow</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">propagate</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -83,17 +85,20 @@ than update_spec)</p></li>
 current FW’s children)</p></li>
 <li><p><strong>defuse_children</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – defuse all the original children of this Firework</p></li>
 <li><p><strong>defuse_workflow</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – defuse all incomplete steps of this workflow</p></li>
+<li><p><strong>propagate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – apply any update_spec and mod_spec modifications
+not only to direct children, but to all dependent FireWorks
+down to the Workflow’s leaves.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FWAction.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FWAction.skip_remaining_tasks">
 <em class="property">property </em><code class="sig-name descname">skip_remaining_tasks</code><a class="headerlink" href="#fireworks.core.firework.FWAction.skip_remaining_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the FWAction gives any dynamic action, we skip the subsequent Firetasks</p>
@@ -104,50 +109,50 @@ current FW’s children)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FWAction.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.FireTaskBase">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FireTaskBase</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FireTaskBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FireTaskBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FireTaskBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.FiretaskBase">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FiretaskBase</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FiretaskBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>FiretaskBase is used like an abstract class that defines a computing task
 (Firetask). All Firetasks should inherit from FiretaskBase.</p>
 <p>You can set parameters of a Firetask like you’d use a dict.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FiretaskBase.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FiretaskBase.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.core.firework.FiretaskBase.optional_params">
 <code class="sig-name descname">optional_params</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.optional_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.core.firework.FiretaskBase.required_params">
 <code class="sig-name descname">required_params</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.required_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FiretaskBase.run_task">
-<em class="property">abstract </em><code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param">fw_spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.run_task" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">run_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_spec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.run_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
@@ -170,26 +175,26 @@ these multiple resources.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.FiretaskBase.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.Firework">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Firework</code><span class="sig-paren">(</span><em class="sig-param">tasks</em>, <em class="sig-param">spec=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">launches=None</em>, <em class="sig-param">archived_launches=None</em>, <em class="sig-param">state='WAITING'</em>, <em class="sig-param">created_on=None</em>, <em class="sig-param">fw_id=None</em>, <em class="sig-param">parents=None</em>, <em class="sig-param">updated_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Firework</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tasks</span></em>, <em class="sig-param"><span class="n">spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">launches</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">archived_launches</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">'WAITING'</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parents</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Firework is a workflow step and might be contain several Firetasks.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.core.firework.Firework.STATE_RANKS">
 <code class="sig-name descname">STATE_RANKS</code><em class="property"> = {'ARCHIVED': -2, 'COMPLETED': 5, 'DEFUSED': 0, 'FIZZLED': -1, 'PAUSED': 0, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4, 'WAITING': 1}</em><a class="headerlink" href="#fireworks.core.firework.Firework.STATE_RANKS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Firework.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">tasks</em>, <em class="sig-param">spec=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">launches=None</em>, <em class="sig-param">archived_launches=None</em>, <em class="sig-param">state='WAITING'</em>, <em class="sig-param">created_on=None</em>, <em class="sig-param">fw_id=None</em>, <em class="sig-param">parents=None</em>, <em class="sig-param">updated_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tasks</span></em>, <em class="sig-param"><span class="n">spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">launches</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">archived_launches</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">'WAITING'</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parents</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -207,39 +212,39 @@ these multiple resources.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Firework.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Firework.state">
 <em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#fireworks.core.firework.Firework.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 str: The current state of the Firework</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Firework.to_db_dict">
 <code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return firework dict with updated launches and state.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Firework.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Firework.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.Launch">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Launch</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">launch_dir</em>, <em class="sig-param">fworker=None</em>, <em class="sig-param">host=None</em>, <em class="sig-param">ip=None</em>, <em class="sig-param">trackers=None</em>, <em class="sig-param">action=None</em>, <em class="sig-param">state_history=None</em>, <em class="sig-param">launch_id=None</em>, <em class="sig-param">fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trackers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">action</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state_history</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Launch encapsulates data about a specific run of a Firework on a computing resource.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">launch_dir</em>, <em class="sig-param">fworker=None</em>, <em class="sig-param">host=None</em>, <em class="sig-param">ip=None</em>, <em class="sig-param">trackers=None</em>, <em class="sig-param">action=None</em>, <em class="sig-param">state_history=None</em>, <em class="sig-param">launch_id=None</em>, <em class="sig-param">fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trackers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">action</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state_history</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -258,35 +263,35 @@ str: The current state of the Firework</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.last_pinged">
 <em class="property">property </em><code class="sig-name descname">last_pinged</code><a class="headerlink" href="#fireworks.core.firework.Launch.last_pinged" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 datetime: the time the Launch last pinged a heartbeat that it was still running</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.reservedtime_secs">
 <em class="property">property </em><code class="sig-name descname">reservedtime_secs</code><a class="headerlink" href="#fireworks.core.firework.Launch.reservedtime_secs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 int: number of seconds the Launch was stuck as RESERVED in a queue.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.runtime_secs">
 <em class="property">property </em><code class="sig-name descname">runtime_secs</code><a class="headerlink" href="#fireworks.core.firework.Launch.runtime_secs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 int: the number of seconds that the Launch ran for.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.set_reservation_id">
-<code class="sig-name descname">set_reservation_id</code><span class="sig-paren">(</span><em class="sig-param">reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.set_reservation_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_reservation_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reservation_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.set_reservation_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the job_id to the reservation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -295,47 +300,47 @@ int: the number of seconds that the Launch ran for.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.state">
 <em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#fireworks.core.firework.Launch.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 str: The current state of the Launch.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.time_end">
 <em class="property">property </em><code class="sig-name descname">time_end</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 datetime: the time the Launch was COMPLETED or FIZZLED</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.time_reserved">
 <em class="property">property </em><code class="sig-name descname">time_reserved</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_reserved" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 datetime: the time the Launch was RESERVED in the queue</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.time_start">
 <em class="property">property </em><code class="sig-name descname">time_start</code><a class="headerlink" href="#fireworks.core.firework.Launch.time_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 datetime: the time the Launch started RUNNING</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.to_db_dict">
-<code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Launch.touch_history">
-<code class="sig-name descname">touch_history</code><span class="sig-paren">(</span><em class="sig-param">update_time=None</em>, <em class="sig-param">checkpoint=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.touch_history" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">touch_history</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">update_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">checkpoint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch.touch_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the update_on field of the state history of a Launch. Used to ping that a Launch
 is still alive.</p>
 <dl class="field-list simple">
@@ -347,19 +352,19 @@ is still alive.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.Tracker">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Tracker</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">nlines=25</em>, <em class="sig-param">content=''</em>, <em class="sig-param">allow_zipped=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Tracker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">nlines</span><span class="o">=</span><span class="default_value">25</span></em>, <em class="sig-param"><span class="n">content</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">allow_zipped</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Tracker monitors a file and returns the last N lines for updating the Launch object.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.core.firework.Tracker.MAX_TRACKER_LINES">
 <code class="sig-name descname">MAX_TRACKER_LINES</code><em class="property"> = 1000</em><a class="headerlink" href="#fireworks.core.firework.Tracker.MAX_TRACKER_LINES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Tracker.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">nlines=25</em>, <em class="sig-param">content=''</em>, <em class="sig-param">allow_zipped=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">nlines</span><span class="o">=</span><span class="default_value">25</span></em>, <em class="sig-param"><span class="n">content</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">allow_zipped</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -372,19 +377,19 @@ is still alive.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Tracker.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Tracker.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Tracker.track_file">
-<code class="sig-name descname">track_file</code><span class="sig-paren">(</span><em class="sig-param">launch_dir=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.track_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">track_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker.track_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the monitored file and returns back the last N lines</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -401,34 +406,34 @@ is still alive.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.Workflow">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Workflow</code><span class="sig-paren">(</span><em class="sig-param">fireworks</em>, <em class="sig-param">links_dict=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">metadata=None</em>, <em class="sig-param">created_on=None</em>, <em class="sig-param">updated_on=None</em>, <em class="sig-param">fw_states=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fireworks</span></em>, <em class="sig-param"><span class="n">links_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_states</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Workflow connects a group of FireWorks in an execution order.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.firework.Workflow.Links">
-<em class="property">class </em><code class="sig-name descname">Links</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Links</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>An inner class for storing the DAG links between FireWorks</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.nodes">
 <em class="property">property </em><code class="sig-name descname">nodes</code><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of all nodes</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.parent_links">
 <em class="property">property </em><code class="sig-name descname">parent_links</code><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.parent_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dict of child and its parents.</p>
@@ -436,7 +441,7 @@ is still alive.</p>
 update parent_links</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.to_db_dict">
 <code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert to str form for Mongo, which cannot have int keys .</p>
@@ -447,7 +452,7 @@ update parent_links</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert to str form for Mongo, which cannot have int keys.</p>
@@ -460,9 +465,9 @@ update parent_links</p>
 
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">fireworks</em>, <em class="sig-param">links_dict=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">metadata=None</em>, <em class="sig-param">created_on=None</em>, <em class="sig-param">updated_on=None</em>, <em class="sig-param">fw_states=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fireworks</span></em>, <em class="sig-param"><span class="n">links_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_states</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -478,9 +483,9 @@ update parent_links</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.append_wf">
-<code class="sig-name descname">append_wf</code><span class="sig-paren">(</span><em class="sig-param">new_wf</em>, <em class="sig-param">fw_ids</em>, <em class="sig-param">detour=False</em>, <em class="sig-param">pull_spec_mods=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.append_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">append_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_wf</span></em>, <em class="sig-param"><span class="n">fw_ids</span></em>, <em class="sig-param"><span class="n">detour</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">pull_spec_mods</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.append_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to add a workflow as a child to a Firework
 Note: detours must have children that have STATE_RANK that is WAITING or below</p>
 <dl class="field-list simple">
@@ -501,9 +506,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.apply_action">
-<code class="sig-name descname">apply_action</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.apply_action" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apply_action</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.apply_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a FWAction on a Firework in the Workflow.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -521,9 +526,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.from_Firework">
-<em class="property">classmethod </em><code class="sig-name descname">from_Firework</code><span class="sig-paren">(</span><em class="sig-param">fw</em>, <em class="sig-param">name=None</em>, <em class="sig-param">metadata=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_Firework" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_Firework</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_Firework" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return Workflow from the given Firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -539,9 +544,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return Workflow from its dict representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -553,9 +558,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.from_wflow">
-<em class="property">classmethod </em><code class="sig-name descname">from_wflow</code><span class="sig-paren">(</span><em class="sig-param">wflow</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_wflow" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_wflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wflow</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_wflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a fresh Workflow from an existing one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -567,13 +572,13 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.fws">
 <em class="property">property </em><code class="sig-name descname">fws</code><a class="headerlink" href="#fireworks.core.firework.Workflow.fws" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of all fireworks</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.leaf_fw_ids">
 <em class="property">property </em><code class="sig-name descname">leaf_fw_ids</code><a class="headerlink" href="#fireworks.core.firework.Workflow.leaf_fw_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets leaf FireWorks of this workflow (those with no children).</p>
@@ -587,9 +592,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">updated_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">updated_ids</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refreshes the state of a Firework and any affected children.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -607,9 +612,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.remove_fws">
-<code class="sig-name descname">remove_fws</code><span class="sig-paren">(</span><em class="sig-param">fw_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.remove_fws" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">remove_fws</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_ids</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.remove_fws" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
 parents of the removed fireworks become the parents of the children fireworks (only if the
 children dont have any other parents).</p>
@@ -620,9 +625,9 @@ children dont have any other parents).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.rerun_fw">
-<code class="sig-name descname">rerun_fw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">updated_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.rerun_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rerun_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">updated_ids</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.rerun_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Archives the launches of a Firework so that it can be re-run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -640,9 +645,9 @@ children dont have any other parents).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">reset_ids=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset_ids</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the states of all Fireworks in this workflow to ‘WAITING’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -651,7 +656,7 @@ children dont have any other parents).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.root_fw_ids">
 <em class="property">property </em><code class="sig-name descname">root_fw_ids</code><a class="headerlink" href="#fireworks.core.firework.Workflow.root_fw_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets root FireWorks of this workflow (those with no parents).</p>
@@ -665,24 +670,24 @@ children dont have any other parents).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.state">
 <em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#fireworks.core.firework.Workflow.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:
 state (str): state of workflow</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.to_db_dict">
 <code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.firework.Workflow.to_display_dict">
 <code class="sig-name descname">to_display_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_display_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -692,13 +697,13 @@ state (str): state of workflow</p>
 </div>
 <div class="section" id="module-fireworks.core.fworker">
 <span id="fireworks-core-fworker-module"></span><h2>fireworks.core.fworker module<a class="headerlink" href="#module-fireworks.core.fworker" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.fworker.FWorker">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.fworker.</code><code class="sig-name descname">FWorker</code><span class="sig-paren">(</span><em class="sig-param">name='Automatically generated Worker'</em>, <em class="sig-param">category=''</em>, <em class="sig-param">query=None</em>, <em class="sig-param">env=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.fworker.</code><code class="sig-name descname">FWorker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'Automatically generated Worker'</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.fworker.FWorker.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">name='Automatically generated Worker'</em>, <em class="sig-param">category=''</em>, <em class="sig-param">query=None</em>, <em class="sig-param">env=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'Automatically generated Worker'</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -717,26 +722,26 @@ for information on how to use this env variable in Firetasks.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.fworker.FWorker.auto_load">
 <em class="property">classmethod </em><code class="sig-name descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.auto_load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns FWorker object from settings file(my_fworker.yaml).</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.fworker.FWorker.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.fworker.FWorker.query">
 <em class="property">property </em><code class="sig-name descname">query</code><a class="headerlink" href="#fireworks.core.fworker.FWorker.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns updated query dict.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.fworker.FWorker.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -744,14 +749,14 @@ for information on how to use this env variable in Firetasks.</p></li>
 </div>
 <div class="section" id="module-fireworks.core.launchpad">
 <span id="fireworks-core-launchpad-module"></span><h2>fireworks.core.launchpad module<a class="headerlink" href="#module-fireworks.core.launchpad" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.launchpad.LaunchPad">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LaunchPad</code><span class="sig-paren">(</span><em class="sig-param">host=None</em>, <em class="sig-param">port=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">username=None</em>, <em class="sig-param">password=None</em>, <em class="sig-param">logdir=None</em>, <em class="sig-param">strm_lvl=None</em>, <em class="sig-param">user_indices=None</em>, <em class="sig-param">wf_user_indices=None</em>, <em class="sig-param">ssl=False</em>, <em class="sig-param">ssl_ca_certs=None</em>, <em class="sig-param">ssl_certfile=None</em>, <em class="sig-param">ssl_keyfile=None</em>, <em class="sig-param">ssl_pem_passphrase=None</em>, <em class="sig-param">authsource=None</em>, <em class="sig-param">uri_mode=False</em>, <em class="sig-param">mongoclient_kwargs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LaunchPad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ssl_ca_certs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_certfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_keyfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_pem_passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>The LaunchPad manages the FireWorks database.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">host=None</em>, <em class="sig-param">port=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">username=None</em>, <em class="sig-param">password=None</em>, <em class="sig-param">logdir=None</em>, <em class="sig-param">strm_lvl=None</em>, <em class="sig-param">user_indices=None</em>, <em class="sig-param">wf_user_indices=None</em>, <em class="sig-param">ssl=False</em>, <em class="sig-param">ssl_ca_certs=None</em>, <em class="sig-param">ssl_certfile=None</em>, <em class="sig-param">ssl_keyfile=None</em>, <em class="sig-param">ssl_pem_passphrase=None</em>, <em class="sig-param">authsource=None</em>, <em class="sig-param">uri_mode=False</em>, <em class="sig-param">mongoclient_kwargs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ssl_ca_certs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_certfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_keyfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_pem_passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -782,9 +787,9 @@ passed into the MongoClient connection (non-URI mode only)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.add_offline_run">
-<code class="sig-name descname">add_offline_run</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">fw_id</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.add_offline_run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_offline_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.add_offline_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the launch and firework to the offline_run collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -797,9 +802,9 @@ passed into the MongoClient connection (non-URI mode only)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.add_wf">
-<code class="sig-name descname">add_wf</code><span class="sig-paren">(</span><em class="sig-param">wf</em>, <em class="sig-param">reassign_all=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.add_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em>, <em class="sig-param"><span class="n">reassign_all</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.add_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add workflow(or firework) to the launchpad. The firework ids will be reassigned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -814,9 +819,9 @@ passed into the MongoClient connection (non-URI mode only)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.append_wf">
-<code class="sig-name descname">append_wf</code><span class="sig-paren">(</span><em class="sig-param">new_wf</em>, <em class="sig-param">fw_ids</em>, <em class="sig-param">detour=False</em>, <em class="sig-param">pull_spec_mods=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.append_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">append_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_wf</span></em>, <em class="sig-param"><span class="n">fw_ids</span></em>, <em class="sig-param"><span class="n">detour</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">pull_spec_mods</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.append_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append a new workflow on top of an existing workflow.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -832,9 +837,9 @@ fw_ids</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.archive_wf">
-<code class="sig-name descname">archive_wf</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.archive_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">archive_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.archive_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Archive the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -843,14 +848,14 @@ fw_ids</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.auto_load">
 <em class="property">classmethod </em><code class="sig-name descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.auto_load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.bulk_add_wfs">
-<code class="sig-name descname">bulk_add_wfs</code><span class="sig-paren">(</span><em class="sig-param">wfs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.bulk_add_wfs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bulk_add_wfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wfs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.bulk_add_wfs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a list of workflows to the fireworks database
 using insert_many for both the fws and wfs, is
 more efficient than adding them one at a time.</p>
@@ -864,21 +869,21 @@ more efficient than adding them one at a time.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.cancel_reservation">
-<code class="sig-name descname">cancel_reservation</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.cancel_reservation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cancel_reservation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.cancel_reservation" title="Permalink to this definition">¶</a></dt>
 <dd><p>given the launch id, cancel the reservation and rerun the fireworks</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.cancel_reservation_by_reservation_id">
-<code class="sig-name descname">cancel_reservation_by_reservation_id</code><span class="sig-paren">(</span><em class="sig-param">reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.cancel_reservation_by_reservation_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cancel_reservation_by_reservation_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reservation_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.cancel_reservation_by_reservation_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the reservation id, cancel the reservation and rerun the corresponding fireworks.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.change_launch_dir">
-<code class="sig-name descname">change_launch_dir</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">launch_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.change_launch_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">change_launch_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.change_launch_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the launch directory corresponding to the given launch id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -890,9 +895,9 @@ more efficient than adding them one at a time.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.checkout_fw">
-<code class="sig-name descname">checkout_fw</code><span class="sig-paren">(</span><em class="sig-param">fworker</em>, <em class="sig-param">launch_dir</em>, <em class="sig-param">fw_id=None</em>, <em class="sig-param">host=None</em>, <em class="sig-param">ip=None</em>, <em class="sig-param">state='RUNNING'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.checkout_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">checkout_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">'RUNNING'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.checkout_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checkout the next ready firework, mark it with the given state(RESERVED or RUNNING) and
 return it to the caller. The caller is responsible for running the Firework.</p>
 <dl class="field-list simple">
@@ -915,9 +920,9 @@ return it to the caller. The caller is responsible for running the Firework.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.complete_launch">
-<code class="sig-name descname">complete_launch</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">action=None</em>, <em class="sig-param">state='COMPLETED'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.complete_launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">complete_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">action</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">'COMPLETED'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.complete_launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal method used to mark a Firework’s Launch as completed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -936,9 +941,9 @@ return it to the caller. The caller is responsible for running the Firework.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.defuse_fw">
-<code class="sig-name descname">defuse_fw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">rerun_duplicates=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.defuse_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">defuse_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">rerun_duplicates</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.defuse_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the firework id, defuse the firework and refresh the workflow.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -951,9 +956,9 @@ marked for rerun and then defused.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.defuse_wf">
-<code class="sig-name descname">defuse_wf</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">defuse_all_states=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.defuse_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">defuse_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">defuse_all_states</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.defuse_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defuse the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -965,9 +970,9 @@ marked for rerun and then defused.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.delete_wf">
-<code class="sig-name descname">delete_wf</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">delete_launch_dirs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.delete_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">delete_launch_dirs</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.delete_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the workflow containing firework with the given id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -980,9 +985,9 @@ the WF will be deleted as well, if possible.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.detect_lostruns">
-<code class="sig-name descname">detect_lostruns</code><span class="sig-paren">(</span><em class="sig-param">expiration_secs=14400</em>, <em class="sig-param">fizzle=False</em>, <em class="sig-param">rerun=False</em>, <em class="sig-param">max_runtime=None</em>, <em class="sig-param">min_runtime=None</em>, <em class="sig-param">refresh=False</em>, <em class="sig-param">query=None</em>, <em class="sig-param">launch_query=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_lostruns" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">detect_lostruns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">expiration_secs</span><span class="o">=</span><span class="default_value">14400</span></em>, <em class="sig-param"><span class="n">fizzle</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">rerun</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_runtime</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_runtime</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">refresh</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">launch_query</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_lostruns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect lost runs i.e running fireworks that haven’t been updated within the specified
 time limit or running firework whose launch has been marked fizzed or completed.</p>
 <dl class="field-list simple">
@@ -1011,9 +1016,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.detect_unreserved">
-<code class="sig-name descname">detect_unreserved</code><span class="sig-paren">(</span><em class="sig-param">expiration_secs=1209600</em>, <em class="sig-param">rerun=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_unreserved" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">detect_unreserved</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">expiration_secs</span><span class="o">=</span><span class="default_value">1209600</span></em>, <em class="sig-param"><span class="n">rerun</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.detect_unreserved" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the reserved launch ids that have not been updated for a while.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1031,9 +1036,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.forget_offline">
-<code class="sig-name descname">forget_offline</code><span class="sig-paren">(</span><em class="sig-param">launchid_or_fwid</em>, <em class="sig-param">launch_mode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.forget_offline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">forget_offline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchid_or_fwid</span></em>, <em class="sig-param"><span class="n">launch_mode</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.forget_offline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unmark the offline run for the given launch or firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1045,14 +1050,14 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.future_run_exists">
-<code class="sig-name descname">future_run_exists</code><span class="sig-paren">(</span><em class="sig-param">fworker=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.future_run_exists" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">future_run_exists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.future_run_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if database has any current OR future Fireworks available</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1064,9 +1069,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_fw_by_id">
-<code class="sig-name descname">get_fw_by_id</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_fw_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a Firework id, give back a Firework object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1078,9 +1083,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_fw_dict_by_id">
-<code class="sig-name descname">get_fw_dict_by_id</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_dict_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_fw_dict_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_dict_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given firework id, return firework dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1092,9 +1097,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_fw_ids">
-<code class="sig-name descname">get_fw_ids</code><span class="sig-paren">(</span><em class="sig-param">query=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">limit=0</em>, <em class="sig-param">count_only=False</em>, <em class="sig-param">launches_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_ids" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_fw_ids</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">count_only</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">launches_mode</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all the fw ids that match a query.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1115,9 +1120,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_fw_ids_from_reservation_id">
-<code class="sig-name descname">get_fw_ids_from_reservation_id</code><span class="sig-paren">(</span><em class="sig-param">reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_ids_from_reservation_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_fw_ids_from_reservation_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reservation_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_fw_ids_from_reservation_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the reservation id, return the list of firework ids.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1132,9 +1137,9 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_launch_by_id">
-<code class="sig-name descname">get_launch_by_id</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_launch_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_launch_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_launch_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a Launch id, return details of the Launch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1146,24 +1151,24 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_launchdir">
-<code class="sig-name descname">get_launchdir</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">launch_idx=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_launchdir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_launchdir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">launch_idx</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_launchdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the directory of the <em>most recent</em> launch of a fw_id
 :param fw_id: (int) fw_id to get launch id for
 :param launch_idx: (int) index of the launch to get. Default is -1, which is most recent.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_logdir">
 <code class="sig-name descname">get_logdir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_logdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the log directory.</p>
 <p>AJ: This is needed for job packing due to Proxy objects not being fully featured…</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_new_fw_id">
-<code class="sig-name descname">get_new_fw_id</code><span class="sig-paren">(</span><em class="sig-param">quantity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_new_fw_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_new_fw_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quantity</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_new_fw_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checkout the next Firework id</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1173,15 +1178,15 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_new_launch_id">
 <code class="sig-name descname">get_new_launch_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_new_launch_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checkout the next Launch id</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_recovery">
-<code class="sig-name descname">get_recovery</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">launch_id='last'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_recovery" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_recovery</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="o">=</span><span class="default_value">'last'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_recovery" title="Permalink to this definition">¶</a></dt>
 <dd><p>function to get recovery data for a given fw and launch
 :param fw_id: fw id to get recovery data for
 :type fw_id: int
@@ -1193,15 +1198,15 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id">
-<code class="sig-name descname">get_reservation_id_from_fw_id</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_reservation_id_from_fw_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_reservation_id_from_fw_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the firework id, return the reservation id</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_tracker_data">
-<code class="sig-name descname">get_tracker_data</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_tracker_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_tracker_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_tracker_data" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fw_id</strong> (<em>id</em>) – firework id</p>
@@ -1215,9 +1220,9 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id">
-<code class="sig-name descname">get_wf_by_fw_id</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_wf_by_fw_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a Firework id, give back the Workflow containing that Firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1229,9 +1234,9 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id_lzyfw">
-<code class="sig-name descname">get_wf_by_fw_id_lzyfw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id_lzyfw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_wf_by_fw_id_lzyfw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_by_fw_id_lzyfw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a FireWork id, give back the Workflow containing that FireWork.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1243,9 +1248,9 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_wf_ids">
-<code class="sig-name descname">get_wf_ids</code><span class="sig-paren">(</span><em class="sig-param">query=None</em>, <em class="sig-param">sort=None</em>, <em class="sig-param">limit=0</em>, <em class="sig-param">count_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_ids" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_wf_ids</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">count_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one fw id for all workflows that match a query.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1265,9 +1270,9 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.get_wf_summary_dict">
-<code class="sig-name descname">get_wf_summary_dict</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">mode='more'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_summary_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_wf_summary_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'more'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_wf_summary_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A much faster way to get summary information about a Workflow by querying only for
 needed information.</p>
 <dl class="field-list simple">
@@ -1286,9 +1291,9 @@ needed information.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.log_message">
-<code class="sig-name descname">log_message</code><span class="sig-paren">(</span><em class="sig-param">level</em>, <em class="sig-param">message</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.log_message" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">log_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span></em>, <em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.log_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Support for job packing</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1300,9 +1305,9 @@ needed information.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.maintain">
-<code class="sig-name descname">maintain</code><span class="sig-paren">(</span><em class="sig-param">infinite=True</em>, <em class="sig-param">maintain_interval=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.maintain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">maintain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">infinite</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">maintain_interval</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.maintain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform launchpad maintenance: detect lost runs and unreserved RESERVE launches.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1314,9 +1319,9 @@ needed information.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.mark_fizzled">
-<code class="sig-name descname">mark_fizzled</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.mark_fizzled" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mark_fizzled</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.mark_fizzled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark the launch corresponding to the given id as FIZZLED.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1331,9 +1336,9 @@ needed information.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.pause_fw">
-<code class="sig-name descname">pause_fw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.pause_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pause_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.pause_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the firework id, pauses the firework and refresh the workflow</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1342,9 +1347,9 @@ needed information.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.pause_wf">
-<code class="sig-name descname">pause_wf</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.pause_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pause_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.pause_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pause the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1353,9 +1358,9 @@ needed information.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.ping_launch">
-<code class="sig-name descname">ping_launch</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">ptime=None</em>, <em class="sig-param">checkpoint=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.ping_launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">ptime</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">checkpoint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.ping_launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ping that a Launch is still alive: updates the ‘update_on ‘field of the state history of a
 Launch.</p>
 <dl class="field-list simple">
@@ -1368,9 +1373,9 @@ Launch.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.recover_offline">
-<code class="sig-name descname">recover_offline</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">ignore_errors=False</em>, <em class="sig-param">print_errors=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.recover_offline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">recover_offline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">ignore_errors</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_errors</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.recover_offline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the launch state using the offline data in FW_offline.json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1386,9 +1391,9 @@ Launch.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.reignite_fw">
-<code class="sig-name descname">reignite_fw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reignite_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reignite_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reignite_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the firework id, re-ignite(set state=WAITING) the defused firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1397,9 +1402,9 @@ Launch.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.reignite_wf">
-<code class="sig-name descname">reignite_wf</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reignite_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reignite_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reignite_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reignite the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1408,9 +1413,9 @@ Launch.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.rerun_fw">
-<code class="sig-name descname">rerun_fw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">rerun_duplicates=True</em>, <em class="sig-param">recover_launch=None</em>, <em class="sig-param">recover_mode=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rerun_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">rerun_duplicates</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">recover_launch</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recover_mode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.rerun_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rerun the firework corresponding to the given id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1433,9 +1438,9 @@ or run recovery fw in previous directory</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.reserve_fw">
-<code class="sig-name descname">reserve_fw</code><span class="sig-paren">(</span><em class="sig-param">fworker</em>, <em class="sig-param">launch_dir</em>, <em class="sig-param">host=None</em>, <em class="sig-param">ip=None</em>, <em class="sig-param">fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reserve_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reserve_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reserve_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checkout the next ready firework and mark the launch reserved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1456,9 +1461,9 @@ or run recovery fw in previous directory</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">password</em>, <em class="sig-param">require_password=True</em>, <em class="sig-param">max_reset_wo_password=25</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">require_password</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">max_reset_wo_password</span><span class="o">=</span><span class="default_value">25</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new FireWorks database. This will overwrite the existing FireWorks database! To
 safeguard against accidentally erasing an existing database, a password must be entered.</p>
 <dl class="field-list simple">
@@ -1475,15 +1480,15 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.restore_backup_data">
-<code class="sig-name descname">restore_backup_data</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.restore_backup_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restore_backup_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.restore_backup_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>For the given launch id and firework id, restore the back up data.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.resume_fw">
-<code class="sig-name descname">resume_fw</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.resume_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resume_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.resume_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the firework id, resume (set state=WAITING) the paused firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1492,9 +1497,9 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.run_exists">
-<code class="sig-name descname">run_exists</code><span class="sig-paren">(</span><em class="sig-param">fworker=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.run_exists" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_exists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.run_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks to see if the database contains any FireWorks that are ready to run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1506,9 +1511,9 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.set_priority">
-<code class="sig-name descname">set_priority</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">priority</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.set_priority" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_priority</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">priority</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.set_priority" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set priority to the firework with the given id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1520,9 +1525,9 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.set_reservation_id">
-<code class="sig-name descname">set_reservation_id</code><span class="sig-paren">(</span><em class="sig-param">launch_id</em>, <em class="sig-param">reservation_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.set_reservation_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_reservation_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">reservation_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.set_reservation_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set reservation id to the launch corresponding to the given launch id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1534,21 +1539,21 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Note: usernames/passwords are exported as unencrypted Strings!</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.tuneup">
-<code class="sig-name descname">tuneup</code><span class="sig-paren">(</span><em class="sig-param">bkground=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.tuneup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tuneup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bkground</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.tuneup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Database tuneup: build indexes</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.update_spec">
-<code class="sig-name descname">update_spec</code><span class="sig-paren">(</span><em class="sig-param">fw_ids</em>, <em class="sig-param">spec_document</em>, <em class="sig-param">mongo=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.update_spec" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_spec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_ids</span></em>, <em class="sig-param"><span class="n">spec_document</span></em>, <em class="sig-param"><span class="n">mongo</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.update_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update fireworks with a spec. Sometimes you need to modify a firework in progress.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1566,16 +1571,16 @@ collection.</p></li>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.launchpad.LazyFirework">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LazyFirework</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">fw_coll</em>, <em class="sig-param">launch_coll</em>, <em class="sig-param">fallback_fs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LazyFirework</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">fw_coll</span></em>, <em class="sig-param"><span class="n">launch_coll</span></em>, <em class="sig-param"><span class="n">fallback_fs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A LazyFirework only has the fw_id, and retrieves other data just-in-time.
 This representation can speed up Workflow loading as only “important” FWs need to be
 fully loaded.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">fw_id</em>, <em class="sig-param">fw_coll</em>, <em class="sig-param">launch_coll</em>, <em class="sig-param">fallback_fs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">fw_coll</span></em>, <em class="sig-param"><span class="n">launch_coll</span></em>, <em class="sig-param"><span class="n">fallback_fs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1587,84 +1592,84 @@ fully loaded.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.archived_launches">
 <em class="property">property </em><code class="sig-name descname">archived_launches</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.archived_launches" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.created_on">
 <em class="property">property </em><code class="sig-name descname">created_on</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.created_on" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.core.launchpad.LazyFirework.db_fields">
 <code class="sig-name descname">db_fields</code><em class="property"> = ('name', 'fw_id', 'spec', 'created_on', 'state')</em><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.db_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.core.launchpad.LazyFirework.db_launch_fields">
 <code class="sig-name descname">db_launch_fields</code><em class="property"> = ('launches', 'archived_launches')</em><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.db_launch_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.full_fw">
 <em class="property">property </em><code class="sig-name descname">full_fw</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.full_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.launches">
 <em class="property">property </em><code class="sig-name descname">launches</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.launches" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.name">
 <em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.parents">
 <em class="property">property </em><code class="sig-name descname">parents</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.parents" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.partial_fw">
 <em class="property">property </em><code class="sig-name descname">partial_fw</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.partial_fw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.spec">
 <em class="property">property </em><code class="sig-name descname">spec</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.spec" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.state">
 <em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.state" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.tasks">
 <em class="property">property </em><code class="sig-name descname">tasks</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.tasks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.to_db_dict">
 <code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.LazyFirework.updated_on">
 <em class="property">property </em><code class="sig-name descname">updated_on</code><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework.updated_on" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="exception">
+<dl class="py exception">
 <dt id="fireworks.core.launchpad.LockedWorkflowError">
 <em class="property">exception </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LockedWorkflowError</code><a class="headerlink" href="#fireworks.core.launchpad.LockedWorkflowError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
@@ -1672,16 +1677,16 @@ fully loaded.</p>
 time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (WFLOCK_EXPIRATION_KILL)</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.launchpad.WFLock">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">WFLock</code><span class="sig-paren">(</span><em class="sig-param">lp</em>, <em class="sig-param">fw_id</em>, <em class="sig-param">expire_secs=300</em>, <em class="sig-param">kill=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">WFLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lp</span></em>, <em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">expire_secs</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">kill</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Lock a Workflow, i.e. for performing update operations
 Raises a LockedWorkflowError if the lock couldn’t be acquired withing expire_secs and kill==False.
 Calling functions are responsible for handling the error in order to avoid database inconsistencies.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.launchpad.WFLock.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">lp</em>, <em class="sig-param">fw_id</em>, <em class="sig-param">expire_secs=300</em>, <em class="sig-param">kill=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lp</span></em>, <em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">expire_secs</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">kill</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1696,9 +1701,9 @@ Calling functions are responsible for handling the error in order to avoid datab
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.launchpad.get_action_from_gridfs">
-<code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">get_action_from_gridfs</code><span class="sig-paren">(</span><em class="sig-param">action_dict</em>, <em class="sig-param">fallback_fs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.get_action_from_gridfs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">get_action_from_gridfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action_dict</span></em>, <em class="sig-param"><span class="n">fallback_fs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.get_action_from_gridfs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to obtain the correct dictionary of the FWAction associated
 with a launch. If necessary retrieves the information from gridfs based
 on its identifier, otherwise simply returns the dictionary in input.
@@ -1724,14 +1729,14 @@ document.</p></li>
 </div>
 <div class="section" id="module-fireworks.core.rocket">
 <span id="fireworks-core-rocket-module"></span><h2>fireworks.core.rocket module<a class="headerlink" href="#module-fireworks.core.rocket" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.core.rocket.Rocket">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">Rocket</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">fworker</em>, <em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">Rocket</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The Rocket fetches a workflow step from the FireWorks database and executes it.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">fworker</em>, <em class="sig-param">fw_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Args:
 launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.</p>
 <blockquote>
@@ -1741,14 +1746,14 @@ launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.<
 fw_id (int): id of a specific Firework to run (quit if it cannot be found)</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.decorate_fwaction">
-<code class="sig-name descname">decorate_fwaction</code><span class="sig-paren">(</span><em class="sig-param">fwaction</em>, <em class="sig-param">my_spec</em>, <em class="sig-param">m_fw</em>, <em class="sig-param">launch_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.decorate_fwaction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">decorate_fwaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fwaction</span></em>, <em class="sig-param"><span class="n">my_spec</span></em>, <em class="sig-param"><span class="n">m_fw</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.decorate_fwaction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">pdb_on_exception=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pdb_on_exception</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the rocket (check out a job from the database and execute it)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1758,9 +1763,9 @@ a caught exception.  Default False.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.update_checkpoint">
-<em class="property">static </em><code class="sig-name descname">update_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">launch_dir</em>, <em class="sig-param">launch_id</em>, <em class="sig-param">checkpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">update_checkpoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">checkpoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to update checkpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1776,47 +1781,47 @@ a caught exception.  Default False.</p>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket.background_task">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">background_task</code><span class="sig-paren">(</span><em class="sig-param">btask</em>, <em class="sig-param">spec</em>, <em class="sig-param">stop_event</em>, <em class="sig-param">master_thread</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.background_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">background_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">btask</span></em>, <em class="sig-param"><span class="n">spec</span></em>, <em class="sig-param"><span class="n">stop_event</span></em>, <em class="sig-param"><span class="n">master_thread</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.background_task" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket.do_ping">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">do_ping</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.do_ping" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">do_ping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.do_ping" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket.ping_launch">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">ping_launch</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">launch_id</em>, <em class="sig-param">stop_event</em>, <em class="sig-param">master_thread</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.ping_launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">stop_event</span></em>, <em class="sig-param"><span class="n">master_thread</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.ping_launch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket.start_background_task">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">start_background_task</code><span class="sig-paren">(</span><em class="sig-param">btask</em>, <em class="sig-param">spec</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_background_task" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">start_background_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">btask</span></em>, <em class="sig-param"><span class="n">spec</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_background_task" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket.start_ping_launch">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">start_ping_launch</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_ping_launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">start_ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_ping_launch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket.stop_backgrounds">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">stop_backgrounds</code><span class="sig-paren">(</span><em class="sig-param">ping_stop</em>, <em class="sig-param">btask_stops</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.stop_backgrounds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">stop_backgrounds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ping_stop</span></em>, <em class="sig-param"><span class="n">btask_stops</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.stop_backgrounds" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-fireworks.core.rocket_launcher">
 <span id="fireworks-core-rocket-launcher-module"></span><h2>fireworks.core.rocket_launcher module<a class="headerlink" href="#module-fireworks.core.rocket_launcher" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket_launcher.get_fworker">
-<code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">get_fworker</code><span class="sig-paren">(</span><em class="sig-param">fworker</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.get_fworker" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">get_fworker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fworker</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.get_fworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket_launcher.launch_rocket">
-<code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">launch_rocket</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">fworker=None</em>, <em class="sig-param">fw_id=None</em>, <em class="sig-param">strm_lvl='INFO'</em>, <em class="sig-param">pdb_on_exception=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">launch_rocket</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">'INFO'</span></em>, <em class="sig-param"><span class="n">pdb_on_exception</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a single rocket in the current directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1835,9 +1840,9 @@ the debugger on a firework exception</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.core.rocket_launcher.rapidfire">
-<code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">rapidfire</code><span class="sig-paren">(</span><em class="sig-param">launchpad</em>, <em class="sig-param">fworker=None</em>, <em class="sig-param">m_dir=None</em>, <em class="sig-param">nlaunches=0</em>, <em class="sig-param">max_loops=-1</em>, <em class="sig-param">sleep_time=None</em>, <em class="sig-param">strm_lvl='INFO'</em>, <em class="sig-param">timeout=None</em>, <em class="sig-param">local_redirect=False</em>, <em class="sig-param">pdb_on_exception=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">rapidfire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">m_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nlaunches</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">max_loops</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">sleep_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">'INFO'</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">local_redirect</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">pdb_on_exception</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
 for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.</p>
 <dl class="field-list simple">
@@ -1864,6 +1869,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -1900,7 +1906,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1914,13 +1920,14 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.core package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
