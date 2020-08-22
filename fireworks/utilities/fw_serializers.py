@@ -43,7 +43,6 @@ import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
 from fireworks.fw_config import JSON_SCHEMA_VALIDATE, JSON_SCHEMA_VALIDATE_LIST
-from fireworks.utilities import json_schema
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -69,6 +68,8 @@ try:
 except Exception:
     NUMPY_INSTALLED = False
 
+if JSON_SCHEMA_VALIDATE:
+    import fireworks_schema
 
 def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
@@ -259,7 +260,7 @@ class FWSerializable(object):
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
-            json_schema.validate(dct, cls.__name__)
+            fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
 
     def to_file(self, filename, f_format=None, **kwargs):
@@ -398,7 +399,7 @@ def load_object_from_file(filename, f_format=None):
 
     classname = FW_NAME_UPDATES.get(dct['_fw_name'], dct['_fw_name'])
     if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
-        json_schema.validate(dct, classname)
+        fireworks_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
 
 

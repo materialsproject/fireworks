@@ -1,5 +1,0 @@
-{
-  "_fw_name": "ArchiveDirTask",
-  "base_name": "/tmp/archived_dir.tar.bz2",
-  "format": "bztar"
-}

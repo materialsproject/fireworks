@@ -17,6 +17,8 @@ JSON schema provides a formal human- and machine-readable description of
 the data types used in classes in FireWorks. Additionally, a function is provided
 that checks the validity of JSON and YAML inputs immediately before deserialization.
 
+To use the schema the `fireworks_schema` package must be installed.
+
 There are three ways to activate JSON schema validation:
 
 * Call the schema validator explicitly
@@ -34,12 +36,12 @@ loaded from a YAML file and validated against the Workflow schema:
 .. code-block:: python
 
   import yaml
-  from fireworks.utilities import json_schema
+  import fireworks_schema
   from fireworks import Workflow
 
   with open('empty_fws.yaml', 'rt') as yf:
       dct = yaml.safe_load(yf)
-  json_schema.validate(dct, 'Workflow')
+  fireworks_schema.validate(dct, 'Workflow')
   wf = Workflow.from_dict(dct)
 
 
@@ -75,5 +77,3 @@ For example, to turn on automatic validation for serialized ``Firework`` and
 
   JSON_SCHEMA_VALIDATE: true
   JSON_SCHEMA_VALIDATE_LIST: [Firework, Workflow]
-
-

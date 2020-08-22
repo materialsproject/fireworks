@@ -1,9 +1,0 @@
-{
-  "_fw_name": "GetFilesTask",
-  "identifiers": [
-    "my_identifier"
-  ],
-  "new_file_names": [
-    "input_file_2"
-  ]
-}
