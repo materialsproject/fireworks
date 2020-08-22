@@ -71,6 +71,7 @@ except Exception:
 if JSON_SCHEMA_VALIDATE:
     import fireworks_schema
 
+
 def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
