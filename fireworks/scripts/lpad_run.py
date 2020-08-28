@@ -223,7 +223,7 @@ def add_wf_dir(args):
         fwf = Workflow.from_file(filename)
         lp.add_wf(fwf)
 
-        
+
 def print_fws(ids, lp, args):
     """Prints results of some FireWorks query to stdout."""
     fws = []
@@ -249,7 +249,7 @@ def print_fws(ids, lp, args):
 
     print(args.output(fws))
 
-    
+
 def get_fw_ids_helper(lp, args, count_only=None):
     """Build fws query from command line options and submit.
 
