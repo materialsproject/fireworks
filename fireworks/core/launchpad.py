@@ -51,6 +51,32 @@ __date__ = 'Jan 30, 2013'
 
 # TODO: lots of duplication reduction and cleanup possible
 
+def sort_aggregation(sort):
+    """Build sorting aggregation pipeline.
+
+    Args:
+        sort [(str,int)]: sorting keys and directions as a list of
+                          (str, int) tuples, i.e. [('updated_on', 1)]
+    """
+    # Fix for sorting by dates which are actually stored as strings:
+    # Not sure about the underlying issue's source, but apparently some
+    # dates are stored as strings and others as date objects.
+    # Following pipeline makes sure all stored dates are actually date
+    # objects for proper comparison when sorting.
+    # Assumption below is that dates are either strings or date objects,
+    # nothing else.
+    aggregation = []
+    for k, _ in sort:
+        if k in {'updated_on', 'created_on'}:
+            aggregation.append(
+                {'$set': {k: {'$dateFromString': {
+                    'dateString': '$' + k,
+                    'onError': '$' + k,  # if conversion fails, just return original object
+                }}}}
+            )
+    aggregation.append({'$sort': {k: v for k, v in sort}})
+    return aggregation
+
 
 class LockedWorkflowError(ValueError):
     """
@@ -742,7 +768,6 @@ class LaunchPad(FWSerializable):
         Returns:
             list: list of firework ids matching the query
         """
-        fw_ids = []
         coll = "launches" if launches_mode else "fireworks"
         criteria = query if query else {}
         if launches_mode:
@@ -753,12 +778,31 @@ class LaunchPad(FWSerializable):
             if limit:
                 return ValueError(
                     "Cannot count_only and limit at the same time!")
-            return getattr(self, coll).find(criteria, {}, sort=sort).count()
 
-        for fw in getattr(self, coll).find(criteria, {"fw_id": True},
-                                           sort=sort).limit(limit):
-            fw_ids.append(fw["fw_id"])
-        return fw_ids
+        aggregation = []
+
+        if criteria is not None:
+            aggregation.append({'$match': criteria})
+
+        if count_only:
+            aggregation.append({'$count': 'count'})
+            self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+
+            cursor = getattr(self, coll).aggregate(aggregation)
+            res = list(cursor)
+            return res[0]['count'] if len(res) > 0 else 0
+
+        if sort is not None:
+            aggregation.extend(sort_aggregation(sort))
+
+        aggregation.append({'$project': {'fw_id': True, '_id': False}})
+
+        if limit is not None and limit > 0:
+            aggregation.append({'$limit': limit})
+
+        self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+        cursor = getattr(self, coll).aggregate(aggregation)
+        return [fw["fw_id"] for fw in cursor]
 
     def get_wf_ids(self, query=None, sort=None, limit=0, count_only=False):
         """
@@ -773,17 +817,32 @@ class LaunchPad(FWSerializable):
         Returns:
             list: list of firework ids
         """
-        wf_ids = []
         criteria = query if query else {}
+        aggregation = []
+
+        if criteria is not None:
+            aggregation.append({'$match': criteria})
+
         if count_only:
-            return self.workflows.find(criteria, {"nodes": True},
-                                       sort=sort).limit(limit).count()
+            aggregation.append({'$count': 'count'})
+            self.m_logger.debug("Aggregation '{}'.".format(aggregation))
 
-        for fw in self.workflows.find(criteria, {"nodes": True},
-                                      sort=sort).limit(limit):
-            wf_ids.append(fw["nodes"][0])
+            cursor = self.workflows.aggregate(aggregation)
+            res = list(cursor)
+            return res[0]['count'] if len(res) > 0 else 0
 
-        return wf_ids
+        if sort is not None:
+            aggregation.extend(sort_aggregation(sort))
+
+        aggregation.append({'$project': {'nodes': True, '_id': False}})
+
+        if limit is not None and limit > 0:
+            aggregation.append({'$limit': limit})
+
+        self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+        cursor = self.workflows.aggregate(aggregation)
+
+        return [fw["nodes"][0] for fw in cursor]
 
     def get_fw_ids_in_wfs(self, wf_query=None, fw_query=None, sort=None,
                           limit=0, count_only=False, launches_mode=False):
@@ -839,10 +898,11 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug("Aggregation '{}'.".format(aggregation))
 
             cursor = self.workflows.aggregate(aggregation)
-            return list(cursor)[0]['count']
+            res = list(cursor)
+            return res[0]['count'] if len(res) > 0 else 0
 
         if sort is not None:
-            aggregation.append({'$sort': sort})
+            aggregation.extend(sort_aggregation(sort))
 
         aggregation.append({'$project': {'fw_id': True, '_id': False}})
 
@@ -1260,7 +1320,7 @@ class LaunchPad(FWSerializable):
             rerun (bool): if True, the expired reservations are cancelled and the fireworks rerun.
 
         Returns:
-            [int]: list of expired lacunh ids
+            [int]: list of expired launch ids
         """
         bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
