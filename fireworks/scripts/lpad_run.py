@@ -300,7 +300,6 @@ def get_fw_ids_helper(lp, args, count_only=None):
     else:
         ids = lp.get_fw_ids(query, sort, args.max, count_only=count_only,
                             launches_mode=args.launches_mode)
-    print_fws(ids, lp, args)
     return ids
 
 
