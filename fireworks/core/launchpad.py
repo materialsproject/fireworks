@@ -603,17 +603,19 @@ class LaunchPad(FWSerializable):
                         links_dict['metadata'], links_dict['created_on'],
                         links_dict['updated_on'], fw_states)
 
-    def delete_wf(self, fw_id, delete_launch_dirs=False):
-        """
-        Delete the workflow containing firework with the given id.
+    def delete_fws(self, fw_ids, delete_launch_dirs=False):
+        """Delete a set of fireworks identified by their fw_ids.
+
+        ATTENTION: This function serves maintenance purposes and will leave
+        workflows untouched. Its use will thus result in a corrupted database.
+        Use 'delete_wf' instead for consistently deleting workflows together
+        with theit fireworks.
 
         Args:
-            fw_id (int): Firework id
+            fw_ids ([int]): Firework ids
             delete_launch_dirs (bool): if True all the launch directories associated with
                 the WF will be deleted as well, if possible.
         """
-        links_dict = self.workflows.find_one({'nodes': fw_id})
-        fw_ids = links_dict["nodes"]
         potential_launch_ids = []
         launch_ids = []
         for i in fw_ids:
@@ -638,15 +640,28 @@ class LaunchPad(FWSerializable):
                 shutil.rmtree(d, ignore_errors=True)
 
         print("Remove fws %s" % fw_ids)
-        print("Remove launches %s" % launch_ids)
-        print("Removing workflow.")
         if self.gridfs_fallback is not None:
             for lid in launch_ids:
                 for f in self.gridfs_fallback.find({"metadata.launch_id": lid}):
                     self.gridfs_fallback.delete(f._id)
+        print("Remove launches %s" % launch_ids)
         self.launches.delete_many({'launch_id': {"$in": launch_ids}})
         self.offline_runs.delete_many({'launch_id': {"$in": launch_ids}})
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
+
+    def delete_wf(self, fw_id, delete_launch_dirs=False):
+        """
+        Delete the workflow containing firework with the given id.
+
+        Args:
+            fw_id (int): Firework id
+            delete_launch_dirs (bool): if True all the launch directories associated with
+                the WF will be deleted as well, if possible.
+        delete_launch_dirs"""
+        links_dict = self.workflows.find_one({'nodes': fw_id})
+        fw_ids = links_dict["nodes"]
+        self.delete_fws(fw_ids, delete_launch_dirs=delete_launch_dirs)
+        print("Removing workflow.")
         self.workflows.delete_one({'nodes': fw_id})
 
     def get_wf_summary_dict(self, fw_id, mode="more"):

@@ -42,6 +42,7 @@ import six
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
+from fireworks.fw_config import JSON_SCHEMA_VALIDATE, JSON_SCHEMA_VALIDATE_LIST
 
 __author__ = 'Anubhav Jain'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -66,6 +67,9 @@ try:
     NUMPY_INSTALLED = True
 except Exception:
     NUMPY_INSTALLED = False
+
+if JSON_SCHEMA_VALIDATE:
+    import fireworks_schema
 
 
 def recursive_dict(obj, preserve_unicode=True):
@@ -251,12 +255,14 @@ class FWSerializable(object):
             FWSerializable
         """
         if f_format == 'json':
-            return cls.from_dict(reconstitute_dates(json.loads(f_str)))
+            dct = json.loads(f_str)
         elif f_format == 'yaml':
-            return cls.from_dict(reconstitute_dates(
-                yaml.safe_load(f_str)))
+            dct = yaml.safe_load(f_str)
         else:
             raise ValueError('Unsupported format {}'.format(f_format))
+        if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
+            fireworks_schema.validate(dct, cls.__name__)
+        return cls.from_dict(reconstitute_dates(dct))
 
     def to_file(self, filename, f_format=None, **kwargs):
         """
@@ -381,19 +387,21 @@ def load_object_from_file(filename, f_format=None):
         f_format (str): the serialization format (default is auto-detect based on
             filename extension)
     """
-    m_dict = {}
     if f_format is None:
         f_format = filename.split('.')[-1]
 
     with open(filename, 'r', **ENCODING_PARAMS) as f:
         if f_format == 'json':
-            m_dict = reconstitute_dates(json.loads(f.read()))
+            dct = json.loads(f.read())
         elif f_format == 'yaml':
-            m_dict = reconstitute_dates(yaml.safe_load(f))
+            dct = yaml.safe_load(f)
         else:
             raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
 
-    return load_object(m_dict)
+    classname = FW_NAME_UPDATES.get(dct['_fw_name'], dct['_fw_name'])
+    if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
+        fireworks_schema.validate(dct, classname)
+    return load_object(reconstitute_dates(dct))
 
 
 def _search_module_for_obj(m_module, obj_dict):
