@@ -7,8 +7,8 @@ import os
 from fireworks.core.firework import FiretaskBase
 from fireworks.utilities.filepad import FilePad
 
-__author__ = 'Kiran Mathew'
-__email__ = 'kmathew@lbl.gov'
+__author__ = 'Kiran Mathew, Johannes Hoermann'
+__email__ = 'kmathew@lbl.gov, johannes.hoermann@imtek.uni-freiburg.de'
 __credits__ = 'Anubhav Jain'
 
 
@@ -87,29 +87,61 @@ class GetFilesTask(FiretaskBase):
 
 class GetFilesByQueryTask(FiretaskBase):
     """
-    A Firetask to fetch files from the filepad and write it to specified directory (current working
-    directory if not specified)
+    A Firetask to query files from the filepad and write them to specified
+    directory (current working directory if not specified).
 
     Required params:
-        - query (dict): mongo db query identifying files to fetch
+        - query (dict): mongo db query identifying files to fetch.
+          Same as within fireworks.utilities.dict_mods, use '->' in dict keys
+          for querying nested documents, instead of MongoDB '.' (dot) seperator.
+          Do use '.' and NOT '->' within the 'sort_key' field.
 
     Optional params:
         - sort_key (str): sort key, don't sort per default
         - sort_direction (int): sort direction, default 'pymongo.DESCENDING'
         - limit (int): maximum number of files to write, default: no limit
+        - fizzle_empty_result (bool): fizzle if no file found, default: True
+        - fizzle_degenerate_file_name (bool): fizzle if more than one of the
+          resulting files are to be written to the same local file (i.e. the
+          filepad's 'original_file_name' entries overlap), default: True
         - filepad_file (str): path to the filepad db config file
         - dest_dir (str): destination directory, default is the current working
           directory.
         - new_file_names ([str]): if provided, the retrieved files will be
           renamed. Not recommended as order and number of queried files not fixed.
+        - meta_file (bool): default: False. If True, then metadata of queried files written to
+          a .yaml file of same name as file itself, suffixed by...
+        - meta_file_suffix (str): if not None, metadata for each file is written
+          to a YAML file of the same name, suffixed by this string.
+          Default: ".meta.yaml"
+
+    The options 'fizzle_degenerate_file_name', 'limit', 'sort_key', and
+    'sort_direction' are all inntended to help dealing with the following
+    special case: Querying by metadata leads to an a priori unknown
+    number of files in the general case. Thus, it is advisable to either
+    'limit' the number of files and/or avoid explicitly specifying a list
+    of 'new_file_names'. In the latter case, files will be written to
+    'dest_dir' using their 'original_file_name' recorded within the
+    attached FilePad object. When more than one queried file share the same
+    'original_file_name', the order of processing matters: subsequent files will
+    overwrite their predecessor of same name. 'sort_key' and 'sort_direction'
+    can help to assure deterministic behavior, e.g. by always processing newer
+    files later.
     """
     _fw_name = 'GetFilesByQueryTask'
     required_params = ["query"]
-    optional_params = ["sort_key", "sort_direction", "limit",
-                       "filepad_file", "dest_dir", "new_file_names"]
+    optional_params = [
+        "dest_dir", "filepad_file",
+        "fizzle_degenerate_file_name", "fizzle_empty_result",
+        "limit", "meta_file", "meta_file_suffix", "new_file_names",
+        "sort_direction", "sort_key"]
 
     def run_task(self, fw_spec):
         import pymongo
+        import json
+        from ruamel.yaml import YAML
+        from fireworks.utilities.dict_mods import arrow_to_dot
+
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
@@ -117,12 +149,40 @@ class GetFilesByQueryTask(FiretaskBase):
         sort_key = self.get("sort_key", None)
         sort_direction = self.get("sort_direction", pymongo.DESCENDING)
         limit = self.get("limit", None)
+        fizzle_empty_result = self.get("fizzle_empty_result", True)
+        fizzle_degenerate_file_name = self.get(
+          "fizzle_degenerate_file_name", True)
+        meta_file = self.get("meta_file", False)
+        meta_file_suffix = self.get("meta_file_suffix", ".meta.yaml")
+
+        assert isinstance(query, dict)
+        query = arrow_to_dot(query)
 
         l = fpad.get_file_by_query(query, sort_key, sort_direction)
+        assert isinstance(l, list)
+
+        if fizzle_empty_result and (len(l) == 0):
+            raise ValueError("Query yielded empty result! (query: {:s})".format(
+                json.dumps(query)))
+
+        unique_file_names = set()  # track all used file names
         for i, (file_contents, doc) in enumerate(l[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
+            if fizzle_degenerate_file_name and (file_name in unique_file_names):
+                raise ValueError(' '.join((
+                    "The local file name {:s} is used",
+                    "a second time by result {:d}/{:d}! (query: {:s})")).format(
+                        file_name, i, len(l), json.dumps(query)))
+
+            unique_file_names.add(file_name)
             with open(os.path.join(dest_dir, file_name), "wb") as f:
                 f.write(file_contents)
+
+            if meta_file:
+                meta_file_name = file_name + meta_file_suffix
+                with open(os.path.join(dest_dir, meta_file_name), "w") as f:
+                    yaml = YAML()
+                    yaml.dump(doc["metadata"], f)
 
 
 class DeleteFilesTask(FiretaskBase):

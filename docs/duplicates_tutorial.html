@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Handling Duplicates Automatically &#8212; FireWorks 1.9.5 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handling Duplicates Automatically &#8212; FireWorks 1.9.6 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Running Tasks in the Background" href="backgroundtask.html" />
@@ -35,7 +36,8 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Handling Duplicates Automatically</a></li> 
       </ul>
     </div>  
 
@@ -166,8 +168,8 @@
 <div class="section" id="adding-a-dupefinder-with-python">
 <h2>Adding a DupeFinder with Python<a class="headerlink" href="#adding-a-dupefinder-with-python" title="Permalink to this headline">¶</a></h2>
 <p>If you are creating a FireWork within Python and want to add in a DupeFinder object, create a key in your spec called <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> and drop your DupeFinder object in there. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="k">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">ScriptTask</span>
-<span class="kn">from</span> <span class="nn">fireworks.user_objects.dupefinders.dupefinder_exact</span> <span class="k">import</span> <span class="n">DupeFinderExact</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span> <span class="nn">fireworks.user_objects.dupefinders.dupefinder_exact</span> <span class="kn">import</span> <span class="n">DupeFinderExact</span>
 
 <span class="n">fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello&quot;&#39;</span><span class="p">)],</span>
               <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;_dupefinder&quot;</span><span class="p">:</span> <span class="n">DupeFinderExact</span><span class="p">()})</span>
@@ -177,6 +179,7 @@
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -215,7 +218,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -235,13 +238,14 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Handling Duplicates Automatically</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

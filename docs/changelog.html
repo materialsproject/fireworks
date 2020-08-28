@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>FireWorks Changelog &#8212; FireWorks 1.9.5 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FireWorks Changelog &#8212; FireWorks 1.9.6 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="The Comprehensive Guide to Writing Firetasks with Python" href="guide_to_writing_firetasks.html" />
@@ -31,7 +32,8 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FireWorks Changelog</a></li> 
       </ul>
     </div>  
 
@@ -42,6 +44,15 @@
             
   <div class="section" id="fireworks-changelog">
 <h1>FireWorks Changelog<a class="headerlink" href="#fireworks-changelog" title="Permalink to this headline">¶</a></h1>
+<p><strong>v1.9.6</strong></p>
+<ul class="simple">
+<li><p>avoid checking the number of jobs in the queue if not needed (G. Petretto)</p></li>
+<li><p>Avoid failures due to encoding issues in tracker (J. Hörmann)</p></li>
+<li><p>Filepad accessible via TLS/SSL encrypted connection (J. Hörmann)</p></li>
+<li><p>llow propagating modified spec not only to direct children, but along all decendants down to workflow leaves by adding a ‘propagate’ flag to FWAction. (J. Hörmann)</p></li>
+<li><p>update some dependency versions</p></li>
+<li><p>misc fixes and updates (mamachra, J. Hörmann, I. Kondov, A. Jain)</p></li>
+</ul>
 <p><strong>v1.9.5</strong></p>
 <ul class="simple">
 <li><p>document new help forum!</p></li>
@@ -1114,6 +1125,7 @@
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -1152,7 +1164,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1169,13 +1181,14 @@
         <li class="right" >
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FireWorks Changelog</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

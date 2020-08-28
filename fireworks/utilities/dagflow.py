@@ -8,6 +8,10 @@ from itertools import combinations
 from igraph import Graph
 
 
+DF_TASKS = ['PyTask', 'CommandLineTask', 'ForeachTask', 'JoinDictTask',
+            'JoinListTask']
+
+
 class DAGFlow(Graph):
     """ The purpose of this class is to help construction, validation and
     visualization of workflows. """
@@ -25,10 +29,7 @@ class DAGFlow(Graph):
             self._add_ctrlflow_links(self._get_links(nlinks))
         elif links:
             self._add_ctrlflow_links(links)
-        self.validate()
-        self.check_dataflow()
         self._add_dataflow_links()
-        self.validate()
 
     @classmethod
     def from_fireworks(cls, fireworkflow):
@@ -53,8 +54,9 @@ class DAGFlow(Graph):
 
         for idx, fwk in enumerate(wfd['fws']):
             step = steps[idx]
-            spec = fwk['spec']
-            step.update(spec)
+            step.update(fwk['spec'])
+            tasks = fwk['spec']['_tasks']
+            step['_tasks'] = [t for t in tasks if t['_fw_name'] in DF_TASKS]
 
             def task_input(task, spec):
                 """ extracts labels of available inputs from a task """
@@ -82,13 +84,13 @@ class DAGFlow(Graph):
             step_data = []
             for task in step['_tasks']:
                 true_task = task['task'] if 'task' in task else task
-                step_data.extend(task_input(true_task, spec))
+                step_data.extend(task_input(true_task, fwk['spec']))
                 if 'outputs' in true_task:
                     assert isinstance(true_task['outputs'], list), (
-                            'outputs must be a list in fw_id ' + str(step['id']))
+                        'outputs must be a list in fw_id ' + str(step['id']))
                 if 'inputs' in true_task:
                     assert isinstance(true_task['inputs'], list), (
-                            'inputs must be a list in fw_id ' + str(step['id']))
+                        'inputs must be a list in fw_id ' + str(step['id']))
             step['data'] = list(set(step_data))
 
         return cls(steps=steps, links=links, name=name)
@@ -105,7 +107,7 @@ class DAGFlow(Graph):
     def _get_ctrlflow_links(self):
         """ Returns a list of unique tuples of link ids """
         links = []
-        for ilink in set([link.tuple for link in list(self.es)]):
+        for ilink in {link.tuple for link in list(self.es)}:
             source = self.vs[ilink[0]]['id']
             target = self.vs[ilink[1]]['id']
             links.append((source, target))
@@ -198,7 +200,7 @@ class DAGFlow(Graph):
 
         # data chunks distributed over several sibling steps
         for task in step['_tasks']:
-            step['chunk'] = True if 'chunk_number' in task else False
+            step['chunk'] = 'chunk_number' in task
 
     def _get_steps(self):
         """ Returns a list of dictionaries describing the steps """
@@ -213,7 +215,9 @@ class DAGFlow(Graph):
         """ Returns the vertex index for a step with provided id """
         for vertex in list(self.vs):
             if vertex['id'] == step_id:
-                return vertex.index
+                retval = vertex.index
+                break
+        return retval
 
     def _get_cycles(self):
         """ Returns a partial list of cycles in case of erroneous workflow """
@@ -224,7 +228,7 @@ class DAGFlow(Graph):
             flatten = lambda l: [item for sublist in l for item in sublist]
             if flatten(lst):
                 break
-        cycs = [list(x) for x in set([tuple(sorted(l)) for l in lst])]
+        cycs = [list(x) for x in {tuple(sorted(l)) for l in lst}]
         cycs = [[self.vs[ind]['id'] for ind in cycle] for cycle in cycs]
         return cycs
 
@@ -243,8 +247,8 @@ class DAGFlow(Graph):
         for vertex in list(self.vs):
             vertex['label'] = vertex['name'] + ', id: ' + str(vertex['id'])
 
-    def validate(self):
-        """ Validate the workflow """
+    def check(self):
+        """ Correctness check of the workflow """
         try:
             assert self.is_dag(), 'The workflow graph must be a DAG.'
         except AssertionError as err:
@@ -258,6 +262,7 @@ class DAGFlow(Graph):
         assert len(self.vs['id']) == len(set(self.vs['id'])), (
             'Workflow steps must have unique IDs.'
         )
+        self.check_dataflow()
 
     def check_dataflow(self):
         """ Checks whether all inputs and outputs match """
@@ -266,7 +271,7 @@ class DAGFlow(Graph):
         for vertex in list(self.vs):
             outputs = vertex['outputs']
             assert len(outputs) == len(set(outputs)), (
-                'The tasks in a workflow step may not share output fields.',
+                'Several tasks may not use the same name in outputs list.',
                 [x for n, x in enumerate(outputs) if x in outputs[:n]]
             )
         # evaluate matching sources
@@ -274,7 +279,7 @@ class DAGFlow(Graph):
             for entity in vertex['inputs']:
                 sources = self._get_sources(vertex, entity)
                 assert len(sources) == 1, (
-                    'An input field must have exactly one source',
+                    'Every input in inputs list must have exactly one source.',
                     'step', vertex['name'], 'entity', entity,
                     'sources', sources
                 )
@@ -289,7 +294,7 @@ class DAGFlow(Graph):
 
     def to_dot(self, filename='wf.dot', view='combined'):
         """ Writes the workflow into a file in DOT format """
-        graph = self.copy()
+        graph = DAGFlow(**self.to_dict())
         if view == 'controlflow':
             graph.delete_dataflow_links()
         elif view == 'dataflow':

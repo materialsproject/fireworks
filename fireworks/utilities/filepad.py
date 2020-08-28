@@ -17,7 +17,7 @@ import gridfs
 from monty.serialization import loadfn
 from monty.json import MSONable
 
-from fireworks.fw_config import LAUNCHPAD_LOC
+from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = 'Kiran Mathew'
@@ -27,9 +27,12 @@ __credits__ = 'Anubhav Jain'
 
 class FilePad(MSONable):
 
-    def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
-                 password=None, filepad_coll_name="filepad", gridfs_coll_name="filepad_gfs", logdir=None,
-                 strm_lvl=None, text_mode=False):
+    def __init__(self, host='localhost', port=27017, database='fireworks',
+                 username=None, password=None, ssl=False, ssl_ca_certs=None,
+                 ssl_certfile=None, ssl_keyfile=None, ssl_pem_passphrase=None,
+                 authsource=None, uri_mode=False, mongoclient_kwargs=None,
+                 filepad_coll_name="filepad", gridfs_coll_name="filepad_gfs",
+                 logdir=None, strm_lvl=None, text_mode=False):
         """
         Args:
             host (str): hostname
@@ -37,6 +40,19 @@ class FilePad(MSONable):
             database (str): database name
             username (str)
             password (str)
+
+            ssl (bool): use TLS/SSL for mongodb connection
+            ssl_ca_certs (str): path to the CA certificate to be used for mongodb connection
+            ssl_certfile (str): path to the client certificate to be used for mongodb connection
+            ssl_keyfile (str): path to the client private key
+            ssl_pem_passphrase (str): passphrase for the client private key
+            authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
+                not set
+            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
+                the host).
+            mongoclient_kwargs (dict): A list of any other custom keyword arguments to be
+                passed into the MongoClient connection (non-URI mode only)
+
             filepad_coll_name (str): filepad collection name
             gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
@@ -49,18 +65,43 @@ class FilePad(MSONable):
         self.database = database
         self.username = username
         self.password = password
+        self.ssl = ssl
+        self.ssl_ca_certs = ssl_ca_certs
+        self.ssl_certfile = ssl_certfile
+        self.ssl_keyfile = ssl_keyfile
+        self.ssl_pem_passphrase = ssl_pem_passphrase
+        self.authsource = authsource or self.database
+        self.mongoclient_kwargs = mongoclient_kwargs or {}
+        self.uri_mode = uri_mode
+
         self.gridfs_coll_name = gridfs_coll_name
         self.text_mode = text_mode
-        try:
-            self.connection = MongoClient(self.host, self.port)
-            self.db = self.connection[database]
-        except Exception:
-            raise Exception("connection failed")
-        try:
-            if self.username:
-                self.db.authenticate(self.username, self.password)
-        except Exception:
-            raise Exception("authentication failed")
+
+        # get connection
+        if uri_mode:
+            self.connection = MongoClient(host)
+            dbname = host.split('/')[-1].split('?')[
+                0]  # parse URI to extract dbname
+            self.db = self.connection[dbname]
+        else:
+            self.connection = MongoClient(self.host, self.port, ssl=self.ssl,
+                                          ssl_ca_certs=self.ssl_ca_certs,
+                                          ssl_certfile=self.ssl_certfile,
+                                          ssl_keyfile=self.ssl_keyfile,
+                                          ssl_pem_passphrase=self.ssl_pem_passphrase,
+                                          socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
+                                          username=self.username,
+                                          password=self.password,
+                                          authSource=self.authsource,
+                                          **self.mongoclient_kwargs)
+            self.db = self.connection[self.database]
+        # except Exception:
+        #     raise Exception("connection failed")
+        # try:
+        #     if self.username:
+        #         self.db.authenticate(self.username, self.password)
+        # except Exception:
+        #     raise Exception("authentication failed")
 
         # set collections: filepad and gridfs
         self.filepad = self.db[filepad_coll_name]
@@ -309,14 +350,37 @@ class FilePad(MSONable):
             user = creds.get("readonly_user", creds.get("username"))
             password = creds.get("readonly_password", creds.get("password"))
 
+        ssl = creds.get('ssl', False)
+        ssl_ca_certs = creds.get('ssl_ca_certs', None)
+        ssl_certfile = creds.get('ssl_certfile', None)
+        ssl_keyfile = creds.get('ssl_keyfile', None)
+        ssl_pem_passphrase = creds.get('ssl_pem_passphrase', None)
+        authsource = creds.get('authsource', None)
+        uri_mode = creds.get('uri_mode', False)
+        mongoclient_kwargs = creds.get('mongoclient_kwargs', None)
+
         coll_name = creds.get("filepad", "filepad")
         gfs_name = creds.get("filepad_gridfs", "filepad_gfs")
 
         text_mode = creds.get("text_mode", False)
 
-        return cls(creds.get("host", "localhost"), int(creds.get("port", 27017)),
-                   creds.get("name", "fireworks"), user, password, coll_name,
-                   gfs_name, text_mode=text_mode)
+        return cls(
+            host=creds.get("host", "localhost"),
+            port=int(creds.get("port", 27017)),
+            database=creds.get("name", "fireworks"),
+            username=user,
+            password=password,
+            ssl=ssl,
+            ssl_ca_certs=ssl_ca_certs,
+            ssl_certfile=ssl_certfile,
+            ssl_keyfile=ssl_keyfile,
+            ssl_pem_passphrase=ssl_pem_passphrase,
+            authsource=authsource,
+            uri_mode=uri_mode,
+            mongoclient_kwargs=mongoclient_kwargs,
+            filepad_coll_name=coll_name,
+            gridfs_coll_name=gfs_name,
+            text_mode=text_mode)
 
     @classmethod
     def auto_load(cls):

@@ -52,6 +52,7 @@ Additional contributions from:
 * Github user: shenjh
 * Github user: specter119
 * Github user: KeLiu
+* Github user: mamachra
 
 Thanks for helpful discussions:
 * Marat Valiev

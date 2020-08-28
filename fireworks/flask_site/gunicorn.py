@@ -5,7 +5,7 @@ from __future__ import unicode_literals, absolute_import
 import multiprocessing
 
 import gunicorn.app.base
-from gunicorn.six import iteritems
+from six import iteritems
 from fireworks.flask_site.app import app as handler_app
 
 
