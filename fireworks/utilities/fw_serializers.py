@@ -198,7 +198,7 @@ class FWSerializable(object):
     def fw_name(self):
         try:
             return self._fw_name
-        except AttributeError:
+        except (AttributeError, KeyError):
             return get_default_serialization(self.__class__)
 
     @abc.abstractmethod
