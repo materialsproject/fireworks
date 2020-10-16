@@ -33,7 +33,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_seriali
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
-from dataclasses import asdict, is_dataclass
+from dataclasses import is_dataclass
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -61,15 +61,13 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     def __post_init__(self, *args, **kwargs):
         if not is_dataclass(self):
-            dict.__init__(self, *args, **kwargs)
+            self.update(*args, **kwargs)
 
             required_params = self.required_params or []
-
             for k in required_params:
                 if k not in self:
                     raise RuntimeError(
-                        "{}: Required parameter {} not specified!".format(self,
-                                                                          k))
+                        "{}: Required parameter {} not specified!".format(self, k))
 
             if self.optional_params is not None:
                 allowed_params = required_params + self.optional_params
@@ -107,21 +105,21 @@ class FiretaskBase(defaultdict, FWSerializable):
     @serialize_fw
     @recursive_serialize
     def to_dict(self):
-        if is_dataclass(self):
-            return asdict(self)
-        else:
-            return dict(self)
+        return self.__dict__
 
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
         if is_dataclass(cls):
-            return cls(**{k: v for k, v in m_dict.items() if k != "_fw_name"})
+            obj = cls(**{k: v for k, v in m_dict.items() if k != "_fw_name"})
+            if "_fw_name" in m_dict:
+                obj._fw_name = m_dict["_fw_name"]
+            return obj
         else:
             return cls(m_dict)
 
     def __repr__(self):
-        return '<{}>:{}'.format(self.fw_name, self.to_dict())
+        return '<{}>:{}'.format(self.fw_name, dict(self))
 
     # not strictly needed here for pickle/unpickle, but complements __setstate__
     def __getstate__(self):
@@ -129,46 +127,61 @@ class FiretaskBase(defaultdict, FWSerializable):
 
     # added to support pickle/unpickle
     def __setstate__(self, state):
-        if is_dataclass(self):
-            return self.from_dict(state)
-        else:
-            self.__init__(state)
+        self.__init__(state)
 
     # added to support pickle/unpickle
     def __reduce__(self):
         t = defaultdict.__reduce__(self)
         mdict = {k: v for k, v in self.to_dict().items() if k != "_fw_name"}
-        return t[0], (mdict, ), t[2], t[3], t[4]
+        return t[0], (mdict,), t[2], t[3], t[4]
 
-    def __setattr__(self, name, value):
-        if not is_dataclass(self):
-            self[name] = value
-        else:
-            super(FiretaskBase, self).__setattr__(name, value)
-
-    def __getattr__(self, name):
-        if name in self:
-            return self[name]
-        else:
-            super(FiretaskBase, self).__getattribute__(name)
-
-    def __setitem__(self, key, value):
-        if is_dataclass(self):
-            self.__setattr__(key, value)
-        else:
-            super(FiretaskBase, self).__setitem__(key, value)
+    def __setitem__(self, key, item):
+        self.__dict__[key] = item
 
     def __getitem__(self, key):
-        if is_dataclass(self):
-            return self.__getattribute__(key)
-        else:
-            return super(FiretaskBase, self).__getitem__(key)
+        return self.__dict__[key]
 
-    def __get__(self, key, *args, **kwargs):
-        if is_dataclass(self):
-            return asdict(self).get(key, *args, **kwargs)
-        else:
-            super(FiretaskBase, self).get(key, *args, **kwargs)
+    def __len__(self):
+        return len(self.__dict__)
+
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+    def clear(self):
+        return self.__dict__.clear()
+
+    def copy(self):
+        return self.__dict__.copy()
+
+    def has_key(self, k):
+        return k in self.__dict__
+
+    def update(self, *args, **kwargs):
+        return self.__dict__.update(*args, **kwargs)
+
+    def keys(self):
+        return self.__dict__.keys()
+
+    def values(self):
+        return self.__dict__.values()
+
+    def items(self):
+        return self.__dict__.items()
+
+    def pop(self, *args):
+        return self.__dict__.pop(*args)
+
+    def __cmp__(self, dict_):
+        return self.__cmp__(self.__dict__, dict_)
+
+    def __contains__(self, item):
+        return item in self.__dict__
+
+    def __iter__(self):
+        return iter(self.__dict__)
+
+    def get(self, *args, **kwargs):
+        return self.__dict__.get(*args, **kwargs)
 
 
 class FWAction(FWSerializable):
