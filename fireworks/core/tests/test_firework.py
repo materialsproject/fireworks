@@ -20,6 +20,11 @@ from fireworks.core.firework import Firework, Workflow, FiretaskBase, FWAction
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
 
+try:
+    import dataclasses
+except ImportError:
+    dataclasses = False
+
 
 class FiretaskBaseTest(unittest.TestCase):
 
@@ -56,6 +61,61 @@ class FiretaskBaseTest(unittest.TestCase):
         self.assertRaises(RuntimeError, DummyTask, param1=3, param3=5)  # extraneous param
         DummyTask(param1=1)  # OK
         DummyTask(param1=1, param2=1)  # OK
+
+    @unittest.skipIf(not dataclasses, "python 3.7+ required to use dataclasses")
+    def test_init_dataclass(self):
+        @dataclasses.dataclass
+        class DummyTask(FiretaskBase):
+
+            hello: str
+
+            def run_task(self, fw_spec):
+                return self.hello
+
+        with self.assertRaises(TypeError):
+            DummyTask()
+
+        d = DummyTask(hello="world")
+        self.assertEqual(d.run_task({}), "world")
+        d = DummyTask.from_dict({"hello": "world2"})
+        self.assertEqual(d.run_task({}), "world2")
+
+    @unittest.skipIf(not dataclasses, "python 3.7+ required to use dataclasses")
+    def test_param_checks_dataclass(self):
+
+        @dataclasses.dataclass
+        class DummyTask(FiretaskBase):
+            _fw_name = "DummyTask"
+            param1: int
+            param2: int = None
+
+        self.assertRaises(TypeError, DummyTask, param2=3)  # missing required param
+        self.assertRaises(TypeError, DummyTask, param1=3, param3=5)  # extraneous param
+        DummyTask(param1=1)  # OK
+        DummyTask(param1=1, param2=1)  # OK
+
+    @unittest.skipIf(not dataclasses, "python 3.7+ required to use dataclasses")
+    def test_init_mixed(self):
+        @dataclasses.dataclass
+        class DummyTask(FiretaskBase):
+
+            hello: str
+
+            def run_task(self, fw_spec):
+                return self["hello"]
+
+        d = DummyTask(hello="world")
+        self.assertEqual(d.run_task({}), "world")
+
+        class DummyTask(FiretaskBase):
+
+            required_params = ["hello"]
+
+            def run_task(self, fw_spec):
+                return self.hello
+
+        d = DummyTask(hello="world")
+        self.assertEqual(d.run_task({}), "world")
 
 
 class PickleTask(FiretaskBase):
