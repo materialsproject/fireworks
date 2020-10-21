@@ -259,6 +259,7 @@ class Rocket:
                     t.fworker = self.fworker
 
                 try:
+                    t.f_logger = l_logger
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
                     traceback.print_exc()
