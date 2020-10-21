@@ -73,6 +73,10 @@ class FiretaskBase(defaultdict, FWSerializable):
                             self.__class__, k, allowed_params))
 
     @abc.abstractmethod
+    def checkpoint(self, signum, stack):
+        raise NotImplementedError("You must have a checkpoint implemented!")
+
+    @abc.abstractmethod
     def run_task(self, fw_spec):
         """
         This method gets called when the Firetask is run. It can take in a
@@ -204,10 +208,9 @@ class Firework(FWSerializable):
     """
     A Firework is a workflow step and might be contain several Firetasks.
     """
-
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED': 0,
                    'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
-                   'COMPLETED': 5}
+                   'COMPLETED': 5, 'CHECKPOINTED': 6}
 
     # note: if you modify this signature, you must also modify LazyFirework
     def __init__(self, tasks, spec=None, name=None, launches=None, archived_launches=None,

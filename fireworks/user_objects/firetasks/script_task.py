@@ -1,6 +1,8 @@
 """ This module includes tasks to integrate scripts and python functions """
-
+import logging
+import os
 import shlex
+import signal
 import subprocess
 import sys
 from fireworks.core.firework import FiretaskBase, FWAction
@@ -21,7 +23,20 @@ class ScriptTask(FiretaskBase):
     required_params = ['script']
     _fw_name = 'ScriptTask'
 
+    def checkpoint(self, signum, stack):
+        try:
+            self.f_logger.log(logging.INFO, 
+                f'ScriptTask.checkpoint Firework with ID = {self.fw_id}')
+            # Use the included launchpad object to 
+            # change the status of the FireWork to "CHECKPOINTED":
+            self.launchpad.checkpoint_fw(self.fw_id)
+        except Exception as e:
+            self.f_logger.log(logging.ERROR, str(e))
+
     def run_task(self, fw_spec):
+        signal.signal(signal.SIGUSR1, self.checkpoint)
+        self.f_logger.log(logging.INFO, 
+            f'ScriptTask.run_task PID = {os.getpid()}')
         if self.get('use_global_spec'):
             self._load_params(fw_spec)
         else:
