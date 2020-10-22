@@ -50,6 +50,8 @@ class ScriptTask(FiretaskBase):
         return self._run_task_internal(fw_spec, stdin)
 
     def _run_task_internal(self, fw_spec, stdin):
+        def ignore_SIGUSR1():
+            signal.signal(signal.SIGUSR1, signal.SIG_IGN)
         # run the program
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else None
         stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else None
@@ -58,7 +60,8 @@ class ScriptTask(FiretaskBase):
             p = subprocess.Popen(
                 s, executable=self.shell_exe, stdin=stdin,
                 stdout=stdout, stderr=stderr,
-                shell=self.use_shell)
+                shell=self.use_shell,
+                preexec_fn=ignore_SIGUSR1)
 
             # communicate in the standard in and get back the standard out and returncode
             if self.stdin_key:
