@@ -6,6 +6,7 @@ import json
 from multiprocessing import Pool
 import os
 import random
+import signal
 import shutil
 import glob
 import unittest
@@ -68,7 +69,6 @@ class ModSpecTask(FiretaskBase):
     def run_task(self, fw_spec):
         print('Running the Mod Spec Task')
         return FWAction(mod_spec=[{"_push": {"dummy2": True}}])
-
 
 class MongoTests(unittest.TestCase):
 
@@ -596,6 +596,37 @@ class MongoTests(unittest.TestCase):
         workflow_results=s.get_workflow_summary(time_field="updated_on")
         self.assertEqual((workflow_results[0]["_id"], workflow_results[0]["count"]), ("COMPLETED", 3))
 
+class CheckpointingTests(MongoTests):
+
+    def test_checkpoint_running_firework(self):
+        """Test checkpointing a running Firework works as expected"""
+        test1 = ScriptTask({'script': 'echo "hello world"',
+                        'stdout_file': 'hello.txt'})
+        fw = Firework(test1, spec={'_add_launchpad_and_fw_id': True})
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        # Set it to RUNNING manually since this all executes in 1 thread:
+        f = self.lp.fireworks.find_one_and_update(
+            {'fw_id': 1},
+            {'$set': {'state': 'RUNNING'}})
+        os.kill(os.getpid(), signal.SIGUSR1)
+        assert self.lp.get_fw_by_id(1).state == 'CHECKPOINTED'
+
+    def test_checkpointing_not_running_firework(self):
+        """Test checkpointing a non-running Firework has no effect"""
+        test1 = ScriptTask({'script': 'echo "hello world"',
+                        'stdout_file': 'hello.txt'})
+        fw = Firework(test1, spec={'_add_launchpad_and_fw_id': True})
+        self.lp.add_wf(fw)
+        launch_rocket(self.lp, self.fworker)
+        for state,rank in Firework.STATE_RANKS.items():
+            if state != 'CHECKPOINTED' and state != 'RUNNING':
+                f = self.lp.fireworks.find_one_and_update(
+                    {'fw_id': 1},
+                    {'$set': {'state': state}})
+                os.kill(os.getpid(), signal.SIGUSR1)
+                assert self.lp.get_fw_by_id(1).state != 'CHECKPOINTED'
+                assert self.lp.get_fw_by_id(1).state == state
 
 if __name__ == "__main__":
     unittest.main()

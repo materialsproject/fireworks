@@ -24,19 +24,27 @@ class ScriptTask(FiretaskBase):
     _fw_name = 'ScriptTask'
 
     def checkpoint(self, signum, stack):
+        self.checkpoint_called = True
         try:
-            self.f_logger.log(logging.INFO, 
-                f'ScriptTask.checkpoint Firework with ID = {self.fw_id}')
+            if getattr(self,'f_logger', None):
+                self.f_logger.log(logging.INFO, 
+                    f'ScriptTask.checkpoint Firework with ID = {self.fw_id}')
             # Use the included launchpad object to 
             # change the status of the FireWork to "CHECKPOINTED":
-            self.launchpad.checkpoint_fw(self.fw_id)
+            if getattr(self,'launchpad', None):
+                self.launchpad.checkpoint_fw(self.fw_id)
         except Exception as e:
-            self.f_logger.log(logging.ERROR, str(e))
+            if getattr(self,'f_logger',None):
+                self.f_logger.log(logging.ERROR, str(e))
+            else:
+                print(str(e))
 
     def run_task(self, fw_spec):
+        self.checkpoint_called = False
         signal.signal(signal.SIGUSR1, self.checkpoint)
-        self.f_logger.log(logging.INFO, 
-            f'ScriptTask.run_task PID = {os.getpid()}')
+        if getattr(self,'f_logger',None):
+            self.f_logger.log(logging.INFO, 
+                f'ScriptTask.run_task PID = {os.getpid()}')
         if self.get('use_global_spec'):
             self._load_params(fw_spec)
         else:

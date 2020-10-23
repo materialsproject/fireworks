@@ -4,6 +4,7 @@
 from __future__ import unicode_literals, division
 import unittest
 import os
+import signal
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
 
 __author__ = "Shyue Ping Ong, Bharat Medasani"
@@ -31,6 +32,25 @@ class ScriptTaskTest(unittest.TestCase):
             self.assertTrue('hello world' in line)
         os.remove('hello.txt')
 
+    def test_checkpointing_scripttask_signaled(self):
+        if os.path.exists('hello.txt'):
+            os.remove('hello.txt')
+        s = ScriptTask({'script': 'echo "hello checkpointed world";',
+                        'stdout_file': 'hello.txt'})
+        s.run_task({})
+        assert not s.checkpoint_called
+        os.kill(os.getpid(), signal.SIGUSR1)
+        assert s.checkpoint_called
+        self.assertTrue(os.path.exists('hello.txt'))
+
+    def test_checkpointing_scripttask_unsignaled(self):
+        if os.path.exists('hello.txt'):
+            os.remove('hello.txt')
+        s = ScriptTask({'script': 'echo "hello checkpointed world";',
+                        'stdout_file': 'hello.txt'})
+        s.run_task({})
+        self.assertTrue(os.path.exists('hello.txt'))        
+        assert not s.checkpoint_called
 
 class PyTaskTest(unittest.TestCase):
 

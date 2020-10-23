@@ -1082,6 +1082,26 @@ class LaunchPad(FWSerializable):
             self._refresh_wf(fw_id)
         return f
 
+    def checkpoint_fw(self, fw_id):
+        """
+        Given the firework id, mark firework as checkpointed and refresh the workflow
+
+        Args:
+            fw_id(int): firework id
+        """
+        allowed_states = ['RUNNING']
+        f = self.fireworks.find_one_and_update(
+            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+            {'$set': {'state': 'CHECKPOINTED',
+                      'updated_on': datetime.datetime.utcnow()}})
+        if f:
+            self.m_logger.info('Checkpointed FireWork')
+        if not f:
+            self.m_logger.error(
+                'No checkpoint-able (RUNNING) Firework exists with fw_id: {}'.format(
+                    fw_id))
+        return f                    
+
     def defuse_wf(self, fw_id, defuse_all_states=True):
         """
         Defuse the workflow containing the given firework id.
@@ -1105,27 +1125,7 @@ class LaunchPad(FWSerializable):
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
             if fw.state not in ["COMPLETED", "FIZZLED", "DEFUSED"]:
-                self.pause_fw(fw.fw_id)
-
-    def checkpoint_fw(self, fw_id):
-        """
-        Given the firework id, mark firework as checkpointed and refresh the workflow
-
-        Args:
-            fw_id(int): firework id
-        """
-        allowed_states = ['RUNNING']
-        f = self.fireworks.find_one_and_update(
-            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
-            {'$set': {'state': 'CHECKPOINTED',
-                      'updated_on': datetime.datetime.utcnow()}})
-        if f:
-            self.m_logger.info('Checkpointed FireWork')
-        if not f:
-            self.m_logger.error(
-                'No pausable (RUNNING) Firework exists with fw_id: {}'.format(
-                    fw_id))
-        return f            
+                self.pause_fw(fw.fw_id)                
 
     def reignite_wf(self, fw_id):
         """
