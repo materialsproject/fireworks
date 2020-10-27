@@ -657,6 +657,13 @@ def set_priority(args):
     lp.m_logger.info("Finished setting priorities of {} FWs".format(len(fw_ids)))
 
 
+def _open_webbrowser(url):
+    """Open a web browser after a delay to give the web server more startup time."""
+    import webbrowser
+    time.sleep(2)
+    webbrowser.open(url)
+
+
 def webgui(args):
     from fireworks.flask_site.app import app
     app.lp = get_lp(args)
@@ -676,14 +683,11 @@ def webgui(args):
             app.BASE_Q_WF["state"] = app.BASE_Q["state"]
 
     if not args.server_mode:
-        from multiprocessing import Process
-        p1 = Process(
-            target=app.run,
-            kwargs={"host": args.host, "port": args.port, "debug": args.debug})
+        from threading import Thread
+        url = "http://{}:{}".format(args.host, args.port)
+        p1 = Thread(target=_open_webbrowser, args=(url,))
         p1.start()
-        import webbrowser
-        time.sleep(2)
-        webbrowser.open("http://{}:{}".format(args.host, args.port))
+        app.run(host=args.host, port=args.port, debug=args.debug)
         p1.join()
     else:
         try:
