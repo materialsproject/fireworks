@@ -52,4 +52,6 @@ fw_tutorials/firetask/addition_task2.py
 fw_tutorials/firetask/words.txt
 
 my_launchpad.yaml
+.python-version
+FW.json
 .DS_Store
