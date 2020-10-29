@@ -33,7 +33,10 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_seriali
     recursive_deserialize, serialize_fw
 from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
 
-from dataclasses import is_dataclass
+try:
+    import dataclasses
+except ImportError:
+    dataclasses = None
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -51,6 +54,11 @@ class FiretaskBase(defaultdict, FWSerializable):
     (Firetask). All Firetasks should inherit from FiretaskBase.
 
     You can set parameters of a Firetask like you'd use a dict.
+
+    Alternatively, Firetasks can be initialized as dataclasses, in which case
+    default values for optional parameters can also be specified. See the
+    example in fireworks/examples/custom_firetasks/dataclasses for more details.
+    Note: Dataclass Fireworks require python 3.6+.
     """
     required_params = None  # list of str of required parameters to check for consistency upon init
     # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
@@ -60,7 +68,7 @@ class FiretaskBase(defaultdict, FWSerializable):
         self.__post_init__(*args, **kwargs)
 
     def __post_init__(self, *args, **kwargs):
-        if not is_dataclass(self):
+        if dataclasses is None or not dataclasses.is_dataclass(self):
             self.update(*args, **kwargs)
 
             required_params = self.required_params or []
@@ -110,7 +118,7 @@ class FiretaskBase(defaultdict, FWSerializable):
     @classmethod
     @recursive_deserialize
     def from_dict(cls, m_dict):
-        if is_dataclass(cls):
+        if dataclasses is not None and dataclasses.is_dataclass(cls):
             obj = cls(**{k: v for k, v in m_dict.items() if k != "_fw_name"})
             if "_fw_name" in m_dict:
                 obj._fw_name = m_dict["_fw_name"]
