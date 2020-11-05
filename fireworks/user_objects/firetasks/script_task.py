@@ -25,31 +25,26 @@ class ScriptTask(FiretaskBase):
 
     def checkpoint(self, signum, stack):
         self.checkpoint_called = True
+        launchpad_passed = getattr(self,'launchpad', None)
         try:
-            if getattr(self,'f_logger', None):
-                self.f_logger.log(logging.INFO, 
-                    f'ScriptTask.checkpoint Firework with ID = {self.fw_id}')
-            # Use the included launchpad object to 
-            # change the status of the FireWork to "CHECKPOINTED":
-            if getattr(self,'launchpad', None):
+            if launchpad_passed:
+                message = f'Checkpointing ScriptTask [Firework ID: {self.fw_id}'
+                launchpad_passed.m_logger.log(logging.INFO, message)
                 self.launchpad.checkpoint_fw(self.fw_id)
-        except Exception as e:
-            if getattr(self,'f_logger',None):
+        except AttributeError as e:
+            if launchpad_passed:
+                launchpad_passed.m_logger.log(logging.ERROR,
+                    f"""Checkpointing error ScriptTask, 
+                            details [{str(e)}]""")
                 self.f_logger.log(logging.ERROR, str(e))
-            else:
-                print(str(e))
 
     def run_task(self, fw_spec):
         self.checkpoint_called = False
         signal.signal(signal.SIGUSR1, self.checkpoint)
-        if getattr(self,'f_logger',None):
-            self.f_logger.log(logging.INFO, 
-                f'ScriptTask.run_task PID = {os.getpid()}')
         if self.get('use_global_spec'):
             self._load_params(fw_spec)
         else:
             self._load_params(self)
-
         # get the standard in and run task internally
         if self.stdin_file:
             with open(self.stdin_file) as stdin_f:
