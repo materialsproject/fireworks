@@ -1100,7 +1100,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.error(
                 'No checkpoint-able (RUNNING) Firework exists with fw_id: {}'.format(
                     fw_id))
-        return f                    
+        return f
 
     def defuse_wf(self, fw_id, defuse_all_states=True):
         """
@@ -1125,7 +1125,7 @@ class LaunchPad(FWSerializable):
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         for fw in wf.fws:
             if fw.state not in ["COMPLETED", "FIZZLED", "DEFUSED"]:
-                self.pause_fw(fw.fw_id)                
+                self.pause_fw(fw.fw_id)
 
     def reignite_wf(self, fw_id):
         """
