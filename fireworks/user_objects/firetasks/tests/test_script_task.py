@@ -6,6 +6,7 @@ import unittest
 import os
 import signal
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
+import pytest
 
 __author__ = "Shyue Ping Ong, Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -37,11 +38,14 @@ class ScriptTaskTest(unittest.TestCase):
             os.remove('hello.txt')
         s = ScriptTask({'script': 'echo "hello checkpointed world";',
                         'stdout_file': 'hello.txt'})
+        # Mock rocket behavior:
+        signal.signal(signal.SIGUSR1, s.checkpoint)        
         s.run_task({})
         assert not s.checkpoint_called
         os.kill(os.getpid(), signal.SIGUSR1)
         assert s.checkpoint_called
         self.assertTrue(os.path.exists('hello.txt'))
+        os.remove('hello.txt')
 
     def test_checkpointing_scripttask_unsignaled(self):
         if os.path.exists('hello.txt'):
