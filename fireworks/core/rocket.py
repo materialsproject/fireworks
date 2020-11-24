@@ -21,6 +21,7 @@ import glob
 import shutil
 import pdb
 import distutils.dir_util
+import signal
 from monty.io import zopen
 from monty.serialization import loadfn, dumpfn
 
@@ -259,6 +260,9 @@ class Rocket:
                     t.fworker = self.fworker
 
                 try:
+                    if getattr(t, 'checkpoint', None) and callable(t.checkpoint):
+                        signal.signal(signal.SIGUSR1, t.checkpoint)
+                    l_logger.log(logging.INFO,'PID = {0}'.format(os.getpid()))
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
                     traceback.print_exc()
