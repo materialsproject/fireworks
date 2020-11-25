@@ -6,7 +6,6 @@ import unittest
 import os
 import signal
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
-import pytest
 
 __author__ = "Shyue Ping Ong, Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
