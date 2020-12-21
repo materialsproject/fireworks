@@ -1082,18 +1082,18 @@ class LaunchPad(FWSerializable):
             self._refresh_wf(fw_id)
         return f
 
-    def checkpoint_fw(self, fw_id):
+    def checkpoint_launch(self, fw_id):
         """
-        Given the firework id, mark firework as checkpointed and refresh the workflow
+        Given the firework id, mark launch as checkpointed and refresh the workflow
 
         Args:
             fw_id(int): firework id
         """
-        allowed_states = ['RUNNING']
-        f = self.fireworks.find_one_and_update(
-            {'fw_id': fw_id, 'state': {'$in': allowed_states}},
+        f = self.launches.find_one_and_update(
+            {'fw_id': fw_id, 'state': 'RUNNING'},
             {'$set': {'state': 'CHECKPOINTED',
                       'updated_on': datetime.datetime.utcnow()}})
+        self._refresh_wf(fw_id)
         if f:
             self.m_logger.info('Checkpointed FireWork')
         if not f:

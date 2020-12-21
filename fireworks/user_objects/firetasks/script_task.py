@@ -30,7 +30,7 @@ class ScriptTask(FiretaskBase):
             if launchpad_passed:
                 message = f'Checkpointing ScriptTask [Firework ID: {self.fw_id}]'
                 launchpad_passed.m_logger.log(logging.INFO, message)
-                self.launchpad.checkpoint_fw(self.fw_id)
+                self.launchpad.checkpoint_launch(self.fw_id)
         except AttributeError as e:
             if launchpad_passed:
                 error = f"""Checkpointing error ScriptTask,

@@ -260,7 +260,7 @@ class Rocket:
                     t.fworker = self.fworker
 
                 try:
-                    if getattr(t, 'checkpoint', None) and callable(t.checkpoint):
+                    if getattr(t, 'checkpoint') and callable(t.checkpoint):
                         signal.signal(signal.SIGUSR1, t.checkpoint)
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
