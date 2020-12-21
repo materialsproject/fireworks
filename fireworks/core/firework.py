@@ -209,7 +209,7 @@ class Firework(FWSerializable):
     A Firework is a workflow step and might be contain several Firetasks.
     """
     STATE_RANKS = {'ARCHIVED': -2, 'FIZZLED': -1, 'DEFUSED': 0, 'PAUSED': 0,
-                   'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4, 
+                   'WAITING': 1, 'READY': 2, 'RESERVED': 3, 'RUNNING': 4,
                    'CHECKPOINTED': 5, 'COMPLETED': 6}
 
     # note: if you modify this signature, you must also modify LazyFirework
