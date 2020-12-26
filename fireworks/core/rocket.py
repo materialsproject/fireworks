@@ -49,7 +49,7 @@ def do_ping(launchpad, launch_id):
 
 
 def ping_launch(launchpad, launch_id, stop_event, master_thread):
-    while not stop_event.is_set() and master_thread.isAlive():
+    while not stop_event.is_set() and master_thread.is_alive():
         do_ping(launchpad, launch_id)
         stop_event.wait(PING_TIME_SECS)
 
@@ -82,7 +82,7 @@ def stop_backgrounds(ping_stop, btask_stops):
 
 def background_task(btask, spec, stop_event, master_thread):
     num_launched = 0
-    while not stop_event.is_set() and master_thread.isAlive():
+    while not stop_event.is_set() and master_thread.is_alive():
         for task in btask.tasks:
             task.run_task(spec)
         if btask.sleep_time > 0:
