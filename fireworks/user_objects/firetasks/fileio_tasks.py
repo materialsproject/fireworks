@@ -84,10 +84,11 @@ class FileTransferTask(FiretaskBase):
         - key_filename: (str) optional SSH key location for remote transfer
         - max_retry: (int) number of times to retry failed transfers; defaults to `0` (no retries)
         - retry_delay: (int) number of seconds to wait between retries; defaults to `10`
+        - ignore_errors (bool): Optional. Whether to ignore errors. Defaults to False.
     """
     _fw_name = 'FileTransferTask'
     required_params = ["mode", "files"]
-    optional_params = ["dest", "server", "user", "key_filename", "max_retry", "retry_delay"]
+    optional_params = ["dest", "server", "user", "key_filename", "max_retry", "retry_delay", "ignore_errors"]
 
     fn_list = {
         "move": shutil.move,
@@ -101,7 +102,7 @@ class FileTransferTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         shell_interpret = self.get('shell_interpret', True)
-        ignore_errors = self.get('ignore_errors')
+        ignore_errors = self.get('ignore_errors', False)
         max_retry = self.get('max_retry', 0)
         retry_delay = self.get('retry_delay', 10)
         mode = self.get('mode', 'move')
