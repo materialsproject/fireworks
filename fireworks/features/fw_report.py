@@ -143,10 +143,10 @@ class FWReport:
         bottom = [0] * len(results)
         for state in states:
             if any(data[state]):
-                if style is 'bar':
+                if style == 'bar':
                     ax.bar(range(len(bottom)), data[state], bottom=bottom,
                            color=state_to_color[state], label=state)
-                elif style is 'fill':
+                elif style == 'fill':
                     ax.fill_between(range(len(bottom)),
                                     bottom, [x + y for x, y in
                                              zip(bottom, data[state])],
