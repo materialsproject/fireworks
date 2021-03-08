@@ -12,7 +12,6 @@ fireworks.examples.custom\_firetasks.merge\_task.merge\_task module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

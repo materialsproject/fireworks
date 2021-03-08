@@ -36,7 +36,6 @@ fireworks.utilities.tests.test\_update\_collection module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

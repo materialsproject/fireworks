@@ -60,7 +60,6 @@ fireworks.user\_objects.firetasks.unittest\_tasks module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

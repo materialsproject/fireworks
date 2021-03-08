@@ -2,6 +2,8 @@
 Contributors
 ============
 
+.. caution:: Starting v1.9.7 onwards, the contributors list is no longer maintained. Please check the Github contributors list instead.
+
 FireWorks was developed primarily by Anubhav Jain at Lawrence Berkeley National Lab, using research funding from Kristin Persson for the `Materials Project <http://www.materialsproject.org>`_.
 
 Additional contributions from:

@@ -36,7 +36,6 @@ fireworks.flask\_site.util module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

@@ -2,6 +2,8 @@
 FireWorks Changelog
 ===================
 
+.. caution:: Starting v1.9.7 onwards, the changelog is no longer maintained. Please check the Github commit log for a record of changes.
+
 **v1.9.6**
 
 * avoid checking the number of jobs in the queue if not needed (G. Petretto)

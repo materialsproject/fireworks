@@ -28,7 +28,6 @@ fireworks.user\_objects.queue\_adapters.pbs\_newt\_adapter module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

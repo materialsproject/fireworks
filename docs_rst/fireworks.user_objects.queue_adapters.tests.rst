@@ -12,7 +12,6 @@ fireworks.user\_objects.queue\_adapters.tests.test\_common\_adapter module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

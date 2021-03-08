@@ -60,7 +60,6 @@ fireworks.features.stats module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
