@@ -4,10 +4,10 @@ fireworks.tests package
 Submodules
 ----------
 
-fireworks.tests.main\_tests module
+fireworks.tests.master\_tests module
 ------------------------------------
 
-.. automodule:: fireworks.tests.main_tests
+.. automodule:: fireworks.tests.master_tests
    :members:
    :undoc-members:
    :show-inheritance:
