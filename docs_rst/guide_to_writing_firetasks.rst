@@ -7,7 +7,7 @@ This guide covers in more detail how one can write their own Firetasks (and retu
 A "Hello World Example"
 =======================
 
-If you'd like to see a "Hello World" Example of a custom Firetask, you can go `here <https://github.com/materialsproject/fireworks/tree/master/fireworks/examples/custom_firetasks/hello_world>`_.
+If you'd like to see a "Hello World" Example of a custom Firetask, you can go `here <https://github.com/materialsproject/fireworks/tree/main/fireworks/examples/custom_firetasks/hello_world>`_.
 
 If you are able to run that example and want more details of how to modify and extend it, read on...
 
