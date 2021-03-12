@@ -20,6 +20,11 @@ from fireworks.core.firework import Firework, Workflow, FiretaskBase, FWAction
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
 
+try:
+    import dataclasses
+except ImportError:
+    dataclasses = False
+
 
 class FiretaskBaseTest(unittest.TestCase):
 
@@ -57,6 +62,36 @@ class FiretaskBaseTest(unittest.TestCase):
         DummyTask(param1=1)  # OK
         DummyTask(param1=1, param2=1)  # OK
 
+    @unittest.skipIf(not dataclasses, "python 3.6+ required to use dataclasses")
+    def test_init_dataclass(self):
+        from fireworks.core.tests.dataclass_tasks import DummyTask1
+
+        with self.assertRaises(TypeError):
+            DummyTask1()
+
+        d = DummyTask1(hello="world")
+        self.assertEqual(d.run_task({}), "world")
+        d = DummyTask1.from_dict({"hello": "world2"})
+        self.assertEqual(d.run_task({}), "world2")
+
+    @unittest.skipIf(not dataclasses, "python 3.6+ required to use dataclasses")
+    def test_param_checks_dataclass(self):
+        from fireworks.core.tests.dataclass_tasks import DummyTask2
+
+        self.assertRaises(TypeError, DummyTask2, param2=3)  # missing required param
+        self.assertRaises(TypeError, DummyTask2, param1=3, param3=5)  # extraneous param
+        DummyTask2(param1=1)  # OK
+        DummyTask2(param1=1, param2=1)  # OK
+
+    @unittest.skipIf(not dataclasses, "python 3.6+ required to use dataclasses")
+    def test_init_mixed(self):
+        from fireworks.core.tests.dataclass_tasks import DummyTask3, DummyTask4
+        d = DummyTask3(hello="world")
+        self.assertEqual(d.run_task({}), "world")
+
+        d = DummyTask4(hello="world")
+        self.assertEqual(d.run_task({}), "world")
+
 
 class PickleTask(FiretaskBase):
     required_params = ["test"]
@@ -74,7 +109,8 @@ class FiretaskPickleTest(unittest.TestCase):
 
     def test_init(self):
         self.assertIsInstance(self.upkl_task, PickleTask)
-        self.assertEqual(PickleTask.from_dict(self.task.to_dict()), self.upkl_task)
+        self.assertEqual(PickleTask.from_dict(self.task.to_dict()).to_dict(),
+                         self.upkl_task.to_dict())
         self.assertEqual(dir(self.task), dir(self.upkl_task))
 
         result_task = self.task.run_task({})
@@ -132,7 +168,7 @@ class WorkflowTest(unittest.TestCase):
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
 
         wf_copy = Workflow.from_wflow(wf)
-        
+
         # now we compare to the original to make sure dependencies are same.
         # have to do gymnastics because ids will NOT be the same
         # but names are retained
