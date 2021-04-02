@@ -419,4 +419,3 @@ if __name__ == "__main__":
 
     app.lp = LaunchPad()
     app.run(debug=True, port=8080, threaded=False)
-
