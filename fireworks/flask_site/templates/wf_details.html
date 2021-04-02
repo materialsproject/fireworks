@@ -12,8 +12,88 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/dagre.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/handlebars-v4.0.2.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/cytoscape-panzoom.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/wf_cyto.js') }}"></script>
-{% raw %}
+
+
+<script>
+    $(document).ready(function() {
+        var options = {
+            name: 'dagre',
+
+            // dagre algo options, uses default value on undefined
+            nodeSep: undefined, // the separation between adjacent nodes in the same rank
+            edgeSep: undefined, // the separation between adjacent edges in the same rank
+            rankSep: undefined, // the separation between adjacent nodes in the same rank
+            rankDir: 'TB', // 'TB' for top to bottom flow, 'LR' for left to right
+            minLen: function( edge ){ return 1; }, // number of ranks to keep between the source and target of the edge
+            edgeWeight: function( edge ){ return 1; }, // higher weight edges are generally made shorter and straighter than lower weight edges
+
+            // general layout options
+            fit: true, // whether to fit to viewport
+            padding: 30, // fit padding
+            animate: false, // whether to transition the node positions
+            animationDuration: 500, // duration of animation in ms if enabled
+            boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+            ready: function(){}, // on layoutready
+            stop: function(){} // on layoutstop
+    };
+        $.getJSON("{{ url_for('workflow_json', wf_id=wf_id) }}", function(result){
+            var cy = cytoscape({
+    container: document.getElementById('cy'),
+    style: cytoscape.stylesheet()
+        .selector('node')
+        .css({
+        'content': 'data(name)',
+        'text-valign': 'center',
+        'width':'data(width)',
+        'shape':'rectangle',
+        'color': 'white',
+        'background-color' : 'data(state)',
+        'text-outline-width': 1,
+        'font-family': "Open Sans, sans-serif",
+        'font-size': 14,
+        'text-outline-color': '#888'
+        })
+        .selector('edge')
+        .css({
+        'target-arrow-shape': 'triangle'
+        })
+        .selector(':selected')
+        .css({
+        'background-color': 'black',
+        'line-color': 'black',
+        'target-arrow-color': 'black',
+                        'source-arrow-color': 'black'
+                                    })
+        .selector('.faded')
+        .css({
+        'opacity': 0.25,
+        'text-opacity': 0
+            }),
+        elements: {
+        nodes:result.nodes,
+        edges:result.edges,
+        },
+        ready: function() {
+                window.cy = this;
+                cy.layout(options);
+                cy.panzoom();
+            }
+    });
+    $('#json').JSONView('collapse')
+    var source = $("#job-details").html();
+    var template = Handlebars.compile(source);
+    cy.on("click", 'node', function(evt) {
+            $.getJSON("{{ url_for('home') }}" + "/fw/" + this.data('id') + "/details", function(result) {
+                    $("#job-details-target").html(template(result));
+                });
+            });
+
+    });
+
+    });
+</script>
+
+
 <script id="job-details" type="text/x-handlebars-template">
 <div class="panel panel-default">
         <div class="panel-heading">
@@ -22,26 +102,25 @@
         <table class="table table-condensed">
             <tr>
                 <th>name</th>
-                <td>{{name}}</td>
+                <td>{{ '{{' }}name{{ '}}' }}</td>
             </tr>
             <tr>
                 <th>state</th>
-                <td>{{state}}</td>
+                <td>{{ '{{' }}state{{ '}}' }}</td>
             </tr>
             <tr>
                 <th>fw_id</th>
-                <td><a href="/fw/{{fw_id}}">{{fw_id}}</a></td>
+                <td><a href="{{ url_for('home') }}/fw/{{ '{{' }}fw_id{{ '}}' }}">{{ '{{' }}fw_id{{ '}}' }}</a></td>
             </tr>
                 <tr>
                     <th>Created On</th>
-                    <td>{{created_on}}</td>
+                    <td>{{ '{{' }}created_on{{ '}}' }}</td>
                     <th>Updated On</th>
-                    <td>{{updated_on}}</td>
+                    <td>{{ '{{' }}updated_on{{ '}}' }}</td>
                 </tr>
                 </table>
                 </div>
 </script>
-{% endraw %}
 <script type="text/javascript">
 var json = {{ wf | tojson }};
 
@@ -77,7 +156,7 @@ $('#json').JSONView('toggle', 2);
     <ul class="inline">
         {% for s in all_states %}
         <li>
-            <a href="/fw/{{s}}">
+            <a href="{{ url_for('fw_state', state=s) }}">
                 <span class="label {{ s }}">
                     {{ s }}
                 </span>
