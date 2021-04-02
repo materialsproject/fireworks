@@ -418,7 +418,5 @@ if __name__ == "__main__":
     )
 
     app.lp = LaunchPad()
-    # app.config["APPLICATION_ROOT"]='/test/'
-    # app.config["SCRIPT_NAME"]='/test/'
     app.run(debug=True, port=8080, threaded=False)
 

@@ -83,7 +83,7 @@
     var source = $("#job-details").html();
     var template = Handlebars.compile(source);
     cy.on("click", 'node', function(evt) {
-            $.getJSON("{{ url_for('home') }}" + "/fw/" + this.data('id') + "/details", function(result) {
+            $.getJSON("{{ url_for('home') }}" + "fw/" + this.data('id') + "/details", function(result) {
                     $("#job-details-target").html(template(result));
                 });
             });
@@ -110,7 +110,7 @@
             </tr>
             <tr>
                 <th>fw_id</th>
-                <td><a href="{{ url_for('home') }}/fw/{{ '{{' }}fw_id{{ '}}' }}">{{ '{{' }}fw_id{{ '}}' }}</a></td>
+                <td><a href="{{ url_for('home') }}fw/{{ '{{' }}fw_id{{ '}}' }}">{{ '{{' }}fw_id{{ '}}' }}</a></td>
             </tr>
                 <tr>
                     <th>Created On</th>
