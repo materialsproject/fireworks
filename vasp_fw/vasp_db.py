@@ -143,9 +143,6 @@ class VASPDB(FiretaskBase):
         kpts = fw_spec['kpts']
         ivdw = fw_spec['ivdw']
         isif = fw_spec['isif']
-        working_dir = os.getcwd()
-        output_dir = os.path.join(working_dir, 'vasp_output')
-        Path.mkdir(output_dir, exist_ok=True)
         #os.environ['VASP_PP_PATH'] = output_dir
 
         self.set_env_vars() 
