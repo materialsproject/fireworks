@@ -143,24 +143,32 @@ class VASPDB(FiretaskBase):
         kpts = fw_spec['kpts']
         ivdw = fw_spec['ivdw']
         isif = fw_spec['isif']
+        start_cwd = os.getcwd()
+        try: 
+            output_folder_name = fw_spec['output_foldername']
+        except KeyError:
+            output_folder_name = 'vasp_output' + '_' + str(input_id)
+
+        output_path = os.path.join(os.getcwd(), output_folder_name)
+        Path(output_path).mkdir(exist_ok=True, parents=True)
+        
         #os.environ['VASP_PP_PATH'] = output_dir
 
         self.set_env_vars() 
         db = connect(database_path)
+        old_atoms = db.get_atoms(input_id) 
         atoms = db.get_atoms(input_id)
         #atoms = read(input_filename, '-1')
 
-        #os.chdir(output_dir)
         atoms = self.initialize_magmoms(atoms, is_zeolite)
+        os.chdir(output_path)
         atoms = self.assign_calculator(atoms, my_nsw=my_nsw) # Using ASE calculator
         atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif) # 300, 1 for single-point-calc
         energy = atoms.get_potential_energy() # Run vasp here
-
         new_atoms = read('vasprun.xml')
+        tag_atoms(new_atoms, old_atoms, 'ase-sort.dat')
         write_index = db.write(atoms)
-
         print(f"input index {input_id} output index {write_index}")
         print("DONE!")
-
-        #os.chdir(working_dir)
+        os.chdir(start_cwd)
         return FWAction(stored_data={'output_index': write_index}, update_spec={'input_id': write_index})
