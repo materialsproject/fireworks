@@ -1,22 +1,23 @@
-from fireworks import FiretaskBase
-import os 
-import shutil
-from ase.parallel import *
-from ase.io import read, write
-from ase.atoms import np
 import os
+import os
+import re
+import shutil
 import time
-from ase.optimize import BFGS,FIRE, QuasiNewton
 from glob import glob
-from ase.calculators.emt import EMT
-from ase.constraints import FixAtoms
-from ase import Atoms
-from ase.calculators.vasp import Vasp
-from ase.optimize.gpmin import gpmin
 from pathlib import Path
+
+from ase import Atoms
+from ase.atoms import np
+from ase.calculators.emt import EMT
+from ase.calculators.vasp import Vasp
+from ase.constraints import FixAtoms
 from ase.db import connect
+from ase.io import read, write
+from ase.optimize import BFGS, FIRE, QuasiNewton
+from ase.optimize.gpmin import gpmin
+from ase.parallel import *
 from fireworks import FWAction
-import re 
+from fireworks import FiretaskBase
 
 
 class VASPDB(FiretaskBase):
@@ -106,8 +107,6 @@ class VASPDB(FiretaskBase):
         for a1, a2 in zip(old_atoms, new_atoms):
             new_atoms[a2.index].tag = old_atoms[old_to_new_map[a2.index]].tag
 
-
-    
     @staticmethod
     def set_env_vars(): 
         path_home = os.environ['HOME']
@@ -152,13 +151,10 @@ class VASPDB(FiretaskBase):
         output_path = os.path.join(os.getcwd(), output_folder_name)
         Path(output_path).mkdir(exist_ok=True, parents=True)
         
-        #os.environ['VASP_PP_PATH'] = output_dir
-
         self.set_env_vars() 
         db = connect(database_path)
         old_atoms = db.get_atoms(input_id) 
         atoms = db.get_atoms(input_id)
-        #atoms = read(input_filename, '-1')
 
         atoms = self.initialize_magmoms(atoms, is_zeolite)
         os.chdir(output_path)
@@ -166,7 +162,7 @@ class VASPDB(FiretaskBase):
         atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif) # 300, 1 for single-point-calc
         energy = atoms.get_potential_energy() # Run vasp here
         new_atoms = read('vasprun.xml')
-        tag_atoms(new_atoms, old_atoms, 'ase-sort.dat')
+        self.tag_atoms(new_atoms, old_atoms, 'ase-sort.dat')
         write_index = db.write(atoms)
         print(f"input index {input_id} output index {write_index}")
         print("DONE!")
