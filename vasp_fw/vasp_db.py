@@ -16,6 +16,7 @@ from ase.optimize.gpmin import gpmin
 from pathlib import Path
 from ase.db import connect
 from fireworks import FWAction
+import re 
 
 
 class VASPDB(FiretaskBase):
@@ -94,6 +95,20 @@ class VASPDB(FiretaskBase):
         return atoms
     
     @staticmethod
+    def tag_atoms(new_atoms: Atoms, old_atoms: Atoms, ase_sort_path: str) -> None:
+        with open(ase_sort_path) as f:
+            lines = f.readlines()
+        old_to_new_map = {}
+        for item in lines:
+            item = item.strip()
+            split = re.split('\s+', item)
+            old_to_new_map[int(split[0])] = int(split[1])
+        for a1, a2 in zip(old_atoms, new_atoms):
+            new_atoms[a2.index].tag = old_atoms[old_to_new_map[a2.index]].tag
+
+
+    
+    @staticmethod
     def set_env_vars(host_name: str): 
         if 'cori' in host_name or 'edison' in host_name or 'nid' in host_name:
             #print(os.environ['HOSTNAME'])
@@ -128,12 +143,13 @@ class VASPDB(FiretaskBase):
         atoms = self.initialize_magmoms(atoms, is_zeolite)
         atoms = self.assign_calculator(atoms, my_nsw=my_nsw) # Using ASE calculator
         atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif) # 300, 1 for single-point-calc
+        energy = atoms.get_potential_energy() # Run vasp here
+
+        new_atoms = read('vasprun.xml')
         write_index = db.write(atoms)
-        #energy = atoms.get_potential_energy() # Run vasp here
-        print(atoms)
+
         print(f"input index {input_id} output index {write_index}")
         print("DONE!")
 
-        #atoms = read('vasprun.xml')
         #os.chdir(working_dir)
         return FWAction(stored_data={'output_index': write_index}, update_spec={'input_id': write_index})
