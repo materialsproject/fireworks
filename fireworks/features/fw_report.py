@@ -2,8 +2,8 @@ from __future__ import division
 
 from collections import OrderedDict
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
+from dateutil.relativedelta import relativedelta
 from fireworks import Firework
 
 __author__ = 'Anubhav Jain <ajain@lbl.gov>'
@@ -22,6 +22,7 @@ state_to_color = {
     "DEFUSED": "#B7BCC3",
     "PAUSED": "#FFCFCA"
 }
+
 
 class FWReport:
     def __init__(self, lpad):

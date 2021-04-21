@@ -6,11 +6,12 @@ __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
 import warnings
 from itertools import combinations
+
 import igraph
+from fireworks import Workflow
+from fireworks.features.fw_report import state_to_color
 from igraph import Graph
 from monty.dev import requires
-from fireworks import Firework, Workflow
-from fireworks.features.fw_report import state_to_color
 
 try:
     from graphviz import Digraph
@@ -30,6 +31,7 @@ DEFAULT_IGRAPH_VISUAL_STYLE = {
 # any other blue
 try:
     import matplotlib
+
     # only needed for color-coding with favorite named colors, not imported
     # in top level as matplotlib is no Fireworks requirement.
 
@@ -434,9 +436,8 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
     return igraph.plot(dagf, **visual_style)
 
 
-
 @requires(
-    graphviz, 
+    graphviz,
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz"
 )
