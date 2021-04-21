@@ -11,6 +11,17 @@ __author__ = 'Anubhav Jain <ajain@lbl.gov>'
 # indices for parsing a datetime string in format 2015-09-28T12:00:07.772058
 DATE_KEYS = {"years": 4, "months": 7, "days": 10, "hours": 13, "minutes": 16}
 
+state_to_color = {
+    "RUNNING": "#F4B90B",
+    "WAITING": "#1F62A2",
+    "FIZZLED": "#DB0051",
+    "READY": "#2E92F2",
+    "COMPLETED": "#24C75A",
+    "RESERVED": "#BB8BC1",
+    "ARCHIVED": "#7F8287",
+    "DEFUSED": "#B7BCC3",
+    "PAUSED": "#FFCFCA"
+}
 
 class FWReport:
     def __init__(self, lpad):
@@ -120,16 +131,6 @@ class FWReport:
             matplotlib plot module
         """
         results = self.get_stats(coll, interval, num_intervals, **kwargs)
-        state_to_color = {"RUNNING": "#F4B90B",
-                          "WAITING": "#1F62A2",
-                          "FIZZLED": "#DB0051",
-                          "READY": "#2E92F2",
-                          "COMPLETED": "#24C75A",
-                          "RESERVED": "#BB8BC1",
-                          "ARCHIVED": "#7F8287",
-                          "DEFUSED": "#B7BCC3",
-                          "PAUSED": "#FFCFCA"
-                          }
         states = states or state_to_color.keys()
 
         from matplotlib.figure import Figure

@@ -15,6 +15,7 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.fw_config import WEBSERVER_PERFWARNINGS
 import fireworks.flask_site.helpers as fwapp_util
 from fireworks.flask_site.util import jsonify
+from fireworks.features.fw_report import state_to_color
 
 app = Flask(__name__)
 app.use_reloader = True
@@ -186,16 +187,6 @@ def workflow_json(wf_id):
         raise ValueError("Invalid fw_id: {}".format(wf_id))
 
     # TODO: modify so this doesn't duplicate the .css file that contains the same colors
-    state_to_color = {"RUNNING": "#F4B90B",
-                      "WAITING": "#1F62A2",
-                      "FIZZLED": "#DB0051",
-                      "READY": "#2E92F2",
-                      "COMPLETED": "#24C75A",
-                      "RESERVED": "#BB8BC1",
-                      "ARCHIVED": "#7F8287",
-                      "DEFUSED": "#B7BCC3",
-                      "PAUSED": "#FFCFCA"
-                      }
 
     wf = app.lp.workflows.find_one({'nodes': wf_id})
     fireworks = list(app.lp.fireworks.find({"fw_id": {"$in": wf["nodes"]}},
