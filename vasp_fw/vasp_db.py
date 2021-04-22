@@ -163,7 +163,7 @@ class VASPDB(FiretaskBase):
         energy = atoms.get_potential_energy() # Run vasp here
         new_atoms = read('vasprun.xml')
         self.tag_atoms(new_atoms, old_atoms, 'ase-sort.dat')
-        write_index = db.write(atoms)
+        write_index = db.write(new_atoms)
         print(f"input index {input_id} output index {write_index}")
         print("DONE!")
         os.chdir(start_cwd)
