@@ -131,6 +131,30 @@ class VASPDB(FiretaskBase):
             os.environ['VASP_COMMAND']='module load vasp/5.4.4; export OMP_NUM_THREADS=1;rm op.vasp;mpirun -np $SLURM_NTASKS vasp_std_vtst | tee op.vasp'
         else:
             raise ValueError('Invalid host_name. Please use either "cori", "stampede" or "hpc1"')
+    
+    @staticmethod
+    def make_unique_output_folder(original_output_dir: str) -> str:
+        folder_made = False
+        iteration = 2 
+        new_output_dir = original_output_dir
+        while not folder_made: 
+            try:
+                Path(new_output_dir).mkdir(exist_ok=False)
+                folder_made = True
+            except FileExistsError:
+                new_output_dir = original_output_dir + '_' + str(iteration)
+                iteration += 1
+                
+        return new_output_dir 
+    
+    @classmethod
+    def move_vasp_files(cls, output_dir):
+        src_files = os.listdir(output_dir)
+        prev_output_dir = cls.make_unique_output_folder(prev_output_dir)
+        for file_name in src_files:
+            full_file_name = os.path.join(output_dir, file_name)
+            if os.path.isfile(full_file_name):
+                shutil.move(full_file_name, prev_output_dir)
 
     def run_task(self, fw_spec):
         is_zeolite = fw_spec['is_zeolite']
@@ -150,16 +174,22 @@ class VASPDB(FiretaskBase):
 
         output_path = os.path.join(os.getcwd(), output_folder_name)
         Path(output_path).mkdir(exist_ok=True, parents=True)
-        
-        self.set_env_vars() 
-        db = connect(database_path)
+
         old_atoms = db.get_atoms(input_id) 
-        atoms = db.get_atoms(input_id)
-        
-        os.chdir(output_path)
+
+        if os.path.exists(os.path.join(output_path, 'vasprun.xml')):  # if the output path exists, then this is a rerun of previous vasp calc
+            vasp_atoms = read(os.path.join(output_path, 'vasprun.xml'))
+            self.tag_atoms(vasp_atoms, old_atoms, os.path.join(output_path, 'ase-sort.dat'))
+            self.move_vasp_files(output_dir)
+            atoms = vasp_atoms
+        else:
+            atoms = old_atoms
+
+        self.set_env_vars() 
         atoms = self.initialize_magmoms(atoms, is_zeolite)
+        os.chdir(output_path)
         atoms = self.assign_calculator(atoms, my_nsw=my_nsw) # Using ASE calculator
-        atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif) # 300, 1 for single-point-calc
+        atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif)
         energy = atoms.get_potential_energy() # Run vasp here
         write_index = db.write(atoms)
         os.chdir(start_cwd)
