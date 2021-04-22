@@ -155,16 +155,16 @@ class VASPDB(FiretaskBase):
         db = connect(database_path)
         old_atoms = db.get_atoms(input_id) 
         atoms = db.get_atoms(input_id)
-
-        atoms = self.initialize_magmoms(atoms, is_zeolite)
+        
         os.chdir(output_path)
+        atoms = self.initialize_magmoms(atoms, is_zeolite)
         atoms = self.assign_calculator(atoms, my_nsw=my_nsw) # Using ASE calculator
         atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif) # 300, 1 for single-point-calc
         energy = atoms.get_potential_energy() # Run vasp here
-        new_atoms = read('vasprun.xml')
-        self.tag_atoms(new_atoms, old_atoms, 'ase-sort.dat')
-        write_index = db.write(new_atoms)
+        write_index = db.write(atoms)
+        os.chdir(start_cwd)
+
         print(f"input index {input_id} output index {write_index}")
         print("DONE!")
-        os.chdir(start_cwd)
+
         return FWAction(stored_data={'output_index': write_index}, update_spec={'input_id': write_index})
