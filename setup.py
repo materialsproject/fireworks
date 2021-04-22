@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-
-from setuptools import setup, find_packages
+import logging
+import multiprocessing  # AJ: for some reason this is needed to not have "python setup.py test" freak out
 import os
-import multiprocessing, logging  # AJ: for some reason this is needed to not have "python setup.py test" freak out
 
+from setuptools import find_packages, setup
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -39,7 +39,8 @@ if __name__ == "__main__":
                         'newt': ['requests>=2.01'],
                         'daemon_mode':['fabric>=2.3.1'],
                         'flask-plotting': ['matplotlib>=2.0.1'],
-                        'workflow-checks': ['python-igraph>=0.7.1']},
+                        'workflow-checks': ['python-igraph>=0.7.1'],
+                        'graph-plotting': ['graphviz']},
         classifiers=['Programming Language :: Python',
                      'Development Status :: 5 - Production/Stable',
                      'Intended Audience :: Science/Research',
