@@ -55,3 +55,6 @@ my_launchpad.yaml
 .python-version
 FW.json
 .DS_Store
+/vasp_fw_tests/data/
+vasp_output_*
+vasp_fw_tests/output/*

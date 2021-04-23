@@ -131,6 +131,35 @@ class VASPDB(FiretaskBase):
             os.environ['VASP_COMMAND']='module load vasp/5.4.4; export OMP_NUM_THREADS=1;rm op.vasp;mpirun -np $SLURM_NTASKS vasp_std_vtst | tee op.vasp'
         else:
             raise ValueError('Invalid host_name. Please use either "cori", "stampede" or "hpc1"')
+    
+    @staticmethod
+    def make_unique_output_folder(original_output_dir: str) -> str:
+        """
+        Makes a unique folder name and returns the previous highest folder name
+        :param original_output_dir: original output directory
+        :type original_output_dir: str
+        :return: newly_created_folder_dir, previously_highest folder dir
+        :rtype: Tuple[str, str]
+        """
+        folder_made = False
+        iteration = 2
+        max_existing = original_output_dir
+        new_output_dir = original_output_dir
+        while not folder_made: 
+            try:
+                Path(new_output_dir).mkdir(exist_ok=False)
+                folder_made = True
+            except FileExistsError:
+                max_existing = new_output_dir
+                new_output_dir = original_output_dir + '_' + str(iteration)
+                iteration += 1
+
+        assert new_output_dir != max_existing, 'error new_output_dir equals max_existing_folder'
+        return new_output_dir, max_existing
+    
+    @staticmethod
+    def calc_energy_vasp(atoms):
+        return atoms.get_potential_energy() # Run vasp here
 
     def run_task(self, fw_spec):
         is_zeolite = fw_spec['is_zeolite']
@@ -143,6 +172,7 @@ class VASPDB(FiretaskBase):
         ivdw = fw_spec['ivdw']
         isif = fw_spec['isif']
         start_cwd = os.getcwd()
+
         try: 
             output_folder_name = fw_spec['output_foldername']
         except KeyError:
@@ -150,21 +180,28 @@ class VASPDB(FiretaskBase):
 
         output_path = os.path.join(os.getcwd(), output_folder_name)
         Path(output_path).mkdir(exist_ok=True, parents=True)
-        
-        self.set_env_vars() 
+
         db = connect(database_path)
         old_atoms = db.get_atoms(input_id) 
-        atoms = db.get_atoms(input_id)
-        
-        os.chdir(output_path)
+
+        if os.path.exists(os.path.join(output_path, 'vasprun.xml')):  # if the output path exists, then this is a rerun of previous vasp calc
+            output_path, max_existing_folder = self.make_unique_output_folder(output_path)
+            vasp_atoms = read(os.path.join(max_existing_folder, 'vasprun.xml'))
+            self.tag_atoms(vasp_atoms, old_atoms, os.path.join(max_existing_folder, 'ase-sort.dat'))
+            atoms = vasp_atoms
+        else:
+            atoms = old_atoms
+
+        self.set_env_vars() 
         atoms = self.initialize_magmoms(atoms, is_zeolite)
+        os.chdir(output_path)
         atoms = self.assign_calculator(atoms, my_nsw=my_nsw) # Using ASE calculator
-        atoms.calc.set(nsw=nsw ,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif) # 300, 1 for single-point-calc
-        energy = atoms.get_potential_energy() # Run vasp here
+        atoms.calc.set(nsw=nsw,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif)
+        self.calc_energy_vasp(atoms)
         write_index = db.write(atoms)
         os.chdir(start_cwd)
 
         print(f"input index {input_id} output index {write_index}")
         print("DONE!")
-
         return FWAction(stored_data={'output_index': write_index}, update_spec={'input_id': write_index})
+
