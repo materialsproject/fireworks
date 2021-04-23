@@ -7,19 +7,23 @@ from ase.io import read
 from unittest.mock import MagicMock, Mock
 import os
 import shutil
+from pathlib import Path
 
 
 class TestVaspFw(TestCase):
     def test_fresh_vasp_fw_run(self):
-        # test without existing file
-        calc_energy_mock = Mock()
-        calc_energy_mock.side_effect = self.generate_fake_output
-        db_path = '/Users/dda/Desktop/fish/fireworks/vasp_fw/output/test.db'
-        db = connect(db_path)
+        """This tests the behavior of a single vasp_db firework launched without
+        detecting any previous runs
+        """
+        output_path = os.path.join(os.getcwd(), 'output')
+        Path(output_path).mkdir(exist_ok=True)
+        db_path = os.path.join(output_path, 'test.db')
+        os.chdir(output_path) # change directory to contain vasp output
+        db = connect('test.db')
         initial_index = db.write(molecule('H2O'))
         spec = {"is_zeolite": True,
                 "host_name": 'hpc1',
-                "database_path": '/Users/dda/Desktop/fish/fireworks/vasp_fw/output/test.db',
+                "database_path": db_path,
                 "input_id": initial_index,
                 "nsw": 1,
                 "my_nsw": 1,
@@ -30,6 +34,10 @@ class TestVaspFw(TestCase):
 
         test_ft = vasp_db.VASPDB()
         test_ft.set_env_vars = MagicMock()
+        # VASP cannot be run locally and thus we have to mock the calc_energy
+        # method in VASP
+        calc_energy_mock = Mock()
+        calc_energy_mock.side_effect = self.generate_fake_output
         test_ft.calc_energy_vasp = calc_energy_mock
         output_fw = test_ft.run_task(spec)
         output_index = output_fw.stored_data['output_index']
@@ -52,6 +60,11 @@ class TestVaspFw(TestCase):
                     self.assertEqual(p1, p2)
 
     def test_restart_vasp_run(self):
+        """
+        This loads the xml vasp file if the other one is conflicting
+        :return:
+        :rtype:
+        """
         original_atoms = read(
             "/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt/vasprun.xml")
         calc_energy_mock = Mock()
