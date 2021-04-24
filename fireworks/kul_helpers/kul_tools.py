@@ -49,7 +49,9 @@ class KulTools:
         elif path_home.startswith('/home1/'):
             host_name = 'stampede'
         else:
-            raise RuntimeError('Cluster type not detected, check cluster settings')
+            #raise RuntimeError('Cluster type not detected, check cluster settings')
+            print('Cluster type not detected, continuing calculation')
+            host_name = None
         return host_name
 
     def identify_and_set_vasp_eviron_vars(self):
