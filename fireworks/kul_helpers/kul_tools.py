@@ -19,7 +19,7 @@ from copy import deepcopy
 
 class KulTools:
     """KulTools class that provides all the necessary tools for running simulations. Currently targetted towards using vasp. """
-    def __init__(self, structure: Atoms, gamma_only=False, calculation_type='spe', calc_spec=None):
+    def __init__(self, structure: Atoms, calculation_type, calc_spec=None, gamma_only=None):
         assert isinstance(structure, Atoms), 'structure must be an Atoms object'
         self.structure = structure
         self.gamma_only = gamma_only
@@ -31,7 +31,9 @@ class KulTools:
 
         self.calc = self.get_default_calc(**calc_spec)
         self.modify_calc_according_to_structure_type()
-        self.input_params = deepcopy(self.calc.input_params)
+
+    def get_input_params(self):
+       return deepcopy(self.calc.input_params)
 
     def identify_hpc_cluster(self) -> str:
         """
