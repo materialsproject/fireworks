@@ -104,30 +104,7 @@ class VASPDB(FiretaskBase):
         output_spec = kul_tools.get_input_params()  #  do something with this at some point
         os.chdir(start_dir)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        self.set_env_vars() 
-        atoms = self.initialize_magmoms(atoms, is_zeolite)
-        os.chdir(output_path)
-        atoms = self.assign_calculator(atoms, my_nsw=my_nsw) # Using ASE calculator
-        atoms.calc.set(nsw=nsw,encut=encut, kpts=kpts, ivdw=ivdw, isif=isif)
-        self.calc_energy_vasp(atoms)
-        write_index = db.write(atoms)
-        os.chdir(start_cwd)
-
-        print(f"input index {input_id} output index {write_index}")
+        print(f"input index {input_id} output index {output_path}")
         print("DONE!")
-        return FWAction(stored_data={'output_index': write_index}, update_spec={'input_id': write_index})
+        return FWAction(stored_data={'output_index': output_path}, update_spec={'input_id': output_path})
 
