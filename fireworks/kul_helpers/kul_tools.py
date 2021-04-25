@@ -16,13 +16,16 @@ except:
 from ase.visualize import view
 from ase.calculators.vasp import Vasp
 from copy import deepcopy
+import json
 
 class KulTools:
     """KulTools class that provides all the necessary tools for running simulations. Currently targetted towards using vasp. """
+
     def __init__(self, structure: Atoms, calculation_type, structure_type, calc_spec=None, gamma_only=None):
         assert isinstance(structure, Atoms), 'structure must be an Atoms object'
         self.structure = structure
-        assert calculation_type in ['spe', 'opt', 'opt_fine', 'dry_run'], "Unknown calculation_type = %s" % calculation_type
+        assert calculation_type in ['spe', 'opt', 'opt_fine',
+                                    'dry_run'], "Unknown calculation_type = %s" % calculation_type
         self.calculation_type = calculation_type
         self.structure_type = structure_type
 
@@ -34,7 +37,7 @@ class KulTools:
         self.modify_calc_according_to_structure_type()
 
     def get_input_params(self):
-       return deepcopy(self.calc.input_params)
+        return deepcopy(self.calc.input_params)
 
     def identify_hpc_cluster(self) -> str:
         """
@@ -50,7 +53,7 @@ class KulTools:
         elif path_home.startswith('/home1/'):
             host_name = 'stampede'
         else:
-            #raise RuntimeError('Cluster type not detected, check cluster settings')
+            # raise RuntimeError('Cluster type not detected, check cluster settings')
             print('Cluster type not detected, continuing calculation')
             host_name = None
         return host_name
@@ -96,45 +99,45 @@ class KulTools:
         self.vasp_pp_path = os.environ['VASP_PP_PATH']
         self.vasp_command = os.environ['VASP_COMMAND']
 
-    def get_default_calc(self, kpts=(1,1,1), potim=0.5, encut=500, ispin=2, nsw=50, prec='Normal', istart=1,
-                                  isif=2, ismear=0, sigma=0.05, nelmin=4, nelmdl=-4, nwrite=1, icharg=2, lasph=True,
-                                  ediff=1E-6, ediffg=-0.05, ibrion=2, lcharg=False, lwave=False, laechg=False,
-                                  voskown=1, algo='Fast', lplane='True', lread='Auto', isym=0, xc='PBE', lorbit=11,
-                                  nupdown=-1, npar=4, nsim=4, ivdw=12, **kwargs):
+    def get_default_calc(self, kpts=(1, 1, 1), potim=0.5, encut=500, ispin=2, nsw=50, prec='Normal', istart=1,
+                         isif=2, ismear=0, sigma=0.05, nelmin=4, nelmdl=-4, nwrite=1, icharg=2, lasph=True,
+                         ediff=1E-6, ediffg=-0.05, ibrion=2, lcharg=False, lwave=False, laechg=False,
+                         voskown=1, algo='Fast', lplane='True', lread='Auto', isym=0, xc='PBE', lorbit=11,
+                         nupdown=-1, npar=4, nsim=4, ivdw=12, **kwargs):
         """Sets a default calculator regadless of the structure type"""
 
         return Vasp(kpts=kpts,
-                     potim=potim,
-                     encut=encut,
-                     ispin=ispin,
-                     nsw=nsw,
-                     prec=prec,
-                     istart=istart,
-                     isif=isif,
-                     ismear=ismear,
-                     sigma=sigma,
-                     nelmin=nelmin,
-                     nelmdl=nelmdl,
-                     nwrite=nwrite,
-                     icharg=icharg,
-                     lasph=lasph,
-                     ediff=ediff,
-                     ediffg=ediffg,
-                     ibrion=ibrion,
-                     lcharg=lcharg,
-                     lwave=lwave,
-                     laechg=laechg,
-                     voskown=voskown,
-                     algo=algo,
-                     lplane=lplane,
-                     lreal=lread,
-                     isym=isym,
-                     xc=xc,
-                     lorbit=lorbit,
-                     nupdown=nupdown,
-                     npar=npar,
-                     nsim=nsim,
-                     ivdw=ivdw)
+                    potim=potim,
+                    encut=encut,
+                    ispin=ispin,
+                    nsw=nsw,
+                    prec=prec,
+                    istart=istart,
+                    isif=isif,
+                    ismear=ismear,
+                    sigma=sigma,
+                    nelmin=nelmin,
+                    nelmdl=nelmdl,
+                    nwrite=nwrite,
+                    icharg=icharg,
+                    lasph=lasph,
+                    ediff=ediff,
+                    ediffg=ediffg,
+                    ibrion=ibrion,
+                    lcharg=lcharg,
+                    lwave=lwave,
+                    laechg=laechg,
+                    voskown=voskown,
+                    algo=algo,
+                    lplane=lplane,
+                    lreal=lread,
+                    isym=isym,
+                    xc=xc,
+                    lorbit=lorbit,
+                    nupdown=nupdown,
+                    npar=npar,
+                    nsim=nsim,
+                    ivdw=ivdw)
 
     def modify_calc_according_to_structure_type(self):
         assert self.structure_type in ['zeo', 'mof', 'metal',
@@ -147,6 +150,8 @@ class KulTools:
             self.calc.set(kpts=(1, 1, 1), lreal=False)
 
     def run_dry_run(self) -> Atoms:
+        with open('input_params.txt', 'w') as f:
+            json.dump(self.get_input_params(), f, indent=4, sort_keys=True)
         return self.structure
 
     def run_dft(self, atoms) -> Atoms:
@@ -154,7 +159,6 @@ class KulTools:
         atoms.set_calculator(self.calc)
         atoms.get_potential_energy()  # Run vasp here
         return atoms
-
 
     def run_spe(self) -> Atoms:
         """Runs a simple single point energy"""
@@ -191,7 +195,7 @@ class KulTools:
         return atoms
 
     def run(self):
-        if self.calculation_type == 'dry-run':
+        if self.calculation_type == 'dry_run':
             self.run_dry_run()
         elif self.calculation_type == 'opt':
             self.structure_after = self.run_opt()  # atoms,dir_name)
@@ -201,10 +205,5 @@ class KulTools:
             self.structure_after = self.run_vib()
         elif self.calculation_type == 'solv':
             self.structure_after = self.run_solv()
-
-
-
-
-
-
-
+        else:
+            raise RuntimeError('calculation type does not match allowed calc types')
