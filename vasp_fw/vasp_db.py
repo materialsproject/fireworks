@@ -104,8 +104,8 @@ class VASPDB(FiretaskBase):
         kul_tools = KulTools(old_atoms, calculation_type, fw_spec['structure_type'],
                              calc_spec=fw_spec['calc_spec'], gamma_only=gamma_only)
         output_atoms = kul_tools.run()
-        self.do_nothing(old_atoms)
-        output_spec = kul_tools.get_input_params()  #  do something with this at some point
+        output_atoms = self.do_nothing(output_atoms)
+        output_spec = kul_tools.get_input_params()  # TODO:  do something with this at some point
         os.chdir(start_dir)
         output_index = db.write(output_atoms)
 

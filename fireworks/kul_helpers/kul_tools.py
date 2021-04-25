@@ -24,8 +24,9 @@ class KulTools:
     def __init__(self, structure: Atoms, calculation_type, structure_type, calc_spec=None, gamma_only=None):
         assert isinstance(structure, Atoms), 'structure must be an Atoms object'
         self.structure = structure
+        self.structure_after = None
         assert calculation_type in ['spe', 'opt', 'opt_fine',
-                                    'dry_run'], "Unknown calculation_type = %s" % calculation_type
+                                    'dry_run', 'alchemy'], "Unknown calculation_type = %s" % calculation_type
         self.calculation_type = calculation_type
         self.structure_type = structure_type
 
@@ -150,9 +151,16 @@ class KulTools:
             self.calc.set(kpts=(1, 1, 1), lreal=False)
 
     def run_dry_run(self) -> Atoms:
+        return deepcopy(self.structure)
+
+    def run_alchemy(self) -> Atoms:
         with open('input_params.txt', 'w') as f:
             json.dump(self.get_input_params(), f, indent=4, sort_keys=True)
-        return self.structure
+
+        atoms = deepcopy(self.structure)
+        for a in atoms:
+            a.symbol = 'Au'
+        return atoms
 
     def run_dft(self, atoms) -> Atoms:
         atoms = deepcopy(atoms)  # prevent side effects
@@ -196,7 +204,7 @@ class KulTools:
 
     def run(self):
         if self.calculation_type == 'dry_run':
-            self.run_dry_run()
+            self.structure_after = self.run_dry_run()
         elif self.calculation_type == 'opt':
             self.structure_after = self.run_opt()  # atoms,dir_name)
         elif self.calculation_type == 'opt_fine':
@@ -205,5 +213,9 @@ class KulTools:
             self.structure_after = self.run_vib()
         elif self.calculation_type == 'solv':
             self.structure_after = self.run_solv()
+        elif self.calculation_type == 'alchemy':
+            self.structure_after = self.run_alchemy()
         else:
             raise RuntimeError('calculation type does not match allowed calc types')
+
+        return self.structure_after
