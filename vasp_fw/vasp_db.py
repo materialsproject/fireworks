@@ -24,7 +24,6 @@ class VASPDB(FiretaskBase):
     
     _fw_name = "vasp_db"
 
-
     @staticmethod
     def tag_atoms(new_atoms: Atoms, old_atoms: Atoms, ase_sort_path: str) -> None:
         with open(ase_sort_path) as f:
@@ -66,6 +65,9 @@ class VASPDB(FiretaskBase):
     def calc_energy_vasp(atoms):
         return atoms.get_potential_energy() # Run vasp here
 
+    def do_nothing(self, atoms): # for testing mocking
+        return atoms
+
     def run_task(self, fw_spec):
         # create output directory and load in atoms
         calculation_type = fw_spec['calculation_type']
@@ -88,7 +90,7 @@ class VASPDB(FiretaskBase):
             self.tag_atoms(vasp_atoms, old_atoms, os.path.join(max_existing_folder, 'ase-sort.dat'))
             atoms = vasp_atoms
         else:
-            Path(output_path).mkdir(parents=True, exist_ok=False)
+            Path(output_path).mkdir(parents=True, exist_ok=True)
             atoms = old_atoms
 
         start_dir = os.getcwd()
@@ -99,12 +101,15 @@ class VASPDB(FiretaskBase):
         except KeyError:
             gamma_only = False
 
-        kul_tools = KulTools(old_atoms, calculation_type, calc_spec=fw_spec['calc_spec'], gamma_only=gamma_only)
-        kul_tools.run()
+        kul_tools = KulTools(old_atoms, calculation_type, fw_spec['structure_type'],
+                             calc_spec=fw_spec['calc_spec'], gamma_only=gamma_only)
+        output_atoms = kul_tools.run()
+        self.do_nothing(old_atoms)
         output_spec = kul_tools.get_input_params()  #  do something with this at some point
         os.chdir(start_dir)
+        output_index = db.write(output_atoms)
 
-        print(f"input index {input_id} output index {output_path}")
+        print(f"input index {input_id} output index {output_index}")
         print("DONE!")
-        return FWAction(stored_data={'output_index': output_path}, update_spec={'input_id': output_path})
+        return FWAction(stored_data={'output_index': output_index}, update_spec={'input_id': output_index})
 

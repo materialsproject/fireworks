@@ -21,34 +21,30 @@ class TestVaspFw(TestCase):
         os.chdir(output_path) # change directory to contain vasp output
         db = connect('test.db')
         initial_index = db.write(molecule('H2O'))
-        spec = {"is_zeolite": True,
-                "host_name": 'hpc1',
-                "database_path": db_path,
+        calc_spec = {"is_zeolite": True}
+        spec = {"database_path": db_path,
                 "input_id": initial_index,
-                "nsw": 1,
-                "my_nsw": 1,
-                "encut": 520.0,
-                "kpts": (1, 1, 1),
-                "ivdw": 12,
-                "isif": 2}
+                "calculation_type": "dry_run",
+                "calc_spec": calc_spec,
+                "structure_type": "zeo"}
 
         test_ft = vasp_db.VASPDB()
         test_ft.set_env_vars = MagicMock()
         # VASP cannot be run locally and thus we have to mock the calc_energy
         # method in VASP
-        calc_energy_mock = Mock()
-        calc_energy_mock.side_effect = self.generate_fake_output
-        test_ft.calc_energy_vasp = calc_energy_mock
+        do_nothing_mock = Mock()
+        do_nothing_mock.side_effect = self.generate_fake_output
+        test_ft.do_nothing = do_nothing_mock
         output_fw = test_ft.run_task(spec)
         output_index = output_fw.stored_data['output_index']
 
+        with self.subTest('assert correct folder name created'):
+            self.assertTrue('vasp_' + str(spec['calculation_type']) + '_' + str(initial_index))
+
         with self.subTest('assert files copied over'):
             original_dir = os.listdir('/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt')
-            new_dir = os.listdir('vasp_output' + '_' + str(initial_index))
+            new_dir = os.listdir('vasp_' + str(spec['calculation_type']) + '_' + str(initial_index))
             self.assertCountEqual(original_dir, new_dir)
-
-        with self.subTest('assert correct folder name created'):
-            self.assertTrue(os.path.exists('vasp_output' + '_' + str(initial_index)))
 
         with self.subTest('assert new atoms object added'):
             original_atoms = db.get_atoms(initial_index)
@@ -65,40 +61,40 @@ class TestVaspFw(TestCase):
         :return:
         :rtype:
         """
+        output_path = os.path.join(os.getcwd(), 'output')
+        Path(output_path).mkdir(exist_ok=True)
+        os.chdir(output_path) # change directory to contain vasp output
+        db_path = os.path.join(os.getcwd(), 'test.db')
+
         original_atoms = read(
             "/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt/vasprun.xml")
-        calc_energy_mock = Mock()
-        calc_energy_mock.side_effect = self.generate_fake_output
-        db_path = os.path.join(os.getcwd(), 'output', 'test_db_2.db')
         db = connect(db_path)
-        db.write(molecule('H2O'))
+        water_index = db.write(molecule('H2O'))
         initial_index = db.write(original_atoms)
-        spec = {"is_zeolite": True,
-                "host_name": 'hpc1',
-                "database_path": db_path,
-                "input_id": initial_index - 1,
-                "nsw": 1,
-                "my_nsw": 1,
-                "encut": 520.0,
-                "kpts": (1, 1, 1),
-                "ivdw": 12,
-                "isif": 2}
+        calc_spec = {'encut': 400}
+        spec = {"database_path": db_path,
+                "input_id": water_index,
+                "calculation_type": "dry_run",
+                "calc_spec": calc_spec,
+                "structure_type": "zeo"}
 
         test_ft = vasp_db.VASPDB()
-        test_ft.set_env_vars = MagicMock()
-        test_ft.calc_energy_vasp = calc_energy_mock
-        output_fw = test_ft.run_task(spec)
+        # VASP cannot be run locally and thus we have to mock the do_nothing method in the firework
+        do_nothing_mock = Mock()
+        do_nothing_mock.side_effect = self.generate_fake_output
+        test_ft.do_nothing = do_nothing_mock
         output_fw = test_ft.run_task(spec)
         output_index = output_fw.stored_data['output_index']
 
         with self.subTest('assert folder crated files copied over to first folder'):
             original_dir = os.listdir('/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt')
-            new_dir = os.listdir('vasp_output' + '_' + str(initial_index - 1))
+            new_dir = os.listdir('vasp_' + str(spec['calculation_type']) + '_' + str(water_index))
             self.assertCountEqual(original_dir, new_dir)
 
+        output_fw = test_ft.run_task(spec)
         with self.subTest('assert folder created and files copied over to second folder'):
             original_dir = os.listdir('/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt')
-            new_dir = os.listdir('vasp_output' + '_' + str(initial_index - 1) + '_2')
+            new_dir = os.listdir('vasp_' + str(spec['calculation_type']) + '_' + str(water_index) + '_2')
             self.assertCountEqual(original_dir, new_dir)
 
         with self.subTest('assert new atoms object added based off of vasp file not initial db file'):
@@ -110,46 +106,11 @@ class TestVaspFw(TestCase):
                 for p1, p2 in zip(a1.position, a2.position):
                     self.assertEqual(p1, p2)
 
-    def test_restart_vasp_run_3(self):
-        original_atoms = read(
-            "/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt/vasprun.xml")
-        for i, a in enumerate(original_atoms):
-            a.tag = i
-        calc_energy_mock = Mock()
-        calc_energy_mock.side_effect = self.generate_fake_output
-        db_path = os.path.join(os.getcwd(), 'output', 'test_db_2.db')
-        db = connect(db_path)
-        db.write(molecule('H2O'))
-        initial_index = db.write(original_atoms)
-        spec = {"is_zeolite": True,
-                "host_name": 'hpc1',
-                "database_path": db_path,
-                "input_id": initial_index,
-                "nsw": 1,
-                "my_nsw": 1,
-                "encut": 520.0,
-                "kpts": (1, 1, 1),
-                "ivdw": 12,
-                "isif": 2}
+        output_fw = test_ft.run_task(spec) # run a third time
 
-        test_ft = vasp_db.VASPDB()
-        test_ft.set_env_vars = MagicMock()
-        test_ft.calc_energy_vasp = calc_energy_mock
-        output_fw = test_ft.run_task(spec)
-        output_fw = test_ft.run_task(spec)
-        output_fw = test_ft.run_task(spec)
-        output_index = output_fw.stored_data['output_index']
-
-        with self.subTest('assert folder crated files copied over to first folder'):
-            original_dir = os.listdir(
-                '/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt')
-            new_dir = os.listdir('vasp_output' + '_' + str(initial_index))
-            self.assertCountEqual(original_dir, new_dir)
-
-        with self.subTest('assert folder created and files copied over to second folder'):
-            original_dir = os.listdir(
-                '/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt')
-            new_dir = os.listdir('vasp_output' + '_' + str(initial_index) + '_3')
+        with self.subTest('assert folder created and files copied over to third folder'):
+            original_dir = os.listdir('/Users/dda/Desktop/fish/fireworks/vasp_fw_tests/data/fake_vasp_output/00_opt')
+            new_dir = os.listdir('vasp_' + str(spec['calculation_type']) + '_' + str(water_index) + '_3')
             self.assertCountEqual(original_dir, new_dir)
 
         with self.subTest('assert new atoms object added based off of vasp file not initial db file'):
@@ -160,6 +121,9 @@ class TestVaspFw(TestCase):
                 self.assertEqual(a2.symbol, 'Po')
                 for p1, p2 in zip(a1.position, a2.position):
                     self.assertEqual(p1, p2)
+
+
+
 
         for a, new_tag in zip(original_atoms,  # a fix for now. Fix with original unsorted atom at some point
                               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,

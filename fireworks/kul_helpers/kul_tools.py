@@ -19,13 +19,14 @@ from copy import deepcopy
 
 class KulTools:
     """KulTools class that provides all the necessary tools for running simulations. Currently targetted towards using vasp. """
-    def __init__(self, structure: Atoms, calculation_type, calc_spec=None, gamma_only=None):
+    def __init__(self, structure: Atoms, calculation_type, structure_type, calc_spec=None, gamma_only=None):
         assert isinstance(structure, Atoms), 'structure must be an Atoms object'
         self.structure = structure
-        self.gamma_only = gamma_only
-        assert self.calculation_type in ['spe', 'opt', 'opt_fine', 'dry_run'], "Unknown calculation_type = %s" % self.calculation_type
+        assert calculation_type in ['spe', 'opt', 'opt_fine', 'dry_run'], "Unknown calculation_type = %s" % calculation_type
         self.calculation_type = calculation_type
+        self.structure_type = structure_type
 
+        self.gamma_only = gamma_only
         self.hpc = self.identify_hpc_cluster()
         self.identify_and_set_vasp_eviron_vars()
 
