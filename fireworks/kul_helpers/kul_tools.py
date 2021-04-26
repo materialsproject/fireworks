@@ -5,18 +5,16 @@ This module defines the central object in analyzing Zeotypes
 """
 import shutil
 import sys, os
-import numpy as np
 from ase import Atoms
-from ase.neighborlist import NeighborList
 
 try:
     from ase.neighborlist import natural_cutoffs
 except:
     from ase.utils import natural_cutoffs
-from ase.visualize import view
 from ase.calculators.vasp import Vasp
 from copy import deepcopy
 import json
+
 
 class KulTools:
     """KulTools class that provides all the necessary tools for running simulations. Currently targetted towards using vasp. """
@@ -27,12 +25,15 @@ class KulTools:
         self.structure_after = None
         assert calculation_type in ['spe', 'opt', 'opt_fine',
                                     'dry_run', 'alchemy'], "Unknown calculation_type = %s" % calculation_type
+
         self.calculation_type = calculation_type
         self.structure_type = structure_type
 
         self.gamma_only = gamma_only
+        print('KT: VASP_GAMMA= %s' % self.gamma_only)
         self.hpc = self.identify_hpc_cluster()
-        self.identify_and_set_vasp_eviron_vars()
+        print('KT: HPC= %s' % self.hpc)
+        self.set_vasp_eviron_vars()
 
         self.calc = self.get_default_calc(**calc_spec)
         self.modify_calc_according_to_structure_type()
@@ -48,18 +49,19 @@ class KulTools:
         if path_home.startswith('/global/homes'):
             host_name = 'cori'
         elif path_home.startswith('/home/'):
-            host_name = 'hpc1'
+            if os.environ['SLURM_SUBMIT_HOST'] == 'hpc1':
+                host_name = 'hpc1'
+            elif os.environ['SLURM_SUBMIT_HOST'] == 'hpc2':
+                host_name = 'hpc2'
         elif path_home.startswith('/Users/'):
             host_name = 'local'
         elif path_home.startswith('/home1/'):
             host_name = 'stampede'
         else:
-            # raise RuntimeError('Cluster type not detected, check cluster settings')
-            print('Cluster type not detected, continuing calculation')
-            host_name = None
+            RuntimeWarning('Check cluster settings, cluster type not detected')
         return host_name
 
-    def identify_and_set_vasp_eviron_vars(self):
+    def set_vasp_eviron_vars(self):
         """
         Identify and set vasp environmental variables
         """
@@ -71,6 +73,17 @@ class KulTools:
                 vasp_exe = 'vasp_std'
             os.environ[
                 'VASP_COMMAND'] = 'module load vasp/5.4.4pl2-vtst; NTASKS=`echo $SLURM_TASKS_PER_NODE|tr \'(\' \' \'|awk \'{print $1}\'`; NNODES=`scontrol show hostnames $SLURM_JOB_NODELIST|wc -l`; NCPU=`echo " $NTASKS * $NNODES " | bc`; echo "num_cpu=" $NCPU; srun -n $NCPU %s | tee -a op.vasp' % vasp_exe
+
+        elif self.hpc == 'hpc2':
+            os.environ['VASP_PP_PATH'] = '/home/ark245/programs/pseudopotentials/pseudo54'
+            if self.gamma_only:
+                vasp_exe = 'vasp_gam'
+            else:
+                vasp_exe = 'vasp_std'
+            os.environ[
+                'VASP_COMMAND'] = 'NTASKS=`echo $SLURM_TASKS_PER_NODE|tr \'(\' \' \'|awk \'{print $1}\'`; NNODES=`scontrol show hostnames $SLURM_JOB_NODELIST|wc -l`; NCPU=`echo " $NTASKS * $NNODES " | bc`; echo "num_cpu=" $NCPU; $(which mpirun) --map-by core --display-map --report-bindings --mca btl_openib_allow_ib true --mca btl_openib_if_include mlx5_0:1 --mca btl_openib_warn_nonexistent_if 0 --mca btl_openib_warn_no_device_params_found 0 --mca pml ob1 --mca btl openib,self,vader --mca mpi_cuda_support 0 -np $NCPU %s | tee -a op.vasp' % vasp_exe
+            print(os.environ['VASP_COMMAND'])
+
         elif self.hpc == 'cori':
             os.environ['VASP_PP_PATH'] = '/global/homes/a/ark245/pseudopotentials/PBE54'
             if self.gamma_only:
@@ -95,10 +108,15 @@ class KulTools:
                 vasp_exe = 'vasp_std'
             os.environ['VASP_COMMAND'] = 'local_%s' % vasp_exe
         else:
-            print('Check cluster settings')
-            sys.exit()
-        self.vasp_pp_path = os.environ['VASP_PP_PATH']
-        self.vasp_command = os.environ['VASP_COMMAND']
+            RuntimeWarning('Check cluster settings, cluster type not detected')
+
+        try:
+            vasp_pp_path = os.environ['VASP_PP_PATH']
+            vasp_command = os.environ['VASP_COMMAND']
+            print('KT: VASP_PP_PATH= %s' % vasp_pp_path)
+            print('KT: VASP_COMMAND= %s' % vasp_command)
+        except KeyError:
+            pass
 
     def get_default_calc(self, kpts=(1, 1, 1), potim=0.5, encut=500, ispin=2, nsw=50, prec='Normal', istart=1,
                          isif=2, ismear=0, sigma=0.05, nelmin=4, nelmdl=-4, nwrite=1, icharg=2, lasph=True,
