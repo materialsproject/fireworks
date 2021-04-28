@@ -64,7 +64,7 @@ def collect_stats(list_keys, filter_truncated=True):
 
 def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5):
     diff_dict = defaultdict(float)
-    all_keys = statsdict1.keys()
+    all_keys = list(statsdict1.keys())
     all_keys.extend(statsdict2.keys())
     all_keys = set(all_keys)
     for k in all_keys:
