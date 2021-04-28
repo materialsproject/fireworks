@@ -6,8 +6,17 @@ __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
 import warnings
 from itertools import combinations
+
 import igraph
+from fireworks import Workflow
+from fireworks.features.fw_report import state_to_color
 from igraph import Graph
+from monty.dev import requires
+
+try:
+    from graphviz import Digraph
+except ImportError:
+    graphviz = None
 
 DF_TASKS = ['PyTask', 'CommandLineTask', 'ForeachTask', 'JoinDictTask',
             'JoinListTask']
@@ -22,6 +31,7 @@ DEFAULT_IGRAPH_VISUAL_STYLE = {
 # any other blue
 try:
     import matplotlib
+
     # only needed for color-coding with favorite named colors, not imported
     # in top level as matplotlib is no Fireworks requirement.
 
@@ -424,3 +434,46 @@ def plot_wf(wf, view='combined', labels=False, **kwargs):
         visual_style["layout"] = dagf.layout(kwargs['layout'])
 
     return igraph.plot(dagf, **visual_style)
+
+
+@requires(
+    graphviz,
+    "graphviz package required for wf_to_graph.\n"
+    "Follow the installation instructions here: https://github.com/xflr6/graphviz"
+)
+def wf_to_graph(wf: Workflow) -> 'Digraph':
+    """
+    Renders a graph representation of a workflow or firework. Workflows are
+    rendered as the control flow of the firework, while Fireworks are
+    rendered as a sequence of Firetasks.
+
+    Copied from https://git.io/JO6L8.
+
+    Args:
+        workflow (Workflow|Firework): workflow or Firework
+            to be rendered.
+
+    Returns:
+        Digraph: the rendered workflow or firework graph
+    """
+    # Directed Acyclic Graph
+    dag = Digraph(comment=wf.name, graph_attr={"rankdir": "LR"})
+    dag.node_attr["shape"] = "box"
+    if isinstance(wf, Workflow):
+        for fw in wf.fws:
+            dag.node(str(fw.fw_id), label=fw.name, color=state_to_color[fw.state])
+
+        for start, targets in wf.links.items():
+            for target in targets:
+                dag.edge(str(start), str(target))
+    elif isinstance(wf, Firework):
+        for n, ft in enumerate(wf.tasks):
+            # Clean up names
+            name = ft.fw_name.replace("{", "").replace("}", "")
+            name = name.split(".")[-1]
+            dag.node(str(n), label=name)
+            if n >= 1:
+                dag.edge(str(n - 1), str(n))
+    else:
+        raise ValueError("expected instance of Workflow or Firework")
+    return dag
