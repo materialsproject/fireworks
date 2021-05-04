@@ -1,6 +1,8 @@
 """ This module includes tasks to integrate scripts and python functions """
-
+import logging
+import os
 import shlex
+import signal
 import subprocess
 import sys
 from fireworks.core.firework import FiretaskBase, FWAction
@@ -21,12 +23,26 @@ class ScriptTask(FiretaskBase):
     required_params = ['script']
     _fw_name = 'ScriptTask'
 
+    def checkpoint(self, signum, stack):
+        self.checkpoint_called = True
+        launchpad_passed = getattr(self, 'launchpad', None)
+        try:
+            if launchpad_passed:
+                message = f'Checkpointing ScriptTask [Firework ID: {self.fw_id}]'
+                launchpad_passed.m_logger.log(logging.INFO, message)
+                self.launchpad.checkpoint_launch(self.fw_id)
+        except AttributeError as e:
+            if launchpad_passed:
+                error = f"""Checkpointing error ScriptTask,
+                          details [{str(e)}]"""
+                launchpad_passed.m_logger.log(logging.ERROR, error)
+
     def run_task(self, fw_spec):
+        self.checkpoint_called = False
         if self.get('use_global_spec'):
             self._load_params(fw_spec)
         else:
             self._load_params(self)
-
         # get the standard in and run task internally
         if self.stdin_file:
             with open(self.stdin_file) as stdin_f:
@@ -35,6 +51,8 @@ class ScriptTask(FiretaskBase):
         return self._run_task_internal(fw_spec, stdin)
 
     def _run_task_internal(self, fw_spec, stdin):
+        def ignore_SIGUSR1():
+            signal.signal(signal.SIGUSR1, signal.SIG_IGN)
         # run the program
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else None
         stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else None
@@ -43,7 +61,8 @@ class ScriptTask(FiretaskBase):
             p = subprocess.Popen(
                 s, executable=self.shell_exe, stdin=stdin,
                 stdout=stdout, stderr=stderr,
-                shell=self.use_shell)
+                shell=self.use_shell,
+                preexec_fn=ignore_SIGUSR1)
 
             # communicate in the standard in and get back the standard out and returncode
             if self.stdin_key:

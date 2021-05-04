@@ -195,3 +195,31 @@ Other than explicitly defining a ``_fw_name`` parameter, there are two alternate
             print str(fw_spec['print'])
 
 In both cases of removing ``_fw_name``, there is still a workaround if you refactor your code. The :doc:`FW config <config_tutorial>` has a parameter called ``FW_NAME_UPDATES`` that allows one to map old names to new ones via a dictionary of {<old name>:<new name>}. This method also works if you need to change your ``_fw_name`` for any reason.
+
+Appendix 3: checkpointing within Firetasks
+==========================================
+
+It's possible to create a custom checkpoint operation within a given Firetask. To that end all Firetasks can optionally implement a `checkpoint` function with the following signature::
+
+    def checkpoint(self, signum, stack)
+
+This signature closely follows the python signal handler functions defined in the official documentation (see `signals <https://docs.python.org/3/library/signal.html>`_). 
+
+When implemented by the Firetask, the `checkpoint` function is the signal handler for the `USR1` signal. If, during execution, this signal is sent to the running Firework process, the `checkpoint` function will be called and any logic within it executed. One use-case would be to checkpoint a particularly long running computation on an HPC system. The workload manager can be set to send the `USR1` signal to the process before the job hits its time-limit and any necessary work can then be automatically saved within the `checkpoint` function.
+
+Note the following:
+
+- If the underlying Firetask will itself start a subprocess as part of its `run_task` logic, the code must ensure the `USR1` signal is ignored by that subprocess. This can be done through the `preexec_fn` argument in `subprocess.Popen` (see `subprocess <https://docs.python.org/3/library/subprocess.html>`_ ). The following snippet demonstrates how this can be accomplished::
+
+    def _run_task_internal(self, fw_spec, stdin):
+        def ignore_SIGUSR1():
+            signal.signal(signal.SIGUSR1, signal.SIG_IGN)
+        for s in self.script:
+            p = subprocess.Popen(
+                s, executable=self.shell_exe, stdin=stdin,
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE,
+                shell=self.use_shell,
+                preexec_fn=ignore_SIGUSR1)
+
+- A `checkpoint` function has already been implemented for the `ScriptTask` class. When triggered by a `USR1` signal, the function will mark the Firework as `CHECKPOINTED`. For this checkpointing behavior to work the workflow must be ran with the `_add_launchpad_and_fw_id: true` as part of the spec. Passing this allows the `checkpoint` function to access the relevant Firework ID in order to change its status during checkpointing.
