@@ -21,7 +21,7 @@ NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
 USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
-                 'fw_tutorials', 'fireworks.features', 'vasp_fw']
+                 'fw_tutorials', 'fireworks.features', 'fireworks.vasp_fw']
 
 # if you update a _fw_name, you can use this to record the change and maintain deserialization
 FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
