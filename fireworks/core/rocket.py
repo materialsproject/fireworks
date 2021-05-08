@@ -64,7 +64,7 @@ def start_ping_launch(launchpad, launch_id):
     else:
         ping_stop = threading.Event()
         ping_thread = threading.Thread(target=ping_launch,
-                                       args=(launchpad, launch_id, ping_stop, threading.currentThread()))
+                                       args=(launchpad, launch_id, ping_stop, threading.current_thread()))
         ping_thread.start()
         return ping_stop
 
@@ -95,7 +95,7 @@ def background_task(btask, spec, stop_event, master_thread):
 def start_background_task(btask, spec):
     ping_stop = threading.Event()
     ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop,
-                                                                 threading.currentThread()))
+                                                                 threading.current_thread()))
     ping_thread.start()
     return ping_stop
 
