@@ -10,7 +10,7 @@
   <ul class="inline">
     {% for s in all_states %}
     <li>
-      <a href="/wf/metadata/{{key}}/{{value}}/{{s}}">
+      <a href="{{ url_for('wf_metadata_find', key=key, value=value, state=s) }}">
         <span class="label {{s}}">
           {{ s }}
         </span>
@@ -30,7 +30,7 @@
   </tr>
   {% for row in rows %}
   <tr>
-    <td><center><a href="/wf/{{ row.fw_id }}">{{ row.fw_id }}</a></center></td>
+    <td><center><a href="{{ url_for('wf_details', wf_id=row.fw_id) }}">{{ row.fw_id }}</a></center></td>
     <td>{{ row.name }}</td>
     <td>{{ row.created_on }}</td>
   </tr>

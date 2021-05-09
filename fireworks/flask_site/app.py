@@ -18,12 +18,11 @@ from fireworks.flask_site.util import jsonify
 from fireworks.features.fw_report import state_to_color
 
 app = Flask(__name__)
-app.use_reloader = True
+# app.use_reloader = True
 app.secret_key = os.environ.get(
     "FWAPP_SECRET_KEY",
     os.urandom(24))
 
-hello = __name__
 app.BASE_Q = {}
 app.BASE_Q_WF = {}
 
@@ -398,4 +397,16 @@ def simple(coll, interval, num_intervals):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    # https://dlukes.github.io/flask-wsgi-url-prefix.html
+
+    from fireworks import LaunchPad
+    from werkzeug.middleware.dispatcher import DispatcherMiddleware
+    # from werkzeug.wrappers import Response
+
+    app.wsgi_app = DispatcherMiddleware(
+        Response('Not Found', status=404),
+        {'/my-app': app.wsgi_app}
+    )
+
+    app.lp = LaunchPad()
+    app.run(debug=True, port=8080, threaded=False)
