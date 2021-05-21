@@ -405,16 +405,19 @@ def simple(coll, interval, num_intervals):
 
 
 if __name__ == "__main__":
-    # https://dlukes.github.io/flask-wsgi-url-prefix.html
-
+    
     from fireworks import LaunchPad
-    from werkzeug.middleware.dispatcher import DispatcherMiddleware
+    
+    # # If you need to use a non-root URL path the following code can be used:
+    # # more information: https://dlukes.github.io/flask-wsgi-url-prefix.html
+    # 
+    # from werkzeug.middleware.dispatcher import DispatcherMiddleware
     # from werkzeug.wrappers import Response
-
-    app.wsgi_app = DispatcherMiddleware(
-        Response('Not Found', status=404),
-        {'/my-app': app.wsgi_app}
-    )
+    #
+    # app.wsgi_app = DispatcherMiddleware(
+    #     Response('Not Found', status=404),
+    #     {'/my-app': app.wsgi_app}
+    # )
 
     app.lp = LaunchPad()
     app.run(debug=True, port=8080, threaded=False)
