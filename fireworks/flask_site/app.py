@@ -17,7 +17,6 @@ import fireworks.flask_site.helpers as fwapp_util
 from fireworks.flask_site.util import jsonify
 
 app = Flask(__name__)
-# app.use_reloader = True
 app.secret_key = os.environ.get(
     "FWAPP_SECRET_KEY",
     os.urandom(24))
