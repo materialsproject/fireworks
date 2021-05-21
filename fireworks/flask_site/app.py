@@ -405,12 +405,12 @@ def simple(coll, interval, num_intervals):
 
 
 if __name__ == "__main__":
-    
+
     from fireworks import LaunchPad
-    
+
     # # If you need to use a non-root URL path the following code can be used:
     # # more information: https://dlukes.github.io/flask-wsgi-url-prefix.html
-    # 
+    #
     # from werkzeug.middleware.dispatcher import DispatcherMiddleware
     # from werkzeug.wrappers import Response
     #
