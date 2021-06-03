@@ -7,8 +7,10 @@
 #SBATCH --core-spec=$${core_spec}
 #SBATCH --exclude=$${exclude_nodes}
 #SBATCH --cpus-per-task=$${cpus_per_task}
-#SBATCH --gpus-per-task=$${gpus_per_task}
+#SBATCH --gpus=$${gpus}
 #SBATCH --gres=$${gres}
+#SBATCH --gpus-per-task=$${gpus_per_task}
+#SBATCH --gpus-per-node=$${gpus_per_node}
 #SBATCH --qos=$${qos}
 #SBATCH --time=$${walltime}
 #SBATCH --time-min=$${time_min}
