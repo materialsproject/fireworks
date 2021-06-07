@@ -11,7 +11,7 @@
 #SBATCH --gpus-per-node=$${gpus_per_node}
 #SBATCH --gres=$${gres}
 #SBATCH --gpus=$${gpus}
-#SBATCH --gpu-bind=${gpu-bind}
+#SBATCH --gpu-bind=$${gpu-bind}
 #SBATCH --qos=$${qos}
 #SBATCH --time=$${walltime}
 #SBATCH --time-min=$${time_min}
