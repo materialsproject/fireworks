@@ -8,7 +8,10 @@
 #SBATCH --exclude=$${exclude_nodes}
 #SBATCH --cpus-per-task=$${cpus_per_task}
 #SBATCH --gpus-per-task=$${gpus_per_task}
+#SBATCH --gpus-per-node=$${gpus_per_node}
 #SBATCH --gres=$${gres}
+#SBATCH --gpus=$${gpus}
+#SBATCH --gpu-bind=${gpu-bind}
 #SBATCH --qos=$${qos}
 #SBATCH --time=$${walltime}
 #SBATCH --time-min=$${time_min}
@@ -24,6 +27,8 @@
 #SBATCH --mem-per-cpu=$${mem_per_cpu}
 #SBATCH --mail-type=$${mail_type}
 #SBATCH --mail-user=$${mail_user}
+#SBATCH --image=$${image}
+#SBATCH --volume=$${volume}
 
 
 $${pre_rocket}
