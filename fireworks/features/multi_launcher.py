@@ -96,7 +96,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
             # Stand down if there is less than 3% of the time left
             if timeout_left < 0.03 * timeout:
                 log_multi(l_logger, ('Remaining time {}s is less than 3% of the original timeout {}s'
-			                         ' - standing down').format(timeout_left, timeout))
+                                     ' - standing down').format(timeout_left, timeout))
                 break
 
             log_multi(l_logger, 'Sleeping for {} secs before resubmit sub job'.format(sleep_time))
