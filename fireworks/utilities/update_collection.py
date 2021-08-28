@@ -54,7 +54,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
                              format(collection_name, extension_name))
 
     all_docs = db[collection_name].find(query)
-    ndocs = db[collection_name].find(query).count_documents({})
+    ndocs = db[collection_name].count_documents(query or {})
 
     modified_docs = []  # all docs that were modified; needed if you set "query" parameter
     print("updating new documents:")
