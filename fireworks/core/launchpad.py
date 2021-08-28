@@ -342,7 +342,7 @@ class LaunchPad(FWSerializable):
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
 
         if password == m_password or (
-                not require_password and self.workflows.count_documents() <= max_reset_wo_password):
+                not require_password and self.workflows.count_documents({}) <= max_reset_wo_password):
             self.fireworks.delete_many({})
             self.launches.delete_many({})
             self.workflows.delete_many({})
@@ -359,7 +359,7 @@ class LaunchPad(FWSerializable):
             raise ValueError(
                 "Password check cannot be overridden since the size of DB ({} workflows) "
                 "is greater than the max_reset_wo_password parameter ({}).".format(
-                    self.fireworks.count_documents(),
+                    self.fireworks.count_documents({}),
                     max_reset_wo_password))
         else:
             raise ValueError(

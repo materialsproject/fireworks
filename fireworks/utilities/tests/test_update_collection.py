@@ -31,7 +31,7 @@ class UpdateCollectionTests(unittest.TestCase):
         cls.lp.db.test_coll.insert({"foo": "bar", "foo_list": [{"foo1": "bar1"}, {"foo2": "foo/old/path/bar"}]})
         update_path_in_collection(cls.lp.db, collection_name="test_coll", replacements={"old/path": "new/path"},
                                               query=None, dry_run=False, force_clear=False)
-        ndocs = cls.lp.db.test_coll.count_documents()
+        ndocs = cls.lp.db.test_coll.count_documents({})
         cls.assertEqual(ndocs, 1)
         test_doc = cls.lp.db.test_coll.find_one({"foo": "bar"})
         cls.assertEqual(test_doc["foo_list"][1]["foo2"], "foo/new/path/bar")
