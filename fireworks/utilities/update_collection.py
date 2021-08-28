@@ -68,7 +68,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
 
         modified_docs.append(doc["_id"])
 
-    ndocs = db[collection_name].find({"_id": {"$nin": modified_docs}}).count_documents({})
+    ndocs = db[collection_name].count_documents({"_id": {"$nin": modified_docs}})
     all_docs = db[collection_name].find({"_id": {"$nin": modified_docs}})
 
     print("transferring unaffected documents (if any)")
@@ -77,7 +77,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
         modified_docs.append(doc["_id"])
 
     print("confirming that all documents were moved")
-    ndocs = db[collection_name].find({"_id": {"$nin": modified_docs}}).count_documents({})
+    ndocs = db[collection_name].count_documents({"_id": {"$nin": modified_docs}})
     if ndocs != 0:
         raise ValueError("update paths aborted! Are you sure new documents are not being inserted into the collection?")
 
