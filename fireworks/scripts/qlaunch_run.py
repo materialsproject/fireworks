@@ -64,7 +64,7 @@ def do_launch(args):
 
     if args.command == 'rapidfire':
         rapidfire(launchpad, fworker=fworker, qadapter=queueadapter, launch_dir=args.launch_dir,
-                  nlaunches=args.nlaunches, njobs_queue=args.maxjobs_queue,
+                  block_dir=args.block_dir, nlaunches=args.nlaunches, njobs_queue=args.maxjobs_queue,
                   njobs_block=args.maxjobs_block, sleep_time=args.sleep,
                   reserve=args.reserve, strm_lvl=args.loglvl, timeout=args.timeout, fill_mode=args.fill_mode)
     else:
@@ -126,6 +126,8 @@ def qlaunch():
                         type=int,
                         default=0)
     parser.add_argument('--launch_dir', help='directory to launch the job / rapid-fire', default='.')
+    parser.add_argument('--block_dir', help='directory to use as block dir. Can be a new or existing '
+                        "block. Must start with 'block_'")
     parser.add_argument('--logdir', help='path to a directory for logging', default=None)
     parser.add_argument('--loglvl', help='level to print log messages', default='INFO')
     parser.add_argument('-s', '--silencer', help='shortcut to mute log messages', action='store_true')
