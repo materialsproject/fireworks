@@ -54,7 +54,7 @@ class AuthenticationTest(unittest.TestCase):
         with self.assertRaises(OperationFailure):
             lp = LaunchPad(name="admin", username="myuser",
                            password="mypassword", authsource="admin")
-            lp.db.collection.count()
+            lp.db.collection.count_documents({})
 
     def test_authenticating_to_users_db(self):
         """A user should be able to authenticate against a database that they
@@ -62,7 +62,7 @@ class AuthenticationTest(unittest.TestCase):
         """
         lp = LaunchPad(name="not_the_admin_db", username="myuser",
                        password="mypassword", authsource="not_the_admin_db")
-        lp.db.collection.count()
+        lp.db.collection.count_documents({})
 
     def test_authsource_infered_from_db_name(self):
         """The default behavior is to authenticate against the db that the user
@@ -70,7 +70,7 @@ class AuthenticationTest(unittest.TestCase):
         """
         lp = LaunchPad(name="not_the_admin_db", username="myuser",
                        password="mypassword")
-        lp.db.collection.count()
+        lp.db.collection.count_documents({})
 
 
 class LaunchPadTest(unittest.TestCase):
@@ -122,7 +122,7 @@ class LaunchPadTest(unittest.TestCase):
         wf = Workflow([fw], name='test_workflow')
         self.lp.add_wf(wf)
         self.assertRaises(ValueError, self.lp.reset, '', False, 0)
-        self.assertEqual(self.lp.workflows.count(), 1)
+        self.assertEqual(self.lp.workflows.count_documents({}), 1)
         self.lp.reset('',require_password=False)
         self.assertFalse(self.lp.get_fw_ids())
         self.assertFalse(self.lp.get_wf_ids())

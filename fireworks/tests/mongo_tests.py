@@ -496,23 +496,23 @@ class MongoTests(unittest.TestCase):
 
         time.sleep(1)
 
-        if self.lp.launches.count() > 1:
+        if self.lp.launches.count_documents({}) > 1:
             print("TOO MANY LAUNCHES FOUND!")
             print("--------")
             for d in self.lp.launches.find():
                 print(d)
             print("--------")
-        self.assertEqual(self.lp.launches.count(), 1)
+        self.assertEqual(self.lp.launches.count_documents({}), 1)
 
     def test_append_wf(self):
         fw1 = Firework([UpdateSpecTask()])
         fw2 = Firework([ModSpecTask()])
         self.lp.add_wf(Workflow([fw1, fw2]))
-        self.assertEqual(self.lp.fireworks.count(), 2)
+        self.assertEqual(self.lp.fireworks.count_documents({}), 2)
         launch_rocket(self.lp, self.fworker)
         launch_rocket(self.lp, self.fworker)
-        self.assertEqual(self.lp.launches.count(), 2)
-        self.assertEqual(self.lp.fireworks.count(), 3)  # due to detour
+        self.assertEqual(self.lp.launches.count_documents({}), 2)
+        self.assertEqual(self.lp.fireworks.count_documents({}), 3)  # due to detour
 
         new_wf = Workflow([Firework([ModSpecTask()])])
         self.lp.append_wf(new_wf, [1, 2])
@@ -523,8 +523,8 @@ class MongoTests(unittest.TestCase):
         self.assertEqual(new_fw.spec['dummy1'], 1)
         self.assertEqual(new_fw.spec['dummy2'], [True])
 
-        self.assertEqual(self.lp.launches.count(), 4)
-        self.assertEqual(self.lp.fireworks.count(), 4)
+        self.assertEqual(self.lp.launches.count_documents({}), 4)
+        self.assertEqual(self.lp.fireworks.count_documents({}), 4)
 
         new_wf = Workflow([Firework([ModSpecTask()])])
         self.lp.append_wf(new_wf, [4])
