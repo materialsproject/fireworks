@@ -9,18 +9,21 @@ The details of job submission and queue communication are handled using Queueada
 which specifies a QueueAdapter as well as desired properties of the submit script.
 """
 
-import os
 import glob
+import os
 import time
 from datetime import datetime
 
-from monty.os import cd, makedirs_p
-
 from fireworks.core.fworker import FWorker
+from fireworks.fw_config import (ALWAYS_CREATE_NEW_BLOCK, QSTAT_FREQUENCY,
+                                 QUEUE_JOBNAME_MAXLEN, QUEUE_RETRY_ATTEMPTS,
+                                 QUEUE_UPDATE_INTERVAL, RAPIDFIRE_SLEEP_SECS,
+                                 SUBMIT_SCRIPT_NAME)
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.fw_utilities import get_fw_logger, log_exception, create_datestamp_dir, get_slug
-from fireworks.fw_config import SUBMIT_SCRIPT_NAME, ALWAYS_CREATE_NEW_BLOCK, QUEUE_RETRY_ATTEMPTS, \
-    QUEUE_UPDATE_INTERVAL, QSTAT_FREQUENCY, RAPIDFIRE_SLEEP_SECS, QUEUE_JOBNAME_MAXLEN
+from fireworks.utilities.fw_utilities import (create_datestamp_dir,
+                                              get_fw_logger, get_slug,
+                                              log_exception)
+from monty.os import cd, makedirs_p
 
 __author__ = 'Anubhav Jain, Michael Kocher'
 __copyright__ = 'Copyright 2012, The Materials Project'
@@ -157,7 +160,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
         return None  # note: this is a hack (rather than False) to indicate a soft failure to rapidfire()
 
 
-def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_queue=0,
+def rapidfire(launchpad, fworker, qadapter, launch_dir='.', block_dir=None, nlaunches=0, njobs_queue=0,
               njobs_block=500, sleep_time=None, reserve=False, strm_lvl='INFO', timeout=None,
               fill_mode=False):
     """
@@ -168,6 +171,8 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         fworker (FWorker)
         qadapter (QueueAdapterBase)
         launch_dir (str): directory where we want to write the blocks
+        block_dir (str): directory to use as block dir. Can be a new or existing block. Dirname must
+            start with 'block_'.
         nlaunches (int): total number of launches desired; "infinite" for loop, 0 for one round
         njobs_queue (int): stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
             If 0 skips the check on the number of jobs in the queue.
@@ -196,7 +201,12 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', nlaunches=0, njobs_q
         l_logger.info('getting queue adapter')
 
         prev_blocks = sorted(glob.glob(os.path.join(launch_dir, 'block_*')), reverse=True)
-        if prev_blocks and not ALWAYS_CREATE_NEW_BLOCK:
+        if block_dir is not None:
+            if not block_dir.startswith("block_"):
+                raise ValueError("Invalid name {}, block dirs must start with 'block_".format(block_dir))
+            block_dir = os.path.abspath(os.path.join(launch_dir, block_dir))
+            os.mkdir(block_dir, exist_ok=True)
+        elif prev_blocks and not ALWAYS_CREATE_NEW_BLOCK:
             block_dir = os.path.abspath(os.path.join(launch_dir, prev_blocks[0]))
             l_logger.info('Found previous block, using {}'.format(block_dir))
         else:
