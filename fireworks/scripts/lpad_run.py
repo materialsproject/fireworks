@@ -55,7 +55,7 @@ def pw_check(ids, args, skip_pw=False):
             if input('Are you sure? This will modify {} entries. (Y/N)'.format(len(ids)))[0].upper() == 'Y':
                 args.password = datetime.datetime.now().strftime('%Y-%m-%d')
             else:
-                raise ValueError('Operation aborted by user.')
+                print('Operation aborted by user.')
         if args.password != m_password:
             raise ValueError("Modifying more than {} entries requires setting the --password parameter! "
                              "(Today's date, e.g. 2012-02-25)".format(PW_CHECK_NUM))
