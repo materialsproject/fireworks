@@ -3,7 +3,6 @@
 import multiprocessing
 
 import gunicorn.app.base
-from six import iteritems
 from fireworks.flask_site.app import app as handler_app
 
 

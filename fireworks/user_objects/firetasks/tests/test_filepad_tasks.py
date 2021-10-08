@@ -59,7 +59,6 @@ class FilePadTasksTest(unittest.TestCase):
           metadata={'key': 'value'})
         t.run_task({})
         dest_dir = os.path.abspath(".")
-        identifiers = ["test_idenfifier"]
         new_file_names = ["test_file.yaml"]
         t = GetFilesByQueryTask(
           query={'metadata->key': 'value'},

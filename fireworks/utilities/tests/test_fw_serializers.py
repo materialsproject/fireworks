@@ -1,6 +1,5 @@
 #from __future__ import unicode_literals
 
-import sys
 from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
 from fireworks.utilities.fw_serializers import load_object, FWSerializable, recursive_dict
 from fireworks.utilities.fw_utilities import explicit_serialize

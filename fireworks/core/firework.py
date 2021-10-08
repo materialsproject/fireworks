@@ -20,9 +20,8 @@ import pprint
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 
-from six import add_metaclass
 
-from fireworks.fw_config import TRACKER_LINES, NEGATIVE_FWID_CTR, EXCEPT_DETAILS_ON_RERUN
+from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
 from fireworks.core.fworker import FWorker
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, \

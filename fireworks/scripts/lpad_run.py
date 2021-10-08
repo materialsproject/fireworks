@@ -1,5 +1,3 @@
-import six
-
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
@@ -7,14 +5,12 @@ A runnable script for managing a FireWorks database (a command-line interface to
 from argparse import ArgumentParser, ArgumentTypeError
 import copy
 import os
-import shutil
 import re
 import time
 import ast
 import json
 import datetime
 import traceback
-from flask import g
 
 from pymongo import DESCENDING, ASCENDING
 import ruamel.yaml as yaml

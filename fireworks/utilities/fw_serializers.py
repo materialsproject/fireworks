@@ -33,8 +33,6 @@ import json  # note that ujson is faster, but at this time does not support "def
 import importlib
 import datetime
 import abc
-import sys
-import six
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY

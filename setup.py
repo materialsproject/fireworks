@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import logging
 import multiprocessing  # AJ: for some reason this is needed to not have "python setup.py test" freak out
 import os
 

@@ -14,16 +14,12 @@ import unittest
 import os
 import glob
 import shutil
-import sys
-import argparse
 
 from fireworks.core.firework import Firework, Tracker, FWorker, Workflow
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket
 from fireworks.features.multi_launcher import launch_multiprocess
-from fireworks.scripts.lpad_run import track_fws
 from fireworks.user_objects.firetasks.script_task import ScriptTask
-from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 
 TESTDB_NAME = 'fireworks_unittest'
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))

@@ -4,3 +4,9 @@ repos:
     hooks:
       - id: pyupgrade
         args: [--py36-plus]
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
+    hooks:
+    - id: autoflake
+      args: [--in-place, --remove-all-unused-imports, --remove-unused-variable, --ignore-init-module-imports]

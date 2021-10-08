@@ -8,7 +8,6 @@ import traceback
 import socket
 import multiprocessing
 import errno
-import six
 import contextlib
 
 from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT

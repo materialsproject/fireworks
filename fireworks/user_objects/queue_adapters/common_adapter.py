@@ -1,6 +1,5 @@
 import copy
 
-import sys
 
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
@@ -233,7 +232,7 @@ class CommonAdapter(QueueAdapterBase):
                     f'The error response reads: {p.stderr.read()}']
                 log_fancy(queue_logger, msgs, 'error')
 
-        except Exception as ex:
+        except Exception:
             # random error, e.g. no qsub on machine!
             log_exception(queue_logger,
                           'Running the command: {} caused an error...'

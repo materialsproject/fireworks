@@ -18,7 +18,6 @@ import shutil
 import pdb
 import distutils.dir_util
 from monty.io import zopen
-from monty.serialization import loadfn, dumpfn
 
 from fireworks.core.firework import FWAction, Firework
 from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, \

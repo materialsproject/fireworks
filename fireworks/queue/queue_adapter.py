@@ -10,7 +10,6 @@ import threading
 import traceback
 import abc
 import collections
-import six
 import warnings
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
@@ -165,7 +164,6 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
         Returns:
             (int) job_id
         """
-        pass
 
     @abc.abstractmethod
     def get_njobs_in_queue(self, username=None):
@@ -178,7 +176,6 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
         Returns:
             (int) number of jobs in the queue
         """
-        pass
 
     @serialize_fw
     def to_dict(self):

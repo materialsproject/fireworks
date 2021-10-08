@@ -4,7 +4,6 @@ __author__ = 'Ivan Kondov'
 __email__ = 'ivan.kondov@kit.edu'
 __copyright__ = 'Copyright 2017, Karlsruhe Institute of Technology'
 
-import warnings
 from itertools import combinations
 
 import igraph

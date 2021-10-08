@@ -1,6 +1,5 @@
 import warnings
 
-from monty.io import zopen
 from monty.os.path import zpath
 
 """
@@ -79,7 +78,6 @@ class LockedWorkflowError(ValueError):
     Error raised if the context manager WFLock can't acquire the lock on the WF within the selected
     time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (WFLOCK_EXPIRATION_KILL)
     """
-    pass
 
 
 class WFLock:

@@ -11,7 +11,6 @@ from fireworks import Firework
 from fireworks.features.fw_report import FWReport
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.core.launchpad import LaunchPad
 from fireworks.fw_config import WEBSERVER_PERFWARNINGS
 import fireworks.flask_site.helpers as fwapp_util
 from fireworks.flask_site.util import jsonify
@@ -144,7 +143,6 @@ def home():
 
     PLOTTING = False
     try:
-        import matplotlib as mpl
         PLOTTING = True
     except Exception:
         pass
@@ -337,7 +335,6 @@ def report(interval, num_intervals):
 
     PLOTTING = False
     try:
-        import matplotlib as mpl
         PLOTTING = True
     except Exception:
         pass
@@ -350,7 +347,6 @@ def report(interval, num_intervals):
 def dashboard():
     PLOTTING = False
     try:
-        import matplotlib as mpl
         PLOTTING = True
     except Exception:
         pass
@@ -368,7 +364,7 @@ def parse_querystr(querystr, coll):
         flash(f"`{querystr}` is not a valid JSON object / Python dict.")
         return {}
     try:
-        h = coll.find_one(d)
+        coll.find_one(d)
     except Exception:
         flash(f"`{querystr}` is not a valid MongoDB query doc.")
         return {}

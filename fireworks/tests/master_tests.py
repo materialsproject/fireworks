@@ -1,5 +1,5 @@
 from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
-from fireworks.utilities.fw_serializers import load_object, recursive_deserialize
+from fireworks.utilities.fw_serializers import load_object
 
 """
 Master tests for FireWorks - generally used to ensure that installation was \
@@ -25,11 +25,8 @@ class TestImports(unittest.TestCase):
     """
 
     def test_imports(self):
-        import ruamel.yaml as yaml
-        import pymongo
-        import jinja2
+        pass
         # test that MongoClient is available (newer pymongo)
-        from pymongo import MongoClient
 
 
 class BasicTests(unittest.TestCase):
