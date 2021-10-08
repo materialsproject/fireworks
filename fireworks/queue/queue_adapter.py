@@ -15,13 +15,13 @@ import warnings
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 from fireworks.utilities.fw_utilities import get_fw_logger
 
-__author__ = 'Anubhav Jain'
-__credits__ = 'Shyue Ping Ong'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 28, 2013'
+__author__ = "Anubhav Jain"
+__credits__ = "Shyue Ping Ong"
+__copyright__ = "Copyright 2013, The Materials Project"
+__version__ = "0.1"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Feb 28, 2013"
 
 
 class Command:
@@ -31,10 +31,11 @@ class Command:
     Based on jcollado's solution:
     http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
     """
+
     command = None
     process = None
     status = None
-    output, error = '', ''
+    output, error = "", ""
 
     def __init__(self, command):
         """
@@ -58,6 +59,7 @@ class Command:
         Returns:
             (status, output, error)
         """
+
         def target(**kwargs):
             try:
                 self.process = subprocess.Popen(self.command, **kwargs)
@@ -72,11 +74,12 @@ class Command:
             except Exception:
                 self.error = traceback.format_exc()
                 self.status = -1
+
         # default stdout and stderr
-        if 'stdout' not in kwargs:
-            kwargs['stdout'] = subprocess.PIPE
-        if 'stderr' not in kwargs:
-            kwargs['stderr'] = subprocess.PIPE
+        if "stdout" not in kwargs:
+            kwargs["stdout"] = subprocess.PIPE
+        if "stderr" not in kwargs:
+            kwargs["stderr"] = subprocess.PIPE
         # thread
         thread = threading.Thread(target=target, kwargs=kwargs)
         thread.start()
@@ -100,10 +103,10 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     https://materialsproject.github.io/fireworks
     """
 
-    _fw_name = 'QueueAdapterBase'
-    template_file = 'OVERRIDE_ME'  # path to template file for a queue script
-    submit_cmd = 'OVERRIDE_ME'  # command to submit jobs, e.g. "qsub" or "squeue"
-    q_name = 'OVERRIDE_ME'  # (arbitrary) name, e.g. "pbs" or "slurm"
+    _fw_name = "QueueAdapterBase"
+    template_file = "OVERRIDE_ME"  # path to template file for a queue script
+    submit_cmd = "OVERRIDE_ME"  # command to submit jobs, e.g. "qsub" or "squeue"
+    q_name = "OVERRIDE_ME"  # (arbitrary) name, e.g. "pbs" or "slurm"
     defaults = {}  # default parameter values for template
 
     def get_script_str(self, launch_dir):
@@ -125,33 +128,31 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             template_keys = [i[1] for i in string.Formatter().parse(template)]
 
             # set substitution dict for replacements into the template
-            subs_dict = {k: v for k, v in self.items()
-                         if v is not None}  # clean null values
+            subs_dict = {k: v for k, v in self.items() if v is not None}  # clean null values
 
             # warn user if they specify a key not present in template
             for subs_key in subs_dict.keys():
-                if subs_key not in template_keys and not \
-                        subs_key.startswith("_") and not subs_key == "logdir":
-                    warnings.warn('Key {} has been specified in qadapter '
-                                  'but it is not present in template, please '
-                                  'check template ({}) for supported keys.'
-                                  .format(subs_key, self.template_file))
+                if subs_key not in template_keys and not subs_key.startswith("_") and not subs_key == "logdir":
+                    warnings.warn(
+                        "Key {} has been specified in qadapter "
+                        "but it is not present in template, please "
+                        "check template ({}) for supported keys.".format(subs_key, self.template_file)
+                    )
 
             for k, v in self.defaults.items():
                 subs_dict.setdefault(k, v)
 
-            subs_dict['job_name'] = subs_dict.get('job_name', 'FW_job')
+            subs_dict["job_name"] = subs_dict.get("job_name", "FW_job")
 
             launch_dir = os.path.abspath(launch_dir)
-            subs_dict['launch_dir'] = launch_dir
+            subs_dict["launch_dir"] = launch_dir
 
             # might contain unused parameters as leftover $$
             unclean_template = a.safe_substitute(subs_dict)
 
-            clean_template = filter(lambda l: "$$" not in l,
-                                    unclean_template.split('\n'))
+            clean_template = filter(lambda l: "$$" not in l, unclean_template.split("\n"))
 
-            return '\n'.join(clean_template)
+            return "\n".join(clean_template)
 
     @abc.abstractmethod
     def submit_to_queue(self, script_file):
@@ -186,11 +187,11 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
         return cls(m_dict)
 
     def get_qlogger(self, name):
-        if 'logdir' in self:
-            return get_fw_logger(name, self['logdir'])
+        if "logdir" in self:
+            return get_fw_logger(name, self["logdir"])
         else:
-            return get_fw_logger(name, stream_level='CRITICAL')
+            return get_fw_logger(name, stream_level="CRITICAL")
 
 
 class QScriptTemplate(string.Template):
-    delimiter = '$$'
+    delimiter = "$$"

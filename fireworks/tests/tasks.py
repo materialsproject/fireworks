@@ -17,7 +17,6 @@ from fireworks.utilities.fw_utilities import explicit_serialize
 
 @explicit_serialize
 class DummyFWEnvTask(FiretaskBase):
-
     def run_task(self, fw_spec):
         data = fw_spec["_fw_env"].get("hello", "hello")
         return FWAction(stored_data={"data": data})
@@ -25,12 +24,11 @@ class DummyFWEnvTask(FiretaskBase):
 
 @explicit_serialize
 class DummyJobPassTask(FiretaskBase):
-
     def run_task(self, fw_spec):
-        return FWAction(stored_data={"data": fw_spec['_job_info']})
+        return FWAction(stored_data={"data": fw_spec["_job_info"]})
+
 
 @explicit_serialize
 class DummyLPTask(FiretaskBase):
-
     def run_task(self, fw_spec):
         return FWAction(stored_data={"fw_id": self.fw_id, "host": self.launchpad.host})

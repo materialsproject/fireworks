@@ -2,9 +2,9 @@ from bson.json_util import dumps, loads
 from tqdm import tqdm
 import datetime
 
-__author__ = 'Alireza Faghaninia, Anubhav Jain'
-__email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
-__date__ = 'Dec 08, 2016'
+__author__ = "Alireza Faghaninia, Anubhav Jain"
+__email__ = "alireza.faghaninia@gmail.com, ajain@lbl.gov"
+__date__ = "Dec 08, 2016"
 
 
 def update_launchpad_data(lp, replacements, **kwargs):
@@ -50,8 +50,9 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
     if force_clear:
         db[f"{tmp_collname}"].drop()
     elif db[f"{tmp_collname}"].find_one():
-        raise AttributeError("The collection {}{} already exists! Use force_clear option to remove.".
-                             format(collection_name, extension_name))
+        raise AttributeError(
+            f"The collection {collection_name}{extension_name} already exists! Use force_clear option to remove."
+        )
 
     all_docs = db[collection_name].find(query)
     ndocs = db[collection_name].count_documents(query or {})

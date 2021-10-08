@@ -7,7 +7,6 @@ module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 
 class FilePadTest(unittest.TestCase):
-
     def setUp(self):
         self.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
         self.fp = FilePad.auto_load()

@@ -39,8 +39,9 @@ def update_doc(ctx):
     make_doc(ctx)
     with cd("docs"):
         ctx.run("git add .")
-        ctx.run(f"git commit -a -m \"Update to v{__version__}\"")
+        ctx.run(f'git commit -a -m "Update to v{__version__}"')
         ctx.run("git push")
+
 
 @task
 def publish(ctx):
@@ -55,15 +56,16 @@ def release_github(ctx):
         "name": "v" + __version__,
         "body": "",
         "draft": False,
-        "prerelease": False
+        "prerelease": False,
     }
-    # For this to work properly, you need to go ti your Github profile, generate 
+    # For this to work properly, you need to go ti your Github profile, generate
     # a "Personal access token". Then do export GITHUB_RELEASES_TOKEN="xyz1234"
     # (or add it to your bash_profile).
     response = requests.post(
         "https://api.github.com/repos/materialsproject/fireworks/releases",
         data=json.dumps(payload),
-        headers={"Authorization": "token " + os.environ["GITHUB_RELEASES_TOKEN"]})
+        headers={"Authorization": "token " + os.environ["GITHUB_RELEASES_TOKEN"]},
+    )
     print(response.text)
 
 

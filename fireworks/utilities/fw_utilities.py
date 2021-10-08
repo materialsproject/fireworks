@@ -12,20 +12,21 @@ import contextlib
 
 from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
 
-__author__ = 'Anubhav Jain, Xiaohui Qu'
-__copyright__ = 'Copyright 2012, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Dec 12, 2012'
+__author__ = "Anubhav Jain, Xiaohui Qu"
+__copyright__ = "Copyright 2012, The Materials Project"
+__version__ = "0.1"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Dec 12, 2012"
 
 PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already been initialized
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
 DEFAULT_FORMATTER = logging.Formatter(FW_LOGGING_FORMAT)
 
 
-def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level='DEBUG',
-                  formatter=DEFAULT_FORMATTER, clear_logs=False):
+def get_fw_logger(
+    name, l_dir=None, file_levels=("DEBUG", "ERROR"), stream_level="DEBUG", formatter=DEFAULT_FORMATTER, clear_logs=False
+):
     """
     Convenience method to return a logger.
 
@@ -40,12 +41,12 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # anything debug and above passes through to the handler level
 
-    stream_level = stream_level if stream_level else 'CRITICAL'
+    stream_level = stream_level if stream_level else "CRITICAL"
     # add handlers for the file_levels
     if l_dir:
         for lvl in file_levels:
-            f_name = os.path.join(l_dir, name.replace('.', '_') + '-' + lvl.lower() + '.log')
-            mode = 'w' if clear_logs else 'a'
+            f_name = os.path.join(l_dir, name.replace(".", "_") + "-" + lvl.lower() + ".log")
+            mode = "w" if clear_logs else "a"
             fh = logging.FileHandler(f_name, mode=mode)
             fh.setLevel(getattr(logging, lvl))
             fh.setFormatter(formatter)
@@ -64,7 +65,7 @@ def get_fw_logger(name, l_dir=None, file_levels=('DEBUG', 'ERROR'), stream_level
     return logger
 
 
-def log_multi(m_logger, msg, log_lvl='info'):
+def log_multi(m_logger, msg, log_lvl="info"):
     """
     Args:
         m_logger (logger): The logger object
@@ -78,7 +79,7 @@ def log_multi(m_logger, msg, log_lvl='info'):
         _log_fnc(msg)
 
 
-def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
+def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False):
     """
     A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,
@@ -96,11 +97,11 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
 
     _log_fnc = getattr(m_logger, log_lvl.lower())
 
-    _log_fnc('----|vvv|----')
-    _log_fnc('\n'.join(msgs))
+    _log_fnc("----|vvv|----")
+    _log_fnc("\n".join(msgs))
     if add_traceback:
         _log_fnc(traceback.format_exc())
-    _log_fnc('----|^^^|----')
+    _log_fnc("----|^^^|----")
 
 
 def log_exception(m_logger, msgs):
@@ -111,10 +112,10 @@ def log_exception(m_logger, msgs):
         m_logger (logger): The logger object
         msgs ([str]): String or iterable of Strings, will be joined by newlines
     """
-    return log_fancy(m_logger, msgs, 'error', add_traceback=True)
+    return log_fancy(m_logger, msgs, "error", add_traceback=True)
 
 
-def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
+def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
     """
     Internal method to create a new block or launcher directory.
     The dir name is based on the time and the FW_BLOCK_FORMAT
@@ -139,6 +140,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
             full_path = None
             import time
             import random
+
             time.sleep(random.random() / 3 + 0.1)
             continue
         else:
@@ -152,7 +154,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
                 full_path = None
                 continue
 
-    l_logger.info(f'Created new dir {full_path}')
+    l_logger.info(f"Created new dir {full_path}")
     return full_path
 
 
@@ -165,7 +167,7 @@ def get_my_ip():
         try:
             _g_ip = socket.gethostbyname(socket.gethostname())
         except Exception:
-            _g_ip = '127.0.0.1'
+            _g_ip = "127.0.0.1"
     return _g_ip
 
 
@@ -178,8 +180,8 @@ def get_my_host():
 
 def get_slug(m_str):
     valid_chars = f"-_.() {string.ascii_letters}{string.digits}"
-    m_str = ''.join(c for c in m_str if c in valid_chars)
-    return m_str.replace(' ', '_')
+    m_str = "".join(c for c in m_str if c in valid_chars)
+    return m_str.replace(" ", "_")
 
 
 class DataServer(BaseManager):
@@ -198,8 +200,8 @@ class DataServer(BaseManager):
         Returns:
             DataServer
         """
-        DataServer.register('LaunchPad', callable=lambda: launchpad)
-        m = DataServer(address=('127.0.0.1', 0), authkey=DS_PASSWORD)  # random port
+        DataServer.register("LaunchPad", callable=lambda: launchpad)
+        m = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
         m.start()
         return m
 
@@ -222,16 +224,27 @@ class NestedClassGetter:
 
 def explicit_serialize(o):
     module_name = o.__module__
-    if module_name == '__main__':
+    if module_name == "__main__":
         import __main__
+
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
-    o._fw_name = f'{{{{{module_name}.{o.__name__}}}}}'
+    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"
     return o
 
 
-def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_label=False,
-            text_loc_factor=1.0, save_as=None, style='rD--', markersize=10, markerfacecolor='blue',
-            fontsize=12, ):
+def plot_wf(
+    wf,
+    depth_factor=1.0,
+    breadth_factor=2.0,
+    labels_on=True,
+    numerical_label=False,
+    text_loc_factor=1.0,
+    save_as=None,
+    style="rD--",
+    markersize=10,
+    markerfacecolor="blue",
+    fontsize=12,
+):
     """
     Generate a visual representation of the workflow. Useful for checking whether the firework
     connections are in order before launching the workflow.
@@ -270,27 +283,29 @@ def plot_wf(wf, depth_factor=1.0, breadth_factor=2.0, labels_on=True, numerical_
     for k in keys:
         for i, j in enumerate(wf.links[k]):
             if not points_map.get(j, None):
-                points_map[j] = (
-                    (i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
+                points_map[j] = ((i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
     for k in keys:
         for i in wf.links[k]:
-            plt.plot([points_map[k][0], points_map[i][0]], [points_map[k][1], points_map[i][1]],
-                     style, markersize=markersize, markerfacecolor=markerfacecolor)
+            plt.plot(
+                [points_map[k][0], points_map[i][0]],
+                [points_map[k][1], points_map[i][1]],
+                style,
+                markersize=markersize,
+                markerfacecolor=markerfacecolor,
+            )
             if labels_on:
                 label1 = wf.id_fw[k].name
                 label2 = wf.id_fw[i].name
                 if numerical_label:
                     label1 = str(k)
                     label2 = str(i)
-                plt.text(points_map[k][0] * text_loc_factor, points_map[k][1] * text_loc_factor,
-                         label1, fontsize=fontsize)
-                plt.text(points_map[i][0] * text_loc_factor, points_map[i][1] * text_loc_factor,
-                         label2, fontsize=fontsize)
+                plt.text(points_map[k][0] * text_loc_factor, points_map[k][1] * text_loc_factor, label1, fontsize=fontsize)
+                plt.text(points_map[i][0] * text_loc_factor, points_map[i][1] * text_loc_factor, label2, fontsize=fontsize)
 
-    plt.axis('scaled')
-    plt.axis('off')
+    plt.axis("scaled")
+    plt.axis("off")
 
     if save_as:
         plt.savefig(save_as)
@@ -307,8 +322,8 @@ def redirect_local():
         old_err = os.dup(sys.stderr.fileno())
         old_out = os.dup(sys.stdout.fileno())
 
-        new_err = open('FW_job.error', 'w')
-        new_out = open('FW_job.out', 'w')
+        new_err = open("FW_job.error", "w")
+        new_out = open("FW_job.out", "w")
 
         os.dup2(new_err.fileno(), sys.stderr.fileno())
         os.dup2(new_out.fileno(), sys.stdout.fileno())

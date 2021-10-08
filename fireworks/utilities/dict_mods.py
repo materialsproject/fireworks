@@ -74,7 +74,7 @@ class DictMods:
     def __init__(self):
         self.supported_actions = {}
         for i in dir(self):
-            if (not re.match(r'__\w+__', i)) and callable(getattr(self, i)):
+            if (not re.match(r"__\w+__", i)) and callable(getattr(self, i)):
                 self.supported_actions["_" + i] = getattr(self, i)
 
     @staticmethod
@@ -128,8 +128,7 @@ class DictMods:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             if key in d and v not in d[key]:
                 d[key].append(v)
             elif key not in d:
@@ -140,8 +139,7 @@ class DictMods:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             if key in d:
                 d[key] = [i for i in d[key] if i != v]
 
@@ -149,8 +147,7 @@ class DictMods:
     def pull_all(input_dict, settings):
         for k, v in settings.items():
             if k in input_dict and (not isinstance(input_dict[k], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             for i in v:
                 DictMods.pull(input_dict, {k: i})
 
@@ -159,8 +156,7 @@ class DictMods:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             if v == 1:
                 d[key].pop()
             elif v == -1:
