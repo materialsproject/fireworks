@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 from fireworks.features.dupefinder import DupeFinderBase
 
 __author__ = 'Anubhav Jain'

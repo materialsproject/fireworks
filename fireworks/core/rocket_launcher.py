@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module contains methods for launching Rockets, both singly and in rapid-fire mode.
 """
@@ -126,7 +122,7 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 break
         elif num_launched == nlaunches:
             break
-        log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
+        log_multi(l_logger, f'Sleeping for {sleep_time} secs')
         time.sleep(sleep_time)
         num_loops += 1
         log_multi(l_logger, 'Checking for FWs to run...')

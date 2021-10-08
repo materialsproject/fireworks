@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import datetime
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw

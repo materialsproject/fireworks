@@ -1,5 +1,3 @@
-# coding: utf-8
-
 #from __future__ import unicode_literals
 
 import sys
@@ -21,10 +19,7 @@ import os
 import json
 
 
-if sys.version_info > (3, 0, 0):
-    ENCODING_PARAMS = {"encoding": "utf-8"}
-else:
-    ENCODING_PARAMS = {}
+ENCODING_PARAMS = {"encoding": "utf-8"}
 
 
 @explicit_serialize
@@ -54,7 +49,7 @@ class SerializationTest(unittest.TestCase):
         self.obj_2 = TestSerializer({"p1": 1234, "p2": 5.0, "p3": "Hi!", 'p4': datetime.datetime.utcnow()}, test_date)
 
         # A unicode test serialized object
-        unicode_str = u'\xe4\xf6\xfc'
+        unicode_str = '\xe4\xf6\xfc'
         self.obj_3 = ExportTestSerializer({"p1": unicode_str, "p2": "abc"})
         self.obj_3.to_file("test.json")
         self.obj_3.to_file("test.yaml")

@@ -1,7 +1,5 @@
 """ TODO: Modify unittest doc. """
-# coding: utf-8
 
-from __future__ import unicode_literals, division
 import unittest
 import os
 from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask

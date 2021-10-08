@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 __author__ = 'Kiran Mathew, Johannes Hoermann'
 
 import unittest
@@ -28,10 +24,10 @@ class FilePadTasksTest(unittest.TestCase):
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
         write_file_contents, _ = self.fp.get_file("write")
-        with open(self.paths[0], "r") as f:
+        with open(self.paths[0]) as f:
             self.assertEqual(write_file_contents, f.read().encode())
         del_file_contents, _ = self.fp.get_file("delete")
-        with open(self.paths[1], "r") as f:
+        with open(self.paths[1]) as f:
             self.assertEqual(del_file_contents, f.read().encode())
 
     def test_deletefilestask_run(self):
@@ -53,7 +49,7 @@ class FilePadTasksTest(unittest.TestCase):
         t = GetFilesTask(identifiers=identifiers, dest_dir=dest_dir, new_file_names=new_file_names)
         t.run_task({})
         write_file_contents, _ = self.fp.get_file("write")
-        with open(os.path.join(dest_dir, new_file_names[0]), "r") as f:
+        with open(os.path.join(dest_dir, new_file_names[0])) as f:
             self.assertEqual(write_file_contents, f.read().encode())
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
@@ -71,7 +67,7 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
         test_file_contents, _ = self.fp.get_file("test_idenfifier")
         self.assertEqual(test_file_contents,
-                         open(os.path.join(dest_dir, new_file_names[0]), "r").read().encode())
+                         open(os.path.join(dest_dir, new_file_names[0])).read().encode())
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
     def test_getfilesbyquerytask_run(self):
@@ -91,7 +87,7 @@ class FilePadTasksTest(unittest.TestCase):
             dest_dir=dest_dir, new_file_names=["queried_test_file.txt"])
         t.run_task({})
         test_file_contents, _ = self.fp.get_file("some_identifier")
-        with open(os.path.join(dest_dir, "queried_test_file.txt"), "r") as f:
+        with open(os.path.join(dest_dir, "queried_test_file.txt")) as f:
             self.assertEqual(test_file_contents, f.read().encode())
         os.remove(os.path.join(dest_dir, "queried_test_file.txt"))
 
@@ -113,7 +109,7 @@ class FilePadTasksTest(unittest.TestCase):
             dest_dir=dest_dir, new_file_names=["queried_test_file.txt"])
         t.run_task({})
 
-        with open('queried_test_file.txt.meta.yaml', 'r') as f:
+        with open('queried_test_file.txt.meta.yaml') as f:
             yaml=YAML(typ='safe')
             metadata = yaml.load(f)
         self.assertEqual(metadata["key"], "value")
@@ -216,7 +212,7 @@ class FilePadTasksTest(unittest.TestCase):
             sort_direction=1)
         t.run_task({})
 
-        with open("degenerate_file.txt", "r") as f:
+        with open("degenerate_file.txt") as f:
             self.assertEqual(file_contents[-1],f.read())
 
     def test_getfilesbyquerytask_sort_descending_name_run(self):
@@ -248,7 +244,7 @@ class FilePadTasksTest(unittest.TestCase):
             sort_direction=-1)
         t.run_task({})
 
-        with open("degenerate_file.txt", "r") as f:
+        with open("degenerate_file.txt") as f:
             self.assertEqual(file_contents[0],f.read())
 
         os.remove("degenerate_file.txt")
@@ -257,10 +253,10 @@ class FilePadTasksTest(unittest.TestCase):
         t = AddFilesTask(paths="*.yaml", directory=module_dir)
         t.run_task({})
         write_file_contents, _ = self.fp.get_file(self.paths[0])
-        with open(self.paths[0], "r") as f:
+        with open(self.paths[0]) as f:
             self.assertEqual(write_file_contents, f.read().encode())
         del_file_contents, wdoc = self.fp.get_file(self.paths[1])
-        with open(self.paths[1], "r") as f:
+        with open(self.paths[1]) as f:
             self.assertEqual(del_file_contents, f.read().encode())
 
     def tearDown(self):

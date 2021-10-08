@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.
 """

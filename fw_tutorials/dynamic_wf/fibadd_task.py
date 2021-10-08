@@ -21,12 +21,12 @@ class FibonacciAdderTask(FiretaskBase):
 
         m_sum = smaller + larger
         if m_sum < stop_point:
-            print('The next Fibonacci number is: {}'.format(m_sum))
+            print(f'The next Fibonacci number is: {m_sum}')
             # create a new Fibonacci Adder to add to the workflow
             new_fw = Firework(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
             return FWAction(stored_data={'next_fibnum': m_sum}, additions=new_fw)
 
         else:
-            print('We have now exceeded our limit; (the next Fibonacci number would have been: {})'.format(m_sum))
+            print(f'We have now exceeded our limit; (the next Fibonacci number would have been: {m_sum})')
             return FWAction()
 

@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import warnings
 
 from monty.io import zopen
@@ -86,7 +82,7 @@ class LockedWorkflowError(ValueError):
     pass
 
 
-class WFLock(object):
+class WFLock:
     """
     Lock a Workflow, i.e. for performing update operations
     Raises a LockedWorkflowError if the lock couldn't be acquired withing expire_secs and kill==False.
@@ -130,7 +126,7 @@ class WFLock(object):
                             self.fw_id))
                 if self.kill:  # force lock acquisition
                     self.lp.m_logger.warning(
-                        'FORCIBLY ACQUIRING LOCK, WF: {}'.format(self.fw_id))
+                        f'FORCIBLY ACQUIRING LOCK, WF: {self.fw_id}')
                     links_dict = self.lp.workflows.find_one_and_update(
                         {'nodes': self.fw_id},
                         {'$set': {'locked': True}})
@@ -350,9 +346,9 @@ class LaunchPad(FWSerializable):
             self._restart_ids(1, 1)
             if self.gridfs_fallback is not None:
                 self.db.drop_collection(
-                    "{}.chunks".format(GRIDFS_FALLBACK_COLLECTION))
+                    f"{GRIDFS_FALLBACK_COLLECTION}.chunks")
                 self.db.drop_collection(
-                    "{}.files".format(GRIDFS_FALLBACK_COLLECTION))
+                    f"{GRIDFS_FALLBACK_COLLECTION}.files")
             self.tuneup()
             self.m_logger.info('LaunchPad was RESET.')
         elif not require_password:
@@ -382,9 +378,9 @@ class LaunchPad(FWSerializable):
             fl, ff, inconsistent_fw_ids = self.detect_lostruns(fizzle=True)
             if fl:
                 self.m_logger.info(
-                    'Detected {} FIZZLED launches: {}'.format(len(fl), fl))
+                    f'Detected {len(fl)} FIZZLED launches: {fl}')
                 self.m_logger.info(
-                    'Detected {} FIZZLED FWs: {}'.format(len(ff), ff))
+                    f'Detected {len(ff)} FIZZLED FWs: {ff}')
             if inconsistent_fw_ids:
                 self.m_logger.info(
                     'Detected {} FIZZLED inconsistent fireworks: {}'.format(
@@ -395,7 +391,7 @@ class LaunchPad(FWSerializable):
             ur = self.detect_unreserved(rerun=True)
             if ur:
                 self.m_logger.info(
-                    'Unreserved {} RESERVED launches: {}'.format(len(ur), ur))
+                    f'Unreserved {len(ur)} RESERVED launches: {ur}')
 
             self.m_logger.info('LaunchPad was MAINTAINED.')
 
@@ -403,7 +399,7 @@ class LaunchPad(FWSerializable):
                 break
 
             self.m_logger.debug(
-                'Sleeping for {} secs...'.format(maintain_interval))
+                f'Sleeping for {maintain_interval} secs...')
             time.sleep(maintain_interval)
 
     def add_wf(self, wf, reassign_all=True):
@@ -430,7 +426,7 @@ class LaunchPad(FWSerializable):
         wf._reassign_ids(old_new)
         # insert the WFLinks
         self.workflows.insert_one(wf.to_db_dict())
-        self.m_logger.info('Added a workflow. id_map: {}'.format(old_new))
+        self.m_logger.info(f'Added a workflow. id_map: {old_new}')
         return old_new
 
     def bulk_add_wfs(self, wfs):
@@ -451,7 +447,7 @@ class LaunchPad(FWSerializable):
                else wf for wf in wfs]
 
         # Initialize new firework counter, starting from the next fw id
-        total_num_fws = sum([len(wf.fws) for wf in wfs])
+        total_num_fws = sum(len(wf.fws) for wf in wfs)
         new_fw_counter = self.fw_id_assigner.find_one_and_update(
             {}, {'$inc': {'next_fw_id': total_num_fws}})['next_fw_id']
         for wf in tqdm(wfs):
@@ -510,7 +506,7 @@ class LaunchPad(FWSerializable):
                                                         self.gridfs_fallback)
             return Launch.from_dict(m_launch)
         raise ValueError(
-            'No Launch exists with launch_id: {}'.format(launch_id))
+            f'No Launch exists with launch_id: {launch_id}')
 
     def get_fw_dict_by_id(self, fw_id):
         """
@@ -524,7 +520,7 @@ class LaunchPad(FWSerializable):
         """
         fw_dict = self.fireworks.find_one({'fw_id': fw_id})
         if not fw_dict:
-            raise ValueError('No Firework exists with id: {}'.format(fw_id))
+            raise ValueError(f'No Firework exists with id: {fw_id}')
         # recreate launches from the launch collection
         launches = list(
             self.launches.find({'launch_id': {"$in": fw_dict['launches']}},
@@ -567,7 +563,7 @@ class LaunchPad(FWSerializable):
         links_dict = self.workflows.find_one({'nodes': fw_id})
         if not links_dict:
             raise ValueError(
-                "Could not find a Workflow with fw_id: {}".format(fw_id))
+                f"Could not find a Workflow with fw_id: {fw_id}")
         fws = map(self.get_fw_by_id, links_dict["nodes"])
         return Workflow(fws, links_dict['links'], links_dict['name'],
                         links_dict['metadata'], links_dict['created_on'],
@@ -586,7 +582,7 @@ class LaunchPad(FWSerializable):
         links_dict = self.workflows.find_one({'nodes': fw_id})
         if not links_dict:
             raise ValueError(
-                "Could not find a Workflow with fw_id: {}".format(fw_id))
+                f"Could not find a Workflow with fw_id: {fw_id}")
 
         fws = []
         for fw_id in links_dict['nodes']:
@@ -594,8 +590,8 @@ class LaunchPad(FWSerializable):
                                     self.gridfs_fallback))
         # Check for fw_states in links_dict to conform with pre-optimized workflows
         if 'fw_states' in links_dict:
-            fw_states = dict(
-                [(int(k), v) for (k, v) in links_dict['fw_states'].items()])
+            fw_states = {
+                int(k): v for (k, v) in links_dict['fw_states'].items()}
         else:
             fw_states = None
 
@@ -786,7 +782,7 @@ class LaunchPad(FWSerializable):
 
         if count_only:
             aggregation.append({'$count': 'count'})
-            self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+            self.m_logger.debug(f"Aggregation '{aggregation}'.")
 
             cursor = getattr(self, coll).aggregate(aggregation)
             res = list(cursor)
@@ -800,7 +796,7 @@ class LaunchPad(FWSerializable):
         if limit is not None and limit > 0:
             aggregation.append({'$limit': limit})
 
-        self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+        self.m_logger.debug(f"Aggregation '{aggregation}'.")
         cursor = getattr(self, coll).aggregate(aggregation)
         return [fw["fw_id"] for fw in cursor]
 
@@ -825,7 +821,7 @@ class LaunchPad(FWSerializable):
 
         if count_only:
             aggregation.append({'$count': 'count'})
-            self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+            self.m_logger.debug(f"Aggregation '{aggregation}'.")
 
             cursor = self.workflows.aggregate(aggregation)
             res = list(cursor)
@@ -839,7 +835,7 @@ class LaunchPad(FWSerializable):
         if limit is not None and limit > 0:
             aggregation.append({'$limit': limit})
 
-        self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+        self.m_logger.debug(f"Aggregation '{aggregation}'.")
         cursor = self.workflows.aggregate(aggregation)
 
         return [fw["nodes"][0] for fw in cursor]
@@ -895,7 +891,7 @@ class LaunchPad(FWSerializable):
 
         if count_only:
             aggregation.append({'$count': 'count'})
-            self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+            self.m_logger.debug(f"Aggregation '{aggregation}'.")
 
             cursor = self.workflows.aggregate(aggregation)
             res = list(cursor)
@@ -909,7 +905,7 @@ class LaunchPad(FWSerializable):
         if limit is not None and limit > 0:
             aggregation.append({'$limit': limit})
 
-        self.m_logger.debug("Aggregation '{}'.".format(aggregation))
+        self.m_logger.debug(f"Aggregation '{aggregation}'.")
         cursor = self.workflows.aggregate(aggregation)
         return [fw["fw_id"] for fw in cursor]
 
@@ -968,7 +964,7 @@ class LaunchPad(FWSerializable):
 
         if GRIDFS_FALLBACK_COLLECTION is not None:
             files_collection = self.db[
-                "{}.files".format(GRIDFS_FALLBACK_COLLECTION)]
+                f"{GRIDFS_FALLBACK_COLLECTION}.files"]
             files_collection.create_index('metadata.launch_id', unique=True,
                                           background=bkground)
 
@@ -1170,7 +1166,7 @@ class LaunchPad(FWSerializable):
             bool: True if the firework is unique
         """
         if not self._steal_launches(m_fw):
-            self.m_logger.debug('FW with id: {} is unique!'.format(m_fw.fw_id))
+            self.m_logger.debug(f'FW with id: {m_fw.fw_id} is unique!')
             return True
         self._upsert_fws([m_fw])  # update the DB with the new launches
         self._refresh_wf(
@@ -1527,7 +1523,7 @@ class LaunchPad(FWSerializable):
                                            m_launch.to_db_dict(), upsert=True)
 
         self.m_logger.debug(
-            'Created/updated Launch with launch_id: {}'.format(launch_id))
+            f'Created/updated Launch with launch_id: {launch_id}')
 
         # update the firework's launches
         if not reserved_launch:
@@ -1561,7 +1557,7 @@ class LaunchPad(FWSerializable):
         self.backup_launch_data[m_launch.launch_id] = m_launch.to_db_dict()
         self.backup_fw_data[fw_id] = m_fw.to_db_dict()
 
-        self.m_logger.debug('{} FW with id: {}'.format(m_fw.state, m_fw.fw_id))
+        self.m_logger.debug(f'{m_fw.state} FW with id: {m_fw.fw_id}')
 
         return m_fw, launch_id
 
@@ -1723,7 +1719,7 @@ class LaunchPad(FWSerializable):
                 used_ids.append(new_id)
             # delete/add in bulk
             self.fireworks.delete_many({'fw_id': {'$in': used_ids}})
-            self.fireworks.insert_many((fw.to_db_dict() for fw in fws))
+            self.fireworks.insert_many(fw.to_db_dict() for fw in fws)
         else:
             for fw in fws:
                 if fw.fw_id < 0:
@@ -1757,7 +1753,7 @@ class LaunchPad(FWSerializable):
         m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
 
         if not m_fw:
-            raise ValueError("FW with id: {} not found!".format(fw_id))
+            raise ValueError(f"FW with id: {fw_id} not found!")
 
         # detect FWs that share the same launch. Must do this before rerun
         duplicates = []
@@ -1807,7 +1803,7 @@ class LaunchPad(FWSerializable):
 
         # rerun duplicated FWs
         for f in duplicates:
-            self.m_logger.info("Also rerunning duplicate fw_id: {}".format(f))
+            self.m_logger.info(f"Also rerunning duplicate fw_id: {f}")
             # False for speed, True shouldn't be needed
             r = self.rerun_fw(f, rerun_duplicates=False,
                               recover_launch=recover_launch,
@@ -1849,7 +1845,7 @@ class LaunchPad(FWSerializable):
                 updated_ids = wf.refresh(fw_id)
                 self._update_wf(wf, updated_ids)
         except LockedWorkflowError:
-            self.m_logger.info("fw_id {} locked. Can't refresh!".format(fw_id))
+            self.m_logger.info(f"fw_id {fw_id} locked. Can't refresh!")
         except Exception:
             # some kind of internal error - an example is that fws serialization changed due to
             # code updates and thus the Firework object can no longer be loaded from db description
@@ -1888,7 +1884,7 @@ class LaunchPad(FWSerializable):
 
         assert query_node is not None
         if not self.workflows.find_one({'nodes': query_node}):
-            raise ValueError("BAD QUERY_NODE! {}".format(query_node))
+            raise ValueError(f"BAD QUERY_NODE! {query_node}")
         # redo the links and fw_states
         wf = wf.to_db_dict()
         wf['locked'] = True  # preserve the lock!
@@ -1909,7 +1905,7 @@ class LaunchPad(FWSerializable):
             # get the query that will limit the number of results to check as duplicates
             m_query = m_dupefinder.query(thief_fw.to_dict()["spec"])
             self.m_logger.debug(
-                'Querying for duplicates, fw_id: {}'.format(thief_fw.fw_id))
+                f'Querying for duplicates, fw_id: {thief_fw.fw_id}')
             # iterate through all potential duplicates in the DB
             for potential_match in self.fireworks.find(m_query):
                 self.m_logger.debug(
@@ -2002,7 +1998,7 @@ class LaunchPad(FWSerializable):
         # get the launch directory
         m_launch = self.get_launch_by_id(launch_id)
         try:
-            self.m_logger.debug("RECOVERING fw_id: {}".format(m_launch.fw_id))
+            self.m_logger.debug(f"RECOVERING fw_id: {m_launch.fw_id}")
 
             offline_loc = zpath(os.path.join(m_launch.launch_dir,
                                              "FW_offline.json"))
@@ -2144,7 +2140,7 @@ class LaunchPad(FWSerializable):
         self.m_logger.log(level, message)
 
 
-class LazyFirework(object):
+class LazyFirework:
     """
     A LazyFirework only has the fw_id, and retrieves other data just-in-time.
     This representation can speed up Workflow loading as only "important" FWs need to be
@@ -2197,7 +2193,7 @@ class LazyFirework(object):
         return self.full_fw.to_db_dict()
 
     def __str__(self):
-        return 'LazyFireWork object: (id: {})'.format(self.fw_id)
+        return f'LazyFireWork object: (id: {self.fw_id})'
 
     # Properties that shadow FireWork attributes
 

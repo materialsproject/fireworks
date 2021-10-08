@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module allows you to modify a dict (a spec) using another dict (an instruction).
 The main method of interest is apply_dictmod().
@@ -53,7 +49,7 @@ def arrow_to_dot(input_dict):
 
 
 @singleton
-class DictMods(object):
+class DictMods:
     """
     Class to implement the supported mongo-like modifications on a dict.
     Supported keywords include the following Mongo-based keywords, with the
@@ -187,4 +183,4 @@ def apply_mod(modification, obj):
         if action in DictMods().supported_actions:
             DictMods().supported_actions[action].__call__(obj, settings)
         else:
-            raise ValueError("{} is not a supported action!".format(action))
+            raise ValueError(f"{action} is not a supported action!")

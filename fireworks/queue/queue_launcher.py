@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module is used to submit jobs to a queue on a cluster. It can submit a single job, or
 if used in "rapid-fire" mode, can submit multiple jobs within a directory structure.
@@ -61,7 +57,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
     fw, launch_id = None, None  # only needed in reservation mode
 
     if not os.path.exists(launcher_dir):
-        raise ValueError('Desired launch directory {} does not exist!'.format(launcher_dir))
+        raise ValueError(f'Desired launch directory {launcher_dir} does not exist!')
 
     if '--offline' in qadapter['rocket_launch'] and not reserve:
         raise ValueError("Must use reservation mode (-r option) of qlaunch "
@@ -86,7 +82,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 if not fw:
                     l_logger.info('No jobs exist in the LaunchPad for submission to queue!')
                     return False
-                l_logger.info('reserved FW with fw_id: {}'.format(fw.fw_id))
+                l_logger.info(f'reserved FW with fw_id: {fw.fw_id}')
 
                 # update qadapter job_name based on FW name
                 job_name = get_slug(fw.name)[0:QUEUE_JOBNAME_MAXLEN]
@@ -97,7 +93,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     qadapter.update(fw.spec['_queueadapter'])
 
                 # reservation mode includes --fw_id in rocket launch
-                qadapter['rocket_launch'] += ' --fw_id {}'.format(fw.fw_id)
+                qadapter['rocket_launch'] += f' --fw_id {fw.fw_id}'
 
                 # update launcher_dir if _launch_dir is selected in reserved fw
                 if '_launch_dir' in fw.spec:
@@ -121,7 +117,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                 launcher_dir = create_datestamp_dir(launcher_dir, l_logger, prefix='launcher_')
 
             # move to the launch directory
-            l_logger.info('moving to launch_dir {}'.format(launcher_dir))
+            l_logger.info(f'moving to launch_dir {launcher_dir}')
 
             with cd(launcher_dir):
 
@@ -151,7 +147,7 @@ def launch_rocket_to_queue(launchpad, fworker, qadapter, launcher_dir='.', reser
                     launchpad.cancel_reservation(launch_id)
                     launchpad.forget_offline(launch_id)
                 except Exception:
-                    log_exception(l_logger, 'Error unreserving FW with fw_id {}'.format(fw.fw_id))
+                    log_exception(l_logger, f'Error unreserving FW with fw_id {fw.fw_id}')
 
             return False
 
@@ -192,7 +188,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', block_dir=None, nlau
 
     # make sure launch_dir exists:
     if not os.path.exists(launch_dir):
-        raise ValueError('Desired launch directory {} does not exist!'.format(launch_dir))
+        raise ValueError(f'Desired launch directory {launch_dir} does not exist!')
 
     num_launched = 0
     start_time = datetime.now()
@@ -203,12 +199,12 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', block_dir=None, nlau
         prev_blocks = sorted(glob.glob(os.path.join(launch_dir, 'block_*')), reverse=True)
         if block_dir is not None:
             if not block_dir.startswith("block_"):
-                raise ValueError("Invalid name {}, block dirs must start with 'block_".format(block_dir))
+                raise ValueError(f"Invalid name {block_dir}, block dirs must start with 'block_")
             block_dir = os.path.abspath(os.path.join(launch_dir, block_dir))
             os.mkdir(block_dir, exist_ok=True)
         elif prev_blocks and not ALWAYS_CREATE_NEW_BLOCK:
             block_dir = os.path.abspath(os.path.join(launch_dir, prev_blocks[0]))
-            l_logger.info('Found previous block, using {}'.format(block_dir))
+            l_logger.info(f'Found previous block, using {block_dir}')
         else:
             block_dir = create_datestamp_dir(launch_dir, l_logger)
 
@@ -236,7 +232,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', block_dir=None, nlau
 
                 # switch to new block dir if it got too big
                 if _njobs_in_dir(block_dir) >= njobs_block:
-                    l_logger.info('Block got bigger than {} jobs.'.format(njobs_block))
+                    l_logger.info(f'Block got bigger than {njobs_block} jobs.')
                     block_dir = create_datestamp_dir(launch_dir, l_logger)
 
                 # launch a single job
@@ -253,7 +249,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', block_dir=None, nlau
                                   'jobs: {}'.format(num_launched))
                     break
                 # wait for the queue system to update
-                l_logger.info('Sleeping for {} seconds...zzz...'.format(QUEUE_UPDATE_INTERVAL))
+                l_logger.info(f'Sleeping for {QUEUE_UPDATE_INTERVAL} seconds...zzz...')
                 time.sleep(QUEUE_UPDATE_INTERVAL)
                 jobs_in_queue += 1
                 job_counter += 1
@@ -266,7 +262,7 @@ def rapidfire(launchpad, fworker, qadapter, launch_dir='.', block_dir=None, nlau
                      >= timeout) or (nlaunches == 0 and not launchpad.future_run_exists(fworker)):
                 break
 
-            l_logger.info('Finished a round of launches, sleeping for {} secs'.format(sleep_time))
+            l_logger.info(f'Finished a round of launches, sleeping for {sleep_time} secs')
             time.sleep(sleep_time)
             l_logger.info('Checking for Rockets to run...')
 

@@ -1,5 +1,3 @@
-from __future__ import division
-
 from collections import OrderedDict
 from datetime import datetime
 
@@ -158,9 +156,9 @@ class FWReport:
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
-        ax.set_xlabel("{} ago".format(interval), fontsize=18)
+        ax.set_xlabel(f"{interval} ago", fontsize=18)
         ax.set_xlim([-0.5, num_intervals - 0.5])
-        ax.set_ylabel("number of {}".format(coll), fontsize=18)
+        ax.set_ylabel(f"number of {coll}", fontsize=18)
         ax.tick_params(labelsize=14)
         ax.legend(fontsize=13)
         fig.tight_layout()

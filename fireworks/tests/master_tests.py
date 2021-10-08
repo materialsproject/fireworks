@@ -1,6 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
 from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
 from fireworks.utilities.fw_serializers import load_object, recursive_deserialize
 

@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module aids in serializing and deserializing objects.
 
@@ -56,10 +52,7 @@ __date__ = 'Dec 13, 2012'
 SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
-if sys.version_info > (3, 0, 0):
-    ENCODING_PARAMS = {"encoding": "utf-8"}
-else:
-    ENCODING_PARAMS = {}
+ENCODING_PARAMS = {"encoding": "utf-8"}
 
 try:
     import numpy as np
@@ -95,7 +88,7 @@ def recursive_dict(obj, preserve_unicode=True):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if preserve_unicode and isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
+    if preserve_unicode and isinstance(obj, str) and obj != obj.encode('ascii', 'ignore'):
         return obj
 
     if NUMPY_INSTALLED and isinstance(obj, np.ndarray):
@@ -124,7 +117,7 @@ def _recursive_load(obj):
     if isinstance(obj, (list, tuple)):
         return [_recursive_load(v) for v in obj]
 
-    if isinstance(obj, six.string_types):
+    if isinstance(obj, str):
         try:
             # convert String to datetime if really datetime
             return reconstitute_dates(obj)
@@ -179,8 +172,7 @@ def serialize_fw(func):
     return _decorator
 
 
-@six.add_metaclass(abc.ABCMeta)
-class FWSerializable(object):
+class FWSerializable(metaclass=abc.ABCMeta):
     """
     To create a serializable object within FireWorks, you should subclass this
     class and implement the to_dict() and from_dict() methods.
@@ -240,7 +232,7 @@ class FWSerializable(object):
             return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
                                   allow_unicode=True)
         else:
-            raise ValueError('Unsupported format {}'.format(f_format))
+            raise ValueError(f'Unsupported format {f_format}')
 
     @classmethod
     def from_format(cls, f_str, f_format='json'):
@@ -259,7 +251,7 @@ class FWSerializable(object):
         elif f_format == 'yaml':
             dct = yaml.safe_load(f_str)
         else:
-            raise ValueError('Unsupported format {}'.format(f_format))
+            raise ValueError(f'Unsupported format {f_format}')
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
@@ -372,9 +364,9 @@ def load_object(obj_dict):
         return found_objects[0][0]
     elif len(found_objects) > 0:
         raise ValueError(
-            'load_object() found multiple objects with cls._fw_name {} -- {}'.format(fw_name, found_objects))
+            f'load_object() found multiple objects with cls._fw_name {fw_name} -- {found_objects}')
 
-    raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
+    raise ValueError(f'load_object() could not find a class with cls._fw_name {fw_name}')
 
 
 def load_object_from_file(filename, f_format=None):
@@ -396,7 +388,7 @@ def load_object_from_file(filename, f_format=None):
         elif f_format == 'yaml':
             dct = yaml.safe_load(f)
         else:
-            raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
+            raise ValueError(f'Unknown file format {f_format} cannot be loaded!')
 
     classname = FW_NAME_UPDATES.get(dct['_fw_name'], dct['_fw_name'])
     if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
@@ -427,7 +419,7 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, (list, tuple)):
         return [reconstitute_dates(v) for v in obj_dict]
 
-    if isinstance(obj_dict, six.string_types):
+    if isinstance(obj_dict, str):
         try:
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
         except Exception:

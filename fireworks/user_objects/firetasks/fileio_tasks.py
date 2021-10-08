@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import os
 import shutil
 import traceback
@@ -170,7 +166,7 @@ class FileTransferTask(FiretaskBase):
         """
         try:
             sftp.stat(path)
-        except IOError as e:
+        except OSError as e:
             if e[0] == 2:
                 return False
             raise

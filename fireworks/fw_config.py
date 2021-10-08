@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 A set of global constants for FireWorks (Python code as a config file).
 """
@@ -139,7 +135,7 @@ def override_user_settings():
             elif key == 'ECHO_TEST':
                 print(v)
             elif key not in globals():
-                raise ValueError('Invalid FW_config file has unknown parameter: {}'.format(key))
+                raise ValueError(f'Invalid FW_config file has unknown parameter: {key}')
             else:
                 globals()[key] = v
 
@@ -180,7 +176,7 @@ def write_config(path=None):
 
 
 @singleton
-class FWData(object):
+class FWData:
     """
     This class stores data that a Firetask might want to access, e.g. to see the runtime params
     """

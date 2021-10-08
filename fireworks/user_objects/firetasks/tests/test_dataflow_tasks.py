@@ -70,7 +70,7 @@ class CommandLineTaskTest(unittest.TestCase):
         action = CommandLineTask(**params).run_task(spec)
         filename = action.update_spec['output file']['value']
         self.assertTrue(os.path.exists(filename))
-        with open(filename, 'r') as fptr:
+        with open(filename) as fptr:
             self.assertEqual(fptr.read().strip(), 'Hello world!')
 
         params = {
@@ -101,7 +101,7 @@ class CommandLineTaskTest(unittest.TestCase):
         self.assertEqual(output_string, 'Hello world!')
         output_file = action.update_spec['output file']['value']
         self.assertTrue(os.path.exists(output_file))
-        with open(output_file, 'r') as fptr:
+        with open(output_file) as fptr:
             self.assertEqual(fptr.read().strip(), 'Hello world!')
         os.remove(filename)
         os.remove(output_file)
@@ -265,7 +265,7 @@ class ForeachTaskTest(unittest.TestCase):
             action = detour.tasks[0].run_task(detour.spec)
             ofile = action.mod_spec[0]['_push']['file set']['value']
             self.assertTrue(os.path.exists(ofile))
-            with open(ofile, 'r') as fptr:
+            with open(ofile) as fptr:
                 outputs.append(fptr.read().strip())
             os.remove(ofile)
         ref_str = ' '.join(str(inp) for inp in inputs)

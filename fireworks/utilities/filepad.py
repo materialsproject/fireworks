@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import division, print_function, unicode_literals, absolute_import
-
 """
 This module defines the FilePad class. FilePad is a convenient api to mongodb/gridfs to
 add/delete/update any file of any size.
@@ -145,7 +141,7 @@ class FilePad(MSONable):
         if identifier is not None:
             _, doc = self.get_file(identifier)
             if doc is not None:
-                self.logger.warning("identifier: {} exists. Skipping insertion".format(identifier))
+                self.logger.warning(f"identifier: {identifier} exists. Skipping insertion")
                 return doc["gfs_id"], doc["identifier"]
 
         path = os.path.abspath(path)

@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import six
 
 """
@@ -70,7 +66,7 @@ class FWorker(FWSerializable):
             q['$and'].extend([{'$or': q.pop('$or')}, {'$or': fworker_check}])
         else:
             q['$or'] = fworker_check
-        if self.category and isinstance(self.category, six.string_types):
+        if self.category and isinstance(self.category, str):
             if self.category == "__none__":
                 q['spec._category'] = {"$exists": False}
             else:

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals, division
-
 from fireworks import FiretaskBase, FWAction, Firework
 from fireworks.utilities.fw_utilities import explicit_serialize
 import time
@@ -52,7 +50,7 @@ class SlowAdditionTask(FiretaskBase):
 class SlowTodictTask(FiretaskBase):
     def to_dict(self):
         time.sleep(self.get('seconds', 10))
-        return super(SlowTodictTask, self).to_dict()
+        return super().to_dict()
 
     def run_task(self, fw_spec):
         return FWAction()

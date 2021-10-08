@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module contains the TemplateWriterTask, which writes files based on a template file and a
 Context using Jinja2's templating engine.

@@ -1,6 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
 import json
 
 from multiprocessing import Pool
@@ -132,9 +129,9 @@ class MongoTests(unittest.TestCase):
 
         with open(os.path.join(os.getcwd(), "FW_offline.json")) as f:
             fwo = json.load(f)
-            self.assertEquals(fwo["state"], "COMPLETED")
-            self.assertEquals(fwo["launch_id"], 1)
-            self.assertEquals(fwo["fwaction"], {'update_spec': {}, 'mod_spec': [], 'stored_data': {'returncode': 0, 'stdout': u'test1\n', 'all_returncodes': [0]}, 'exit': False, 'detours': [], 'additions': [], 'defuse_children': False, 'defuse_workflow': False})
+            self.assertEqual(fwo["state"], "COMPLETED")
+            self.assertEqual(fwo["launch_id"], 1)
+            self.assertEqual(fwo["fwaction"], {'update_spec': {}, 'mod_spec': [], 'stored_data': {'returncode': 0, 'stdout': 'test1\n', 'all_returncodes': [0]}, 'exit': False, 'detours': [], 'additions': [], 'defuse_children': False, 'defuse_workflow': False})
 
         with open(os.path.join(os.getcwd(), "FW_ping.json")) as f:
             fwp = json.load(f)
@@ -187,7 +184,7 @@ class MongoTests(unittest.TestCase):
 
         # confirm the sum in the child job
         child_fw = self.lp.get_fw_by_id(last_fw_id)
-        self.assertEqual(set(child_fw.spec['input_array']), set([2, 3, 4]))
+        self.assertEqual(set(child_fw.spec['input_array']), {2, 3, 4})
         self.assertEqual(child_fw.launches[0].action.stored_data["sum"], 9)
 
     def test_multi_fw(self):
@@ -299,11 +296,11 @@ class MongoTests(unittest.TestCase):
         self.lp.add_wf(Workflow([fw1, fw2]))
         rapidfire(self.lp)
         links = self.lp.get_wf_by_fw_id(1).links
-        self.assertEqual(set(links[1]), set([2, 3, 4, 5]))
-        self.assertEqual(set(links[2]), set([]))
-        self.assertEqual(set(links[3]), set([2]))
-        self.assertEqual(set(links[4]), set([2]))
-        self.assertEqual(set(links[5]), set([2]))
+        self.assertEqual(set(links[1]), {2, 3, 4, 5})
+        self.assertEqual(set(links[2]), set())
+        self.assertEqual(set(links[3]), {2})
+        self.assertEqual(set(links[4]), {2})
+        self.assertEqual(set(links[5]), {2})
 
     def test_fw_env(self):
         t = DummyFWEnvTask()

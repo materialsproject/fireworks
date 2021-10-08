@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import six
 
 """
@@ -18,7 +14,6 @@ import ast
 import json
 import datetime
 import traceback
-from six.moves import input, zip
 from flask import g
 
 from pymongo import DESCENDING, ASCENDING
@@ -52,7 +47,7 @@ def pw_check(ids, args, skip_pw=False):
     if len(ids) > PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime('%Y-%m-%d')
         if not args.password:
-            if input('Are you sure? This will modify {} entries. (Y/N)'.format(len(ids)))[0].upper() == 'Y':
+            if input(f'Are you sure? This will modify {len(ids)} entries. (Y/N)')[0].upper() == 'Y':
                 args.password = datetime.datetime.now().strftime('%Y-%m-%d')
             else:
                 print('Operation aborted by user.')
@@ -74,7 +69,7 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     Returns:
         list of ids
     """
-    if args.fw_id and sum([bool(x) for x in [args.name, args.state, args.query]]) >= 1:
+    if args.fw_id and sum(bool(x) for x in [args.name, args.state, args.query]) >= 1:
         raise ValueError('Cannot specify both fw_id and name/state/query)')
 
     query = {}
@@ -157,7 +152,7 @@ def init_yaml(args):
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, default, helptext in fields:
-        val = input("Enter {} parameter. (default: {}). {}: ".format(k, default, helptext))
+        val = input(f"Enter {k} parameter. (default: {default}). {helptext}: ")
         doc[k] = val if val else default
     if "port" in doc:
         doc["port"] = int(doc["port"])  # enforce the port as an int
@@ -166,7 +161,7 @@ def init_yaml(args):
 
     lp = LaunchPad.from_dict(doc)
     lp.to_file(args.config_file)
-    print("\nConfiguration written to {}!".format(args.config_file))
+    print(f"\nConfiguration written to {args.config_file}!")
 
 
 def reset(args):
@@ -261,12 +256,12 @@ def get_fw_ids_helper(lp, args, count_only=None):
     Returns:
         [int]: resulting fw_ids or count of fws in query.
     """
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
+    if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
+    if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) == 0:
         args.query = '{}'
         args.display_format = args.display_format if args.display_format else 'ids'
-    if sum([bool(x) for x in [args.fw_id, args.name, args.qid]]) > 1:
+    if sum(bool(x) for x in [args.fw_id, args.name, args.qid]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, qid)')
     else:
         args.display_format = args.display_format if args.display_format else 'more'
@@ -338,9 +333,9 @@ def get_fws(args):
 def get_fws_in_wfs(args):
     # get_wfs
     lp = get_lp(args)
-    if sum([bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]]) > 1:
+    if sum(bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]]) == 0:
+    if sum(bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]) == 0:
         args.wf_query = '{}'
 
     if args.wf_fw_id:
@@ -353,12 +348,12 @@ def get_fws_in_wfs(args):
         wf_query = ast.literal_eval(args.wf_query)
 
     # get_fws
-    if sum([bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]]) > 1:
+    if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]]) == 0:
+    if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]) == 0:
         args.fw_query = '{}'
         args.display_format = args.display_format if args.display_format else 'ids'
-    if sum([bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]]) > 1:
+    if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, qid)')
     else:
         args.display_format = args.display_format if args.display_format else 'more'
@@ -405,9 +400,9 @@ def update_fws(args):
 
 def get_wfs(args):
     lp = get_lp(args)
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) > 1:
+    if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) > 1:
         raise ValueError('Please specify exactly one of (fw_id, name, state, query)')
-    if sum([bool(x) for x in [args.fw_id, args.name, args.state, args.query]]) == 0:
+    if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) == 0:
         args.query = '{}'
         args.display_format = args.display_format if args.display_format else 'ids'
     else:
@@ -460,8 +455,8 @@ def delete_wfs(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         lp.delete_wf(f, delete_launch_dirs=args.delete_launch_dirs)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished deleting {} WFs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished deleting {len(fw_ids)} WFs')
 
 
 def get_children(links, start, max_depth):
@@ -482,11 +477,11 @@ def detect_lostruns(args):
     fl, ff, fi = lp.detect_lostruns(expiration_secs=args.time, fizzle=args.fizzle, rerun=args.rerun,
                                     max_runtime=args.max_runtime, min_runtime=args.min_runtime,
                                     refresh=args.refresh, query=query, launch_query=launch_query)
-    lp.m_logger.debug('Detected {} lost launches: {}'.format(len(fl), fl))
-    lp.m_logger.info('Detected {} lost FWs: {}'.format(len(ff), ff))
+    lp.m_logger.debug(f'Detected {len(fl)} lost launches: {fl}')
+    lp.m_logger.info(f'Detected {len(ff)} lost FWs: {ff}')
     if args.display_format is not None and args.display_format != 'none':
         print_fws(ff, lp, args)
-    lp.m_logger.info('Detected {} inconsistent FWs: {}'.format(len(fi), fi))
+    lp.m_logger.info(f'Detected {len(fi)} inconsistent FWs: {fi}')
     if args.display_format is not None and args.display_format != 'none':
         print_fws(fi, lp, args)
     if len(ff) > 0 and not args.fizzle and not args.rerun:
@@ -520,8 +515,8 @@ def defuse_wfs(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         lp.defuse_wf(f, defuse_all_states=args.defuse_all_states)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished defusing {} FWs.'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished defusing {len(fw_ids)} FWs.')
     if not args.defuse_all_states:
         lp.m_logger.info('Note: FIZZLED and COMPLETED FWs were not defused. '
                          'Use the --defuse_all_states option to force this (or rerun FIZZLED FWs first).')
@@ -532,8 +527,8 @@ def pause_wfs(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         lp.pause_wf(f)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished defusing {} FWs.'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished defusing {len(fw_ids)} FWs.')
 
 
 def archive(args):
@@ -541,8 +536,8 @@ def archive(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         lp.archive_wf(f)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished archiving {} WFs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished archiving {len(fw_ids)} WFs')
 
 
 def reignite_wfs(args):
@@ -550,8 +545,8 @@ def reignite_wfs(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         lp.reignite_wf(f)
-        lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
-    lp.m_logger.info('Finished reigniting {} Workflows'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed Workflow with fw_id: {f}')
+    lp.m_logger.info(f'Finished reigniting {len(fw_ids)} Workflows')
 
 
 def defuse_fws(args):
@@ -559,8 +554,8 @@ def defuse_fws(args):
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
         lp.defuse_fw(f)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished defusing {} FWs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished defusing {len(fw_ids)} FWs')
 
 
 def pause_fws(args):
@@ -568,8 +563,8 @@ def pause_fws(args):
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
         lp.pause_fw(f)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished pausing {} FWs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished pausing {len(fw_ids)} FWs')
 
 
 def reignite_fws(args):
@@ -577,8 +572,8 @@ def reignite_fws(args):
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
         lp.reignite_fw(f)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished reigniting {} FWs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished reigniting {len(fw_ids)} FWs')
 
 
 def resume_fws(args):
@@ -586,8 +581,8 @@ def resume_fws(args):
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
         lp.resume_fw(f)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished resuming {} FWs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished resuming {len(fw_ids)} FWs')
 
 
 def rerun_fws(args):
@@ -603,8 +598,8 @@ def rerun_fws(args):
         launch_ids = [None] * len(fw_ids)
     for f, l in zip(fw_ids, launch_ids):
         lp.rerun_fw(int(f), recover_launch=l, recover_mode=args.recover_mode)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished setting {} FWs to rerun'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished setting {len(fw_ids)} FWs to rerun')
 
 
 def refresh(args):
@@ -614,8 +609,8 @@ def refresh(args):
         wf = lp.get_wf_by_fw_id_lzyfw(f)
         for fw_id in wf.root_fw_ids:
             lp._refresh_wf(fw_id)
-        lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
-    lp.m_logger.info('Finished refreshing {} Workflows'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed Workflow with fw_id: {f}')
+    lp.m_logger.info(f'Finished refreshing {len(fw_ids)} Workflows')
 
 
 def unlock(args):
@@ -623,9 +618,9 @@ def unlock(args):
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
         with WFLock(lp, f, expire_secs=0, kill=True):
-            lp.m_logger.warning('FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {}'.format(f))
-            lp.m_logger.debug('Processed Workflow with fw_id: {}'.format(f))
-    lp.m_logger.info('Finished unlocking {} Workflows'.format(len(fw_ids)))
+            lp.m_logger.warning(f'FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {f}')
+            lp.m_logger.debug(f'Processed Workflow with fw_id: {f}')
+    lp.m_logger.info(f'Finished unlocking {len(fw_ids)} Workflows')
 
 
 def get_qid(args):
@@ -653,8 +648,8 @@ def set_priority(args):
         fw_ids = list(all_fw_ids)
     for f in fw_ids:
         lp.set_priority(f, args.priority)
-        lp.m_logger.debug("Processed fw_id {}".format(f))
-    lp.m_logger.info("Finished setting priorities of {} FWs".format(len(fw_ids)))
+        lp.m_logger.debug(f"Processed fw_id {f}")
+    lp.m_logger.info(f"Finished setting priorities of {len(fw_ids)} FWs")
 
 
 def _open_webbrowser(url):
@@ -684,7 +679,7 @@ def webgui(args):
 
     if not args.server_mode:
         from threading import Thread
-        url = "http://{}:{}".format(args.host, args.port)
+        url = f"http://{args.host}:{args.port}"
         p1 = Thread(target=_open_webbrowser, args=(url,))
         p1.start()
         app.run(host=args.host, port=args.port, debug=args.debug)
@@ -699,7 +694,7 @@ def webgui(args):
                      "Install using `pip install gunicorn`.")
         nworkers = args.nworkers if args.nworkers else number_of_workers()
         options = {
-            'bind': '%s:%s' % (args.host, args.port),
+            'bind': f'{args.host}:{args.port}',
             'workers': nworkers,
         }
         StandaloneApplication(app, options).run()
@@ -739,7 +734,7 @@ def recover_offline(args):
     lp.m_logger.info("FINISHED recovering offline runs. {} job(s) recovered: {}".format(
         len(recovered_fws), recovered_fws))
     if failed_fws:
-        lp.m_logger.info("FAILED to recover offline fw_ids: {}".format(failed_fws))
+        lp.m_logger.info(f"FAILED to recover offline fw_ids: {failed_fws}")
 
 
 def forget_offline(args):
@@ -747,8 +742,8 @@ def forget_offline(args):
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
         lp.forget_offline(f, launch_mode=False)
-        lp.m_logger.debug('Processed fw_id: {}'.format(f))
-    lp.m_logger.info('Finished forget_offine, processed {} FWs'.format(len(fw_ids)))
+        lp.m_logger.debug(f'Processed fw_id: {f}')
+    lp.m_logger.info(f'Finished forget_offine, processed {len(fw_ids)} FWs')
 
 
 def report(args):
@@ -757,7 +752,7 @@ def report(args):
     fwr = FWReport(lp)
     stats = fwr.get_stats(coll=args.collection, interval=args.interval,
                           num_intervals=args.num_intervals, additional_query=query)
-    title_str = "Stats on {}".format(args.collection)
+    title_str = f"Stats on {args.collection}"
     title_dec = "-" * len(title_str)
     print(title_dec)
     print(title_str)
@@ -770,7 +765,7 @@ def introspect(args):
     lp = get_lp(args)
     isp = Introspector(lp)
     for coll in ['launches', 'tasks', 'fireworks', 'workflows']:
-        print('generating report for {}...please wait...'.format(coll))
+        print(f'generating report for {coll}...please wait...')
         print('')
         table = isp.introspect_fizzled(coll=coll, threshold=args.threshold, limit=args.max)
         isp.print_report(table, coll)
@@ -799,7 +794,7 @@ def track_fws(args):
                     output.append(str(t))
         if output:
             name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})['name']
-            output.insert(0, '# FW id: {}, FW name: {}'.format(f, name))
+            output.insert(0, f'# FW id: {f}, FW name: {name}')
             if first_print:
                 first_print = False
             else:
@@ -853,7 +848,7 @@ def arg_positive_int(value):
         if ivalue < 1:
             raise ValueError()
     except ValueError:
-        raise ArgumentTypeError("{} is not a positive integer".format(value))
+        raise ArgumentTypeError(f"{value} is not a positive integer")
     return ivalue
 
 
@@ -1426,7 +1421,7 @@ def lpad():
     else:
         for opt in fw_id_options:
             if hasattr(args, opt) and getattr(args, opt) is not None and \
-                    isinstance(getattr(args, opt), six.string_types):
+                    isinstance(getattr(args, opt), str):
                 if "," in getattr(args, opt):
                     setattr(args, opt, [int(x) for x in getattr(args, opt).split(",")])
                 else:

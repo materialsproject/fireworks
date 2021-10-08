@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals, division
-
 __author__ = "Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
 __version__ = "0.1"
@@ -168,7 +164,7 @@ class LaunchPadTest(unittest.TestCase):
                            name='lorem wf')
             wfs.extend([wf3, wf5])
         self.lp.bulk_add_wfs(wfs)
-        num_fws_total = sum([len(wf.fws) for wf in wfs])
+        num_fws_total = sum(len(wf.fws) for wf in wfs)
         distinct_fw_ids = self.lp.fireworks.distinct('fw_id', {'name': 'lorem'})
         self.assertEqual(len(distinct_fw_ids), num_fws_total)
         num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem wf"}))
@@ -248,13 +244,13 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # Give names to fw_ids
         self.zeus_fw_id = 2
-        self.zeus_child_fw_ids = set([7,8,9,11,14])
-        self.lapetus_desc_fw_ids = set([6,10,12,13])
-        self.zeus_sib_fw_ids = set([3,4,5])
+        self.zeus_child_fw_ids = {7,8,9,11,14}
+        self.lapetus_desc_fw_ids = {6,10,12,13}
+        self.zeus_sib_fw_ids = {3,4,5}
         self.par_fw_id = 1
         self.all_ids = self.zeus_child_fw_ids | self.lapetus_desc_fw_ids | \
-                       self.zeus_sib_fw_ids | set([self.zeus_fw_id]) | \
-                       set([self.par_fw_id])
+                       self.zeus_sib_fw_ids | {self.zeus_fw_id} | \
+                       {self.par_fw_id}
 
         self.old_wd = os.getcwd()
 
@@ -745,13 +741,13 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         # Give names to fw_ids
         self.zeus_fw_id = 2
-        self.zeus_child_fw_ids = set([7,8,9,11,14])
-        self.lapetus_desc_fw_ids = set([6,10,12,13])
-        self.zeus_sib_fw_ids = set([3,4,5])
+        self.zeus_child_fw_ids = {7,8,9,11,14}
+        self.lapetus_desc_fw_ids = {6,10,12,13}
+        self.zeus_sib_fw_ids = {3,4,5}
         self.par_fw_id = 1
         self.all_ids = self.zeus_child_fw_ids | self.lapetus_desc_fw_ids | \
-                       self.zeus_sib_fw_ids | set([self.zeus_fw_id]) | \
-                       set([self.par_fw_id])
+                       self.zeus_sib_fw_ids | {self.zeus_fw_id} | \
+                       {self.par_fw_id}
 
         self.old_wd = os.getcwd()
 

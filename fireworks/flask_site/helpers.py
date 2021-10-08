@@ -24,5 +24,5 @@ def wf_filt_given_fw_filt(filt, lp):
 def uses_index(filt, coll):
     ii = coll.index_information()
     fields_filtered = set(filt.keys())
-    fields_indexed = set(v['key'][0][0] for v in ii.values())
+    fields_indexed = {v['key'][0][0] for v in ii.values()}
     return len(fields_filtered & fields_indexed) > 0

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals, absolute_import
-
 # Based on http://docs.gunicorn.org/en/19.6.0/custom.html
 
 import multiprocessing
@@ -18,14 +16,14 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
     def __init__(self, app, options=None):
         self.options = options or {}
         self.application = app
-        super(StandaloneApplication, self).__init__()
+        super().__init__()
 
     def load_config(self):
-        config = dict([
-            (key, value) for key, value in iteritems(self.options)
+        config = {
+            key: value for key, value in self.options.items()
             if key in self.cfg.settings and value is not None
-        ])
-        for key, value in iteritems(config):
+        }
+        for key, value in config.items():
             self.cfg.set(key.lower(), value)
 
     def load(self):
@@ -34,7 +32,7 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
 if __name__ == '__main__':
     options = {
-        'bind': '%s:%s' % ('127.0.0.1', '8080'),
+        'bind': '{}:{}'.format('127.0.0.1', '8080'),
         'workers': number_of_workers(),
     }
     StandaloneApplication(handler_app, options).run()

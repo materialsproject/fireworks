@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import os
 
 from fireworks.core.firework import FiretaskBase

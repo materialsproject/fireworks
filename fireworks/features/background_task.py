@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, serialize_fw, \
     recursive_deserialize
 
@@ -13,7 +9,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 10, 2014'
 
 
-class BackgroundTask(FWSerializable, object):
+class BackgroundTask(FWSerializable):
     _fw_name = 'BackgroundTask'
 
     def __init__(self, tasks, num_launches=0, sleep_time=60, run_on_finish=False):

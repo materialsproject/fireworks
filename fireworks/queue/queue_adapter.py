@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """
@@ -29,7 +25,7 @@ __email__ = 'ajain@lbl.gov'
 __date__ = 'Feb 28, 2013'
 
 
-class Command(object):
+class Command:
     """
     Helper class -  run subprocess commands in a different thread with TIMEOUT option.
     From https://gist.github.com/kirpit/1306188
@@ -48,7 +44,7 @@ class Command(object):
         Args:
             command: command to run
         """
-        if isinstance(command, six.string_types):
+        if isinstance(command, str):
             command = shlex.split(command)
         self.command = command
 

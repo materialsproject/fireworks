@@ -1,6 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
 import copy
 
 import sys
@@ -120,7 +117,7 @@ class CommonAdapter(QueueAdapterBase):
             if self.get('queue'):
                 status_cmd.extend(['-q', self['queue']])
         elif self.q_type == "MOAB":
-            status_cmd.extend(['-w', "user={}".format(username)])
+            status_cmd.extend(['-w', f"user={username}"])
             # no queue restriction command known for QUEST supercomputer, i.e., -p option doesn't work
         else:
             status_cmd.extend(['-u', username])
@@ -197,7 +194,7 @@ class CommonAdapter(QueueAdapterBase):
                 'Cannot find script file located at: {}'.format(
                     script_file))
 
-        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+        queue_logger = self.get_qlogger(f'qadapter.{self.q_name}')
         submit_cmd = self.q_commands[self.q_type]["submit_cmd"]
         # submit the job
         try:
@@ -209,7 +206,7 @@ class CommonAdapter(QueueAdapterBase):
             # as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
             # when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
             if self.q_type == 'LoadSharingFacility':
-                with open(script_file, 'r') as inputFile:
+                with open(script_file) as inputFile:
                     p = subprocess.Popen([submit_cmd], stdin=inputFile, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             else:
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -233,7 +230,7 @@ class CommonAdapter(QueueAdapterBase):
                 msgs = [
                     'Error in job submission with {n} file {f} and cmd {c}'.format(
                         n=self.q_name, f=script_file, c=cmd),
-                    'The error response reads: {}'.format(p.stderr.read())]
+                    f'The error response reads: {p.stderr.read()}']
                 log_fancy(queue_logger, msgs, 'error')
 
         except Exception as ex:
@@ -249,7 +246,7 @@ class CommonAdapter(QueueAdapterBase):
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue
         """
-        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+        queue_logger = self.get_qlogger(f'qadapter.{self.q_name}')
 
         # initialize username
         if username is None:
@@ -269,13 +266,13 @@ class CommonAdapter(QueueAdapterBase):
 
         # there's a problem talking to qstat server?
         msgs = ['Error trying to get the number of jobs in the queue',
-                'The error response reads: {}'.format(p[2])]
+                f'The error response reads: {p[2]}']
         log_fancy(queue_logger, msgs, 'error')
         return None
 
     @staticmethod
     def _get_default_template_file(q_type):
-        return os.path.join(os.path.dirname(__file__), '{}_template.txt'.format(q_type))
+        return os.path.join(os.path.dirname(__file__), f'{q_type}_template.txt')
 
     @serialize_fw
     def to_dict(self):

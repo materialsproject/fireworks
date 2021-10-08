@@ -85,7 +85,7 @@ class ScriptTask(FiretaskBase):
             return FWAction(stored_data=output, defuse_children=True)
 
         elif self.fizzle_bad_rc and sum(returncodes) != 0:
-            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncodes))
+            raise RuntimeError(f'ScriptTask fizzled! Return code: {returncodes}')
 
         return FWAction(stored_data=output)
 

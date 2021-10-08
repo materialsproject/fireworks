@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 A runnable script to launch Job Packing (Multiple) Rockets
 """
@@ -88,7 +84,7 @@ def mlaunch():
     if args.nodefile:
         if args.nodefile in os.environ:
             args.nodefile = os.environ[args.nodefile]
-        with open(args.nodefile, 'r') as f:
+        with open(args.nodefile) as f:
             total_node_list = [line.strip() for line in f.readlines()]
 
     launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,

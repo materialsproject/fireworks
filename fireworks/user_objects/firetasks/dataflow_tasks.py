@@ -187,7 +187,7 @@ class CommandLineTask(FireTaskBase):
                         assert arg['target'] is not None
                         assert arg['target']['type'] == 'stdin'
                         if arg['source']['type'] == 'path':
-                            stdin = open(arg['source']['value'], 'r')
+                            stdin = open(arg['source']['value'])
                         elif arg['source']['type'] == 'data':
                             stdin = PIPE
                             stdininp = str(arg['source']['value']).encode()
@@ -391,7 +391,7 @@ class ImportDataTask(FireTaskBase):
 
         fmt = filename.split('.')[-1]
         assert fmt in ['json', 'yaml']
-        with open(filename, 'r') as inp:
+        with open(filename) as inp:
             data = json.load(inp) if fmt == 'json' else yaml.safe_load(inp)
 
         leaf = reduce(operator.getitem, maplist[:-1], fw_spec)

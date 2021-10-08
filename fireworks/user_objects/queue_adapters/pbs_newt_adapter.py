@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import os
 from fireworks.queue.queue_adapter import QueueAdapterBase
 import getpass
@@ -30,7 +26,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
     def submit_to_queue(self, script_file):
         self._init_auth_session()
         jobfile = os.path.join(os.getcwd(), script_file)
-        r = PBSAdapterNEWT._session.post("https://newt.nersc.gov/newt/queue/{}/".format(self.resource),
+        r = PBSAdapterNEWT._session.post(f"https://newt.nersc.gov/newt/queue/{self.resource}/",
                                          {"jobfile": jobfile})
         return int(r.json()['jobid'].split('.')[0])
 
@@ -38,7 +34,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
         if username is None:
             username = getpass.getuser()
         from requests import Session  # hide import in case optional library not installed
-        r = Session().get("https://newt.nersc.gov/newt/queue/{}/?user={}".format(self.resource, username))
+        r = Session().get(f"https://newt.nersc.gov/newt/queue/{self.resource}/?user={username}")
         return len(r.json())
 
     @staticmethod

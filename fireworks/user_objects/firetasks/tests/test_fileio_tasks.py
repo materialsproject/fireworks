@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 __author__ = 'Shyue Ping Ong'
 __copyright__ = 'Copyright 2013, The Materials Project'
 __version__ = '0.1'
@@ -31,13 +27,13 @@ class FileWriteDeleteTest(unittest.TestCase):
         t = load_object_from_file(os.path.join(module_dir, "write.yaml"))
         t.run_task({})
         for i in range(2):
-            self.assertTrue(os.path.exists("myfile{}".format(i + 1)))
+            self.assertTrue(os.path.exists(f"myfile{i + 1}"))
 
         #Use delete task to remove the files created.
         t = load_object_from_file(os.path.join(module_dir, "delete.yaml"))
         t.run_task({})
         for i in range(2):
-            self.assertFalse(os.path.exists("myfile{}".format(i + 1)))
+            self.assertFalse(os.path.exists(f"myfile{i + 1}"))
 
 
 class CompressDecompressArchiveDirTest(unittest.TestCase):

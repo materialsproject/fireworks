@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
@@ -187,7 +183,7 @@ def qlaunch():
                     connect_kwargs=connect_kwargs) as conn:
                 for r in args.remote_config_dir:
                     r = os.path.expanduser(r)
-                    conn.run("mkdir -p {}".format(r))
+                    conn.run(f"mkdir -p {r}")
                     for f in os.listdir(args.config_dir):
                         if os.path.isfile(f):
                             conn.put(f, os.path.join(r, f))
@@ -195,7 +191,7 @@ def qlaunch():
     for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
         v = getattr(args, k, None)
         if v != rapid_parser.get_default(k):
-            non_default.append("--{} {}".format(k, v))
+            non_default.append(f"--{k} {v}")
     non_default = " ".join(non_default)
 
     pre_non_default = []

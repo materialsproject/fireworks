@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module contains methods for launching several Rockets in a parallel environment
 """
@@ -85,7 +81,7 @@ def rapidfire_process(fworker, nlaunches, sleep, loglvl, port, node_list, sub_np
         live_ids = list(set(launch_ids) - {None})
         if len(live_ids) > 0:
             # Some other sub jobs are still running
-            log_multi(l_logger, 'Sleeping for {} secs before resubmit sub job'.format(sleep_time))
+            log_multi(l_logger, f'Sleeping for {sleep_time} secs before resubmit sub job')
             time.sleep(sleep_time)
             log_multi(l_logger, 'Resubmit sub job')
             rapidfire(launchpad, fworker=fworker, m_dir=None, nlaunches=nlaunches,
@@ -178,7 +174,7 @@ def launch_multiprocess(launchpad, fworker, loglvl, nlaunches, num_jobs, sleep_t
         l_dir = launchpad.get_logdir() if launchpad else None
         l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
         if host in total_node_list:
-            log_multi(l_logger, "Remove the current node \"{}\" from compute node".format(host))
+            log_multi(l_logger, f"Remove the current node \"{host}\" from compute node")
             total_node_list.remove(host)
         else:
             log_multi(l_logger, "The current node is not in the node list, keep the node list as is")

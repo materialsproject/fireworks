@@ -171,7 +171,7 @@ def fw_details(fw_id):
     try:
         int(fw_id)
     except Exception:
-        raise ValueError("Invalid fw_id: {}".format(fw_id))
+        raise ValueError(f"Invalid fw_id: {fw_id}")
     fw = app.lp.get_fw_dict_by_id(fw_id)
     fw = json.loads(
         json.dumps(fw, default=DATETIME_HANDLER))  # formats ObjectIds
@@ -184,7 +184,7 @@ def workflow_json(wf_id):
     try:
         int(wf_id)
     except ValueError:
-        raise ValueError("Invalid fw_id: {}".format(wf_id))
+        raise ValueError(f"Invalid fw_id: {wf_id}")
 
     # TODO: modify so this doesn't duplicate the .css file that contains the same colors
 
@@ -215,7 +215,7 @@ def wf_details(wf_id):
     try:
         int(wf_id)
     except ValueError:
-        raise ValueError("Invalid fw_id: {}".format(wf_id))
+        raise ValueError(f"Invalid fw_id: {wf_id}")
     wf = app.lp.get_wf_summary_dict(wf_id, mode="all")
     wf = json.loads(
         json.dumps(wf, default=DATETIME_HANDLER))  # formats ObjectIds
@@ -292,7 +292,7 @@ def wf_metadata_find(key, value, state):
         value = int(value)
     except ValueError:
         pass
-    q = {'metadata.{}'.format(key): value}
+    q = {f'metadata.{key}': value}
     state_mixin = {} if state == "total" else {"state": state}
     q.update(state_mixin)
     q = _addq_WF(q)
@@ -365,12 +365,12 @@ def parse_querystr(querystr, coll):
         d = json.loads(querystr)
         assert isinstance(d, dict)
     except Exception:
-        flash("`{}` is not a valid JSON object / Python dict.".format(querystr))
+        flash(f"`{querystr}` is not a valid JSON object / Python dict.")
         return {}
     try:
         h = coll.find_one(d)
     except Exception:
-        flash("`{}` is not a valid MongoDB query doc.".format(querystr))
+        flash(f"`{querystr}` is not a valid MongoDB query doc.")
         return {}
     if WEBSERVER_PERFWARNINGS and not fwapp_util.uses_index(d, coll):
         flash("`{}` does not use a mongo index. "

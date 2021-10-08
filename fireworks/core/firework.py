@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 from copy import deepcopy
 
 """
@@ -42,8 +38,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-@add_metaclass(abc.ABCMeta)
-class FiretaskBase(defaultdict, FWSerializable):
+class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
     """
     FiretaskBase is used like an abstract class that defines a computing task
     (Firetask). All Firetasks should inherit from FiretaskBase.
@@ -62,7 +57,7 @@ class FiretaskBase(defaultdict, FWSerializable):
 
         for k in required_params:
             if k not in self:
-                raise RuntimeError("{}: Required parameter {} not specified!".format(self, k))
+                raise RuntimeError(f"{self}: Required parameter {k} not specified!")
 
         if self.optional_params is not None:
             allowed_params = required_params + self.optional_params
@@ -107,7 +102,7 @@ class FiretaskBase(defaultdict, FWSerializable):
         return cls(m_dict)
 
     def __repr__(self):
-        return '<{}>:{}'.format(self.fw_name, dict(self))
+        return f'<{self.fw_name}>:{dict(self)}'
 
     # not strictly needed here for pickle/unpickle, but complements __setstate__
     def __getstate__(self):
@@ -342,7 +337,7 @@ class Firework(FWSerializable):
         return 'Firework object: (id: %i , name: %s)' % (self.fw_id, self.fw_name)
 
 
-class Tracker(FWSerializable, object):
+class Tracker(FWSerializable):
     """
     A Tracker monitors a file and returns the last N lines for updating the Launch object.
     """
@@ -402,10 +397,10 @@ class Tracker(FWSerializable, object):
                        m_dict.get('allow_zipped', False))
 
     def __str__(self):
-        return '### Filename: {}\n{}'.format(self.filename, self.content)
+        return f'### Filename: {self.filename}\n{self.content}'
 
 
-class Launch(FWSerializable, object):
+class Launch(FWSerializable):
     """
     A Launch encapsulates data about a specific run of a Firework on a computing resource.
     """
@@ -426,7 +421,7 @@ class Launch(FWSerializable, object):
             fw_id (int): id of the Firework this Launch is running
         """
         if state not in Firework.STATE_RANKS:
-            raise ValueError("Invalid launch state: {}".format(state))
+            raise ValueError(f"Invalid launch state: {state}")
         self.launch_dir = launch_dir
         self.fworker = fworker or FWorker()
         self.host = host or get_my_host()
@@ -668,7 +663,7 @@ class Workflow(FWSerializable):
             Returns:
                 dict
             """
-            return dict([(str(k), v) for (k, v) in self.items()])
+            return {str(k): v for (k, v) in self.items()}
 
         def to_db_dict(self):
             """
@@ -678,8 +673,8 @@ class Workflow(FWSerializable):
                 dict
             """
             m_dict = {
-                'links': dict([(str(k), v) for (k, v) in self.items()]),
-                'parent_links': dict([(str(k), v) for (k, v) in self.parent_links.items()]),
+                'links': {str(k): v for (k, v) in self.items()},
+                'parent_links': {str(k): v for (k, v) in self.parent_links.items()},
                 'nodes': self.nodes}
             return m_dict
 
@@ -960,7 +955,7 @@ class Workflow(FWSerializable):
         for new_fw in new_wf.fws:
             if new_fw.fw_id >= 0:  # note: this is also used later in the 'detour' code
                 raise ValueError(
-                    'FireWorks to add must use a negative fw_id! Got fw_id: {}'.format(new_fw.fw_id))
+                    f'FireWorks to add must use a negative fw_id! Got fw_id: {new_fw.fw_id}')
 
         # completed checks - go ahead and append
         for new_fw in new_wf.fws:
@@ -1134,7 +1129,7 @@ class Workflow(FWSerializable):
         m_dict['name'] = self.name
         m_dict['created_on'] = self.created_on
         m_dict['updated_on'] = self.updated_on
-        m_dict['fw_states'] = dict([(str(k), v) for (k, v) in self.fw_states.items()])
+        m_dict['fw_states'] = {str(k): v for (k, v) in self.fw_states.items()}
         return m_dict
 
     def to_display_dict(self):
@@ -1265,7 +1260,7 @@ class Workflow(FWSerializable):
                         updated_on=fw.updated_on)
 
     def __str__(self):
-        return 'Workflow object: (fw_ids: {} , name: {})'.format(self.id_fw.keys(), self.name)
+        return f'Workflow object: (fw_ids: {self.id_fw.keys()} , name: {self.name})'
 
     def remove_fws(self, fw_ids):
         """

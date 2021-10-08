@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 from monty.os.path import zpath
 
 """
@@ -152,7 +148,7 @@ class Rocket:
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
-            print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
+            print(f"No FireWorks are ready to run and match query! {self.fworker.query}")
             return False
 
         final_state = None
@@ -463,7 +459,7 @@ class Rocket:
                 if files:
                     filepath = sorted(files)[-1]
                     fwaction.mod_spec.append({
-                        "_set": {"_files_prev->{:s}".format(k): filepath}
+                        "_set": {f"_files_prev->{k:s}": filepath}
                     })
 
         return fwaction

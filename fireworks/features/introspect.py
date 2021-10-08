@@ -1,5 +1,3 @@
-from __future__ import division
-
 from collections import defaultdict
 from pymongo import DESCENDING
 from tabulate import tabulate
@@ -23,7 +21,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
     """
     if isinstance(curr_doc, dict):
         if curr_recurs > max_recurs:
-            return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
+            return [f"{separator_str}<TRUNCATED_OBJECT>"]
         my_list = []
         for k in curr_doc:
             for val in flatten_to_keys(curr_doc[k], curr_recurs + 1, max_recurs):
@@ -36,7 +34,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
         my_list = []
         for k in curr_doc:
             if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
-                return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
+                return [f"{separator_str}<TRUNCATED_OBJECT>"]
             my_list.append(separator_str + str(k))
         return my_list
 
@@ -133,7 +131,7 @@ class Introspector:
             elif state_key == "action.stored_data._exception._stacktrace":
                 stacktrace = doc.get("action", {}).get("stored_data", {}).get("_exception", {}).get("_stacktrace",
                                                                                                     "<NO_STACKTRACE>")
-                fizzled_keys.append('_stacktrace{}{}'.format(separator_str, stacktrace))
+                fizzled_keys.append(f'_stacktrace{separator_str}{stacktrace}')
             else:
                 fizzled_keys.extend(flatten_to_keys(doc[state_key]))
 
@@ -176,7 +174,7 @@ class Introspector:
         elif coll.lower() in ["launches"]:
             header_txt = "launches.actions.stored_data._exception._stacktrace"
 
-        header_txt = "Introspection report for {}".format(header_txt)
+        header_txt = f"Introspection report for {header_txt}"
         print('=' * len(header_txt))
         print(header_txt)
         print('=' * len(header_txt))
@@ -185,6 +183,6 @@ class Introspector:
             print(tabulate(table, headers=['key', 'value', '#C', '#F', '%C - %F']))
         else:
             for row in table:
-                print('----{} Failures have the following stack trace--------------'.format(row[3]))
+                print(f'----{row[3]} Failures have the following stack trace--------------')
                 print(row[1])
                 print('')

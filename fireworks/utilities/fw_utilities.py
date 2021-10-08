@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import logging
 import datetime
 from multiprocessing.managers import BaseManager
@@ -76,7 +74,7 @@ def log_multi(m_logger, msg, log_lvl='info'):
     """
     _log_fnc = getattr(m_logger, log_lvl.lower())
     if FWData().MULTIPROCESSING:
-        _log_fnc("{} : ({})".format(msg, multiprocessing.current_process().name))
+        _log_fnc(f"{msg} : ({multiprocessing.current_process().name})")
     else:
         _log_fnc(msg)
 
@@ -94,7 +92,7 @@ def log_fancy(m_logger, msgs, log_lvl='info', add_traceback=False):
         msgs ([str]): a String or iterable of Strings
         add_traceback (bool): add traceback text, useful when logging exceptions (default False)
     """
-    if isinstance(msgs, six.string_types):
+    if isinstance(msgs, str):
         msgs = [msgs]
 
     _log_fnc = getattr(m_logger, log_lvl.lower())
@@ -155,7 +153,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix='block_'):
                 full_path = None
                 continue
 
-    l_logger.info('Created new dir {}'.format(full_path))
+    l_logger.info(f'Created new dir {full_path}')
     return full_path
 
 
@@ -180,7 +178,7 @@ def get_my_host():
 
 
 def get_slug(m_str):
-    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    valid_chars = f"-_.() {string.ascii_letters}{string.digits}"
     m_str = ''.join(c for c in m_str if c in valid_chars)
     return m_str.replace(' ', '_')
 
@@ -207,7 +205,7 @@ class DataServer(BaseManager):
         return m
 
 
-class NestedClassGetter(object):
+class NestedClassGetter:
     """
     Used to help pickle inner classes, e.g. see Workflow.Links
     When called with the containing class as the first argument,
@@ -228,7 +226,7 @@ def explicit_serialize(o):
     if module_name == '__main__':
         import __main__
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
-    o._fw_name = '{{%s.%s}}' % (module_name, o.__name__)
+    o._fw_name = f'{{{{{module_name}.{o.__name__}}}}}'
     return o
 
 

@@ -4,7 +4,6 @@ import os
 import shutil
 import sys
 import yaml
-from six.moves import input
 from argparse import ArgumentParser
 
 from fireworks.core.firework import Firework
@@ -76,9 +75,9 @@ def do_cleanup(args):
         for name, fwid, d, files in to_delete:
             try:
                 shutil.rmtree(d)
-                print("Deleted {}".format(d))
+                print(f"Deleted {d}")
             except Exception as ex:
-                print("Unable to delete {} because of {}".format(d, ex))
+                print(f"Unable to delete {d} because of {ex}")
     else:
         print("Canceled!")
 

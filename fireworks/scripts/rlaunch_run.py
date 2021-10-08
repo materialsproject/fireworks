@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """
@@ -28,7 +24,7 @@ __date__ = 'Feb 7, 2013'
 
 
 def handle_interrupt(signum, frame):
-    sys.stderr.write("Interruped by signal {:d}\n".format(signum))
+    sys.stderr.write(f"Interruped by signal {signum:d}\n")
     sys.exit(1)
 
 
@@ -144,7 +140,7 @@ def rlaunch():
         if args.nodefile:
             if args.nodefile in os.environ:
                 args.nodefile = os.environ[args.nodefile]
-            with open(args.nodefile, 'r') as f:
+            with open(args.nodefile) as f:
                 total_node_list = [line.strip() for line in f.readlines()]
         launch_multiprocess(launchpad, fworker, args.loglvl, args.nlaunches, args.num_jobs,
                             args.sleep, total_node_list, args.ppn, timeout=args.timeout,
