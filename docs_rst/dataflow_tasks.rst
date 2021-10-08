@@ -2,8 +2,8 @@
 Using the dataflow Firetasks
 ============================
 
-This group includes custom Firetasks to manage dataflow between Fireworks. The 
-input data and output data are stored in the Firework **spec** and passed to the 
+This group includes custom Firetasks to manage dataflow between Fireworks. The
+input data and output data are stored in the Firework **spec** and passed to the
 subsequent Firetasks and Fireworks via *FWAction* objects. The module includes:
 
 * CommandLineTask
@@ -42,7 +42,7 @@ Required parameters
 The ``command`` key is a representation of the command as to be used with the
 *Subprocess* package. The optional keys ``inputs[0]``, ``inputs[1]``, ...,
 ``outputs[0]``, ``outputs[0]``, ..., are
-the actual keys specified in ``inputs`` and ``outputs``. 
+the actual keys specified in ``inputs`` and ``outputs``.
 The dictionaries ``dict1``, ``dict2``, etc. have the following schema::
 
     {
@@ -101,7 +101,7 @@ command line::
     links: {}
     metadata: {}
 
-The STDOUT output is collected and stored in a new file under ``/tmp``. The 
+The STDOUT output is collected and stored in a new file under ``/tmp``. The
 full path of the file is stored in **spec** of the current Firework and all
 child Fireworks with key ``output file``.
 
@@ -114,7 +114,7 @@ this Firework and its children by inserting a parallel section of child
 Fireworks. The number of the spawned parallel Fireworks is determined by the
 length of the list specified by the ``split`` parameter or the optional
 ``number of chunks`` parameter. Each child Firework contains a Firetask (of
-classes PyTask, CommandLineTask or any Firetask with ``inputs`` parameter) 
+classes PyTask, CommandLineTask or any Firetask with ``inputs`` parameter)
 which processes one element (or one chunk) from this list. The output is passed
 to the **spec** of the Firework(s) right after the detour using a push method,
 i.e. the outputs of all parallel Fireworks are collected in a list specified
@@ -127,7 +127,7 @@ Required parameters
 -------------------
 
 * **task** *(dict)*: a dictionary representation of the Firetask
-* **split** *(str)*: a key in **spec** which contains input data to be 
+* **split** *(str)*: a key in **spec** which contains input data to be
   distributed over the parallel child Fireworks. This key must also be available
   both in the ``inputs`` parameter of the Firetask and in the **spec**.
 
@@ -187,7 +187,7 @@ PyTask::
     metadata: {}
     name: Workflow for many sorts of coffee
 
-In this example the function ``auxiliary.printurn`` prints and returns all 
+In this example the function ``auxiliary.printurn`` prints and returns all
 its arguments::
 
     def printurn(*args):
@@ -202,7 +202,7 @@ its arguments::
         print(result)
         return result
 
-The module ``auxiliary``, i.e. the file ``auxiliary.py`` must be in 
+The module ``auxiliary``, i.e. the file ``auxiliary.py`` must be in
 ``$PYTHONPATH``.
 
 
