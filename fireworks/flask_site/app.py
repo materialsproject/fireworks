@@ -2,19 +2,28 @@ import json
 import os
 from functools import wraps
 
-from flask import Flask, render_template, request, Response, make_response
-from flask import redirect, url_for, abort, flash, session
+from flask import (
+    Flask,
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_paginate import Pagination
 from pymongo import DESCENDING
 
+import fireworks.flask_site.helpers as fwapp_util
 from fireworks import Firework
-from fireworks.features.fw_report import FWReport
+from fireworks.features.fw_report import FWReport, state_to_color
+from fireworks.flask_site.util import jsonify
+from fireworks.fw_config import WEBSERVER_PERFWARNINGS
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.fw_config import WEBSERVER_PERFWARNINGS
-import fireworks.flask_site.helpers as fwapp_util
-from fireworks.flask_site.util import jsonify
-from fireworks.features.fw_report import state_to_color
 
 app = Flask(__name__)
 app.use_reloader = True

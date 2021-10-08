@@ -1,12 +1,17 @@
 __author__ = "Kiran Mathew, Johannes Hoermann"
 
-import unittest
 import os
+import unittest
+
 from ruamel.yaml import YAML
 
-from fireworks.user_objects.firetasks.filepad_tasks import AddFilesTask, DeleteFilesTask, GetFilesTask, GetFilesByQueryTask
+from fireworks.user_objects.firetasks.filepad_tasks import (
+    AddFilesTask,
+    DeleteFilesTask,
+    GetFilesByQueryTask,
+    GetFilesTask,
+)
 from fireworks.utilities.filepad import FilePad
-
 
 module_dir = os.path.abspath(os.path.dirname(__file__))
 

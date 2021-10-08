@@ -1,4 +1,9 @@
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, serialize_fw, recursive_deserialize
+from fireworks.utilities.fw_serializers import (
+    FWSerializable,
+    recursive_deserialize,
+    recursive_serialize,
+    serialize_fw,
+)
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2014, The Materials Project"

@@ -1,4 +1,5 @@
 import unittest
+
 from fireworks.features.introspect import flatten_to_keys, separator_str
 
 __author__ = "Anubhav Jain <ajain@lbl.gov>"

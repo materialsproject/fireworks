@@ -1,4 +1,4 @@
-from fireworks import explicit_serialize, FiretaskBase
+from fireworks import FiretaskBase, explicit_serialize
 
 
 @explicit_serialize

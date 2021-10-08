@@ -5,12 +5,16 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "1/6/14"
 
-import unittest
 import os
+import unittest
 
-from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask, CompressDirTask, ArchiveDirTask, DecompressDirTask
+from fireworks.user_objects.firetasks.fileio_tasks import (
+    ArchiveDirTask,
+    CompressDirTask,
+    DecompressDirTask,
+    FileWriteTask,
+)
 from fireworks.utilities.fw_serializers import load_object_from_file
-
 
 module_dir = os.path.abspath(os.path.dirname(__file__))
 

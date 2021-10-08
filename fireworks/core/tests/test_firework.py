@@ -12,7 +12,7 @@ __date__ = "2/26/14"
 
 import unittest
 
-from fireworks.core.firework import Firework, Workflow, FiretaskBase, FWAction
+from fireworks.core.firework import FiretaskBase, Firework, FWAction, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
 

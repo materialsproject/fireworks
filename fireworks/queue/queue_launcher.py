@@ -10,6 +10,8 @@ import os
 import time
 from datetime import datetime
 
+from monty.os import cd, makedirs_p
+
 from fireworks.core.fworker import FWorker
 from fireworks.fw_config import (
     ALWAYS_CREATE_NEW_BLOCK,
@@ -21,8 +23,12 @@ from fireworks.fw_config import (
     SUBMIT_SCRIPT_NAME,
 )
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception
-from monty.os import cd, makedirs_p
+from fireworks.utilities.fw_utilities import (
+    create_datestamp_dir,
+    get_fw_logger,
+    get_slug,
+    log_exception,
+)
 
 __author__ = "Anubhav Jain, Michael Kocher"
 __copyright__ = "Copyright 2012, The Materials Project"

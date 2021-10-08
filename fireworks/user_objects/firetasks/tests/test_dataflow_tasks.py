@@ -9,11 +9,13 @@ import os
 import unittest
 import uuid
 
-from fireworks.user_objects.firetasks.dataflow_tasks import CommandLineTask
-from fireworks.user_objects.firetasks.dataflow_tasks import ForeachTask
-from fireworks.user_objects.firetasks.dataflow_tasks import JoinDictTask
-from fireworks.user_objects.firetasks.dataflow_tasks import JoinListTask
-from fireworks.user_objects.firetasks.dataflow_tasks import ImportDataTask
+from fireworks.user_objects.firetasks.dataflow_tasks import (
+    CommandLineTask,
+    ForeachTask,
+    ImportDataTask,
+    JoinDictTask,
+    JoinListTask,
+)
 
 
 def afunc(array, power):
@@ -287,6 +289,7 @@ class ImportDataTaskTest(unittest.TestCase):
     def test_import_data_task(self):
         """loads data from a file into spec"""
         import json
+
         import ruamel.yaml as yaml
 
         temperature = {"value": 273.15, "units": "Kelvin"}

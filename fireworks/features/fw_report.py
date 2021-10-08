@@ -2,6 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+
 from fireworks import Firework
 
 __author__ = "Anubhav Jain <ajain@lbl.gov>"

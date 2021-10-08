@@ -2,10 +2,10 @@
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
 
-from argparse import ArgumentParser
 import os
 import sys
 import time
+from argparse import ArgumentParser
 
 try:
     import fabric
@@ -17,10 +17,15 @@ except ImportError:
 else:
     HAS_FABRIC = True
 
-from fireworks.fw_config import QUEUEADAPTER_LOC, CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.queue.queue_launcher import rapidfire, launch_rocket_to_queue
+from fireworks.fw_config import (
+    CONFIG_FILE_DIR,
+    FWORKER_LOC,
+    LAUNCHPAD_LOC,
+    QUEUEADAPTER_LOC,
+)
+from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
 __authors__ = "Anubhav Jain, Shyue Ping Ong"

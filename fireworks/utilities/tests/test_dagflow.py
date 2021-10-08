@@ -5,9 +5,10 @@ __copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
 __email__ = "ivan.kondov@kit.edu"
 
 import os
-import uuid
 import unittest
-from fireworks import PyTask, Firework, Workflow
+import uuid
+
+from fireworks import Firework, PyTask, Workflow
 
 
 class DAGFlowTest(unittest.TestCase):
@@ -135,8 +136,8 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_non_dataflow_tasks(self):
         """non-dataflow tasks using outputs and inputs keys do not fail"""
-        from fireworks.utilities.dagflow import DAGFlow
         from fireworks.core.firework import FireTaskBase
+        from fireworks.utilities.dagflow import DAGFlow
 
         class NonDataFlowTask(FireTaskBase):
             """a firetask class for testing"""

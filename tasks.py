@@ -1,14 +1,15 @@
 # Copyright (c) Pymatgen Development Team.
 # Distributed under the terms of the MIT License.
 
-import os
 import json
+import os
 import webbrowser
+
 import requests
 from invoke import task
-from fireworks import __version__
 from monty.os import cd
 
+from fireworks import __version__
 
 """
 Deployment file to facilitate releases.

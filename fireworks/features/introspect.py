@@ -1,4 +1,5 @@
 from collections import defaultdict
+
 from pymongo import DESCENDING
 from tabulate import tabulate
 

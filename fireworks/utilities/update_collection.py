@@ -1,6 +1,7 @@
+import datetime
+
 from bson.json_util import dumps, loads
 from tqdm import tqdm
-import datetime
 
 __author__ = "Alireza Faghaninia, Anubhav Jain"
 __email__ = "alireza.faghaninia@gmail.com, ajain@lbl.gov"

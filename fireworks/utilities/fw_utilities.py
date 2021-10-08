@@ -1,16 +1,21 @@
-import logging
+import contextlib
 import datetime
-from multiprocessing.managers import BaseManager
+import errno
+import logging
+import multiprocessing
+import os
+import socket
 import string
 import sys
-import os
 import traceback
-import socket
-import multiprocessing
-import errno
-import contextlib
+from multiprocessing.managers import BaseManager
 
-from fireworks.fw_config import FWData, FW_BLOCK_FORMAT, DS_PASSWORD, FW_LOGGING_FORMAT
+from fireworks.fw_config import (
+    DS_PASSWORD,
+    FW_BLOCK_FORMAT,
+    FW_LOGGING_FORMAT,
+    FWData,
+)
 
 __author__ = "Anubhav Jain, Xiaohui Qu"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -138,8 +143,8 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
         full_path = get_path()
         if os.path.exists(full_path):
             full_path = None
-            import time
             import random
+            import time
 
             time.sleep(random.random() / 3 + 0.1)
             continue

@@ -2,37 +2,37 @@
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
 
-from argparse import ArgumentParser, ArgumentTypeError
+import ast
 import copy
+import datetime
+import json
 import os
 import re
 import time
-import ast
-import json
-import datetime
 import traceback
+from argparse import ArgumentParser, ArgumentTypeError
 
-from pymongo import DESCENDING, ASCENDING
 import ruamel.yaml as yaml
+from pymongo import ASCENDING, DESCENDING
 
-from fireworks.fw_config import (
-    RESERVATION_EXPIRATION_SECS,
-    RUN_EXPIRATION_SECS,
-    PW_CHECK_NUM,
-    MAINTAIN_INTERVAL,
-    CONFIG_FILE_DIR,
-    LAUNCHPAD_LOC,
-    FWORKER_LOC,
-    WEBSERVER_PORT,
-    WEBSERVER_HOST,
-)
+from fireworks import FW_INSTALL_DIR
+from fireworks import __version__ as FW_VERSION
+from fireworks.core.firework import Firework, Workflow
+from fireworks.core.fworker import FWorker
+from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.features.fw_report import FWReport
 from fireworks.features.introspect import Introspector
-from fireworks.core.launchpad import LaunchPad, WFLock
-from fireworks.core.firework import Workflow, Firework
-from fireworks.core.fworker import FWorker
-from fireworks import __version__ as FW_VERSION
-from fireworks import FW_INSTALL_DIR
+from fireworks.fw_config import (
+    CONFIG_FILE_DIR,
+    FWORKER_LOC,
+    LAUNCHPAD_LOC,
+    MAINTAIN_INTERVAL,
+    PW_CHECK_NUM,
+    RESERVATION_EXPIRATION_SECS,
+    RUN_EXPIRATION_SECS,
+    WEBSERVER_HOST,
+    WEBSERVER_PORT,
+)
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
@@ -720,7 +720,10 @@ def webgui(args):
         p1.join()
     else:
         try:
-            from fireworks.flask_site.gunicorn import StandaloneApplication, number_of_workers
+            from fireworks.flask_site.gunicorn import (
+                StandaloneApplication,
+                number_of_workers,
+            )
         except ImportError:
             import sys
 

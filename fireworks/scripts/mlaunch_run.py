@@ -2,13 +2,13 @@
 A runnable script to launch Job Packing (Multiple) Rockets
 """
 
-from argparse import ArgumentParser
 import os
+from argparse import ArgumentParser
 
-from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"

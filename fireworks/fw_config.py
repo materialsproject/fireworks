@@ -3,8 +3,9 @@ A set of global constants for FireWorks (Python code as a config file).
 """
 
 import os
-from monty.serialization import loadfn, dumpfn
+
 from monty.design_patterns import singleton
+from monty.serialization import dumpfn, loadfn
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"

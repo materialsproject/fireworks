@@ -1,8 +1,9 @@
 """ TODO: Modify unittest doc. """
 
-import unittest
 import os
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
+import unittest
+
+from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
 
 __author__ = "Shyue Ping Ong, Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"

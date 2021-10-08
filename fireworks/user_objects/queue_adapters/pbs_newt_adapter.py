@@ -1,6 +1,7 @@
-import os
-from fireworks.queue.queue_adapter import QueueAdapterBase
 import getpass
+import os
+
+from fireworks.queue.queue_adapter import QueueAdapterBase
 
 __author__ = "Shreyas Cholia, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -32,8 +33,9 @@ class PBSAdapterNEWT(QueueAdapterBase):
 
     def get_njobs_in_queue(self, username=None):
         if username is None:
-            username = getpass.getuser()
-        from requests import Session  # hide import in case optional library not installed
+            username = getpass.getus
+        # hide import in case optional library not installeder()
+        from requests import Session
 
         r = Session().get(f"https://newt.nersc.gov/newt/queue/{self.resource}/?user={username}")
         return len(r.json())
@@ -44,7 +46,8 @@ class PBSAdapterNEWT(QueueAdapterBase):
         Initialize the _session class var with an authorized session. Asks for a /
         password in new sessions, skips PW check for previously authenticated sessions
         """
-        from requests import Session  # hide import in case optional library not installed
+        # hide import in case optional library not installed
+        from requests import Session
 
         username = getpass.getuser()
         if not PBSAdapterNEWT._session:

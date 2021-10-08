@@ -10,12 +10,12 @@ __maintainer__ = "Bharat medasani"
 __email__ = "mbkumar@gmail.com"
 __date__ = "8/12/14"
 
-import unittest
-import os
 import glob
+import os
 import shutil
+import unittest
 
-from fireworks.core.firework import Firework, Tracker, FWorker, Workflow
+from fireworks.core.firework import Firework, FWorker, Tracker, Workflow
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket
 from fireworks.features.multi_launcher import launch_multiprocess

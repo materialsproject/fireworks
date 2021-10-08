@@ -11,21 +11,29 @@ This module contains some of the most central FireWorks classes:
         a job completes.
 """
 
-from collections import defaultdict, OrderedDict
 import abc
-from datetime import datetime
 import os
 import pprint
+from collections import OrderedDict, defaultdict
+from datetime import datetime
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 
-
-from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
 from fireworks.core.fworker import FWorker
+from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, serialize_fw
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, NestedClassGetter
+from fireworks.utilities.fw_serializers import (
+    FWSerializable,
+    recursive_deserialize,
+    recursive_serialize,
+    serialize_fw,
+)
+from fireworks.utilities.fw_utilities import (
+    NestedClassGetter,
+    get_my_host,
+    get_my_ip,
+)
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"

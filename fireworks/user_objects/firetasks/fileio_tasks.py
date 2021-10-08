@@ -1,8 +1,8 @@
 import os
 import shutil
-import traceback
-from os.path import expandvars, expanduser, abspath
 import time
+import traceback
+from os.path import abspath, expanduser, expandvars
 
 from monty.shutil import compress_dir, decompress_dir
 

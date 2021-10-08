@@ -3,13 +3,14 @@
 import os
 import shutil
 import sys
-import yaml
 from argparse import ArgumentParser
 
+import yaml
+
 from fireworks.core.firework import Firework
+from fireworks.core.launchpad import LaunchPad
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
-from fireworks.core.launchpad import LaunchPad
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"

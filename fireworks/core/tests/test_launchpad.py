@@ -5,26 +5,31 @@ __maintainer__ = "Bharat Medasani"
 __email__ = "mbkumar@gmail.com"
 __date__ = "7/01/14"
 
-import unittest
-import time
-import os
-import glob
-import shutil
 import datetime
-from multiprocessing import Process
 import filecmp
+import glob
+import os
+import shutil
+import time
+import unittest
+from multiprocessing import Process
 
+from monty.os import cd
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
 
-from fireworks import Firework, Workflow, LaunchPad, FWorker
-from fireworks.core.rocket_launcher import rapidfire, launch_rocket
-from fireworks.queue.queue_launcher import setup_offline_job
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
-from fireworks.core.tests.tasks import ExceptionTestTask, ExecutionCounterTask, SlowAdditionTask, WaitWFLockTask
-from fireworks.core.tests.tasks import DetoursTask
 import fireworks.fw_config
-from monty.os import cd
+from fireworks import Firework, FWorker, LaunchPad, Workflow
+from fireworks.core.rocket_launcher import launch_rocket, rapidfire
+from fireworks.core.tests.tasks import (
+    DetoursTask,
+    ExceptionTestTask,
+    ExecutionCounterTask,
+    SlowAdditionTask,
+    WaitWFLockTask,
+)
+from fireworks.queue.queue_launcher import setup_offline_job
+from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
 
 TESTDB_NAME = "fireworks_unittest"
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))

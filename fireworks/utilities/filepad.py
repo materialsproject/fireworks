@@ -3,15 +3,14 @@ This module defines the FilePad class. FilePad is a convenient api to mongodb/gr
 add/delete/update any file of any size.
 """
 
-import zlib
 import os
+import zlib
 
-from pymongo import MongoClient
-import pymongo
 import gridfs
-
-from monty.serialization import loadfn
+import pymongo
 from monty.json import MSONable
+from monty.serialization import loadfn
+from pymongo import MongoClient
 
 from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS
 from fireworks.utilities.fw_utilities import get_fw_logger

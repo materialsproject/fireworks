@@ -5,8 +5,9 @@ __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 
 import sys
+
 from fireworks import Firework
-from fireworks.core.firework import FWAction, FireTaskBase
+from fireworks.core.firework import FireTaskBase, FWAction
 from fireworks.utilities.fw_serializers import load_object
 
 if sys.version_info[0] > 2:
@@ -159,8 +160,8 @@ class CommandLineTask(FireTaskBase):
         """
         import os
         import uuid
-        from subprocess import Popen, PIPE
         from shutil import copyfile
+        from subprocess import PIPE, Popen
 
         def set_binding(arg):
             argstr = ""
@@ -377,9 +378,10 @@ class ImportDataTask(FireTaskBase):
     optional_params = []
 
     def run_task(self, fw_spec):
-        from functools import reduce
-        import operator
         import json
+        import operator
+        from functools import reduce
+
         import ruamel.yaml as yaml
 
         filename = self["filename"]

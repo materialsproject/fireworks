@@ -1,16 +1,16 @@
 import copy
 
-
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
 queues.
 """
 import getpass
 import os
-import stat
 import re
+import stat
 import subprocess
-from fireworks.queue.queue_adapter import QueueAdapterBase, Command
+
+from fireworks.queue.queue_adapter import Command, QueueAdapterBase
 from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
 

@@ -1,27 +1,32 @@
+import glob
 import json
-
-from multiprocessing import Pool
 import os
 import random
 import shutil
-import glob
-import unittest
 import time
-from fireworks import explicit_serialize, FWAction
-from fireworks.core.firework import Firework, Workflow, FiretaskBase
+import unittest
+from multiprocessing import Pool
+
+from fireworks import FWAction, explicit_serialize
+from fireworks.core.firework import FiretaskBase, Firework, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.background_task import BackgroundTask
+from fireworks.features.stats import FWStats
 from fireworks.queue.queue_launcher import setup_offline_job
+from fireworks.tests.tasks import DummyFWEnvTask, DummyJobPassTask, DummyLPTask
 from fireworks.user_objects.dupefinders.dupefinder_exact import DupeFinderExact
-from fireworks.user_objects.firetasks.fileio_tasks import FileTransferTask, FileWriteTask
-from fireworks.user_objects.firetasks.script_task import ScriptTask, PyTask
-from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
+from fireworks.user_objects.firetasks.fileio_tasks import (
+    FileTransferTask,
+    FileWriteTask,
+)
+from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
+from fireworks.user_objects.firetasks.templatewriter_task import (
+    TemplateWriterTask,
+)
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
-from fireworks.tests.tasks import DummyFWEnvTask, DummyJobPassTask, DummyLPTask
-from fireworks.features.stats import FWStats
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"

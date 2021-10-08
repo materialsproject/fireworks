@@ -5,11 +5,10 @@ import shutil
 import unittest
 from unittest import TestCase
 
-from fireworks import LaunchPad, Firework, FWorker
+from fireworks import Firework, FWorker, LaunchPad
 from fireworks.core.firework import Workflow
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.user_objects.firetasks.script_task import ScriptTask
-
 
 __author__ = "xiaohuiqu"
 

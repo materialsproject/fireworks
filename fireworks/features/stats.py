@@ -2,10 +2,11 @@
 Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.
 """
 
-from datetime import datetime, timedelta
-from dateutil import parser
-from bson.son import SON
 from collections import defaultdict
+from datetime import datetime, timedelta
+
+from bson.son import SON
+from dateutil import parser
 
 from fireworks import LaunchPad
 

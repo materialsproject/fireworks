@@ -1,7 +1,8 @@
-from fireworks import FiretaskBase, FWAction, Firework
-from fireworks.utilities.fw_utilities import explicit_serialize
 import time
 from unittest import SkipTest
+
+from fireworks import FiretaskBase, Firework, FWAction
+from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 class SerializableException(Exception):

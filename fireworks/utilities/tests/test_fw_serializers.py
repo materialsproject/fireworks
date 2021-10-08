@@ -1,9 +1,15 @@
 # from __future__ import unicode_literals
 
-from fireworks.user_objects.firetasks.unittest_tasks import TestSerializer, ExportTestSerializer
-from fireworks.utilities.fw_serializers import load_object, FWSerializable, recursive_dict
+from fireworks.user_objects.firetasks.unittest_tasks import (
+    ExportTestSerializer,
+    TestSerializer,
+)
+from fireworks.utilities.fw_serializers import (
+    FWSerializable,
+    load_object,
+    recursive_dict,
+)
 from fireworks.utilities.fw_utilities import explicit_serialize
-
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -12,11 +18,10 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 26, 2013"
 
-import unittest
 import datetime
-import os
 import json
-
+import os
+import unittest
 
 ENCODING_PARAMS = {"encoding": "utf-8"}
 

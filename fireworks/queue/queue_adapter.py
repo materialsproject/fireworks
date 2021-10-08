@@ -2,14 +2,14 @@
 This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
 """
 
+import abc
+import collections
 import os
 import shlex
 import string
 import subprocess
 import threading
 import traceback
-import abc
-import collections
 import warnings
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw

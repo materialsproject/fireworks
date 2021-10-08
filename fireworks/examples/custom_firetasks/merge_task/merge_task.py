@@ -1,4 +1,11 @@
-from fireworks import LaunchPad, explicit_serialize, FiretaskBase, FWAction, Firework, Workflow
+from fireworks import (
+    FiretaskBase,
+    Firework,
+    FWAction,
+    LaunchPad,
+    Workflow,
+    explicit_serialize,
+)
 from fireworks.core.rocket_launcher import rapidfire
 
 __author__ = "Anubhav Jain <ajain@lbl.gov>"

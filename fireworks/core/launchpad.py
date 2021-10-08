@@ -10,35 +10,43 @@ import datetime
 import json
 import os
 import random
+import shutil
 import time
 import traceback
-import shutil
-import gridfs
 from collections import OrderedDict, defaultdict
 from itertools import chain
-from tqdm import tqdm
+
+import gridfs
 from bson import ObjectId
-
-from pymongo import MongoClient
-from pymongo import DESCENDING, ASCENDING
-from pymongo.errors import DocumentTooLarge
 from monty.serialization import loadfn
+from pymongo import ASCENDING, DESCENDING, MongoClient
+from pymongo.errors import DocumentTooLarge
+from tqdm import tqdm
 
+from fireworks.core.firework import (
+    Firework,
+    FWAction,
+    Launch,
+    Tracker,
+    Workflow,
+)
 from fireworks.fw_config import (
+    GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
-    SORT_FWS,
+    MAINTAIN_INTERVAL,
+    MONGO_SOCKET_TIMEOUT_MS,
     RESERVATION_EXPIRATION_SECS,
     RUN_EXPIRATION_SECS,
-    MAINTAIN_INTERVAL,
-    WFLOCK_EXPIRATION_SECS,
+    SORT_FWS,
     WFLOCK_EXPIRATION_KILL,
-    MONGO_SOCKET_TIMEOUT_MS,
-    GRIDFS_FALLBACK_COLLECTION,
+    WFLOCK_EXPIRATION_SECS,
 )
-from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates
-from fireworks.core.firework import Firework, Launch, Workflow, FWAction, Tracker
+from fireworks.utilities.fw_serializers import (
+    FWSerializable,
+    reconstitute_dates,
+    recursive_dict,
+)
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.utilities.fw_serializers import recursive_dict
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"

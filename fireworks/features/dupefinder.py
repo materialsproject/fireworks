@@ -2,7 +2,7 @@
 This module contains the base class for implementing Duplicate Finders
 """
 
-from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"

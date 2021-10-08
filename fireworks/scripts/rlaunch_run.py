@@ -2,17 +2,21 @@
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """
 
-from argparse import ArgumentParser
 import os
 import signal
 import sys
+from argparse import ArgumentParser
 
-from fireworks.fw_config import LAUNCHPAD_LOC, FWORKER_LOC, CONFIG_FILE_DIR
-from fireworks.core.launchpad import LaunchPad
 from fireworks.core.fworker import FWorker
-from fireworks.core.rocket_launcher import rapidfire, launch_rocket
-from fireworks.utilities.fw_utilities import get_my_host, get_my_ip, get_fw_logger
+from fireworks.core.launchpad import LaunchPad
+from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.multi_launcher import launch_multiprocess
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
+from fireworks.utilities.fw_utilities import (
+    get_fw_logger,
+    get_my_host,
+    get_my_ip,
+)
 
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"

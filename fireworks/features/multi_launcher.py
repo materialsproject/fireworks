@@ -2,14 +2,24 @@
 This module contains methods for launching several Rockets in a parallel environment
 """
 
-from multiprocessing import Process, Manager
 import os
 import threading
 import time
+from multiprocessing import Manager, Process
 
-from fireworks.fw_config import FWData, PING_TIME_SECS, DS_PASSWORD, RAPIDFIRE_SLEEP_SECS
 from fireworks.core.rocket_launcher import rapidfire
-from fireworks.utilities.fw_utilities import DataServer, get_fw_logger, log_multi, get_my_host
+from fireworks.fw_config import (
+    DS_PASSWORD,
+    PING_TIME_SECS,
+    RAPIDFIRE_SLEEP_SECS,
+    FWData,
+)
+from fireworks.utilities.fw_utilities import (
+    DataServer,
+    get_fw_logger,
+    get_my_host,
+    log_multi,
+)
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Material Project & The Electrolyte Genome Project"

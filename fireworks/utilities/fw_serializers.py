@@ -26,17 +26,26 @@ Some advantages:
 
 """
 
-import traceback
-import pkgutil
+import abc
+import datetime
+import importlib
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
-import importlib
-import datetime
-import abc
+import pkgutil
+import traceback
+
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
-from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
-from fireworks.fw_config import JSON_SCHEMA_VALIDATE, JSON_SCHEMA_VALIDATE_LIST
+
+from fireworks.fw_config import (
+    DECODE_MONTY,
+    ENCODE_MONTY,
+    FW_NAME_UPDATES,
+    JSON_SCHEMA_VALIDATE,
+    JSON_SCHEMA_VALIDATE_LIST,
+    USER_PACKAGES,
+    YAML_STYLE,
+)
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"

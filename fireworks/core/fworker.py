@@ -5,7 +5,12 @@ This module contains FireWorker, which encapsulates information about a computin
 import json
 
 from fireworks.fw_config import FWORKER_LOC
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_serialize, recursive_deserialize, DATETIME_HANDLER
+from fireworks.utilities.fw_serializers import (
+    DATETIME_HANDLER,
+    FWSerializable,
+    recursive_deserialize,
+    recursive_serialize,
+)
 
 __author__ = "Anubhav Jain"
 __credits__ = "Michael Kocher"

@@ -1,6 +1,7 @@
-import unittest
-import os
 import datetime
+import os
+import unittest
+
 from fireworks import LaunchPad
 from fireworks.utilities.update_collection import update_path_in_collection
 

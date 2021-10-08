@@ -3,8 +3,10 @@
 import shlex
 import subprocess
 import sys
-from fireworks.core.firework import FiretaskBase, FWAction
+
 from six.moves import builtins
+
+from fireworks.core.firework import FiretaskBase, FWAction
 
 if sys.version_info[0] > 2:
     basestring = str

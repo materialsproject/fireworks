@@ -6,10 +6,15 @@ import os
 import time
 from datetime import datetime
 
-from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS, FWORKER_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi, redirect_local
+from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
+from fireworks.utilities.fw_utilities import (
+    create_datestamp_dir,
+    get_fw_logger,
+    log_multi,
+    redirect_local,
+)
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"

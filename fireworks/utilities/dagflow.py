@@ -7,10 +7,11 @@ __copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
 from itertools import combinations
 
 import igraph
-from fireworks import Workflow
-from fireworks.features.fw_report import state_to_color
 from igraph import Graph
 from monty.dev import requires
+
+from fireworks import Workflow
+from fireworks.features.fw_report import state_to_color
 
 try:
     from graphviz import Digraph

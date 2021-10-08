@@ -5,32 +5,33 @@ A Rocket fetches a Firework from the database, runs the sequence of Firetasks in
 completes the Launch
 """
 
-from datetime import datetime
+import distutils.dir_util
+import errno
+import glob
 import json
 import logging
 import multiprocessing
 import os
-import traceback
-import threading
-import errno
-import glob
-import shutil
 import pdb
-import distutils.dir_util
+import shutil
+import threading
+import traceback
+from datetime import datetime
+
 from monty.io import zopen
 
-from fireworks.core.firework import FWAction, Firework
+from fireworks.core.firework import Firework, FWAction
+from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
 from fireworks.fw_config import (
-    FWData,
     PING_TIME_SECS,
-    REMOVE_USELESS_DIRS,
     PRINT_FW_JSON,
     PRINT_FW_YAML,
-    STORE_PACKING_INFO,
+    REMOVE_USELESS_DIRS,
     ROCKET_STREAM_LOGLEVEL,
+    STORE_PACKING_INFO,
+    FWData,
 )
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.core.launchpad import LockedWorkflowError, LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Anubhav Jain"
