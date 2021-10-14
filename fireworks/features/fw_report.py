@@ -77,7 +77,9 @@ class FWReport:
             match_q.update({time_field: date_q})
 
         pipeline.append({"$match": match_q})
-        pipeline.append({"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}})
+        pipeline.append(
+            {"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}}
+        )
         pipeline.append(
             {
                 "$group": {
@@ -121,7 +123,12 @@ class FWReport:
             completed_score = 0 if completed_cnt == 0 else (completed_cnt / (completed_cnt + fizzled_cnt))
             completed_score = round(completed_score, 3) * 100
             decorated_list.append(
-                {"date_key": x["date_key"], "states": new_states, "count": total_count, "completed_score": completed_score}
+                {
+                    "date_key": x["date_key"],
+                    "states": new_states,
+                    "count": total_count,
+                    "completed_score": completed_score,
+                }
             )
         return decorated_list
 

@@ -138,7 +138,9 @@ class WFLock:
                     raise ValueError(f"Could not find workflow in database: {self.fw_id}")
                 if self.kill:  # force lock acquisition
                     self.lp.m_logger.warning(f"FORCIBLY ACQUIRING LOCK, WF: {self.fw_id}")
-                    links_dict = self.lp.workflows.find_one_and_update({"nodes": self.fw_id}, {"$set": {"locked": True}})
+                    links_dict = self.lp.workflows.find_one_and_update(
+                        {"nodes": self.fw_id}, {"$set": {"locked": True}}
+                    )
                 else:  # throw error if we don't want to force lock acquisition
                     raise LockedWorkflowError(f"Could not get workflow - LOCKED: {self.fw_id}")
             else:
@@ -306,7 +308,8 @@ class LaunchPad(FWSerializable):
             {"fw_id": {"$in": fw_ids}, "state": {"$nin": allowed_states}}, {"fw_id": 1, "state": 1}
         ):
             self.m_logger.warning(
-                "Cannot update spec of fw_id: {} with state: {}. " "Try rerunning first".format(fw["fw_id"], fw["state"])
+                "Cannot update spec of fw_id: {} with state: {}. "
+                "Try rerunning first".format(fw["fw_id"], fw["state"])
             )
 
     @classmethod
@@ -320,7 +323,9 @@ class LaunchPad(FWSerializable):
         user_indices = d.get("user_indices", [])
         wf_user_indices = d.get("wf_user_indices", [])
         ssl = d.get("ssl", False)
-        ssl_ca_certs = d.get("ssl_ca_certs", d.get("ssl_ca_file", None))  # ssl_ca_file was the old notation for FWS < 1.5.5
+        ssl_ca_certs = d.get(
+            "ssl_ca_certs", d.get("ssl_ca_file", None)
+        )  # ssl_ca_file was the old notation for FWS < 1.5.5
         ssl_certfile = d.get("ssl_certfile", None)
         ssl_keyfile = d.get("ssl_keyfile", None)
         ssl_pem_passphrase = d.get("ssl_pem_passphrase", None)
@@ -368,7 +373,9 @@ class LaunchPad(FWSerializable):
         """
         m_password = datetime.datetime.now().strftime("%Y-%m-%d")
 
-        if password == m_password or (not require_password and self.workflows.count_documents({}) <= max_reset_wo_password):
+        if password == m_password or (
+            not require_password and self.workflows.count_documents({}) <= max_reset_wo_password
+        ):
             self.fireworks.delete_many({})
             self.launches.delete_many({})
             self.workflows.delete_many({})
@@ -468,7 +475,9 @@ class LaunchPad(FWSerializable):
 
         # Initialize new firework counter, starting from the next fw id
         total_num_fws = sum(len(wf.fws) for wf in wfs)
-        new_fw_counter = self.fw_id_assigner.find_one_and_update({}, {"$inc": {"next_fw_id": total_num_fws}})["next_fw_id"]
+        new_fw_counter = self.fw_id_assigner.find_one_and_update({}, {"$inc": {"next_fw_id": total_num_fws}})[
+            "next_fw_id"
+        ]
         for wf in tqdm(wfs):
             # Reassign fw_ids and increment the counter
             old_new = dict(zip(wf.id_fw.keys(), range(new_fw_counter, new_fw_counter + len(wf.fws))))
@@ -536,7 +545,9 @@ class LaunchPad(FWSerializable):
         if not fw_dict:
             raise ValueError(f"No Firework exists with id: {fw_id}")
         # recreate launches from the launch collection
-        launches = list(self.launches.find({"launch_id": {"$in": fw_dict["launches"]}}, sort=[("launch_id", ASCENDING)]))
+        launches = list(
+            self.launches.find({"launch_id": {"$in": fw_dict["launches"]}}, sort=[("launch_id", ASCENDING)])
+        )
         for l in launches:
             l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
         fw_dict["launches"] = launches
@@ -743,7 +754,9 @@ class LaunchPad(FWSerializable):
         if mode == "all":
             del wf["fw_states"]
             wf["links"] = {id_name_map[int(k)]: [id_name_map[i] for i in v] for k, v in wf["links"].items()}
-            wf["parent_links"] = {id_name_map[int(k)]: [id_name_map[i] for i in v] for k, v in wf["parent_links"].items()}
+            wf["parent_links"] = {
+                id_name_map[int(k)]: [id_name_map[i] for i in v] for k, v in wf["parent_links"].items()
+            }
         if mode == "reservations":
             wf["states"] = OrderedDict()
             wf["launches"] = OrderedDict()
@@ -847,7 +860,9 @@ class LaunchPad(FWSerializable):
 
         return [fw["nodes"][0] for fw in cursor]
 
-    def get_fw_ids_in_wfs(self, wf_query=None, fw_query=None, sort=None, limit=0, count_only=False, launches_mode=False):
+    def get_fw_ids_in_wfs(
+        self, wf_query=None, fw_query=None, sort=None, limit=0, count_only=False, launches_mode=False
+    ):
         """
         Return all fw ids that match fw_query within workflows that match wf_query.
 
@@ -1056,7 +1071,8 @@ class LaunchPad(FWSerializable):
             fw_id (int): firework id
         """
         f = self.fireworks.find_one_and_update(
-            {"fw_id": fw_id, "state": "DEFUSED"}, {"$set": {"state": "WAITING", "updated_on": datetime.datetime.utcnow()}}
+            {"fw_id": fw_id, "state": "DEFUSED"},
+            {"$set": {"state": "WAITING", "updated_on": datetime.datetime.utcnow()}},
         )
         if f:
             self._refresh_wf(fw_id)
@@ -1070,7 +1086,8 @@ class LaunchPad(FWSerializable):
             fw_id (int): firework id
         """
         f = self.fireworks.find_one_and_update(
-            {"fw_id": fw_id, "state": "PAUSED"}, {"$set": {"state": "WAITING", "updated_on": datetime.datetime.utcnow()}}
+            {"fw_id": fw_id, "state": "PAUSED"},
+            {"$set": {"state": "WAITING", "updated_on": datetime.datetime.utcnow()}},
         )
         if f:
             self._refresh_wf(fw_id)
@@ -1425,7 +1442,9 @@ class LaunchPad(FWSerializable):
         inconsistent_query["state"] = "RUNNING"
         running_fws = self.fireworks.find(inconsistent_query, {"fw_id": 1, "launches": 1})
         for fw in running_fws:
-            if self.launches.find_one({"launch_id": {"$in": fw["launches"]}, "state": {"$in": ["FIZZLED", "COMPLETED"]}}):
+            if self.launches.find_one(
+                {"launch_id": {"$in": fw["launches"]}, "state": {"$in": ["FIZZLED", "COMPLETED"]}}
+            ):
                 inconsistent_fw_ids.append(fw["fw_id"])
                 if refresh:
                     self._refresh_wf(fw["fw_id"])
@@ -1572,7 +1591,8 @@ class LaunchPad(FWSerializable):
                 raise
             if self.gridfs_fallback is None:
                 err.args = (
-                    err.args[0] + ". Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml" " to a value different from None",
+                    err.args[0] + ". Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml"
+                    " to a value different from None",
                 )
                 raise err
 
@@ -1711,7 +1731,9 @@ class LaunchPad(FWSerializable):
         if rerun_duplicates:
             f = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}}, {"launches": 1})
             if f:
-                for d in self.fireworks.find({"launches": {"$in": f["launches"]}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}):
+                for d in self.fireworks.find(
+                    {"launches": {"$in": f["launches"]}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}
+                ):
                     duplicates.append(d["fw_id"])
             duplicates = list(set(duplicates))
 
@@ -1960,7 +1982,9 @@ class LaunchPad(FWSerializable):
             if "fwaction" in offline_data:
                 fwaction = FWAction.from_dict(offline_data["fwaction"])
                 m_launch.state = offline_data["state"]
-                self.launches.find_one_and_replace({"launch_id": m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+                self.launches.find_one_and_replace(
+                    {"launch_id": m_launch.launch_id}, m_launch.to_db_dict(), upsert=True
+                )
 
                 m_launch = Launch.from_dict(self.complete_launch(launch_id, fwaction, m_launch.state))
 
@@ -1974,7 +1998,9 @@ class LaunchPad(FWSerializable):
                 self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed": True}})
 
             else:
-                l = self.launches.find_one_and_replace({"launch_id": m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
+                l = self.launches.find_one_and_replace(
+                    {"launch_id": m_launch.launch_id}, m_launch.to_db_dict(), upsert=True
+                )
                 fw_id = l["fw_id"]
                 f = self.fireworks.find_one_and_update(
                     {"fw_id": fw_id}, {"$set": {"state": "RUNNING", "updated_on": datetime.datetime.utcnow()}}

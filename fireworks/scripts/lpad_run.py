@@ -910,7 +910,11 @@ def lpad():
     fw_id_kwargs = {"type": str, "help": "fw_id"}
 
     state_args = ["-s", "--state"]
-    state_kwargs = {"type": lambda s: s.upper(), "help": "Select by state.", "choices": list(Firework.STATE_RANKS.keys())}
+    state_kwargs = {
+        "type": lambda s: s.upper(),
+        "help": "Select by state.",
+        "choices": list(Firework.STATE_RANKS.keys()),
+    }
     disp_args = ["-d", "--display_format"]
     disp_kwargs = {
         "type": lambda s: s.lower(),
@@ -931,7 +935,8 @@ def lpad():
     launches_mode_args = ["-lm", "--launches_mode"]
     launches_mode_kwargs = {
         "action": "store_true",
-        "help": "Query the launches collection (enclose pymongo-style " "dict in single-quotes, e.g. '{\"launch_id\": 1}')",
+        "help": "Query the launches collection (enclose pymongo-style "
+        "dict in single-quotes, e.g. '{\"launch_id\": 1}')",
     }
 
     qid_args = ["--qid"]
@@ -994,7 +999,9 @@ def lpad():
         "-d", "--dir", action="store_true", help="Directory mode. Finds all files in the " "paths given by wf_file."
     )
     addwf_parser.add_argument("wf_file", nargs="+", help="Path to a Firework or Workflow file")
-    addwf_parser.add_argument("-c", "--check", help="check the workflow before adding", dest="check", action="store_true")
+    addwf_parser.add_argument(
+        "-c", "--check", help="check the workflow before adding", dest="check", action="store_true"
+    )
     addwf_parser.set_defaults(func=add_wf, check=False)
 
     check_wf_parser = subparsers.add_parser("check_wflow", help="check a workflow from launchpad")
@@ -1009,14 +1016,21 @@ def lpad():
     )
     get_launchdir_parser.add_argument("fw_id", type=int, help="fw_id to chdir to")
     get_launchdir_parser.add_argument(
-        "--launch_idx", type=int, help="the index of the launch to get (default of -1 is most recent launch)", default=-1
+        "--launch_idx",
+        type=int,
+        help="the index of the launch to get (default of -1 is most recent launch)",
+        default=-1,
     )
     get_launchdir_parser.set_defaults(func=get_launchdir)
 
-    append_wf_parser = subparsers.add_parser("append_wflow", help="append a workflow from file to a workflow on launchpad")
+    append_wf_parser = subparsers.add_parser(
+        "append_wflow", help="append a workflow from file to a workflow on launchpad"
+    )
     append_wf_parser.add_argument(*fw_id_args, type=fw_id_kwargs["type"], help="parent firework ids")
     append_wf_parser.add_argument("-f", "--wf_file", help="path to a firework or workflow file")
-    append_wf_parser.add_argument("-d", "--detour", help="append workflow as a detour", dest="detour", action="store_true")
+    append_wf_parser.add_argument(
+        "-d", "--detour", help="append workflow as a detour", dest="detour", action="store_true"
+    )
     append_wf_parser.add_argument(
         "--no_pull_spec_mods", help="do not to pull spec mods from parent", dest="pull_spec_mods", action="store_false"
     )
@@ -1049,7 +1063,9 @@ def lpad():
     get_fw_parser.add_argument("--rsort", help="Reverse sort results", choices=["created_on", "updated_on"])
     get_fw_parser.set_defaults(func=get_fws)
 
-    get_fw_in_wf_parser = subparsers.add_parser("get_fws_in_wflows", help="get information about FireWorks in Workflows")
+    get_fw_in_wf_parser = subparsers.add_parser(
+        "get_fws_in_wflows", help="get information about FireWorks in Workflows"
+    )
 
     get_fw_in_wf_parser.add_argument(*wf_prefixed_fw_id_args, **fw_id_kwargs)
     get_fw_in_wf_parser.add_argument("-wfn", "--wf_name", help="get WFs with this name")
@@ -1277,7 +1293,8 @@ def lpad():
     archive_parser.set_defaults(func=archive)
 
     delete_wfs_parser = subparsers.add_parser(
-        "delete_wflows", help='Delete workflows (permanently). Use "archive_wflows" instead if ' 'you want to "soft-remove"'
+        "delete_wflows",
+        help='Delete workflows (permanently). Use "archive_wflows" instead if ' 'you want to "soft-remove"',
     )
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     delete_wfs_parser.add_argument("-n", "--name", help="name")
@@ -1384,8 +1401,12 @@ def lpad():
     webgui_parser.add_argument("--nworkers", type=arg_positive_int, help="Number of worker processes for server mode")
     webgui_parser.add_argument("--fwquery", help="additional query filter for FireWorks as JSON string")
     webgui_parser.add_argument("--wflowquery", help="additional query filter for Workflows as JSON string")
-    webgui_parser.add_argument("--webgui_username", help="Optional username needed to access webgui", type=str, default=None)
-    webgui_parser.add_argument("--webgui_password", help="Optional password needed to access webgui", type=str, default=None)
+    webgui_parser.add_argument(
+        "--webgui_username", help="Optional username needed to access webgui", type=str, default=None
+    )
+    webgui_parser.add_argument(
+        "--webgui_password", help="Optional password needed to access webgui", type=str, default=None
+    )
     webgui_parser.set_defaults(func=webgui)
 
     recover_parser = subparsers.add_parser("recover_offline", help="recover offline workflows")
@@ -1449,7 +1470,9 @@ def lpad():
     )
     tuneup_parser.set_defaults(func=tuneup)
 
-    refresh_parser = admin_subparser.add_parser("refresh", help="manually force a workflow refresh " "(not usually needed)")
+    refresh_parser = admin_subparser.add_parser(
+        "refresh", help="manually force a workflow refresh " "(not usually needed)"
+    )
     refresh_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     refresh_parser.add_argument("-n", "--name", help="name")
     refresh_parser.add_argument(*state_args, **state_kwargs)
@@ -1498,7 +1521,9 @@ def lpad():
     report_parser.add_argument(
         "-n", "--num_intervals", help="The number of intervals on which to " "report (default=5)", type=int, default=5
     )
-    report_parser.add_argument("-q", "--query", help="Additional Pymongo queries to filter entries " "before processing.")
+    report_parser.add_argument(
+        "-q", "--query", help="Additional Pymongo queries to filter entries " "before processing."
+    )
     report_parser.set_defaults(func=report)
 
     introspect_parser = subparsers.add_parser("introspect", help="Introspect recent runs to pin down errors")

@@ -188,7 +188,10 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         )
         # Sibling fireworks
         fw_s1 = Firework(
-            ScriptTask.from_str('echo "Zeus is son of Cronus"', {"store_stdout": True}), name="sib1", fw_id=2, parents=fw_p
+            ScriptTask.from_str('echo "Zeus is son of Cronus"', {"store_stdout": True}),
+            name="sib1",
+            fw_id=2,
+            parents=fw_p,
         )
         fw_s2 = Firework(
             ScriptTask.from_str('echo "Poisedon is brother of Zeus"', {"store_stdout": True}),
@@ -216,7 +219,9 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             ScriptTask.from_str('echo "Ares is son of Zeus"', {"store_stdout": True}), name="c1", fw_id=7, parents=fw_s1
         )
         fw_c2 = Firework(
-            ScriptTask.from_str('echo "Persephone is daughter of Zeus & Demeter and wife of Hades"', {"store_stdout": True}),
+            ScriptTask.from_str(
+                'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"', {"store_stdout": True}
+            ),
             name="c2",
             fw_id=8,
             parents=[fw_s1, fw_s4],
@@ -271,7 +276,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.zeus_sib_fw_ids = {3, 4, 5}
         self.par_fw_id = 1
         self.all_ids = (
-            self.zeus_child_fw_ids | self.lapetus_desc_fw_ids | self.zeus_sib_fw_ids | {self.zeus_fw_id} | {self.par_fw_id}
+            self.zeus_child_fw_ids
+            | self.lapetus_desc_fw_ids
+            | self.zeus_sib_fw_ids
+            | {self.zeus_fw_id}
+            | {self.par_fw_id}
         )
 
         self.old_wd = os.getcwd()
@@ -738,7 +747,9 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             ScriptTask.from_str('echo "Ares is son of Zeus"', {"store_stdout": True}), name="c1", fw_id=7, parents=fw_s1
         )
         fw_c2 = Firework(
-            ScriptTask.from_str('echo "Persephone is daughter of Zeus & Demeter and wife of Hades"', {"store_stdout": True}),
+            ScriptTask.from_str(
+                'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"', {"store_stdout": True}
+            ),
             name="c2",
             fw_id=8,
             parents=[fw_s1, fw_s4],
@@ -793,7 +804,11 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         self.zeus_sib_fw_ids = {3, 4, 5}
         self.par_fw_id = 1
         self.all_ids = (
-            self.zeus_child_fw_ids | self.lapetus_desc_fw_ids | self.zeus_sib_fw_ids | {self.zeus_fw_id} | {self.par_fw_id}
+            self.zeus_child_fw_ids
+            | self.lapetus_desc_fw_ids
+            | self.zeus_sib_fw_ids
+            | {self.zeus_fw_id}
+            | {self.par_fw_id}
         )
 
         self.old_wd = os.getcwd()
@@ -1143,9 +1158,9 @@ class WFLockTest(unittest.TestCase):
         fast_fw = self.lp.get_fw_by_id(2)
 
         if fast_fw.state == "FIZZLED":
-            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {"action.stored_data._exception._stacktrace": 1})["action"][
-                "stored_data"
-            ]["_exception"]["_stacktrace"]
+            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {"action.stored_data._exception._stacktrace": 1})[
+                "action"
+            ]["stored_data"]["_exception"]["_stacktrace"]
             if "SkipTest" in stacktrace:
                 self.skipTest("The test didn't run correctly")
 
@@ -1192,9 +1207,9 @@ class WFLockTest(unittest.TestCase):
         fast_fw = self.lp.get_fw_by_id(2)
 
         if fast_fw.state == "FIZZLED":
-            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {"action.stored_data._exception._stacktrace": 1})["action"][
-                "stored_data"
-            ]["_exception"]["_stacktrace"]
+            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {"action.stored_data._exception._stacktrace": 1})[
+                "action"
+            ]["stored_data"]["_exception"]["_stacktrace"]
             if "SkipTest" in stacktrace:
                 self.skipTest("The test didn't run correctly")
 

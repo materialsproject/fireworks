@@ -59,7 +59,12 @@ class FWStats:
             (list) A summary of fireworks stats for the specified time range.
         """
         results = self._get_summary(
-            coll=self._fireworks, query_start=query_start, query_end=query_end, query=query, time_field=time_field, **args
+            coll=self._fireworks,
+            query_start=query_start,
+            query_end=query_end,
+            query=query,
+            time_field=time_field,
+            **args
         )
         return results
 
@@ -163,13 +168,20 @@ class FWStats:
             summary_query[0],
             summary_query[1],
             summary_query[2],
-            {"$group": {"_id": "$_id." + time_field, "run_counts": {"$push": {"state": "$_id.state", "count": "$count"}}}},
+            {
+                "$group": {
+                    "_id": "$_id." + time_field,
+                    "run_counts": {"$push": {"state": "$_id.state", "count": "$count"}},
+                }
+            },
             summary_query[-1],
         ]
         results = self._launches.aggregate(re_aggregate_query)
         return results["result"] if results["ok"] else None
 
-    def group_fizzled_fireworks(self, group_by, query_start=None, query_end=None, query=None, include_ids=False, **args):
+    def group_fizzled_fireworks(
+        self, group_by, query_start=None, query_end=None, query=None, include_ids=False, **args
+    ):
         """
         Group fizzled fireworks for a specified time range by a specified key.
         :param group_by: (str) Database field used to group fireworks items.
@@ -199,7 +211,14 @@ class FWStats:
         )
 
     def identify_catastrophes(
-        self, error_ratio=0.01, query_start=None, query_end=None, query=None, time_field="time_end", include_ids=True, **args
+        self,
+        error_ratio=0.01,
+        query_start=None,
+        query_end=None,
+        query=None,
+        time_field="time_end",
+        include_ids=True,
+        **args
     ):
         """
         Get days with higher failure ratio
@@ -298,7 +317,11 @@ class FWStats:
             project_query.update({id_field: 1})
             group_query.update({"ids": {"$push": "$" + id_field}})
         return self._aggregate(
-            coll=coll, match=match_query, project=project_query, group_op=group_query, return_query_only=return_query_only
+            coll=coll,
+            match=match_query,
+            project=project_query,
+            group_op=group_query,
+            return_query_only=return_query_only,
         )
 
     def _get_launch_id_from_fireworks(self, query=None):

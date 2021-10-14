@@ -42,7 +42,9 @@ def rlaunch():
     parser = ArgumentParser(description=m_description)
     subparsers = parser.add_subparsers(help="command", dest="command")
     single_parser = subparsers.add_parser("singleshot", help="launch a single Rocket")
-    rapid_parser = subparsers.add_parser("rapidfire", help="launch multiple Rockets (loop until all FireWorks complete)")
+    rapid_parser = subparsers.add_parser(
+        "rapidfire", help="launch multiple Rockets (loop until all FireWorks complete)"
+    )
     multi_parser = subparsers.add_parser("multi", help="launches multiple Rockets simultaneously")
 
     single_parser.add_argument("-f", "--fw_id", help="specific fw_id to run", default=None, type=int)
@@ -52,7 +54,9 @@ def rlaunch():
     rapid_parser.add_argument(
         "--nlaunches", help='num_launches (int or "infinite"; ' "default 0 is all jobs in DB)", default=0
     )
-    rapid_parser.add_argument("--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int)
+    rapid_parser.add_argument(
+        "--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int
+    )
     rapid_parser.add_argument(
         "--max_loops",
         help="after this many sleep loops, quit even in " "infinite nlaunches mode (default -1 is infinite loops)",
@@ -67,16 +71,22 @@ def rlaunch():
     multi_parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     multi_parser.add_argument(
         "--nlaunches",
-        help="number of FireWorks to run in series per " 'parallel job (int or "infinite"; default 0 is ' "all jobs in DB)",
+        help="number of FireWorks to run in series per "
+        'parallel job (int or "infinite"; default 0 is '
+        "all jobs in DB)",
         default=0,
     )
     multi_parser.add_argument(
         "--sleep", help="sleep time between loops in infinite launch mode" "(secs)", default=None, type=int
     )
-    multi_parser.add_argument("--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int)
+    multi_parser.add_argument(
+        "--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int
+    )
     multi_parser.add_argument(
         "--nodefile",
-        help="nodefile name or environment variable name " "containing the node file name (for populating" " FWData only)",
+        help="nodefile name or environment variable name "
+        "containing the node file name (for populating"
+        " FWData only)",
         default=None,
         type=str,
     )

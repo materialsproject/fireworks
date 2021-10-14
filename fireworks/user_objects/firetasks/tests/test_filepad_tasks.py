@@ -145,7 +145,9 @@ class FilePadTasksTest(unittest.TestCase):
 
         with open("degenerate_file.txt", "w") as f:
             f.write("Some other file with some other content BUT same file name")
-        t = AddFilesTask(paths=["degenerate_file.txt"], identifiers=["some_other_identifier"], metadata={"key": "value"})
+        t = AddFilesTask(
+            paths=["degenerate_file.txt"], identifiers=["some_other_identifier"], metadata={"key": "value"}
+        )
         t.run_task({})
 
         os.remove("degenerate_file.txt")
@@ -163,7 +165,9 @@ class FilePadTasksTest(unittest.TestCase):
 
         with open("degenerate_file.txt", "w") as f:
             f.write("Some other file with some other content BUT same file name")
-        t = AddFilesTask(paths=["degenerate_file.txt"], identifiers=["some_other_identifier"], metadata={"key": "value"})
+        t = AddFilesTask(
+            paths=["degenerate_file.txt"], identifiers=["some_other_identifier"], metadata={"key": "value"}
+        )
         t.run_task({})
 
         os.remove("degenerate_file.txt")
@@ -187,7 +191,9 @@ class FilePadTasksTest(unittest.TestCase):
         with open("degenerate_file.txt", "w") as f:
             f.write(file_contents[-1])
         t = AddFilesTask(
-            paths=["degenerate_file.txt"], identifiers=["some_other_identifier"], metadata={"key": "value", "sort_key": 1}
+            paths=["degenerate_file.txt"],
+            identifiers=["some_other_identifier"],
+            metadata={"key": "value", "sort_key": 1},
         )
         t.run_task({})
 
@@ -215,7 +221,9 @@ class FilePadTasksTest(unittest.TestCase):
         with open("degenerate_file.txt", "w") as f:
             f.write(file_contents[-1])
         t = AddFilesTask(
-            paths=["degenerate_file.txt"], identifiers=["some_other_identifier"], metadata={"key": "value", "sort_key": 20}
+            paths=["degenerate_file.txt"],
+            identifiers=["some_other_identifier"],
+            metadata={"key": "value", "sort_key": 20},
         )
         t.run_task({})
 

@@ -138,7 +138,10 @@ class CommandLineTaskTest(unittest.TestCase):
             "command_spec": {
                 "command": ["stat"],
                 "filename": {"source": {"type": "data", "value": filename}},
-                "format option": {"binding": {"prefix": "-c", "separator": " "}, "source": {"type": "data", "value": "%y"}},
+                "format option": {
+                    "binding": {"prefix": "-c", "separator": " "},
+                    "source": {"type": "data", "value": "%y"},
+                },
                 "date and time": {"source": {"type": "stdout"}, "target": {"type": "data"}},
             },
             "inputs": ["format option", "filename"],

@@ -75,7 +75,8 @@ class DAGFlowTest(unittest.TestCase):
         from fireworks.utilities.dagflow import DAGFlow
 
         fw2 = Firework(
-            PyTask(func="math.pow", inputs=["first power", "exponent"], outputs=["second power"]), name="pow(pow(2, 3), 4)"
+            PyTask(func="math.pow", inputs=["first power", "exponent"], outputs=["second power"]),
+            name="pow(pow(2, 3), 4)",
         )
         wfl = Workflow([self.fw1, fw2], {self.fw1: [fw2], fw2: []})
         msg = (

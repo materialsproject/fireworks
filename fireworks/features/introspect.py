@@ -131,7 +131,10 @@ class Introspector:
                     fizzled_keys.append("_fw_name{}{}".format(separator_str, t["_fw_name"]))
             elif state_key == "action.stored_data._exception._stacktrace":
                 stacktrace = (
-                    doc.get("action", {}).get("stored_data", {}).get("_exception", {}).get("_stacktrace", "<NO_STACKTRACE>")
+                    doc.get("action", {})
+                    .get("stored_data", {})
+                    .get("_exception", {})
+                    .get("_stacktrace", "<NO_STACKTRACE>")
                 )
                 fizzled_keys.append(f"_stacktrace{separator_str}{stacktrace}")
             else:
@@ -159,7 +162,13 @@ class Introspector:
         table = []
         for w in sorted(diff_d, key=diff_d.get, reverse=True):
             table.append(
-                [w.split(separator_str)[0], w.split(separator_str)[1], completed_d.get(w, 0), fizzled_d.get(w, 0), diff_d[w]]
+                [
+                    w.split(separator_str)[0],
+                    w.split(separator_str)[1],
+                    completed_d.get(w, 0),
+                    fizzled_d.get(w, 0),
+                    diff_d[w],
+                ]
             )
 
         return table

@@ -448,7 +448,9 @@ class Tracker(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return Tracker(m_dict["filename"], m_dict["nlines"], m_dict.get("content", ""), m_dict.get("allow_zipped", False))
+        return Tracker(
+            m_dict["filename"], m_dict["nlines"], m_dict.get("content", ""), m_dict.get("allow_zipped", False)
+        )
 
     def __str__(self):
         return f"### Filename: {self.filename}\n{self.content}"
@@ -876,7 +878,8 @@ class Workflow(FWSerializable):
                     or
                     # Otherwise all children must be ok with the fizzled parent
                     not all(
-                        self.id_fw[child_id].spec.get("_allow_fizzled_parents", False) for child_id in self.links[fizzled_id]
+                        self.id_fw[child_id].spec.get("_allow_fizzled_parents", False)
+                        for child_id in self.links[fizzled_id]
                     )
                 ):
                     m_state = "FIZZLED"
@@ -1233,7 +1236,9 @@ class Workflow(FWSerializable):
         )
         m_dict["states"] = OrderedDict([(self._str_fw(x), self.id_fw[x].state) for x in nodes])
         m_dict["nodes"] = [self._str_fw(x) for x in nodes]
-        m_dict["links"] = OrderedDict([(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["links"].items()])
+        m_dict["links"] = OrderedDict(
+            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["links"].items()]
+        )
         m_dict["parent_links"] = OrderedDict(
             [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["parent_links"].items()]
         )

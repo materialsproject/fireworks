@@ -30,7 +30,12 @@ DEFAULT_FORMATTER = logging.Formatter(FW_LOGGING_FORMAT)
 
 
 def get_fw_logger(
-    name, l_dir=None, file_levels=("DEBUG", "ERROR"), stream_level="DEBUG", formatter=DEFAULT_FORMATTER, clear_logs=False
+    name,
+    l_dir=None,
+    file_levels=("DEBUG", "ERROR"),
+    stream_level="DEBUG",
+    formatter=DEFAULT_FORMATTER,
+    clear_logs=False,
 ):
     """
     Convenience method to return a logger.
@@ -306,8 +311,12 @@ def plot_wf(
                 if numerical_label:
                     label1 = str(k)
                     label2 = str(i)
-                plt.text(points_map[k][0] * text_loc_factor, points_map[k][1] * text_loc_factor, label1, fontsize=fontsize)
-                plt.text(points_map[i][0] * text_loc_factor, points_map[i][1] * text_loc_factor, label2, fontsize=fontsize)
+                plt.text(
+                    points_map[k][0] * text_loc_factor, points_map[k][1] * text_loc_factor, label1, fontsize=fontsize
+                )
+                plt.text(
+                    points_map[i][0] * text_loc_factor, points_map[i][1] * text_loc_factor, label2, fontsize=fontsize
+                )
 
     plt.axis("scaled")
     plt.axis("off")

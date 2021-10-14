@@ -68,7 +68,9 @@ class SerializationTest(unittest.TestCase):
         os.remove("test.yaml")
 
     def test_sanity(self):
-        self.assertEqual(self.obj_1, self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!")
+        self.assertEqual(
+            self.obj_1, self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!"
+        )
         self.assertNotEqual(self.obj_1, self.obj_2, "The __ne__() method of the TestSerializer is not set up properly!")
         self.assertEqual(
             self.obj_1,
@@ -86,11 +88,15 @@ class SerializationTest(unittest.TestCase):
 
     def test_yaml(self):
         obj1_yaml_string = str(self.obj_1.to_format("yaml"))
-        self.assertEqual(self.obj_1.from_format(obj1_yaml_string, "yaml"), self.obj_1, "YAML format export / import fails!")
+        self.assertEqual(
+            self.obj_1.from_format(obj1_yaml_string, "yaml"), self.obj_1, "YAML format export / import fails!"
+        )
 
     def test_complex_json(self):
         obj2_json_string = str(self.obj_2.to_format())  # default format is JSON, make sure this is true
-        self.assertEqual(self.obj_2.from_format(obj2_json_string), self.obj_2, "Complex JSON format export / import fails!")
+        self.assertEqual(
+            self.obj_2.from_format(obj2_json_string), self.obj_2, "Complex JSON format export / import fails!"
+        )
 
     def test_complex_yaml(self):
         obj2_yaml_string = str(self.obj_2.to_format("yaml"))
@@ -100,7 +106,9 @@ class SerializationTest(unittest.TestCase):
 
     def test_unicode_json(self):
         obj3_json_string = str(self.obj_3.to_format())  # default format is JSON, make sure this is true
-        self.assertEqual(self.obj_3.from_format(obj3_json_string), self.obj_3, "Unicode JSON format export / import fails!")
+        self.assertEqual(
+            self.obj_3.from_format(obj3_json_string), self.obj_3, "Unicode JSON format export / import fails!"
+        )
 
     def test_unicode_yaml(self):
         obj3_yaml_string = str(self.obj_3.to_format("yaml"))
@@ -109,7 +117,9 @@ class SerializationTest(unittest.TestCase):
         )
 
     def test_unicode_json_file(self):
-        with open(os.path.join(self.module_dir, "test_reference.json")) as f, open("test.json", **ENCODING_PARAMS) as f2:
+        with open(os.path.join(self.module_dir, "test_reference.json")) as f, open(
+            "test.json", **ENCODING_PARAMS
+        ) as f2:
             obj1 = json.load(f)
             obj2 = json.load(f2)
             self.assertEqual(obj1, obj2, "Unicode JSON file export fails")

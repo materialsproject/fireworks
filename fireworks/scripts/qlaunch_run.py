@@ -75,7 +75,15 @@ def do_launch(args):
         )
     else:
         launch_rocket_to_queue(
-            launchpad, fworker, queueadapter, args.launch_dir, args.reserve, args.loglvl, False, args.fill_mode, args.fw_id
+            launchpad,
+            fworker,
+            queueadapter,
+            args.launch_dir,
+            args.reserve,
+            args.loglvl,
+            False,
+            args.fill_mode,
+            args.fw_id,
         )
 
 
@@ -173,11 +181,17 @@ def qlaunch():
         "-m", "--maxjobs_queue", help="maximum jobs to keep in queue for this user. 0 for no limit", default=0, type=int
     )
     rapid_parser.add_argument("-b", "--maxjobs_block", help="maximum jobs to put in a block", default=500, type=int)
-    rapid_parser.add_argument("--nlaunches", help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0)
-    rapid_parser.add_argument("--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int)
+    rapid_parser.add_argument(
+        "--nlaunches", help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0
+    )
+    rapid_parser.add_argument(
+        "--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int
+    )
     rapid_parser.add_argument("--sleep", help="sleep time between loops", default=None, type=int)
 
-    single_parser.add_argument("-f", "--fw_id", help="specific fw_id to run in reservation mode", default=None, type=int)
+    single_parser.add_argument(
+        "-f", "--fw_id", help="specific fw_id to run in reservation mode", default=None, type=int
+    )
 
     try:
         import argcomplete

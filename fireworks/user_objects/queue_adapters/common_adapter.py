@@ -60,7 +60,9 @@ class CommonAdapter(QueueAdapterBase):
             )
         self.q_type = q_type
         self.template_file = (
-            os.path.abspath(template_file) if template_file is not None else CommonAdapter._get_default_template_file(q_type)
+            os.path.abspath(template_file)
+            if template_file is not None
+            else CommonAdapter._get_default_template_file(q_type)
         )
         self.q_name = q_name or q_type
         self.timeout = timeout or 5
@@ -219,7 +221,9 @@ class CommonAdapter(QueueAdapterBase):
                     return job_id
                 except Exception as ex:
                     # probably error parsing job code
-                    log_exception(queue_logger, f"Could not parse job id following {submit_cmd} due to error {str(ex)}...")
+                    log_exception(
+                        queue_logger, f"Could not parse job id following {submit_cmd} due to error {str(ex)}..."
+                    )
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
