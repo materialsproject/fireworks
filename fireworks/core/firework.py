@@ -21,7 +21,11 @@ from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 
 from fireworks.core.fworker import FWorker
-from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
+from fireworks.fw_config import (
+    EXCEPT_DETAILS_ON_RERUN,
+    NEGATIVE_FWID_CTR,
+    TRACKER_LINES,
+)
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import (
     FWSerializable,
@@ -42,6 +46,9 @@ __version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
+
+# workaround for false positive flake8(F401) (https://git.io/JKZ2x)
+NEGATIVE_FWID_CTR
 
 
 class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
