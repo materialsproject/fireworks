@@ -19,6 +19,7 @@ module = [
     "gunicorn",
     "gunicorn.app",
     "gunicorn.app.base",
+    "igraph",
     "invoke",
     "matplotlib",
     "matplotlib.backends.backend_agg",
