@@ -13,6 +13,7 @@ warn_unused_configs = true
 module = [
     "argcomplete",
     "fabric",
+    "fireworks_schema",
     "flask_paginate",
     "graphviz",
     # https://github.com/benoitc/gunicorn/pull/2377

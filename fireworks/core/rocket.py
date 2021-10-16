@@ -409,8 +409,9 @@ class Rocket:
                     l_logger.log(logging.DEBUG, traceback.format_exc())
                     l_logger.log(
                         logging.WARNING,
-                        f"Firework {self.fw_id} fizzled but couldn't complete the update of the database. "
-                        f"Reason: {e}\nRefresh the WF to recover the result (lpad admin refresh -i {self.fw_id}).",
+                        "Firework {} fizzled but couldn't complete the update of the database."
+                        " Reason: {}\nRefresh the WF to recover the result "
+                        "(lpad admin refresh -i {}).".format(self.fw_id, e, self.fw_id),
                     )
                     return True
             else:
