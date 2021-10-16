@@ -24,6 +24,26 @@ repos:
     hooks:
       - id: isort
 
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.910-1
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - jinja2
+          - numpy
+          - pymongo-stubs
+          - ruamel.yaml
+          - types-flask
+          - types-paramiko
+          - types-prettytable
+          - types-python-dateutil
+          - types-pyyaml
+          - types-requests
+          - types-setuptools
+          - types-six
+          - types-tabulate
+        args: []
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:

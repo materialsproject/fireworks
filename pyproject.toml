@@ -1,2 +1,40 @@
 [tool.black]
 line-length = 120
+
+[tool.mypy]
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+
+scripts_are_modules = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "argcomplete",
+    "fabric",
+    "flask_paginate",
+    "graphviz",
+    # https://github.com/benoitc/gunicorn/pull/2377
+    "gunicorn",
+    "gunicorn.app",
+    "gunicorn.app.base",
+    "invoke",
+    "matplotlib",
+    "matplotlib.backends.backend_agg",
+    "matplotlib.figure",
+    "matplotlib.pyplot",
+    "matplotlib.ticker",
+    "monty",
+    "monty.design_patterns",
+    "monty.dev",
+    "monty.io",
+    "monty.json",
+    "monty.os",
+    "monty.os.path",
+    "monty.serialization",
+    "monty.shutil",
+    # https://github.com/tqdm/tqdm/issues/260
+    "tqdm",
+]
+ignore_missing_imports = true
