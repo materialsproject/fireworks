@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from datetime import datetime
+from typing import List
 
 from dateutil.relativedelta import relativedelta
 
@@ -184,30 +185,30 @@ class FWReport:
         return fig
 
     @staticmethod
-    def get_stats_str(decorated_stat_list):
+    def get_stats_str(decorated_stat_list: List[dict]) -> str:
         """
         Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
 
         Args:
-            decorated_stat_list ([dict])
+            decorated_stat_list (list[dict]): List of completed/failed/... statistics for
+            workflows/fireworks in a given time-period.
 
         Returns:
-             str
+            str: Description of workflow/firework statistics for given time period.
         """
         if not decorated_stat_list:
             return "There are no stats to display for the chosen time period."
 
         my_str = ""
         for x in decorated_stat_list:
-            header_str = "Stats for time-period {}\n".format(x["date_key"])
+            header_str = f"Stats for time-period {x['date_key']}\n"
             my_str += header_str
             border_str = "=" * len(header_str) + "\n"
             my_str += border_str
 
             for i in x["states"]:
-                my_str += "{} : {}\n".format(i, x["states"][i])
-            my_str += "\n"
-            my_str += "total : {}\n".format(x["count"])
-            my_str += "C/(C+F) : {}\n".format(x["completed_score"])
-            my_str += "\n"
+                my_str += f"{i} : {x['states'][i]}\n"
+
+            my_str += f"\ntotal : {x['count']}\n"
+            my_str += f"C/(C+F) : {x['completed_score']}%\n\n"
         return my_str
