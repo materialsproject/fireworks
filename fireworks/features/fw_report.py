@@ -194,7 +194,7 @@ class FWReport:
             workflows/fireworks in a given time-period.
 
         Returns:
-             str: Description of workflow/firework statuses for given time period.
+            str: Description of workflow/firework statistics for given time period.
         """
         if not decorated_stat_list:
             return "There are no stats to display for the chosen time period."
