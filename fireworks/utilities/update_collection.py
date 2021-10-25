@@ -1,10 +1,11 @@
-from bson.json_util import dumps, loads
-from tqdm import tqdm
 import datetime
 
-__author__ = 'Alireza Faghaninia, Anubhav Jain'
-__email__ = 'alireza.faghaninia@gmail.com, ajain@lbl.gov'
-__date__ = 'Dec 08, 2016'
+from bson.json_util import dumps, loads
+from tqdm import tqdm
+
+__author__ = "Alireza Faghaninia, Anubhav Jain"
+__email__ = "alireza.faghaninia@gmail.com, ajain@lbl.gov"
+__date__ = "Dec 08, 2016"
 
 
 def update_launchpad_data(lp, replacements, **kwargs):
@@ -19,7 +20,7 @@ def update_launchpad_data(lp, replacements, **kwargs):
     :param kwargs: Additional arguments accepted by the update_path_in_collection method
     """
     for coll_name in ["launches", "fireworks", "workflows"]:
-        print("Updating data inside collection: {}".format(coll_name))
+        print(f"Updating data inside collection: {coll_name}")
         update_path_in_collection(lp.db, coll_name, replacements, **kwargs)
 
     print("Update launchpad data complete.")
@@ -45,13 +46,14 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
     """
 
     extension_name = "_tmp_refactor"
-    tmp_collname = "{}{}".format(collection_name, extension_name)
+    tmp_collname = f"{collection_name}{extension_name}"
 
     if force_clear:
-        db["{}".format(tmp_collname)].drop()
-    elif db["{}".format(tmp_collname)].find_one():
-        raise AttributeError("The collection {}{} already exists! Use force_clear option to remove.".
-                             format(collection_name, extension_name))
+        db[f"{tmp_collname}"].drop()
+    elif db[f"{tmp_collname}"].find_one():
+        raise AttributeError(
+            f"The collection {collection_name}{extension_name} already exists! Use force_clear option to remove."
+        )
 
     all_docs = db[collection_name].find(query)
     ndocs = db[collection_name].count_documents(query or {})
@@ -64,7 +66,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
         for old_path, new_path in replacements.items():
             m_str = m_str.replace(old_path, new_path)
         m_bson = loads(m_str)
-        db["{}".format(tmp_collname)].insert(m_bson)
+        db[f"{tmp_collname}"].insert(m_bson)
 
         modified_docs.append(doc["_id"])
 
@@ -73,7 +75,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
 
     print("transferring unaffected documents (if any)")
     for old_doc in tqdm(all_docs, total=ndocs):
-        db["{}".format(tmp_collname)].insert(old_doc)
+        db[f"{tmp_collname}"].insert(old_doc)
         modified_docs.append(doc["_id"])
 
     print("confirming that all documents were moved")
@@ -83,6 +85,6 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
 
     if not dry_run:
         # archive the old collection
-        db[collection_name].rename("{}_xiv_{}".format(collection_name, datetime.date.today()))
+        db[collection_name].rename(f"{collection_name}_xiv_{datetime.date.today()}")
         # move temp collection to collection
-        db["{}".format(tmp_collname)].rename(collection_name)
+        db[f"{tmp_collname}"].rename(collection_name)

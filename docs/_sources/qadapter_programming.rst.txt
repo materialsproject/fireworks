@@ -92,4 +92,3 @@ If your queue is a complex entity that is different than typical queue managers 
 You might look at the *CommonAdapter* class or *PBSAdapterNEWT* for examples. After writing your new code, decide on a location for your queue adapter Python code and template file. The built-in queue adapters are located in ``<INSTALL_DIR>/fireworks/user_objects/queue_adapters``, and FireWorks will discover your code there automatically (you can find out ``<INSTALL_DIR>`` by typing ``lpad version``). However, you can also place your queue adapter in a different Python package if you set the ``ADD_USER_PACKAGES`` option as in the :doc:`FW config </config_tutorial>`.
 
 Again, we suggest that you contact us for help (see :ref:`contributing-label`) if you run into any problems during the process.
-

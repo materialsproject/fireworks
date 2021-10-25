@@ -11,8 +11,8 @@ If you like FireWorks, you might also like [rocketsled](https://github.com/hacki
 If you find FireWorks useful, please consider citing the paper:
 ```
 Jain, A., Ong, S. P., Chen, W., Medasani, B., Qu, X., Kocher, M., Brafman, M.,
-Petretto, G., Rignanese, G.-M., Hautier, G., Gunter, D., and Persson, K. A. 
-(2015) FireWorks: a dynamic workflow system designed for high-throughput 
-applications. Concurrency Computat.: Pract. Exper., 27: 5037–5059. 
+Petretto, G., Rignanese, G.-M., Hautier, G., Gunter, D., and Persson, K. A.
+(2015) FireWorks: a dynamic workflow system designed for high-throughput
+applications. Concurrency Computat.: Pract. Exper., 27: 5037–5059.
 doi: 10.1002/cpe.3505.
 ```

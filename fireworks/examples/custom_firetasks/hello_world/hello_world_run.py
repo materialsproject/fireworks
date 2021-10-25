@@ -1,6 +1,8 @@
-from fireworks import LaunchPad, Firework, Workflow
+from fireworks import Firework, LaunchPad, Workflow
 from fireworks.core.rocket_launcher import launch_rocket
-from fireworks.examples.custom_firetasks.hello_world.hello_world_task import HelloTask
+from fireworks.examples.custom_firetasks.hello_world.hello_world_task import (
+    HelloTask,
+)
 
 if __name__ == "__main__":
     # initialize the database

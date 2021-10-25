@@ -14,4 +14,3 @@ A few more examples can be found by browsing our unit tests::
 
     cd <INSTALL_DIR>/tests
     cat mongo_tests.py
-

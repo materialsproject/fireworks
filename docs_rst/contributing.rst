@@ -61,7 +61,3 @@ Two great tutorials for how to do this are:
 
 
 If you encounter trouble, please let us know. We look forward to your merge request!
-
-
-
-

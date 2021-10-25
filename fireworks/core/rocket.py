@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 from monty.os.path import zpath
 
 """
@@ -9,42 +5,48 @@ A Rocket fetches a Firework from the database, runs the sequence of Firetasks in
 completes the Launch
 """
 
-from datetime import datetime
+import distutils.dir_util
+import errno
+import glob
 import json
 import logging
 import multiprocessing
 import os
-import traceback
-import threading
-import errno
-import glob
-import shutil
 import pdb
-import distutils.dir_util
-from monty.io import zopen
-from monty.serialization import loadfn, dumpfn
+import shutil
+import threading
+import traceback
+from datetime import datetime
 
-from fireworks.core.firework import FWAction, Firework
-from fireworks.fw_config import FWData, PING_TIME_SECS, REMOVE_USELESS_DIRS, \
-    PRINT_FW_JSON, \
-    PRINT_FW_YAML, STORE_PACKING_INFO, ROCKET_STREAM_LOGLEVEL
+from monty.io import zopen
+
+from fireworks.core.firework import Firework, FWAction
+from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
+from fireworks.fw_config import (
+    PING_TIME_SECS,
+    PRINT_FW_JSON,
+    PRINT_FW_YAML,
+    REMOVE_USELESS_DIRS,
+    ROCKET_STREAM_LOGLEVEL,
+    STORE_PACKING_INFO,
+    FWData,
+)
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.core.launchpad import LockedWorkflowError, LaunchPad
 from fireworks.utilities.fw_utilities import get_fw_logger
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 7, 2013'
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2013, The Materials Project"
+__version__ = "0.1"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Feb 7, 2013"
 
 
 def do_ping(launchpad, launch_id):
     if launchpad:
         launchpad.ping_launch(launch_id)
     else:
-        with open('FW_ping.json', 'w') as f:
+        with open("FW_ping.json", "w") as f:
             f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
 
 
@@ -63,8 +65,9 @@ def start_ping_launch(launchpad, launch_id):
         return None
     else:
         ping_stop = threading.Event()
-        ping_thread = threading.Thread(target=ping_launch,
-                                       args=(launchpad, launch_id, ping_stop, threading.current_thread()))
+        ping_thread = threading.Thread(
+            target=ping_launch, args=(launchpad, launch_id, ping_stop, threading.current_thread())
+        )
         ping_thread.start()
         return ping_stop
 
@@ -94,8 +97,7 @@ def background_task(btask, spec, stop_event, master_thread):
 
 def start_background_task(btask, spec):
     ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop,
-                                                                 threading.current_thread()))
+    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop, threading.current_thread()))
     ping_thread.start()
     return ping_stop
 
@@ -132,8 +134,7 @@ class Rocket:
         lp = self.launchpad
         launch_dir = os.path.abspath(os.getcwd())
         logdir = lp.get_logdir() if lp else None
-        l_logger = get_fw_logger('rocket.launcher', l_dir=logdir,
-                                 stream_level=ROCKET_STREAM_LOGLEVEL)
+        l_logger = get_fw_logger("rocket.launcher", l_dir=logdir, stream_level=ROCKET_STREAM_LOGLEVEL)
 
         # check a FW job out of the launchpad
         if lp:
@@ -145,14 +146,14 @@ class Rocket:
             fpath = zpath("FW_offline.json")
             with zopen(fpath) as f_in:
                 d = json.loads(f_in.read())
-                d['started_on'] = datetime.utcnow().isoformat()
+                d["started_on"] = datetime.utcnow().isoformat()
                 with zopen(fpath, "wt") as f_out:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
-            print("No FireWorks are ready to run and match query! {}".format(self.fworker.query))
+            print(f"No FireWorks are ready to run and match query! {self.fworker.query}")
             return False
 
         final_state = None
@@ -160,9 +161,9 @@ class Rocket:
         btask_stops = []
 
         try:
-            if '_launch_dir' in m_fw.spec and lp:
+            if "_launch_dir" in m_fw.spec and lp:
                 prev_dir = launch_dir
-                launch_dir = os.path.expandvars(m_fw.spec['_launch_dir'])
+                launch_dir = os.path.expandvars(m_fw.spec["_launch_dir"])
                 if not os.path.abspath(launch_dir):
                     launch_dir = os.path.normpath(os.path.join(os.getcwd(), launch_dir))
                 # thread-safe "mkdir -p"
@@ -182,25 +183,22 @@ class Rocket:
                     except Exception:
                         pass
 
-            recovery = m_fw.spec.get('_recovery', None)
+            recovery = m_fw.spec.get("_recovery", None)
             if recovery:
-                recovery_dir = recovery.get('_prev_dir')
-                recovery_mode = recovery.get('_mode')
-                starting_task = recovery.get('_task_n')
-                all_stored_data.update(recovery.get('_all_stored_data'))
-                all_update_spec.update(recovery.get('_all_update_spec'))
-                all_mod_spec.extend(recovery.get('_all_mod_spec'))
+                recovery_dir = recovery.get("_prev_dir")
+                recovery_mode = recovery.get("_mode")
+                starting_task = recovery.get("_task_n")
+                all_stored_data.update(recovery.get("_all_stored_data"))
+                all_update_spec.update(recovery.get("_all_update_spec"))
+                all_mod_spec.extend(recovery.get("_all_mod_spec"))
                 if lp:
-                    l_logger.log(
-                        logging.INFO,
-                        'Recovering from task number {} in folder {}.'.format(starting_task,
-                                                                              recovery_dir))
-                if recovery_mode == 'cp' and launch_dir != recovery_dir:
+                    l_logger.log(logging.INFO, f"Recovering from task number {starting_task} in folder {recovery_dir}.")
+                if recovery_mode == "cp" and launch_dir != recovery_dir:
                     if lp:
                         l_logger.log(
                             logging.INFO,
-                            'Copying data from recovery folder {} to folder {}.'.format(recovery_dir,
-                                                                                        launch_dir))
+                            f"Copying data from recovery folder {recovery_dir} to folder {launch_dir}.",
+                        )
                     distutils.dir_util.copy_tree(recovery_dir, launch_dir, update=1)
 
             else:
@@ -215,15 +213,14 @@ class Rocket:
                         shutil.copyfileobj(fin, fout)
 
             if lp:
-                message = 'RUNNING fw_id: {} in directory: {}'. \
-                    format(m_fw.fw_id, os.getcwd())
+                message = f"RUNNING fw_id: {m_fw.fw_id} in directory: {os.getcwd()}"
                 l_logger.log(logging.INFO, message)
 
             # write FW.json and/or FW.yaml to the directory
             if PRINT_FW_JSON:
-                m_fw.to_file('FW.json', indent=4)
+                m_fw.to_file("FW.json", indent=4)
             if PRINT_FW_YAML:
-                m_fw.to_file('FW.yaml')
+                m_fw.to_file("FW.yaml")
 
             my_spec = dict(m_fw.spec)  # make a copy of spec, don't override original
             my_spec["_fw_env"] = self.fworker.env
@@ -232,16 +229,18 @@ class Rocket:
             ping_stop = start_ping_launch(lp, launch_id)
 
             # start background tasks
-            if '_background_tasks' in my_spec:
-                for bt in my_spec['_background_tasks']:
+            if "_background_tasks" in my_spec:
+                for bt in my_spec["_background_tasks"]:
                     btask_stops.append(start_background_task(bt, m_fw.spec))
 
             # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
-                checkpoint = {'_task_n': t_counter,
-                              '_all_stored_data': all_stored_data,
-                              '_all_update_spec': all_update_spec,
-                              '_all_mod_spec': all_mod_spec}
+                checkpoint = {
+                    "_task_n": t_counter,
+                    "_all_stored_data": all_stored_data,
+                    "_all_update_spec": all_update_spec,
+                    "_all_mod_spec": all_mod_spec,
+                }
                 Rocket.update_checkpoint(lp, launch_dir, launch_id, checkpoint)
 
                 if lp:
@@ -274,8 +273,7 @@ class Rocket:
                         exception_details = None
                     except BaseException as e:
                         if lp:
-                            l_logger.log(logging.WARNING,
-                                         "Exception couldn't be serialized: %s " % e)
+                            l_logger.log(logging.WARNING, "Exception couldn't be serialized: %s " % e)
                         exception_details = None
 
                     try:
@@ -283,23 +281,26 @@ class Rocket:
                     except Exception:
                         m_task = None
 
-                    m_action = FWAction(stored_data={'_message': 'runtime error during task',
-                                                     '_task': m_task,
-                                                     '_exception': {'_stacktrace': tb,
-                                                                    '_details': exception_details}},
-                                        exit=True)
+                    m_action = FWAction(
+                        stored_data={
+                            "_message": "runtime error during task",
+                            "_task": m_task,
+                            "_exception": {"_stacktrace": tb, "_details": exception_details},
+                        },
+                        exit=True,
+                    )
                     m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
                     if lp:
-                        final_state = 'FIZZLED'
+                        final_state = "FIZZLED"
                         lp.complete_launch(launch_id, m_action, final_state)
                     else:
                         fpath = zpath("FW_offline.json")
                         with zopen(fpath) as f_in:
                             d = json.loads(f_in.read())
-                            d['fwaction'] = m_action.to_dict()
-                            d['state'] = 'FIZZLED'
-                            d['completed_on'] = datetime.utcnow().isoformat()
+                            d["fwaction"] = m_action.to_dict()
+                            d["state"] = "FIZZLED"
+                            d["completed_on"] = datetime.utcnow().isoformat()
                             with zopen(fpath, "wt") as f_out:
                                 f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -307,10 +308,10 @@ class Rocket:
 
                 # read in a FWAction from a file, in case the task is not Python and cannot return
                 # it explicitly
-                if os.path.exists('FWAction.json'):
-                    m_action = FWAction.from_file('FWAction.json')
-                elif os.path.exists('FWAction.yaml'):
-                    m_action = FWAction.from_file('FWAction.yaml')
+                if os.path.exists("FWAction.json"):
+                    m_action = FWAction.from_file("FWAction.json")
+                elif os.path.exists("FWAction.yaml"):
+                    m_action = FWAction.from_file("FWAction.yaml")
 
                 if not m_action:
                     m_action = FWAction()
@@ -332,7 +333,7 @@ class Rocket:
 
             # add job packing info if this is needed
             if FWData().MULTIPROCESSING and STORE_PACKING_INFO:
-                all_stored_data['multiprocess_name'] = multiprocessing.current_process().name
+                all_stored_data["multiprocess_name"] = multiprocessing.current_process().name
 
             # perform finishing operation
             stop_backgrounds(ping_stop, btask_stops)
@@ -340,8 +341,8 @@ class Rocket:
                 b.set()
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             # last background monitors
-            if '_background_tasks' in my_spec:
-                for bt in my_spec['_background_tasks']:
+            if "_background_tasks" in my_spec:
+                for bt in my_spec["_background_tasks"]:
                     if bt.run_on_finish:
                         for task in bt.tasks:
                             task.run_task(m_fw.spec)
@@ -353,16 +354,16 @@ class Rocket:
             m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
 
             if lp:
-                final_state = 'COMPLETED'
+                final_state = "COMPLETED"
                 lp.complete_launch(launch_id, m_action, final_state)
             else:
 
                 fpath = zpath("FW_offline.json")
                 with zopen(fpath) as f_in:
                     d = json.loads(f_in.read())
-                    d['fwaction'] = m_action.to_dict()
-                    d['state'] = 'COMPLETED'
-                    d['completed_on'] = datetime.utcnow().isoformat()
+                    d["fwaction"] = m_action.to_dict()
+                    d["state"] = "COMPLETED"
+                    d["completed_on"] = datetime.utcnow().isoformat()
                     with zopen(fpath, "wt") as f_out:
                         f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -370,11 +371,12 @@ class Rocket:
 
         except LockedWorkflowError as e:
             l_logger.log(logging.DEBUG, traceback.format_exc())
-            l_logger.log(logging.WARNING,
-                         "Firework {} reached final state {} but couldn't complete the update of "
-                         "the database. Reason: {}\nRefresh the WF to recover the result "
-                         "(lpad admin refresh -i {}).".format(
-                             self.fw_id, final_state, e, self.fw_id))
+            l_logger.log(
+                logging.WARNING,
+                "Firework {} reached final state {} but couldn't complete the update of "
+                "the database. Reason: {}\nRefresh the WF to recover the result "
+                "(lpad admin refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id),
+            )
             return True
 
         except Exception:
@@ -387,10 +389,14 @@ class Rocket:
 
             do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
             # the action produced by the task is discarded
-            m_action = FWAction(stored_data={'_message': 'runtime error during task', '_task': None,
-                                             '_exception': {'_stacktrace': traceback.format_exc(),
-                                                            '_details': None}},
-                                exit=True)
+            m_action = FWAction(
+                stored_data={
+                    "_message": "runtime error during task",
+                    "_task": None,
+                    "_exception": {"_stacktrace": traceback.format_exc(), "_details": None},
+                },
+                exit=True,
+            )
 
             try:
                 m_action = self.decorate_fwaction(m_action, my_spec, m_fw, launch_dir)
@@ -399,22 +405,23 @@ class Rocket:
 
             if lp:
                 try:
-                    lp.complete_launch(launch_id, m_action, 'FIZZLED')
+                    lp.complete_launch(launch_id, m_action, "FIZZLED")
                 except LockedWorkflowError as e:
                     l_logger.log(logging.DEBUG, traceback.format_exc())
-                    l_logger.log(logging.WARNING,
-                                 "Firework {} fizzled but couldn't complete the update of the database."
-                                 " Reason: {}\nRefresh the WF to recover the result "
-                                 "(lpad admin refresh -i {}).".format(
-                                     self.fw_id, final_state, e, self.fw_id))
+                    l_logger.log(
+                        logging.WARNING,
+                        "Firework {} fizzled but couldn't complete the update of the database."
+                        " Reason: {}\nRefresh the WF to recover the result "
+                        "(lpad admin refresh -i {}).".format(self.fw_id, final_state, e, self.fw_id),
+                    )
                     return True
             else:
                 fpath = zpath("FW_offline.json")
                 with zopen(fpath) as f_in:
                     d = json.loads(f_in.read())
-                    d['fwaction'] = m_action.to_dict()
-                    d['state'] = 'FIZZLED'
-                    d['completed_on'] = datetime.utcnow().isoformat()
+                    d["fwaction"] = m_action.to_dict()
+                    d["state"] = "FIZZLED"
+                    d["completed_on"] = datetime.utcnow().isoformat()
                     with zopen(fpath, "wt") as f_out:
                         f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -437,7 +444,7 @@ class Rocket:
             fpath = zpath(os.path.join(launch_dir, "FW_offline.json"))
             with zopen(fpath) as f_in:
                 d = json.loads(f_in.read())
-                d['checkpoint'] = checkpoint
+                d["checkpoint"] = checkpoint
                 with zopen(fpath, "wt") as f_out:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -451,7 +458,7 @@ class Rocket:
             fwaction.mod_spec.append({"_push_all": {"_job_info": job_info}})
 
         if my_spec.get("_preserve_fworker"):
-            fwaction.update_spec['_fworker'] = self.fworker.name
+            fwaction.update_spec["_fworker"] = self.fworker.name
 
         if my_spec.get("_files_out"):
             # One potential area of conflict is if a fw depends on two fws
@@ -462,8 +469,6 @@ class Rocket:
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
                     filepath = sorted(files)[-1]
-                    fwaction.mod_spec.append({
-                        "_set": {"_files_prev->{:s}".format(k): filepath}
-                    })
+                    fwaction.mod_spec.append({"_set": {f"_files_prev->{k:s}": filepath}})
 
         return fwaction
