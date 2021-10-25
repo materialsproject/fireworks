@@ -1,15 +1,11 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import os
 
 from fireworks.core.firework import FiretaskBase
 from fireworks.utilities.filepad import FilePad
 
-__author__ = 'Kiran Mathew, Johannes Hoermann'
-__email__ = 'kmathew@lbl.gov, johannes.hoermann@imtek.uni-freiburg.de'
-__credits__ = 'Anubhav Jain'
+__author__ = "Kiran Mathew, Johannes Hoermann"
+__email__ = "kmathew@lbl.gov, johannes.hoermann@imtek.uni-freiburg.de"
+__credits__ = "Anubhav Jain"
 
 
 class AddFilesTask(FiretaskBase):
@@ -26,7 +22,8 @@ class AddFilesTask(FiretaskBase):
         - compress (bool): whether or not to compress the file before inserting to gridfs
         - metadata (dict): metadata to store along with the file, stored in 'metadata' key
     """
-    _fw_name = 'AddFilesTask'
+
+    _fw_name = "AddFilesTask"
     required_params = ["paths"]
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
@@ -49,8 +46,7 @@ class AddFilesTask(FiretaskBase):
         fpad = get_fpad(self.get("filepad_file", None))
 
         for p, l in zip(paths, identifiers):
-            fpad.add_file(p, identifier=l, metadata=self.get("metadata", None),
-                          compress=self.get("compress", True))
+            fpad.add_file(p, identifier=l, metadata=self.get("metadata", None), compress=self.get("compress", True))
 
 
 class GetFilesTask(FiretaskBase):
@@ -66,7 +62,8 @@ class GetFilesTask(FiretaskBase):
         - dest_dir (str): destination directory, default is the current working directory
         - new_file_names ([str]): if provided, the retrieved files will be renamed
     """
-    _fw_name = 'GetFilesTask'
+
+    _fw_name = "GetFilesTask"
     required_params = ["identifiers"]
     optional_params = ["filepad_file", "dest_dir", "new_file_names"]
 
@@ -128,18 +125,28 @@ class GetFilesByQueryTask(FiretaskBase):
     can help to assure deterministic behavior, e.g. by always processing newer
     files later.
     """
-    _fw_name = 'GetFilesByQueryTask'
+
+    _fw_name = "GetFilesByQueryTask"
     required_params = ["query"]
     optional_params = [
-        "dest_dir", "filepad_file",
-        "fizzle_degenerate_file_name", "fizzle_empty_result",
-        "limit", "meta_file", "meta_file_suffix", "new_file_names",
-        "sort_direction", "sort_key"]
+        "dest_dir",
+        "filepad_file",
+        "fizzle_degenerate_file_name",
+        "fizzle_empty_result",
+        "limit",
+        "meta_file",
+        "meta_file_suffix",
+        "new_file_names",
+        "sort_direction",
+        "sort_key",
+    ]
 
     def run_task(self, fw_spec):
-        import pymongo
         import json
+
+        import pymongo
         from ruamel.yaml import YAML
+
         from fireworks.utilities.dict_mods import arrow_to_dot
 
         fpad = get_fpad(self.get("filepad_file", None))
@@ -150,8 +157,7 @@ class GetFilesByQueryTask(FiretaskBase):
         sort_direction = self.get("sort_direction", pymongo.DESCENDING)
         limit = self.get("limit", None)
         fizzle_empty_result = self.get("fizzle_empty_result", True)
-        fizzle_degenerate_file_name = self.get(
-          "fizzle_degenerate_file_name", True)
+        fizzle_degenerate_file_name = self.get("fizzle_degenerate_file_name", True)
         meta_file = self.get("meta_file", False)
         meta_file_suffix = self.get("meta_file_suffix", ".meta.yaml")
 
@@ -162,17 +168,17 @@ class GetFilesByQueryTask(FiretaskBase):
         assert isinstance(l, list)
 
         if fizzle_empty_result and (len(l) == 0):
-            raise ValueError("Query yielded empty result! (query: {:s})".format(
-                json.dumps(query)))
+            raise ValueError(f"Query yielded empty result! (query: {json.dumps(query):s})")
 
         unique_file_names = set()  # track all used file names
         for i, (file_contents, doc) in enumerate(l[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             if fizzle_degenerate_file_name and (file_name in unique_file_names):
-                raise ValueError(' '.join((
-                    "The local file name {:s} is used",
-                    "a second time by result {:d}/{:d}! (query: {:s})")).format(
-                        file_name, i, len(l), json.dumps(query)))
+                raise ValueError(
+                    " ".join(
+                        ("The local file name {:s} is used", "a second time by result {:d}/{:d}! (query: {:s})")
+                    ).format(file_name, i, len(l), json.dumps(query))
+                )
 
             unique_file_names.add(file_name)
             with open(os.path.join(dest_dir, file_name), "wb") as f:
@@ -195,7 +201,8 @@ class DeleteFilesTask(FiretaskBase):
     Optional params:
         - filepad_file (str): path to the filepad db config file
     """
-    _fw_name = 'DeleteFilesTask'
+
+    _fw_name = "DeleteFilesTask"
     required_params = ["identifiers"]
     optional_params = ["filepad_file"]
 

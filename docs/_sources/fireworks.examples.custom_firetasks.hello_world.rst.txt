@@ -20,7 +20,6 @@ fireworks.examples.custom\_firetasks.hello\_world.hello\_world\_task module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

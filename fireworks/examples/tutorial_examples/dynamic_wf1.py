@@ -7,7 +7,6 @@ from fireworks import ScriptTask
 from fireworks.core.firework import Firework, Workflow
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import rapidfire
-
 from fw_tutorials.dynamic_wf.printjob_task import PrintJobTask
 
 if __name__ == "__main__":

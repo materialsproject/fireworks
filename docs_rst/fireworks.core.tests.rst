@@ -44,7 +44,6 @@ fireworks.core.tests.test\_tracker module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

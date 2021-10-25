@@ -4,8 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fireworks.utilities.tests package &#8212; FireWorks 1.9.6 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fireworks.utilities.tests package &#8212; FireWorks 1.9.7 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,7 +15,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
- 
+
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
@@ -28,16 +28,16 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">fireworks.utilities.tests package</a></li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.utilities.tests package</a></li>
       </ul>
-    </div>  
+    </div>
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-            
+
   <div class="section" id="fireworks-utilities-tests-package">
 <h1>fireworks.utilities.tests package<a class="headerlink" href="#fireworks-utilities-tests-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
@@ -58,15 +58,21 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut">
-<code class="sig-name descname">test_dagflow_cut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut" title="Permalink to this definition">¶</a></dt>
-<dd><p>disconnected graph</p>
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_inputs">
+<code class="sig-name descname">test_dagflow_clashing_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>parent firework output overwrites an input in spec</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_input">
-<code class="sig-name descname">test_dagflow_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>missing input</p>
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_outputs">
+<code class="sig-name descname">test_dagflow_clashing_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>subsequent task overwrites output of a task</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut">
+<code class="sig-name descname">test_dagflow_cut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut" title="Permalink to this definition">¶</a></dt>
+<dd><p>disconnected graph</p>
 </dd></dl>
 
 <dl class="py method">
@@ -82,15 +88,27 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_missing_input">
+<code class="sig-name descname">test_dagflow_missing_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_missing_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>missing input</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_non_dataflow_tasks">
+<code class="sig-name descname">test_dagflow_non_dataflow_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_non_dataflow_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>non-dataflow tasks using outputs and inputs keys do not fail</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok">
 <code class="sig-name descname">test_dagflow_ok</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok" title="Permalink to this definition">¶</a></dt>
 <dd><p>construct and replicate</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_output">
-<code class="sig-name descname">test_dagflow_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>clashing inputs</p>
+<dt id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_race_condition">
+<code class="sig-name descname">test_dagflow_race_condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_race_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>two parent firework outputs overwrite each other</p>
 </dd></dl>
 
 <dl class="py method">
@@ -359,14 +377,14 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.6 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">fireworks.utilities.tests package</a></li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.utilities.tests package</a></li>
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

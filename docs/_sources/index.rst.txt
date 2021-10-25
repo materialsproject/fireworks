@@ -211,6 +211,7 @@ Misc
     qadapter_programming
     update_text
     filepad_tutorial
+    json_schema
 
 Reference
 =========

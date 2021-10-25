@@ -160,4 +160,3 @@ Optional parameters
 -------------------
 
 * format: (str) - choose between "zip", "tar", "bztar" or "gztar" (default).
-

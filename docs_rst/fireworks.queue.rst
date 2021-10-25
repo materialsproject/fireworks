@@ -20,7 +20,6 @@ fireworks.queue.queue\_launcher module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

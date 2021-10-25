@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module allows you to modify a dict (a spec) using another dict (an instruction).
 The main method of interest is apply_dictmod().
@@ -53,7 +49,7 @@ def arrow_to_dot(input_dict):
 
 
 @singleton
-class DictMods(object):
+class DictMods:
     """
     Class to implement the supported mongo-like modifications on a dict.
     Supported keywords include the following Mongo-based keywords, with the
@@ -78,7 +74,7 @@ class DictMods(object):
     def __init__(self):
         self.supported_actions = {}
         for i in dir(self):
-            if (not re.match('__\w+__', i)) and callable(getattr(self, i)):
+            if (not re.match(r"__\w+__", i)) and callable(getattr(self, i)):
                 self.supported_actions["_" + i] = getattr(self, i)
 
     @staticmethod
@@ -132,8 +128,7 @@ class DictMods(object):
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             if key in d and v not in d[key]:
                 d[key].append(v)
             elif key not in d:
@@ -144,8 +139,7 @@ class DictMods(object):
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             if key in d:
                 d[key] = [i for i in d[key] if i != v]
 
@@ -153,8 +147,7 @@ class DictMods(object):
     def pull_all(input_dict, settings):
         for k, v in settings.items():
             if k in input_dict and (not isinstance(input_dict[k], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             for i in v:
                 DictMods.pull(input_dict, {k: i})
 
@@ -163,8 +156,7 @@ class DictMods(object):
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
-                raise ValueError("Keyword {} does not refer to an array."
-                                 .format(k))
+                raise ValueError(f"Keyword {k} does not refer to an array.")
             if v == 1:
                 d[key].pop()
             elif v == -1:
@@ -187,4 +179,4 @@ def apply_mod(modification, obj):
         if action in DictMods().supported_actions:
             DictMods().supported_actions[action].__call__(obj, settings)
         else:
-            raise ValueError("{} is not a supported action!".format(action))
+            raise ValueError(f"{action} is not a supported action!")

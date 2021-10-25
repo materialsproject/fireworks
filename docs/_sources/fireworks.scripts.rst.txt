@@ -36,7 +36,6 @@ fireworks.scripts.rlaunch\_run module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

@@ -44,7 +44,6 @@ fireworks.examples.tutorial\_examples.workflows module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

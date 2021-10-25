@@ -44,7 +44,6 @@ fireworks.user\_objects.firetasks.tests.test\_templatewriter\_task module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

@@ -12,7 +12,6 @@ fireworks.user\_objects.dupefinders.dupefinder\_exact module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

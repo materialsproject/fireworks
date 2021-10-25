@@ -75,5 +75,3 @@ To delete the file contents and the associated document by the file id::
 To delete all the file contents and the associated documents by a general mongo query::
 
     fp.delete_file_by_query(<query>)
-
-

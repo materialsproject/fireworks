@@ -2,7 +2,7 @@
 This code is described in the Workflow tutorial, https://materialsproject.github.io/fireworks/workflow_tutorial.html
 """
 
-from fireworks import Firework, Workflow, FWorker, LaunchPad, ScriptTask
+from fireworks import Firework, FWorker, LaunchPad, ScriptTask, Workflow
 from fireworks.core.rocket_launcher import rapidfire
 
 if __name__ == "__main__":

@@ -52,7 +52,6 @@ fireworks.tests.test\_workflow module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

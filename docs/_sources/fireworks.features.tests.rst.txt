@@ -12,7 +12,6 @@ fireworks.features.tests.test\_introspect module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
