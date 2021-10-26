@@ -1598,7 +1598,7 @@ class LaunchPad(FWSerializable):
                 json.dumps(action_dict), encoding="utf-8", metadata={"launch_id": launch_id}
             )
             launch_db_dict["action"] = {"gridfs_id": str(action_id)}
-            self.m_logger.warning("The size of the launch document was too large. Saving " "the action in gridfs.")
+            self.m_logger.warning("The size of the launch document was too large. Saving the action in gridfs.")
 
             self.launches.find_one_and_replace({"launch_id": m_launch.launch_id}, launch_db_dict, upsert=True)
 

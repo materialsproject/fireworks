@@ -77,7 +77,7 @@ def launch_rocket_to_queue(
         raise ValueError(f"Desired launch directory {launcher_dir} does not exist!")
 
     if "--offline" in qadapter["rocket_launch"] and not reserve:
-        raise ValueError("Must use reservation mode (-r option) of qlaunch " "when using offline option of rlaunch!!")
+        raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline option of rlaunch!!")
 
     if reserve and "singleshot" not in qadapter.get("rocket_launch", ""):
         raise ValueError("Reservation mode of queue launcher only works for singleshot Rocket Launcher!")
@@ -149,7 +149,7 @@ def launch_rocket_to_queue(
                 reservation_id = qadapter.submit_to_queue(SUBMIT_SCRIPT_NAME)
                 if not reservation_id:
                     raise RuntimeError(
-                        "queue script could not be submitted, check queue " "script/queue adapter/queue server status!"
+                        "queue script could not be submitted, check queue script/queue adapter/queue server status!"
                     )
                 elif reserve:
                     launchpad.set_reservation_id(launch_id, reservation_id)
@@ -336,7 +336,7 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
         time.sleep(RETRY_INTERVAL)
         RETRY_INTERVAL *= 2
 
-    raise RuntimeError("Unable to determine number of jobs in queue, " "check queue adapter and queue server status!")
+    raise RuntimeError("Unable to determine number of jobs in queue, check queue adapter and queue server status!")
 
 
 def setup_offline_job(launchpad, fw, launch_id):
