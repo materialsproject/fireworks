@@ -309,7 +309,7 @@ class ForeachTask(FireTaskBase):
             spec[self["split"]] = chunk
             task = load_object(self["task"])
             task["chunk_number"] = index
-            name = self._fw_name + " " + str(index)
+            name = f"{self._fw_name} {index}"
             fireworks.append(Firework(task, spec=spec, name=name))
         return FWAction(detours=fireworks)
 

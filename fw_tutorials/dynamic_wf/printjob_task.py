@@ -18,6 +18,6 @@ class PrintJobTask(FiretaskBase):
         job_info_array = fw_spec["_job_info"]
         prev_job_info = job_info_array[-1]
 
-        print("The name of the previous job was: {}".format(prev_job_info["name"]))
-        print("The id of the previous job was: {}".format(prev_job_info["fw_id"]))
-        print("The location of the previous job was: {}".format(prev_job_info["launch_dir"]))
+        print(f"The name of the previous job was: {prev_job_info['name']}")
+        print(f"The id of the previous job was: {prev_job_info['fw_id']}")
+        print(f"The location of the previous job was: {prev_job_info['launch_dir']}")

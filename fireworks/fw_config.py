@@ -124,11 +124,7 @@ def override_user_settings():
     config_paths = config_paths or [os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")]
 
     if len(config_paths) > 1:
-        print(
-            "Found many potential paths for {}: {}\nChoosing as default: {}".format(
-                "FW_CONFIG_FILE", config_paths, config_paths[0]
-            )
-        )
+        print(f"Found many potential paths for FW_CONFIG_FILE: {config_paths}\nChoosing as default: {config_paths[0]}")
 
     if os.path.exists(config_paths[0]):
         overrides = loadfn(config_paths[0])
@@ -144,7 +140,7 @@ def override_user_settings():
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
         if globals().get(k, None) is None:
-            fname = "my_qadapter.yaml" if k == "QUEUEADAPTER_LOC" else "my_{}.yaml".format(k.split("_")[0].lower())
+            fname = "my_qadapter.yaml" if k == "QUEUEADAPTER_LOC" else f"my_{k.split('_')[0].lower()}.yaml"
             m_paths = []
             if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
                 test_paths.insert(0, CONFIG_FILE_DIR)

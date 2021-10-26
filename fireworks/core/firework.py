@@ -78,9 +78,8 @@ class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
             for k in kwargs:
                 if k not in allowed_params:
                     raise RuntimeError(
-                        "Invalid keyword argument specified for: {}. You specified: {}. Allowed values are: {}.".format(
-                            self.__class__, k, allowed_params
-                        )
+                        f"Invalid keyword argument specified for: {self.__class__}. "
+                        f"You specified: {k}. Allowed values are: {allowed_params}."
                     )
 
     @abc.abstractmethod
@@ -815,8 +814,8 @@ class Workflow(FWSerializable):
             for pfw in fw.parents:
                 if pfw.fw_id not in self.links:
                     raise ValueError(
-                        "FW_id: {} defines a dependent link to FW_id: {}, but the latter was not "
-                        "added to the workflow!".format(fw.fw_id, pfw.fw_id)
+                        f"FW_id: {fw.fw_id} defines a dependent link to FW_id: {pfw.fw_id}, but the latter was not "
+                        "added to the workflow!"
                     )
                 if fw.fw_id not in self.links[pfw.fw_id]:
                     self.links[pfw.fw_id].append(fw.fw_id)
@@ -1037,9 +1036,8 @@ class Workflow(FWSerializable):
                     ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
                     if any(ready_run):
                         raise ValueError(
-                            "fw_id: {}: Detour option only works if all children "
-                            "of detours are not READY to run and have not "
-                            "already run".format(fw_id)
+                            f"fw_id: {fw_id}: Detour option only works if all children "
+                            "of detours are not READY to run and have not already run"
                         )
 
         # make sure all new child fws have negative fw_id

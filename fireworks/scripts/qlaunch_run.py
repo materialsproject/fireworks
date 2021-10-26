@@ -263,7 +263,7 @@ def qlaunch():
         else:
             do_launch(args)
         if interval > 0:
-            print("Next run in {} seconds... Press Ctrl-C to exit at any " "time.".format(interval))
+            print(f"Next run in {interval} seconds... Press Ctrl-C to exit at any time.")
             time.sleep(args.daemon)
         else:
             break

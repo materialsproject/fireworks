@@ -55,8 +55,7 @@ class CommonAdapter(QueueAdapterBase):
         """
         if q_type not in CommonAdapter.default_q_commands:
             raise ValueError(
-                "{} is not a supported queue type. "
-                "CommonAdaptor supports {}".format(q_type, list(self.default_q_commands.keys()))
+                f"{q_type} is not a supported queue type. CommonAdaptor supports {list(self.default_q_commands.keys())}"
             )
         self.q_type = q_type
         self.template_file = (

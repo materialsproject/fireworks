@@ -128,7 +128,7 @@ class Introspector:
             nsamples_fizzled += 1
             if state_key == "spec._tasks":
                 for t in doc["spec"]["_tasks"]:
-                    fizzled_keys.append("_fw_name{}{}".format(separator_str, t["_fw_name"]))
+                    fizzled_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
             elif state_key == "action.stored_data._exception._stacktrace":
                 stacktrace = (
                     doc.get("action", {})
@@ -151,7 +151,7 @@ class Introspector:
                 nsamples_completed += 1
                 if state_key == "spec._tasks":
                     for t in doc["spec"]["_tasks"]:
-                        completed_keys.append("_fw_name{}{}".format(separator_str, t["_fw_name"]))
+                        completed_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
                 else:
                     completed_keys.extend(flatten_to_keys(doc[state_key]))
 

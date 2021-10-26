@@ -57,8 +57,8 @@ def pw_check(ids, args, skip_pw=False):
                 print("Operation aborted by user.")
         if args.password != m_password:
             raise ValueError(
-                "Modifying more than {} entries requires setting the --password parameter! "
-                "(Today's date, e.g. 2012-02-25)".format(PW_CHECK_NUM)
+                f"Modifying more than {PW_CHECK_NUM} entries requires setting the --password parameter! "
+                "(Today's date, e.g. 2012-02-25)"
             )
     return ids
 
@@ -120,7 +120,7 @@ def get_lp(args):
         traceback.print_exc()
         err_message = (
             "FireWorks was not able to connect to MongoDB. Is the server running? "
-            "The database file specified was {}.".format(args.launchpad_file)
+            f"The database file specified was {args.launchpad_file}."
         )
         if not args.launchpad_file:
             err_message += (
@@ -824,7 +824,7 @@ def track_fws(args):
         for d in data:
             for t in d["trackers"]:
                 if (not include or t.filename in include) and (not exclude or t.filename not in exclude):
-                    output.append("## Launch id: {}".format(d["launch_id"]))
+                    output.append(f"## Launch id: {d['launch_id']}")
                     output.append(str(t))
         if output:
             name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})["name"]
@@ -1103,10 +1103,8 @@ def lpad():
     rerun_fws_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     rerun_fws_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     rerun_fws_parser.add_argument("--task-level", action="store_true", help="Enable task level recovery")
     rerun_fws_parser.add_argument(
@@ -1139,10 +1137,8 @@ def lpad():
     defuse_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     defuse_fw_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     defuse_fw_parser.set_defaults(func=defuse_fws)
 
@@ -1154,10 +1150,8 @@ def lpad():
     pause_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     pause_fw_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input "
-        "prompt required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     pause_fw_parser.set_defaults(func=pause_fws)
 
@@ -1169,10 +1163,8 @@ def lpad():
     reignite_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     reignite_fw_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input "
-        "prompt required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     reignite_fw_parser.set_defaults(func=reignite_fws)
 
@@ -1184,10 +1176,8 @@ def lpad():
     resume_fw_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     resume_fw_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input "
-        "prompt required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     resume_fw_parser.set_defaults(func=resume_fws)
 
@@ -1211,10 +1201,8 @@ def lpad():
     )
     update_fws_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input "
-        "prompt required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     update_fws_parser.set_defaults(func=update_fws)
 
@@ -1245,9 +1233,8 @@ def lpad():
     defuse_wf_parser.add_argument(*query_args, **query_kwargs)
     defuse_wf_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     defuse_wf_parser.set_defaults(func=pause_wfs)
 
@@ -1258,9 +1245,8 @@ def lpad():
     pause_wf_parser.add_argument(*query_args, **query_kwargs)
     pause_wf_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     pause_wf_parser.set_defaults(func=pause_wfs)
 
@@ -1271,10 +1257,8 @@ def lpad():
     reignite_wfs_parser.add_argument(*query_args, **query_kwargs)
     reignite_wfs_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input "
-        "prompt required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     reignite_wfs_parser.set_defaults(func=reignite_wfs)
 
@@ -1285,10 +1269,8 @@ def lpad():
     archive_parser.add_argument(*query_args, **query_kwargs)
     archive_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     archive_parser.set_defaults(func=archive)
 
@@ -1302,10 +1284,8 @@ def lpad():
     delete_wfs_parser.add_argument(*query_args, **query_kwargs)
     delete_wfs_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     delete_wfs_parser.add_argument(
         "--ldirs",
@@ -1356,10 +1336,8 @@ def lpad():
     priority_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     priority_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     priority_parser.add_argument(
         "-wf", action="store_true", help="the priority will be set for all the fireworks of the matching workflows"
@@ -1479,10 +1457,8 @@ def lpad():
     refresh_parser.add_argument(*query_args, **query_kwargs)
     refresh_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} "
-        "entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     refresh_parser.set_defaults(func=refresh)
 
@@ -1495,9 +1471,8 @@ def lpad():
     unlock_parser.add_argument(*query_args, **query_kwargs)
     unlock_parser.add_argument(
         "--password",
-        help="Today's date, e.g. 2012-02-25. "
-        "Password or positive response to input prompt "
-        "required when modifying more than {} entries.".format(PW_CHECK_NUM),
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
     )
     unlock_parser.set_defaults(func=unlock)
 

@@ -308,8 +308,7 @@ class LaunchPad(FWSerializable):
             {"fw_id": {"$in": fw_ids}, "state": {"$nin": allowed_states}}, {"fw_id": 1, "state": 1}
         ):
             self.m_logger.warning(
-                "Cannot update spec of fw_id: {} with state: {}. "
-                "Try rerunning first".format(fw["fw_id"], fw["state"])
+                f"Cannot update spec of fw_id: {fw['fw_id']} with state: {fw['state']}. Try rerunning first."
             )
 
     @classmethod
@@ -388,10 +387,8 @@ class LaunchPad(FWSerializable):
             self.m_logger.info("LaunchPad was RESET.")
         elif not require_password:
             raise ValueError(
-                "Password check cannot be overridden since the size of DB ({} workflows) "
-                "is greater than the max_reset_wo_password parameter ({}).".format(
-                    self.fireworks.count_documents({}), max_reset_wo_password
-                )
+                f"Password check cannot be overridden since the size of DB ({self.fireworks.count_documents({})} "
+                f"workflows) is greater than the max_reset_wo_password parameter ({max_reset_wo_password})."
             )
         else:
             raise ValueError(f"Invalid password! Password is today's date: {m_password}")
@@ -1754,7 +1751,7 @@ class LaunchPad(FWSerializable):
 
         # rerun this FW
         if m_fw["state"] in ["ARCHIVED", "DEFUSED"]:
-            self.m_logger.info("Cannot rerun fw_id: {}: it is {}.".format(fw_id, m_fw["state"]))
+            self.m_logger.info(f"Cannot rerun fw_id: {fw_id}: it is {m_fw['state']}.")
         elif m_fw["state"] == "WAITING" and not recover_launch:
             self.m_logger.debug(f"Skipping rerun fw_id: {fw_id}: it is already WAITING.")
         else:
@@ -1862,9 +1859,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug(f"Querying for duplicates, fw_id: {thief_fw.fw_id}")
             # iterate through all potential duplicates in the DB
             for potential_match in self.fireworks.find(m_query):
-                self.m_logger.debug(
-                    "Verifying for duplicates, fw_ids: {}, {}".format(thief_fw.fw_id, potential_match["fw_id"])
-                )
+                self.m_logger.debug(f"Verifying for duplicates, fw_ids: {thief_fw.fw_id}, {potential_match['fw_id']}")
 
                 # see if verification is needed, as this slows the process
                 verified = False
@@ -1893,9 +1888,7 @@ class LaunchPad(FWSerializable):
                     for launch in valuable_launches:
                         thief_fw.launches.append(launch)
                         stolen = True
-                        self.m_logger.info(
-                            "Duplicate found! fwids {} and {}".format(thief_fw.fw_id, potential_match["fw_id"])
-                        )
+                        self.m_logger.info(f"Duplicate found! fwids {thief_fw.fw_id} and {potential_match['fw_id']}")
         return stolen
 
     def set_priority(self, fw_id, priority):
@@ -1974,8 +1967,8 @@ class LaunchPad(FWSerializable):
                     self.ping_launch(launch_id, ptime=ping_dict["ping_time"], checkpoint=checkpoint)
                 else:
                     warnings.warn(
-                        "Unable to find FW_ping.json in {}! State history updated_on might be incorrect, trackers "
-                        "may not update.".format(m_launch.launch_dir)
+                        f"Unable to find FW_ping.json in {m_launch.launch_dir}! State history updated_on might be "
+                        "incorrect, trackers may not update."
                     )
                     m_launch.touch_history(checkpoint=checkpoint)
 

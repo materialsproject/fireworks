@@ -156,8 +156,7 @@ class FileTransferTask(FiretaskBase):
 
                 elif not ignore_errors:
                     raise ValueError(
-                        "There was an error performing operation {} from {} "
-                        "to {}".format(mode, self["files"], self["dest"])
+                        f"There was an error performing operation {mode} from {self['files']} to {self['dest']}"
                     )
 
         if mode == "rtransfer":

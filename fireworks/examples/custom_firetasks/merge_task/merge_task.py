@@ -33,8 +33,8 @@ class TaskB(FiretaskBase):
 class TaskC(FiretaskBase):
     def run_task(self, fw_spec):
         print("This is task C.")
-        print("Task A gave me: {}".format(fw_spec["param_A"]))
-        print("Task B gave me: {}".format(fw_spec["param_B"]))
+        print(f"Task A gave me: {fw_spec['param_A']}")
+        print(f"Task B gave me: {fw_spec['param_B']}")
 
 
 if __name__ == "__main__":

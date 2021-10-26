@@ -36,7 +36,7 @@ class AddFilesTask(FiretaskBase):
         if isinstance(self["paths"], list):
             paths = [os.path.abspath(p) for p in self["paths"]]
         else:
-            paths = [os.path.abspath(p) for p in glob("{}/{}".format(directory, self["paths"]))]
+            paths = [os.path.abspath(p) for p in glob(f"{directory}/{self['paths']}")]
 
         # if not given, use the full paths as identifiers
         identifiers = self.get("identifiers", paths)
@@ -175,9 +175,8 @@ class GetFilesByQueryTask(FiretaskBase):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             if fizzle_degenerate_file_name and (file_name in unique_file_names):
                 raise ValueError(
-                    " ".join(
-                        ("The local file name {:s} is used", "a second time by result {:d}/{:d}! (query: {:s})")
-                    ).format(file_name, i, len(l), json.dumps(query))
+                    f"The local file name {file_name} is used a second time by result {i}/{len(l)}! "
+                    f"(query: {json.dumps(query)})"
                 )
 
             unique_file_names.add(file_name)
