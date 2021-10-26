@@ -978,7 +978,7 @@ class LaunchPad(FWSerializable):
 
         self.m_logger.debug("Updating indices...")
         self.fireworks.create_index("fw_id", unique=True, background=bkground)
-        for f in ("state", "spec._category", "created_on", "updated_on" "name", "launches"):
+        for f in ("state", "spec._category", "created_on", "updated_on", "name", "launches"):
             self.fireworks.create_index(f, background=bkground)
 
         self.launches.create_index("launch_id", unique=True, background=bkground)
