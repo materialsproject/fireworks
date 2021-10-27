@@ -12,6 +12,7 @@ import traceback
 import warnings
 from collections import defaultdict
 from itertools import chain
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 import gridfs
 from bson import ObjectId
@@ -50,7 +51,7 @@ __date__ = "Jan 30, 2013"
 # TODO: lots of duplication reduction and cleanup possible
 
 
-def sort_aggregation(sort):
+def sort_aggregation(sort: Sequence[Tuple[str, int]]) -> List[Mapping[str, Any]]:
     """Build sorting aggregation pipeline.
 
     Args:
@@ -97,7 +98,13 @@ class WFLock:
     Calling functions are responsible for handling the error in order to avoid database inconsistencies.
     """
 
-    def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
+    def __init__(
+        self,
+        lp: "LaunchPad",
+        fw_id: int,
+        expire_secs: int = WFLOCK_EXPIRATION_SECS,
+        kill: bool = WFLOCK_EXPIRATION_KILL,
+    ):
         """
         Args:
             lp (LaunchPad)
@@ -110,7 +117,7 @@ class WFLock:
         self.expire_secs = expire_secs
         self.kill = kill
 
-    def __enter__(self):
+    def __enter__(self) -> None:
         ctr = 0
         waiting_time = 0
         # acquire lock
@@ -140,7 +147,7 @@ class WFLock:
                     {"nodes": self.fw_id, "locked": {"$exists": False}}, {"$set": {"locked": True}}
                 )
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.lp.workflows.find_one_and_update({"nodes": self.fw_id}, {"$unset": {"locked": True}})
 
 
@@ -151,17 +158,17 @@ class LaunchPad(FWSerializable):
 
     def __init__(
         self,
-        host=None,
-        port=None,
-        name=None,
-        username=None,
-        password=None,
-        logdir=None,
-        strm_lvl=None,
-        user_indices=None,
-        wf_user_indices=None,
-        authsource=None,
-        uri_mode=False,
+        host: Optional[str] = None,
+        port: Optional[int] = None,
+        name: Optional[str] = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        logdir: Optional[str] = None,
+        strm_lvl: Optional[str] = None,
+        user_indices: Optional[Sequence[int]] = None,
+        wf_user_indices: Optional[Sequence[int]] = None,
+        authsource: str = None,
+        uri_mode: bool = False,
         mongoclient_kwargs=None,
     ):
         """
@@ -580,7 +587,7 @@ class LaunchPad(FWSerializable):
             fw_states,
         )
 
-    def delete_fws(self, fw_ids, delete_launch_dirs=False):
+    def delete_fws(self, fw_ids: Sequence[int], delete_launch_dirs: bool = False) -> None:
         """Delete a set of fireworks identified by their fw_ids.
 
         ATTENTION: This function serves maintenance purposes and will leave
@@ -724,7 +731,14 @@ class LaunchPad(FWSerializable):
 
         return wf
 
-    def get_fw_ids(self, query=None, sort=None, limit=0, count_only=False, launches_mode=False):
+    def get_fw_ids(
+        self,
+        query: Optional[Mapping[str, Any]] = None,
+        sort=None,
+        limit: int = 0,
+        count_only: bool = False,
+        launches_mode: bool = False,
+    ) -> Union[int, Sequence[int]]:
         """
         Return all the fw ids that match a query.
 
@@ -2038,7 +2052,7 @@ class LazyFirework:
     db_fields = ("name", "fw_id", "spec", "created_on", "state")
     db_launch_fields = ("launches", "archived_launches")
 
-    def __init__(self, fw_id, fw_coll, launch_coll, fallback_fs):
+    def __init__(self, fw_id: int, fw_coll, launch_coll, fallback_fs):
         """
         Args:
             fw_id (int): firework id
@@ -2177,7 +2191,7 @@ class LazyFirework:
 
     # Get a type of Launch object
 
-    def _get_launch_data(self, name):
+    def _get_launch_data(self, name: str):
         """
         Pull launch data individually for each field.
 
@@ -2202,7 +2216,7 @@ class LazyFirework:
         return getattr(fw, name)
 
 
-def get_action_from_gridfs(action_dict, fallback_fs):
+def get_action_from_gridfs(action_dict: Mapping[str, Any], fallback_fs: gridfs.GridFS) -> Dict[str, Any]:
     """
     Helper function to obtain the correct dictionary of the FWAction associated
     with a launch. If necessary retrieves the information from gridfs based

@@ -5,8 +5,10 @@ This module contains methods for launching Rockets, both singly and in rapid-fir
 import os
 import time
 from datetime import datetime
+from typing import Optional
 
 from fireworks.core.fworker import FWorker
+from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket import Rocket
 from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
 from fireworks.utilities.fw_utilities import (
@@ -23,17 +25,23 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 22, 2013"
 
 
-def get_fworker(fworker):
-    if fworker:
+def get_fworker(fworker: Optional[FWorker]) -> FWorker:
+    if fworker is not None:
         my_fwkr = fworker
     elif FWORKER_LOC:
-        my_fwkr = FWorker.from_file(FWORKER_LOC)
+        my_fwkr = FWorker.from_file(FWORKER_LOC)  # type: ignore
     else:
         my_fwkr = FWorker()
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_exception=False):
+def launch_rocket(
+    launchpad: LaunchPad,
+    fworker: Optional[FWorker] = None,
+    fw_id: Optional[int] = None,
+    strm_lvl: str = "INFO",
+    pdb_on_exception: bool = False,
+) -> bool:
     """
     Run a single rocket in the current directory.
 
@@ -53,6 +61,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_e
     l_logger = get_fw_logger("rocket.launcher", l_dir=l_dir, stream_level=strm_lvl)
 
     log_multi(l_logger, "Launching Rocket")
+    assert fw_id is not None
     rocket = Rocket(launchpad, fworker, fw_id)
     rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception)
     log_multi(l_logger, "Rocket finished")
@@ -60,16 +69,16 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_e
 
 
 def rapidfire(
-    launchpad,
-    fworker=None,
-    m_dir=None,
-    nlaunches=0,
-    max_loops=-1,
-    sleep_time=None,
-    strm_lvl="INFO",
-    timeout=None,
-    local_redirect=False,
-    pdb_on_exception=False,
+    launchpad: LaunchPad,
+    fworker: Optional[FWorker] = None,
+    m_dir: Optional[str] = None,
+    nlaunches: int = 0,
+    max_loops: int = -1,
+    sleep_time: Optional[int] = None,
+    strm_lvl: str = "INFO",
+    timeout: Optional[int] = None,
+    local_redirect: bool = False,
+    pdb_on_exception: bool = False,
 ):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories

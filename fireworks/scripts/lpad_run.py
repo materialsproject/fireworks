@@ -55,7 +55,7 @@ __date__ = "Feb 7, 2013"
 DEFAULT_LPAD_YAML = "my_launchpad.yaml"
 
 
-def pw_check(ids: List[int], args: Namespace, skip_pw: bool = False) -> List[int]:
+def pw_check(ids: Sequence[int], args: Namespace, skip_pw: bool = False) -> List[int]:
     if len(ids) > PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime("%Y-%m-%d")
         if not args.password:
@@ -249,7 +249,7 @@ def add_wf_dir(args: Namespace) -> None:
         lp.add_wf(fwf)
 
 
-def print_fws(ids, lp, args: Namespace) -> None:
+def print_fws(ids: Sequence[int], lp: LaunchPad, args: Namespace) -> None:
     """Prints results of some FireWorks query to stdout."""
     fws = []
     if args.display_format == "ids":
@@ -327,9 +327,7 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
     return ids
 
 
-def get_fws_helper(
-    lp: LaunchPad, ids: List[int], args: Namespace
-) -> Union[List[int], int, List[Dict[str, Union[str, int, bool]]], Union[str, int, bool]]:
+def get_fws_helper(lp: LaunchPad, ids: Sequence[int], args: Namespace) -> Union[List[int], int, List[Dict[str, Union[str, int, bool]]], Union[str, int, bool]]:
     """Get fws from ids in a representation according to args.display_format."""
     fws = []
     if args.display_format == "ids":
@@ -493,15 +491,15 @@ def delete_wfs(args: Namespace) -> None:
     lp.m_logger.info(f"Finished deleting {len(fw_ids)} WFs")
 
 
-def get_children(links, start, max_depth):
-    data = {}
-    for l, c in links.items():
-        if l == start:
-            if len(c) > 0:
-                data[l] = [get_children(links, i, max_depth) for i in c]
-            else:
-                data[l] = c
-    return data
+# def get_children(links, start):
+#     data = {}
+#     for l, c in links.items():
+#         if l == start:
+#             if len(c) > 0:
+#                 data[l] = [get_children(links, i) for i in c]
+#             else:
+#                 data[l] = c
+#     return data
 
 
 def detect_lostruns(args: Namespace) -> None:
@@ -695,7 +693,7 @@ def set_priority(args: Namespace) -> None:
     lp.m_logger.info(f"Finished setting priorities of {len(fw_ids)} FWs")
 
 
-def _open_webbrowser(url):
+def _open_webbrowser(url: str) -> None:
     """Open a web browser after a delay to give the web server more startup time."""
     import webbrowser
 
@@ -869,14 +867,14 @@ def orphaned(args: Namespace) -> None:
         print(args.output(fws))
 
 
-def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
+def get_output_func(format: Literal["json", "yaml"]) -> Callable[[Any], str]:
     if format == "json":
-        return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
+        return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)  # type: ignore
     else:
-        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)  # type: ignore
 
 
-def arg_positive_int(value: str) -> int:
+def arg_positive_int(value: Any) -> int:
     try:
         ivalue = int(value)
     except ValueError:
@@ -934,7 +932,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     # enhanced display options allow for value 'none' or None (default) for no output
     enh_disp_args = copy.deepcopy(disp_args)
     enh_disp_kwargs = copy.deepcopy(disp_kwargs)
-    enh_disp_kwargs["choices"].append("none")
+    enh_disp_kwargs["choices"].append("none")  # type: ignore
     enh_disp_kwargs["default"] = None
 
     query_args = ["-q", "--query"]

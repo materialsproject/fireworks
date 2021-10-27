@@ -3,7 +3,7 @@
 import os
 import shutil
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 
 import yaml
 
@@ -18,8 +18,10 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "1/6/14"
 
+from typing import Sequence
 
-def create_fw_single(args, fnames, yaml_fname):
+
+def create_fw_single(args: Namespace, fnames: Sequence[str], yaml_fname: str) -> None:
     tasks = []
     if fnames:
         files = []
@@ -34,7 +36,7 @@ def create_fw_single(args, fnames, yaml_fname):
         yaml.dump(fw.to_dict(), f, default_flow_style=False)
 
 
-def create_fw(args):
+def create_fw(args: Namespace) -> None:
     if not args.directory_mode:
         create_fw_single(args, args.files_or_dirs, args.output)
     else:
@@ -43,7 +45,7 @@ def create_fw(args):
             create_fw_single(args, [os.path.join(d, f) for f in os.listdir(d)], output_fname.format(i))
 
 
-def do_cleanup(args):
+def do_cleanup(args: Namespace) -> None:
     lp = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
     to_delete = []
     for i in lp.get_fw_ids({}):
