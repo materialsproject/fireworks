@@ -1,4 +1,5 @@
 *.py[cod]
+.hypothesis
 .mypy_cache
 
 # doc builds
