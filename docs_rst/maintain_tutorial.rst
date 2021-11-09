@@ -2,7 +2,7 @@
 Database administration commands
 ================================
 
-There are two types of maintainence operations that can be performed through the LaunchPad:
+There are two types of maintenance operations that can be performed through the LaunchPad:
 
 * **maintain** - automatically detects and marks failed jobs and deleted queue reservations
 * **tuneup** - tries to speed up database performance by updating indices and compacting the database. Should be performed during database downtime.
