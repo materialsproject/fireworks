@@ -83,7 +83,7 @@ class CommonAdapter(QueueAdapterBase):
             # 99% of the time you just get:
             # Cobalt: "199768"
             # but there's a version that also includes project and queue
-            # information on preceeding lines and both of those  might
+            # information on preceding lines and both of those  might
             # contain a number in any position.
             re_string = r"(\b\d+\b)"
         else:
@@ -130,7 +130,7 @@ class CommonAdapter(QueueAdapterBase):
         # TODO: what if username is too long for the output and is cut off?
 
         # WRS: I may come back to this after confirming that Cobalt
-        #      strictly follows the PBS standard and replace the spliting
+        #      strictly follows the PBS standard and replace the splitting
         #      with a regex that would solve length issues
 
         if self.q_type == "SLURM":
@@ -237,7 +237,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs currently in the queu efor the user
+        returns the number of jobs currently in the queue for the user
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue

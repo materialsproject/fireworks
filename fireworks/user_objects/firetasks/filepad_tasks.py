@@ -90,7 +90,7 @@ class GetFilesByQueryTask(FiretaskBase):
     Required params:
         - query (dict): mongo db query identifying files to fetch.
           Same as within fireworks.utilities.dict_mods, use '->' in dict keys
-          for querying nested documents, instead of MongoDB '.' (dot) seperator.
+          for querying nested documents, instead of MongoDB '.' (dot) separator.
           Do use '.' and NOT '->' within the 'sort_key' field.
 
     Optional params:

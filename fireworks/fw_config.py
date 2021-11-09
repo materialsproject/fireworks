@@ -66,7 +66,7 @@ CONFIG_FILE_DIR = "."  # directory containing config files (if not individually 
 
 ROCKET_STREAM_LOGLEVEL = "INFO"  # the streaming log level of the rocket.launcher logger
 
-QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to alwas
+QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to always
 
 ALWAYS_CREATE_NEW_BLOCK = False  # always create new block on queue launcher call
 

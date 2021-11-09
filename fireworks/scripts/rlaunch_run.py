@@ -12,11 +12,7 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
-from fireworks.utilities.fw_utilities import (
-    get_fw_logger,
-    get_my_host,
-    get_my_ip,
-)
+from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
 
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"
@@ -28,7 +24,7 @@ __date__ = "Feb 7, 2013"
 
 
 def handle_interrupt(signum, frame):
-    sys.stderr.write(f"Interruped by signal {signum:d}\n")
+    sys.stderr.write(f"Interrupted by signal {signum:d}\n")
     sys.exit(1)
 
 

@@ -33,11 +33,7 @@ from fireworks.utilities.fw_serializers import (
     recursive_serialize,
     serialize_fw,
 )
-from fireworks.utilities.fw_utilities import (
-    NestedClassGetter,
-    get_my_host,
-    get_my_ip,
-)
+from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -986,7 +982,7 @@ class Workflow(FWSerializable):
         Archives the launches of a Firework so that it can be re-run.
 
         Args:
-            fw_id (int): id of firework to tbe rerun
+            fw_id (int): id of firework to rerun
             updated_ids (set(int)): set of fireworks id to rerun
 
         Returns:

@@ -23,13 +23,7 @@ from pymongo import ASCENDING, DESCENDING, MongoClient
 from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
-from fireworks.core.firework import (
-    Firework,
-    FWAction,
-    Launch,
-    Tracker,
-    Workflow,
-)
+from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
@@ -102,7 +96,7 @@ class LockedWorkflowError(ValueError):
 class WFLock:
     """
     Lock a Workflow, i.e. for performing update operations
-    Raises a LockedWorkflowError if the lock couldn't be acquired withing expire_secs and kill==False.
+    Raises a LockedWorkflowError if the lock couldn't be acquired within expire_secs and kill==False.
     Calling functions are responsible for handling the error in order to avoid database inconsistencies.
     """
 
