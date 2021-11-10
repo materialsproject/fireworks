@@ -206,9 +206,9 @@ class FWReport:
             border_str = "=" * len(header_str) + "\n"
             my_str += border_str
 
-            for i in x["states"]:
-                my_str += f"{i} : {x['states'][i]}\n"
+            for state in x["states"]:
+                my_str += f"{state} : {x['states'][state]}\n"
 
             my_str += f"\ntotal : {x['count']}\n"
-            my_str += f"C/(C+F) : {x['completed_score']}%\n\n"
+            my_str += f"C/(C+F) : {x['completed_score']:.1f}%\n\n"
         return my_str

@@ -77,7 +77,7 @@ def launch_rocket_to_queue(
         raise ValueError(f"Desired launch directory {launcher_dir} does not exist!")
 
     if "--offline" in qadapter["rocket_launch"] and not reserve:
-        raise ValueError("Must use reservation mode (-r option) of qlaunch " "when using offline option of rlaunch!!")
+        raise ValueError("Must use reservation mode (-r option) of qlaunch when using offline option of rlaunch!!")
 
     if reserve and "singleshot" not in qadapter.get("rocket_launch", ""):
         raise ValueError("Reservation mode of queue launcher only works for singleshot Rocket Launcher!")
@@ -149,7 +149,7 @@ def launch_rocket_to_queue(
                 reservation_id = qadapter.submit_to_queue(SUBMIT_SCRIPT_NAME)
                 if not reservation_id:
                     raise RuntimeError(
-                        "queue script could not be submitted, check queue " "script/queue adapter/queue server status!"
+                        "queue script could not be submitted, check queue script/queue adapter/queue server status!"
                     )
                 elif reserve:
                     launchpad.set_reservation_id(launch_id, reservation_id)
@@ -250,9 +250,7 @@ def rapidfire(
                     break
 
                 if njobs_queue and jobs_in_queue >= njobs_queue:
-                    l_logger.info(
-                        "Jobs in queue ({}) meets/exceeds " "maximum allowed ({})".format(jobs_in_queue, njobs_queue)
-                    )
+                    l_logger.info(f"Jobs in queue ({jobs_in_queue}) meets/exceeds maximum allowed ({njobs_queue})")
                     break
 
                 l_logger.info("Launching a rocket!")
@@ -273,7 +271,7 @@ def rapidfire(
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if nlaunches > 0 and num_launched == nlaunches:
-                    l_logger.info("Launched allowed number of " "jobs: {}".format(num_launched))
+                    l_logger.info(f"Launched allowed number of jobs: {num_launched}")
                     break
                 # wait for the queue system to update
                 l_logger.info(f"Sleeping for {QUEUE_UPDATE_INTERVAL} seconds...zzz...")
@@ -331,16 +329,14 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
         try:
             jobs_in_queue = qadapter.get_njobs_in_queue()
             if jobs_in_queue is not None:
-                l_logger.info("{} jobs in queue. " "Maximum allowed by user: {}".format(jobs_in_queue, njobs_queue))
+                l_logger.info(f"{jobs_in_queue} jobs in queue. Maximum allowed by user: {njobs_queue}")
                 return jobs_in_queue
         except Exception:
-            log_exception(
-                l_logger, "Could not get number of jobs in queue! " "Sleeping {} secs...zzz...".format(RETRY_INTERVAL)
-            )
+            log_exception(l_logger, f"Could not get number of jobs in queue! Sleeping {RETRY_INTERVAL} secs...zzz...")
         time.sleep(RETRY_INTERVAL)
         RETRY_INTERVAL *= 2
 
-    raise RuntimeError("Unable to determine number of jobs in queue, " "check queue adapter and queue server status!")
+    raise RuntimeError("Unable to determine number of jobs in queue, check queue adapter and queue server status!")
 
 
 def setup_offline_job(launchpad, fw, launch_id):

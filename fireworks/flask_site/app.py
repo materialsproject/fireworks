@@ -55,7 +55,7 @@ def check_auth(username, password):
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
-        "Could not verify your access level for that URL. You have to login " "with proper credentials",
+        "Could not verify your access level for that URL. You have to login with proper credentials",
         401,
         {"WWW-Authenticate": 'Basic realm="Login Required"'},
     )
@@ -369,10 +369,8 @@ def parse_querystr(querystr, coll):
         return {}
     if WEBSERVER_PERFWARNINGS and not fwapp_util.uses_index(d, coll):
         flash(
-            "`{}` does not use a mongo index. "
-            "If you expect to use this query often, add an index "
-            "to the database collection "
-            "to make it run faster.".format(querystr)
+            f"`{querystr}` does not use a mongo index. If you expect to use this query often, "
+            "add an index to the database collection to make it run faster."
         )
     return d
 

@@ -133,7 +133,7 @@ class PyTask(FiretaskBase):
     Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system. The optional inputs
     and outputs lists may contain spec keys to add to args list and to make
-    the function output available in the curent and in children fireworks.
+    the function output available in the current and in children fireworks.
 
     Required parameters:
         - func (str): Fully qualified python method. E.g., json.dump, or shutil

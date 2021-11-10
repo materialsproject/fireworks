@@ -189,7 +189,7 @@ class DAGFlow(Graph):
         if entity in step["data"] and entity not in csrclist:
             lst.append(step.index)
 
-        # data entity from a preceeding task in the same step
+        # data entity from a preceding task in the same step
         outp_found = False
         for task in step["_tasks"]:
             if "outputs" in task and entity in task["outputs"]:

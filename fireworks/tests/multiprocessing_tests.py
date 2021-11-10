@@ -34,7 +34,7 @@ class TestCheckoutFW(TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:" "27017! Skipping tests.")
+            raise unittest.SkipTest("MongoDB is not running in localhost: 27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -82,7 +82,7 @@ class TestEarlyExit(TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:" "27017! Skipping tests.")
+            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):

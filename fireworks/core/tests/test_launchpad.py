@@ -36,7 +36,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class AuthenticationTest(unittest.TestCase):
-    """Tests whether users are authenticating agains the correct mongo dbs."""
+    """Tests whether users are authenticating against the correct mongo dbs."""
 
     @classmethod
     def setUpClass(cls):
@@ -108,7 +108,7 @@ class LaunchPadTest(unittest.TestCase):
 
     def test_reset(self):
         # Store some test fireworks
-        # Atempt couple of ways to reset the lp and check
+        # Attempt couple of ways to reset the lp and check
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name="test_workflow")
         self.lp.add_wf(wf)

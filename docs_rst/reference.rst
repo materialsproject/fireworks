@@ -65,11 +65,11 @@ _add_launchpad_and_fw_id  Embeds LaunchPad (``launchpad``) and fw_id (``fw_id``)
 _dupefinder               Used to specify a duplicate finder object for avoiding duplicated runs. More information :doc:`here </duplicates_tutorial>`.
 _allow_fizzled_parents    Run this Firework if all parents are *either* COMPLETED or FIZZLED.
 _preserve_fworker         Run the children on the same FireWorker as the parent
-_job_info                 Reserved for automatically putting putting information about previous jobs via the ``_pass_job_info`` option.
+_job_info                 Reserved for automatically putting information about previous jobs via the ``_pass_job_info`` option.
 _fizzled_parents          Reserved for automatically putting information about FIZZLED parents in a child Firework with the ``_allow_fizzled_parents`` option.
 _trackers                 Reserved for specifying Trackers.
 _background_tasks         Reserved for specifying BackgroundTasks
-_fw_env                   Reserved for setting worker-specifc environment variables. More information :doc:`here </worker_tutorial>`.
+_fw_env                   Reserved for setting worker-specific environment variables. More information :doc:`here </worker_tutorial>`.
 _files_in                 Reserved for specifying a dict of {name: filename} for input files to be copied from preceding FW.
 _files_out                Reserved for specifying a dict of {name, output file name} that can be copied by a child FW.
 _files_prev               Reserved for storing the actual full filepaths if _files_out is specified.

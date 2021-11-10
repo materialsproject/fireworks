@@ -41,7 +41,7 @@ def mlaunch():
     parser.add_argument(
         "-c",
         "--config_dir",
-        help="path to a directory containing the config file " "(used if -l, -w unspecified)",
+        help="path to a directory containing the config file (used if -l, -w unspecified)",
         default=CONFIG_FILE_DIR,
     )
 
@@ -50,7 +50,7 @@ def mlaunch():
 
     parser.add_argument(
         "--nodefile",
-        help="nodefile name or environment variable name containing " "the node file name (for populating FWData only)",
+        help="nodefile name or environment variable name containing the node file name (for populating FWData only)",
         default=None,
         type=str,
     )

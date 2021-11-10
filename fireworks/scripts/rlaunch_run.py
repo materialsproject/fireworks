@@ -12,11 +12,7 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
-from fireworks.utilities.fw_utilities import (
-    get_fw_logger,
-    get_my_host,
-    get_my_ip,
-)
+from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
 
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"
@@ -28,7 +24,7 @@ __date__ = "Feb 7, 2013"
 
 
 def handle_interrupt(signum, frame):
-    sys.stderr.write(f"Interruped by signal {signum:d}\n")
+    sys.stderr.write(f"Interrupted by signal {signum:d}\n")
     sys.exit(1)
 
 
@@ -59,7 +55,7 @@ def rlaunch():
     )
     rapid_parser.add_argument(
         "--max_loops",
-        help="after this many sleep loops, quit even in " "infinite nlaunches mode (default -1 is infinite loops)",
+        help="after this many sleep loops, quit even in infinite nlaunches mode (default -1 is infinite loops)",
         default=-1,
         type=int,
     )
@@ -77,7 +73,7 @@ def rlaunch():
         default=0,
     )
     multi_parser.add_argument(
-        "--sleep", help="sleep time between loops in infinite launch mode" "(secs)", default=None, type=int
+        "--sleep", help="sleep time between loops in infinite launch mode (secs)", default=None, type=int
     )
     multi_parser.add_argument(
         "--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int
@@ -92,7 +88,7 @@ def rlaunch():
     )
     multi_parser.add_argument("--ppn", help="processors per node (for populating FWData only)", default=1, type=int)
     multi_parser.add_argument(
-        "--exclude_current_node", help="Don't use the script launching node" "as compute node", action="store_true"
+        "--exclude_current_node", help="Don't use the script launching node as compute node", action="store_true"
     )
     multi_parser.add_argument(
         "--local_redirect", help="Redirect stdout and stderr to the launch directory", action="store_true"
@@ -103,7 +99,7 @@ def rlaunch():
     parser.add_argument(
         "-c",
         "--config_dir",
-        help="path to a directory containing the config file " "(used if -l, -w unspecified)",
+        help="path to a directory containing the config file (used if -l, -w unspecified)",
         default=CONFIG_FILE_DIR,
     )
 

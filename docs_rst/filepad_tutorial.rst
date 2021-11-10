@@ -3,7 +3,7 @@ Using FilePad for storing and retrieving files
 ===============================================
 
 
-FilePad utility provides the api to add and delete arbitrary files of arbitray sizes to MongoDB(filepad).
+FilePad utility provides the api to add and delete arbitrary files of arbitrary sizes to MongoDB(filepad).
 The is achieved by inserting the entire file contents to GridFS and storing the id returned by the
 GridFS insertion, the user provided identifier and the metadata in a document in the filepad. In the following
 documentation, ``file contents`` refers to the file contents stored in GridFS and ``document`` refers to the

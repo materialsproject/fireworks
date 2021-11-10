@@ -134,9 +134,8 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             for subs_key in subs_dict.keys():
                 if subs_key not in template_keys and not subs_key.startswith("_") and not subs_key == "logdir":
                     warnings.warn(
-                        "Key {} has been specified in qadapter "
-                        "but it is not present in template, please "
-                        "check template ({}) for supported keys.".format(subs_key, self.template_file)
+                        f"Key {subs_key} has been specified in qadapter but it is not present in template, "
+                        f"please check template ({self.template_file}) for supported keys."
                     )
 
             for k, v in self.defaults.items():

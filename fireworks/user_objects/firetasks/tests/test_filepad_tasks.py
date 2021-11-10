@@ -137,7 +137,7 @@ class FilePadTasksTest(unittest.TestCase):
         # test successful if exception raised
 
     def test_getfilesbyquerytask_ignore_degenerate_file_name(self):
-        """Tests on ignoring degenrate file name in result from FilePad query"""
+        """Tests on ignoring degenerate file name in result from FilePad query"""
         with open("degenerate_file.txt", "w") as f:
             f.write("Some file with some content")
         t = AddFilesTask(paths=["degenerate_file.txt"], identifiers=["some_identifier"], metadata={"key": "value"})

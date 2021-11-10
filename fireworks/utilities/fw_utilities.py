@@ -10,12 +10,7 @@ import sys
 import traceback
 from multiprocessing.managers import BaseManager
 
-from fireworks.fw_config import (
-    DS_PASSWORD,
-    FW_BLOCK_FORMAT,
-    FW_LOGGING_FORMAT,
-    FWData,
-)
+from fireworks.fw_config import DS_PASSWORD, FW_BLOCK_FORMAT, FW_LOGGING_FORMAT, FWData
 
 __author__ = "Anubhav Jain, Xiaohui Qu"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -263,7 +258,7 @@ def plot_wf(
         wf (Workflow): workflow object.
         depth_factor (float): adjust this to stretch the plot in y direction.
         breadth_factor (float): adjust this to stretch the plot in x direction.
-        labels_on (bool): whether to label the nodes or not. The default is to lable the nodes
+        labels_on (bool): whether to label the nodes or not. The default is to label the nodes
             using the firework names.
         numerical_label (bool): set this to label the nodes using the firework ids.
         text_loc_factor (float): adjust the label location.

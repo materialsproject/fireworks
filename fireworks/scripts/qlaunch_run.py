@@ -108,7 +108,7 @@ def qlaunch():
         "-rh",
         "--remote_host",
         nargs="*",
-        help="Remote host to exec qlaunch. Right now, " "only supports running from a config dir.",
+        help="Remote host to exec qlaunch. Right now, only supports running from a config dir.",
     )
     parser.add_argument(
         "-rc",
@@ -146,19 +146,19 @@ def qlaunch():
     parser.add_argument(
         "-rs",
         "--remote_setup",
-        help="Setup the remote config dir using files in " "the directory specified by -c.",
+        help="Setup the remote config dir using files in the directory specified by -c.",
         action="store_true",
     )
     parser.add_argument(
         "-d",
         "--daemon",
-        help="Daemon mode. Command is repeated every x " "seconds. Defaults to 0, which means non-daemon " "mode.",
+        help="Daemon mode. Command is repeated every x seconds. Defaults to 0, which means non-daemon mode.",
         type=int,
         default=0,
     )
     parser.add_argument("--launch_dir", help="directory to launch the job / rapid-fire", default=".")
     parser.add_argument(
-        "--block_dir", help="directory to use as block dir. Can be a new or existing " "block. Must start with 'block_'"
+        "--block_dir", help="directory to use as block dir. Can be a new or existing block. Must start with 'block_'"
     )
     parser.add_argument("--logdir", help="path to a directory for logging", default=None)
     parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
@@ -263,7 +263,7 @@ def qlaunch():
         else:
             do_launch(args)
         if interval > 0:
-            print("Next run in {} seconds... Press Ctrl-C to exit at any " "time.".format(interval))
+            print(f"Next run in {interval} seconds... Press Ctrl-C to exit at any time.")
             time.sleep(args.daemon)
         else:
             break

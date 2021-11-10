@@ -42,7 +42,7 @@ class UpdateCollectionTests(unittest.TestCase):
         cls.assertEqual(ndocs, 1)
         test_doc = cls.lp.db.test_coll.find_one({"foo": "bar"})
         cls.assertEqual(test_doc["foo_list"][1]["foo2"], "foo/new/path/bar")
-        test_doc_archived = cls.lp.db["{}_xiv_{}".format("test_coll", datetime.date.today())].find_one()
+        test_doc_archived = cls.lp.db[f"test_coll_xiv_{datetime.date.today()}"].find_one()
         cls.assertEqual(test_doc_archived["foo_list"][1]["foo2"], "foo/old/path/bar")
 
 

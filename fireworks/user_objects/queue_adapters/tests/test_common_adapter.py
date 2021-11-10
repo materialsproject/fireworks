@@ -13,10 +13,7 @@ __date__ = "12/31/13"
 import unittest
 
 from fireworks.user_objects.queue_adapters.common_adapter import *
-from fireworks.utilities.fw_serializers import (
-    load_object,
-    load_object_from_file,
-)
+from fireworks.utilities.fw_serializers import load_object, load_object_from_file
 
 
 class CommonAdapterTest(unittest.TestCase):
@@ -30,7 +27,7 @@ class CommonAdapterTest(unittest.TestCase):
         )
         p_new = load_object(p.to_dict())
 
-        # Make sure the original and deserialized verison both work properly.
+        # Make sure the original and deserialized version both work properly.
         for a in [p, p_new]:
             script = a.get_script_str("here")
             lines = script.split("\n")
