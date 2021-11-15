@@ -3,6 +3,7 @@ A set of global constants for FireWorks (Python code as a config file).
 """
 
 import os
+from typing import Any, Dict
 
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
@@ -105,7 +106,7 @@ MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
 
 
-def override_user_settings():
+def override_user_settings() -> None:
     module_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(module_dir)  # FW root dir
 
@@ -159,7 +160,7 @@ def override_user_settings():
 override_user_settings()
 
 
-def config_to_dict():
+def config_to_dict() -> Dict[str, Any]:
     d = {}
     for k, v in globals().items():
         if k.upper() == k and k != "NEGATIVE_FWID_CTR":
@@ -167,8 +168,9 @@ def config_to_dict():
     return d
 
 
-def write_config(path=None):
-    path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml") if path is None else path
+def write_config(path: str = None) -> None:
+    if path is None:
+        path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")
     dumpfn(config_to_dict(), path)
 
 

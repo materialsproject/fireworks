@@ -157,7 +157,7 @@ class LaunchPadTest(unittest.TestCase):
             wf5 = Workflow([Firework(ftask, name="lorem") for _ in range(5)], name="lorem wf")
             wfs.extend([wf3, wf5])
         self.lp.bulk_add_wfs(wfs)
-        num_fws_total = sum(len(wf.fws) for wf in wfs)
+        num_fws_total = sum(len(wf) for wf in wfs)
         distinct_fw_ids = self.lp.fireworks.distinct("fw_id", {"name": "lorem"})
         self.assertEqual(len(distinct_fw_ids), num_fws_total)
         num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem wf"}))

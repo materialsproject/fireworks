@@ -3,8 +3,7 @@
 import shlex
 import subprocess
 import sys
-
-from six.moves import builtins
+from typing import Dict, List, Optional, Union
 
 from fireworks.core.firework import FiretaskBase, FWAction
 
@@ -164,7 +163,7 @@ class PyTask(FiretaskBase):
     # note that we are not using "optional_params" because we do not want to do
     # strict parameter checking in FireTaskBase due to "auto_kwargs" option
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
             modname, funcname = toks
@@ -172,7 +171,7 @@ class PyTask(FiretaskBase):
             func = getattr(mod, funcname)
         else:
             # Handle built in functions.
-            func = getattr(builtins, toks[0])
+            func = getattr(__builtins__, toks[0])
 
         args = list(self.get("args", []))  # defensive copy
 

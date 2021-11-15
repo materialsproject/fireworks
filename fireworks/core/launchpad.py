@@ -465,17 +465,17 @@ class LaunchPad(FWSerializable):
         wfs = [Workflow.from_firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
 
         # Initialize new firework counter, starting from the next fw id
-        total_num_fws = sum(len(wf.fws) for wf in wfs)
+        total_num_fws = sum(len(wf) for wf in wfs)
         new_fw_counter = self.fw_id_assigner.find_one_and_update({}, {"$inc": {"next_fw_id": total_num_fws}})[
             "next_fw_id"
         ]
         for wf in tqdm(wfs):
             # Reassign fw_ids and increment the counter
-            old_new = dict(zip(wf.id_fw.keys(), range(new_fw_counter, new_fw_counter + len(wf.fws))))
-            for fw in wf.fws:
+            old_new = dict(zip(wf.id_fw.keys(), range(new_fw_counter, new_fw_counter + len(wf))))
+            for fw in wf:
                 fw.fw_id = old_new[fw.fw_id]
             wf._reassign_ids(old_new)
-            new_fw_counter += len(wf.fws)
+            new_fw_counter += len(wf)
 
             # Set root fws to READY
             for fw_id in wf.root_fw_ids:
@@ -485,7 +485,7 @@ class LaunchPad(FWSerializable):
         # Insert all fws and wfs, do workflows first so fws don't
         # get checked out prematurely
         self.workflows.insert_many(wf.to_db_dict() for wf in wfs)
-        all_fws = chain.from_iterable(wf.fws for wf in wfs)
+        all_fws = chain.from_iterable(wf for wf in wfs)
         self.fireworks.insert_many(fw.to_db_dict() for fw in all_fws)
         return None
 
@@ -1093,7 +1093,7 @@ class LaunchPad(FWSerializable):
             defuse_all_states (bool)
         """
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-        for fw in wf.fws:
+        for fw in wf:
             if fw.state not in ["COMPLETED", "FIZZLED"] or defuse_all_states:
                 self.defuse_fw(fw.fw_id)
 
@@ -1105,7 +1105,7 @@ class LaunchPad(FWSerializable):
             fw_id (int): firework id
         """
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-        for fw in wf.fws:
+        for fw in wf:
             if fw.state not in ["COMPLETED", "FIZZLED", "DEFUSED"]:
                 self.pause_fw(fw.fw_id)
 
@@ -1117,7 +1117,7 @@ class LaunchPad(FWSerializable):
             fw_id (int): firework id
         """
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-        for fw in wf.fws:
+        for fw in wf:
             self.reignite_fw(fw.fw_id)
 
     def archive_wf(self, fw_id):
@@ -1130,13 +1130,13 @@ class LaunchPad(FWSerializable):
         # first archive all the launches, so they are not used in duplicate checks
         wf = self.get_wf_by_fw_id_lzyfw(fw_id)
         if wf.state != "ARCHIVED":
-            fw_ids = [f.fw_id for f in wf.fws]
+            fw_ids = [f.fw_id for f in wf]
             for fw_id in fw_ids:
                 self.rerun_fw(fw_id)
 
             # second set the state of all FWs to ARCHIVED
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
-            for fw in wf.fws:
+            for fw in wf:
                 self.fireworks.find_one_and_update(
                     {"fw_id": fw.fw_id}, {"$set": {"state": "ARCHIVED", "updated_on": datetime.datetime.utcnow()}}
                 )
