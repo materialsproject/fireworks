@@ -1,5 +1,6 @@
 """ This module includes tasks to integrate scripts and python functions """
 
+import builtins
 import shlex
 import subprocess
 import sys
@@ -171,7 +172,7 @@ class PyTask(FiretaskBase):
             func = getattr(mod, funcname)
         else:
             # Handle built in functions.
-            func = getattr(__builtins__, toks[0])
+            func = getattr(builtins, toks[0])
 
         args = list(self.get("args", []))  # defensive copy
 
