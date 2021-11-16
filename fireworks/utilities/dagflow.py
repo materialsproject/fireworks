@@ -10,13 +10,13 @@ import igraph
 from igraph import Graph
 from monty.dev import requires
 
-from fireworks import Workflow
+from fireworks import Firework, Workflow
 from fireworks.features.fw_report import state_to_color
 
 try:
     from graphviz import Digraph
 except ImportError:
-    graphviz = None
+    Digraph = None
 
 DF_TASKS = ["PyTask", "CommandLineTask", "ForeachTask", "JoinDictTask", "JoinListTask"]
 
@@ -428,11 +428,11 @@ def plot_wf(wf, view="combined", labels=False, **kwargs):
 
 
 @requires(
-    graphviz,
+    Digraph is not None,
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz",
 )
-def wf_to_graph(wf: Workflow) -> "Digraph":
+def wf_to_graph(wf: Workflow) -> Digraph:
     """
     Renders a graph representation of a workflow or firework. Workflows are
     rendered as the control flow of the firework, while Fireworks are
