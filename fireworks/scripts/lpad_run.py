@@ -720,18 +720,14 @@ def webgui(args):
         p1.join()
     else:
         try:
-            from fireworks.flask_site.gunicorn import (
-                StandaloneApplication,
-                number_of_workers,
-            )
+            from fireworks.flask_site.gunicorn import StandaloneApplication
         except ImportError:
             import sys
 
             sys.exit("Gunicorn is required for server mode. Install using `pip install gunicorn`.")
-        nworkers = args.nworkers if args.nworkers else number_of_workers()
         options = {
             "bind": f"{args.host}:{args.port}",
-            "workers": nworkers,
+            "workers": args.nworkers,
         }
         StandaloneApplication(app, options).run()
 
@@ -877,10 +873,11 @@ def get_output_func(format):
 def arg_positive_int(value):
     try:
         ivalue = int(value)
-        if ivalue < 1:
-            raise ValueError()
     except ValueError:
-        raise ArgumentTypeError(f"{value} is not a positive integer")
+        raise ArgumentTypeError(f"int(value) conversion failed for {value}")
+
+    if ivalue < 1:
+        raise ValueError(f"{value} is not a positive integer")
     return ivalue
 
 
@@ -1376,7 +1373,9 @@ def lpad():
     webgui_parser.add_argument(
         "-s", "--server_mode", help="run in server mode (skip opening the browser)", action="store_true"
     )
-    webgui_parser.add_argument("--nworkers", type=arg_positive_int, help="Number of worker processes for server mode")
+    webgui_parser.add_argument(
+        "--nworkers", type=arg_positive_int, help="Number of worker processes for server mode", default=1
+    )
     webgui_parser.add_argument("--fwquery", help="additional query filter for FireWorks as JSON string")
     webgui_parser.add_argument("--wflowquery", help="additional query filter for Workflows as JSON string")
     webgui_parser.add_argument(
