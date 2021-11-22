@@ -1,4 +1,8 @@
+from typing import Dict, Union
+
 from monty.os.path import zpath
+
+from fireworks.core.fworker import FWorker
 
 """
 A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
@@ -14,9 +18,9 @@ import multiprocessing
 import os
 import pdb
 import shutil
-import threading
 import traceback
 from datetime import datetime
+from threading import Event, Thread, current_thread
 
 from monty.io import zopen
 
@@ -42,7 +46,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
 
 
-def do_ping(launchpad, launch_id):
+def do_ping(launchpad: LaunchPad, launch_id: int) -> None:
     if launchpad:
         launchpad.ping_launch(launch_id)
     else:
@@ -50,13 +54,13 @@ def do_ping(launchpad, launch_id):
             f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
 
 
-def ping_launch(launchpad, launch_id, stop_event, master_thread):
+def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_thread: Thread) -> None:
     while not stop_event.is_set() and master_thread.is_alive():
         do_ping(launchpad, launch_id)
         stop_event.wait(PING_TIME_SECS)
 
 
-def start_ping_launch(launchpad, launch_id):
+def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Union[Event, None]:
     fd = FWData()
     if fd.MULTIPROCESSING:
         if not launch_id:
@@ -64,10 +68,8 @@ def start_ping_launch(launchpad, launch_id):
         fd.Running_IDs[os.getpid()] = launch_id
         return None
     else:
-        ping_stop = threading.Event()
-        ping_thread = threading.Thread(
-            target=ping_launch, args=(launchpad, launch_id, ping_stop, threading.current_thread())
-        )
+        ping_stop = Event()
+        ping_thread = Thread(target=ping_launch, args=(launchpad, launch_id, ping_stop, current_thread()))
         ping_thread.start()
         return ping_stop
 
@@ -96,8 +98,8 @@ def background_task(btask, spec, stop_event, master_thread):
 
 
 def start_background_task(btask, spec):
-    ping_stop = threading.Event()
-    ping_thread = threading.Thread(target=background_task, args=(btask, spec, ping_stop, threading.current_thread()))
+    ping_stop = Event()
+    ping_thread = Thread(target=background_task, args=(btask, spec, ping_stop, current_thread()))
     ping_thread.start()
     return ping_stop
 
@@ -107,7 +109,7 @@ class Rocket:
     The Rocket fetches a workflow step from the FireWorks database and executes it.
     """
 
-    def __init__(self, launchpad, fworker, fw_id):
+    def __init__(self, launchpad: LaunchPad, fworker: FWorker, fw_id: int) -> None:
         """
         Args:
         launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
@@ -119,13 +121,15 @@ class Rocket:
         self.fworker = fworker
         self.fw_id = fw_id
 
-    def run(self, pdb_on_exception=False):
+    def run(self, pdb_on_exception: bool = False) -> bool:
         """
         Run the rocket (check out a job from the database and execute it)
 
         Args:
-            pdb_on_exception (bool): whether to invoke the debugger on
-                a caught exception.  Default False.
+            pdb_on_exception (bool): whether to invoke the debugger on a caught exception. Default to False.
+
+        Returns:
+            bool: True if the rocket ran successfully, False is if it failed or no job in the DB was ready to run.
         """
         all_stored_data = {}  # combined stored data for *all* the Tasks
         all_update_spec = {}  # combined update_spec for *all* the Tasks
@@ -426,7 +430,7 @@ class Rocket:
             return True
 
     @staticmethod
-    def update_checkpoint(launchpad, launch_dir, launch_id, checkpoint):
+    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: Dict[str, any]) -> None:
         """
         Helper function to update checkpoint
 
@@ -446,7 +450,9 @@ class Rocket:
                 with zopen(fpath, "wt") as f_out:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
-    def decorate_fwaction(self, fwaction, my_spec, m_fw, launch_dir):
+    def decorate_fwaction(
+        self, fwaction: FWAction, my_spec: Dict[str, any], m_fw: Firework, launch_dir: str
+    ) -> FWAction:
 
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
