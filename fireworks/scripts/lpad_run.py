@@ -883,7 +883,7 @@ def arg_positive_int(value):
 
 def lpad():
     m_description = (
-        "A command line interface to FireWorks. For more help on a specific command, " 'type "lpad <command> -h".'
+        "A command line interface to FireWorks. For more help on a specific command, type 'lpad <command> -h'."
     )
 
     parser = ArgumentParser(description=m_description)
@@ -910,7 +910,7 @@ def lpad():
     state_kwargs = {
         "type": lambda s: s.upper(),
         "help": "Select by state.",
-        "choices": list(Firework.STATE_RANKS.keys()),
+        "choices": Firework.STATE_RANKS,
     }
     disp_args = ["-d", "--display_format"]
     disp_kwargs = {
@@ -1007,9 +1007,8 @@ def lpad():
 
     get_launchdir_parser = subparsers.add_parser(
         "get_launchdir",
-        help="get the directory of the most recent launch of the given fw_id."
-        ' A common usage is "cd `get_launchdir <FW_ID>`" to change the '
-        "working directory that of the FW launch",
+        help="get the directory of the most recent launch of the given fw_id. A common usage is "
+        "'cd `get_launchdir <FW_ID>`' to change the working directory to that of the FW launch",
     )
     get_launchdir_parser.add_argument("fw_id", type=int, help="fw_id to chdir to")
     get_launchdir_parser.add_argument(
