@@ -8,7 +8,9 @@ import socket
 import string
 import sys
 import traceback
+from logging import Formatter, Logger
 from multiprocessing.managers import BaseManager
+from typing import Tuple
 
 from fireworks.fw_config import DS_PASSWORD, FW_BLOCK_FORMAT, FW_LOGGING_FORMAT, FWData
 
@@ -21,17 +23,17 @@ __date__ = "Dec 12, 2012"
 
 PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already been initialized
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
-DEFAULT_FORMATTER = logging.Formatter(FW_LOGGING_FORMAT)
+DEFAULT_FORMATTER = Formatter(FW_LOGGING_FORMAT)
 
 
 def get_fw_logger(
-    name,
-    l_dir=None,
-    file_levels=("DEBUG", "ERROR"),
-    stream_level="DEBUG",
-    formatter=DEFAULT_FORMATTER,
-    clear_logs=False,
-):
+    name: str,
+    l_dir: None = None,
+    file_levels: Tuple[str, str] = ("DEBUG", "ERROR"),
+    stream_level: str = "DEBUG",
+    formatter: Formatter = DEFAULT_FORMATTER,
+    clear_logs: bool = False,
+) -> Logger:
     """
     Convenience method to return a logger.
 

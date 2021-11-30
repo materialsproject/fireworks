@@ -451,7 +451,7 @@ def wf_to_graph(wf: Workflow) -> "Digraph":
     dag = Digraph(comment=wf.name, graph_attr={"rankdir": "LR"})
     dag.node_attr["shape"] = "box"
     if isinstance(wf, Workflow):
-        for fw in wf.fws:
+        for fw in wf:
             dag.node(str(fw.fw_id), label=fw.name, color=state_to_color[fw.state])
 
         for start, targets in wf.links.items():

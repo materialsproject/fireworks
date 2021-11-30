@@ -35,7 +35,6 @@ if __name__ == "__main__":
             "ruamel.yaml>=0.15.35",
             "pymongo>=3.3.0",
             "Jinja2>=2.8.0",
-            "six>=1.10.0",
             "monty>=1.0.1",
             "python-dateutil>=2.5.3",
             "tabulate>=0.7.5",

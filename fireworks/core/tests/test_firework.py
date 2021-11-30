@@ -112,7 +112,6 @@ class WorkflowTest(unittest.TestCase):
     def test_copy(self):
         """Test that we can produce a copy of a Workflow but that the copy
         has unique fw_ids.
-
         """
         fws = []
         for i in range(5):
@@ -156,6 +155,14 @@ class WorkflowTest(unittest.TestCase):
             children.extend(wflow.links[i])
         wflow.remove_fws(wflow.root_fw_ids)
         self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
+
+    def test_iter_and_len(self):
+        fws = [self.fw1, self.fw2, self.fw3]
+        wflow = Workflow(fws)
+        for idx, fw in enumerate(wflow):
+            self.assertEqual(fw, fws[idx])
+
+        assert len(wflow) == len(fws)
 
 
 if __name__ == "__main__":
