@@ -21,10 +21,3 @@ def test_wf_to_graph():
     dag = wf_to_graph(wf)
 
     assert isinstance(dag, Digraph)
-
-    assert (
-        dag.source
-        == '// unnamed WF\ndigraph {\n\tnode [shape=box]\n\trankdir=LR\n\t-1 [label="pow(2, 3)" color="#1F62A2"]\n\t-2 '
-        '[label="pow(pow(2, 3), 4)" color="#1F62A2"]\n\t-3 [label="the third one" color="#1F62A2"]\n\t-1 -> -2\n\t-2 ->'
-        " -3\n}\n"
-    )
