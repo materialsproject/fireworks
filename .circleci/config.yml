@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  py3test:
+  pytest:
     working_directory: ~/fireworks
     docker:
       - image: continuumio/miniconda3:4.6.14
@@ -28,33 +28,9 @@ jobs:
             echo "Checking code style..."
             pycodestyle fireworks
             echo "Done..."
-  py2test:
-    working_directory: ~/fireworks
-    docker:
-      - image: continuumio/miniconda3:4.6.14
-      - image: circleci/mongo:latest
-    steps:
-      - checkout
-      - run:
-          command: |
-            export PATH=$HOME/miniconda3/bin:$PATH
-            conda config --set always_yes yes --set changeps1 no
-            conda update -q conda
-            conda info -a
-            conda create -q -n test-environment python=2.7
-            source activate test-environment
-            conda update --quiet --all
-            pip install --quiet --ignore-installed -r requirements.txt -r requirements-ci.txt
-      - run:
-          name: Run fireworks tests
-          command: |
-            export PATH=$HOME/miniconda3/bin:$PATH
-            source activate test-environment
-            pip install --quiet -e .
-            pytest fireworks
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - py3test
+      - pytest
