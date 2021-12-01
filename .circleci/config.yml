@@ -23,7 +23,7 @@ jobs:
           command: |
             export PATH=$HOME/miniconda3/bin:$PATH
             source activate test-environment
-            pip install .[workflow-checks]
+            pip install .[workflow-checks,graph-plotting]
             pytest fireworks
             echo "Checking code style..."
             pycodestyle fireworks
