@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-
-import multiprocessing  # AJ: for some reason this is needed to not have "python setup.py test" freak out
-import os
-
 from setuptools import find_packages, setup
 
 __author__ = "Anubhav Jain"
@@ -11,14 +6,13 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
-module_dir = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == "__main__":
     setup(
         name="FireWorks",
         version="1.9.7",
         description="FireWorks workflow software",
-        long_description=open(os.path.join(module_dir, "README.md")).read(),
+        long_description=open("README.md").read(),
         url="https://github.com/materialsproject/fireworks",
         author="Anubhav Jain",
         author_email="anubhavster@gmail.com",
@@ -35,6 +29,7 @@ if __name__ == "__main__":
             "ruamel.yaml>=0.15.35",
             "pymongo>=3.3.0",
             "Jinja2>=2.8.0",
+            "six>=1.10.0",
             "monty>=1.0.1",
             "python-dateutil>=2.5.3",
             "tabulate>=0.7.5",
