@@ -1,9 +1,11 @@
+import pytest
+
 from fireworks import Firework, PyTask, Workflow
-from fireworks.utilities.visualize import Digraph, wf_to_graph
+from fireworks.utilities.visualize import Digraph, plot_wf, wf_to_graph
 
 
-def test_wf_to_graph():
-
+@pytest.fixture
+def power_wf():
     fw1 = Firework(
         PyTask(func="math.pow", inputs=["base", "exponent"], outputs=["first power"]),
         name="pow(2, 3)",
@@ -18,6 +20,24 @@ def test_wf_to_graph():
 
     wf = Workflow([fw1, fw2, fw3], {fw1: [fw2], fw2: [fw3], fw3: []})
 
-    dag = wf_to_graph(wf)
+    return wf
+
+
+def test_wf_to_graph(power_wf):
+
+    dag = wf_to_graph(power_wf)
 
     assert isinstance(dag, Digraph)
+
+    dag = wf_to_graph(power_wf, wf_show_tasks=False)
+
+    assert isinstance(dag, Digraph)
+
+
+def test_plot_wf(power_wf):
+
+    plot_wf(power_wf)
+
+    plot_wf(power_wf, depth_factor=0.5, breadth_factor=1)
+
+    plot_wf(power_wf, labels_on=True)
