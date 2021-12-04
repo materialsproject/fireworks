@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from monty.dev import requires
 
 from fireworks import Firework, Workflow
@@ -96,37 +98,72 @@ def plot_wf(
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz",
 )
-def wf_to_graph(wf: Workflow) -> "Digraph":
-    """
-    Renders a graph representation of a workflow or firework. Workflows are
-    rendered as the control flow of the firework, while Fireworks are
-    rendered as a sequence of Firetasks.
+def wf_to_graph(wf: Workflow, dag_kwargs: Dict[str, Any] = {}, wf_show_tasks: bool = True) -> Digraph:
+    """Renders a graph representation of a workflow or firework. Workflows are rendered as the
+    control flow of the firework, while Fireworks are rendered as a sequence of Firetasks.
+
+    Copied from https://git.io/JO6L8.
 
     Args:
-        workflow (Workflow|Firework): workflow or Firework
-            to be rendered.
+        workflow (Workflow | Firework): Workflow or Firework to be rendered.
+        dag_kwargs (dict[str, Any]): Arguments passed to Digraph.attr(). Defaults to {}.
+        wf_show_tasks (bool): When rendering a Workflow, whether to show each Firetask in the graph. Defaults to False.
 
     Returns:
-        Digraph: the rendered workflow or firework graph
+        Digraph: The Workflow or Firework directed acyclic graph.
     """
+    if not isinstance(wf, (Workflow, Firework)):
+        raise ValueError(f"expected instance of Workflow or Firework, got {wf}")
+
+    if isinstance(wf, Workflow) and not wf_show_tasks:
+        # if we're rendering a Workflow and not showing tasks, we render the graph from left to right
+        # by default
+        dag_kwargs["rankdir"] = dag_kwargs.get("rankdir", "LR")
+
     # Directed Acyclic Graph
-    dag = Digraph(comment=wf.name, graph_attr={"rankdir": "LR"})
-    dag.node_attr["shape"] = "box"
+    dag = Digraph(comment=wf.name)
+    dag.attr(**dag_kwargs)
+    dag.node_attr.update(shape="box")
+
+    dag.graph_attr["fontname"] = "helvetica"
+    dag.node_attr["fontname"] = "helvetica"
+    dag.edge_attr["fontname"] = "helvetica"
+
     if isinstance(wf, Workflow):
         for fw in wf:
-            dag.node(str(fw.fw_id), label=fw.name, color=state_to_color[fw.state])
+            color = state_to_color[fw.state]
+            dag.node(name=str(fw.fw_id), label=fw.name, color=color, fontname="helvetica")
+
+            if not wf_show_tasks:
+                continue
+
+            subgraph = Digraph(name=f"tasks_{fw.fw_id}")
+            subgraph.attr(color=color)
+
+            for idx, task in enumerate(fw.tasks):
+                # Clean up names
+                name = task.fw_name.replace("{", "").replace("}", "")
+                name = name.split(".")[-1]
+                node_id = f"{fw.fw_id}-{idx}"
+                subgraph.node(name=node_id, label=name, style="dashed")
+                if idx == 0:
+                    subgraph.edge(str(fw.fw_id), node_id)
+                else:
+                    subgraph.edge(f"{fw.fw_id}-{idx-1}", node_id)
+
+            dag.subgraph(subgraph)
 
         for start, targets in wf.links.items():
             for target in targets:
                 dag.edge(str(start), str(target))
+
     elif isinstance(wf, Firework):
-        for n, ft in enumerate(wf.tasks):
+        for idx, task in enumerate(wf.tasks):
             # Clean up names
-            name = ft.fw_name.replace("{", "").replace("}", "")
+            name = task.fw_name.replace("{", "").replace("}", "")
             name = name.split(".")[-1]
-            dag.node(str(n), label=name)
-            if n >= 1:
-                dag.edge(str(n - 1), str(n))
-    else:
-        raise ValueError("expected instance of Workflow or Firework")
+            dag.node(str(idx), label=name)
+            if idx >= 1:
+                dag.edge(str(idx - 1), str(idx))
+
     return dag
