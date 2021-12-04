@@ -167,3 +167,24 @@ def wf_to_graph(wf: Workflow, dag_kwargs: Dict[str, Any] = {}, wf_show_tasks: bo
                 dag.edge(str(idx - 1), str(idx))
 
     return dag
+
+
+if __name__ == "__main__":
+    import atomate.vasp.workflows as wf_mod
+    from pymatgen.core import Lattice, Structure
+
+    struct = Structure(Lattice.cubic(3), ["S"], [[0, 0, 0]])
+    wf = wf_mod.wf_bandstructure_hse(struct)
+
+    for item in dir(wf_mod):
+        if item.startswith("wf_"):
+            try:
+                wf = getattr(wf_mod, item)(struct)
+            except TypeError:
+                continue
+            dag = wf_to_graph(wf)
+            # add wf name as plot title above the graph
+            dag.attr(label=item, fontsize="20", labelloc="t")
+            dag.view()
+            # dag.format = "png"  # default formt is PDF
+            # dag.render(f"docs_rst/_static/wf_graphs/{item}")
