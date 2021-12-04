@@ -22,9 +22,7 @@ from fireworks.user_objects.firetasks.fileio_tasks import (
     FileWriteTask,
 )
 from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
-from fireworks.user_objects.firetasks.templatewriter_task import (
-    TemplateWriterTask,
-)
+from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
 
