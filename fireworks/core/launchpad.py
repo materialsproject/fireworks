@@ -22,7 +22,11 @@ from monty.serialization import loadfn
 from pymongo import ASCENDING, DESCENDING, MongoClient
 from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
-from importlib.metadata import version
+
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
 from fireworks.fw_config import (
