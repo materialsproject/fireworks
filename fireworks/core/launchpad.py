@@ -21,6 +21,7 @@ from bson import ObjectId
 from monty.serialization import loadfn
 from pymongo import ASCENDING, DESCENDING, MongoClient
 from pymongo.errors import DocumentTooLarge
+from importlib.metadata import version
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
@@ -185,11 +186,16 @@ class LaunchPad(FWSerializable):
             strm_lvl (str): the logger stream level
             user_indices (list): list of 'fireworks' collection indexes to be built
             wf_user_indices (list): list of 'workflows' collection indexes to be built
-            ssl (bool): use TLS/SSL for mongodb connection
-            ssl_ca_certs (str): path to the CA certificate to be used for mongodb connection
-            ssl_certfile (str): path to the client certificate to be used for mongodb connection
-            ssl_keyfile (str): path to the client private key
-            ssl_pem_passphrase (str): passphrase for the client private key
+            ssl (bool): use TLS/SSL for mongodb connection. For pymongo versions >=4.0, this is
+                aliased to the tls argument to MongoClient.
+            ssl_ca_certs (str): path to the CA certificate to be used for mongodb connection. For pymongo versions >=4.0,
+                this is aliased to the tlsCAFile argument to MongoClient.
+            ssl_certfile (str): path to the client certificate to be used for mongodb connection. For pymongo versions
+                >=4.0, this is aliased to the tlsCertificateKeyFile argument to MongoClient.
+            ssl_keyfile (str): path to the client private key. For pymongo versions >=4.0, this argument is aliased
+                to the tlsCertificateKeyFile argument if ssl_certfile is not passed.
+            ssl_pem_passphrase (str): passphrase for the client private key. For pymongo versions >=4.0, this argument
+                is aliased to the tlsCertificateKeyFilePassword argument.
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
                 not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
@@ -226,20 +232,40 @@ class LaunchPad(FWSerializable):
             dbname = host.split("/")[-1].split("?")[0]  # parse URI to extract dbname
             self.db = self.connection[dbname]
         else:
-            self.connection = MongoClient(
-                self.host,
-                self.port,
-                ssl=self.ssl,
-                ssl_ca_certs=self.ssl_ca_certs,
-                ssl_certfile=self.ssl_certfile,
-                ssl_keyfile=self.ssl_keyfile,
-                ssl_pem_passphrase=self.ssl_pem_passphrase,
-                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
-                username=self.username,
-                password=self.password,
-                authSource=self.authsource,
-                **self.mongoclient_kwargs,
-            )
+
+
+            if int(version("pymongo").split(".")[0]) >= 4:
+                tls_key_file = self.ssl_certfile if self.ssl_certfile else self.ssl_keyfile
+
+                # Using pymongo version >= 4.0
+                self.connection = MongoClient(
+                    self.host,
+                    self.port,
+                    tls=self.ssl,
+                    tlsCAFile=self.ssl_ca_certs,
+                    tlsCertificateKeyFile=tls_key_file,
+                    tlsCertificateKeyFilePassword=self.ssl_pem_passphrase,
+                    socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
+                    username=self.username,
+                    password=self.password,
+                    authSource=self.authsource
+                )
+            else:
+                # Using older pymongo major version >4.0
+                self.connection = MongoClient(
+                    self.host,
+                    self.port,
+                    ssl=self.ssl,
+                    ssl_ca_certs=self.ssl_ca_certs,
+                    ssl_certfile=self.ssl_certfile,
+                    ssl_keyfile=self.ssl_keyfile,
+                    ssl_pem_passphrase=self.ssl_pem_passphrase,
+                    socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
+                    username=self.username,
+                    password=self.password,
+                    authSource=self.authsource,
+                    **self.mongoclient_kwargs,
+                )
             self.db = self.connection[self.name]
 
         self.fireworks = self.db.fireworks
