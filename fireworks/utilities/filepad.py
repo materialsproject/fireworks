@@ -28,11 +28,6 @@ class FilePad(MSONable):
         database="fireworks",
         username=None,
         password=None,
-        ssl=False,
-        ssl_ca_certs=None,
-        ssl_certfile=None,
-        ssl_keyfile=None,
-        ssl_pem_passphrase=None,
         authsource=None,
         uri_mode=False,
         mongoclient_kwargs=None,
@@ -50,17 +45,10 @@ class FilePad(MSONable):
             username (str)
             password (str)
 
-            ssl (bool): use TLS/SSL for mongodb connection
-            ssl_ca_certs (str): path to the CA certificate to be used for mongodb connection
-            ssl_certfile (str): path to the client certificate to be used for mongodb connection
-            ssl_keyfile (str): path to the client private key
-            ssl_pem_passphrase (str): passphrase for the client private key
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
                 not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
-            mongoclient_kwargs (dict): A list of any other custom keyword arguments to be
-                passed into the MongoClient connection (non-URI mode only)
 
             filepad_coll_name (str): filepad collection name
             gridfs_coll_name (str): gridfs collection name
@@ -74,11 +62,6 @@ class FilePad(MSONable):
         self.database = database
         self.username = username
         self.password = password
-        self.ssl = ssl
-        self.ssl_ca_certs = ssl_ca_certs
-        self.ssl_certfile = ssl_certfile
-        self.ssl_keyfile = ssl_keyfile
-        self.ssl_pem_passphrase = ssl_pem_passphrase
         self.authsource = authsource or self.database
         self.mongoclient_kwargs = mongoclient_kwargs or {}
         self.uri_mode = uri_mode
@@ -95,11 +78,6 @@ class FilePad(MSONable):
             self.connection = MongoClient(
                 self.host,
                 self.port,
-                ssl=self.ssl,
-                ssl_ca_certs=self.ssl_ca_certs,
-                ssl_certfile=self.ssl_certfile,
-                ssl_keyfile=self.ssl_keyfile,
-                ssl_pem_passphrase=self.ssl_pem_passphrase,
                 socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
                 username=self.username,
                 password=self.password,
@@ -363,11 +341,6 @@ class FilePad(MSONable):
             user = creds.get("readonly_user", creds.get("username"))
             password = creds.get("readonly_password", creds.get("password"))
 
-        ssl = creds.get("ssl", False)
-        ssl_ca_certs = creds.get("ssl_ca_certs", None)
-        ssl_certfile = creds.get("ssl_certfile", None)
-        ssl_keyfile = creds.get("ssl_keyfile", None)
-        ssl_pem_passphrase = creds.get("ssl_pem_passphrase", None)
         authsource = creds.get("authsource", None)
         uri_mode = creds.get("uri_mode", False)
         mongoclient_kwargs = creds.get("mongoclient_kwargs", None)
@@ -383,11 +356,6 @@ class FilePad(MSONable):
             database=creds.get("name", "fireworks"),
             username=user,
             password=password,
-            ssl=ssl,
-            ssl_ca_certs=ssl_ca_certs,
-            ssl_certfile=ssl_certfile,
-            ssl_keyfile=ssl_keyfile,
-            ssl_pem_passphrase=ssl_pem_passphrase,
             authsource=authsource,
             uri_mode=uri_mode,
             mongoclient_kwargs=mongoclient_kwargs,
