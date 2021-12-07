@@ -21,8 +21,8 @@ from bson import ObjectId
 from monty.serialization import loadfn
 from pymongo import ASCENDING, DESCENDING, MongoClient
 from pymongo.errors import DocumentTooLarge
-from importlib.metadata import version
 from tqdm import tqdm
+from importlib.metadata import version
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
 from fireworks.fw_config import (
@@ -249,6 +249,7 @@ class LaunchPad(FWSerializable):
                     username=self.username,
                     password=self.password,
                     authSource=self.authsource
+                    **self.mongoclient_kwargs,
                 )
             else:
                 # Using older pymongo major version >4.0
