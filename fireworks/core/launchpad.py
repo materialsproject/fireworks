@@ -163,11 +163,6 @@ class LaunchPad(FWSerializable):
         strm_lvl=None,
         user_indices=None,
         wf_user_indices=None,
-        ssl=False,
-        ssl_ca_certs=None,
-        ssl_certfile=None,
-        ssl_keyfile=None,
-        ssl_pem_passphrase=None,
         authsource=None,
         uri_mode=False,
         mongoclient_kwargs=None,
@@ -185,17 +180,14 @@ class LaunchPad(FWSerializable):
             strm_lvl (str): the logger stream level
             user_indices (list): list of 'fireworks' collection indexes to be built
             wf_user_indices (list): list of 'workflows' collection indexes to be built
-            ssl (bool): use TLS/SSL for mongodb connection
-            ssl_ca_certs (str): path to the CA certificate to be used for mongodb connection
-            ssl_certfile (str): path to the client certificate to be used for mongodb connection
-            ssl_keyfile (str): path to the client private key
-            ssl_pem_passphrase (str): passphrase for the client private key
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
                 not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
             mongoclient_kwargs (dict): A list of any other custom keyword arguments to be
-                passed into the MongoClient connection (non-URI mode only)
+                passed into the MongoClient connection (non-URI mode only). Use these kwargs to specify SSL/TLS
+                arguments. Note these arguments are different depending on the major pymongo version used; see
+                pymongo documentation for more details.
         """
 
         self.host = host if (host or uri_mode) else "localhost"
@@ -203,11 +195,6 @@ class LaunchPad(FWSerializable):
         self.name = name if (name or uri_mode) else "fireworks"
         self.username = username
         self.password = password
-        self.ssl = ssl
-        self.ssl_ca_certs = ssl_ca_certs
-        self.ssl_certfile = ssl_certfile
-        self.ssl_keyfile = ssl_keyfile
-        self.ssl_pem_passphrase = ssl_pem_passphrase
         self.authsource = authsource or self.name
         self.mongoclient_kwargs = mongoclient_kwargs or {}
         self.uri_mode = uri_mode
@@ -229,11 +216,6 @@ class LaunchPad(FWSerializable):
             self.connection = MongoClient(
                 self.host,
                 self.port,
-                ssl=self.ssl,
-                ssl_ca_certs=self.ssl_ca_certs,
-                ssl_certfile=self.ssl_certfile,
-                ssl_keyfile=self.ssl_keyfile,
-                ssl_pem_passphrase=self.ssl_pem_passphrase,
                 socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
                 username=self.username,
                 password=self.password,
@@ -269,11 +251,6 @@ class LaunchPad(FWSerializable):
             "strm_lvl": self.strm_lvl,
             "user_indices": self.user_indices,
             "wf_user_indices": self.wf_user_indices,
-            "ssl": self.ssl,
-            "ssl_ca_certs": self.ssl_ca_certs,
-            "ssl_certfile": self.ssl_certfile,
-            "ssl_keyfile": self.ssl_keyfile,
-            "ssl_pem_passphrase": self.ssl_pem_passphrase,
             "authsource": self.authsource,
             "uri_mode": self.uri_mode,
             "mongoclient_kwargs": self.mongoclient_kwargs,
@@ -315,13 +292,6 @@ class LaunchPad(FWSerializable):
         strm_lvl = d.get("strm_lvl", None)
         user_indices = d.get("user_indices", [])
         wf_user_indices = d.get("wf_user_indices", [])
-        ssl = d.get("ssl", False)
-        ssl_ca_certs = d.get(
-            "ssl_ca_certs", d.get("ssl_ca_file", None)
-        )  # ssl_ca_file was the old notation for FWS < 1.5.5
-        ssl_certfile = d.get("ssl_certfile", None)
-        ssl_keyfile = d.get("ssl_keyfile", None)
-        ssl_pem_passphrase = d.get("ssl_pem_passphrase", None)
         authsource = d.get("authsource", None)
         uri_mode = d.get("uri_mode", False)
         mongoclient_kwargs = d.get("mongoclient_kwargs", None)
@@ -335,11 +305,6 @@ class LaunchPad(FWSerializable):
             strm_lvl,
             user_indices,
             wf_user_indices,
-            ssl,
-            ssl_ca_certs,
-            ssl_certfile,
-            ssl_keyfile,
-            ssl_pem_passphrase,
             authsource,
             uri_mode,
             mongoclient_kwargs,
