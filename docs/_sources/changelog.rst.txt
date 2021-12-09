@@ -9,7 +9,7 @@ FireWorks Changelog
 * avoid checking the number of jobs in the queue if not needed (G. Petretto)
 * Avoid failures due to encoding issues in tracker (J. Hörmann)
 * Filepad accessible via TLS/SSL encrypted connection (J. Hörmann)
-* llow propagating modified spec not only to direct children, but along all decendants down to workflow leaves by adding a 'propagate' flag to FWAction. (J. Hörmann)
+* allow propagating modified spec not only to direct children, but along all descendants down to workflow leaves by adding a 'propagate' flag to FWAction. (J. Hörmann)
 * update some dependency versions
 * misc fixes and updates (mamachra, J. Hörmann, I. Kondov, A. Jain)
 
@@ -364,7 +364,7 @@ FireWorks Changelog
 * add launches mode query (query launches collection when performing lpad tasks)
 * Add auth option to web app (S.P. Ong)
 * enhance webapp server w/gunicorn (D. Winston)
-* threshold parameter in introspect commmand
+* threshold parameter in introspect command
 * add license option to SLURM adapter
 * add fill mode to qlaunch for keeping jobs in the queue even when nothing in DB to run
 * fix njobs_queue bug
