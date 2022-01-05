@@ -3,8 +3,8 @@ import os
 __version__ = "1.9.8"
 FW_INSTALL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-import warnings                                                                                                                     
-warnings.filterwarnings("ignore", message="numpy.dtype size changed")                                                               
+import warnings
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ndarray size changed")
 
 # These imports allow a much simpler import of core Fireworks functionality.
