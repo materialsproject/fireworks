@@ -1,35 +1,42 @@
-# coding: utf-8
-
-from __future__ import division, print_function, unicode_literals, absolute_import
-
 """
 This module defines the FilePad class. FilePad is a convenient api to mongodb/gridfs to
 add/delete/update any file of any size.
 """
 
-import zlib
 import os
+import zlib
 
-from pymongo import MongoClient
 import gridfs
-
-from monty.serialization import loadfn
+import pymongo
 from monty.json import MSONable
+from monty.serialization import loadfn
+from pymongo import MongoClient
 
-from fireworks.fw_config import LAUNCHPAD_LOC
+from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS
 from fireworks.utilities.fw_utilities import get_fw_logger
 
-
-__author__ = 'Kiran Mathew'
-__email__ = 'kmathew@lbl.gov'
-__credits__ = 'Anubhav Jain'
+__author__ = "Kiran Mathew"
+__email__ = "kmathew@lbl.gov"
+__credits__ = "Anubhav Jain"
 
 
 class FilePad(MSONable):
-
-    def __init__(self, host='localhost', port=27017, database='fireworks', username=None,
-                 password=None, filepad_coll_name="filepad", gridfs_coll_name="filepad_gfs", logdir=None,
-                 strm_lvl=None):
+    def __init__(
+        self,
+        host="localhost",
+        port=27017,
+        database="fireworks",
+        username=None,
+        password=None,
+        authsource=None,
+        uri_mode=False,
+        mongoclient_kwargs=None,
+        filepad_coll_name="filepad",
+        gridfs_coll_name="filepad_gfs",
+        logdir=None,
+        strm_lvl=None,
+        text_mode=False,
+    ):
         """
         Args:
             host (str): hostname
@@ -37,27 +44,54 @@ class FilePad(MSONable):
             database (str): database name
             username (str)
             password (str)
+
+            authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
+                not set
+            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
+                the host).
+
             filepad_coll_name (str): filepad collection name
             gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
             strm_lvl (str): the logger stream level
+            text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if
+                working only with text files between Windows and Unix systems
         """
         self.host = host
         self.port = int(port)
         self.database = database
         self.username = username
         self.password = password
+        self.authsource = authsource or self.database
+        self.mongoclient_kwargs = mongoclient_kwargs or {}
+        self.uri_mode = uri_mode
+
         self.gridfs_coll_name = gridfs_coll_name
-        try:
-            self.connection = MongoClient(self.host, self.port)
-            self.db = self.connection[database]
-        except:
-            raise Exception("connection failed")
-        try:
-            if self.username:
-                self.db.authenticate(self.username, self.password)
-        except:
-            raise Exception("authentication failed")
+        self.text_mode = text_mode
+
+        # get connection
+        if uri_mode:
+            self.connection = MongoClient(host)
+            dbname = host.split("/")[-1].split("?")[0]  # parse URI to extract dbname
+            self.db = self.connection[dbname]
+        else:
+            self.connection = MongoClient(
+                self.host,
+                self.port,
+                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
+                username=self.username,
+                password=self.password,
+                authSource=self.authsource,
+                **self.mongoclient_kwargs,
+            )
+            self.db = self.connection[self.database]
+        # except Exception:
+        #     raise Exception("connection failed")
+        # try:
+        #     if self.username:
+        #         self.db.authenticate(self.username, self.password)
+        # except Exception:
+        #     raise Exception("authentication failed")
 
         # set collections: filepad and gridfs
         self.filepad = self.db[filepad_coll_name]
@@ -65,8 +99,8 @@ class FilePad(MSONable):
 
         # logging
         self.logdir = logdir
-        self.strm_lvl = strm_lvl if strm_lvl else 'INFO'
-        self.logger = get_fw_logger('filepad', l_dir=self.logdir, stream_level=self.strm_lvl)
+        self.strm_lvl = strm_lvl if strm_lvl else "INFO"
+        self.logger = get_fw_logger("filepad", l_dir=self.logdir, stream_level=self.strm_lvl)
 
         # build indexes
         self.build_indexes()
@@ -101,16 +135,20 @@ class FilePad(MSONable):
         if identifier is not None:
             _, doc = self.get_file(identifier)
             if doc is not None:
-                self.logger.warning("identifier: {} exists. Skipping insertion".format(identifier))
+                self.logger.warning(f"identifier: {identifier} exists. Skipping insertion")
                 return doc["gfs_id"], doc["identifier"]
 
         path = os.path.abspath(path)
-        root_data = {"identifier": identifier,
-                     "original_file_name": os.path.basename(path),
-                     "original_file_path": path,
-                     "metadata": metadata,
-                     "compressed": compress}
-        with open(path, "r") as f:
+        root_data = {
+            "identifier": identifier,
+            "original_file_name": os.path.basename(path),
+            "original_file_path": path,
+            "metadata": metadata,
+            "compressed": compress,
+        }
+
+        read_mode = "r" if self.text_mode else "rb"
+        with open(path, read_mode) as f:
             contents = f.read()
             return self._insert_contents(contents, identifier, root_data, compress)
 
@@ -138,17 +176,23 @@ class FilePad(MSONable):
         doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._get_file_contents(doc)
 
-    def get_file_by_query(self, query):
+    def get_file_by_query(self, query, sort_key=None, sort_direction=pymongo.DESCENDING):
         """
 
         Args:
-            query (dict): pymongo query dict
+            query (dict):                   pymongo query dict
+            sort_key (str, optional):       sort key, default None
+            sort_direction (int, optional): default pymongo.DESCENDING
 
         Returns:
             list: list of all (file content as a string, document dictionary)
         """
         all_files = []
-        for d in self.filepad.find(query):
+        if sort_key is None:
+            cursor = self.filepad.find(query)
+        else:
+            cursor = self.filepad.find(query).sort(sort_key, sort_direction)
+        for d in cursor:
             all_files.append(self._get_file_contents(d))
         return all_files
 
@@ -234,7 +278,9 @@ class FilePad(MSONable):
 
     def _insert_to_gridfs(self, contents, compress):
         if compress:
-            contents = zlib.compress(contents.encode(), compress)
+            if self.text_mode:
+                contents = contents.encode()
+            contents = zlib.compress(contents, compress)
         # insert to gridfs
         return str(self.gridfs.put(contents))
 
@@ -249,7 +295,7 @@ class FilePad(MSONable):
         from bson.objectid import ObjectId
 
         if doc:
-            gfs_id = doc['gfs_id']
+            gfs_id = doc["gfs_id"]
             file_contents = self.gridfs.get(ObjectId(gfs_id)).read()
             if doc["compressed"]:
                 file_contents = zlib.decompress(file_contents)
@@ -271,7 +317,8 @@ class FilePad(MSONable):
             return None, None
         old_gfs_id = doc["gfs_id"]
         self.gridfs.delete(old_gfs_id)
-        gfs_id = self._insert_to_gridfs(open(path, "r").read(), compress)
+        read_mode = "r" if self.text_mode else "rb"
+        gfs_id = self._insert_to_gridfs(open(path, read_mode).read(), compress)
         doc["gfs_id"] = gfs_id
         doc["compressed"] = compress
         return old_gfs_id, gfs_id
@@ -294,12 +341,28 @@ class FilePad(MSONable):
             user = creds.get("readonly_user", creds.get("username"))
             password = creds.get("readonly_password", creds.get("password"))
 
+        authsource = creds.get("authsource", None)
+        uri_mode = creds.get("uri_mode", False)
+        mongoclient_kwargs = creds.get("mongoclient_kwargs", None)
+
         coll_name = creds.get("filepad", "filepad")
         gfs_name = creds.get("filepad_gridfs", "filepad_gfs")
 
-        return cls(creds.get("host", "localhost"), int(creds.get("port", 27017)),
-                   creds.get("name", "fireworks"), user, password, coll_name,
-                   gfs_name)
+        text_mode = creds.get("text_mode", False)
+
+        return cls(
+            host=creds.get("host", "localhost"),
+            port=int(creds.get("port", 27017)),
+            database=creds.get("name", "fireworks"),
+            username=user,
+            password=password,
+            authsource=authsource,
+            uri_mode=uri_mode,
+            mongoclient_kwargs=mongoclient_kwargs,
+            filepad_coll_name=coll_name,
+            gridfs_coll_name=gfs_name,
+            text_mode=text_mode,
+        )
 
     @classmethod
     def auto_load(cls):

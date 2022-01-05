@@ -1,48 +1,50 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 A set of global constants for FireWorks (Python code as a config file).
 """
 
 import os
-from monty.serialization import loadfn, dumpfn
-from monty.design_patterns import singleton
+from typing import Any, Dict
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2012, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Dec 12, 2012'
+from monty.design_patterns import singleton
+from monty.serialization import dumpfn, loadfn
+
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2012, The Materials Project"
+__version__ = "0.1"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Dec 12, 2012"
 
 NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
-USER_PACKAGES = ['fireworks.user_objects', 'fireworks.utilities.tests',
-                 'fw_tutorials', 'fireworks.features']
+USER_PACKAGES = ["fireworks.user_objects", "fireworks.utilities.tests", "fw_tutorials", "fireworks.features"]
 
 # if you update a _fw_name, you can use this to record the change and maintain deserialization
-FW_NAME_UPDATES = {'Transfer Task': 'FileTransferTask',
-                   'Script Task': 'ScriptTask',
-                   'Template Writer Task': 'TemplateWriterTask',
-                   'Dupe Finder Exact': 'DupeFinderExact'}
+FW_NAME_UPDATES = {
+    "Transfer Task": "FileTransferTask",
+    "Script Task": "ScriptTask",
+    "Template Writer Task": "TemplateWriterTask",
+    "Dupe Finder Exact": "DupeFinderExact",
+}
 
 YAML_STYLE = False  # controls whether YAML documents will be nested as braces or blocks (False = blocks)
 
-FW_BLOCK_FORMAT = '%Y-%m-%d-%H-%M-%S-%f'  # date format for writing block directories in "rapid-fire" mode
+FW_BLOCK_FORMAT = "%Y-%m-%d-%H-%M-%S-%f"  # date format for writing block directories in "rapid-fire" mode
 
-FW_LOGGING_FORMAT = '%(asctime)s %(levelname)s %(message)s'  # format for loggers
+FW_LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"  # format for loggers
 
 QUEUE_RETRY_ATTEMPTS = 10  # number of attempts to re-try communicating with queue server in failures
 QUEUE_UPDATE_INTERVAL = 5  # max interval (seconds) needed for queue to update after submitting a job
 QUEUE_JOBNAME_MAXLEN = 20  # max length of the jobname for queue systems
 
-SUBMIT_SCRIPT_NAME = 'FW_submit.script'  # name of submit script
+SUBMIT_SCRIPT_NAME = "FW_submit.script"  # name of submit script
 
 PRINT_FW_JSON = True
 PRINT_FW_YAML = False
+
+JSON_SCHEMA_VALIDATE = False
+JSON_SCHEMA_VALIDATE_LIST = None
 
 PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
 RUN_EXPIRATION_SECS = PING_TIME_SECS * 4  # mark job as FIZZLED if not pinged in this time
@@ -61,11 +63,11 @@ LAUNCHPAD_LOC = None  # where to find the my_launchpad.yaml file
 FWORKER_LOC = None  # where to find the my_fworker.yaml file
 QUEUEADAPTER_LOC = None  # where to find the my_qadapter.yaml file
 
-CONFIG_FILE_DIR = '.'  # directory containing config files (if not individually set)
+CONFIG_FILE_DIR = "."  # directory containing config files (if not individually set)
 
 ROCKET_STREAM_LOGLEVEL = "INFO"  # the streaming log level of the rocket.launcher logger
 
-QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to alwas
+QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to always
 
 ALWAYS_CREATE_NEW_BLOCK = False  # always create new block on queue launcher call
 
@@ -73,7 +75,7 @@ TEMPLATE_DIR = None  # default template dir for TemplateWriterTask
 
 REMOVE_USELESS_DIRS = True  # deletes empty launch dir if _launch_dir set
 
-DS_PASSWORD = b'1234'  # dummy password to access DataServer
+DS_PASSWORD = b"1234"  # dummy password to access DataServer
 
 STORE_PACKING_INFO = True  # automatically add job packing info to stored_data
 
@@ -81,7 +83,7 @@ PW_CHECK_NUM = 10  # number of entries that can be modified in single lpad comma
 
 TRACKER_LINES = 25  # number of lines to return in Tracker
 
-SORT_FWS = ''  # sort equal priority FWs? "FILO" or "FIFO".
+SORT_FWS = ""  # sort equal priority FWs? "FILO" or "FIFO".
 
 ENCODE_MONTY = True  # detect and use Monty-style as_dict()
 
@@ -93,7 +95,7 @@ WEBSERVER_HOST = "127.0.0.1"  # default host on which the Flask web server runs
 
 WEBSERVER_PORT = 5000  # default port on which the Flask web server runs
 
-WEBSERVER_PERFWARNINGS = False # enable performance-related warnings
+WEBSERVER_PERFWARNINGS = False  # enable performance-related warnings
 
 # value of socketTimeoutMS when connection to mongoDB.  See pymongo official
 # documentation http://api.mongodb.org/python/current/api/pymongo/mongo_client.html
@@ -104,46 +106,42 @@ MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
 
 
-def override_user_settings():
+def override_user_settings() -> None:
     module_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(module_dir)  # FW root dir
 
     config_paths = []
 
-    test_paths = [os.getcwd(), os.path.join(os.path.expanduser('~'), ".fireworks"), root_dir]
+    test_paths = [os.getcwd(), os.path.join(os.path.expanduser("~"), ".fireworks"), root_dir]
 
     for p in test_paths:
-        fp = os.path.join(p, 'FW_config.yaml')
+        fp = os.path.join(p, "FW_config.yaml")
         if fp not in config_paths and os.path.exists(fp):
             config_paths.append(fp)
 
-    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in\
-            config_paths:
+    if "FW_CONFIG_FILE" in os.environ and os.environ["FW_CONFIG_FILE"] not in config_paths:
         config_paths.append(os.environ["FW_CONFIG_FILE"])
 
-    config_paths = config_paths or [os.path.join(
-        os.path.expanduser('~'), ".fireworks", 'FW_config.yaml')]
+    config_paths = config_paths or [os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")]
 
     if len(config_paths) > 1:
-        print("Found many potential paths for {}: {}\nChoosing as default: {}"
-              .format("FW_CONFIG_FILE", config_paths, config_paths[0]))
+        print(f"Found many potential paths for FW_CONFIG_FILE: {config_paths}\nChoosing as default: {config_paths[0]}")
 
     if os.path.exists(config_paths[0]):
         overrides = loadfn(config_paths[0])
         for key, v in overrides.items():
-            if key == 'ADD_USER_PACKAGES':
+            if key == "ADD_USER_PACKAGES":
                 USER_PACKAGES.extend(v)
-            elif key == 'ECHO_TEST':
+            elif key == "ECHO_TEST":
                 print(v)
             elif key not in globals():
-                raise ValueError('Invalid FW_config file has unknown parameter: {}'.format(key))
+                raise ValueError(f"Invalid FW_config file has unknown parameter: {key}")
             else:
                 globals()[key] = v
 
     for k in ["LAUNCHPAD_LOC", "FWORKER_LOC", "QUEUEADAPTER_LOC"]:
         if globals().get(k, None) is None:
-            fname = "my_qadapter.yaml" if k == "QUEUEADAPTER_LOC" else \
-                "my_{}.yaml".format(k.split("_")[0].lower())
+            fname = "my_qadapter.yaml" if k == "QUEUEADAPTER_LOC" else f"my_{k.split('_')[0].lower()}.yaml"
             m_paths = []
             if os.path.realpath(CONFIG_FILE_DIR) not in test_paths:
                 test_paths.insert(0, CONFIG_FILE_DIR)
@@ -153,8 +151,7 @@ def override_user_settings():
                     m_paths.append(fp)
 
             if len(m_paths) > 1:
-                print("Found many potential paths for {}: {}\nChoosing as default: {}"
-                      .format(k, m_paths, m_paths[0]))
+                print(f"Found many potential paths for {k}: {m_paths}\nChoosing as default: {m_paths[0]}")
 
             if len(m_paths) > 0:
                 globals()[k] = m_paths[0]
@@ -163,7 +160,7 @@ def override_user_settings():
 override_user_settings()
 
 
-def config_to_dict():
+def config_to_dict() -> Dict[str, Any]:
     d = {}
     for k, v in globals().items():
         if k.upper() == k and k != "NEGATIVE_FWID_CTR":
@@ -171,13 +168,14 @@ def config_to_dict():
     return d
 
 
-def write_config(path=None):
-    path = os.path.join(os.path.expanduser('~'), ".fireworks", 'FW_config.yaml') if path is None else path
+def write_config(path: str = None) -> None:
+    if path is None:
+        path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")
     dumpfn(config_to_dict(), path)
 
 
 @singleton
-class FWData(object):
+class FWData:
     """
     This class stores data that a Firetask might want to access, e.g. to see the runtime params
     """

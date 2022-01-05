@@ -1,18 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Installing FireWorks &#8212; FireWorks 1.9.3 documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installing FireWorks &#8212; FireWorks 1.9.8 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Five-minute quickstart" href="quickstart.html" />
@@ -36,7 +36,8 @@
         <li class="right" >
           <a href="index.html" title="Is FireWorks for me?"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installing FireWorks</a></li> 
       </ul>
     </div>  
 
@@ -48,8 +49,8 @@
   <div class="section" id="installing-fireworks">
 <h1>Installing FireWorks<a class="headerlink" href="#installing-fireworks" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">We suggest that you use Python 2.7.3 or higher, especially in production. There is a <a class="reference external" href="https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE">bug</a> in Python 2.7.2 that could affect FireWorks (although we haven’t seen any problems yet). As of FireWorks v0.7, Python 3.3 and higher should also work.</p>
+<p class="admonition-title">Note</p>
+<p>We suggest that you use Python 3.7 or higher, especially in production. There is a <a class="reference external" href="https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE">bug</a> in Python 2.7.2 that could affect FireWorks (although we haven’t seen any problems yet).</p>
 </div>
 <div class="section" id="install-mongodb">
 <h2>Install MongoDB<a class="headerlink" href="#install-mongodb" title="Permalink to this headline">¶</a></h2>
@@ -58,10 +59,10 @@
 <p>To access via a <em>cloud provider</em>, you might try <a class="reference external" href="http://mlab.com/">mLab</a>, <a class="reference external" href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a>, or search for a different one. If you are using mLab, here are a few notes:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Set up an account via the mLab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.</li>
-<li>mLab will ask you to create a database; any name is fine, but make sure you write down what it is.</li>
-<li>After creating a database, note that you’ll need to create at least one database user in order to access the database.</li>
-<li>You can test your database connection using MongoDB’s built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.</li>
+<li><p>Set up an account via the mLab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.</p></li>
+<li><p>mLab will ask you to create a database; any name is fine, but make sure you write down what it is.</p></li>
+<li><p>After creating a database, note that you’ll need to create at least one database user in order to access the database.</p></li>
+<li><p>You can test your database connection using MongoDB’s built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connection as part of the procedure.</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -69,23 +70,23 @@
 <h2>Preparing to Install FireWorks (Python and pip)<a class="headerlink" href="#preparing-to-install-fireworks-python-and-pip" title="Permalink to this headline">¶</a></h2>
 <p>To prepare for installation, you should:</p>
 <ol class="arabic simple">
-<li>Install <a class="reference external" href="http://www.python.org">Python</a> - either Python 2.7+ or Python 3 should work.</li>
-<li>Install <a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">pip</a>, if not already packaged with your system (this sometimes comes bundled with your Python install). This will allow you to download required dependencies.</li>
+<li><p>Install <a class="reference external" href="http://www.python.org">Python</a> - use Python 3.3+ (and ideally the latest version) as Python 2 has been discontinued. FireWorks may continue to work with Python 2.7.x for some time, but this is no longer guaranteed.</p></li>
+<li><p>Install <a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">pip</a>, if not already packaged with your system (this sometimes comes bundled with your Python install). This will allow you to download required dependencies.</p></li>
 </ol>
 <div class="admonition tip">
-<p class="first admonition-title">Tip</p>
-<p class="last">if you have easy_install configured, e.g. through <a class="reference external" href="http://pypi.python.org/pypi/setuptools">setuptools</a>, you should be able to install pip using the command <code class="docutils literal notranslate"><span class="pre">easy_install</span> <span class="pre">pip</span></code>. You should make sure that setuptools is installed using the proper Python version and probably without the <code class="docutils literal notranslate"><span class="pre">--user</span></code> option if running <code class="docutils literal notranslate"><span class="pre">ez_setup.py</span></code>.</p>
+<p class="admonition-title">Tip</p>
+<p>if you have easy_install configured, e.g. through <a class="reference external" href="http://pypi.python.org/pypi/setuptools">setuptools</a>, you should be able to install pip using the command <code class="docutils literal notranslate"><span class="pre">easy_install</span> <span class="pre">pip</span></code>. You should make sure that setuptools is installed using the proper Python version and probably without the <code class="docutils literal notranslate"><span class="pre">--user</span></code> option if running <code class="docutils literal notranslate"><span class="pre">ez_setup.py</span></code>.</p>
 </div>
 <div class="section" id="virtualenv-installation-option">
 <h3>Virtualenv installation option<a class="headerlink" href="#virtualenv-installation-option" title="Permalink to this headline">¶</a></h3>
-<p>Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. For example, you might want to use Python 2.7 for FireWorks, but Python 3+ for other Python codes you’re interested in using. Or, you might have different versions of Python libraries supporting FireWorks and your other installations. This is often the case on shared machines. if you’re interested in this option, you might consider a <a class="reference internal" href="virtualenv_tutorial.html"><span class="doc">virtualenv install</span></a>. Otherwise, just follow the installation instructions below. A simpler option to setting up virtualenv that accomplishes some of the same goals is to use the <code class="docutils literal notranslate"><span class="pre">--user</span></code> flag when running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">develop</span></code> in the the Git version of installation (see Installation Method 2).</p>
+<p>Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. If you’re interested in this option, you might consider a <a class="reference internal" href="virtualenv_tutorial.html"><span class="doc">virtualenv install</span></a>. Otherwise, just follow the installation instructions below. A simpler option to setting up virtualenv that accomplishes some of the same goals is to use the <code class="docutils literal notranslate"><span class="pre">--user</span></code> flag when running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">develop</span></code> in the the Git version of installation (see Installation Method 2).</p>
 </div>
 </div>
 <div class="section" id="installation-method-1-use-pip">
 <h2>Installation Method 1: Use Pip<a class="headerlink" href="#installation-method-1-use-pip" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to install FireWorks is to simply run a one-liner in pip. The downside of this method is that it is more difficult to view and edit the source code.</p>
 <ol class="arabic">
-<li><p class="first">To install, simply type:</p>
+<li><p>To install, simply type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">FireWorks</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">matplotlib</span>  <span class="c1"># (only needed for seeing visual report plots in web gui!)</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">paramiko</span>  <span class="c1"># (only needed if using built-in remote file transfer!)</span>
@@ -95,46 +96,43 @@
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you are getting permissions error, you might include the <code class="docutils literal notranslate"><span class="pre">--user</span></code> option, i.e., <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">FireWorks</span></code>. Another option is invoking administrator access, e.g., <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">FireWorks</span></code>.</p>
+<p class="admonition-title">Note</p>
+<p>If you are getting permissions error, you might include the <code class="docutils literal notranslate"><span class="pre">--user</span></code> option, i.e., <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">FireWorks</span></code>. Another option is invoking administrator access, e.g., <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">FireWorks</span></code>.</p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If installation fails with a message like “error: can’t copy ‘XXXXX’: doesn’t exist or not a regular file”, try updating pip via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span> <span class="pre">pip</span></code>.</p>
+<p class="admonition-title">Note</p>
+<p>If installation fails with a message like “error: can’t copy ‘XXXXX’: doesn’t exist or not a regular file”, try updating pip via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span> <span class="pre">pip</span></code>.</p>
 </div>
 </li>
-<li><p class="first">Separately, you can download the Firework tutorial files if you plan on going through the tutorials. You can download these from the <a class="reference external" href="https://github.com/materialsproject/fireworks">FireWorks Github page</a>. All you need is the <code class="docutils literal notranslate"><span class="pre">fw_tutorial</span></code> directory, but it might be easiest to download the entire source and just copy the <code class="docutils literal notranslate"><span class="pre">fw_tutorial</span></code> directory somewhere else.</p>
-</li>
-<li><p class="first">If you want, you can test connection to a remote server (see instructions below)</p>
-</li>
+<li><p>Separately, you can download the Firework tutorial files if you plan on going through the tutorials. You can download these from the <a class="reference external" href="https://github.com/materialsproject/fireworks">FireWorks Github page</a>. All you need is the <code class="docutils literal notranslate"><span class="pre">fw_tutorial</span></code> directory, but it might be easiest to download the entire source and just copy the <code class="docutils literal notranslate"><span class="pre">fw_tutorial</span></code> directory somewhere else.</p></li>
+<li><p>If you want, you can test connection to a remote server (see instructions below)</p></li>
 </ol>
 </div>
 <div class="section" id="installation-method-2-use-git-to-install-in-developer-mode">
 <h2>Installation Method 2: Use Git to install in developer mode<a class="headerlink" href="#installation-method-2-use-git-to-install-in-developer-mode" title="Permalink to this headline">¶</a></h2>
 <p>The most comprehensive way to install FireWorks is in ‘developer mode’, which will allow you to easily view and modify the source code and fork the repo for development purposes. However, this method requires setting up an account on GitHub and properly setting up SSH keys.</p>
 <ol class="arabic">
-<li><p class="first">Install <a class="reference external" href="http://git-scm.com">git</a>, if not already packaged with your system. This will allow you to download the latest source code.</p>
-</li>
-<li><p class="first">Run the following code to download the FireWorks source:</p>
+<li><p>Install <a class="reference external" href="http://git-scm.com">git</a>, if not already packaged with your system. This will allow you to download the latest source code.</p></li>
+<li><p>Run the following code to download the FireWorks source:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">materialsproject</span><span class="o">/</span><span class="n">fireworks</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Make sure you have an account on GitHub set up, and have associated your SSH key on your computer with your GitHub account. Otherwise you might get a cryptic <code class="docutils literal notranslate"><span class="pre">Permission</span> <span class="pre">denied</span> <span class="pre">(publickey)</span></code> error. Help on ssh keys can be found <a class="reference external" href="https://help.github.com/articles/generating-ssh-keys">here</a>.</p>
+<p class="admonition-title">Note</p>
+<p>Make sure you have an account on GitHub set up, and have associated your SSH key on your computer with your GitHub account. Otherwise you might get a cryptic <code class="docutils literal notranslate"><span class="pre">Permission</span> <span class="pre">denied</span> <span class="pre">(publickey)</span></code> error. Help on ssh keys can be found <a class="reference external" href="https://help.github.com/articles/generating-ssh-keys">here</a>.</p>
 </div>
 </li>
-<li><p class="first">Navigate inside the FireWorks directory containing the file setup.py:</p>
+<li><p>Navigate inside the FireWorks directory containing the file setup.py:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">fireworks</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Run the following command (you might need administrator privileges, so pre-pend the word ‘sudo’ as needed):</p>
+<li><p>Run the following command (you might need administrator privileges, so pre-pend the word ‘sudo’ as needed):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">develop</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Install optional dependencies using pip with the following commands (with administrator privileges):</p>
+<li><p>Install optional dependencies using pip with the following commands (with administrator privileges):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">paramiko</span>  <span class="c1"># (only needed if using built-in remote file transfer!)</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">fabric</span>  <span class="c1"># (only needed if using daemon mode of qlaunch!)</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="n">requests</span>  <span class="c1"># (only needed if you want to use the NEWT queue adapter!)</span>
@@ -146,16 +144,15 @@
 <div class="section" id="run-unit-tests">
 <h3>Run unit tests<a class="headerlink" href="#run-unit-tests" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Staying in the directory containing setup.py, run the following command:</p>
+<li><p>Staying in the directory containing setup.py, run the following command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>).</p>
-</li>
+<li><p>Ideally, a printout should indicate that all tests have passed. If not, you might try to debug based on the error indicated, or you can let us know the problem so we can improve the docs (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>).</p></li>
 </ol>
 <ol class="arabic simple" id="remote-test-label" start="3">
-<li>If you want, you can test connection to a remote server (see instructions below)</li>
+<li><p>If you want, you can test connection to a remote server (see instructions below)</p></li>
 </ol>
 </div>
 </div>
@@ -167,9 +164,8 @@
 </div>
 <p>If you installed FireWorks in developer mode:</p>
 <ol class="arabic">
-<li><p class="first">Navigate inside your FireWorks source directory containing the file setup.py (you can type <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">version</span></code> to tell you where this is).</p>
-</li>
-<li><p class="first">Run the following commands:</p>
+<li><p>Navigate inside your FireWorks source directory containing the file setup.py (you can type <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">version</span></code> to tell you where this is).</p></li>
+<li><p>Run the following commands:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">pull</span>
 
 <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">develop</span>
@@ -180,15 +176,15 @@
 </li>
 </ol>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You can use the command <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">develop</span> <span class="pre">--user</span></code> if you want to only install FireWorks for the local user</p>
+<p class="admonition-title">Note</p>
+<p>You can use the command <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">develop</span> <span class="pre">--user</span></code> if you want to only install FireWorks for the local user</p>
 </div>
 </div>
 <div class="section" id="testing-connection-to-a-remote-server">
 <h2>Testing connection to a remote server<a class="headerlink" href="#testing-connection-to-a-remote-server" title="Permalink to this headline">¶</a></h2>
 <p>We’ve set up a test database to see if you can connect to it.</p>
 <ol class="arabic">
-<li><p class="first">Create a file called <code class="docutils literal notranslate"><span class="pre">my_launchpad_testing.yaml</span></code> and put the following contents inside:</p>
+<li><p>Create a file called <code class="docutils literal notranslate"><span class="pre">my_launchpad_testing.yaml</span></code> and put the following contents inside:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">host</span><span class="p">:</span> <span class="n">ds049170</span><span class="o">.</span><span class="n">mongolab</span><span class="o">.</span><span class="n">com</span>
 <span class="n">port</span><span class="p">:</span> <span class="mi">49170</span>
 <span class="n">name</span><span class="p">:</span> <span class="n">fireworks</span>
@@ -197,12 +193,12 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Execute the command:</p>
+<li><p>Execute the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="o">-</span><span class="n">l</span> <span class="n">my_launchpad_testing</span><span class="o">.</span><span class="n">yaml</span> <span class="n">get_wflows</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">If successful, you should see a couple of results:</p>
+<li><p>If successful, you should see a couple of results:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Tracker FW--1&quot;</span><span class="p">,</span>
@@ -226,6 +222,7 @@
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -264,17 +261,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -294,13 +289,14 @@
         <li class="right" >
           <a href="index.html" title="Is FireWorks for me?"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installing FireWorks</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

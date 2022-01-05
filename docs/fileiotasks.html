@@ -1,18 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using the built-in FileIO Tasks &#8212; FireWorks 1.9.3 documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using the built-in FileIO Tasks &#8212; FireWorks 1.9.8 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Using the PyTask" href="pytask.html" />
@@ -36,7 +36,8 @@
         <li class="right" >
           <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using the built-in FileIO Tasks</a></li> 
       </ul>
     </div>  
 
@@ -54,13 +55,13 @@
 <div class="section" id="required-parameters">
 <h3>Required parameters<a class="headerlink" href="#required-parameters" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>files_to_write: ([{filename:(str), contents:(str)}]) - this is a list of dictionaries. each dictionary must have a filename (string) and contents (str). The contents are written to the corresponding filename.</li>
+<li><p>files_to_write: ([{filename:(str), contents:(str)}]) - this is a list of dictionaries. each dictionary must have a filename (string) and contents (str). The contents are written to the corresponding filename.</p></li>
 </ul>
 </div>
 <div class="section" id="optional-parameters">
 <h3>Optional parameters<a class="headerlink" href="#optional-parameters" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>dest: (str) - the directory in which to write all the files (default is current working directory)</li>
+<li><p>dest: (str) - the directory in which to write all the files (default is current working directory)</p></li>
 </ul>
 </div>
 </div>
@@ -70,13 +71,13 @@
 <div class="section" id="id1">
 <h3>Required parameters<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>files_to_delete: ([(str)]) - a list of Strings corresponding to the filenames to delete</li>
+<li><p>files_to_delete: ([(str)]) - a list of Strings corresponding to the filenames to delete</p></li>
 </ul>
 </div>
 <div class="section" id="id2">
 <h3>Optional parameters<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>dest: (str) - the directory in which to delete all the files (default is current working directory)</li>
+<li><p>dest: (str) - the directory in which to delete all the files (default is current working directory)</p></li>
 </ul>
 </div>
 </div>
@@ -84,8 +85,8 @@
 <h2>FileTransferTask<a class="headerlink" href="#filetransfertask" title="Permalink to this headline">¶</a></h2>
 <p>The FileTransferTask is a built-in Firetask for moving and copying files, perhaps to a remote server. Its usage is straightforward:</p>
 <ul class="simple">
-<li>a <code class="docutils literal notranslate"><span class="pre">files</span></code> key that contains a list of files to move or copy</li>
-<li>additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors</li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">files</span></code> key that contains a list of files to move or copy</p></li>
+<li><p>additional options control how directory names are interpreted, how to perform the move/copy, and what to do in case of errors</p></li>
 </ul>
 <p>An example of a Firework that copies two files, <code class="docutils literal notranslate"><span class="pre">file1.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">file2.txt</span></code>, to the home directory looks as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
@@ -126,41 +127,41 @@
 <p><strong>mode</strong></p>
 <p>The potential values are:</p>
 <ul class="simple">
-<li><em>move</em> - move a file or directory</li>
-<li><em>copy</em> - copy a file/dir (including permissions) but do not include metadata</li>
-<li><em>copy2</em> - copy a file/dir (including permissions); also include metadata</li>
-<li><em>copytree</em> - recursively copy an entire directory copy</li>
-<li><em>copyfile</em> - copy the contents of a file into another file (no metadata)</li>
-<li><em>rtransfer</em> - do a remote transfer (this is covered later in this doc)</li>
+<li><p><em>move</em> - move a file or directory</p></li>
+<li><p><em>copy</em> - copy a file/dir (including permissions) but do not include metadata</p></li>
+<li><p><em>copy2</em> - copy a file/dir (including permissions); also include metadata</p></li>
+<li><p><em>copytree</em> - recursively copy an entire directory copy</p></li>
+<li><p><em>copyfile</em> - copy the contents of a file into another file (no metadata)</p></li>
+<li><p><em>rtransfer</em> - do a remote transfer (this is covered later in this doc)</p></li>
 </ul>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">With the exception of <strong>rtransfer</strong>, <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code> is using Python’s <em>shutil</em> module to do the move/copy. You can read more about these modes in <a href="#id9"><span class="problematic" id="id10">`Python's *shutil* docs &lt;http://docs.python.org/2/library/shutil.html`_</span></a>.</p>
+<p class="admonition-title">Note</p>
+<p>With the exception of <strong>rtransfer</strong>, <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code> is using Python’s <em>shutil</em> module to do the move/copy. You can read more about these modes in <a href="#id9"><span class="problematic" id="id10">`Python's *shutil* docs &lt;http://docs.python.org/2/library/shutil.html`_</span></a>.</p>
 </div>
 <p><strong>ignore_errors</strong></p>
 <p>Either <em>True</em> or <em>False</em> (default=*False*). If True, a failed move/copy will just cause <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code> to move to the next file in the <code class="docutils literal notranslate"><span class="pre">files</span></code> list. If False, a failed move/copy will raise an error.</p>
 <p><strong>shell_interpret</strong></p>
 <p>Either <em>True</em> or <em>False</em> (default=*True*). If False, the <em>src</em> and <em>dest</em> of files are taken literally. If <em>True</em>, the <em>src</em> and <em>dest</em> interpret environment variables and shortcuts like <code class="docutils literal notranslate"><span class="pre">~</span></code> and <code class="docutils literal notranslate"><span class="pre">.</span></code></p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In remote transfer mode, some shortcuts like <code class="docutils literal notranslate"><span class="pre">.</span></code> and <code class="docutils literal notranslate"><span class="pre">~</span></code> are not interpreted for the destination. However, environment variables will still be interpreted if <code class="docutils literal notranslate"><span class="pre">shell_interpret</span></code> is True.</p>
+<p class="admonition-title">Note</p>
+<p>In remote transfer mode, some shortcuts like <code class="docutils literal notranslate"><span class="pre">.</span></code> and <code class="docutils literal notranslate"><span class="pre">~</span></code> are not interpreted for the destination. However, environment variables will still be interpreted if <code class="docutils literal notranslate"><span class="pre">shell_interpret</span></code> is True.</p>
 </div>
 </div>
 <div class="section" id="remote-transfers">
 <h3>Remote Transfers<a class="headerlink" href="#remote-transfers" title="Permalink to this headline">¶</a></h3>
 <p>Remote transfers are handled via SFTP using the <em>paramiko</em> Python library (make sure you’ve installed it via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">paramiko</span></code>). To do a remote transfer, you set <code class="docutils literal notranslate"><span class="pre">files</span></code> as before but:</p>
 <ul class="simple">
-<li>You’ll first need to configure passwordless login via ssh between the two machines that are transferring files</li>
-<li>Set the <strong>mode</strong> of transfer to <em>rtransfer</em> (see previous section)</li>
-<li>You <em>must</em> set an additional option called <strong>server</strong> to the remote server hostname or IP</li>
-<li>Make sure the <em>dest</em> doesn’t contain symbols that can’t properly be interpreted on the local machine, like <code class="docutils literal notranslate"><span class="pre">~</span></code> or <code class="docutils literal notranslate"><span class="pre">.</span></code></li>
-<li>If you are using a non-standard keyfile location (e.g., not something like <code class="docutils literal notranslate"><span class="pre">~/.ssh/id_dsa.pub</span></code>), you need to set the <strong>key_filename</strong> option to the location of your key filename.</li>
+<li><p>You’ll first need to configure passwordless login via ssh between the two machines that are transferring files</p></li>
+<li><p>Set the <strong>mode</strong> of transfer to <em>rtransfer</em> (see previous section)</p></li>
+<li><p>You <em>must</em> set an additional option called <strong>server</strong> to the remote server hostname or IP</p></li>
+<li><p>Make sure the <em>dest</em> doesn’t contain symbols that can’t properly be interpreted on the local machine, like <code class="docutils literal notranslate"><span class="pre">~</span></code> or <code class="docutils literal notranslate"><span class="pre">.</span></code></p></li>
+<li><p>If you are using a non-standard keyfile location (e.g., not something like <code class="docutils literal notranslate"><span class="pre">~/.ssh/id_dsa.pub</span></code>), you need to set the <strong>key_filename</strong> option to the location of your key filename.</p></li>
 </ul>
 <p>If all this is configured properly, you should be able to transfer files to a remote machine via <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code>. Some potential hiccups:</p>
 <ul class="simple">
-<li>You require a password to SSH between machines and haven’t configured passwordless SSH.</li>
-<li>You are using a non-standard SSH port</li>
-<li>Your <code class="docutils literal notranslate"><span class="pre">known_hosts</span></code> file is not located in <code class="docutils literal notranslate"><span class="pre">~/.ssh/known_hosts</span></code></li>
+<li><p>You require a password to SSH between machines and haven’t configured passwordless SSH.</p></li>
+<li><p>You are using a non-standard SSH port</p></li>
+<li><p>Your <code class="docutils literal notranslate"><span class="pre">known_hosts</span></code> file is not located in <code class="docutils literal notranslate"><span class="pre">~/.ssh/known_hosts</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="the-use-global-spec-option">
@@ -178,9 +179,9 @@
 <div class="section" id="id6">
 <h3>Optional parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>compression: (str) - choose between “gz” (default) and “bz2” compression modes</li>
-<li>dest: (str) - destination location</li>
-<li>ignore_errors: (bool) - whether to ignore errors</li>
+<li><p>compression: (str) - choose between “gz” (default) and “bz2” compression modes</p></li>
+<li><p>dest: (str) - destination location</p></li>
+<li><p>ignore_errors: (bool) - whether to ignore errors</p></li>
 </ul>
 </div>
 </div>
@@ -190,20 +191,21 @@
 <div class="section" id="id7">
 <h3>Required parameters<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>base_name: (str) the full file path of the output archive file</li>
-<li>format: (str) “zip”, “tar”, “bztar” or “gztar”</li>
+<li><p>base_name: (str) the full file path of the output archive file</p></li>
+<li><p>format: (str) “zip”, “tar”, “bztar” or “gztar”</p></li>
 </ul>
 </div>
 <div class="section" id="id8">
 <h3>Optional parameters<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>format: (str) - choose between “zip”, “tar”, “bztar” or “gztar” (default).</li>
+<li><p>format: (str) - choose between “zip”, “tar”, “bztar” or “gztar” (default).</p></li>
 </ul>
 </div>
 </div>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -256,17 +258,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -286,13 +286,14 @@
         <li class="right" >
           <a href="templatewritertask.html" title="Using the TemplateWriterTask to write files"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using the built-in FileIO Tasks</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

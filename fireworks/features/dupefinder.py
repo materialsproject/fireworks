@@ -1,19 +1,15 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module contains the base class for implementing Duplicate Finders
 """
 
-from fireworks.utilities.fw_serializers import serialize_fw, FWSerializable
+from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Mar 01, 2013'
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2013, The Materials Project"
+__version__ = "0.1"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Mar 01, 2013"
 
 
 class DupeFinderBase(FWSerializable):

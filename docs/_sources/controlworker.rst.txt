@@ -69,7 +69,7 @@ Another simple method to direct FireWorks to FireWorks is by assigning *categori
 Once you've set these values, job execution occurs as follows:
 
 * FireWorkers with no ``category`` variable set will be able to run **any** Firework (even FireWorks with a ``_category`` key in the spec!).
-* FireWorkers with a ``_category`` variable set to the special keyword ``__none__`` will only be able to run Fireworks with  no ``_category`` key in the spec. If this option is set, it must be the only category for the FWorker.
+* FireWorkers with a ``category`` variable set to the special keyword ``__none__`` will only be able to run Fireworks with  no ``_category`` key in the spec. If this option is set, it must be the only category for the FWorker.
 * FireWorkers with a ``category`` set will only run the FireWorks with an exactly matching ``_category`` variable in the Firework spec.
 
 

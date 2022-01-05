@@ -1,18 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.queue package &#8212; FireWorks 1.9.3 documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fireworks.queue package &#8212; FireWorks 1.9.8 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -28,7 +28,8 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.queue package</a></li> 
       </ul>
     </div>  
 
@@ -44,186 +45,175 @@
 </div>
 <div class="section" id="module-fireworks.queue.queue_adapter">
 <span id="fireworks-queue-queue-adapter-module"></span><h2>fireworks.queue.queue_adapter module<a class="headerlink" href="#module-fireworks.queue.queue_adapter" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<p>This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.</p>
+<dl class="py class">
 <dt id="fireworks.queue.queue_adapter.Command">
-<em class="property">class </em><code class="descclassname">fireworks.queue.queue_adapter.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.queue.queue_adapter.</code><code class="sig-name descname">Command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Helper class -  run subprocess commands in a different thread with TIMEOUT option.
 From <a class="reference external" href="https://gist.github.com/kirpit/1306188">https://gist.github.com/kirpit/1306188</a>
 Based on jcollado’s solution:
 <a class="reference external" href="http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933">http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933</a></p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.Command.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize the object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>command</strong> – command to run</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command</strong> – command to run</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.Command.command">
-<code class="descname">command</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">command</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.Command.error">
-<code class="descname">error</code><em class="property"> = ''</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">error</code><em class="property"> = ''</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.Command.output">
-<code class="descname">output</code><em class="property"> = ''</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.output" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">output</code><em class="property"> = ''</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.output" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.Command.process">
-<code class="descname">process</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.process" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.Command.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>timeout=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the command.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – timeout</li>
-<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – timeout</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(status, output, error)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(status, output, error)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.Command.status">
-<code class="descname">status</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">status</code><em class="property"> = None</em><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.queue.queue_adapter.QScriptTemplate">
-<em class="property">class </em><code class="descclassname">fireworks.queue.queue_adapter.</code><code class="descname">QScriptTemplate</code><span class="sig-paren">(</span><em>template</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/string.html#string.Template" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">string.Template</span></code></a></p>
-<dl class="attribute">
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.queue.queue_adapter.</code><code class="sig-name descname">QScriptTemplate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">template</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/string.html#string.Template" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">string.Template</span></code></a></p>
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.QScriptTemplate.delimiter">
-<code class="descname">delimiter</code><em class="property"> = '$$'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.delimiter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delimiter</code><em class="property"> = '$$'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.delimiter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.QScriptTemplate.pattern">
-<code class="descname">pattern</code><em class="property"> = re.compile('\n    \\$\\$(?:\n      (?P&lt;escaped&gt;\\$\\$) |   # Escape sequence of two delimiters\n      (?P&lt;named&gt;(?-i:[_a-zA-Z][_a-zA-Z0-9]*))      |   # delimiter and a Python identifier\n      {(?P&lt;braced&gt;(?-i:, re.IGNORECASE|re.VERBOSE)</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.pattern" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pattern</code><em class="property"> = re.compile('\n    \\$\\$(?:\n      (?P&lt;escaped&gt;\\$\\$) |   # Escape sequence of two delimiters\n      (?P&lt;named&gt;(?a:[_a-z][_a-z0-9]*))      |   # delimiter and a Python identifier\n      {(?P&lt;braced&gt;(?a:[_a-z][_, re.IGNORECASE|re.VERBOSE)</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.pattern" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase">
-<em class="property">class </em><code class="descclassname">fireworks.queue.queue_adapter.</code><code class="descname">QueueAdapterBase</code><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.queue.queue_adapter.</code><code class="sig-name descname">QueueAdapterBase</code><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>The QueueAdapter is responsible for all interactions with a specific queue management system.
 This includes handling all details of queue script format as well as queue submission and</p>
 <blockquote>
-<div>management.</div></blockquote>
+<div><p>management.</p>
+</div></blockquote>
 <p>A user should extend this class with implementations that work on specific queue systems.
 Examples and implementations are in: fireworks/user_objects/queue_adapters.</p>
 <p>Documentation on implementing queue adapters can be found on FireWorks home page,
 <a class="reference external" href="https://materialsproject.github.io/fireworks">https://materialsproject.github.io/fireworks</a></p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.defaults">
-<code class="descname">defaults</code><em class="property"> = {}</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.defaults" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">defaults</code><em class="property"> = {}</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.from_dict">
-<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.get_njobs_in_queue">
-<code class="descname">get_njobs_in_queue</code><span class="sig-paren">(</span><em>username=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_njobs_in_queue" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">get_njobs_in_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_njobs_in_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of jobs currently in the queue for the user.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the username of the jobs to count (default is to autodetect)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(int) number of jobs in the queue</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the username of the jobs to count (default is to autodetect)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) number of jobs in the queue</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.get_qlogger">
-<code class="descname">get_qlogger</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_qlogger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_qlogger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_qlogger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.get_script_str">
-<code class="descname">get_script_str</code><span class="sig-paren">(</span><em>launch_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_script_str" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_script_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launch_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_script_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a (multi-line) String representing the queue script, e.g. PBS script.
 Uses the template_file along with internal parameters to create the script.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The directory the job will be launched in</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(str) the queue script</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory the job will be launched in</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(str) the queue script</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.q_name">
-<code class="descname">q_name</code><em class="property"> = 'OVERRIDE_ME'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.q_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">q_name</code><em class="property"> = 'OVERRIDE_ME'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.q_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.submit_cmd">
-<code class="descname">submit_cmd</code><em class="property"> = 'OVERRIDE_ME'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.submit_cmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">submit_cmd</code><em class="property"> = 'OVERRIDE_ME'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.submit_cmd" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.submit_to_queue">
-<code class="descname">submit_to_queue</code><span class="sig-paren">(</span><em>script_file</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.submit_to_queue" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">submit_to_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">script_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.submit_to_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submits the job to the queue and returns the job id.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>script_file</strong> – (str) name of the script file to use (String)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(int) job_id</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>script_file</strong> – (str) name of the script file to use (String)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) job_id</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.template_file">
-<code class="descname">template_file</code><em class="property"> = 'OVERRIDE_ME'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.template_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">template_file</code><em class="property"> = 'OVERRIDE_ME'</em><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.template_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.queue.queue_adapter.QueueAdapterBase.to_dict">
-<code class="descname">to_dict</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -231,64 +221,63 @@ Uses the template_file along with internal parameters to create the script.</p>
 </div>
 <div class="section" id="module-fireworks.queue.queue_launcher">
 <span id="fireworks-queue-queue-launcher-module"></span><h2>fireworks.queue.queue_launcher module<a class="headerlink" href="#module-fireworks.queue.queue_launcher" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<p>This module is used to submit jobs to a queue on a cluster. It can submit a single job, or
+if used in “rapid-fire” mode, can submit multiple jobs within a directory structure.
+The details of job submission and queue communication are handled using Queueadapter,
+which specifies a QueueAdapter as well as desired properties of the submit script.</p>
+<dl class="py function">
 <dt id="fireworks.queue.queue_launcher.launch_rocket_to_queue">
-<code class="descclassname">fireworks.queue.queue_launcher.</code><code class="descname">launch_rocket_to_queue</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>qadapter</em>, <em>launcher_dir='.'</em>, <em>reserve=False</em>, <em>strm_lvl='INFO'</em>, <em>create_launcher_dir=False</em>, <em>fill_mode=False</em>, <em>fw_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_launcher.launch_rocket_to_queue" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.queue.queue_launcher.</code><code class="sig-name descname">launch_rocket_to_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">qadapter</span></em>, <em class="sig-param"><span class="n">launcher_dir</span><span class="o">=</span><span class="default_value">'.'</span></em>, <em class="sig-param"><span class="n">reserve</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">'INFO'</span></em>, <em class="sig-param"><span class="n">create_launcher_dir</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fill_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_launcher.launch_rocket_to_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submit a single job to the queue.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </li>
-<li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </li>
-<li><strong>qadapter</strong> (<a class="reference internal" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><em>QueueAdapterBase</em></a>) – </li>
-<li><strong>launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The directory where to submit the job</li>
-<li><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to queue in reservation mode</li>
-<li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – level at which to stream log messages</li>
-<li><strong>create_launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to create a subfolder launcher+timestamp, if needed</li>
-<li><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run
-(only in non-reservation mode)</li>
-<li><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – specific fw_id to reserve (reservation mode only)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </p></li>
+<li><p><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </p></li>
+<li><p><strong>qadapter</strong> (<a class="reference internal" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><em>QueueAdapterBase</em></a>) – </p></li>
+<li><p><strong>launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory where to submit the job</p></li>
+<li><p><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to queue in reservation mode</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – level at which to stream log messages</p></li>
+<li><p><strong>create_launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to create a subfolder launcher+timestamp, if needed</p></li>
+<li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run
+(only in non-reservation mode)</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – specific fw_id to reserve (reservation mode only)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.queue.queue_launcher.rapidfire">
-<code class="descclassname">fireworks.queue.queue_launcher.</code><code class="descname">rapidfire</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fworker</em>, <em>qadapter</em>, <em>launch_dir='.'</em>, <em>nlaunches=0</em>, <em>njobs_queue=0</em>, <em>njobs_block=500</em>, <em>sleep_time=None</em>, <em>reserve=False</em>, <em>strm_lvl='INFO'</em>, <em>timeout=None</em>, <em>fill_mode=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.queue.queue_launcher.</code><code class="sig-name descname">rapidfire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">qadapter</span></em>, <em class="sig-param"><span class="n">launch_dir</span><span class="o">=</span><span class="default_value">'.'</span></em>, <em class="sig-param"><span class="n">block_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nlaunches</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">njobs_queue</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">njobs_block</span><span class="o">=</span><span class="default_value">500</span></em>, <em class="sig-param"><span class="n">sleep_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">reserve</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">'INFO'</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fill_mode</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_launcher.rapidfire" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submit many jobs to the queue.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </li>
-<li><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </li>
-<li><strong>qadapter</strong> (<a class="reference internal" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><em>QueueAdapterBase</em></a>) – </li>
-<li><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – directory where we want to write the blocks</li>
-<li><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – total number of launches desired; “infinite” for loop, 0 for one round</li>
-<li><strong>njobs_queue</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit</li>
-<li><strong>njobs_block</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – automatically write a new block when njobs_block jobs are in a single block</li>
-<li><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</li>
-<li><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to queue in reservation mode</li>
-<li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – level at which to stream log messages</li>
-<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</li>
-<li><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run (only in
-non-reservation mode)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </p></li>
+<li><p><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </p></li>
+<li><p><strong>qadapter</strong> (<a class="reference internal" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><em>QueueAdapterBase</em></a>) – </p></li>
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – directory where we want to write the blocks</p></li>
+<li><p><strong>block_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – directory to use as block dir. Can be a new or existing block. Dirname must
+start with ‘<a href="#id1"><span class="problematic" id="id2">block_</span></a>’.</p></li>
+<li><p><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – total number of launches desired; “infinite” for loop, 0 for one round</p></li>
+<li><p><strong>njobs_queue</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
+If 0 skips the check on the number of jobs in the queue.</p></li>
+<li><p><strong>njobs_block</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – automatically write a new block when njobs_block jobs are in a single block</p></li>
+<li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</p></li>
+<li><p><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to queue in reservation mode</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – level at which to stream log messages</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</p></li>
+<li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run (only in
+non-reservation mode)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.queue.queue_launcher.setup_offline_job">
-<code class="descclassname">fireworks.queue.queue_launcher.</code><code class="descname">setup_offline_job</code><span class="sig-paren">(</span><em>launchpad</em>, <em>fw</em>, <em>launch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_launcher.setup_offline_job" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.queue.queue_launcher.</code><code class="sig-name descname">setup_offline_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fw</span></em>, <em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_launcher.setup_offline_job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -298,6 +287,7 @@ non-reservation mode)</li>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -322,17 +312,15 @@ non-reservation mode)</li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -346,13 +334,14 @@ non-reservation mode)</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.queue package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

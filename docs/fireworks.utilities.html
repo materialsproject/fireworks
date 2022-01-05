@@ -1,18 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>fireworks.utilities package &#8212; FireWorks 1.9.3 documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fireworks.utilities package &#8212; FireWorks 1.9.8 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -28,7 +28,8 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.utilities package</a></li> 
       </ul>
     </div>  
 
@@ -63,302 +64,291 @@
 </div>
 <div class="section" id="module-fireworks.utilities.dict_mods">
 <span id="fireworks-utilities-dict-mods-module"></span><h2>fireworks.utilities.dict_mods module<a class="headerlink" href="#module-fireworks.utilities.dict_mods" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<p>This module allows you to modify a dict (a spec) using another dict (an instruction).
+The main method of interest is apply_dictmod().</p>
+<p>This code is based heavily on the Ansible class of custodian &lt;<a class="reference external" href="https://pypi.python.org/pypi/custodian">https://pypi.python.org/pypi/custodian</a>&gt;,
+but simplifies it considerably for the limited use cases required by FireWorks.</p>
+<dl class="py function">
 <dt id="fireworks.utilities.dict_mods.apply_mod">
-<code class="descclassname">fireworks.utilities.dict_mods.</code><code class="descname">apply_mod</code><span class="sig-paren">(</span><em>modification</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.apply_mod" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.dict_mods.</code><code class="sig-name descname">apply_mod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">modification</span></em>, <em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.apply_mod" title="Permalink to this definition">¶</a></dt>
 <dd><p>Note that modify makes actual in-place modifications. It does not
 return a copy.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>modification</strong> – Modification must be {action_keyword : settings}, where action_keyword is a
-supported DictMod</li>
-<li><strong>obj</strong> – A dict to be modified</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modification</strong> – Modification must be {action_keyword : settings}, where action_keyword is a
+supported DictMod</p></li>
+<li><p><strong>obj</strong> – A dict to be modified</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="fireworks.utilities.dict_mods.arrow_to_dot">
+<code class="sig-prename descclassname">fireworks.utilities.dict_mods.</code><code class="sig-name descname">arrow_to_dot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.arrow_to_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts arrows (‘-&gt;’) in dict keys to dots ‘.’ recursively.
+Allows for storing MongoDB neseted document queries in MongoDB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="fireworks.utilities.dict_mods.get_nested_dict">
-<code class="descclassname">fireworks.utilities.dict_mods.</code><code class="descname">get_nested_dict</code><span class="sig-paren">(</span><em>input_dict</em>, <em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.get_nested_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.dict_mods.</code><code class="sig-name descname">get_nested_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_dict</span></em>, <em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.get_nested_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-fireworks.utilities.filepad">
 <span id="fireworks-utilities-filepad-module"></span><h2>fireworks.utilities.filepad module<a class="headerlink" href="#module-fireworks.utilities.filepad" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<p>This module defines the FilePad class. FilePad is a convenient api to mongodb/gridfs to
+add/delete/update any file of any size.</p>
+<dl class="py class">
 <dt id="fireworks.utilities.filepad.FilePad">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.filepad.</code><code class="descname">FilePad</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>database='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>filepad_coll_name='filepad'</em>, <em>gridfs_coll_name='filepad_gfs'</em>, <em>logdir=None</em>, <em>strm_lvl=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.utilities.filepad.</code><code class="sig-name descname">FilePad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">'localhost'</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">27017</span></em>, <em class="sig-param"><span class="n">database</span><span class="o">=</span><span class="default_value">'fireworks'</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filepad_coll_name</span><span class="o">=</span><span class="default_value">'filepad'</span></em>, <em class="sig-param"><span class="n">gridfs_coll_name</span><span class="o">=</span><span class="default_value">'filepad_gfs'</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">text_mode</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">monty.json.MSONable</span></code></p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>host='localhost'</em>, <em>port=27017</em>, <em>database='fireworks'</em>, <em>username=None</em>, <em>password=None</em>, <em>filepad_coll_name='filepad'</em>, <em>gridfs_coll_name='filepad_gfs'</em>, <em>logdir=None</em>, <em>strm_lvl=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – hostname</li>
-<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – port number</li>
-<li><strong>database</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – database name</li>
-<li><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
-<li><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
-<li><strong>filepad_coll_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – filepad collection name</li>
-<li><strong>gridfs_coll_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – gridfs collection name</li>
-<li><strong>logdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the log directory</li>
-<li><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the logger stream level</li>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">'localhost'</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">27017</span></em>, <em class="sig-param"><span class="n">database</span><span class="o">=</span><span class="default_value">'fireworks'</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filepad_coll_name</span><span class="o">=</span><span class="default_value">'filepad'</span></em>, <em class="sig-param"><span class="n">gridfs_coll_name</span><span class="o">=</span><span class="default_value">'filepad_gfs'</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">text_mode</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – hostname</p></li>
+<li><p><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – port number</p></li>
+<li><p><strong>database</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – database name</p></li>
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>authsource</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – authSource parameter for MongoDB authentication; defaults to “name” (i.e., db name) if
+not set</p></li>
+<li><p><strong>uri_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
+the host).</p></li>
+<li><p><strong>filepad_coll_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – filepad collection name</p></li>
+<li><p><strong>gridfs_coll_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – gridfs collection name</p></li>
+<li><p><strong>logdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the log directory</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the logger stream level</p></li>
+<li><p><strong>text_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to use text_mode for file read/write (instead of binary). Might be useful if
+working only with text files between Windows and Unix systems</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.add_file">
-<code class="descname">add_file</code><span class="sig-paren">(</span><em>path</em>, <em>identifier=None</em>, <em>compress=True</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">identifier</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">compress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
 Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the file</li>
-<li><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – file identifier. If identifier = None then the identifier is set to the object id
-returned by gridfs insertion.</li>
-<li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – compress or not</li>
-<li><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – file metadata</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the file</p></li>
+<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – file identifier. If identifier = None then the identifier is set to the object id
+returned by gridfs insertion.</p></li>
+<li><p><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – compress or not</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – file metadata</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the id returned by gridfs, identifier</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the id returned by gridfs, identifier</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.auto_load">
-<em class="property">classmethod </em><code class="descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.auto_load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">auto_load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.auto_load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns FilePad object</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.build_indexes">
-<code class="descname">build_indexes</code><span class="sig-paren">(</span><em>indexes=None</em>, <em>background=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.build_indexes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">build_indexes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">indexes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.build_indexes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the indexes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>indexes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – list of single field indexes to be built.</li>
-<li><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Run in the background or not.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indexes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of single field indexes to be built.</p></li>
+<li><p><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Run in the background or not.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.count">
-<code class="descname">count</code><span class="sig-paren">(</span><em>filter=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.count" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">count</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of documents in filepad.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – </li>
-<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – see pymongo.Collection.count for the supported
-keyword arguments.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – </p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – see pymongo.Collection.count for the supported
+keyword arguments.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the count</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the count</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.delete_file">
-<code class="descname">delete_file</code><span class="sig-paren">(</span><em>identifier</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">identifier</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the document with the matching identifier. The contents in the gridfs as well as the
 associated document in the filepad are deleted.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the file identifier</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the file identifier</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.delete_file_by_id">
-<code class="descname">delete_file_by_id</code><span class="sig-paren">(</span><em>gfs_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_id" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the file id</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">delete_file_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gfs_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the file id</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.delete_file_by_query">
-<code class="descname">delete_file_by_query</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_query" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – pymongo query dict</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">delete_file_by_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.delete_file_by_query" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – pymongo query dict</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.from_db_file">
-<em class="property">classmethod </em><code class="descname">from_db_file</code><span class="sig-paren">(</span><em>db_file</em>, <em>admin=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.from_db_file" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>db_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the filepad cred file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">FilePad object</td>
-</tr>
-</tbody>
-</table>
+<em class="property">classmethod </em><code class="sig-name descname">from_db_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db_file</span></em>, <em class="sig-param"><span class="n">admin</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.from_db_file" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>db_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the filepad cred file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>FilePad object</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.get_file">
-<code class="descname">get_file</code><span class="sig-paren">(</span><em>identifier</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">identifier</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get file by identifier</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the file identifier</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the file content as a string, document dictionary</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a>)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the file identifier</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the file content as a string, document dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.get_file_by_id">
-<code class="descname">get_file_by_id</code><span class="sig-paren">(</span><em>gfs_id</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_id" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the gridfs id for the file.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the file content as a string, document dictionary</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a>)</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">get_file_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gfs_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the gridfs id for the file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the file content as a string, document dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.get_file_by_query">
-<code class="descname">get_file_by_query</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_query" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – pymongo query dict</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of all (file content as a string, document dictionary)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">get_file_by_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span></em>, <em class="sig-param"><span class="n">sort_key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort_direction</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.get_file_by_query" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – pymongo query dict</p></li>
+<li><p><strong>sort_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – sort key, default None</p></li>
+<li><p><strong>sort_direction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – default pymongo.DESCENDING</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of all (file content as a string, document dictionary)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset filepad and the gridfs collections</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.update_file">
-<code class="descname">update_file</code><span class="sig-paren">(</span><em>identifier</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">identifier</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">compress</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the filecontents in the gridfs, update the gfs_id in the document and retain the
 rest.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the unique file identifier</li>
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the new file whose contents will replace the existing one.</li>
-<li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether or not to compress the contents before inserting to gridfs</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the unique file identifier</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the new file whose contents will replace the existing one.</p></li>
+<li><p><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether or not to compress the contents before inserting to gridfs</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">old file id , new file id</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>old file id , new file id</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.filepad.FilePad.update_file_by_id">
-<code class="descname">update_file_by_id</code><span class="sig-paren">(</span><em>gfs_id</em>, <em>path</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file_by_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_file_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gfs_id</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">compress</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.update_file_by_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the file in the gridfs with the given id and retain the rest of the document.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the gridfs id for the file.</li>
-<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – path to the new file whose contents will replace the existing one.</li>
-<li><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether or not to compress the contents before inserting to gridfs</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gfs_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the gridfs id for the file.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the new file whose contents will replace the existing one.</p></li>
+<li><p><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether or not to compress the contents before inserting to gridfs</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">old file id , new file id</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>)</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>old file id , new file id</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -366,138 +356,161 @@ rest.</p>
 </div>
 <div class="section" id="module-fireworks.utilities.fw_serializers">
 <span id="fireworks-utilities-fw-serializers-module"></span><h2>fireworks.utilities.fw_serializers module<a class="headerlink" href="#module-fireworks.utilities.fw_serializers" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<p>This module aids in serializing and deserializing objects.</p>
+<p>To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize
+an object, refer to the documentation for the FWSerializable class and load_object() method.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>you can de-serialize explicitly, e.g. FWObject.from_dict() to enforce a FWObject instance as the result</p></li>
+<li><p>you can de-serialize implicitly, e.g. load_object() to search for the correct Class dynamically</p></li>
+</ul>
+</div></blockquote>
+<p>The implicit method is especially useful if you don’t know in advance which subclass of a base class
+your serialization might point to. e.g. if you require some type of Quadrilateral, a serialization
+from your collaborator might point to a Square, Rhombus, or Rectangle, and you might not know which
+one in advance…</p>
+<dl class="simple">
+<dt>Some advantages:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Robust with regard to code refactorings even in implicit loading given certain reasonable</dt><dd><p>guidelines on fw_name.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Simple to allow a superclass to define all the serializations for its subclasses, removing</dt><dd><p>code repetition(in particular, note that from_dict is a class method rather than a static
+method, allowing use of self)</p>
+</dd>
+</dl>
+</li>
+<li><p>Decorators aid in some of the routine parts of the serialization, such as adding the _fw_name key</p></li>
+<li><p>Both JSON and YAML file import/export are naturally and concisely supported within the framework.</p></li>
+<li><p>Auto-detect and proper loading of JSON and YAML files</p></li>
+<li><p>Proper JSON handling of datetime (both encoding and decoding) and UTF-8 strings</p></li>
+<li><dl class="simple">
+<dt>In some cases, objects can be serialized/deserialized extremely concisely, by use of only</dt><dd><p>their fw_name (if no parameters are needed to describe the object)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.DATETIME_HANDLER">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">DATETIME_HANDLER</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.DATETIME_HANDLER" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">DATETIME_HANDLER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.DATETIME_HANDLER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">FWSerializable</code><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">FWSerializable</code><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>To create a serializable object within FireWorks, you should subclass this
 class and implement the to_dict() and from_dict() methods.</p>
 <p>If you want the load_object() implicit de-serialization to work, you must
 also:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use the &#64;serialize_fw decorator on to_dict()</li>
-<li>Override the _fw_name parameter with a unique key.</li>
+<li><p>Use the &#64;serialize_fw decorator on to_dict()</p></li>
+<li><p>Override the _fw_name parameter with a unique key.</p></li>
 </ul>
 </div></blockquote>
 <p>See documentation of load_object() for more details.</p>
 <p>The use of &#64;classmethod for from_dict allows you to define a superclass
 that implements the to_dict() and from_dict() for all its subclasses.</p>
 <p>For an example of serialization, see the class QueueAdapterBase.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.as_dict">
-<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.as_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.as_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.from_dict">
-<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>m_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.from_file">
-<em class="property">classmethod </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>filename</em>, <em>f_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_file" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">f_format</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a serialization of this object from a file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – filename to read</li>
-<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – serialization format, default checks the filename extension</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – filename to read</p></li>
+<li><p><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – serialization format, default checks the filename extension</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">FWSerializable</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>FWSerializable</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.from_format">
-<em class="property">classmethod </em><code class="descname">from_format</code><span class="sig-paren">(</span><em>f_str</em>, <em>f_format='json'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_format" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_str</span></em>, <em class="sig-param"><span class="n">f_format</span><span class="o">=</span><span class="default_value">'json'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.from_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert from a String representation to its Object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>f_str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the String representation</li>
-<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – serialization format of the String (default json)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the String representation</p></li>
+<li><p><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – serialization format of the String (default json)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">FWSerializable</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>FWSerializable</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.fw_name">
-<code class="descname">fw_name</code><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.fw_name" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">fw_name</code><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.fw_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.to_db_dict">
-<code class="descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.to_dict">
-<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.to_file">
-<code class="descname">to_file</code><span class="sig-paren">(</span><em>filename</em>, <em>f_format=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">f_format</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a serialization of this object to a file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – filename to write to</li>
-<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – serialization format, default checks the filename extension</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – filename to write to</p></li>
+<li><p><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – serialization format, default checks the filename extension</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_serializers.FWSerializable.to_format">
-<code class="descname">to_format</code><span class="sig-paren">(</span><em>f_format='json'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_format" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_format</span><span class="o">=</span><span class="default_value">'json'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.FWSerializable.to_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a String representation in the given format</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the format to output to (default json)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the format to output to (default json)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.get_default_serialization">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">get_default_serialization</code><span class="sig-paren">(</span><em>cls</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.get_default_serialization" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">get_default_serialization</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.get_default_serialization" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.load_object">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">load_object</code><span class="sig-paren">(</span><em>obj_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.load_object" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">load_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.load_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates an instantiation of a class based on a dictionary representation. We implicitly
 determine the Class through introspection along with information in the dictionary.</p>
 <p>We search for a class with the _fw_name property equal to obj_dict[‘_fw_name’]
@@ -507,69 +520,62 @@ Afterwards, the modules in the USER_PACKAGES global parameter are checked.</p>
 <p>Refactoring class names, module names, etc. will not break object loading
 as long as:</p>
 <ol class="lowerroman simple">
-<li>the _fw_name property is maintained the same AND</li>
-<li>the refactored module is kept within USER_PACKAGES</li>
+<li><p>the _fw_name property is maintained the same AND</p></li>
+<li><p>the refactored module is kept within USER_PACKAGES</p></li>
 </ol>
 <p>You can get around these limitations if you really want:
 i) If you want to change the fw_name of an object you can set the FW_NAME_UPDATES key
 ii) If you want to put a refactored module in a new place add an entry to USER_PACKAGES</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – the dict representation of the class</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – the dict representation of the class</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.load_object_from_file">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">load_object_from_file</code><span class="sig-paren">(</span><em>filename</em>, <em>f_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.load_object_from_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">load_object_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">f_format</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.load_object_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implicitly load an object from a file. just a friendly wrapper to
 load_object()</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the filename to load an object from</li>
-<li><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – the serialization format (default is auto-detect based on
-filename extension)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the filename to load an object from</p></li>
+<li><p><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the serialization format (default is auto-detect based on
+filename extension)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.reconstitute_dates">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">reconstitute_dates</code><span class="sig-paren">(</span><em>obj_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.reconstitute_dates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">reconstitute_dates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.reconstitute_dates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.recursive_deserialize">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">recursive_deserialize</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_deserialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">recursive_deserialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_deserialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>a decorator to add FW serializations keys
 see documentation of FWSerializable for more details</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.recursive_dict">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">recursive_dict</code><span class="sig-paren">(</span><em>obj</em>, <em>preserve_unicode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">recursive_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">preserve_unicode</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.recursive_serialize">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">recursive_serialize</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_serialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">recursive_serialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.recursive_serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>a decorator to add FW serializations keys
 see documentation of FWSerializable for more details</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_serializers.serialize_fw">
-<code class="descclassname">fireworks.utilities.fw_serializers.</code><code class="descname">serialize_fw</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.serialize_fw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_serializers.</code><code class="sig-name descname">serialize_fw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_serializers.serialize_fw" title="Permalink to this definition">¶</a></dt>
 <dd><p>a decorator to add FW serializations keys
 see documentation of FWSerializable for more details</p>
 </dd></dl>
@@ -577,247 +583,214 @@ see documentation of FWSerializable for more details</p>
 </div>
 <div class="section" id="module-fireworks.utilities.fw_utilities">
 <span id="fireworks-utilities-fw-utilities-module"></span><h2>fireworks.utilities.fw_utilities module<a class="headerlink" href="#module-fireworks.utilities.fw_utilities" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.utilities.fw_utilities.DataServer">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">DataServer</code><span class="sig-paren">(</span><em>address=None</em>, <em>authkey=None</em>, <em>serializer='pickle'</em>, <em>ctx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.managers.BaseManager" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.BaseManager</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">DataServer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">address</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authkey</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">serializer</span><span class="o">=</span><span class="default_value">'pickle'</span></em>, <em class="sig-param"><span class="n">ctx</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.managers.BaseManager" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.BaseManager</span></code></a></p>
 <p>Provide a server that can host shared objects between multiprocessing
 Processes (that normally can’t share data). For example, a common LaunchPad is
 shared between processes and pinging launches is coordinated to limit DB hits.</p>
-<dl class="classmethod">
+<dl class="py method">
 <dt id="fireworks.utilities.fw_utilities.DataServer.setup">
-<em class="property">classmethod </em><code class="descname">setup</code><span class="sig-paren">(</span><em>launchpad</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer.setup" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">DataServer</td>
-</tr>
-</tbody>
-</table>
+<em class="property">classmethod </em><code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.DataServer.setup" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataServer</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="fireworks.utilities.fw_utilities.NestedClassGetter">
-<em class="property">class </em><code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">NestedClassGetter</code><a class="headerlink" href="#fireworks.utilities.fw_utilities.NestedClassGetter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">NestedClassGetter</code><a class="headerlink" href="#fireworks.utilities.fw_utilities.NestedClassGetter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Used to help pickle inner classes, e.g. see Workflow.Links
 When called with the containing class as the first argument,
 and the name of the nested class as the second argument,
 returns an instance of the nested class.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.create_datestamp_dir">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">create_datestamp_dir</code><span class="sig-paren">(</span><em>root_dir</em>, <em>l_logger</em>, <em>prefix='block_'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.create_datestamp_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">create_datestamp_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_dir</span></em>, <em class="sig-param"><span class="n">l_logger</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">'block_'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.create_datestamp_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal method to create a new block or launcher directory.
 The dir name is based on the time and the FW_BLOCK_FORMAT</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root_dir</strong> – directory to create the new dir in</li>
-<li><strong>l_logger</strong> – the logger to use</li>
-<li><strong>prefix</strong> – the prefix for the new dir, default=”<a href="#id1"><span class="problematic" id="id2">block_</span></a>”</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> – directory to create the new dir in</p></li>
+<li><p><strong>l_logger</strong> – the logger to use</p></li>
+<li><p><strong>prefix</strong> – the prefix for the new dir, default=”<a href="#id1"><span class="problematic" id="id2">block_</span></a>”</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.explicit_serialize">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">explicit_serialize</code><span class="sig-paren">(</span><em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.explicit_serialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">explicit_serialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">o</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.explicit_serialize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.get_fw_logger">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_fw_logger</code><span class="sig-paren">(</span><em>name</em>, <em>l_dir=None</em>, <em>file_levels=('DEBUG'</em>, <em>'ERROR')</em>, <em>stream_level='DEBUG'</em>, <em>formatter=&lt;logging.Formatter object&gt;</em>, <em>clear_logs=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_fw_logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">get_fw_logger</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">l_dir: None = None</em>, <em class="sig-param">file_levels: Tuple[str</em>, <em class="sig-param">str] = ('DEBUG'</em>, <em class="sig-param">'ERROR')</em>, <em class="sig-param">stream_level: str = 'DEBUG'</em>, <em class="sig-param">formatter: logging.Formatter = &lt;logging.Formatter object&gt;</em>, <em class="sig-param">clear_logs: bool = False</em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.10)">logging.Logger</a><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_fw_logger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience method to return a logger.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> – name of the logger that sets the groups, e.g. ‘group1.set2’</li>
-<li><strong>l_dir</strong> – the directory to put the log file</li>
-<li><strong>file_levels</strong> – iterable describing level(s) to log to file(s). default: (‘DEBUG’, ‘ERROR’)</li>
-<li><strong>stream_level</strong> – level to log to standard output. default: ‘DEBUG’</li>
-<li><strong>formatter</strong> – logging format. default: FW_LOGGING_FORMATTER</li>
-<li><strong>clear_logs</strong> – whether to clear the logger with the same name</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of the logger that sets the groups, e.g. ‘group1.set2’</p></li>
+<li><p><strong>l_dir</strong> – the directory to put the log file</p></li>
+<li><p><strong>file_levels</strong> – iterable describing level(s) to log to file(s). default: (‘DEBUG’, ‘ERROR’)</p></li>
+<li><p><strong>stream_level</strong> – level to log to standard output. default: ‘DEBUG’</p></li>
+<li><p><strong>formatter</strong> – logging format. default: FW_LOGGING_FORMATTER</p></li>
+<li><p><strong>clear_logs</strong> – whether to clear the logger with the same name</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.get_my_host">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_my_host</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_my_host" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">get_my_host</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_my_host" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.get_my_ip">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_my_ip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_my_ip" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">get_my_ip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_my_ip" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.get_slug">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">get_slug</code><span class="sig-paren">(</span><em>m_str</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_slug" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">get_slug</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.get_slug" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.log_exception">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">log_exception</code><span class="sig-paren">(</span><em>m_logger</em>, <em>msgs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_exception" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">log_exception</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_logger</span></em>, <em class="sig-param"><span class="n">msgs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>A shortcut wrapper around log_fancy for exceptions</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>m_logger</strong> (<em>logger</em>) – The logger object</li>
-<li><strong>msgs</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – String or iterable of Strings, will be joined by newlines</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m_logger</strong> (<em>logger</em>) – The logger object</p></li>
+<li><p><strong>msgs</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – String or iterable of Strings, will be joined by newlines</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.log_fancy">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">log_fancy</code><span class="sig-paren">(</span><em>m_logger</em>, <em>msgs</em>, <em>log_lvl='info'</em>, <em>add_traceback=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_fancy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">log_fancy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_logger</span></em>, <em class="sig-param"><span class="n">msgs</span></em>, <em class="sig-param"><span class="n">log_lvl</span><span class="o">=</span><span class="default_value">'info'</span></em>, <em class="sig-param"><span class="n">add_traceback</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_fancy" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper around the logger messages useful for multi-line logs.
 Helps to group log messages by adding a fancy border around it,
 which enhances readability of log lines meant to be read
 as a unit.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>m_logger</strong> (<em>logger</em>) – The logger object</li>
-<li><strong>log_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The level to log at</li>
-<li><strong>msgs</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – a String or iterable of Strings</li>
-<li><strong>add_traceback</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – add traceback text, useful when logging exceptions (default False)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m_logger</strong> (<em>logger</em>) – The logger object</p></li>
+<li><p><strong>log_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The level to log at</p></li>
+<li><p><strong>msgs</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – a String or iterable of Strings</p></li>
+<li><p><strong>add_traceback</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – add traceback text, useful when logging exceptions (default False)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.log_multi">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">log_multi</code><span class="sig-paren">(</span><em>m_logger</em>, <em>msg</em>, <em>log_lvl='info'</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_multi" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>m_logger</strong> (<em>logger</em>) – The logger object</li>
-<li><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – a String to log</li>
-<li><strong>log_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The level to log at</li>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">log_multi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_logger</span></em>, <em class="sig-param"><span class="n">msg</span></em>, <em class="sig-param"><span class="n">log_lvl</span><span class="o">=</span><span class="default_value">'info'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.log_multi" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m_logger</strong> (<em>logger</em>) – The logger object</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a String to log</p></li>
+<li><p><strong>log_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The level to log at</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.plot_wf">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">plot_wf</code><span class="sig-paren">(</span><em>wf</em>, <em>depth_factor=1.0</em>, <em>breadth_factor=2.0</em>, <em>labels_on=True</em>, <em>numerical_label=False</em>, <em>text_loc_factor=1.0</em>, <em>save_as=None</em>, <em>style='rD--'</em>, <em>markersize=10</em>, <em>markerfacecolor='blue'</em>, <em>fontsize=12</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.plot_wf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">plot_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em>, <em class="sig-param"><span class="n">depth_factor</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">breadth_factor</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">labels_on</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">numerical_label</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">text_loc_factor</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">save_as</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'rD--'</span></em>, <em class="sig-param"><span class="n">markersize</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">markerfacecolor</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">fontsize</span><span class="o">=</span><span class="default_value">12</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.plot_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a visual representation of the workflow. Useful for checking whether the firework
 connections are in order before launching the workflow.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>wf</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) – workflow object.</li>
-<li><strong>depth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – adjust this to stretch the plot in y direction.</li>
-<li><strong>breadth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – adjust this to stretch the plot in x direction.</li>
-<li><strong>labels_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – whether to label the nodes or not. The default is to lable the nodes
-using the firework names.</li>
-<li><strong>numerical_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – set this to label the nodes using the firework ids.</li>
-<li><strong>text_loc_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – adjust the label location.</li>
-<li><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – save the figure to the given name.</li>
-<li><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – marker style.</li>
-<li><strong>markersize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – marker size.</li>
-<li><strong>markerfacecolor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – marker face color.</li>
-<li><strong>fontsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – font size for the node label.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wf</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) – workflow object.</p></li>
+<li><p><strong>depth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust this to stretch the plot in y direction.</p></li>
+<li><p><strong>breadth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust this to stretch the plot in x direction.</p></li>
+<li><p><strong>labels_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to label the nodes or not. The default is to label the nodes
+using the firework names.</p></li>
+<li><p><strong>numerical_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – set this to label the nodes using the firework ids.</p></li>
+<li><p><strong>text_loc_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust the label location.</p></li>
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – save the figure to the given name.</p></li>
+<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – marker style.</p></li>
+<li><p><strong>markersize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – marker size.</p></li>
+<li><p><strong>markerfacecolor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – marker face color.</p></li>
+<li><p><strong>fontsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – font size for the node label.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.redirect_local">
-<code class="descclassname">fireworks.utilities.fw_utilities.</code><code class="descname">redirect_local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">redirect_local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>temporarily redirect stdout or stderr to fws.error and fws.out</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-fireworks.utilities.update_collection">
 <span id="fireworks-utilities-update-collection-module"></span><h2>fireworks.utilities.update_collection module<a class="headerlink" href="#module-fireworks.utilities.update_collection" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.update_collection.update_launchpad_data">
-<code class="descclassname">fireworks.utilities.update_collection.</code><code class="descname">update_launchpad_data</code><span class="sig-paren">(</span><em>lp</em>, <em>replacements</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_launchpad_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.update_collection.</code><code class="sig-name descname">update_launchpad_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lp</span></em>, <em class="sig-param"><span class="n">replacements</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_launchpad_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>If you want to update a text string in your entire FireWorks database with a replacement, use this method.
 For example, you might want to update a directory name preamble like “/scratch/user1” to “/project/user2”.
 The algorithm does a text replacement over the <em>entire</em> BSON document. The original collection is backed up within
 the database with extension “_xiv_{Date}”.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>(</strong><strong>LaunchPad</strong><strong>)</strong> (<em>lp</em>) – a FireWorks LaunchPad object</li>
-<li><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>replacements</em>) – e.g. {“old_path1”: “new_path1”, “scratch/”:”project/”}</li>
-<li><strong>kwargs</strong> – Additional arguments accepted by the update_path_in_collection method</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>LaunchPad</strong><strong>)</strong> (<em>lp</em>) – a FireWorks LaunchPad object</p></li>
+<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>replacements</em>) – e.g. {“old_path1”: “new_path1”, “scratch/”:”project/”}</p></li>
+<li><p><strong>kwargs</strong> – Additional arguments accepted by the update_path_in_collection method</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="fireworks.utilities.update_collection.update_path_in_collection">
-<code class="descclassname">fireworks.utilities.update_collection.</code><code class="descname">update_path_in_collection</code><span class="sig-paren">(</span><em>db</em>, <em>collection_name</em>, <em>replacements</em>, <em>query=None</em>, <em>dry_run=False</em>, <em>force_clear=False</em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_path_in_collection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.utilities.update_collection.</code><code class="sig-name descname">update_path_in_collection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db</span></em>, <em class="sig-param"><span class="n">collection_name</span></em>, <em class="sig-param"><span class="n">replacements</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dry_run</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">force_clear</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.update_collection.update_path_in_collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>updates the text specified in replacements for the documents in a MongoDB collection.
 This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
 The algorithm does a text replacement over the <em>entire</em> BSON document. The original collection is backed up within
 the database with extension “_xiv_{Date}”.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>db</strong> (<em>Database</em>) – MongoDB db object</li>
-<li><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – name of a MongoDB collection to update</li>
-<li><strong>replacements</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – e.g. {“old_path1”: “new_path1”, “scratch/”:”project/”}</li>
-<li><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – criteria for query, default None if you want all documents to be updated</li>
-<li><strong>dry_run</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – if True, only a new collection with new paths is created and original “collection” is not replaced</li>
-<li><strong>force_clear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – careful! If True, the collection “{}_temp_refactor”.format(collection) is removed!</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> (<em>Database</em>) – MongoDB db object</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – name of a MongoDB collection to update</p></li>
+<li><p><strong>replacements</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – e.g. {“old_path1”: “new_path1”, “scratch/”:”project/”}</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – criteria for query, default None if you want all documents to be updated</p></li>
+<li><p><strong>dry_run</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, only a new collection with new paths is created and original “collection” is not
+replaced</p></li>
+<li><p><strong>force_clear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – careful! If True, the collection f”{collection}_temp_refactor” is removed!</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None, but if dry_run==False it replaces the collection with the updated one</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None, but if dry_run==False it replaces the collection with the updated one</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -827,6 +800,7 @@ the database with extension “_xiv_{Date}”.</p>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -856,17 +830,15 @@ the database with extension “_xiv_{Date}”.</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -880,13 +852,14 @@ the database with extension “_xiv_{Date}”.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">fireworks.utilities package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

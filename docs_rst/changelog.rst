@@ -2,6 +2,37 @@
 FireWorks Changelog
 ===================
 
+.. caution:: Starting v1.9.7 onwards, the changelog is no longer maintained. Please check the Github commit log for a record of changes.
+
+**v1.9.6**
+
+* avoid checking the number of jobs in the queue if not needed (G. Petretto)
+* Avoid failures due to encoding issues in tracker (J. Hörmann)
+* Filepad accessible via TLS/SSL encrypted connection (J. Hörmann)
+* allow propagating modified spec not only to direct children, but along all descendants down to workflow leaves by adding a 'propagate' flag to FWAction. (J. Hörmann)
+* update some dependency versions
+* misc fixes and updates (mamachra, J. Hörmann, I. Kondov, A. Jain)
+
+**v1.9.5**
+
+* document new help forum!
+* ability to add custom kwargs to the LaunchPad MongoClient using the YAML format (thanks to I. Kondov for pointing in this direction)
+* restore "text_mode" for anyone having problems with the new binary FilePad
+* rework lostruns recovery
+* actually use launch_dir in update_checkpoint (hopefully shouldn't change any behavior)
+* prevent "zombie" reruns of offline runs when marking them as fizzled or rerun. (thanks to jotelha for suggestion)
+* Use mod_spec instead of update_spec to pass on out-/infiles along Fireworks (J. Hörmann)
+* allow binary files in FilePad / handle filepad files as binary always (J. Hörmann)
+* update SLURM job id parsing (G. Petretto)
+* update dependencies
+
+**v1.9.4**
+
+* filepad tasks to get files by query (Github user: J. Hörmann)
+* the _pass_job_info command now also passes the FW state of the parent (M. Siron)
+* bugfix for detect_lostruns command (P. Huck)
+* http/https fix for web gui (D. Winston)
+
 **v1.9.3**
 
 .. caution:: if you set ``optional_params`` in your FireTask, these will be strictly checked in FWS v1.9.3 and greater!
@@ -333,7 +364,7 @@ FireWorks Changelog
 * add launches mode query (query launches collection when performing lpad tasks)
 * Add auth option to web app (S.P. Ong)
 * enhance webapp server w/gunicorn (D. Winston)
-* threshold parameter in introspect commmand
+* threshold parameter in introspect command
 * add license option to SLURM adapter
 * add fill mode to qlaunch for keeping jobs in the queue even when nothing in DB to run
 * fix njobs_queue bug

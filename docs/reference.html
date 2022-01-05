@@ -1,22 +1,22 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reference material &#8212; FireWorks 1.9.3 documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reference material &#8212; FireWorks 1.9.8 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="The Comprehensive Guide to Writing Firetasks with Python" href="guide_to_writing_firetasks.html" />
-    <link rel="prev" title="Using FilePad for storing and retrieving files" href="filepad_tutorial.html" />
+    <link rel="prev" title="Using JSON Schema" href="json_schema.html" />
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
@@ -34,9 +34,10 @@
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="filepad_tutorial.html" title="Using FilePad for storing and retrieving files"
+          <a href="json_schema.html" title="Using JSON Schema"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Reference material</a></li> 
       </ul>
     </div>  
 
@@ -54,38 +55,38 @@
 <div class="section" id="fireworks-states">
 <h3>FireWorks states<a class="headerlink" href="#fireworks-states" title="Permalink to this headline">¶</a></h3>
 <p>A Firework state represents the status of a single job.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="5%" />
-<col width="95%" />
+<col style="width: 5%" />
+<col style="width: 95%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>State</strong></td>
-<td><strong>Meaning</strong></td>
+<tbody>
+<tr class="row-odd"><td><p><strong>State</strong></p></td>
+<td><p><strong>Meaning</strong></p></td>
 </tr>
-<tr class="row-even"><td>ARCHIVED</td>
-<td>Similar to <em>deleted</em>. The Firework will not run, and its launches are archived (won’t be used in duplicate checking). However, you can still query the Firework. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>ARCHIVED</p></td>
+<td><p>Similar to <em>deleted</em>. The Firework will not run, and its launches are archived (won’t be used in duplicate checking). However, you can still query the Firework. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>DEFUSED</td>
-<td>The Firework is canceled/paused. Child FireWorks won’t run (although siblings might). The Firework can be resumed (<em>reignited</em>) later. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-odd"><td><p>DEFUSED</p></td>
+<td><p>The Firework is canceled/paused. Child FireWorks won’t run (although siblings might). The Firework can be resumed (<em>reignited</em>) later. More information <a class="reference internal" href="defuse_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td>WAITING</td>
-<td>The Firework is waiting for a parent Firework to complete. The Rocket Launcher will not pull this Firework until parent jobs complete.</td>
+<tr class="row-even"><td><p>WAITING</p></td>
+<td><p>The Firework is waiting for a parent Firework to complete. The Rocket Launcher will not pull this Firework until parent jobs complete.</p></td>
 </tr>
-<tr class="row-odd"><td>READY</td>
-<td>This Firework is ready to run, but hasn’t started running yet. The Rocket Launcher must pull this job and start running it.</td>
+<tr class="row-odd"><td><p>READY</p></td>
+<td><p>This Firework is ready to run, but hasn’t started running yet. The Rocket Launcher must pull this job and start running it.</p></td>
 </tr>
-<tr class="row-even"><td>RESERVED</td>
-<td>(Queue Launcher in reservation mode only). The Firework is waiting in a queue to run. More information <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>RESERVED</p></td>
+<td><p>(Queue Launcher in reservation mode only). The Firework is waiting in a queue to run. More information <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>FIZZLED</td>
-<td>The Firework has failed; it was executed but threw an error during the process. It can be rerun if desired - more information <a class="reference internal" href="failures_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-odd"><td><p>FIZZLED</p></td>
+<td><p>The Firework has failed; it was executed but threw an error during the process. It can be rerun if desired - more information <a class="reference internal" href="failures_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td>RUNNING</td>
-<td>The Firework is currently running. Note that in catastrophic cases, a Firework may display this state even though it has crashed; more information <a class="reference internal" href="failures_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>RUNNING</p></td>
+<td><p>The Firework is currently running. Note that in catastrophic cases, a Firework may display this state even though it has crashed; more information <a class="reference internal" href="failures_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>COMPLETED</td>
-<td>The Firework has successfully finished running.</td>
+<tr class="row-odd"><td><p>COMPLETED</p></td>
+<td><p>The Firework has successfully finished running.</p></td>
 </tr>
 </tbody>
 </table>
@@ -93,35 +94,35 @@
 <div class="section" id="workflows-states">
 <h3>Workflows states<a class="headerlink" href="#workflows-states" title="Permalink to this headline">¶</a></h3>
 <p>The state of a Workflow depends on the states of its component FireWorks.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="8%" />
-<col width="92%" />
+<col style="width: 8%" />
+<col style="width: 92%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>State</strong></td>
-<td><strong>Meaning</strong></td>
+<tbody>
+<tr class="row-odd"><td><p><strong>State</strong></p></td>
+<td><p><strong>Meaning</strong></p></td>
 </tr>
-<tr class="row-even"><td>ARCHIVED</td>
-<td>Similar to <em>deleted</em>. All the individual Firework states are ARCHIVED.</td>
+<tr class="row-even"><td><p>ARCHIVED</p></td>
+<td><p>Similar to <em>deleted</em>. All the individual Firework states are ARCHIVED.</p></td>
 </tr>
-<tr class="row-odd"><td>COMPLETED</td>
-<td>All the individual Firework states are COMPLETED - the workflow is finished.</td>
+<tr class="row-odd"><td><p>COMPLETED</p></td>
+<td><p>All the individual Firework states are COMPLETED - the workflow is finished.</p></td>
 </tr>
-<tr class="row-even"><td>DEFUSED</td>
-<td>At least <em>one</em> Firework in the workflow is DEFUSED. (If you have a branching workflow, other FireWorks might be running).</td>
+<tr class="row-even"><td><p>DEFUSED</p></td>
+<td><p>At least <em>one</em> Firework in the workflow is DEFUSED. (If you have a branching workflow, other FireWorks might be running).</p></td>
 </tr>
-<tr class="row-odd"><td>FIZZLED</td>
-<td>At least <em>one</em> Firework in the workflow is FIZZLED and no FWs are DEFUSED. (If you have a branching workflow, other FireWorks might be running).</td>
+<tr class="row-odd"><td><p>FIZZLED</p></td>
+<td><p>At least <em>one</em> Firework in the workflow is FIZZLED and no FWs are DEFUSED. (If you have a branching workflow, other FireWorks might be running).</p></td>
 </tr>
-<tr class="row-even"><td>RUNNING</td>
-<td>At least one Firework is RUNNING or COMPLETED. This state means that workflow has started but is not yet fully complete.</td>
+<tr class="row-even"><td><p>RUNNING</p></td>
+<td><p>At least one Firework is RUNNING or COMPLETED. This state means that workflow has started but is not yet fully complete.</p></td>
 </tr>
-<tr class="row-odd"><td>RESERVED</td>
-<td>No FireWorks are RUNNING or COMPLETED, but at least one Firework has been submitted to the queue.</td>
+<tr class="row-odd"><td><p>RESERVED</p></td>
+<td><p>No FireWorks are RUNNING or COMPLETED, but at least one Firework has been submitted to the queue.</p></td>
 </tr>
-<tr class="row-even"><td>READY</td>
-<td>The workflow has not started running and no FireWorks are reserved to run.</td>
+<tr class="row-even"><td><p>READY</p></td>
+<td><p>The workflow has not started running and no FireWorks are reserved to run.</p></td>
 </tr>
 </tbody>
 </table>
@@ -130,74 +131,74 @@
 <div class="section" id="reserved-keywords-in-fw-spec">
 <h2>Reserved keywords in FW spec<a class="headerlink" href="#reserved-keywords-in-fw-spec" title="Permalink to this headline">¶</a></h2>
 <p>The FW spec has certain <strong>reserved keywords</strong> that indicate special instructions to the FireWorks software. They are listed below:</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="14%" />
-<col width="86%" />
+<col style="width: 14%" />
+<col style="width: 86%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>Keyword</strong></td>
-<td><strong>Meaning</strong></td>
+<tbody>
+<tr class="row-odd"><td><p><strong>Keyword</strong></p></td>
+<td><p><strong>Meaning</strong></p></td>
 </tr>
-<tr class="row-even"><td>_tasks</td>
-<td>Reserved for specifying the list of Firetasks in the spec.</td>
+<tr class="row-even"><td><p>_tasks</p></td>
+<td><p>Reserved for specifying the list of Firetasks in the spec.</p></td>
 </tr>
-<tr class="row-odd"><td>_priority</td>
-<td>Used to specify the job’s priority. More information <a class="reference internal" href="priority_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-odd"><td><p>_priority</p></td>
+<td><p>Used to specify the job’s priority. More information <a class="reference internal" href="priority_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td>_pass_job_info</td>
-<td>This will pass a dictionary with keys [“fw_id”, “fw_name”, “launch_dir”] to the “_job_info” key. More information <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>_pass_job_info</p></td>
+<td><p>This will pass a dictionary with keys [“fw_id”, “fw_name”, “launch_dir”] to the “_job_info” key. More information <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>_launch_dir</td>
-<td>Pre-specify the directory to run the job rather than using default FW directory. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</td>
+<tr class="row-odd"><td><p>_launch_dir</p></td>
+<td><p>Pre-specify the directory to run the job rather than using default FW directory. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td>_fworker</td>
-<td>Used to control what resources run this job. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>_fworker</p></td>
+<td><p>Used to control what resources run this job. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>_category</td>
-<td>Used to control what resources run this job. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</td>
+<tr class="row-odd"><td><p>_category</p></td>
+<td><p>Used to control what resources run this job. More information <a class="reference internal" href="controlworker.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td>_queueadapter</td>
-<td>Special queue parameters for this job. More information <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>_queueadapter</p></td>
+<td><p>Special queue parameters for this job. More information <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>_add_fworker</td>
-<td>Embeds FireWorker (<code class="docutils literal notranslate"><span class="pre">fireworker</span></code>) variable inside the Firetask just before runtime.</td>
+<tr class="row-odd"><td><p>_add_fworker</p></td>
+<td><p>Embeds FireWorker (<code class="docutils literal notranslate"><span class="pre">fireworker</span></code>) variable inside the Firetask just before runtime.</p></td>
 </tr>
-<tr class="row-even"><td>_add_launchpad_and_fw_id</td>
-<td>Embeds LaunchPad (<code class="docutils literal notranslate"><span class="pre">launchpad</span></code>) and fw_id (<code class="docutils literal notranslate"><span class="pre">fw_id</span></code>) variables inside the Firetask just before runtime. Not best practice but maybe useful.</td>
+<tr class="row-even"><td><p>_add_launchpad_and_fw_id</p></td>
+<td><p>Embeds LaunchPad (<code class="docutils literal notranslate"><span class="pre">launchpad</span></code>) and fw_id (<code class="docutils literal notranslate"><span class="pre">fw_id</span></code>) variables inside the Firetask just before runtime. Not best practice but maybe useful.</p></td>
 </tr>
-<tr class="row-odd"><td>_dupefinder</td>
-<td>Used to specify a duplicate finder object for avoiding duplicated runs. More information <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-odd"><td><p>_dupefinder</p></td>
+<td><p>Used to specify a duplicate finder object for avoiding duplicated runs. More information <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td>_allow_fizzled_parents</td>
-<td>Run this Firework if all parents are <em>either</em> COMPLETED or FIZZLED.</td>
+<tr class="row-even"><td><p>_allow_fizzled_parents</p></td>
+<td><p>Run this Firework if all parents are <em>either</em> COMPLETED or FIZZLED.</p></td>
 </tr>
-<tr class="row-odd"><td>_preserve_fworker</td>
-<td>Run the children on the same FireWorker as the parent</td>
+<tr class="row-odd"><td><p>_preserve_fworker</p></td>
+<td><p>Run the children on the same FireWorker as the parent</p></td>
 </tr>
-<tr class="row-even"><td>_job_info</td>
-<td>Reserved for automatically putting putting information about previous jobs via the <code class="docutils literal notranslate"><span class="pre">_pass_job_info</span></code> option.</td>
+<tr class="row-even"><td><p>_job_info</p></td>
+<td><p>Reserved for automatically putting information about previous jobs via the <code class="docutils literal notranslate"><span class="pre">_pass_job_info</span></code> option.</p></td>
 </tr>
-<tr class="row-odd"><td>_fizzled_parents</td>
-<td>Reserved for automatically putting information about FIZZLED parents in a child Firework with the <code class="docutils literal notranslate"><span class="pre">_allow_fizzled_parents</span></code> option.</td>
+<tr class="row-odd"><td><p>_fizzled_parents</p></td>
+<td><p>Reserved for automatically putting information about FIZZLED parents in a child Firework with the <code class="docutils literal notranslate"><span class="pre">_allow_fizzled_parents</span></code> option.</p></td>
 </tr>
-<tr class="row-even"><td>_trackers</td>
-<td>Reserved for specifying Trackers.</td>
+<tr class="row-even"><td><p>_trackers</p></td>
+<td><p>Reserved for specifying Trackers.</p></td>
 </tr>
-<tr class="row-odd"><td>_background_tasks</td>
-<td>Reserved for specifying BackgroundTasks</td>
+<tr class="row-odd"><td><p>_background_tasks</p></td>
+<td><p>Reserved for specifying BackgroundTasks</p></td>
 </tr>
-<tr class="row-even"><td>_fw_env</td>
-<td>Reserved for setting worker-specifc environment variables. More information <a class="reference internal" href="worker_tutorial.html"><span class="doc">here</span></a>.</td>
+<tr class="row-even"><td><p>_fw_env</p></td>
+<td><p>Reserved for setting worker-specific environment variables. More information <a class="reference internal" href="worker_tutorial.html"><span class="doc">here</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td>_files_in</td>
-<td>Reserved for specifying a dict of {name: filename} for input files to be copied from preceding FW.</td>
+<tr class="row-odd"><td><p>_files_in</p></td>
+<td><p>Reserved for specifying a dict of {name: filename} for input files to be copied from preceding FW.</p></td>
 </tr>
-<tr class="row-even"><td>_files_out</td>
-<td>Reserved for specifying a dict of {name, output file name} that can be copied by a child FW.</td>
+<tr class="row-even"><td><p>_files_out</p></td>
+<td><p>Reserved for specifying a dict of {name, output file name} that can be copied by a child FW.</p></td>
 </tr>
-<tr class="row-odd"><td>_files_prev</td>
-<td>Reserved for storing the actual full filepaths if _files_out is specified.</td>
+<tr class="row-odd"><td><p>_files_prev</p></td>
+<td><p>Reserved for storing the actual full filepaths if _files_out is specified.</p></td>
 </tr>
 </tbody>
 </table>
@@ -205,6 +206,7 @@
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -224,8 +226,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="filepad_tutorial.html"
-                        title="previous chapter">Using FilePad for storing and retrieving files</a></p>
+  <p class="topless"><a href="json_schema.html"
+                        title="previous chapter">Using JSON Schema</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="guide_to_writing_firetasks.html"
                         title="next chapter">The Comprehensive Guide to Writing Firetasks with Python</a></p>
@@ -237,17 +239,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -265,15 +265,16 @@
           <a href="guide_to_writing_firetasks.html" title="The Comprehensive Guide to Writing Firetasks with Python"
              >next</a> |</li>
         <li class="right" >
-          <a href="filepad_tutorial.html" title="Using FilePad for storing and retrieving files"
+          <a href="json_schema.html" title="Using JSON Schema"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Reference material</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

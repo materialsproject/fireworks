@@ -2,7 +2,7 @@
 Installing FireWorks
 ====================
 
-.. note:: We suggest that you use Python 2.7.3 or higher, especially in production. There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet). As of FireWorks v0.7, Python 3.3 and higher should also work.
+.. note:: We suggest that you use Python 3.7 or higher, especially in production. There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet).
 
 Install MongoDB
 ===============
@@ -16,13 +16,13 @@ To access via a *cloud provider*, you might try `mLab <http://mlab.com/>`_, `Mon
     * Set up an account via the mLab web site instructions. When asked to pick a server type (e.g. Amazon, Google, etc) you can just choose free option of 500MB. This is more than enough to get started.
     * mLab will ask you to create a database; any name is fine, but make sure you write down what it is.
     * After creating a database, note that you'll need to create at least one database user in order to access the database.
-    * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connnection as part of the procedure.
+    * You can test your database connection using MongoDB's built-in command line tools. Or, you can continue with FireWorks installation and subsequently the tutorials, which will test the database connection as part of the procedure.
 
 Preparing to Install FireWorks (Python and pip)
 ===============================================
 To prepare for installation, you should:
 
-#. Install `Python <http://www.python.org>`_ - either Python 2.7+ or Python 3 should work.
+#. Install `Python <http://www.python.org>`_ - use Python 3.3+ (and ideally the latest version) as Python 2 has been discontinued. FireWorks may continue to work with Python 2.7.x for some time, but this is no longer guaranteed.
 #. Install `pip <http://www.pip-installer.org/en/latest/installing.html>`_, if not already packaged with your system (this sometimes comes bundled with your Python install). This will allow you to download required dependencies.
 
 .. tip:: if you have easy_install configured, e.g. through `setuptools <http://pypi.python.org/pypi/setuptools>`_, you should be able to install pip using the command ``easy_install pip``. You should make sure that setuptools is installed using the proper Python version and probably without the ``--user`` option if running ``ez_setup.py``.
@@ -30,7 +30,7 @@ To prepare for installation, you should:
 Virtualenv installation option
 ------------------------------
 
-Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. For example, you might want to use Python 2.7 for FireWorks, but Python 3+ for other Python codes you're interested in using. Or, you might have different versions of Python libraries supporting FireWorks and your other installations. This is often the case on shared machines. if you're interested in this option, you might consider a :doc:`virtualenv install </virtualenv_tutorial>`. Otherwise, just follow the installation instructions below. A simpler option to setting up virtualenv that accomplishes some of the same goals is to use the ``--user`` flag when running ``python setup.py develop`` in the the Git version of installation (see Installation Method 2).
+Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. If you're interested in this option, you might consider a :doc:`virtualenv install </virtualenv_tutorial>`. Otherwise, just follow the installation instructions below. A simpler option to setting up virtualenv that accomplishes some of the same goals is to use the ``--user`` flag when running ``python setup.py develop`` in the the Git version of installation (see Installation Method 2).
 
 Installation Method 1: Use Pip
 ==============================

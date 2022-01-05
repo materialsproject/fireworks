@@ -2,6 +2,8 @@
 Contributors
 ============
 
+.. caution:: Starting v1.9.7 onwards, the contributors list is no longer maintained. Please check the Github contributors list instead.
+
 FireWorks was developed primarily by Anubhav Jain at Lawrence Berkeley National Lab, using research funding from Kristin Persson for the `Materials Project <http://www.materialsproject.org>`_.
 
 Additional contributions from:
@@ -45,11 +47,14 @@ Additional contributions from:
 * Matt Henderson
 * Steven Torrisi
 * Eli Ateljevich
+* Martin Siron
+* Johannes Hörmann
 * Github user: kpoman
 * Github user: jakirkham
 * Github user: shenjh
 * Github user: specter119
 * Github user: KeLiu
+* Github user: mamachra
 
 Thanks for helpful discussions:
 * Marat Valiev
@@ -59,7 +64,6 @@ Thanks for helpful discussions:
 * Akira Takahashi
 * J. Hörmann
 * Marnik Bercx
-* Martin Siron
 * User: Primer
 * User: tahorst
 

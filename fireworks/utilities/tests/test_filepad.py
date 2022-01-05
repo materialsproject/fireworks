@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import division, print_function, unicode_literals, absolute_import
-
 import os
 import unittest
 
@@ -11,7 +7,6 @@ module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 
 class FilePadTest(unittest.TestCase):
-
     def setUp(self):
         self.chgcar_file = os.path.join(module_dir, "CHGCAR.Fe3O4")
         self.fp = FilePad.auto_load()
@@ -30,7 +25,7 @@ class FilePadTest(unittest.TestCase):
     def test_get_file(self):
         _, file_identifier = self.fp.add_file(self.chgcar_file, identifier="xxx", metadata={"author": "Kiran Mathew"})
         file_contents, doc = self.fp.get_file(file_identifier)
-        self.assertEqual(file_contents, open(self.chgcar_file, "r").read().encode())
+        self.assertEqual(file_contents, open(self.chgcar_file).read().encode())
         self.assertEqual(doc["identifier"], file_identifier)
         self.assertEqual(doc["metadata"]["author"], "Kiran Mathew")
         abspath = os.path.abspath(self.chgcar_file)
