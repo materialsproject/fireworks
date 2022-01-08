@@ -222,7 +222,7 @@ Limitations
 To keep the code simple, qlaunch default remote options are limited to
 similar configurations across multiple resources. If you have more
 complicated setups, e.g., different users, different queue configurations
-across different computing resoruces, remote qlaunch will not be able to
+across different computing resources, remote qlaunch will not be able to
 handle these. However, you can always write your own fabfile.py and use
 Fabric's far more sophisticated execution model.
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modifying the FW Config &#8212; FireWorks 1.9.7 documentation</title>
+    <title>Modifying the FW Config &#8212; FireWorks 1.9.8 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Improving FireWorks performance" href="performance_tutorial.html" />
     <link rel="prev" title="Configuring Security" href="security_tutorial.html" />
-
+ 
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
@@ -36,16 +36,16 @@
         <li class="right" >
           <a href="security_tutorial.html" title="Configuring Security"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Modifying the FW Config</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Modifying the FW Config</a></li> 
       </ul>
-    </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
-
+            
   <div class="section" id="modifying-the-fw-config">
 <h1>Modifying the FW Config<a class="headerlink" href="#modifying-the-fw-config" title="Permalink to this headline">¶</a></h1>
 <p>Many parameters used by FireWorks can be changed to suit your needs. Some examples include:</p>
@@ -141,7 +141,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">RESERVATION_EXPIRATION_SECS:</span> <span class="pre">1209600</span></code> - means that the LaunchPad will cancel the reservation of a Firework that’s been in the queue for 1209600 seconds (14 days). See the <a class="reference internal" href="queue_tutorial_pt2.html"><span class="doc">queue reservation tutorial</span></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">FW_BLOCK_FORMAT:</span> <span class="pre">%Y-%m-%d-%H-%M-%S-%f</span></code> - the <code class="docutils literal notranslate"><span class="pre">launcher_</span></code> and <code class="docutils literal notranslate"><span class="pre">block_</span></code> directories written by the Rocket and Queue Launchers add a date stamp to the directory. You can change this if desired.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">QSTAT_FREQUENCY:</span> <span class="pre">50</span></code> - number of jobs submitted to queue before re-executing a qstat. 1 means always do qstat, higher avoids unnecessarily loading the qstat server. Set this low if you have multiple processes submitting jobs to the same queue.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PW_CHECK_NUM:</span> <span class="pre">10</span></code> - how many FireWorks/Worflows can be changed with a single LaunchPad command (like <code class="docutils literal notranslate"><span class="pre">rerun_fws</span></code>) before a password is required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PW_CHECK_NUM:</span> <span class="pre">10</span></code> - how many FireWorks/Workflows can be changed with a single LaunchPad command (like <code class="docutils literal notranslate"><span class="pre">rerun_fws</span></code>) before a password is required.</p></li>
 </ul>
 <p>For a full list of parameters that can be changed, you can browse the <code class="docutils literal notranslate"><span class="pre">fw_config.py</span></code> file in the FireWorks source.</p>
 </div>
@@ -212,8 +212,8 @@
         <li class="right" >
           <a href="security_tutorial.html" title="Configuring Security"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Modifying the FW Config</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Modifying the FW Config</a></li> 
       </ul>
     </div>
 
