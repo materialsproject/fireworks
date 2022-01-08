@@ -29,7 +29,7 @@ class UpdateCollectionTests(unittest.TestCase):
             cls.lp.connection.drop_database(TESTDB_NAME)
 
     def test_update_path(cls):
-        cls.lp.db.test_coll.insert({"foo": "bar", "foo_list": [{"foo1": "bar1"}, {"foo2": "foo/old/path/bar"}]})
+        cls.lp.db.test_coll.insert_one({"foo": "bar", "foo_list": [{"foo1": "bar1"}, {"foo2": "foo/old/path/bar"}]})
         update_path_in_collection(
             cls.lp.db,
             collection_name="test_coll",
