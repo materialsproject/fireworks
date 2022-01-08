@@ -186,5 +186,5 @@ if __name__ == "__main__":
             # add wf name as plot title above the graph
             dag.attr(label=item, fontsize="20", labelloc="t")
             dag.view()
-            # dag.format = "png"  # default formt is PDF
+            # dag.format = "png"  # default format is PDF
             # dag.render(f"docs_rst/_static/wf_graphs/{item}")
