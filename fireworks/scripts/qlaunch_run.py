@@ -240,7 +240,7 @@ def qlaunch():
     for k in ["silencer", "reserve"]:
         v = getattr(args, k, None)
         if v:
-            pre_non_default.append("--%s" % k)
+            pre_non_default.append(f"--{k}")
     pre_non_default = " ".join(pre_non_default)
 
     interval = args.daemon

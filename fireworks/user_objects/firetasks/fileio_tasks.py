@@ -222,7 +222,7 @@ class DecompressDirTask(FiretaskBase):
             decompress_dir(dest)
         except Exception:
             if not ignore_errors:
-                raise ValueError("There was an error performing decompression in %s." % dest)
+                raise ValueError(f"There was an error performing decompression in {dest}.")
 
 
 class ArchiveDirTask(FiretaskBase):
