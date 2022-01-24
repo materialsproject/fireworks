@@ -805,7 +805,7 @@ class Workflow(FWSerializable):
         """
         name = name or "unnamed WF"  # prevent None names
 
-        links_dict = links_dict if links_dict else {}
+        links_dict = links_dict or {}
 
         # main dict containing mapping of an id to a Firework object
         self.id_fw: Dict[int, Firework] = {}
@@ -840,16 +840,13 @@ class Workflow(FWSerializable):
         if len(self.links.nodes) == 0:
             raise ValueError("Workflow cannot be empty (must contain at least 1 FW)")
 
-        self.metadata = metadata if metadata else {}
+        self.metadata = metadata or {}
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
         # dict containing mapping of an id to a firework state. The states are stored locally and
         # redundantly for speed purpose
-        if fw_states:
-            self.fw_states = fw_states
-        else:
-            self.fw_states = {key: self.id_fw[key].state for key in self.id_fw}
+        self.fw_states = fw_states or {key: val.state for key, val in self.id_fw.items()}
 
     @property
     def fws(self) -> List[Firework]:
@@ -868,7 +865,7 @@ class Workflow(FWSerializable):
         return len(self.id_fw)
 
     def __getitem__(self, idx: int) -> Firework:
-        return self.id_fw[idx]
+        return list(self.id_fw.values())[idx]
 
     @property
     def state(self) -> str:
