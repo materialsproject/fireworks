@@ -11,7 +11,7 @@ This module contains some of the most central FireWorks classes:
 import abc
 import os
 import pprint
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
 from typing import Any, Dict, Iterable, List, Sequence
@@ -808,7 +808,7 @@ class Workflow(FWSerializable):
         links_dict = links_dict if links_dict else {}
 
         # main dict containing mapping of an id to a Firework object
-        self.id_fw = OrderedDict()
+        self.id_fw: Dict[int, Firework] = {}
         for fw in fireworks:
             if fw.fw_id in self.id_fw:
                 raise ValueError("FW ids must be unique!")
@@ -1251,17 +1251,13 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict["nodes"])
         m_dict["name--id"] = self.name + "--" + str(nodes[0])
-        m_dict["launch_dirs"] = OrderedDict(
-            [(self._str_fw(x), [l.launch_dir for l in self.id_fw[x].launches]) for x in nodes]
-        )
-        m_dict["states"] = OrderedDict([(self._str_fw(x), self.id_fw[x].state) for x in nodes])
+        m_dict["launch_dirs"] = {self._str_fw(x): [l.launch_dir for l in self.id_fw[x].launches] for x in nodes}
+        m_dict["states"] = {self._str_fw(x): self.id_fw[x].state for x in nodes}
         m_dict["nodes"] = [self._str_fw(x) for x in nodes]
-        m_dict["links"] = OrderedDict(
-            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["links"].items()]
-        )
-        m_dict["parent_links"] = OrderedDict(
-            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["parent_links"].items()]
-        )
+        m_dict["links"] = {self._str_fw(k): [self._str_fw(v) for v in a] for k, a in m_dict["links"].items()}
+        m_dict["parent_links"] = {
+            self._str_fw(k): [self._str_fw(v) for v in a] for k, a in m_dict["parent_links"].items()
+        }
         m_dict["states_list"] = "-".join([a[0:4] for a in m_dict["states"].values()])
         return m_dict
 
