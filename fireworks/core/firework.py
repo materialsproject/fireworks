@@ -267,9 +267,8 @@ class Firework(FWSerializable):
             updated_on (datetime): last time the STATE was updated.
         """
 
-        tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
+        self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
-        self.tasks = tasks
         self.spec = spec.copy() if spec else {}
 
         self.name = name or "Unnamed FW"  # do it this way to prevent None
@@ -391,6 +390,9 @@ class Firework(FWSerializable):
 
     def __len__(self) -> int:
         return len(self.tasks)
+
+    def __getitem__(self, idx: int) -> FiretaskBase:
+        return self.tasks[idx]
 
 
 class Tracker(FWSerializable):
@@ -864,6 +866,9 @@ class Workflow(FWSerializable):
 
     def __len__(self) -> int:
         return len(self.id_fw)
+
+    def __getitem__(self, idx: int) -> Firework:
+        return self.id_fw[idx]
 
     @property
     def state(self) -> str:
