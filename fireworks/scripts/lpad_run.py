@@ -327,7 +327,7 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
     return ids
 
 
-def get_fws_helper(lp: LaunchPad, ids: Sequence[int], args: Namespace) -> Union[List[int], int, List[Dict[str, Union[str, int, bool]]], Union[str, int, bool]]:
+def get_fws_helper(lp: LaunchPad, ids: Sequence[int], args: Namespace) -> Union[int, List[int], List[List[int]]]:
     """Get fws from ids in a representation according to args.display_format."""
     fws = []
     if args.display_format == "ids":
