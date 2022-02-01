@@ -248,7 +248,7 @@ class Rocket:
                 Rocket.update_checkpoint(lp, launch_dir, launch_id, checkpoint)
 
                 if lp:
-                    l_logger.log(logging.INFO, "Task started: %s." % t.fw_name)
+                    l_logger.info(f"Task started: {t.fw_name}.")
 
                 if my_spec.get("_add_launchpad_and_fw_id"):
                     t.fw_id = m_fw.fw_id
@@ -277,7 +277,7 @@ class Rocket:
                         exception_details = None
                     except BaseException as e:
                         if lp:
-                            l_logger.log(logging.WARNING, "Exception couldn't be serialized: %s " % e)
+                            l_logger.warning(f"Exception couldn't be serialized: {e}")
                         exception_details = None
 
                     try:
@@ -331,7 +331,7 @@ class Rocket:
                 for mod in m_action.mod_spec:
                     apply_mod(mod, my_spec)
                 if lp:
-                    l_logger.log(logging.INFO, "Task completed: %s " % t.fw_name)
+                    l_logger.info(f"Task completed: {t.fw_name}")
                 if m_action.skip_remaining_tasks:
                     break
 
