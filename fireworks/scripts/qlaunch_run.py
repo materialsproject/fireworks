@@ -1,7 +1,7 @@
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
-
+import importlib
 import os
 import sys
 import time
@@ -100,6 +100,10 @@ def qlaunch():
     )
 
     parser = ArgumentParser(description=m_description)
+
+    fw_version = importlib.metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+
     subparsers = parser.add_subparsers(help="command", dest="command")
     single_parser = subparsers.add_parser("singleshot", help="launch a single rocket to the queue")
     rapid_parser = subparsers.add_parser("rapidfire", help="launch multiple rockets to the queue")

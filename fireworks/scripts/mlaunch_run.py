@@ -2,6 +2,7 @@
 A runnable script to launch Job Packing (Multiple) Rockets
 """
 
+import importlib
 import os
 from argparse import ArgumentParser
 
@@ -23,6 +24,9 @@ def mlaunch():
     m_description = "This program launches multiple Rockets simultaneously"
 
     parser = ArgumentParser(description=m_description)
+
+    fw_version = importlib.metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
 
     parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     parser.add_argument(
