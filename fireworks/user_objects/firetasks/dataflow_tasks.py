@@ -7,14 +7,14 @@ __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 import sys
 
 from fireworks import Firework
-from fireworks.core.firework import FireTaskBase, FWAction
+from fireworks.core.firework import FiretaskBase, FWAction
 from fireworks.utilities.fw_serializers import load_object
 
 if sys.version_info[0] > 2:
     basestring = str
 
 
-class CommandLineTask(FireTaskBase):
+class CommandLineTask(FiretaskBase):
     """
     A Firetask to execute external commands in a shell
 
@@ -259,7 +259,7 @@ class CommandLineTask(FireTaskBase):
         return retlist
 
 
-class ForeachTask(FireTaskBase):
+class ForeachTask(FiretaskBase):
     """
     This firetask branches the workflow creating parallel fireworks
     using FWAction: one firework for each element or each chunk from the
@@ -314,7 +314,7 @@ class ForeachTask(FireTaskBase):
         return FWAction(detours=fireworks)
 
 
-class JoinDictTask(FireTaskBase):
+class JoinDictTask(FiretaskBase):
     """combines specified spec fields into a dictionary"""
 
     _fw_name = "JoinDictTask"
@@ -345,7 +345,7 @@ class JoinDictTask(FireTaskBase):
         return FWAction(update_spec={self["output"]: output})
 
 
-class JoinListTask(FireTaskBase):
+class JoinListTask(FiretaskBase):
     """combines specified spec fields into a list."""
 
     _fw_name = "JoinListTask"
@@ -366,7 +366,7 @@ class JoinListTask(FireTaskBase):
         return FWAction(update_spec={self["output"]: output})
 
 
-class ImportDataTask(FireTaskBase):
+class ImportDataTask(FiretaskBase):
     """
     Update the spec with data from file in a nested dictionary at a position
     specified by a mapstring = maplist[0]/maplist[1]/...

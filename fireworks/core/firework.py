@@ -11,7 +11,7 @@ This module contains some of the most central FireWorks classes:
 import abc
 import os
 import pprint
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
 from typing import Any, Dict, Iterable, List, Sequence
@@ -267,9 +267,8 @@ class Firework(FWSerializable):
             updated_on (datetime): last time the STATE was updated.
         """
 
-        tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
+        self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
-        self.tasks = tasks
         self.spec = spec.copy() if spec else {}
 
         self.name = name or "Unnamed FW"  # do it this way to prevent None
@@ -384,13 +383,16 @@ class Firework(FWSerializable):
         )
 
     def __str__(self):
-        return "Firework object: (id: %i , name: %s)" % (self.fw_id, self.fw_name)
+        return f"Firework object: (id: {int(self.fw_id)} , name: {self.fw_name})"
 
     def __iter__(self) -> Iterable[FiretaskBase]:
         return self.tasks.__iter__()
 
     def __len__(self) -> int:
         return len(self.tasks)
+
+    def __getitem__(self, idx: int) -> FiretaskBase:
+        return self.tasks[idx]
 
 
 class Tracker(FWSerializable):
@@ -803,10 +805,10 @@ class Workflow(FWSerializable):
         """
         name = name or "unnamed WF"  # prevent None names
 
-        links_dict = links_dict if links_dict else {}
+        links_dict = links_dict or {}
 
         # main dict containing mapping of an id to a Firework object
-        self.id_fw = OrderedDict()
+        self.id_fw: Dict[int, Firework] = {}
         for fw in fireworks:
             if fw.fw_id in self.id_fw:
                 raise ValueError("FW ids must be unique!")
@@ -838,16 +840,13 @@ class Workflow(FWSerializable):
         if len(self.links.nodes) == 0:
             raise ValueError("Workflow cannot be empty (must contain at least 1 FW)")
 
-        self.metadata = metadata if metadata else {}
+        self.metadata = metadata or {}
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
         # dict containing mapping of an id to a firework state. The states are stored locally and
         # redundantly for speed purpose
-        if fw_states:
-            self.fw_states = fw_states
-        else:
-            self.fw_states = {key: self.id_fw[key].state for key in self.id_fw}
+        self.fw_states = fw_states or {key: val.state for key, val in self.id_fw.items()}
 
     @property
     def fws(self) -> List[Firework]:
@@ -864,6 +863,9 @@ class Workflow(FWSerializable):
 
     def __len__(self) -> int:
         return len(self.id_fw)
+
+    def __getitem__(self, idx: int) -> Firework:
+        return list(self.id_fw.values())[idx]
 
     @property
     def state(self) -> str:
@@ -1246,17 +1248,13 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict["nodes"])
         m_dict["name--id"] = self.name + "--" + str(nodes[0])
-        m_dict["launch_dirs"] = OrderedDict(
-            [(self._str_fw(x), [l.launch_dir for l in self.id_fw[x].launches]) for x in nodes]
-        )
-        m_dict["states"] = OrderedDict([(self._str_fw(x), self.id_fw[x].state) for x in nodes])
+        m_dict["launch_dirs"] = {self._str_fw(x): [l.launch_dir for l in self.id_fw[x].launches] for x in nodes}
+        m_dict["states"] = {self._str_fw(x): self.id_fw[x].state for x in nodes}
         m_dict["nodes"] = [self._str_fw(x) for x in nodes]
-        m_dict["links"] = OrderedDict(
-            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["links"].items()]
-        )
-        m_dict["parent_links"] = OrderedDict(
-            [(self._str_fw(k), [self._str_fw(v) for v in a]) for k, a in m_dict["parent_links"].items()]
-        )
+        m_dict["links"] = {self._str_fw(k): [self._str_fw(v) for v in a] for k, a in m_dict["links"].items()}
+        m_dict["parent_links"] = {
+            self._str_fw(k): [self._str_fw(v) for v in a] for k, a in m_dict["parent_links"].items()
+        }
         m_dict["states_list"] = "-".join([a[0:4] for a in m_dict["states"].values()])
         return m_dict
 

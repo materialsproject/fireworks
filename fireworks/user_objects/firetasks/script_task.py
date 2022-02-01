@@ -162,7 +162,7 @@ class PyTask(FiretaskBase):
     required_params = ["func"]
     other_params = ["args", "kwargs", "auto_kwargs", "stored_data_varname", "inputs", "outputs", "chunk_number"]
     # note that we are not using "optional_params" because we do not want to do
-    # strict parameter checking in FireTaskBase due to "auto_kwargs" option
+    # strict parameter checking in FiretaskBase due to "auto_kwargs" option
 
     def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
         toks = self["func"].rsplit(".", 1)

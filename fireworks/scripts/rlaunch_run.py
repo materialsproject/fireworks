@@ -2,6 +2,7 @@
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """
 
+import importlib
 import os
 import signal
 import sys
@@ -36,6 +37,10 @@ def rlaunch():
     )
 
     parser = ArgumentParser(description=m_description)
+
+    fw_version = importlib.metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+
     subparsers = parser.add_subparsers(help="command", dest="command")
     single_parser = subparsers.add_parser("singleshot", help="launch a single Rocket")
     rapid_parser = subparsers.add_parser(
