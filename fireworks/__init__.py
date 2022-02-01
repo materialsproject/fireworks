@@ -25,7 +25,5 @@ from fireworks.user_objects.firetasks.fileio_tasks import (
     FileWriteTask,
 )
 from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
-from fireworks.user_objects.firetasks.templatewriter_task import (
-    TemplateWriterTask,
-)
+from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fireworks.utilities.fw_utilities import explicit_serialize
