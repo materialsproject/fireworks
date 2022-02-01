@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fireworks.user_objects.firetasks package &#8212; FireWorks 1.9.9 documentation</title>
+    <title>fireworks.user_objects.firetasks package &#8212; FireWorks 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.user_objects.firetasks package</a></li> 
       </ul>
     </div>  
@@ -66,7 +66,7 @@
 <dl class="py class">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.user_objects.firetasks.dataflow_tasks.</code><code class="sig-name descname">CommandLineTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FireTaskBase" title="fireworks.core.firework.FireTaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FireTaskBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <p>A Firetask to execute external commands in a shell</p>
 <dl class="simple">
 <dt>Required params:</dt><dd><ul class="simple">
@@ -216,7 +216,7 @@ these multiple resources.</p>
 <dl class="py class">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.user_objects.firetasks.dataflow_tasks.</code><code class="sig-name descname">ForeachTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FireTaskBase" title="fireworks.core.firework.FireTaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FireTaskBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <p>This firetask branches the workflow creating parallel fireworks
 using FWAction: one firework for each element or each chunk from the
 <em>split</em> list. Each firework in this generated list contains the firetask
@@ -277,7 +277,7 @@ these multiple resources.</p>
 <dl class="py class">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.user_objects.firetasks.dataflow_tasks.</code><code class="sig-name descname">ImportDataTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FireTaskBase" title="fireworks.core.firework.FireTaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FireTaskBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <p>Update the spec with data from file in a nested dictionary at a position
 specified by a mapstring = maplist[0]/maplist[1]/…
 i.e. spec[maplist[0]][maplist[1]]… = data</p>
@@ -321,7 +321,7 @@ these multiple resources.</p>
 <dl class="py class">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.user_objects.firetasks.dataflow_tasks.</code><code class="sig-name descname">JoinDictTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FireTaskBase" title="fireworks.core.firework.FireTaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FireTaskBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <p>combines specified spec fields into a dictionary</p>
 <dl class="py attribute">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.optional_params">
@@ -363,7 +363,7 @@ these multiple resources.</p>
 <dl class="py class">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.user_objects.firetasks.dataflow_tasks.</code><code class="sig-name descname">JoinListTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FireTaskBase" title="fireworks.core.firework.FireTaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FireTaskBase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a></p>
 <p>combines specified spec fields into a list.</p>
 <dl class="py attribute">
 <dt id="fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask.required_params">
@@ -1253,7 +1253,7 @@ these multiple resources.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.user_objects.firetasks package</a></li> 
       </ul>
     </div>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fireworks.utilities package &#8212; FireWorks 1.9.9 documentation</title>
+    <title>fireworks.utilities package &#8212; FireWorks 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.utilities package</a></li> 
       </ul>
     </div>  
@@ -50,6 +50,7 @@
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_filepad">fireworks.utilities.tests.test_filepad module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_fw_serializers">fireworks.utilities.tests.test_fw_serializers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_update_collection">fireworks.utilities.tests.test_update_collection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks-utilities-tests-test-visualize-module">fireworks.utilities.tests.test_visualize module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests">Module contents</a></li>
 </ul>
 </li>
@@ -717,31 +718,6 @@ as a unit.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.utilities.fw_utilities.plot_wf">
-<code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">plot_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em>, <em class="sig-param"><span class="n">depth_factor</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">breadth_factor</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">labels_on</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">numerical_label</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">text_loc_factor</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">save_as</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'rD--'</span></em>, <em class="sig-param"><span class="n">markersize</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">markerfacecolor</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">fontsize</span><span class="o">=</span><span class="default_value">12</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.plot_wf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a visual representation of the workflow. Useful for checking whether the firework
-connections are in order before launching the workflow.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>wf</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) – workflow object.</p></li>
-<li><p><strong>depth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust this to stretch the plot in y direction.</p></li>
-<li><p><strong>breadth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust this to stretch the plot in x direction.</p></li>
-<li><p><strong>labels_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to label the nodes or not. The default is to label the nodes
-using the firework names.</p></li>
-<li><p><strong>numerical_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – set this to label the nodes using the firework ids.</p></li>
-<li><p><strong>text_loc_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust the label location.</p></li>
-<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – save the figure to the given name.</p></li>
-<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – marker style.</p></li>
-<li><p><strong>markersize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – marker size.</p></li>
-<li><p><strong>markerfacecolor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – marker face color.</p></li>
-<li><p><strong>fontsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – font size for the node label.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="fireworks.utilities.fw_utilities.redirect_local">
 <code class="sig-prename descclassname">fireworks.utilities.fw_utilities.</code><code class="sig-name descname">redirect_local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>temporarily redirect stdout or stderr to fws.error and fws.out</p>
@@ -794,6 +770,57 @@ replaced</p></li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-fireworks.utilities.visualize">
+<span id="fireworks-utilities-visualize-module"></span><h2>fireworks.utilities.visualize module<a class="headerlink" href="#module-fireworks.utilities.visualize" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="fireworks.utilities.visualize.plot_wf">
+<code class="sig-prename descclassname">fireworks.utilities.visualize.</code><code class="sig-name descname">plot_wf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span></em>, <em class="sig-param"><span class="n">depth_factor</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">breadth_factor</span><span class="o">=</span><span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">labels_on</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">numerical_label</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">text_loc_factor</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">save_as</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'rD--'</span></em>, <em class="sig-param"><span class="n">markersize</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">markerfacecolor</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">fontsize</span><span class="o">=</span><span class="default_value">12</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.visualize.plot_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a visual representation of the workflow. Useful for checking whether the firework
+connections are in order before launching the workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wf</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) – workflow object.</p></li>
+<li><p><strong>depth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust this to stretch the plot in y direction.</p></li>
+<li><p><strong>breadth_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust this to stretch the plot in x direction.</p></li>
+<li><p><strong>labels_on</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to label the nodes or not. The default is to label the nodes
+using the firework names.</p></li>
+<li><p><strong>numerical_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – set this to label the nodes using the firework ids.</p></li>
+<li><p><strong>text_loc_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – adjust the label location.</p></li>
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – save the figure to the given name.</p></li>
+<li><p><strong>style</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – marker style.</p></li>
+<li><p><strong>markersize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – marker size.</p></li>
+<li><p><strong>markerfacecolor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – marker face color.</p></li>
+<li><p><strong>fontsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – font size for the node label.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="fireworks.utilities.visualize.wf_to_graph">
+<code class="sig-prename descclassname">fireworks.utilities.visualize.</code><code class="sig-name descname">wf_to_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span><span class="p">:</span> <span class="n"><a class="reference internal" href="fireworks.core.html#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow">fireworks.core.firework.Workflow</a></span></em>, <em class="sig-param"><span class="n">dag_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">wf_show_tasks</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.utilities.visualize.wf_to_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a graph representation of a workflow or firework. Workflows are rendered as the
+control flow of the firework, while Fireworks are rendered as a sequence of Firetasks.</p>
+<p>Copied from <a class="reference external" href="https://git.io/JO6L8">https://git.io/JO6L8</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>workflow</strong> (<em>Workflow | Firework</em>) – Workflow or Firework to be rendered.</p></li>
+<li><p><strong>dag_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Arguments passed to Digraph.attr(). Defaults to {}.</p></li>
+<li><p><strong>wf_show_tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – When rendering a Workflow, whether to show each Firetask in the graph. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Workflow or Firework directed acyclic graph.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Digraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-fireworks.utilities">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.utilities" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -817,6 +844,7 @@ replaced</p></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.fw_serializers">fireworks.utilities.fw_serializers module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.fw_utilities">fireworks.utilities.fw_utilities module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.update_collection">fireworks.utilities.update_collection module</a></li>
+<li><a class="reference internal" href="#module-fireworks.utilities.visualize">fireworks.utilities.visualize module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities">Module contents</a></li>
 </ul>
 </li>
@@ -852,7 +880,7 @@ replaced</p></li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.utilities package</a></li> 
       </ul>
     </div>

@@ -1,6 +1,6 @@
 import os
 
-__version__ = "1.9.9"
+__version__ = "2.0.0"
 FW_INSTALL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # These imports allow a much simpler import of core Fireworks functionality.

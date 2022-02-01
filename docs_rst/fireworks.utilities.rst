@@ -60,6 +60,14 @@ fireworks.utilities.update\_collection module
    :undoc-members:
    :show-inheritance:
 
+fireworks.utilities.visualize module
+------------------------------------
+
+.. automodule:: fireworks.utilities.visualize
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

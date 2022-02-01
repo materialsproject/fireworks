@@ -10,7 +10,7 @@ __date__ = "Jan 9, 2013"
 if __name__ == "__main__":
     setup(
         name="FireWorks",
-        version="1.9.9",
+        version="2.0.0",
         description="FireWorks workflow software",
         long_description=open("README.md").read(),
         url="https://github.com/materialsproject/fireworks",

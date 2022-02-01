@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 1.9.9 documentation</title>
+    <title>The Comprehensive Guide to Writing Firetasks with Python &#8212; FireWorks 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="reference.html" title="Reference material"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">The Comprehensive Guide to Writing Firetasks with Python</a></li> 
       </ul>
     </div>  
@@ -152,13 +152,13 @@
 
        <span class="n">m_sum</span> <span class="o">=</span> <span class="n">smaller</span> <span class="o">+</span> <span class="n">larger</span>
        <span class="k">if</span> <span class="n">m_sum</span> <span class="o">&lt;</span> <span class="n">stop_point</span><span class="p">:</span>
-           <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The next Fibonacci number is: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m_sum</span><span class="p">))</span>
+           <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The next Fibonacci number is: </span><span class="si">{</span><span class="n">m_sum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
            <span class="c1"># create a new Fibonacci Adder to add to the workflow</span>
-           <span class="n">new_fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">FibonacciAdderTask</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;smaller&#39;</span><span class="p">:</span> <span class="n">larger</span><span class="p">,</span> <span class="s1">&#39;larger&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">,</span> <span class="s1">&#39;stop_point&#39;</span><span class="p">:</span> <span class="n">stop_point</span><span class="p">})</span>
-           <span class="k">return</span> <span class="n">FWAction</span><span class="p">(</span><span class="n">stored_data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;next_fibnum&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">},</span> <span class="n">additions</span><span class="o">=</span><span class="n">new_fw</span><span class="p">)</span>
+           <span class="n">new_fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">(</span><span class="n">FibonacciAdderTask</span><span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;smaller&quot;</span><span class="p">:</span> <span class="n">larger</span><span class="p">,</span> <span class="s2">&quot;larger&quot;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">,</span> <span class="s2">&quot;stop_point&quot;</span><span class="p">:</span> <span class="n">stop_point</span><span class="p">})</span>
+           <span class="k">return</span> <span class="n">FWAction</span><span class="p">(</span><span class="n">stored_data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;next_fibnum&quot;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">},</span> <span class="n">additions</span><span class="o">=</span><span class="n">new_fw</span><span class="p">)</span>
 
        <span class="k">else</span><span class="p">:</span>
-           <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;We have now exceeded our limit; (the next Fibonacci number would have been: </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m_sum</span><span class="p">))</span>
+           <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;We have now exceeded our limit; (the next Fibonacci number would have been: </span><span class="si">{</span><span class="n">m_sum</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
            <span class="k">return</span> <span class="n">FWAction</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -312,7 +312,7 @@ complete definition of expected input and output files, a very common use case i
         <li class="right" >
           <a href="reference.html" title="Reference material"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">The Comprehensive Guide to Writing Firetasks with Python</a></li> 
       </ul>
     </div>
