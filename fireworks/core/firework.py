@@ -383,7 +383,7 @@ class Firework(FWSerializable):
         )
 
     def __str__(self):
-        return "Firework object: (id: %i , name: %s)" % (self.fw_id, self.fw_name)
+        return f"Firework object: (id: {int(self.fw_id)} , name: {self.fw_name})"
 
     def __iter__(self) -> Iterable[FiretaskBase]:
         return self.tasks.__iter__()

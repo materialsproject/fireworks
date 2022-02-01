@@ -610,16 +610,16 @@ class LaunchPad(FWSerializable):
             launch_dirs = []
             for i in launch_ids:
                 launch_dirs.append(self.launches.find_one({"launch_id": i}, {"launch_dir": 1})["launch_dir"])
-            print("Remove folders %s" % launch_dirs)
+            print(f"Remove folders {launch_dirs}")
             for d in launch_dirs:
                 shutil.rmtree(d, ignore_errors=True)
 
-        print("Remove fws %s" % fw_ids)
+        print(f"Remove fws {fw_ids}")
         if self.gridfs_fallback is not None:
             for lid in launch_ids:
                 for f in self.gridfs_fallback.find({"metadata.launch_id": lid}):
                     self.gridfs_fallback.delete(f._id)
-        print("Remove launches %s" % launch_ids)
+        print(f"Remove launches {launch_ids}")
         self.launches.delete_many({"launch_id": {"$in": launch_ids}})
         self.offline_runs.delete_many({"launch_id": {"$in": launch_ids}})
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
@@ -676,7 +676,7 @@ class LaunchPad(FWSerializable):
                 launch_ids.extend(fw["launches"])
             fw_data.append(fw)
             if mode != "less":
-                id_name_map[fw["fw_id"]] = "%s--%d" % (fw["name"], fw["fw_id"])
+                id_name_map[fw["fw_id"]] = f"{fw['name']}--{int(fw['fw_id'])}"
 
         if launch_fields:
             launch_info = defaultdict(list)
@@ -700,7 +700,7 @@ class LaunchPad(FWSerializable):
             wf["states"] = {}
             wf["launch_dirs"] = {}
             for fw in wf["fw"]:
-                k = "%s--%d" % (fw["name"], fw["fw_id"])
+                k = f"{fw['name']}--{int(fw['fw_id'])}"
                 wf["states"][k] = fw["state"]
                 wf["launch_dirs"][k] = [l["launch_dir"] for l in fw["launches"]]
             del wf["nodes"]
@@ -715,7 +715,7 @@ class LaunchPad(FWSerializable):
             wf["states"] = {}
             wf["launches"] = {}
             for fw in wf["fw"]:
-                k = "%s--%d" % (fw["name"], fw["fw_id"])
+                k = f"{fw['name']}--{int(fw['fw_id'])}"
                 wf["states"][k] = fw["state"]
                 wf["launches"][k] = fw["launches"]
             del wf["nodes"]

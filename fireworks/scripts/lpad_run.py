@@ -5,6 +5,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 import ast
 import copy
 import datetime
+import importlib
 import json
 import os
 import re
@@ -455,7 +456,7 @@ def get_wfs(args):
         wfs = []
         for i in ids:
             d = lp.get_wf_summary_dict(i, args.display_format)
-            d["name"] += "--%d" % i
+            d["name"] += f"--{int(i)}"
             wfs.append(d)
 
     if args.table:
@@ -887,6 +888,10 @@ def lpad():
     )
 
     parser = ArgumentParser(description=m_description)
+
+    fw_version = importlib.metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+
     parent_parser = ArgumentParser(add_help=False)
     parser.add_argument(
         "-o",

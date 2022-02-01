@@ -13,9 +13,7 @@ __date__ = "8/7/14"
 import os
 import unittest
 
-from fireworks.user_objects.firetasks.templatewriter_task import (
-    TemplateWriterTask,
-)
+from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 
 
 class TemplateWriterTaskTest(unittest.TestCase):

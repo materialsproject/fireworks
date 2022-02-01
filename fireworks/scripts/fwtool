@@ -59,8 +59,8 @@ def do_cleanup(args):
     print("The following will be deleted:")
     for name, fwid, d, files in to_delete:
         print("{}-{} - {} - {}".format(name, fwid, d, ", ".join(files)))
-    ans = input("Confirm? (Y/N)")
-    if ans.startswith("Y"):
+    answer = input("Confirm? (Y/N)")
+    if answer.startswith("Y"):
         for name, fwid, d, files in to_delete:
             try:
                 shutil.rmtree(d)
