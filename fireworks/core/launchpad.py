@@ -1,7 +1,3 @@
-import warnings
-
-from monty.os.path import zpath
-
 """
 The LaunchPad manages the FireWorks database.
 """
@@ -13,11 +9,13 @@ import random
 import shutil
 import time
 import traceback
-from collections import OrderedDict, defaultdict
+import warnings
+from collections import defaultdict
 from itertools import chain
 
 import gridfs
 from bson import ObjectId
+from monty.os.path import zpath
 from monty.serialization import loadfn
 from pymongo import ASCENDING, DESCENDING, MongoClient
 from pymongo.errors import DocumentTooLarge
@@ -699,8 +697,8 @@ class LaunchPad(FWSerializable):
             del wf["nodes"]
 
         if mode == "more" or mode == "all":
-            wf["states"] = OrderedDict()
-            wf["launch_dirs"] = OrderedDict()
+            wf["states"] = {}
+            wf["launch_dirs"] = {}
             for fw in wf["fw"]:
                 k = f"{fw['name']}--{int(fw['fw_id'])}"
                 wf["states"][k] = fw["state"]
@@ -714,8 +712,8 @@ class LaunchPad(FWSerializable):
                 id_name_map[int(k)]: [id_name_map[i] for i in v] for k, v in wf["parent_links"].items()
             }
         if mode == "reservations":
-            wf["states"] = OrderedDict()
-            wf["launches"] = OrderedDict()
+            wf["states"] = {}
+            wf["launches"] = {}
             for fw in wf["fw"]:
                 k = f"{fw['name']}--{int(fw['fw_id'])}"
                 wf["states"][k] = fw["state"]

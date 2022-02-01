@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from datetime import datetime
 from typing import List
 
@@ -107,7 +106,7 @@ class FWReport:
             total_count = 0
             fizzled_cnt = 0
             completed_cnt = 0
-            new_states = OrderedDict()
+            new_states = {}
             for s in sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.__getitem__):
                 count = 0
                 for i in x["states"]:

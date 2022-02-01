@@ -1,9 +1,3 @@
-from typing import Dict, Union
-
-from monty.os.path import zpath
-
-from fireworks.core.fworker import FWorker
-
 """
 A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
 completes the Launch
@@ -21,10 +15,13 @@ import shutil
 import traceback
 from datetime import datetime
 from threading import Event, Thread, current_thread
+from typing import Dict, Union
 
 from monty.io import zopen
+from monty.os.path import zpath
 
 from fireworks.core.firework import Firework, FWAction
+from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
 from fireworks.fw_config import (
     PING_TIME_SECS,

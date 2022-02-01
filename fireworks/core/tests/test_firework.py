@@ -156,13 +156,15 @@ class WorkflowTest(unittest.TestCase):
         wflow.remove_fws(wflow.root_fw_ids)
         self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
 
-    def test_iter_and_len(self):
+    def test_iter_len_index(self):
         fws = [self.fw1, self.fw2, self.fw3]
         wflow = Workflow(fws)
         for idx, fw in enumerate(wflow):
             self.assertEqual(fw, fws[idx])
 
         assert len(wflow) == len(fws)
+
+        assert wflow[0] == self.fw1
 
 
 if __name__ == "__main__":
