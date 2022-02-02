@@ -10,7 +10,6 @@ from fireworks.core.firework import FiretaskBase
 
 __author__ = "Anubhav Jain, David Waroquiers, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Shyue Ping Ong"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "Jan 6, 2014"

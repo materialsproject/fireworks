@@ -5,7 +5,6 @@ from fireworks.queue.queue_adapter import QueueAdapterBase
 
 __author__ = "Shreyas Cholia, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Nov 21, 2013"

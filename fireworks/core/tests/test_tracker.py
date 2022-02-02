@@ -5,7 +5,6 @@ Tracker unitest
 
 __author__ = "Bharat medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Bharat medasani"
 __email__ = "mbkumar@gmail.com"
 __date__ = "8/12/14"

@@ -15,7 +15,6 @@ from fireworks.utilities.fw_serializers import (
 __author__ = "Anubhav Jain"
 __credits__ = "Michael Kocher"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Dec 12, 2012"

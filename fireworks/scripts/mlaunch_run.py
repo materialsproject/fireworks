@@ -19,7 +19,6 @@ else:
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"
-__version__ = "0.1"
 __maintainer__ = "Xiaohui Qu"
 __email__ = "xqu@lbl.gov"
 __date__ = "Aug 19, 2013"
