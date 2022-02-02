@@ -5,7 +5,7 @@ A runnable script for managing a FireWorks database (a command-line interface to
 import ast
 import copy
 import datetime
-import importlib
+import importlib.metadata
 import json
 import os
 import re
@@ -17,7 +17,6 @@ import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
 
 from fireworks import FW_INSTALL_DIR
-from fireworks import __version__ as FW_VERSION
 from fireworks.core.firework import Firework, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
@@ -833,11 +832,6 @@ def track_fws(args):
             print("\n".join(output))
 
 
-def version(args):
-    print("FireWorks version:", FW_VERSION)
-    print("located in:", FW_INSTALL_DIR)
-
-
 def maintain(args):
     lp = get_lp(args)
     lp.maintain(args.infinite, args.maintain_interval)
@@ -890,7 +884,8 @@ def lpad():
     parser = ArgumentParser(description=m_description)
 
     fw_version = importlib.metadata.version("fireworks")
-    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+    v_out = f"%(prog)s v{fw_version} located in {FW_INSTALL_DIR}"
+    parser.add_argument("-v", "--version", action="version", version=v_out)
 
     parent_parser = ArgumentParser(add_help=False)
     parser.add_argument(
@@ -973,9 +968,6 @@ def lpad():
         for opt in [*fw_id_args, *wf_prefixed_fw_id_args, *fw_prefixed_fw_id_args]
         if re.match("^--.*$", opt)
     ]
-
-    version_parser = subparsers.add_parser("version", help="Print the version and location of FireWorks")
-    version_parser.set_defaults(func=version)
 
     init_parser = subparsers.add_parser("init", help="Initialize a Fireworks launchpad YAML file.")
     init_parser.add_argument(

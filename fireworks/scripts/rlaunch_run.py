@@ -2,7 +2,7 @@
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """
 
-import importlib
+import importlib.metadata
 import os
 import signal
 import sys

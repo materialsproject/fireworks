@@ -2,7 +2,7 @@
 A runnable script to launch Job Packing (Multiple) Rockets
 """
 
-import importlib
+import importlib.metadata
 import os
 from argparse import ArgumentParser
 

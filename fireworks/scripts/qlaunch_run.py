@@ -1,7 +1,7 @@
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
-import importlib
+import importlib.metadata
 import os
 import sys
 import time
