@@ -6,6 +6,7 @@ import os
 import sys
 import time
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 try:
     import fabric
@@ -87,7 +88,7 @@ def do_launch(args):
         )
 
 
-def qlaunch():
+def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "This program is used to submit jobs to a queueing system. "
         "Details of the job and queue interaction are handled by the "
@@ -99,7 +100,7 @@ def qlaunch():
         "use qlauncher.py rapidfire -h"
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("qlaunch", description=m_description)
 
     fw_version = importlib.metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
@@ -208,7 +209,7 @@ def qlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.remote_host and not HAS_FABRIC:
         print("Remote options require the Fabric package v2+ to be installed!")
@@ -272,6 +273,8 @@ def qlaunch():
         else:
             break
 
+        return 0
+
 
 if __name__ == "__main__":
-    qlaunch()
+    raise SystemExit(qlaunch())

@@ -12,6 +12,7 @@ import re
 import time
 import traceback
 from argparse import ArgumentParser, ArgumentTypeError
+from typing import Optional, Sequence
 
 import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
@@ -876,12 +877,12 @@ def arg_positive_int(value):
     return ivalue
 
 
-def lpad():
+def lpad(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "A command line interface to FireWorks. For more help on a specific command, type 'lpad <command> -h'."
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("lpad", description=m_description)
 
     fw_version = importlib.metadata.version("fireworks")
     v_out = f"%(prog)s v{fw_version} located in {FW_INSTALL_DIR}"
@@ -1517,7 +1518,7 @@ def lpad():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     args.output = get_output_func(args.output)
 
@@ -1534,6 +1535,8 @@ def lpad():
 
         args.func(args)
 
+    return 0
+
 
 if __name__ == "__main__":
-    lpad()
+    raise SystemExit(lpad())

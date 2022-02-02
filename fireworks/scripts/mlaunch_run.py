@@ -5,6 +5,7 @@ A runnable script to launch Job Packing (Multiple) Rockets
 import importlib.metadata
 import os
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -19,11 +20,11 @@ __email__ = "xqu@lbl.gov"
 __date__ = "Aug 19, 2013"
 
 
-def mlaunch():
+def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     m_description = "This program launches multiple Rockets simultaneously"
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("mlaunch", description=m_description)
 
     fw_version = importlib.metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
@@ -74,7 +75,7 @@ def mlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if (
         not args.launchpad_file
@@ -115,6 +116,8 @@ def mlaunch():
         exclude_current_node=args.exclude_current_node,
     )
 
+    return 0
+
 
 if __name__ == "__main__":
-    mlaunch()
+    raise SystemExit(mlaunch())

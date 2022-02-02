@@ -7,6 +7,7 @@ import os
 import signal
 import sys
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -29,14 +30,14 @@ def handle_interrupt(signum, frame):
     sys.exit(1)
 
 
-def rlaunch():
+def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "This program launches one or more Rockets. A Rocket retrieves a job from the "
         'central database and runs it. The "single-shot" option launches a single Rocket, '
         'whereas the "rapidfire" option loops until all FireWorks are completed.'
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("rlaunch", description=m_description)
 
     fw_version = importlib.metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
@@ -122,7 +123,7 @@ def rlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     signal.signal(signal.SIGINT, handle_interrupt)  # graceful exit on ^C
 
@@ -189,6 +190,8 @@ def rlaunch():
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
 
+    return 0
+
 
 if __name__ == "__main__":
-    rlaunch()
+    raise SystemExit(rlaunch())

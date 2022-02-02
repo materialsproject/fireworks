@@ -82,7 +82,7 @@ def rapidfire_process(
     FWData().Running_IDs = running_ids_dict
     sleep_time = sleep if sleep else RAPIDFIRE_SLEEP_SECS
     l_dir = launchpad.get_logdir() if launchpad else None
-    l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=loglvl)
+    l_logger = get_fw_logger("rocket.launcher", l_dir=l_dir, stream_level=loglvl)
     # Record the start time for timeout update
     process_start_time = time.time()
     rapidfire(
@@ -109,13 +109,18 @@ def rapidfire_process(
 
             # Stand down if there is less than 3% of the time left
             if timeout_left < 0.03 * timeout:
-                log_multi(l_logger, ('Remaining time {}s is less than 3% of the original timeout {}s'
-                                     ' - standing down').format(timeout_left, timeout))
+                log_multi(
+                    l_logger,
+                    (
+                        f"Remaining time {timeout_left}s is less than 3% of the original timeout "
+                        f"{timeout}s - standing down"
+                    ),
+                )
                 break
 
-            log_multi(l_logger, 'Sleeping for {} secs before resubmit sub job'.format(sleep_time))
+            log_multi(l_logger, f"Sleeping for {sleep_time} secs before resubmit sub job")
             time.sleep(sleep_time)
-            log_multi(l_logger, 'Resubmit sub job')
+            log_multi(l_logger, "Resubmit sub job")
             rapidfire(
                 launchpad,
                 fworker=fworker,
