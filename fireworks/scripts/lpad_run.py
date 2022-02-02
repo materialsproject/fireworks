@@ -5,10 +5,10 @@ A runnable script for managing a FireWorks database (a command-line interface to
 import ast
 import copy
 import datetime
-import importlib.metadata
 import json
 import os
 import re
+import sys
 import time
 import traceback
 from argparse import ArgumentParser, ArgumentTypeError
@@ -36,6 +36,11 @@ from fireworks.fw_config import (
 )
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -884,7 +889,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     parser = ArgumentParser("lpad", description=m_description)
 
-    fw_version = importlib.metadata.version("fireworks")
+    fw_version = metadata.version("fireworks")
     v_out = f"%(prog)s v{fw_version} located in {FW_INSTALL_DIR}"
     parser.add_argument("-v", "--version", action="version", version=v_out)
 

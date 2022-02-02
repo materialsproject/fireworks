@@ -2,7 +2,6 @@
 A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
 """
 
-import importlib.metadata
 import os
 import signal
 import sys
@@ -15,6 +14,11 @@ from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"
@@ -39,7 +43,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     parser = ArgumentParser("rlaunch", description=m_description)
 
-    fw_version = importlib.metadata.version("fireworks")
+    fw_version = metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
 
     subparsers = parser.add_subparsers(help="command", dest="command")

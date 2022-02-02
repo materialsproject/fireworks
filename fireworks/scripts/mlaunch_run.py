@@ -2,8 +2,8 @@
 A runnable script to launch Job Packing (Multiple) Rockets
 """
 
-import importlib.metadata
 import os
+import sys
 from argparse import ArgumentParser
 from typing import Optional, Sequence
 
@@ -11,6 +11,11 @@ from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"
@@ -26,7 +31,7 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     parser = ArgumentParser("mlaunch", description=m_description)
 
-    fw_version = importlib.metadata.version("fireworks")
+    fw_version = metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
 
     parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)

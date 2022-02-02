@@ -1,7 +1,6 @@
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
-import importlib.metadata
 import os
 import sys
 import time
@@ -28,6 +27,11 @@ from fireworks.fw_config import (
 )
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 __authors__ = "Anubhav Jain, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -102,7 +106,7 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     parser = ArgumentParser("qlaunch", description=m_description)
 
-    fw_version = importlib.metadata.version("fireworks")
+    fw_version = metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
 
     subparsers = parser.add_subparsers(help="command", dest="command")
