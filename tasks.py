@@ -1,14 +1,19 @@
 # Copyright (c) Pymatgen Development Team.
 # Distributed under the terms of the MIT License.
 
-import importlib.metadata
 import json
 import os
+import sys
 import webbrowser
 
 import requests
 from invoke import task
 from monty.os import cd
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 """
 Deployment file to facilitate releases.
@@ -17,7 +22,7 @@ Deployment file to facilitate releases.
 __author__ = "Shyue Ping Ong, Anubhav Jain"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "Sep 1, 2014"
-fw_version = f"v{importlib.metadata.version('fireworks')}"
+fw_version = f"v{metadata.version('fireworks')}"
 
 
 @task
