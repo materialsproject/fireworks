@@ -37,6 +37,8 @@ from fireworks.fw_config import (
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
+from ._helpers import _validate_config_file_paths
+
 if sys.version_info < (3, 8):
     import importlib_metadata as metadata
 else:
@@ -110,12 +112,6 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 
 def get_lp(args):
     try:
-        if not args.launchpad_file:
-            if os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
-                args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
-            else:
-                args.launchpad_file = LAUNCHPAD_LOC
-
         if args.launchpad_file:
             return LaunchPad.from_file(args.launchpad_file)
         else:
@@ -1523,6 +1519,12 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
         pass
 
     args = parser.parse_args(argv)
+
+    cfg_files_to_check = [
+        ("launchpad", "-l", False, LAUNCHPAD_LOC),
+        ("fworker", "-w", False, FWORKER_LOC),
+    ]
+    _validate_config_file_paths(args, cfg_files_to_check)
 
     args.output = get_output_func(args.output)
 
