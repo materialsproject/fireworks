@@ -17,3 +17,15 @@ def test_mlaunch_report_version(capsys, arg):
 
     assert stdout.startswith("mlaunch v")
     assert stderr == ""
+
+
+def test_mlaunch_config_file_flags():
+    """Test mlaunch CLI throws errors on bad/missing config file flags."""
+
+    num_jobs = "1"
+
+    with pytest.raises(FileNotFoundError, match="launchpad_file '' does not exist!"):
+        mlaunch([num_jobs, "-l", ""])
+
+    with pytest.raises(FileNotFoundError, match="fworker_file 'missing_file' does not exist!"):
+        mlaunch([num_jobs, "-w", "missing_file"])

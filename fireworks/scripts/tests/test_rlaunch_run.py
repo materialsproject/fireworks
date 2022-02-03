@@ -17,3 +17,13 @@ def test_rlaunch_report_version(capsys, arg):
 
     assert stdout.startswith("rlaunch v")
     assert stderr == ""
+
+
+def test_rlaunch_config_file_flags():
+    """Test rlaunch CLI throws errors on bad/missing config file flags."""
+
+    with pytest.raises(FileNotFoundError, match="launchpad_file '' does not exist!"):
+        rlaunch(["-l", ""])
+
+    with pytest.raises(FileNotFoundError, match="fworker_file 'missing_file' does not exist!"):
+        rlaunch(["-w", "missing_file"])
