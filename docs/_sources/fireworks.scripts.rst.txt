@@ -1,6 +1,14 @@
 fireworks.scripts package
 =========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   fireworks.scripts.tests
+
 Submodules
 ----------
 

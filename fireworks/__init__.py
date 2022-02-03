@@ -1,5 +1,7 @@
 import os
 
+__version__ = "2.0.2"  # this is needed to build RST docs correctly
+
 # These imports allow a much simpler import of core Fireworks functionality.
 # E.g., you can now do "from fireworks import Firework", instead of from
 # "fireworks.core.firework import Firework".
