@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module aids in serializing and deserializing objects.
 
@@ -30,36 +26,39 @@ Some advantages:
 
 """
 
-import traceback
-import pkgutil
+import abc
+import datetime
+import importlib
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
-import importlib
-import datetime
-import abc
-import sys
-import six
+import pkgutil
+import traceback
+
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
-from fireworks.fw_config import FW_NAME_UPDATES, YAML_STYLE, USER_PACKAGES, DECODE_MONTY, ENCODE_MONTY
-from fireworks.fw_config import JSON_SCHEMA_VALIDATE, JSON_SCHEMA_VALIDATE_LIST
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2012, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Dec 13, 2012'
+from fireworks.fw_config import (
+    DECODE_MONTY,
+    ENCODE_MONTY,
+    FW_NAME_UPDATES,
+    JSON_SCHEMA_VALIDATE,
+    JSON_SCHEMA_VALIDATE_LIST,
+    USER_PACKAGES,
+    YAML_STYLE,
+)
+
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2012, The Materials Project"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Dec 13, 2012"
 
 # TODO: consider *somehow* switching FireWorks to monty serialization. e.g., numpy serialization is better handled.
 
 SAVED_FW_MODULES = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
-if sys.version_info > (3, 0, 0):
-    ENCODING_PARAMS = {"encoding": "utf-8"}
-else:
-    ENCODING_PARAMS = {}
+ENCODING_PARAMS = {"encoding": "utf-8"}
 
 try:
     import numpy as np
@@ -76,15 +75,14 @@ def recursive_dict(obj, preserve_unicode=True):
     if obj is None:
         return None
 
-    if ENCODE_MONTY and hasattr(obj, 'as_dict'):  # compatible with new monty JSONEncoder (MontyEncoder)
+    if ENCODE_MONTY and hasattr(obj, "as_dict"):  # compatible with new monty JSONEncoder (MontyEncoder)
         return recursive_dict(obj.as_dict(), preserve_unicode)
 
-    if hasattr(obj, 'to_dict'):
+    if hasattr(obj, "to_dict"):
         return recursive_dict(obj.to_dict(), preserve_unicode)
 
     if isinstance(obj, dict):
-        return {recursive_dict(k, preserve_unicode): recursive_dict(v, preserve_unicode)
-                for k, v in obj.items()}
+        return {recursive_dict(k, preserve_unicode): recursive_dict(v, preserve_unicode) for k, v in obj.items()}
 
     if isinstance(obj, (list, tuple)):
         return [recursive_dict(v, preserve_unicode) for v in obj]
@@ -95,7 +93,7 @@ def recursive_dict(obj, preserve_unicode=True):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if preserve_unicode and isinstance(obj, six.text_type) and obj != obj.encode('ascii', 'ignore'):
+    if preserve_unicode and isinstance(obj, str) and obj != obj.encode("ascii", "ignore"):
         return obj
 
     if NUMPY_INSTALLED and isinstance(obj, np.ndarray):
@@ -109,14 +107,14 @@ def _recursive_load(obj):
     if obj is None:
         return None
 
-    if hasattr(obj, '_fw_name') or isinstance(obj, MSONable):
+    if hasattr(obj, "_fw_name") or isinstance(obj, MSONable):
         return obj
 
     if isinstance(obj, dict):
-        if '_fw_name' in obj:
+        if "_fw_name" in obj:
             return load_object(obj)
 
-        if DECODE_MONTY and '@module' in obj and '@class' in obj:  # MontyDecoder compatibility
+        if DECODE_MONTY and "@module" in obj and "@class" in obj:  # MontyDecoder compatibility
             return json.loads(json.dumps(obj), cls=MontyDecoder)
 
         return {k: _recursive_load(v) for k, v in obj.items()}
@@ -124,13 +122,13 @@ def _recursive_load(obj):
     if isinstance(obj, (list, tuple)):
         return [_recursive_load(v) for v in obj]
 
-    if isinstance(obj, six.string_types):
+    if isinstance(obj, str):
         try:
             # convert String to datetime if really datetime
             return reconstitute_dates(obj)
         except Exception:
             # convert unicode to ASCII if not really unicode
-            if obj == obj.encode('ascii', 'ignore'):
+            if obj == obj.encode("ascii", "ignore"):
                 return str(obj)
 
     return obj
@@ -173,14 +171,13 @@ def serialize_fw(func):
 
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
-        m_dict['_fw_name'] = self.fw_name
+        m_dict["_fw_name"] = self.fw_name
         return m_dict
 
     return _decorator
 
 
-@six.add_metaclass(abc.ABCMeta)
-class FWSerializable(object):
+class FWSerializable(metaclass=abc.ABCMeta):
     """
     To create a serializable object within FireWorks, you should subclass this
     class and implement the to_dict() and from_dict() methods.
@@ -207,7 +204,7 @@ class FWSerializable(object):
 
     @abc.abstractmethod
     def to_dict(self):
-        raise NotImplementedError('FWSerializable object did not implement to_dict()!')
+        raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
     def to_db_dict(self):
         return self.to_dict()
@@ -221,29 +218,28 @@ class FWSerializable(object):
     @classmethod
     @abc.abstractmethod
     def from_dict(cls, m_dict):
-        raise NotImplementedError('FWSerializable object did not implement from_dict()!')
+        raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
     def __repr__(self):
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
-    def to_format(self, f_format='json', **kwargs):
+    def to_format(self, f_format="json", **kwargs):
         """
         returns a String representation in the given format
 
         Args:
             f_format (str): the format to output to (default json)
         """
-        if f_format == 'json':
+        if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
-        elif f_format == 'yaml':
+        elif f_format == "yaml":
             # start with the JSON format, and convert to YAML
-            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE,
-                                  allow_unicode=True)
+            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
         else:
-            raise ValueError('Unsupported format {}'.format(f_format))
+            raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
-    def from_format(cls, f_str, f_format='json'):
+    def from_format(cls, f_str, f_format="json"):
         """
         convert from a String representation to its Object.
 
@@ -254,12 +250,12 @@ class FWSerializable(object):
         Returns:
             FWSerializable
         """
-        if f_format == 'json':
+        if f_format == "json":
             dct = json.loads(f_str)
-        elif f_format == 'yaml':
+        elif f_format == "yaml":
             dct = yaml.safe_load(f_str)
         else:
-            raise ValueError('Unsupported format {}'.format(f_format))
+            raise ValueError(f"Unsupported format {f_format}")
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
@@ -273,8 +269,8 @@ class FWSerializable(object):
             f_format (str): serialization format, default checks the filename extension
         """
         if f_format is None:
-            f_format = filename.split('.')[-1]
-        with open(filename, 'w', **ENCODING_PARAMS) as f:
+            f_format = filename.split(".")[-1]
+        with open(filename, "w", **ENCODING_PARAMS) as f:
             f.write(self.to_format(f_format=f_format, **kwargs))
 
     @classmethod
@@ -290,8 +286,8 @@ class FWSerializable(object):
             FWSerializable
         """
         if f_format is None:
-            f_format = filename.split('.')[-1]
-        with open(filename, 'r', **ENCODING_PARAMS) as f:
+            f_format = filename.split(".")[-1]
+        with open(filename, "r", **ENCODING_PARAMS) as f:
             return cls.from_format(f.read(), f_format=f_format)
 
     def __getstate__(self):
@@ -329,12 +325,12 @@ def load_object(obj_dict):
     """
 
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
-    fw_name = FW_NAME_UPDATES.get(obj_dict['_fw_name'], obj_dict['_fw_name'])
-    obj_dict['_fw_name'] = fw_name
+    fw_name = FW_NAME_UPDATES.get(obj_dict["_fw_name"], obj_dict["_fw_name"])
+    obj_dict["_fw_name"] = fw_name
 
     # check for explicit serialization, e.g. {{fireworks.tasks.MyTask}} - based on pymatgen method
-    if fw_name.startswith('{{') and fw_name.endswith('}}'):
-        modname, classname = fw_name.strip('{} ').rsplit(".", 1)
+    if fw_name.startswith("{{") and fw_name.endswith("}}"):
+        modname, classname = fw_name.strip("{} ").rsplit(".", 1)
         mod = __import__(modname, globals(), locals(), [classname], 0)
         if hasattr(mod, classname):
             cls_ = getattr(mod, classname)
@@ -353,8 +349,7 @@ def load_object(obj_dict):
     found_objects = []  # used to make sure we don't find multiple hits
     for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for _, mod_name, is_pkg in pkgutil.walk_packages(
-                root_module.__path__, package + '.'):
+        for _, mod_name, is_pkg in pkgutil.walk_packages(root_module.__path__, package + "."):
             try:
                 m_module = importlib.import_module(mod_name)
                 m_object = _search_module_for_obj(m_module, obj_dict)
@@ -362,19 +357,17 @@ def load_object(obj_dict):
                     found_objects.append((m_object, mod_name))
             except ImportError as ex:
                 import warnings
-                warnings.warn(
-                    "%s in %s cannot be loaded because of %s. Skipping.."
-                    % (m_object, mod_name, str(ex)))
+
+                warnings.warn(f"{m_object} in {mod_name} cannot be loaded because of {str(ex)}. Skipping..")
                 traceback.print_exc(ex)
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
         return found_objects[0][0]
     elif len(found_objects) > 0:
-        raise ValueError(
-            'load_object() found multiple objects with cls._fw_name {} -- {}'.format(fw_name, found_objects))
+        raise ValueError(f"load_object() found multiple objects with cls._fw_name {fw_name} -- {found_objects}")
 
-    raise ValueError('load_object() could not find a class with cls._fw_name {}'.format(fw_name))
+    raise ValueError(f"load_object() could not find a class with cls._fw_name {fw_name}")
 
 
 def load_object_from_file(filename, f_format=None):
@@ -388,17 +381,17 @@ def load_object_from_file(filename, f_format=None):
             filename extension)
     """
     if f_format is None:
-        f_format = filename.split('.')[-1]
+        f_format = filename.split(".")[-1]
 
-    with open(filename, 'r', **ENCODING_PARAMS) as f:
-        if f_format == 'json':
+    with open(filename, "r", **ENCODING_PARAMS) as f:
+        if f_format == "json":
             dct = json.loads(f.read())
-        elif f_format == 'yaml':
+        elif f_format == "yaml":
             dct = yaml.safe_load(f)
         else:
-            raise ValueError('Unknown file format {} cannot be loaded!'.format(f_format))
+            raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
 
-    classname = FW_NAME_UPDATES.get(dct['_fw_name'], dct['_fw_name'])
+    classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
     if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
         fireworks_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
@@ -408,12 +401,15 @@ def _search_module_for_obj(m_module, obj_dict):
     """
     internal method that looks in a module for a class with a given _fw_name
     """
-    obj_name = obj_dict['_fw_name']
+    obj_name = obj_dict["_fw_name"]
 
     for _, obj in inspect.getmembers(m_module):
         # check if the member is a Class matching our description
-        if inspect.isclass(obj) and obj.__module__ == m_module.__name__ and \
-                getattr(obj, '_fw_name', get_default_serialization(obj)) == obj_name:
+        if (
+            inspect.isclass(obj)
+            and obj.__module__ == m_module.__name__
+            and getattr(obj, "_fw_name", get_default_serialization(obj)) == obj_name
+        ):
             return obj.from_dict(obj_dict)
 
 
@@ -427,7 +423,7 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, (list, tuple)):
         return [reconstitute_dates(v) for v in obj_dict]
 
-    if isinstance(obj_dict, six.string_types):
+    if isinstance(obj_dict, str):
         try:
             return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
         except Exception:
@@ -439,10 +435,12 @@ def reconstitute_dates(obj_dict):
 
 
 def get_default_serialization(cls):
-    root_mod = cls.__module__.split('.')[0]
-    if root_mod == '__main__':
-        raise ValueError("Cannot get default serialization; try "
-                         "instantiating your object from a different module "
-                         "from which it is defined rather than defining your "
-                         "object in the __main__ (running) module.")
-    return root_mod + '::' + cls.__name__  # e.g. fireworks.ABC
+    root_mod = cls.__module__.split(".")[0]
+    if root_mod == "__main__":
+        raise ValueError(
+            "Cannot get default serialization; try "
+            "instantiating your object from a different module "
+            "from which it is defined rather than defining your "
+            "object in the __main__ (running) module."
+        )
+    return root_mod + "::" + cls.__name__  # e.g. fireworks.ABC

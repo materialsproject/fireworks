@@ -77,5 +77,3 @@ cy.on("click", 'node', function(evt) {
 
 
 });
-
-

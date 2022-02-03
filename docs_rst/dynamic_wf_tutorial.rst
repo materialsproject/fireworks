@@ -73,9 +73,9 @@ The first thing we will examine is a workflow that passes job information - name
         job_info_array = fw_spec['_job_info']
         prev_job_info = job_info_array[-1]
 
-        print('The name of the previous job was: {}'.format(prev_job_info['name']))
-        print('The id of the previous job was: {}'.format(prev_job_info['fw_id']))
-        print('The location of the previous job was: {}'.format(prev_job_info['launch_dir']))
+        print(f"The name of the previous job was: {prev_job_info['name']}")
+        print(f"The id of the previous job was: {prev_job_info['fw_id']}")
+        print(f"The location of the previous job was: {prev_job_info['launch_dir']}")
 
 10. It should be clear from examination how this code is working. First, it is inspecting the ``_job_info`` key (remember, even though we did not set the value of this key it was created and populated automatically because the previous job had set the ``_pass_job_info`` key to True in the ``_fw_spec``). Next, we are taking the last item in this array since there could be information about multiple previous jobs in this key. Finally, we are printing out the information about the job. We could similarly use the information about ``launch_dir`` to copy files or perform other tasks.
 

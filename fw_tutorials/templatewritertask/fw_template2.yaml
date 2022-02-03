@@ -6,4 +6,3 @@ spec:
       opt1: 10.0
       opt2: stable method
     output_file: inputs.txt
-

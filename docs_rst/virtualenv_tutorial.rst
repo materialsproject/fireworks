@@ -35,7 +35,3 @@ Setting up virtualenv
 Your bash prompt should change to show what environment you're in after you've activated the virtualenv. You can now continue with the :doc:`FireWorks installation instructions </installation>` in your virtual environment.
 
 .. note:: If you ever want to deactivate and go back to normal, just type ``deactivate``.
-
-
-
-

@@ -1,10 +1,9 @@
-from __future__ import division
-
 from collections import defaultdict
+
 from pymongo import DESCENDING
 from tabulate import tabulate
 
-__author__ = 'Anubhav Jain <ajain@lbl.gov>'
+__author__ = "Anubhav Jain <ajain@lbl.gov>"
 
 separator_str = ":%%:"
 
@@ -23,11 +22,11 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
     """
     if isinstance(curr_doc, dict):
         if curr_recurs > max_recurs:
-            return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
+            return [f"{separator_str}<TRUNCATED_OBJECT>"]
         my_list = []
         for k in curr_doc:
             for val in flatten_to_keys(curr_doc[k], curr_recurs + 1, max_recurs):
-                dot_char = '' if curr_recurs == 1 else '.'
+                dot_char = "" if curr_recurs == 1 else "."
                 my_list.append(dot_char + k + val)
 
         return my_list
@@ -36,7 +35,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
         my_list = []
         for k in curr_doc:
             if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
-                return ["{}<TRUNCATED_OBJECT>".format(separator_str)]
+                return [f"{separator_str}<TRUNCATED_OBJECT>"]
             my_list.append(separator_str + str(k))
         return my_list
 
@@ -57,14 +56,14 @@ def collect_stats(list_keys, filter_truncated=True):
     """
     d = defaultdict(int)
     for x in list_keys:
-        if not filter_truncated or '<TRUNCATED_OBJECT>' not in x:
+        if not filter_truncated or "<TRUNCATED_OBJECT>" not in x:
             d[x] += 1
     return d
 
 
 def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5):
     diff_dict = defaultdict(float)
-    all_keys = statsdict1.keys()
+    all_keys = list(statsdict1.keys())
     all_keys.extend(statsdict2.keys())
     all_keys = set(all_keys)
     for k in all_keys:
@@ -75,7 +74,7 @@ def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5)
             diff_dict[k] -= (statsdict2[k] / numsamples2) * 100
 
         if abs(diff_dict[k]) < threshold:
-            del (diff_dict[k])
+            del diff_dict[k]
 
     return diff_dict
 
@@ -128,12 +127,16 @@ class Introspector:
         for doc in self.db[coll].find(q, {state_key: 1}, sort=sort_key).limit(limit):
             nsamples_fizzled += 1
             if state_key == "spec._tasks":
-                for t in doc['spec']['_tasks']:
-                    fizzled_keys.append('_fw_name{}{}'.format(separator_str, t['_fw_name']))
+                for t in doc["spec"]["_tasks"]:
+                    fizzled_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
             elif state_key == "action.stored_data._exception._stacktrace":
-                stacktrace = doc.get("action", {}).get("stored_data", {}).get("_exception", {}).get("_stacktrace",
-                                                                                                    "<NO_STACKTRACE>")
-                fizzled_keys.append('_stacktrace{}{}'.format(separator_str, stacktrace))
+                stacktrace = (
+                    doc.get("action", {})
+                    .get("stored_data", {})
+                    .get("_exception", {})
+                    .get("_stacktrace", "<NO_STACKTRACE>")
+                )
+                fizzled_keys.append(f"_stacktrace{separator_str}{stacktrace}")
             else:
                 fizzled_keys.extend(flatten_to_keys(doc[state_key]))
 
@@ -147,20 +150,26 @@ class Introspector:
             for doc in self.db[coll].find({"state": "COMPLETED"}, {state_key: 1}, sort=sort_key).limit(limit):
                 nsamples_completed += 1
                 if state_key == "spec._tasks":
-                    for t in doc['spec']['_tasks']:
-                        completed_keys.append('_fw_name{}{}'.format(separator_str, t['_fw_name']))
+                    for t in doc["spec"]["_tasks"]:
+                        completed_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
                 else:
                     completed_keys.extend(flatten_to_keys(doc[state_key]))
 
         completed_d = collect_stats(completed_keys)
 
-        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled,
-                               threshold=threshold)
+        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled, threshold=threshold)
 
         table = []
         for w in sorted(diff_d, key=diff_d.get, reverse=True):
-            table.append([w.split(separator_str)[0], w.split(separator_str)[1], completed_d.get(w, 0),
-                          fizzled_d.get(w, 0), diff_d[w]])
+            table.append(
+                [
+                    w.split(separator_str)[0],
+                    w.split(separator_str)[1],
+                    completed_d.get(w, 0),
+                    fizzled_d.get(w, 0),
+                    diff_d[w],
+                ]
+            )
 
         return table
 
@@ -176,15 +185,15 @@ class Introspector:
         elif coll.lower() in ["launches"]:
             header_txt = "launches.actions.stored_data._exception._stacktrace"
 
-        header_txt = "Introspection report for {}".format(header_txt)
-        print('=' * len(header_txt))
+        header_txt = f"Introspection report for {header_txt}"
+        print("=" * len(header_txt))
         print(header_txt)
-        print('=' * len(header_txt))
+        print("=" * len(header_txt))
 
         if coll.lower() != "launches":
-            print(tabulate(table, headers=['key', 'value', '#C', '#F', '%C - %F']))
+            print(tabulate(table, headers=["key", "value", "#C", "#F", "%C - %F"]))
         else:
             for row in table:
-                print('----{} Failures have the following stack trace--------------'.format(row[3]))
+                print(f"----{row[3]} Failures have the following stack trace--------------")
                 print(row[1])
-                print('')
+                print("")

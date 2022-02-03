@@ -145,4 +145,3 @@ Python example
 ==============
 
 A runnable Python example illustrating the use of templates was given in the :doc:`Firetask tutorial <firetask_tutorial>`.
-

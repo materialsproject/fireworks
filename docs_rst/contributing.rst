@@ -37,7 +37,7 @@ Documentation, coding style, and tests
 
 We ask for reasonably clear documentation of modules, classes, methods, and tricky code sections (hopefully not too many of the last item!) Where possible, code within a method or class should be easy to understand without the need for additional documentation. In some cases, we may request a tutorial to clarify usage of your code to the community. In terms of programming style, some guidelines are given in `PEP 8 <http://www.python.org/dev/peps/pep-0008/>`_, but we mainly ask that you try to follow the style of the FireWorks core modules. Depending on the complexity of the contribution, tests might need to be included along with your code.
 
-However, when starting you should not be as concerned with these issues as with writing clear, succint, and functional code. If we feel that issues such as documentation or style are preventing merging of your code with the main repo, a core developer may request your permission to re-document and/or re-style your code, and add his/her name to either the ``__credits__`` or ``__authors__`` field of your code header (your name will still be retained in the ``__authors__`` field).
+However, when starting you should not be as concerned with these issues as with writing clear, succinct, and functional code. If we feel that issues such as documentation or style are preventing merging of your code with the main repo, a core developer may request your permission to re-document and/or re-style your code, and add his/her name to either the ``__credits__`` or ``__authors__`` field of your code header (your name will still be retained in the ``__authors__`` field).
 
 OS Compatibility
 ----------------
@@ -61,7 +61,3 @@ Two great tutorials for how to do this are:
 
 
 If you encounter trouble, please let us know. We look forward to your merge request!
-
-
-
-

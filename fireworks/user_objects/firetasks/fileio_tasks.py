@@ -1,23 +1,18 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 import os
 import shutil
-import traceback
-from os.path import expandvars, expanduser, abspath
 import time
+import traceback
+from os.path import abspath, expanduser, expandvars
 
 from monty.shutil import compress_dir, decompress_dir
 
 from fireworks.core.firework import FiretaskBase
 
-__author__ = 'Anubhav Jain, David Waroquiers, Shyue Ping Ong'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Shyue Ping Ong'
-__email__ = 'ongsp@ucsd.edu'
-__date__ = 'Jan 6, 2014'
+__author__ = "Anubhav Jain, David Waroquiers, Shyue Ping Ong"
+__copyright__ = "Copyright 2013, The Materials Project"
+__maintainer__ = "Shyue Ping Ong"
+__email__ = "ongsp@ucsd.edu"
+__date__ = "Jan 6, 2014"
 
 
 class FileWriteTask(FiretaskBase):
@@ -31,7 +26,8 @@ class FileWriteTask(FiretaskBase):
     Optional params:
         - dest: (str) Shared path for files
     """
-    _fw_name = 'FileWriteTask'
+
+    _fw_name = "FileWriteTask"
     required_params = ["files_to_write"]
     optional_params = ["dest"]
 
@@ -53,13 +49,14 @@ class FileDeleteTask(FiretaskBase):
         - dest: (str) Shared path for files
         - ignore_errors (bool): Whether to ignore errors. Defaults to True.
     """
-    _fw_name = 'FileDeleteTask'
+
+    _fw_name = "FileDeleteTask"
     required_params = ["files_to_delete"]
     optional_params = ["dest", "ignore_errors"]
 
     def run_task(self, fw_spec):
         pth = self.get("dest", os.getcwd())
-        ignore_errors = self.get('ignore_errors', True)
+        ignore_errors = self.get("ignore_errors", True)
         for f in self["files_to_delete"]:
             try:
                 os.remove(os.path.join(pth, f))
@@ -86,7 +83,8 @@ class FileTransferTask(FiretaskBase):
         - retry_delay: (int) number of seconds to wait between retries; defaults to `10`
         - ignore_errors (bool): Optional. Whether to ignore errors. Defaults to False.
     """
-    _fw_name = 'FileTransferTask'
+
+    _fw_name = "FileTransferTask"
     required_params = ["mode", "files"]
     optional_params = ["dest", "server", "user", "key_filename", "max_retry", "retry_delay", "ignore_errors"]
 
@@ -101,30 +99,31 @@ class FileTransferTask(FiretaskBase):
     }
 
     def run_task(self, fw_spec):
-        shell_interpret = self.get('shell_interpret', True)
-        ignore_errors = self.get('ignore_errors', False)
-        max_retry = self.get('max_retry', 0)
-        retry_delay = self.get('retry_delay', 10)
-        mode = self.get('mode', 'move')
+        shell_interpret = self.get("shell_interpret", True)
+        ignore_errors = self.get("ignore_errors", False)
+        max_retry = self.get("max_retry", 0)
+        retry_delay = self.get("retry_delay", 10)
+        mode = self.get("mode", "move")
 
-        if mode == 'rtransfer':
+        if mode == "rtransfer":
             # remote transfers
             # Create SFTP connection
             import paramiko
+
             ssh = paramiko.SSHClient()
             ssh.load_host_keys(expanduser(os.path.join("~", ".ssh", "known_hosts")))
-            ssh.connect(self['server'], username=self.get('user'), key_filename=self.get('key_filename'))
+            ssh.connect(self["server"], username=self.get("user"), key_filename=self.get("key_filename"))
             sftp = ssh.open_sftp()
 
         for f in self["files"]:
             try:
-                if 'src' in f:
-                    src = os.path.abspath(expanduser(expandvars(f['src']))) if shell_interpret else f['src']
+                if "src" in f:
+                    src = os.path.abspath(expanduser(expandvars(f["src"]))) if shell_interpret else f["src"]
                 else:
                     src = abspath(expanduser(expandvars(f))) if shell_interpret else f
 
-                if mode == 'rtransfer':
-                    dest = self['dest']
+                if mode == "rtransfer":
+                    dest = self["dest"]
                     if os.path.isdir(src):
                         if not self._rexists(sftp, dest):
                             sftp.mkdir(dest)
@@ -139,10 +138,10 @@ class FileTransferTask(FiretaskBase):
                         sftp.put(src, os.path.join(dest, os.path.basename(src)))
 
                 else:
-                    if 'dest' in f:
-                        dest = abspath(expanduser(expandvars(f['dest']))) if shell_interpret else f['dest']
+                    if "dest" in f:
+                        dest = abspath(expanduser(expandvars(f["dest"]))) if shell_interpret else f["dest"]
                     else:
-                        dest = abspath(expanduser(expandvars(self['dest']))) if shell_interpret else self['dest']
+                        dest = abspath(expanduser(expandvars(self["dest"]))) if shell_interpret else self["dest"]
                     FileTransferTask.fn_list[mode](src, dest)
 
             except Exception:
@@ -151,15 +150,15 @@ class FileTransferTask(FiretaskBase):
 
                     # we want to avoid hammering either the local or remote machine
                     time.sleep(retry_delay)
-                    self['max_retry'] -= 1
+                    self["max_retry"] -= 1
                     self.run_task(fw_spec)
 
                 elif not ignore_errors:
                     raise ValueError(
-                        "There was an error performing operation {} from {} "
-                        "to {}".format(mode, self["files"], self["dest"]))
+                        f"There was an error performing operation {mode} from {self['files']} to {self['dest']}"
+                    )
 
-        if mode == 'rtransfer':
+        if mode == "rtransfer":
             sftp.close()
             ssh.close()
 
@@ -170,7 +169,7 @@ class FileTransferTask(FiretaskBase):
         """
         try:
             sftp.stat(path)
-        except IOError as e:
+        except OSError as e:
             if e[0] == 2:
                 return False
             raise
@@ -188,19 +187,18 @@ class CompressDirTask(FiretaskBase):
         ignore_errors (bool): Optional. Whether to ignore errors. Defaults to False.
     """
 
-    _fw_name = 'CompressDirTask'
+    _fw_name = "CompressDirTask"
     optional_params = ["compression", "dest", "ignore_errors"]
 
     def run_task(self, fw_spec):
-        ignore_errors = self.get('ignore_errors', False)
+        ignore_errors = self.get("ignore_errors", False)
         dest = self.get("dest", os.getcwd())
         compression = self.get("compression", "gz")
         try:
             compress_dir(dest, compression=compression)
         except Exception:
             if not ignore_errors:
-                raise ValueError("There was an error performing compression {} in {}.".format(
-                    compression, dest))
+                raise ValueError(f"There was an error performing compression {compression} in {dest}.")
 
 
 class DecompressDirTask(FiretaskBase):
@@ -213,18 +211,17 @@ class DecompressDirTask(FiretaskBase):
         ignore_errors (bool): Optional. Whether to ignore errors. Defaults to False.
     """
 
-    _fw_name = 'DecompressDirTask'
+    _fw_name = "DecompressDirTask"
     optional_params = ["dest", "ignore_errors"]
 
     def run_task(self, fw_spec):
-        ignore_errors = self.get('ignore_errors', False)
+        ignore_errors = self.get("ignore_errors", False)
         dest = self.get("dest", os.getcwd())
         try:
             decompress_dir(dest)
         except Exception:
             if not ignore_errors:
-                raise ValueError(
-                    "There was an error performing decompression in %s." % dest)
+                raise ValueError(f"There was an error performing decompression in {dest}.")
 
 
 class ArchiveDirTask(FiretaskBase):
@@ -237,7 +234,7 @@ class ArchiveDirTask(FiretaskBase):
         format (str): Optional. one of "zip", "tar", "bztar" or "gztar". Defaults to gztar.
     """
 
-    _fw_name = 'ArchiveDirTask'
+    _fw_name = "ArchiveDirTask"
     required_params = ["base_name"]
     optional_params = ["format"]
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fireworks.core package &#8212; FireWorks 1.9.7 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.core package</a></li> 
       </ul>
     </div>  
@@ -62,6 +62,20 @@
 </div>
 <div class="section" id="module-fireworks.core.firework">
 <span id="fireworks-core-firework-module"></span><h2>fireworks.core.firework module<a class="headerlink" href="#module-fireworks.core.firework" title="Permalink to this headline">¶</a></h2>
+<p>This module contains some of the most central FireWorks classes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).</p></li>
+<li><p>A Firework defines a workflow step and contains one or more Firetasks along with its Launches.</p></li>
+<li><p>A Launch describes the run of a Firework on a computing resource.</p></li>
+<li><p>A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).</p></li>
+<li><dl class="simple">
+<dt>A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after</dt><dd><p>a job completes.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
 <dl class="py class">
 <dt id="fireworks.core.firework.FWAction">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FWAction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stored_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exit</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">update_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mod_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">additions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">detours</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">defuse_children</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">defuse_workflow</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">propagate</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FWAction" title="Permalink to this definition">¶</a></dt>
@@ -75,17 +89,17 @@ as return commands that alter the workflow.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>stored_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – data to store from the run. Does not affect the operation of FireWorks.</p></li>
-<li><p><strong>exit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if set to True, any remaining Firetasks within the same Firework are skipped.</p></li>
-<li><p><strong>update_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – specifies how to update the child FW’s spec</p></li>
-<li><p><strong>mod_spec</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) – update the child FW’s spec using the DictMod language (more flexible
+<li><p><strong>stored_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – data to store from the run. Does not affect the operation of FireWorks.</p></li>
+<li><p><strong>exit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if set to True, any remaining Firetasks within the same Firework are skipped.</p></li>
+<li><p><strong>update_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – specifies how to update the child FW’s spec</p></li>
+<li><p><strong>mod_spec</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – update the child FW’s spec using the DictMod language (more flexible
 than update_spec)</p></li>
 <li><p><strong>additions</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a><em>]</em>) – a list of WFs/FWs to add as children</p></li>
 <li><p><strong>detours</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a><em>]</em>) – a list of WFs/FWs to add as children (they will inherit the
 current FW’s children)</p></li>
-<li><p><strong>defuse_children</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – defuse all the original children of this Firework</p></li>
-<li><p><strong>defuse_workflow</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – defuse all incomplete steps of this workflow</p></li>
-<li><p><strong>propagate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – apply any update_spec and mod_spec modifications
+<li><p><strong>defuse_children</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – defuse all the original children of this Firework</p></li>
+<li><p><strong>defuse_workflow</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – defuse all incomplete steps of this workflow</p></li>
+<li><p><strong>propagate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – apply any update_spec and mod_spec modifications
 not only to direct children, but to all dependent FireWorks
 down to the Workflow’s leaves.</p></li>
 </ul>
@@ -125,7 +139,7 @@ down to the Workflow’s leaves.</p></li>
 <dl class="py class">
 <dt id="fireworks.core.firework.FiretaskBase">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">FiretaskBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.FiretaskBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>FiretaskBase is used like an abstract class that defines a computing task
 (Firetask). All Firetasks should inherit from FiretaskBase.</p>
 <p>You can set parameters of a Firetask like you’d use a dict.</p>
@@ -158,7 +172,7 @@ Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
 In addition, this spec contains a special “_fw_env” key that
 contains the env settings of the FWorker calling this method.
 This provides for abstracting out certain commands or
@@ -199,12 +213,12 @@ these multiple resources.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tasks</strong> (<em>Firetask</em><em> or </em><em>[</em><em>Firetask</em><em>]</em>) – a list of Firetasks to run in sequence.</p></li>
-<li><p><strong>spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – specification of the job to run. Used by the Firetask.</p></li>
+<li><p><strong>spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – specification of the job to run. Used by the Firetask.</p></li>
 <li><p><strong>launches</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Launch" title="fireworks.core.firework.Launch"><em>Launch</em></a><em>]</em>) – a list of Launch objects of this Firework.</p></li>
 <li><p><strong>archived_launches</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Launch" title="fireworks.core.firework.Launch"><em>Launch</em></a><em>]</em>) – a list of archived Launch objects of this Firework.</p></li>
-<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the state of the FW (e.g. WAITING, RUNNING, COMPLETED, ARCHIVED)</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the state of the FW (e.g. WAITING, RUNNING, COMPLETED, ARCHIVED)</p></li>
 <li><p><strong>created_on</strong> (<em>datetime</em>) – time of creation</p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – an identification number for this Firework.</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – an identification number for this Firework.</p></li>
 <li><p><strong>parents</strong> (<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a><em> or </em><em>[</em><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a><em>]</em>) – list of parent FWs this FW depends on.</p></li>
 <li><p><strong>updated_on</strong> (<em>datetime</em>) – last time the STATE was updated.</p></li>
 </ul>
@@ -240,7 +254,7 @@ str: The current state of the Firework</p>
 <dl class="py class">
 <dt id="fireworks.core.firework.Launch">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">fworker</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trackers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">action</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">state_history</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Launch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Launch encapsulates data about a specific run of a Firework on a computing resource.</p>
 <dl class="py method">
 <dt id="fireworks.core.firework.Launch.__init__">
@@ -248,16 +262,16 @@ str: The current state of the Firework</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the state of the Launch (e.g. RUNNING, COMPLETED)</p></li>
-<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the directory where the Launch takes place</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the state of the Launch (e.g. RUNNING, COMPLETED)</p></li>
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the directory where the Launch takes place</p></li>
 <li><p><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – The FireWorker running the Launch</p></li>
-<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the hostname where the launch took place (set automatically if None)</p></li>
-<li><p><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the IP address where the launch took place (set automatically if None)</p></li>
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the hostname where the launch took place (set automatically if None)</p></li>
+<li><p><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the IP address where the launch took place (set automatically if None)</p></li>
 <li><p><strong>trackers</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Tracker" title="fireworks.core.firework.Tracker"><em>Tracker</em></a><em>]</em>) – File Trackers for this Launch</p></li>
 <li><p><strong>action</strong> (<a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction"><em>FWAction</em></a>) – the output of the Launch</p></li>
-<li><p><strong>state_history</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>]</em>) – a history of all states of the Launch and when they occurred</p></li>
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch_id set by the LaunchPad</p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – id of the Firework this Launch is running</p></li>
+<li><p><strong>state_history</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – a history of all states of the Launch and when they occurred</p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch_id set by the LaunchPad</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – id of the Firework this Launch is running</p></li>
 </ul>
 </dd>
 </dl>
@@ -295,7 +309,7 @@ int: the number of seconds that the Launch ran for.</p>
 <dd><p>Adds the job_id to the reservation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the id of the reservation (e.g., queue reservation)</p>
+<dd class="field-odd"><p><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the id of the reservation (e.g., queue reservation)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -355,7 +369,7 @@ is still alive.</p>
 <dl class="py class">
 <dt id="fireworks.core.firework.Tracker">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Tracker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">nlines</span><span class="o">=</span><span class="default_value">25</span></em>, <em class="sig-param"><span class="n">content</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">allow_zipped</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Tracker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Tracker monitors a file and returns the last N lines for updating the Launch object.</p>
 <dl class="py attribute">
 <dt id="fireworks.core.firework.Tracker.MAX_TRACKER_LINES">
@@ -368,10 +382,10 @@ is still alive.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
-<li><p><strong>nlines</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of lines to track</p></li>
-<li><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – tracked content</p></li>
-<li><p><strong>allow_zipped</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if set, will look for zipped file.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>nlines</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – number of lines to track</p></li>
+<li><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – tracked content</p></li>
+<li><p><strong>allow_zipped</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if set, will look for zipped file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -393,13 +407,13 @@ is still alive.</p>
 <dd><p>Reads the monitored file and returns back the last N lines</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory where job was launched in case of relative filename</p>
+<dd class="field-odd"><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – directory where job was launched in case of relative filename</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the content(last N lines)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -408,13 +422,13 @@ is still alive.</p>
 
 <dl class="py class">
 <dt id="fireworks.core.firework.Workflow">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fireworks</span></em>, <em class="sig-param"><span class="n">links_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_states</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.firework.</code><code class="sig-name descname">Workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fireworks</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">fireworks.core.firework.Firework</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">links_dict</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">, </span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.10)">datetime.datetime</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.10)">datetime.datetime</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_states</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>A Workflow connects a group of FireWorks in an execution order.</p>
 <dl class="py class">
 <dt id="fireworks.core.firework.Workflow.Links">
 <em class="property">class </em><code class="sig-name descname">Links</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.Links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>An inner class for storing the DAG links between FireWorks</p>
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.Links.__init__">
@@ -467,17 +481,17 @@ update parent_links</p>
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fireworks</span></em>, <em class="sig-param"><span class="n">links_dict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_states</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fireworks</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">fireworks.core.firework.Firework</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">links_dict</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">, </span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_on</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.10)">datetime.datetime</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_on</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.10)">datetime.datetime</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fw_states</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.core.firework.Workflow.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fireworks</strong> (<em>[</em><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a><em>]</em>) – all FireWorks in this workflow.</p></li>
-<li><p><strong>links_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – links between the FWs as (parent_id):[(child_id1, child_id2)]</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – name of workflow.</p></li>
-<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – metadata for this Workflow.</p></li>
+<li><p><strong>links_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – links between the FWs as (parent_id):[(child_id1, child_id2)]</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – name of workflow.</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – metadata for this Workflow.</p></li>
 <li><p><strong>created_on</strong> (<em>datetime</em>) – time of creation</p></li>
 <li><p><strong>updated_on</strong> (<em>datetime</em>) – time of update</p></li>
-<li><p><strong>fw_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – leave this alone unless you are purposefully creating a Lazy-style WF</p></li>
+<li><p><strong>fw_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – leave this alone unless you are purposefully creating a Lazy-style WF</p></li>
 </ul>
 </dd>
 </dl>
@@ -492,50 +506,50 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>new_wf</strong> (<a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) – New Workflow to add.</p></li>
-<li><p><strong>fw_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – ids of the parent Fireworks on which to add the Workflow.</p></li>
-<li><p><strong>detour</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – add children of the current Firework to the Workflow’s leaves.</p></li>
-<li><p><strong>pull_spec_mods</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – pull spec mods of COMPLETED parents, refreshes the WF states.</p></li>
+<li><p><strong>fw_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – ids of the parent Fireworks on which to add the Workflow.</p></li>
+<li><p><strong>detour</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – add children of the current Firework to the Workflow’s leaves.</p></li>
+<li><p><strong>pull_spec_mods</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – pull spec mods of COMPLETED parents, refreshes the WF states.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of Firework ids that were updated or new</p>
+<dd class="field-even"><p>list of Firework ids that were updated or new.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.apply_action">
-<code class="sig-name descname">apply_action</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.apply_action" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apply_action</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction">fireworks.core.firework.FWAction</a></span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a><span class="p">]</span><a class="headerlink" href="#fireworks.core.firework.Workflow.apply_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a FWAction on a Firework in the Workflow.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>action</strong> (<a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction"><em>FWAction</em></a>) – action to apply</p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – id of Firework on which to apply the action</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – id of Firework on which to apply the action</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of Firework ids that were updated or new</p>
+<dd class="field-even"><p>list of Firework ids that were updated or new.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.from_Firework">
-<em class="property">classmethod </em><code class="sig-name descname">from_Firework</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_Firework" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_Firework</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">fireworks.core.firework.Firework</a></span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow">fireworks.core.firework.Workflow</a><a class="headerlink" href="#fireworks.core.firework.Workflow.from_Firework" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return Workflow from the given Firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fw</strong> (<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework"><em>Firework</em></a>) – </p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – New workflow’s name. if not provided, the firework name is used</p></li>
-<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – New workflow’s metadata.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – New workflow’s name. if not provided, the firework name is used</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – New workflow’s metadata.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -546,11 +560,11 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.from_dict">
-<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_dict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m_dict</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow">fireworks.core.firework.Workflow</a><a class="headerlink" href="#fireworks.core.firework.Workflow.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return Workflow from its dict representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>m_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – either a Workflow dict or a Firework dict</p>
+<dd class="field-odd"><p><strong>m_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – either a Workflow dict or a Firework dict</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Workflow</p>
@@ -560,7 +574,7 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.from_wflow">
-<em class="property">classmethod </em><code class="sig-name descname">from_wflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wflow</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.from_wflow" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_wflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wflow</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow">fireworks.core.firework.Workflow</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow">fireworks.core.firework.Workflow</a><a class="headerlink" href="#fireworks.core.firework.Workflow.from_wflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a fresh Workflow from an existing one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -584,10 +598,10 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 <dd><p>Gets leaf FireWorks of this workflow (those with no children).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Firework ids of leaf FWs</p>
+<dd class="field-odd"><p>Firework ids of leaf FWs.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -599,15 +613,15 @@ Note: detours must have children that have STATE_RANK that is WAITING or below</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – id of the Firework on which to perform the refresh</p></li>
-<li><p><strong>updated_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – id of the Firework on which to perform the refresh</p></li>
+<li><p><strong>updated_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of Firework ids that were updated</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)">set</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -620,7 +634,7 @@ parents of the removed fireworks become the parents of the children fireworks (o
 children dont have any other parents).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – list of fw ids to remove.</p>
+<dd class="field-odd"><p><strong>fw_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of fw ids to remove.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,26 +646,26 @@ children dont have any other parents).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – id of firework to tbe rerun</p></li>
-<li><p><strong>updated_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)"><em>set</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>)</em>) – set of fireworks id to rerun</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – id of firework to rerun</p></li>
+<li><p><strong>updated_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>)</em>) – set of fireworks id to rerun</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of Firework ids that were updated</p>
+<dd class="field-even"><p>list of Firework ids that were updated.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset_ids</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.reset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset_ids</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.core.firework.Workflow.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the states of all Fireworks in this workflow to ‘WAITING’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>reset_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, give each Firework a new id.</p>
+<dd class="field-odd"><p><strong>reset_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, give each Firework a new id.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -662,10 +676,10 @@ children dont have any other parents).</p>
 <dd><p>Gets root FireWorks of this workflow (those with no parents).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Firework ids of root FWs</p>
+<dd class="field-odd"><p>Firework ids of root FWs.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -679,12 +693,12 @@ state (str): state of workflow</p>
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.to_db_dict">
-<code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_db_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_db_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_db_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="fireworks.core.firework.Workflow.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span><a class="headerlink" href="#fireworks.core.firework.Workflow.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -697,6 +711,7 @@ state (str): state of workflow</p>
 </div>
 <div class="section" id="module-fireworks.core.fworker">
 <span id="fireworks-core-fworker-module"></span><h2>fireworks.core.fworker module<a class="headerlink" href="#module-fireworks.core.fworker" title="Permalink to this headline">¶</a></h2>
+<p>This module contains FireWorker, which encapsulates information about a computing resource</p>
 <dl class="py class">
 <dt id="fireworks.core.fworker.FWorker">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.fworker.</code><code class="sig-name descname">FWorker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'Automatically generated Worker'</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.fworker.FWorker" title="Permalink to this definition">¶</a></dt>
@@ -707,12 +722,12 @@ state (str): state of workflow</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the resource, should be unique</p></li>
-<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – a String describing a specific category of
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the resource, should be unique</p></li>
+<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – a String describing a specific category of
 job to pull, does not need to be unique. If the FWorker should
 pull jobs of multiple categories, use a list of str.</p></li>
-<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – a dict query that restricts the type of Firework this resource will run</p></li>
-<li><p><strong>env</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – a dict of special environment variables for the resource.
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – a dict query that restricts the type of Firework this resource will run</p></li>
+<li><p><strong>env</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – a dict of special environment variables for the resource.
 This env is passed to running Firetasks as a _fw_env in the
 fw_spec, which provides for abstraction of resource-specific
 commands or settings.  See <a class="reference internal" href="#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.core.firework.FiretaskBase</span></code></a>
@@ -749,39 +764,37 @@ for information on how to use this env variable in Firetasks.</p></li>
 </div>
 <div class="section" id="module-fireworks.core.launchpad">
 <span id="fireworks-core-launchpad-module"></span><h2>fireworks.core.launchpad module<a class="headerlink" href="#module-fireworks.core.launchpad" title="Permalink to this headline">¶</a></h2>
+<p>The LaunchPad manages the FireWorks database.</p>
 <dl class="py class">
 <dt id="fireworks.core.launchpad.LaunchPad">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LaunchPad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ssl_ca_certs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_certfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_keyfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_pem_passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LaunchPad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">fireworks.utilities.fw_serializers.FWSerializable</span></code></a></p>
 <p>The LaunchPad manages the FireWorks database.</p>
 <dl class="py method">
 <dt id="fireworks.core.launchpad.LaunchPad.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ssl_ca_certs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_certfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_keyfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssl_pem_passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – hostname. If uri_mode is True, a MongoDB connection string URI
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – hostname. If uri_mode is True, a MongoDB connection string URI
 (<a class="reference external" href="https://docs.mongodb.com/manual/reference/connection-string/">https://docs.mongodb.com/manual/reference/connection-string/</a>) can be used instead of the remaining
 options below.</p></li>
-<li><p><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – port number</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – database name</p></li>
-<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
-<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
-<li><p><strong>logdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the log directory</p></li>
-<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the logger stream level</p></li>
-<li><p><strong>user_indices</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – list of ‘fireworks’ collection indexes to be built</p></li>
-<li><p><strong>wf_user_indices</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a>) – list of ‘workflows’ collection indexes to be built</p></li>
-<li><p><strong>ssl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – use TLS/SSL for mongodb connection</p></li>
-<li><p><strong>ssl_ca_certs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the CA certificate to be used for mongodb connection</p></li>
-<li><p><strong>ssl_certfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the client certificate to be used for mongodb connection</p></li>
-<li><p><strong>ssl_keyfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the client private key</p></li>
-<li><p><strong>ssl_pem_passphrase</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – passphrase for the client private key</p></li>
-<li><p><strong>authsource</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – authSource parameter for MongoDB authentication; defaults to “name” (i.e., db name) if
+<li><p><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – port number</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – database name</p></li>
+<li><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>logdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the log directory</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the logger stream level</p></li>
+<li><p><strong>user_indices</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of ‘fireworks’ collection indexes to be built</p></li>
+<li><p><strong>wf_user_indices</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of ‘workflows’ collection indexes to be built</p></li>
+<li><p><strong>authsource</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – authSource parameter for MongoDB authentication; defaults to “name” (i.e., db name) if
 not set</p></li>
-<li><p><strong>uri_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
+<li><p><strong>uri_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
 the host).</p></li>
-<li><p><strong>mongoclient_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A list of any other custom keyword arguments to be
-passed into the MongoClient connection (non-URI mode only)</p></li>
+<li><p><strong>mongoclient_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A list of any other custom keyword arguments to be
+passed into the MongoClient connection (non-URI mode only). Use these kwargs to specify SSL/TLS
+arguments. Note these arguments are different depending on the major pymongo version used; see
+pymongo documentation for more details.</p></li>
 </ul>
 </dd>
 </dl>
@@ -794,9 +807,9 @@ passed into the MongoClient connection (non-URI mode only)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch id</p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch id</p></li>
 <li><p><strong>fw_id</strong> (<em>id</em>) – firework id</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -814,7 +827,7 @@ passed into the MongoClient connection (non-URI mode only)</p></li>
 <dd class="field-even"><p>mapping between old and new Firework ids</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -827,10 +840,10 @@ passed into the MongoClient connection (non-URI mode only)</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>new_wf</strong> (<a class="reference internal" href="#fireworks.core.firework.Workflow" title="fireworks.core.firework.Workflow"><em>Workflow</em></a>) – The new workflow to append</p></li>
-<li><p><strong>fw_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – The parent fw_ids at which to append the workflow</p></li>
-<li><p><strong>detour</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether to connect the new Workflow in a “detour” style, i.e., move</p></li>
+<li><p><strong>fw_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – The parent fw_ids at which to append the workflow</p></li>
+<li><p><strong>detour</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to connect the new Workflow in a “detour” style, i.e., move</p></li>
 <li><p><strong>children of the parent fw_ids to the new_wf</strong> (<em>original</em>) – </p></li>
-<li><p><strong>pull_spec_mods</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether the new Workflow should pull the FWActions of the parent
+<li><p><strong>pull_spec_mods</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the new Workflow should pull the FWActions of the parent
 fw_ids</p></li>
 </ul>
 </dd>
@@ -843,7 +856,7 @@ fw_ids</p></li>
 <dd><p>Archive the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -888,8 +901,8 @@ more efficient than adding them one at a time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p></li>
-<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the new launch directory.</p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p></li>
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the new launch directory.</p></li>
 </ul>
 </dd>
 </dl>
@@ -904,18 +917,18 @@ return it to the caller. The caller is responsible for running the Firework.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – A FWorker instance</p></li>
-<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the dir the FW will be run in (for creating a Launch object)</p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Firework id</p></li>
-<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the host making the request (for creating a Launch object)</p></li>
-<li><p><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the ip making the request (for creating a Launch object)</p></li>
-<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – RESERVED or RUNNING, the fetched firework’s state will be set to this value.</p></li>
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the dir the FW will be run in (for creating a Launch object)</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Firework id</p></li>
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the host making the request (for creating a Launch object)</p></li>
+<li><p><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the ip making the request (for creating a Launch object)</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – RESERVED or RUNNING, the fetched firework’s state will be set to this value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>firework and the new launch id</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">Firework</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">Firework</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -927,16 +940,16 @@ return it to the caller. The caller is responsible for running the Firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p></li>
 <li><p><strong>action</strong> (<a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction"><em>FWAction</em></a>) – the FWAction of what to do next</p></li>
-<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – COMPLETED or FIZZLED</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – COMPLETED or FIZZLED</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>updated launch</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -948,8 +961,8 @@ return it to the caller. The caller is responsible for running the Firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p></li>
-<li><p><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, duplicate fireworks(ones with the same launch) are
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p></li>
+<li><p><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, duplicate fireworks(ones with the same launch) are
 marked for rerun and then defused.</p></li>
 </ul>
 </dd>
@@ -963,8 +976,8 @@ marked for rerun and then defused.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p></li>
-<li><p><strong>defuse_all_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p></li>
+<li><p><strong>defuse_all_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -981,8 +994,8 @@ with theit fireworks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – Firework ids</p></li>
-<li><p><strong>delete_launch_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True all the launch directories associated with
+<li><p><strong>fw_ids</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – Firework ids</p></li>
+<li><p><strong>delete_launch_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True all the launch directories associated with
 the WF will be deleted as well, if possible.</p></li>
 </ul>
 </dd>
@@ -996,8 +1009,8 @@ the WF will be deleted as well, if possible.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Firework id</p></li>
-<li><p><strong>delete_launch_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True all the launch directories associated with
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Firework id</p></li>
+<li><p><strong>delete_launch_dirs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True all the launch directories associated with
 the WF will be deleted as well, if possible.</p></li>
 </ul>
 </dd>
@@ -1014,13 +1027,13 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>expiration_secs</strong> (<em>seconds</em>) – expiration time in seconds</p></li>
-<li><p><strong>fizzle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, mark the lost runs fizzed</p></li>
-<li><p><strong>rerun</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, mark the lost runs fizzed and rerun</p></li>
+<li><p><strong>fizzle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, mark the lost runs fizzed</p></li>
+<li><p><strong>rerun</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, mark the lost runs fizzed and rerun</p></li>
 <li><p><strong>max_runtime</strong> (<em>seconds</em>) – maximum run time</p></li>
 <li><p><strong>min_runtime</strong> (<em>seconds</em>) – minimum run time</p></li>
-<li><p><strong>refresh</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, refresh the workflow with inconsistent fireworks.</p></li>
-<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – restrict search to FWs matching this query</p></li>
-<li><p><strong>launch_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – restrict search to launches matching this query (e.g. host restriction)</p></li>
+<li><p><strong>refresh</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, refresh the workflow with inconsistent fireworks.</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – restrict search to FWs matching this query</p></li>
+<li><p><strong>launch_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – restrict search to launches matching this query (e.g. host restriction)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1031,7 +1044,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>([<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>], [<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>], [<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>])</p>
+<dd class="field-odd"><p>([<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>], [<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>], [<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>])</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1044,14 +1057,14 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>expiration_secs</strong> (<em>seconds</em>) – time limit</p></li>
-<li><p><strong>rerun</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True, the expired reservations are cancelled and the fireworks rerun.</p></li>
+<li><p><strong>rerun</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, the expired reservations are cancelled and the fireworks rerun.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of expired launch ids</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1063,8 +1076,8 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launchid_or_fwid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch od or firework id</p></li>
-<li><p><strong>launch_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if True then launch id is given.</p></li>
+<li><p><strong>launchid_or_fwid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch od or firework id</p></li>
+<li><p><strong>launch_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True then launch id is given.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1084,7 +1097,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd class="field-odd"><p>True if database has any ready or waiting Fireworks.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1095,7 +1108,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd><p>Given a Firework id, give back a Firework object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Firework id.</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Firework id.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Firework object</p>
@@ -1109,7 +1122,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd><p>Given firework id, return firework dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>dict</p>
@@ -1124,18 +1137,18 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – representing a Mongo query</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – representing a Mongo query</p></li>
 <li><p><strong>[</strong> (<em>sort</em>) – sort argument in Pymongo format</p></li>
-<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – limit the results</p></li>
-<li><p><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – only return the count rather than explicit ids</p></li>
-<li><p><strong>launches_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – query the launches collection instead of fireworks</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – limit the results</p></li>
+<li><p><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – only return the count rather than explicit ids</p></li>
+<li><p><strong>launches_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – query the launches collection instead of fireworks</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of firework ids matching the query</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1146,13 +1159,13 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd><p>Given the reservation id, return the list of firework ids.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p>
+<dd class="field-odd"><p><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of firework ids.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1164,19 +1177,19 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wf_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – representing a Mongo query on workflows</p></li>
-<li><p><strong>fw_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – representing a Mongo query on Fireworks</p></li>
+<li><p><strong>wf_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – representing a Mongo query on workflows</p></li>
+<li><p><strong>fw_query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – representing a Mongo query on Fireworks</p></li>
 <li><p><strong>[</strong> (<em>sort</em>) – sort argument in Pymongo format</p></li>
-<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – limit the results</p></li>
-<li><p><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – only return the count rather than explicit ids</p></li>
-<li><p><strong>launches_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – query the launches collection instead of fireworks</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – limit the results</p></li>
+<li><p><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – only return the count rather than explicit ids</p></li>
+<li><p><strong>launches_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – query the launches collection instead of fireworks</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of firework ids matching the query</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1187,7 +1200,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd><p>Given a Launch id, return details of the Launch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch id</p>
+<dd class="field-odd"><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch id</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Launch object</p>
@@ -1216,7 +1229,7 @@ time limit or running firework whose launch has been marked fizzed or completed.
 <dd><p>Checkout the next Firework id</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – optionally ask for many ids, otherwise defaults to 1
+<dd class="field-odd"><p><strong>quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – optionally ask for many ids, otherwise defaults to 1
 this then returns the <em>first</em> fw_id in that range</p>
 </dd>
 </dl>
@@ -1259,7 +1272,7 @@ this then returns the <em>first</em> fw_id in that range</p>
 <dd class="field-even"><p>list tracker dicts</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>]</p>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1270,7 +1283,7 @@ this then returns the <em>first</em> fw_id in that range</p>
 <dd><p>Given a Firework id, give back the Workflow containing that Firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A Workflow object</p>
@@ -1284,7 +1297,7 @@ this then returns the <em>first</em> fw_id in that range</p>
 <dd><p>Given a FireWork id, give back the Workflow containing that FireWork.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A Workflow object</p>
@@ -1299,17 +1312,17 @@ this then returns the <em>first</em> fw_id in that range</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – representing a Mongo query</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – representing a Mongo query</p></li>
 <li><p><strong>[</strong> (<em>sort</em>) – sort argument in Pymongo format</p></li>
-<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – limit the results</p></li>
-<li><p><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – only return the count rather than explicit ids</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – limit the results</p></li>
+<li><p><strong>count_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – only return the count rather than explicit ids</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of firework ids</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1322,15 +1335,15 @@ needed information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – A Firework id.</p></li>
-<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Choose between “more”, “less” and “all” in terms of quantity of information.</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – A Firework id.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Choose between “more”, “less” and “all” in terms of quantity of information.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>information about Workflow.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1342,8 +1355,8 @@ needed information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
-<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -1356,7 +1369,7 @@ needed information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>infinite</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p></li>
+<li><p><strong>infinite</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – </p></li>
 <li><p><strong>maintain_interval</strong> (<em>seconds</em>) – sleep time</p></li>
 </ul>
 </dd>
@@ -1369,13 +1382,13 @@ needed information.</p>
 <dd><p>Mark the launch corresponding to the given id as FIZZLED.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch id</p>
+<dd class="field-odd"><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch id</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>updated launch</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1386,7 +1399,7 @@ needed information.</p>
 <dd><p>Given the firework id, pauses the firework and refresh the workflow</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1397,7 +1410,7 @@ needed information.</p>
 <dd><p>Pause the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1410,7 +1423,7 @@ Launch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p></li>
 <li><p><strong>ptime</strong> (<em>datetime</em>) – </p></li>
 </ul>
 </dd>
@@ -1424,9 +1437,9 @@ Launch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch id</p></li>
-<li><p><strong>ignore_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p></li>
-<li><p><strong>print_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – </p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch id</p></li>
+<li><p><strong>ignore_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – </p></li>
+<li><p><strong>print_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1441,7 +1454,7 @@ Launch.</p>
 <dd><p>Given the firework id, re-ignite(set state=WAITING) the defused firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1452,7 +1465,7 @@ Launch.</p>
 <dd><p>Reignite the workflow containing the given firework id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1464,9 +1477,9 @@ Launch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p></li>
-<li><p><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – flag for whether duplicates should be rerun</p></li>
-<li><p><strong>recover_launch</strong> (<em>'last'</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch_id for last recovery, if set to
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p></li>
+<li><p><strong>rerun_duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – flag for whether duplicates should be rerun</p></li>
+<li><p><strong>recover_launch</strong> (<em>'last'</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch_id for last recovery, if set to
 ‘last’ (default), recovery will find the last available launch.
 If it is an int, will recover that specific launch</p></li>
 <li><p><strong>recover_mode</strong> (<em>'prev_dir'</em><em> or </em><em>'cp'</em>) – flag to indicate whether to copy
@@ -1477,7 +1490,7 @@ or run recovery fw in previous directory</p></li>
 <dd class="field-even"><p>list of firework ids that were rerun</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+<dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1490,17 +1503,17 @@ or run recovery fw in previous directory</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </p></li>
-<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – path to the launch directory.</p></li>
-<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – hostname</p></li>
-<li><p><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – ip address</p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – fw_id to be reserved, if desired</p></li>
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – path to the launch directory.</p></li>
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – hostname</p></li>
+<li><p><strong>ip</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – ip address</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – fw_id to be reserved, if desired</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the checked out firework and the new launch id</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">Firework</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">Firework</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1513,11 +1526,11 @@ safeguard against accidentally erasing an existing database, a password must be 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A String representing today’s date, e.g. ‘2012-12-31’</p></li>
-<li><p><strong>require_password</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether a password is required to reset the DB. Setting to
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A String representing today’s date, e.g. ‘2012-12-31’</p></li>
+<li><p><strong>require_password</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether a password is required to reset the DB. Setting to
 false is dangerous because running code unintentionally could clear your DB - use
 max_reset_wo_password to minimize risk.</p></li>
-<li><p><strong>max_reset_wo_password</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – A failsafe; when require_password is set to False,
+<li><p><strong>max_reset_wo_password</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – A failsafe; when require_password is set to False,
 FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </ul>
 </dd>
@@ -1536,7 +1549,7 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 <dd><p>Given the firework id, resume (set state=WAITING) the paused firework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p>
+<dd class="field-odd"><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1550,7 +1563,7 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 <dd class="field-odd"><p>True if the database contains any FireWorks that are ready to run.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1562,7 +1575,7 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p></li>
 <li><p><strong>priority</strong> – </p></li>
 </ul>
 </dd>
@@ -1576,8 +1589,8 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p></li>
-<li><p><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – </p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p></li>
+<li><p><strong>reservation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -1603,11 +1616,11 @@ FWS will not clear DBs that contain more workflows than this parameter</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>[</strong><strong>int</strong><strong>]</strong> (<em>fw_ids</em>) – All fw_ids to modify.</p></li>
-<li><p><strong>spec_document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – The spec document. Note that only modifications to
+<li><p><strong>spec_document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The spec document. Note that only modifications to
 the spec key are allowed. So if you supply {“_tasks.1.parameter”: “hello”},
 you are effectively modifying spec._tasks.1.parameter in the actual fireworks
 collection.</p></li>
-<li><p><strong>mongo</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – spec_document uses mongo syntax to directly update the spec</p></li>
+<li><p><strong>mongo</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – spec_document uses mongo syntax to directly update the spec</p></li>
 </ul>
 </dd>
 </dl>
@@ -1618,7 +1631,7 @@ collection.</p></li>
 <dl class="py class">
 <dt id="fireworks.core.launchpad.LazyFirework">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LazyFirework</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">fw_coll</span></em>, <em class="sig-param"><span class="n">launch_coll</span></em>, <em class="sig-param"><span class="n">fallback_fs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LazyFirework" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A LazyFirework only has the fw_id, and retrieves other data just-in-time.
 This representation can speed up Workflow loading as only “important” FWs need to be
 fully loaded.</p>
@@ -1628,7 +1641,7 @@ fully loaded.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – firework id</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – firework id</p></li>
 <li><p><strong>fw_coll</strong> (<em>pymongo.collection</em>) – fireworks collection</p></li>
 <li><p><strong>launch_coll</strong> (<em>pymongo.collection</em>) – launches collection</p></li>
 </ul>
@@ -1716,7 +1729,7 @@ fully loaded.</p>
 <dl class="py exception">
 <dt id="fireworks.core.launchpad.LockedWorkflowError">
 <em class="property">exception </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LockedWorkflowError</code><a class="headerlink" href="#fireworks.core.launchpad.LockedWorkflowError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Error raised if the context manager WFLock can’t acquire the lock on the WF within the selected
 time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (WFLOCK_EXPIRATION_KILL)</p>
 </dd></dl>
@@ -1724,9 +1737,9 @@ time interval (WFLOCK_EXPIRATION_SECS), if the killing of the lock is disabled (
 <dl class="py class">
 <dt id="fireworks.core.launchpad.WFLock">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">WFLock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lp</span></em>, <em class="sig-param"><span class="n">fw_id</span></em>, <em class="sig-param"><span class="n">expire_secs</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">kill</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.WFLock" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Lock a Workflow, i.e. for performing update operations
-Raises a LockedWorkflowError if the lock couldn’t be acquired withing expire_secs and kill==False.
+Raises a LockedWorkflowError if the lock couldn’t be acquired within expire_secs and kill==False.
 Calling functions are responsible for handling the error in order to avoid database inconsistencies.</p>
 <dl class="py method">
 <dt id="fireworks.core.launchpad.WFLock.__init__">
@@ -1735,9 +1748,9 @@ Calling functions are responsible for handling the error in order to avoid datab
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lp</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Firework id</p></li>
-<li><p><strong>expire_secs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – max waiting time in seconds.</p></li>
-<li><p><strong>kill</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – force lock acquisition or not</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Firework id</p></li>
+<li><p><strong>expire_secs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – max waiting time in seconds.</p></li>
+<li><p><strong>kill</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – force lock acquisition or not</p></li>
 </ul>
 </dd>
 </dl>
@@ -1756,7 +1769,7 @@ correct action dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>action_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – the dictionary contained in the “action” key of a launch
+<li><p><strong>action_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – the dictionary contained in the “action” key of a launch
 document.</p></li>
 <li><p><strong>fallback_fs</strong> (<em>GridFS</em>) – the GridFS with the actions exceeding the 16MB limit.</p></li>
 </ul>
@@ -1765,7 +1778,7 @@ document.</p></li>
 <dd class="field-even"><p>the dictionary of the action.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1785,14 +1798,16 @@ document.</p></li>
 </div>
 <div class="section" id="module-fireworks.core.rocket">
 <span id="fireworks-core-rocket-module"></span><h2>fireworks.core.rocket module<a class="headerlink" href="#module-fireworks.core.rocket" title="Permalink to this headline">¶</a></h2>
+<p>A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
+completes the Launch</p>
 <dl class="py class">
 <dt id="fireworks.core.rocket.Rocket">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">Rocket</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">Rocket</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">fworker</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker">fireworks.core.fworker.FWorker</a></span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The Rocket fetches a workflow step from the FireWorks database and executes it.</p>
 <dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">fworker</span></em>, <em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">fworker</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker">fireworks.core.fworker.FWorker</a></span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.core.rocket.Rocket.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Args:
 launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.</p>
 <blockquote>
@@ -1804,32 +1819,37 @@ fw_id (int): id of a specific Firework to run (quit if it cannot be found)</p>
 
 <dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.decorate_fwaction">
-<code class="sig-name descname">decorate_fwaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fwaction</span></em>, <em class="sig-param"><span class="n">my_spec</span></em>, <em class="sig-param"><span class="n">m_fw</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.decorate_fwaction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">decorate_fwaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fwaction</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction">fireworks.core.firework.FWAction</a></span></em>, <em class="sig-param"><span class="n">my_spec</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">m_fw</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.firework.Firework" title="fireworks.core.firework.Firework">fireworks.core.firework.Firework</a></span></em>, <em class="sig-param"><span class="n">launch_dir</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#fireworks.core.firework.FWAction" title="fireworks.core.firework.FWAction">fireworks.core.firework.FWAction</a><a class="headerlink" href="#fireworks.core.rocket.Rocket.decorate_fwaction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pdb_on_exception</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pdb_on_exception</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the rocket (check out a job from the database and execute it)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – whether to invoke the debugger on
-a caught exception.  Default False.</p>
+<dd class="field-odd"><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether to invoke the debugger on a caught exception. Default to False.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the rocket ran successfully, False is if it failed or no job in the DB was ready to run.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="fireworks.core.rocket.Rocket.update_checkpoint">
-<em class="property">static </em><code class="sig-name descname">update_checkpoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_dir</span></em>, <em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">checkpoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">update_checkpoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">launch_dir</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em>, <em class="sig-param"><span class="n">checkpoint</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>any<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.core.rocket.Rocket.update_checkpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to update checkpoint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – LaunchPad to ping with checkpoint data</p></li>
-<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – directory in which FW_offline.json was created</p></li>
-<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – launch id to update</p></li>
-<li><p><strong>checkpoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – checkpoint data</p></li>
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – directory in which FW_offline.json was created</p></li>
+<li><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – launch id to update</p></li>
+<li><p><strong>checkpoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – checkpoint data</p></li>
 </ul>
 </dd>
 </dl>
@@ -1844,12 +1864,12 @@ a caught exception.  Default False.</p>
 
 <dl class="py function">
 <dt id="fireworks.core.rocket.do_ping">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">do_ping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.do_ping" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">do_ping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.core.rocket.do_ping" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="fireworks.core.rocket.ping_launch">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_id</span></em>, <em class="sig-param"><span class="n">stop_event</span></em>, <em class="sig-param"><span class="n">master_thread</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.ping_launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em>, <em class="sig-param"><span class="n">stop_event</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.Event" title="(in Python v3.10)">threading.Event</a></span></em>, <em class="sig-param"><span class="n">master_thread</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.Thread" title="(in Python v3.10)">threading.Thread</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.core.rocket.ping_launch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -1859,7 +1879,7 @@ a caught exception.  Default False.</p>
 
 <dl class="py function">
 <dt id="fireworks.core.rocket.start_ping_launch">
-<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">start_ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span></em>, <em class="sig-param"><span class="n">launch_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.start_ping_launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">start_ping_launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">launch_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.Event" title="(in Python v3.10)">threading.Event</a><span class="p">]</span><a class="headerlink" href="#fireworks.core.rocket.start_ping_launch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -1870,6 +1890,7 @@ a caught exception.  Default False.</p>
 </div>
 <div class="section" id="module-fireworks.core.rocket_launcher">
 <span id="fireworks-core-rocket-launcher-module"></span><h2>fireworks.core.rocket_launcher module<a class="headerlink" href="#module-fireworks.core.rocket_launcher" title="Permalink to this headline">¶</a></h2>
+<p>This module contains methods for launching Rockets, both singly and in rapid-fire mode.</p>
 <dl class="py function">
 <dt id="fireworks.core.rocket_launcher.get_fworker">
 <code class="sig-prename descclassname">fireworks.core.rocket_launcher.</code><code class="sig-name descname">get_fworker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fworker</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.get_fworker" title="Permalink to this definition">¶</a></dt>
@@ -1884,9 +1905,9 @@ a caught exception.  Default False.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </p></li>
 <li><p><strong>fworker</strong> (<a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>) – </p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – if set, a particular Firework to run</p></li>
-<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – level at which to output logs to stdout</p></li>
-<li><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – if set to True, python will start
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – if set, a particular Firework to run</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – level at which to output logs to stdout</p></li>
+<li><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if set to True, python will start
 the debugger on a firework exception</p></li>
 </ul>
 </dd>
@@ -1906,13 +1927,13 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>launchpad</strong> (<a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>) – </p></li>
 <li><p><strong>fworker</strong> (<em>FWorker object</em>) – </p></li>
-<li><p><strong>m_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the directory in which to loop Rocket running</p></li>
-<li><p><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop until max_loops</p></li>
-<li><p><strong>max_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – maximum number of loops (default -1 is infinite)</p></li>
-<li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</p></li>
-<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – level at which to output logs to stdout</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – of seconds after which to stop the rapidfire process</p></li>
-<li><p><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – redirect standard input and output to local file</p></li>
+<li><p><strong>m_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the directory in which to loop Rocket running</p></li>
+<li><p><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – 0 means ‘until completion’, -1 or “infinite” means to loop until max_loops</p></li>
+<li><p><strong>max_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – maximum number of loops (default -1 is infinite)</p></li>
+<li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – level at which to output logs to stdout</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – of seconds after which to stop the rapidfire process</p></li>
+<li><p><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – redirect standard input and output to local file</p></li>
 </ul>
 </dd>
 </dl>
@@ -1976,7 +1997,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.core package</a></li> 
       </ul>
     </div>

@@ -4,23 +4,23 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 28, 2013'
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2013, The Materials Project"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Feb 28, 2013"
 
 # All examples assume you have MongoDB running on port 27017!
 
+
 def setup():
-    launchpad = LaunchPad(name='fireworks_test', strm_lvl='ERROR')
-    launchpad.reset('', require_password=False)
+    launchpad = LaunchPad(name="fireworks_test", strm_lvl="ERROR")
+    launchpad.reset("", require_password=False)
     return launchpad
 
 
 def basic_fw_ex():
-    print('--- BASIC FIREWORK EXAMPLE ---')
+    print("--- BASIC FIREWORK EXAMPLE ---")
 
     # setup
     launchpad = setup()
@@ -35,7 +35,7 @@ def basic_fw_ex():
 
 
 def rapid_fire_ex():
-    print('--- RAPIDFIRE EXAMPLE ---')
+    print("--- RAPIDFIRE EXAMPLE ---")
 
     # setup
     launchpad = setup()
@@ -56,7 +56,7 @@ def rapid_fire_ex():
 
 
 def multiple_tasks_ex():
-    print('--- MULTIPLE FIRETASKS EXAMPLE ---')
+    print("--- MULTIPLE FIRETASKS EXAMPLE ---")
 
     # setup
     launchpad = setup()
@@ -73,7 +73,7 @@ def multiple_tasks_ex():
 
 
 def basic_wf_ex():
-    print('--- BASIC WORKFLOW EXAMPLE ---')
+    print("--- BASIC WORKFLOW EXAMPLE ---")
 
     # setup
     launchpad = setup()
@@ -96,10 +96,9 @@ def basic_wf_ex():
     # launch Rocket
     rapidfire(launchpad, FWorker())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     basic_fw_ex()
     rapid_fire_ex()
     multiple_tasks_ex()
     basic_wf_ex()
-
-

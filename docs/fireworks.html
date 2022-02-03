@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fireworks package &#8212; FireWorks 1.9.7 documentation</title>
+    <title>fireworks package &#8212; FireWorks 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks package</a></li> 
       </ul>
     </div>  
@@ -186,6 +186,7 @@
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_filepad">fireworks.utilities.tests.test_filepad module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_fw_serializers">fireworks.utilities.tests.test_fw_serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_update_collection">fireworks.utilities.tests.test_update_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks-utilities-tests-test-visualize-module">fireworks.utilities.tests.test_visualize module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#module-fireworks.utilities.tests">Module contents</a></li>
 </ul>
 </li>
@@ -198,6 +199,7 @@
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.html#module-fireworks.utilities.fw_serializers">fireworks.utilities.fw_serializers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.html#module-fireworks.utilities.fw_utilities">fireworks.utilities.fw_utilities module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.html#module-fireworks.utilities.update_collection">fireworks.utilities.update_collection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.html#module-fireworks.utilities.visualize">fireworks.utilities.visualize module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fireworks.utilities.html#module-fireworks.utilities">Module contents</a></li>
 </ul>
 </li>
@@ -209,19 +211,20 @@
 </div>
 <div class="section" id="module-fireworks.fw_config">
 <span id="fireworks-fw-config-module"></span><h2>fireworks.fw_config module<a class="headerlink" href="#module-fireworks.fw_config" title="Permalink to this headline">¶</a></h2>
+<p>A set of global constants for FireWorks (Python code as a config file).</p>
 <dl class="py function">
 <dt id="fireworks.fw_config.config_to_dict">
-<code class="sig-prename descclassname">fireworks.fw_config.</code><code class="sig-name descname">config_to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.fw_config.config_to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.fw_config.</code><code class="sig-name descname">config_to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a><span class="p">, </span>Any<span class="p">]</span><a class="headerlink" href="#fireworks.fw_config.config_to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="fireworks.fw_config.override_user_settings">
-<code class="sig-prename descclassname">fireworks.fw_config.</code><code class="sig-name descname">override_user_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.fw_config.override_user_settings" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.fw_config.</code><code class="sig-name descname">override_user_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.fw_config.override_user_settings" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="fireworks.fw_config.write_config">
-<code class="sig-prename descclassname">fireworks.fw_config.</code><code class="sig-name descname">write_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.fw_config.write_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">fireworks.fw_config.</code><code class="sig-name descname">write_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a><a class="headerlink" href="#fireworks.fw_config.write_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -278,7 +281,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks package</a></li> 
       </ul>
     </div>

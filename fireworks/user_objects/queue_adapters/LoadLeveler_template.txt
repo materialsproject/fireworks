@@ -5,14 +5,14 @@
 # @ job_name = $${job_name}
 # @ output = FW_job.out
 # @ error = FW_job.error
-# @ job_type = $${job_type} 
-# @ node_usage = $${node_usage} 
+# @ job_type = $${job_type}
+# @ node_usage = $${node_usage}
 # @ node = $${nnodes}
 # @ tasks_per_node = $${ppnode}
-# @ resources = $${resources} 
+# @ resources = $${resources}
 # @ network.MPI = sn_all,not_shared,us
-# @ wall_clock_limit = $${walltime} 
-# @ notification = $${notification} 
+# @ wall_clock_limit = $${walltime}
+# @ notification = $${notification}
 # @ queue
 
 $${pre_rocket}

@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals, division
-
 """
 TODO: Modify unittest doc.
 """
@@ -9,20 +5,18 @@ TODO: Modify unittest doc.
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "2/26/14"
 
 import unittest
 
-from fireworks.core.firework import Firework, Workflow, FiretaskBase, FWAction
+from fireworks.core.firework import FiretaskBase, Firework, FWAction, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 class FiretaskBaseTest(unittest.TestCase):
-
     def test_init(self):
         class DummyTask(FiretaskBase):
 
@@ -46,7 +40,6 @@ class FiretaskBaseTest(unittest.TestCase):
         self.assertRaises(NotImplementedError, d.run_task, {})
 
     def test_param_checks(self):
-
         class DummyTask(FiretaskBase):
             _fw_name = "DummyTask"
             required_params = ["param1"]
@@ -68,6 +61,7 @@ class PickleTask(FiretaskBase):
 class FiretaskPickleTest(unittest.TestCase):
     def setUp(self):
         import pickle
+
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
         self.upkl_task = pickle.loads(self.pkl_task)
@@ -97,7 +91,6 @@ class Task2(FiretaskBase):
 
 
 class WorkflowTest(unittest.TestCase):
-
     def setUp(self):
         self.fw1 = Firework(Task1())
         self.fw2 = Firework([Task2(), Task2()], parents=self.fw1)
@@ -112,27 +105,22 @@ class WorkflowTest(unittest.TestCase):
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
         self.assertIsInstance(wf, Workflow)
-        self.assertRaises(ValueError, Workflow, fws,
-                          links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
-        self.assertRaises(ValueError, Workflow, fws,
-                          links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
-
+        self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
+        self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
     def test_copy(self):
         """Test that we can produce a copy of a Workflow but that the copy
         has unique fw_ids.
-
         """
         fws = []
         for i in range(5):
-            fw = Firework([PyTask(func="print", args=[i])], fw_id=i,
-                          name=str(i))
+            fw = Firework([PyTask(func="print", args=[i])], fw_id=i, name=str(i))
             fws.append(fw)
 
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
 
         wf_copy = Workflow.from_wflow(wf)
-        
+
         # now we compare to the original to make sure dependencies are same.
         # have to do gymnastics because ids will NOT be the same
         # but names are retained
@@ -167,6 +155,16 @@ class WorkflowTest(unittest.TestCase):
         wflow.remove_fws(wflow.root_fw_ids)
         self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
 
+    def test_iter_len_index(self):
+        fws = [self.fw1, self.fw2, self.fw3]
+        wflow = Workflow(fws)
+        for idx, fw in enumerate(wflow):
+            self.assertEqual(fw, fws[idx])
 
-if __name__ == '__main__':
+        assert len(wflow) == len(fws)
+
+        assert wflow[0] == self.fw1
+
+
+if __name__ == "__main__":
     unittest.main()

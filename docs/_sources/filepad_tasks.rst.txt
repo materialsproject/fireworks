@@ -54,4 +54,3 @@ Optional parameters
 -------------------
 
 * filepad_file (str): path to the filepad db config file
-

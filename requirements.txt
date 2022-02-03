@@ -1,7 +1,6 @@
 ruamel.yaml==0.16.5
 pymongo==3.10.0
-Jinja2==2.10.3
-six==1.13.0
+Jinja2==2.11.3
 monty==3.0.2
 python-dateutil==2.8.1
 tabulate==0.8.6

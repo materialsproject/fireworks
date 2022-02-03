@@ -1,7 +1,3 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
-
 """
 This module contains methods for launching Rockets, both singly and in rapid-fire mode.
 """
@@ -10,17 +6,21 @@ import os
 import time
 from datetime import datetime
 
-from fireworks.fw_config import RAPIDFIRE_SLEEP_SECS, FWORKER_LOC
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.utilities.fw_utilities import get_fw_logger, create_datestamp_dir, log_multi, redirect_local
+from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
+from fireworks.utilities.fw_utilities import (
+    create_datestamp_dir,
+    get_fw_logger,
+    log_multi,
+    redirect_local,
+)
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 22, 2013'
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2013, The Materials Project"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Feb 22, 2013"
 
 
 def get_fworker(fworker):
@@ -33,8 +33,7 @@ def get_fworker(fworker):
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO',
-                  pdb_on_exception=False):
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_exception=False):
     """
     Run a single rocket in the current directory.
 
@@ -51,17 +50,27 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl='INFO',
     """
     fworker = get_fworker(fworker)
     l_dir = launchpad.get_logdir() if launchpad else None
-    l_logger = get_fw_logger('rocket.launcher', l_dir=l_dir, stream_level=strm_lvl)
+    l_logger = get_fw_logger("rocket.launcher", l_dir=l_dir, stream_level=strm_lvl)
 
-    log_multi(l_logger, 'Launching Rocket')
+    log_multi(l_logger, "Launching Rocket")
     rocket = Rocket(launchpad, fworker, fw_id)
     rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception)
-    log_multi(l_logger, 'Rocket finished')
+    log_multi(l_logger, "Rocket finished")
     return rocket_ran
 
 
-def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sleep_time=None,
-              strm_lvl='INFO', timeout=None, local_redirect=False, pdb_on_exception=False):
+def rapidfire(
+    launchpad,
+    fworker=None,
+    m_dir=None,
+    nlaunches=0,
+    max_loops=-1,
+    sleep_time=None,
+    strm_lvl="INFO",
+    timeout=None,
+    local_redirect=False,
+    pdb_on_exception=False,
+):
     """
     Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
     for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.
@@ -80,8 +89,8 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
 
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
-    l_logger = get_fw_logger('rocket.launcher', l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
-    nlaunches = -1 if nlaunches == 'infinite' else int(nlaunches)
+    l_logger = get_fw_logger("rocket.launcher", l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
+    nlaunches = -1 if nlaunches == "infinite" else int(nlaunches)
     fworker = get_fworker(fworker)
 
     num_launched = 0
@@ -90,22 +99,19 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
 
     def time_ok():
         # has the rapidfire run timed out?
-        return (timeout is None or
-                (datetime.now() - start_time).total_seconds() < timeout)
+        return timeout is None or (datetime.now() - start_time).total_seconds() < timeout
 
     while num_loops != max_loops and time_ok():
         skip_check = False  # this is used to speed operation
         while (skip_check or launchpad.run_exists(fworker)) and time_ok():
             os.chdir(curdir)
-            launcher_dir = create_datestamp_dir(curdir, l_logger, prefix='launcher_')
+            launcher_dir = create_datestamp_dir(curdir, l_logger, prefix="launcher_")
             os.chdir(launcher_dir)
             if local_redirect:
                 with redirect_local():
-                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
-                                               pdb_on_exception=pdb_on_exception)
+                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
             else:
-                rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
-                                           pdb_on_exception=pdb_on_exception)
+                rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
 
             if rocket_ran:
                 num_launched += 1
@@ -126,8 +132,8 @@ def rapidfire(launchpad, fworker=None, m_dir=None, nlaunches=0, max_loops=-1, sl
                 break
         elif num_launched == nlaunches:
             break
-        log_multi(l_logger, 'Sleeping for {} secs'.format(sleep_time))
+        log_multi(l_logger, f"Sleeping for {sleep_time} secs")
         time.sleep(sleep_time)
         num_loops += 1
-        log_multi(l_logger, 'Checking for FWs to run...')
+        log_multi(l_logger, "Checking for FWs to run...")
     os.chdir(curdir)

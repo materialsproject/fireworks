@@ -67,7 +67,7 @@ To save typing, you can set things up so that the ``-l`` option is automatically
 Add TLS/SSL configuration to your LaunchPad file
 ================================================
 
-If the MongoDB server is configured with TLS/SSL launchpad file 
+If the MongoDB server is configured with TLS/SSL launchpad file
 ``my_launchpad.yaml`` (or whatever launchpad file is specified after the ``-l`` option or in the configuration file) has to include further information in the following lines::
 
     ssl: <bool> # whether to use TLS/SSL for connection to MongoDB, default: false

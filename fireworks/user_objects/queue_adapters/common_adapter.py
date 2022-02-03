@@ -1,9 +1,4 @@
-# coding: utf-8
-
-from __future__ import unicode_literals
 import copy
-
-import sys
 
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
@@ -11,19 +6,19 @@ queues.
 """
 import getpass
 import os
-import stat
 import re
+import stat
 import subprocess
-from fireworks.queue.queue_adapter import QueueAdapterBase, Command
+
+from fireworks.queue.queue_adapter import Command, QueueAdapterBase
 from fireworks.utilities.fw_serializers import serialize_fw
 from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
-__author__ = 'Anubhav Jain, Michael Kocher, Shyue Ping Ong, David Waroquiers, Felix Brockherde'
-__copyright__ = 'Copyright 2012, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Dec 12, 2012'
+__author__ = "Anubhav Jain, Michael Kocher, Shyue Ping Ong, David Waroquiers, Felix Brockherde"
+__copyright__ = "Copyright 2012, The Materials Project"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Dec 12, 2012"
 
 
 class CommonAdapter(QueueAdapterBase):
@@ -31,7 +26,8 @@ class CommonAdapter(QueueAdapterBase):
     An adapter that works on most PBS (including derivatives such as
     TORQUE), SGE, and SLURM queues.
     """
-    _fw_name = 'CommonAdapter'
+
+    _fw_name = "CommonAdapter"
 
     default_q_commands = {
         "PBS": {"submit_cmd": "qsub", "status_cmd": "qstat"},
@@ -40,7 +36,7 @@ class CommonAdapter(QueueAdapterBase):
         "SLURM": {"submit_cmd": "sbatch", "status_cmd": "squeue"},
         "LoadLeveler": {"submit_cmd": "llsubmit", "status_cmd": "llq"},
         "LoadSharingFacility": {"submit_cmd": "bsub", "status_cmd": "bjobs"},
-        "MOAB": {"submit_cmd": "msub", "status_cmd": "showq"}
+        "MOAB": {"submit_cmd": "msub", "status_cmd": "showq"},
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, timeout=None, **kwargs):
@@ -58,18 +54,20 @@ class CommonAdapter(QueueAdapterBase):
         """
         if q_type not in CommonAdapter.default_q_commands:
             raise ValueError(
-                "{} is not a supported queue type. "
-                "CommonAdaptor supports {}".format(
-                    q_type, list(self.default_q_commands.keys())))
+                f"{q_type} is not a supported queue type. CommonAdaptor supports {list(self.default_q_commands.keys())}"
+            )
         self.q_type = q_type
-        self.template_file = os.path.abspath(template_file) if template_file is not None else \
-            CommonAdapter._get_default_template_file(q_type)
+        self.template_file = (
+            os.path.abspath(template_file)
+            if template_file is not None
+            else CommonAdapter._get_default_template_file(q_type)
+        )
         self.q_name = q_name or q_type
         self.timeout = timeout or 5
         self.update(dict(kwargs))
 
         self.q_commands = copy.deepcopy(CommonAdapter.default_q_commands)
-        if '_q_commands_override' in self:
+        if "_q_commands_override" in self:
             self.q_commands[self.q_type].update(self["_q_commands_override"])
 
     def _parse_jobid(self, output_str):
@@ -84,7 +82,7 @@ class CommonAdapter(QueueAdapterBase):
             # 99% of the time you just get:
             # Cobalt: "199768"
             # but there's a version that also includes project and queue
-            # information on preceeding lines and both of those  might
+            # information on preceding lines and both of those  might
             # contain a number in any position.
             re_string = r"(\b\d+\b)"
         else:
@@ -100,30 +98,30 @@ class CommonAdapter(QueueAdapterBase):
     def _get_status_cmd(self, username):
         status_cmd = [self.q_commands[self.q_type]["status_cmd"]]
 
-        if self.q_type == 'SLURM':
+        if self.q_type == "SLURM":
             # by default, squeue lists pending and running jobs
             # -p: filter queue (partition)
             # -h: no header line
             # -o: reduce output to user only (shorter string to parse)
-            status_cmd.extend(['-o "%u"', '-u', username, '-h'])
-            if self.get('queue'):
-                status_cmd.extend(['-p', self['queue']])
+            status_cmd.extend(['-o "%u"', "-u", username, "-h"])
+            if self.get("queue"):
+                status_cmd.extend(["-p", self["queue"]])
         elif self.q_type == "LoadSharingFacility":
             # use no header and the wide format so that there is one line per job, and display only running and
             # pending jobs
-            status_cmd.extend(['-p', '-r', '-o', 'jobID user queue', '-noheader', '-u', username])
+            status_cmd.extend(["-p", "-r", "-o", "jobID user queue", "-noheader", "-u", username])
         elif self.q_type == "Cobalt":
             header = "JobId:User:Queue:Jobname:Nodes:Procs:Mode:WallTime:State:RunTime:Project:Location"
-            status_cmd.extend(['--header', header, '-u', username])
-        elif self.q_type == 'SGE':
-            status_cmd.extend(['-u', username])
-            if self.get('queue'):
-                status_cmd.extend(['-q', self['queue']])
+            status_cmd.extend(["--header", header, "-u", username])
+        elif self.q_type == "SGE":
+            status_cmd.extend(["-u", username])
+            if self.get("queue"):
+                status_cmd.extend(["-q", self["queue"]])
         elif self.q_type == "MOAB":
-            status_cmd.extend(['-w', "user={}".format(username)])
+            status_cmd.extend(["-w", f"user={username}"])
             # no queue restriction command known for QUEST supercomputer, i.e., -p option doesn't work
         else:
-            status_cmd.extend(['-u', username])
+            status_cmd.extend(["-u", username])
 
         return status_cmd
 
@@ -131,38 +129,38 @@ class CommonAdapter(QueueAdapterBase):
         # TODO: what if username is too long for the output and is cut off?
 
         # WRS: I may come back to this after confirming that Cobalt
-        #      strictly follows the PBS standard and replace the spliting
+        #      strictly follows the PBS standard and replace the splitting
         #      with a regex that would solve length issues
 
-        if self.q_type == 'SLURM':
+        if self.q_type == "SLURM":
             # subtract one due to trailing '\n' and split behavior
-            return len(output_str.split('\n')) - 1
+            return len(output_str.split("\n")) - 1
 
         if self.q_type == "LoadLeveler":
-            if 'There is currently no job status to report' in output_str:
+            if "There is currently no job status to report" in output_str:
                 return 0
             else:
                 # last line is: "1 job step(s) in query, 0 waiting, ..."
-                return int(output_str.split('\n')[-2].split()[0])
+                return int(output_str.split("\n")[-2].split()[0])
         if self.q_type == "LoadSharingFacility":
             # Count the number of lines which pertain to the queue
             cnt = 0
-            for line in output_str.split('\n'):
-                if line.endswith(self['queue']):
+            for line in output_str.split("\n"):
+                if line.endswith(self["queue"]):
                     cnt += 1
             return cnt
         if self.q_type == "SGE":
             # want only lines that include username;
             # this will exclude e.g. header lines
-            return len([l for l in output_str.split('\n') if username in l])
+            return len([l for l in output_str.split("\n") if username in l])
 
         if self.q_type == "MOAB":
             # want only lines that include username;
             # this will exclude e.g. header lines
-            return len([l for l in output_str.split('\n') if username in l])
+            return len([l for l in output_str.split("\n") if username in l])
 
         count = 0
-        for l in output_str.split('\n'):
+        for l in output_str.split("\n"):
             if l.lower().startswith("job"):
                 if self.q_type == "Cobalt":
                     # Cobalt capitalzes headers
@@ -180,7 +178,7 @@ class CommonAdapter(QueueAdapterBase):
                 if toks[state_index] != "C":
                     # note: the entire queue name might be cutoff from the output if long queue name
                     # so we are only ensuring that our queue matches up until cutoff point
-                    if "queue" in self and self["queue"][0:len(toks[queue_index])] in toks[queue_index]:
+                    if "queue" in self and self["queue"][0 : len(toks[queue_index])] in toks[queue_index]:
                         count += 1
 
         return count
@@ -193,11 +191,9 @@ class CommonAdapter(QueueAdapterBase):
         :return: (int) job_id
         """
         if not os.path.exists(script_file):
-            raise ValueError(
-                'Cannot find script file located at: {}'.format(
-                    script_file))
+            raise ValueError(f"Cannot find script file located at: {script_file}")
 
-        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+        queue_logger = self.get_qlogger(f"qadapter.{self.q_name}")
         submit_cmd = self.q_commands[self.q_type]["submit_cmd"]
         # submit the job
         try:
@@ -208,8 +204,8 @@ class CommonAdapter(QueueAdapterBase):
             # For most of the queues handled by common_adapter, it's best to simply submit the file name
             # as an argument.  LoadSharingFacility doesn't handle the header section (queue name, nodes, etc)
             # when taking file arguments, so the file needs to be passed as stdin to make it work correctly.
-            if self.q_type == 'LoadSharingFacility':
-                with open(script_file, 'r') as inputFile:
+            if self.q_type == "LoadSharingFacility":
+                with open(script_file) as inputFile:
                     p = subprocess.Popen([submit_cmd], stdin=inputFile, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             else:
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -219,37 +215,33 @@ class CommonAdapter(QueueAdapterBase):
             if p.returncode == 0:
                 try:
                     job_id = self._parse_jobid(p.stdout.read().decode())
-                    queue_logger.info(
-                        'Job submission was successful and job_id is {}'.format(
-                            job_id))
+                    queue_logger.info(f"Job submission was successful and job_id is {job_id}")
                     return job_id
                 except Exception as ex:
                     # probably error parsing job code
-                    log_exception(queue_logger,
-                                  'Could not parse job id following {} due to error {}...'
-                                  .format(submit_cmd, str(ex)))
+                    log_exception(
+                        queue_logger, f"Could not parse job id following {submit_cmd} due to error {str(ex)}..."
+                    )
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
-                    'Error in job submission with {n} file {f} and cmd {c}'.format(
-                        n=self.q_name, f=script_file, c=cmd),
-                    'The error response reads: {}'.format(p.stderr.read())]
-                log_fancy(queue_logger, msgs, 'error')
+                    f"Error in job submission with {self.q_name} file {script_file} and cmd {cmd}",
+                    f"The error response reads: {p.stderr.read()}",
+                ]
+                log_fancy(queue_logger, msgs, "error")
 
-        except Exception as ex:
+        except Exception:
             # random error, e.g. no qsub on machine!
-            log_exception(queue_logger,
-                          'Running the command: {} caused an error...'
-                          .format(submit_cmd))
+            log_exception(queue_logger, f"Running the command: {submit_cmd} caused an error...")
 
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs currently in the queu efor the user
+        returns the number of jobs currently in the queue for the user
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue
         """
-        queue_logger = self.get_qlogger('qadapter.{}'.format(self.q_name))
+        queue_logger = self.get_qlogger(f"qadapter.{self.q_name}")
 
         # initialize username
         if username is None:
@@ -262,20 +254,17 @@ class CommonAdapter(QueueAdapterBase):
         # parse the result
         if p[0] == 0:
             njobs = self._parse_njobs(p[1], username)
-            queue_logger.info(
-                'The number of jobs currently in the queue is: {}'.format(
-                    njobs))
+            queue_logger.info(f"The number of jobs currently in the queue is: {njobs}")
             return njobs
 
         # there's a problem talking to qstat server?
-        msgs = ['Error trying to get the number of jobs in the queue',
-                'The error response reads: {}'.format(p[2])]
-        log_fancy(queue_logger, msgs, 'error')
+        msgs = ["Error trying to get the number of jobs in the queue", f"The error response reads: {p[2]}"]
+        log_fancy(queue_logger, msgs, "error")
         return None
 
     @staticmethod
     def _get_default_template_file(q_type):
-        return os.path.join(os.path.dirname(__file__), '{}_template.txt'.format(q_type))
+        return os.path.join(os.path.dirname(__file__), f"{q_type}_template.txt")
 
     @serialize_fw
     def to_dict(self):
@@ -296,4 +285,5 @@ class CommonAdapter(QueueAdapterBase):
             q_name=m_dict.get("_fw_q_name"),
             template_file=m_dict.get("_fw_template_file"),
             timeout=m_dict.get("_fw_timeout"),
-            **{k: v for k, v in m_dict.items() if not k.startswith("_fw")})
+            **{k: v for k, v in m_dict.items() if not k.startswith("_fw")},
+        )

@@ -1,28 +1,31 @@
 """ This module includes tasks to integrate scripts and python functions """
 
+import builtins
 import shlex
 import subprocess
 import sys
+from typing import Dict, List, Optional, Union
+
 from fireworks.core.firework import FiretaskBase, FWAction
-from six.moves import builtins
+
 if sys.version_info[0] > 2:
     basestring = str
 
-__author__ = 'Anubhav Jain'
-__copyright__ = 'Copyright 2013, The Materials Project'
-__version__ = '0.1'
-__maintainer__ = 'Anubhav Jain'
-__email__ = 'ajain@lbl.gov'
-__date__ = 'Feb 18, 2013'
+__author__ = "Anubhav Jain"
+__copyright__ = "Copyright 2013, The Materials Project"
+__maintainer__ = "Anubhav Jain"
+__email__ = "ajain@lbl.gov"
+__date__ = "Feb 18, 2013"
 
 
 class ScriptTask(FiretaskBase):
-    """ Runs a user-defined script """
-    required_params = ['script']
-    _fw_name = 'ScriptTask'
+    """Runs a user-defined script"""
+
+    required_params = ["script"]
+    _fw_name = "ScriptTask"
 
     def run_task(self, fw_spec):
-        if self.get('use_global_spec'):
+        if self.get("use_global_spec"):
             self._load_params(fw_spec)
         else:
             self._load_params(self)
@@ -41,9 +44,8 @@ class ScriptTask(FiretaskBase):
         returncodes = []
         for s in self.script:
             p = subprocess.Popen(
-                s, executable=self.shell_exe, stdin=stdin,
-                stdout=stdout, stderr=stderr,
-                shell=self.use_shell)
+                s, executable=self.shell_exe, stdin=stdin, stdout=stdout, stderr=stderr, shell=self.use_shell
+            )
 
             # communicate in the standard in and get back the standard out and returncode
             if self.stdin_key:
@@ -58,44 +60,44 @@ class ScriptTask(FiretaskBase):
 
         # write out the output, error files if specified
 
-        stdout = stdout.decode('utf-8') if isinstance(stdout, bytes) else stdout
-        stderr = stderr.decode('utf-8') if isinstance(stderr, bytes) else stderr
+        stdout = stdout.decode("utf-8") if isinstance(stdout, bytes) else stdout
+        stderr = stderr.decode("utf-8") if isinstance(stderr, bytes) else stderr
 
         if self.stdout_file:
-            with open(self.stdout_file, 'a+') as f:
+            with open(self.stdout_file, "a+") as f:
                 f.write(stdout)
 
         if self.stderr_file:
-            with open(self.stderr_file, 'a+') as f:
+            with open(self.stderr_file, "a+") as f:
                 f.write(stderr)
 
         # write the output keys
         output = {}
 
         if self.store_stdout:
-            output['stdout'] = stdout
+            output["stdout"] = stdout
 
         if self.store_stderr:
-            output['stderr'] = stderr
+            output["stderr"] = stderr
 
-        output['returncode'] = returncodes[-1]
-        output['all_returncodes'] = returncodes
+        output["returncode"] = returncodes[-1]
+        output["all_returncodes"] = returncodes
 
         if self.defuse_bad_rc and sum(returncodes) != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
         elif self.fizzle_bad_rc and sum(returncodes) != 0:
-            raise RuntimeError('ScriptTask fizzled! Return code: {}'.format(returncodes))
+            raise RuntimeError(f"ScriptTask fizzled! Return code: {returncodes}")
 
         return FWAction(stored_data=output)
 
     def _load_params(self, d):
-        if d.get('stdin_file') and d.get('stdin_key'):
-            raise ValueError('ScriptTask cannot process both a key and file as the standard in!')
+        if d.get("stdin_file") and d.get("stdin_key"):
+            raise ValueError("ScriptTask cannot process both a key and file as the standard in!")
 
-        self.use_shell = d.get('use_shell', True)
+        self.use_shell = d.get("use_shell", True)
 
-        m_script = d['script']
+        m_script = d["script"]
         if isinstance(m_script, basestring):
             m_script = [m_script]
 
@@ -104,24 +106,24 @@ class ScriptTask(FiretaskBase):
         else:
             self.script = m_script
 
-        self.stdin_file = d.get('stdin_file')
-        self.stdin_key = d.get('stdin_key')
-        self.stdout_file = d.get('stdout_file')
-        self.stderr_file = d.get('stderr_file')
-        self.store_stdout = d.get('store_stdout')
-        self.store_stderr = d.get('store_stderr')
-        self.shell_exe = d.get('shell_exe')
-        self.defuse_bad_rc = d.get('defuse_bad_rc')
-        self.fizzle_bad_rc = d.get('fizzle_bad_rc', not self.defuse_bad_rc)
+        self.stdin_file = d.get("stdin_file")
+        self.stdin_key = d.get("stdin_key")
+        self.stdout_file = d.get("stdout_file")
+        self.stderr_file = d.get("stderr_file")
+        self.store_stdout = d.get("store_stdout")
+        self.store_stderr = d.get("store_stderr")
+        self.shell_exe = d.get("shell_exe")
+        self.defuse_bad_rc = d.get("defuse_bad_rc")
+        self.fizzle_bad_rc = d.get("fizzle_bad_rc", not self.defuse_bad_rc)
 
         if self.defuse_bad_rc and self.fizzle_bad_rc:
-            raise ValueError('ScriptTask cannot both FIZZLE and DEFUSE a bad returncode!')
+            raise ValueError("ScriptTask cannot both FIZZLE and DEFUSE a bad returncode!")
 
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):
         parameters = parameters if parameters else {}
-        parameters['script'] = [shell_cmd]
-        parameters['use_shell'] = True
+        parameters["script"] = [shell_cmd]
+        parameters["use_shell"] = True
         return cls(parameters)
 
 
@@ -130,7 +132,7 @@ class PyTask(FiretaskBase):
     Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system. The optional inputs
     and outputs lists may contain spec keys to add to args list and to make
-    the function output available in the curent and in children fireworks.
+    the function output available in the current and in children fireworks.
 
     Required parameters:
         - func (str): Fully qualified python method. E.g., json.dump, or shutil
@@ -154,15 +156,15 @@ class PyTask(FiretaskBase):
         - chunk_number (int): a serial number of the Firetask within a
           group of Firetasks generated by a ForeachTask
     """
-    _fw_name = 'PyTask'
-    required_params = ['func']
-    other_params = ['args', 'kwargs', 'auto_kwargs', 'stored_data_varname',
-                    'inputs', 'outputs', 'chunk_number']
-    # note that we are not using "optional_params" because we do not want to do
-    # strict parameter checking in FireTaskBase due to "auto_kwargs" option
 
-    def run_task(self, fw_spec):
-        toks = self['func'].rsplit('.', 1)
+    _fw_name = "PyTask"
+    required_params = ["func"]
+    other_params = ["args", "kwargs", "auto_kwargs", "stored_data_varname", "inputs", "outputs", "chunk_number"]
+    # note that we are not using "optional_params" because we do not want to do
+    # strict parameter checking in FiretaskBase due to "auto_kwargs" option
+
+    def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
+        toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
             modname, funcname = toks
             mod = __import__(modname, globals(), locals(), [str(funcname)], 0)
@@ -171,42 +173,43 @@ class PyTask(FiretaskBase):
             # Handle built in functions.
             func = getattr(builtins, toks[0])
 
-        args = list(self.get('args', []))  # defensive copy
+        args = list(self.get("args", []))  # defensive copy
 
-        inputs = self.get('inputs', [])
+        inputs = self.get("inputs", [])
         assert isinstance(inputs, list)
         for item in inputs:
             args.append(fw_spec[item])
 
-        if self.get('auto_kwargs'):
-            kwargs = {k: v for k, v in self.items()
-                      if not (k.startswith('_')
-                              or k in self.required_params
-                              or k in self.other_params)}
+        if self.get("auto_kwargs"):
+            kwargs = {
+                k: v
+                for k, v in self.items()
+                if not (k.startswith("_") or k in self.required_params or k in self.other_params)
+            }
         else:
-            kwargs = self.get('kwargs', {})
+            kwargs = self.get("kwargs", {})
 
         output = func(*args, **kwargs)
 
         if isinstance(output, FWAction):
             return output
         actions = {}
-        outputs = self.get('outputs', [])
+        outputs = self.get("outputs", [])
         assert isinstance(outputs, list)
         if len(outputs) == 1:
-            if self.get('chunk_number') is None:
-                actions['update_spec'] = {outputs[0]: output}
+            if self.get("chunk_number") is None:
+                actions["update_spec"] = {outputs[0]: output}
             else:
                 if isinstance(output, (list, tuple, set)):
-                    mod_spec = [{'_push': {outputs[0]: i}} for i in output]
+                    mod_spec = [{"_push": {outputs[0]: i}} for i in output]
                 else:
-                    mod_spec = [{'_push': {outputs[0]: output}}]
-                actions['mod_spec'] = mod_spec
+                    mod_spec = [{"_push": {outputs[0]: output}}]
+                actions["mod_spec"] = mod_spec
         elif len(outputs) > 1:
             assert isinstance(output, (list, tuple, set))
             assert len(output) == len(outputs)
-            actions['update_spec'] = dict(zip(outputs, output))
-        if self.get('stored_data_varname'):
-            actions['stored_data'] = {self['stored_data_varname']: output}
+            actions["update_spec"] = dict(zip(outputs, output))
+        if self.get("stored_data_varname"):
+            actions["stored_data"] = {self["stored_data_varname"]: output}
         if len(actions) > 0:
             return FWAction(**actions)
