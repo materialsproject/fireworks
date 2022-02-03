@@ -10,16 +10,20 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import importlib.metadata
 import os
 import sys
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.append(os.path.abspath(".."))
 print(sys.path)
-fw_version = importlib.metadata.version("fireworks")
+fw_version = metadata.version("fireworks")
 
 # -- General configuration -----------------------------------------------------
 
