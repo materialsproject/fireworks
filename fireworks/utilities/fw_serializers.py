@@ -49,7 +49,6 @@ from fireworks.fw_config import (
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Dec 13, 2012"

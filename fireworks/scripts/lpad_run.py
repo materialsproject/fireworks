@@ -5,19 +5,19 @@ A runnable script for managing a FireWorks database (a command-line interface to
 import ast
 import copy
 import datetime
-import importlib
 import json
 import os
 import re
+import sys
 import time
 import traceback
 from argparse import ArgumentParser, ArgumentTypeError
+from typing import Optional, Sequence
 
 import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
 
 from fireworks import FW_INSTALL_DIR
-from fireworks import __version__ as FW_VERSION
 from fireworks.core.firework import Firework, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
@@ -37,10 +37,14 @@ from fireworks.fw_config import (
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
+
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
@@ -833,11 +837,6 @@ def track_fws(args):
             print("\n".join(output))
 
 
-def version(args):
-    print("FireWorks version:", FW_VERSION)
-    print("located in:", FW_INSTALL_DIR)
-
-
 def maintain(args):
     lp = get_lp(args)
     lp.maintain(args.infinite, args.maintain_interval)
@@ -882,15 +881,16 @@ def arg_positive_int(value):
     return ivalue
 
 
-def lpad():
+def lpad(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "A command line interface to FireWorks. For more help on a specific command, type 'lpad <command> -h'."
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("lpad", description=m_description)
 
-    fw_version = importlib.metadata.version("fireworks")
-    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+    fw_version = metadata.version("fireworks")
+    v_out = f"%(prog)s v{fw_version} located in {FW_INSTALL_DIR}"
+    parser.add_argument("-v", "--version", action="version", version=v_out)
 
     parent_parser = ArgumentParser(add_help=False)
     parser.add_argument(
@@ -973,9 +973,6 @@ def lpad():
         for opt in [*fw_id_args, *wf_prefixed_fw_id_args, *fw_prefixed_fw_id_args]
         if re.match("^--.*$", opt)
     ]
-
-    version_parser = subparsers.add_parser("version", help="Print the version and location of FireWorks")
-    version_parser.set_defaults(func=version)
 
     init_parser = subparsers.add_parser("init", help="Initialize a Fireworks launchpad YAML file.")
     init_parser.add_argument(
@@ -1525,7 +1522,7 @@ def lpad():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     args.output = get_output_func(args.output)
 
@@ -1542,6 +1539,8 @@ def lpad():
 
         args.func(args)
 
+    return 0
+
 
 if __name__ == "__main__":
-    lpad()
+    raise SystemExit(lpad())

@@ -37,7 +37,6 @@ from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"

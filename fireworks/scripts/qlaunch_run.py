@@ -1,11 +1,11 @@
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
-import importlib
 import os
 import sys
 import time
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 try:
     import fabric
@@ -28,9 +28,13 @@ from fireworks.fw_config import (
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
+
 __authors__ = "Anubhav Jain, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
@@ -87,7 +91,7 @@ def do_launch(args):
         )
 
 
-def qlaunch():
+def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "This program is used to submit jobs to a queueing system. "
         "Details of the job and queue interaction are handled by the "
@@ -99,9 +103,9 @@ def qlaunch():
         "use qlauncher.py rapidfire -h"
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("qlaunch", description=m_description)
 
-    fw_version = importlib.metadata.version("fireworks")
+    fw_version = metadata.version("fireworks")
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
 
     subparsers = parser.add_subparsers(help="command", dest="command")
@@ -208,7 +212,7 @@ def qlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.remote_host and not HAS_FABRIC:
         print("Remote options require the Fabric package v2+ to be installed!")
@@ -272,6 +276,8 @@ def qlaunch():
         else:
             break
 
+        return 0
+
 
 if __name__ == "__main__":
-    qlaunch()
+    raise SystemExit(qlaunch())

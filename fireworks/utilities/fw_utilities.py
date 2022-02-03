@@ -16,7 +16,6 @@ from fireworks.fw_config import DS_PASSWORD, FW_BLOCK_FORMAT, FW_LOGGING_FORMAT,
 
 __author__ = "Anubhav Jain, Xiaohui Qu"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Dec 12, 2012"
