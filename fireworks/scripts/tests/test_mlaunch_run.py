@@ -20,7 +20,7 @@ def test_mlaunch_report_version(capsys, arg):
 
 
 def test_mlaunch_config_file_flags():
-    """Test mlaunch CLI throws errors on bad/missing config file flags."""
+    """Test mlaunch CLI throws errors on missing config file flags."""
 
     num_jobs = "1"
 

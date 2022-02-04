@@ -18,21 +18,22 @@ def _validate_config_file_paths(args: Namespace, cfg_files_to_validate: Sequence
     """
     for config_file, cli_flag, required, default_loc in cfg_files_to_validate:
 
-        fname = f"{config_file}_file"
-        file_path = getattr(args, fname)
+        file_name = f"{config_file}_file"
+        file_path = getattr(args, file_name)
 
-        if file_path is None and os.path.exists(os.path.join(args.config_dir, f"my_{fname}.yaml")):
-            setattr(args, fname, os.path.join(args.config_dir, f"my_{fname}.yaml"))
+        # args.config_dir defaults to '.' if not specified
+        if file_path is None and os.path.exists(os.path.join(args.config_dir, f"my_{file_name}.yaml")):
+            setattr(args, file_name, os.path.join(args.config_dir, f"my_{file_name}.yaml"))
         elif file_path is None:
-            setattr(args, fname, default_loc)
+            setattr(args, file_name, default_loc)
 
-        file_path = getattr(args, fname, None)
+        file_path = getattr(args, file_name, None)
 
         # throw on missing config files
         if file_path is None and required:
             raise ValueError(
-                f"no path specified for {fname}. Check the value of CONFIG_FILE_DIR and make sure it points "
-                f"at where your config files are or use the {cli_flag} flag to specify the path."
+                f"No path specified for {file_name}. Use the {cli_flag} flag to specify or check the value "
+                f"of CONFIG_FILE_DIR and make sure it points at where all your config files are."
             )
         if file_path is not None and not os.path.exists(file_path):
-            raise FileNotFoundError(f"{fname} '{file_path}' does not exist!")
+            raise FileNotFoundError(f"{file_name} '{file_path}' does not exist!")

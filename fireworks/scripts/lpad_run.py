@@ -1520,10 +1520,9 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     args = parser.parse_args(argv)
 
-    cfg_files_to_check = [
-        ("launchpad", "-l", False, LAUNCHPAD_LOC),
-        ("fworker", "-w", False, FWORKER_LOC),
-    ]
+    cfg_files_to_check = [("launchpad", "-l", False, LAUNCHPAD_LOC)]
+    if hasattr(args, "fworker_file"):
+        cfg_files_to_check.append(("fworker", "-w", False, FWORKER_LOC))
     _validate_config_file_paths(args, cfg_files_to_check)
 
     args.output = get_output_func(args.output)
