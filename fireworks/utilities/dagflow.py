@@ -5,6 +5,7 @@ __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
 
 from itertools import combinations
+from typing import List, Optional, Tuple
 
 import igraph
 from igraph import Graph
@@ -42,7 +43,7 @@ class DAGFlow(Graph):
     """The purpose of this class is to help construction, validation and
     visualization of workflows."""
 
-    def __init__(self, steps, links=None, nlinks=None, name=None, **kwargs):
+    def __init__(self, steps, links=None, nlinks=None, name: Optional[str] = None, **kwargs) -> None:
         Graph.__init__(self, directed=True, graph_attrs={"name": name}, **kwargs)
 
         for step in steps:
@@ -56,7 +57,7 @@ class DAGFlow(Graph):
         self._add_dataflow_links()
 
     @classmethod
-    def from_fireworks(cls, fireworkflow):
+    def from_fireworks(cls, fireworkflow) -> "DAGFlow":
         """Converts a fireworks workflow object into a new DAGFlow object"""
         wfd = fireworkflow.to_dict()
         if "name" in wfd:
@@ -117,7 +118,7 @@ class DAGFlow(Graph):
 
         return cls(steps=steps, links=links, name=name)
 
-    def _get_links(self, nlinks):
+    def _get_links(self, nlinks) -> List[Tuple[x, x]]:
         """Translates named links into links between step ids"""
         links = []
         for link in nlinks:
@@ -126,7 +127,7 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def _get_ctrlflow_links(self):
+    def _get_ctrlflow_links(self) -> List[Tuple[x, x]]:
         """Returns a list of unique tuples of link ids"""
         links = []
         for ilink in {link.tuple for link in list(self.es)}:
@@ -135,7 +136,7 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def _add_ctrlflow_links(self, links):
+    def _add_ctrlflow_links(self, links) -> None:
         """Adds graph edges corresponding to control flow links"""
         for link in links:
             source = self._get_index(link[0])
@@ -262,22 +263,22 @@ class DAGFlow(Graph):
         """Returns all leaves (i.e. vertices without outgoing edges)"""
         return [i for i, v in enumerate(self.degree(mode=igraph.OUT)) if v == 0]
 
-    def delete_ctrlflow_links(self):
+    def delete_ctrlflow_links(self) -> None:
         """Deletes graph edges corresponding to control flow links"""
         lst = [link.index for link in list(self.es) if link["label"] == " "]
         self.delete_edges(lst)
 
-    def delete_dataflow_links(self):
+    def delete_dataflow_links(self) -> None:
         """Deletes graph edges corresponding to data flow links"""
         lst = [link.index for link in list(self.es) if link["label"] != " "]
         self.delete_edges(lst)
 
-    def add_step_labels(self):
+    def add_step_labels(self) -> None:
         """Labels the workflow steps (i.e. graph vertices)"""
         for vertex in list(self.vs):
             vertex["label"] = vertex["name"] + ", id: " + str(vertex["id"])
 
-    def check(self):
+    def check(self) -> None:
         """Correctness check of the workflow"""
         try:
             assert self.is_dag(), "The workflow graph must be a DAG."
@@ -288,7 +289,7 @@ class DAGFlow(Graph):
         assert len(self.vs["id"]) == len(set(self.vs["id"])), "Workflow steps must have unique IDs."
         self.check_dataflow()
 
-    def check_dataflow(self):
+    def check_dataflow(self) -> None:
         """Checks whether all inputs and outputs match"""
 
         # check for shared output data entities
@@ -344,3 +345,237 @@ class DAGFlow(Graph):
                 if isinstance(val, bool):
                     del vertex[key]
         graph.write_dot(filename)
+<<<<<<< HEAD
+||||||| parent of d44d6080 (continue typing)
+
+
+def plot_wf(wf, view="combined", labels=False, **kwargs):
+    """Plot workflow DAG via igraph.plot.
+
+    Args:
+        wf (Workflow)
+        view (str): same as in 'to_dot'. Default: 'combined'
+        labels (bool): show a FW's name and id as labels in graph
+
+    Other **kwargs can be any igraph plotting style keyword, overrides default.
+    See https://igraph.org/python/doc/tutorial/tutorial.html for possible
+    keywords. See `plot_wf` code for defaults.
+
+    Returns:
+        igraph.drawing.Plot
+    """
+
+    dagf = DAGFlow.from_fireworks(wf)
+    if labels:
+        dagf.add_step_labels()
+
+    # copied from to_dot
+    if view == "controlflow":
+        dagf.delete_dataflow_links()
+    elif view == "dataflow":
+        dagf.delete_ctrlflow_links()
+    elif view == "combined":
+        dlinks = []
+        for vertex1, vertex2 in combinations(dagf.vs.indices, 2):
+            clinks = list(set(dagf.incident(vertex1, mode="ALL")) & set(dagf.incident(vertex2, mode="ALL")))
+            if len(clinks) > 1:
+                for link in clinks:
+                    if dagf.es[link]["label"] == " ":
+                        dlinks.append(link)
+        dagf.delete_edges(dlinks)
+
+    # remove non-string, non-numeric attributes because write_dot() warns
+    for vertex in dagf.vs:
+        for key, val in vertex.attributes().items():
+            if not isinstance(val, (str, int, float, complex)):
+                del vertex[key]
+            if isinstance(val, bool):
+                del vertex[key]
+
+    # plotting defaults
+    visual_style = DEFAULT_IGRAPH_VISUAL_STYLE.copy()
+
+    # generic plotting defaults
+    visual_style["layout"] = dagf.layout_kamada_kawai()
+
+    # vertex defaults
+    dagf_roots = dagf._get_roots()
+    dagf_leaves = dagf._get_leaves()
+
+    def color_coding(v):
+        if v in dagf_roots:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING["root"]
+        elif v in dagf_leaves:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING["leaf"]
+        else:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING["other"]
+
+    visual_style["vertex_color"] = [color_coding(v) for v in range(dagf.vcount())]
+
+    visual_style.update(kwargs)
+
+    # special treatment
+    if "layout" in kwargs and isinstance(kwargs["layout"], str):
+        visual_style["layout"] = dagf.layout(kwargs["layout"])
+
+    return igraph.plot(dagf, **visual_style)
+
+
+@requires(
+    graphviz,
+    "graphviz package required for wf_to_graph.\n"
+    "Follow the installation instructions here: https://github.com/xflr6/graphviz",
+)
+def wf_to_graph(wf: Workflow) -> "Digraph":
+    """
+    Renders a graph representation of a workflow or firework. Workflows are
+    rendered as the control flow of the firework, while Fireworks are
+    rendered as a sequence of Firetasks.
+
+    Copied from https://git.io/JO6L8.
+
+    Args:
+        workflow (Workflow|Firework): workflow or Firework
+            to be rendered.
+
+    Returns:
+        Digraph: the rendered workflow or firework graph
+    """
+    # Directed Acyclic Graph
+    dag = Digraph(comment=wf.name, graph_attr={"rankdir": "LR"})
+    dag.node_attr["shape"] = "box"
+    if isinstance(wf, Workflow):
+        for fw in wf:
+            dag.node(str(fw.fw_id), label=fw.name, color=state_to_color[fw.state])
+
+        for start, targets in wf.links.items():
+            for target in targets:
+                dag.edge(str(start), str(target))
+    elif isinstance(wf, Firework):
+        for n, ft in enumerate(wf.tasks):
+            # Clean up names
+            name = ft.fw_name.replace("{", "").replace("}", "")
+            name = name.split(".")[-1]
+            dag.node(str(n), label=name)
+            if n >= 1:
+                dag.edge(str(n - 1), str(n))
+    else:
+        raise ValueError("expected instance of Workflow or Firework")
+    return dag
+=======
+
+
+def plot_wf(wf: Workflow, view: str = "combined", labels: bool = False, **kwargs) -> Plot:
+    """Plot workflow DAG via igraph.plot.
+
+    Args:
+        wf (Workflow)
+        view (str): same as in 'to_dot'. Default: 'combined'
+        labels (bool): show a FW's name and id as labels in graph
+
+    Other **kwargs can be any igraph plotting style keyword, overrides default.
+    See https://igraph.org/python/doc/tutorial/tutorial.html for possible
+    keywords. See `plot_wf` code for defaults.
+
+    Returns:
+        igraph.drawing.Plot
+    """
+
+    dagf = DAGFlow.from_fireworks(wf)
+    if labels:
+        dagf.add_step_labels()
+
+    # copied from to_dot
+    if view == "controlflow":
+        dagf.delete_dataflow_links()
+    elif view == "dataflow":
+        dagf.delete_ctrlflow_links()
+    elif view == "combined":
+        dlinks = []
+        for vertex1, vertex2 in combinations(dagf.vs.indices, 2):
+            clinks = list(set(dagf.incident(vertex1, mode="ALL")) & set(dagf.incident(vertex2, mode="ALL")))
+            if len(clinks) > 1:
+                for link in clinks:
+                    if dagf.es[link]["label"] == " ":
+                        dlinks.append(link)
+        dagf.delete_edges(dlinks)
+
+    # remove non-string, non-numeric attributes because write_dot() warns
+    for vertex in dagf.vs:
+        for key, val in vertex.attributes().items():
+            if not isinstance(val, (str, int, float, complex)):
+                del vertex[key]
+            if isinstance(val, bool):
+                del vertex[key]
+
+    # plotting defaults
+    visual_style = DEFAULT_IGRAPH_VISUAL_STYLE.copy()
+
+    # generic plotting defaults
+    visual_style["layout"] = dagf.layout_kamada_kawai()
+
+    # vertex defaults
+    dagf_roots = dagf._get_roots()
+    dagf_leaves = dagf._get_leaves()
+
+    def color_coding(v):
+        if v in dagf_roots:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING["root"]
+        elif v in dagf_leaves:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING["leaf"]
+        else:
+            return DEFAULT_IGRAPH_VERTEX_COLOR_CODING["other"]
+
+    visual_style["vertex_color"] = [color_coding(v) for v in range(dagf.vcount())]
+
+    visual_style.update(kwargs)
+
+    # special treatment
+    if "layout" in kwargs and isinstance(kwargs["layout"], str):
+        visual_style["layout"] = dagf.layout(kwargs["layout"])
+
+    return igraph.plot(dagf, **visual_style)
+
+
+@requires(
+    graphviz,
+    "graphviz package required for wf_to_graph.\n"
+    "Follow the installation instructions here: https://github.com/xflr6/graphviz",
+)
+def wf_to_graph(wf: Workflow) -> "Digraph":
+    """
+    Renders a graph representation of a workflow or firework. Workflows are
+    rendered as the control flow of the firework, while Fireworks are
+    rendered as a sequence of Firetasks.
+
+    Copied from https://git.io/JO6L8.
+
+    Args:
+        workflow (Workflow|Firework): workflow or Firework
+            to be rendered.
+
+    Returns:
+        Digraph: the rendered workflow or firework graph
+    """
+    # Directed Acyclic Graph
+    dag = Digraph(comment=wf.name, graph_attr={"rankdir": "LR"})
+    dag.node_attr["shape"] = "box"
+    if isinstance(wf, Workflow):
+        for fw in wf:
+            dag.node(str(fw.fw_id), label=fw.name, color=state_to_color[fw.state])
+
+        for start, targets in wf.links.items():
+            for target in targets:
+                dag.edge(str(start), str(target))
+    elif isinstance(wf, Firework):
+        for n, ft in enumerate(wf.tasks):
+            # Clean up names
+            name = ft.fw_name.replace("{", "").replace("}", "")
+            name = name.split(".")[-1]
+            dag.node(str(n), label=name)
+            if n >= 1:
+                dag.edge(str(n - 1), str(n))
+    else:
+        raise ValueError("expected instance of Workflow or Firework")
+    return dag
+>>>>>>> d44d6080 (continue typing)

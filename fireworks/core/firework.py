@@ -286,7 +286,8 @@ class Firework(FWSerializable):
         self.updated_on = updated_on or datetime.utcnow()
 
         parents = [parents] if isinstance(parents, Firework) else parents
-        self.parents = parents if parents else []
+        self.parents = list(parents) if parents else []
+        assert self.parents is not None
 
         self._state = state
 
@@ -477,7 +478,7 @@ class Launch(FWSerializable):
         state_history: Optional[Dict[Any, Any]] = None,
         launch_id: Optional[int] = None,
         fw_id: Optional[int] = None,
-    ):
+    ) -> None:
         """
         Args:
             state (str): the state of the Launch (e.g. RUNNING, COMPLETED)

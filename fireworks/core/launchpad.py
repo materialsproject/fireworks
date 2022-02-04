@@ -23,6 +23,7 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
+from fireworks.core.types import Spec
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
@@ -104,7 +105,7 @@ class WFLock:
         fw_id: int,
         expire_secs: int = WFLOCK_EXPIRATION_SECS,
         kill: bool = WFLOCK_EXPIRATION_KILL,
-    ):
+    ) -> None:
         """
         Args:
             lp (LaunchPad)
@@ -170,7 +171,7 @@ class LaunchPad(FWSerializable):
         authsource: str = None,
         uri_mode: bool = False,
         mongoclient_kwargs=None,
-    ):
+    ) -> None:
         """
         Args:
             host (str): hostname. If uri_mode is True, a MongoDB connection string URI
@@ -241,7 +242,7 @@ class LaunchPad(FWSerializable):
         self.backup_launch_data = {}
         self.backup_fw_data = {}
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         """
         Note: usernames/passwords are exported as unencrypted Strings!
         """
@@ -260,7 +261,7 @@ class LaunchPad(FWSerializable):
             "mongoclient_kwargs": self.mongoclient_kwargs,
         }
 
-    def update_spec(self, fw_ids, spec_document, mongo=False):
+    def update_spec(self, fw_ids: Sequence[int], spec_document: Spec, mongo: bool = False):
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -391,7 +392,7 @@ class LaunchPad(FWSerializable):
             self.m_logger.debug(f"Sleeping for {maintain_interval} secs...")
             time.sleep(maintain_interval)
 
-    def add_wf(self, wf, reassign_all=True):
+    def add_wf(self, wf: Union[Workflow, Firework], reassign_all: bool = True) -> Dict[int, int]:
         """
         Add workflow(or firework) to the launchpad. The firework ids will be reassigned.
 
@@ -519,7 +520,7 @@ class LaunchPad(FWSerializable):
         fw_dict["archived_launches"] = launches
         return fw_dict
 
-    def get_fw_by_id(self, fw_id):
+    def get_fw_by_id(self, fw_id: int) -> Firework:
         """
         Given a Firework id, give back a Firework object.
 
@@ -531,7 +532,7 @@ class LaunchPad(FWSerializable):
         """
         return Firework.from_dict(self.get_fw_dict_by_id(fw_id))
 
-    def get_wf_by_fw_id(self, fw_id):
+    def get_wf_by_fw_id(self, fw_id: int) -> Workflow:
         """
         Given a Firework id, give back the Workflow containing that Firework.
 
@@ -630,7 +631,7 @@ class LaunchPad(FWSerializable):
         self.offline_runs.delete_many({"launch_id": {"$in": launch_ids}})
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
 
-    def delete_wf(self, fw_id, delete_launch_dirs=False):
+    def delete_wf(self, fw_id: int, delete_launch_dirs: bool = False) -> None:
         """
         Delete the workflow containing firework with the given id.
 
@@ -645,7 +646,7 @@ class LaunchPad(FWSerializable):
         print("Removing workflow.")
         self.workflows.delete_one({"nodes": fw_id})
 
-    def get_wf_summary_dict(self, fw_id, mode="more"):
+    def get_wf_summary_dict(self, fw_id: int, mode: str = "more") -> Dict[str, Any]:
         """
         A much faster way to get summary information about a Workflow by querying only for
         needed information.
@@ -738,7 +739,7 @@ class LaunchPad(FWSerializable):
         limit: int = 0,
         count_only: bool = False,
         launches_mode: bool = False,
-    ) -> Union[int, Sequence[int]]:
+    ) -> List[int]:
         """
         Return all the fw ids that match a query.
 
@@ -828,8 +829,14 @@ class LaunchPad(FWSerializable):
         return [fw["nodes"][0] for fw in cursor]
 
     def get_fw_ids_in_wfs(
-        self, wf_query=None, fw_query=None, sort=None, limit=0, count_only=False, launches_mode=False
-    ):
+        self,
+        wf_query: Optional[Dict[str, Any]] = None,
+        fw_query: Optional[Dict[str, Any]] = None,
+        sort: Optional[List[Tuple[str, str]]] = None,
+        limit: int = 0,
+        count_only: bool = False,
+        launches_mode: bool = False,
+    ) -> List[int]:
         """
         Return all fw ids that match fw_query within workflows that match wf_query.
 
@@ -1603,7 +1610,7 @@ class LaunchPad(FWSerializable):
             },
         )
 
-    def get_new_fw_id(self, quantity=1):
+    def get_new_fw_id(self, quantity: int = 1) -> int:
         """
         Checkout the next Firework id
 
@@ -1631,7 +1638,7 @@ class LaunchPad(FWSerializable):
                 "database, please do so by performing a database reset (e.g., lpad reset)"
             )
 
-    def _upsert_fws(self, fws, reassign_all=False):
+    def _upsert_fws(self, fws: List[Firework], reassign_all: bool = False) -> Dict[int, int]:
         """
         Insert the fireworks to the 'fireworks' collection.
 
@@ -2137,21 +2144,21 @@ class LazyFirework:
         self.partial_fw.updated_on = value
 
     @property
-    def parents(self):
+    def parents(self) -> List[Firework]:
         if self._fw is not None:
             return self.partial_fw.parents
         else:
             return []
 
     @parents.setter
-    def parents(self, value):
+    def parents(self, value) -> None:
         self.partial_fw.parents = value
 
     # Properties that shadow FireWork attributes, but which are
     # fetched individually from the DB (i.e. launch objects)
 
     @property
-    def launches(self):
+    def launches(self) -> Launch:
         return self._get_launch_data("launches")
 
     @launches.setter
@@ -2164,7 +2171,7 @@ class LazyFirework:
         return self._get_launch_data("archived_launches")
 
     @archived_launches.setter
-    def archived_launches(self, value):
+    def archived_launches(self, value) -> None:
         self._launches["archived_launches"] = True
         self.partial_fw.archived_launches = value
 
@@ -2191,7 +2198,7 @@ class LazyFirework:
 
     # Get a type of Launch object
 
-    def _get_launch_data(self, name: str):
+    def _get_launch_data(self, name: str) -> Launch:
         """
         Pull launch data individually for each field.
 

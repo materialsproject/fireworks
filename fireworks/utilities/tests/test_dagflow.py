@@ -14,7 +14,7 @@ from fireworks import Firework, PyTask, Workflow
 class DAGFlowTest(unittest.TestCase):
     """run tests for DAGFlow class"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         try:
             __import__("igraph", fromlist=["Graph"])
         except (ImportError, ModuleNotFoundError):
@@ -32,7 +32,7 @@ class DAGFlowTest(unittest.TestCase):
         )
         self.fw3 = Firework(PyTask(func="print", inputs=["second power"]), name="the third one")
 
-    def test_dagflow_ok(self):
+    def test_dagflow_ok(self) -> None:
         """construct and replicate"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -40,7 +40,7 @@ class DAGFlowTest(unittest.TestCase):
         dagf = DAGFlow.from_fireworks(wfl)
         DAGFlow(**dagf.to_dict())
 
-    def test_dagflow_loop(self):
+    def test_dagflow_loop(self) -> None:
         """loop in graph"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -50,7 +50,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(wfl).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_cut(self):
+    def test_dagflow_cut(self) -> None:
         """disconnected graph"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -60,7 +60,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(wfl).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_link(self):
+    def test_dagflow_link(self) -> None:
         """wrong links"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -70,7 +70,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(wfl).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_missing_input(self):
+    def test_dagflow_missing_input(self) -> None:
         """missing input"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -87,7 +87,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(wfl).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_clashing_inputs(self):
+    def test_dagflow_clashing_inputs(self) -> None:
         """parent firework output overwrites an input in spec"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -105,7 +105,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(wfl).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_race_condition(self):
+    def test_dagflow_race_condition(self) -> None:
         """two parent firework outputs overwrite each other"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -121,7 +121,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(wfl).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_clashing_outputs(self):
+    def test_dagflow_clashing_outputs(self) -> None:
         """subsequent task overwrites output of a task"""
         from fireworks.utilities.dagflow import DAGFlow
 
@@ -135,7 +135,7 @@ class DAGFlowTest(unittest.TestCase):
             DAGFlow.from_fireworks(Workflow([fwk], {})).check()
         self.assertTrue(msg in str(context.exception))
 
-    def test_dagflow_non_dataflow_tasks(self):
+    def test_dagflow_non_dataflow_tasks(self) -> None:
         """non-dataflow tasks using outputs and inputs keys do not fail"""
         from fireworks.core.firework import FiretaskBase
         from fireworks.utilities.dagflow import DAGFlow
@@ -154,7 +154,7 @@ class DAGFlowTest(unittest.TestCase):
         wfl = Workflow([self.fw1, fw2], {self.fw1: [fw2], fw2: []})
         DAGFlow.from_fireworks(wfl).check()
 
-    def test_dagflow_view(self):
+    def test_dagflow_view(self) -> None:
         """visualize the workflow graph"""
         from fireworks.utilities.dagflow import DAGFlow
 

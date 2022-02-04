@@ -301,7 +301,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
 
 
 # TODO: make this quicker the first time around
-def load_object(obj_dict: Dict[str, Any]) -> Any:
+def load_object(obj_dict: MutableMapping[str, Any]) -> Any:
     """
     Creates an instantiation of a class based on a dictionary representation. We implicitly
     determine the Class through introspection along with information in the dictionary.
