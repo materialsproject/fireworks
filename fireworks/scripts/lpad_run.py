@@ -10,7 +10,6 @@ import os
 import re
 import sys
 import time
-import traceback
 from argparse import ArgumentParser, ArgumentTypeError
 from typing import Optional, Sequence
 
@@ -113,14 +112,22 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
 def get_lp(args):
     try:
         if args.launchpad_file:
-            return LaunchPad.from_file(args.launchpad_file)
+            lp = LaunchPad.from_file(args.launchpad_file)
         else:
+
             args.loglvl = "CRITICAL" if args.silencer else args.loglvl
-            return LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
+            # no lpad file means we try connect to localhost which is fast so use small timeout
+            # (default 30s) for quick response to user if no DB is running
+            mongo_kwds = {"serverSelectionTimeoutMS": 500}
+            lp = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl, mongoclient_kwargs=mongo_kwds)
+
+        # make sure we can connect to DB, raises pymongo.errors.ServerSelectionTimeoutError if not
+        lp.connection.admin.command("ping")
+        return lp
+
     except Exception:
-        traceback.print_exc()
         err_message = (
-            "FireWorks was not able to connect to MongoDB. Is the server running? "
+            f"FireWorks was not able to connect to MongoDB at {lp.host}:{lp.port}. Is the server running? "
             f"The database file specified was {args.launchpad_file}."
         )
         if not args.launchpad_file:
@@ -129,7 +136,8 @@ def get_lp(args):
                 "location and credentials of your Mongo database (otherwise use default "
                 "localhost configuration)."
             )
-        raise ValueError(err_message)
+        # use from None to hide the pymongo ServerSelectionTimeoutError that otherwise clutters up the stack trace
+        raise ValueError(err_message) from None
 
 
 def init_yaml(args):
@@ -167,7 +175,7 @@ def init_yaml(args):
             "port, database name, etc.) must be present in the URI. See: "
             "https://docs.mongodb.com/manual/reference/connection-string/ for details."
         )
-        print("(Enter your connection URI in under the 'host' parameter)")
+        print("(Enter your connection URI through the 'host' parameter)")
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, default, helptext in fields:
