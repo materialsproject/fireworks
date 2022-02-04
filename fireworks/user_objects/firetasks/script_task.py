@@ -4,9 +4,10 @@ import builtins
 import shlex
 import subprocess
 import sys
-from typing import Dict, List, Optional, Union
+from typing import Any, MutableMapping, Optional
 
 from fireworks.core.firework import FiretaskBase, FWAction
+from fireworks.core.types import Spec
 
 if sys.version_info[0] > 2:
     basestring = str
@@ -24,7 +25,7 @@ class ScriptTask(FiretaskBase):
     required_params = ["script"]
     _fw_name = "ScriptTask"
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         if self.get("use_global_spec"):
             self._load_params(fw_spec)
         else:
@@ -37,7 +38,7 @@ class ScriptTask(FiretaskBase):
         stdin = subprocess.PIPE if self.stdin_key else None
         return self._run_task_internal(fw_spec, stdin)
 
-    def _run_task_internal(self, fw_spec, stdin):
+    def _run_task_internal(self, fw_spec: Spec, stdin) -> FWAction:
         # run the program
         stdout = subprocess.PIPE if self.store_stdout or self.stdout_file else None
         stderr = subprocess.PIPE if self.store_stderr or self.stderr_file else None
@@ -120,7 +121,7 @@ class ScriptTask(FiretaskBase):
             raise ValueError("ScriptTask cannot both FIZZLE and DEFUSE a bad returncode!")
 
     @classmethod
-    def from_str(cls, shell_cmd, parameters=None):
+    def from_str(cls, shell_cmd: str, parameters: Optional[MutableMapping[str, Any]] = None) -> "ScriptTask":
         parameters = parameters if parameters else {}
         parameters["script"] = [shell_cmd]
         parameters["use_shell"] = True
@@ -163,7 +164,7 @@ class PyTask(FiretaskBase):
     # note that we are not using "optional_params" because we do not want to do
     # strict parameter checking in FiretaskBase due to "auto_kwargs" option
 
-    def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
+    def run_task(self, fw_spec: Spec) -> Optional[FWAction]:
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
             modname, funcname = toks

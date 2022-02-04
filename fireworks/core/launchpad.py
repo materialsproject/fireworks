@@ -23,7 +23,8 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
-from fireworks.core.types import Spec
+from fireworks.core.fworker import FWorker
+from fireworks.core.types import FromDict, Spec, ToDict
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
@@ -242,7 +243,7 @@ class LaunchPad(FWSerializable):
         self.backup_launch_data = {}
         self.backup_fw_data = {}
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         """
         Note: usernames/passwords are exported as unencrypted Strings!
         """
@@ -261,7 +262,7 @@ class LaunchPad(FWSerializable):
             "mongoclient_kwargs": self.mongoclient_kwargs,
         }
 
-    def update_spec(self, fw_ids: Sequence[int], spec_document: Spec, mongo: bool = False):
+    def update_spec(self, fw_ids: Sequence[int], spec_document: Spec, mongo: bool = False) -> None:
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -288,7 +289,7 @@ class LaunchPad(FWSerializable):
             )
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d: FromDict) -> "LaunchPad":
         port = d.get("port", None)
         name = d.get("name", None)
         username = d.get("username", None)
@@ -316,7 +317,7 @@ class LaunchPad(FWSerializable):
         )
 
     @classmethod
-    def auto_load(cls):
+    def auto_load(cls) -> "LaunchPad":
         if LAUNCHPAD_LOC:
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         return LaunchPad()
@@ -476,7 +477,7 @@ class LaunchPad(FWSerializable):
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)
 
-    def get_launch_by_id(self, launch_id):
+    def get_launch_by_id(self, launch_id: int) -> Launch:
         """
         Given a Launch id, return details of the Launch.
 
@@ -492,7 +493,7 @@ class LaunchPad(FWSerializable):
             return Launch.from_dict(m_launch)
         raise ValueError(f"No Launch exists with launch_id: {launch_id}")
 
-    def get_fw_dict_by_id(self, fw_id):
+    def get_fw_dict_by_id(self, fw_id: int):
         """
         Given firework id, return firework dict.
 
@@ -836,7 +837,7 @@ class LaunchPad(FWSerializable):
         limit: int = 0,
         count_only: bool = False,
         launches_mode: bool = False,
-    ) -> List[int]:
+    ) -> Union[List[int], int]:
         """
         Return all fw ids that match fw_query within workflows that match wf_query.
 
@@ -910,7 +911,7 @@ class LaunchPad(FWSerializable):
         cursor = self.workflows.aggregate(aggregation)
         return [fw["fw_id"] for fw in cursor]
 
-    def run_exists(self, fworker=None):
+    def run_exists(self, fworker: Optional[FWorker] = None) -> bool:
         """
         Checks to see if the database contains any FireWorks that are ready to run.
 
@@ -920,7 +921,7 @@ class LaunchPad(FWSerializable):
         q = fworker.query if fworker else {}
         return bool(self._get_a_fw_to_run(query=q, checkout=False))
 
-    def future_run_exists(self, fworker=None):
+    def future_run_exists(self, fworker: Optional[FWorker] = None) -> bool:
         """Check if database has any current OR future Fireworks available
 
         Returns:
@@ -1199,7 +1200,7 @@ class LaunchPad(FWSerializable):
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
-    def _get_active_launch_ids(self):
+    def _get_active_launch_ids(self) -> List[int]:
         """
         Get all the launch ids.
 
@@ -1211,7 +1212,14 @@ class LaunchPad(FWSerializable):
             all_launch_ids.extend(l["launches"])
         return all_launch_ids
 
-    def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
+    def reserve_fw(
+        self,
+        fworker: FWorker,
+        launch_dir: str,
+        host: Optional[str] = None,
+        ip: Optional[str] = None,
+        fw_id: Optional[int] = None,
+    ):
         """
         Checkout the next ready firework and mark the launch reserved.
 

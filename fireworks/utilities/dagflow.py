@@ -10,6 +10,8 @@ from typing import List, Optional, Tuple
 import igraph
 from igraph import Graph
 
+from fireworks import Workflow
+
 DF_TASKS = ["PyTask", "CommandLineTask", "ForeachTask", "JoinDictTask", "JoinListTask"]
 
 DEFAULT_IGRAPH_VISUAL_STYLE = {
@@ -57,7 +59,7 @@ class DAGFlow(Graph):
         self._add_dataflow_links()
 
     @classmethod
-    def from_fireworks(cls, fireworkflow) -> "DAGFlow":
+    def from_fireworks(cls, fireworkflow: Workflow) -> "DAGFlow":
         """Converts a fireworks workflow object into a new DAGFlow object"""
         wfd = fireworkflow.to_dict()
         if "name" in wfd:

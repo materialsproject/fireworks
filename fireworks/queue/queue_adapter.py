@@ -11,6 +11,7 @@ import subprocess
 import threading
 import traceback
 import warnings
+from typing import Any, Dict
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -106,7 +107,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     template_file = "OVERRIDE_ME"  # path to template file for a queue script
     submit_cmd = "OVERRIDE_ME"  # command to submit jobs, e.g. "qsub" or "squeue"
     q_name = "OVERRIDE_ME"  # (arbitrary) name, e.g. "pbs" or "slurm"
-    defaults = {}  # default parameter values for template
+    defaults: Dict[str, Any] = {}  # default parameter values for template
 
     def get_script_str(self, launch_dir):
         """

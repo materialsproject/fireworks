@@ -94,7 +94,7 @@ def recursive_dict(obj: Any, preserve_unicode: bool = True) -> Any:
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if preserve_unicode and isinstance(obj, str) and obj != obj.encode("ascii", "ignore"):
+    if preserve_unicode and isinstance(obj, str) and obj != obj.encode("ascii", "ignore"):  # type: ignore
         return obj
 
     if NUMPY_INSTALLED and isinstance(obj, np.ndarray):
@@ -129,7 +129,7 @@ def _recursive_load(obj: Any) -> Any:
             return reconstitute_dates(obj)
         except Exception:
             # convert unicode to ASCII if not really unicode
-            if obj == obj.encode("ascii", "ignore"):
+            if obj == obj.encode("ascii", "ignore"):  # type: ignore
                 return str(obj)
 
     return obj
@@ -271,7 +271,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "w", **ENCODING_PARAMS) as f:
+        with open(filename, "w", **ENCODING_PARAMS) as f:  # type: ignore
             f.write(self.to_format(f_format=f_format, **kwargs))
 
     @classmethod
@@ -288,7 +288,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "r", **ENCODING_PARAMS) as f:
+        with open(filename, "r", **ENCODING_PARAMS) as f:  # type: ignore
             return cls.from_format(f.read(), f_format=f_format)
 
     def __getstate__(self):
@@ -384,7 +384,7 @@ def load_object_from_file(filename: str, f_format: Optional[str] = None) -> Any:
     if f_format is None:
         f_format = filename.split(".")[-1]
 
-    with open(filename, "r", **ENCODING_PARAMS) as f:
+    with open(filename, "r", **ENCODING_PARAMS) as f:  # type: ignore
         if f_format == "json":
             dct = json.loads(f.read())
         elif f_format == "yaml":
@@ -393,8 +393,9 @@ def load_object_from_file(filename: str, f_format: Optional[str] = None) -> Any:
             raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
 
     classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
-    if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
-        fireworks_schema.validate(dct, classname)
+    if JSON_SCHEMA_VALIDATE:
+        if JSON_SCHEMA_VALIDATE_LIST is not None and classname in JSON_SCHEMA_VALIDATE_LIST:
+            fireworks_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
 
 

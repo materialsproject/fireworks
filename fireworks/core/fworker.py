@@ -5,6 +5,7 @@ This module contains FireWorker, which encapsulates information about a computin
 import json
 from typing import Any, Dict, Optional, Sequence, Union
 
+from fireworks.core.types import FromDict, ToDict
 from fireworks.fw_config import FWORKER_LOC
 from fireworks.utilities.fw_serializers import (
     DATETIME_HANDLER,
@@ -27,7 +28,7 @@ class FWorker(FWSerializable):
         name: str = "Automatically generated Worker",
         category: Union[str, Sequence[str]] = "",
         query: Optional[Dict[str, Any]] = None,
-        env: Optional[Dict[str, Any]] = None,
+        env: Optional[Dict[str, str]] = None,
     ) -> None:
         """
         Args:
@@ -48,7 +49,7 @@ class FWorker(FWSerializable):
         self.env = env if env else {}
 
     @recursive_serialize
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         return {
             "name": self.name,
             "category": self.category,
@@ -58,11 +59,11 @@ class FWorker(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict: Dict[str, Any]) -> "FWorker":
+    def from_dict(cls, m_dict: FromDict) -> "FWorker":
         return FWorker(m_dict["name"], m_dict["category"], json.loads(m_dict["query"]), m_dict.get("env"))
 
     @property
-    def query(self) -> Dict[str, Any]:
+    def query(self) -> ToDict:
         """
         Returns updated query dict.
         """
@@ -89,5 +90,5 @@ class FWorker(FWSerializable):
         Returns FWorker object from settings file(my_fworker.yaml).
         """
         if FWORKER_LOC:
-            return FWorker.from_file(FWORKER_LOC)
+            return FWorker.from_file(FWORKER_LOC)  # type: ignore
         return FWorker()

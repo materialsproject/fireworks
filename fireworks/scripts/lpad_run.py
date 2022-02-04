@@ -1,7 +1,7 @@
 """
 A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
 """
-
+# mypy: ignore-errors
 import ast
 import copy
 import datetime

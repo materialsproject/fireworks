@@ -54,10 +54,10 @@ class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
     You can set parameters of a Firetask like you'd use a dict.
     """
 
-    required_params = None  # list of str of required parameters to check for consistency upon init
+    required_params: Optional[List[str]] = None  # list of str of required parameters to check for consistency upon init
 
     # if set to a list of str, only required and optional kwargs are allowed; consistency checked upon init
-    optional_params = None
+    optional_params: Optional[List[str]] = None
 
     def __init__(self, *args, **kwargs) -> None:
         dict.__init__(self, *args, **kwargs)
