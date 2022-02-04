@@ -17,7 +17,7 @@ __date__ = "Dec 12, 2012"
 NEGATIVE_FWID_CTR = 0
 
 # this is where load_object() looks for serialized objects
-USER_PACKAGES = ["fireworks.user_objects", "fireworks.utilities.tests", "fw_tutorials", "fireworks.features"]
+USER_PACKAGES = ["fireworks.user_objects", "fw_tutorials", "fireworks.features"]
 
 # if you update a _fw_name, you can use this to record the change and maintain deserialization
 FW_NAME_UPDATES = {
