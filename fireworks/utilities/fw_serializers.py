@@ -33,7 +33,7 @@ import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
 import traceback
-from typing import Any, Dict, Mapping, MutableMapping, Optional, Type
+from typing import Any, Mapping, MutableMapping, Optional, Type
 
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable

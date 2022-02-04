@@ -3,7 +3,7 @@ A set of global constants for FireWorks (Python code as a config file).
 """
 
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
@@ -43,7 +43,7 @@ PRINT_FW_JSON = True
 PRINT_FW_YAML = False
 
 JSON_SCHEMA_VALIDATE = False
-JSON_SCHEMA_VALIDATE_LIST: List[str] = None
+JSON_SCHEMA_VALIDATE_LIST: Optional[List[str]] = None
 
 PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
 RUN_EXPIRATION_SECS = PING_TIME_SECS * 4  # mark job as FIZZLED if not pinged in this time
@@ -167,7 +167,7 @@ def config_to_dict() -> Dict[str, Any]:
     return d
 
 
-def write_config(path: str = None) -> None:
+def write_config(path: Optional[str] = None) -> None:
     if path is None:
         path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")
     dumpfn(config_to_dict(), path)

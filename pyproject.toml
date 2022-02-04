@@ -30,6 +30,8 @@ strict_equality = true
 [[tool.mypy.overrides]]
 module = [
     "argcomplete",
+    "atomate",
+    "atomate.vasp",
     "fabric",
     "fireworks_schema",
     "flask_paginate",
@@ -54,6 +56,8 @@ module = [
     "monty.os.path",
     "monty.serialization",
     "monty.shutil",
+    "pymatgen.core",
+    "pytest",
     # https://github.com/tqdm/tqdm/issues/260
     "tqdm",
 ]

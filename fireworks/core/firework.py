@@ -20,7 +20,7 @@ from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 
 from fireworks.core.fworker import FWorker
-from fireworks.core.types import Checkpoint, FromDict, Spec
+from fireworks.core.types import Checkpoint, FromDict, Spec, ToDict
 from fireworks.fw_config import (
     EXCEPT_DETAILS_ON_RERUN,
     NEGATIVE_FWID_CTR,
@@ -103,19 +103,19 @@ class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
 
     @serialize_fw
     @recursive_serialize
-    def to_dict(self) -> Dict[Any, Any]:
+    def to_dict(self) -> ToDict:
         return dict(self)
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict: Dict[Any, Any]) -> "FiretaskBase":
+    def from_dict(cls, m_dict: FromDict) -> "FiretaskBase":
         return cls(m_dict)
 
     def __repr__(self) -> str:
         return f"<{self.fw_name}>:{dict(self)}"
 
     # not strictly needed here for pickle/unpickle, but complements __setstate__
-    def __getstate__(self) -> Dict[Any, Any]:
+    def __getstate__(self) -> ToDict:
         return self.to_dict()
 
     # added to support pickle/unpickle
@@ -178,7 +178,7 @@ class FWAction(FWSerializable):
         self.propagate = propagate
 
     @recursive_serialize
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         return {
             "stored_data": self.stored_data,
             "exit": self.exit,
@@ -193,7 +193,7 @@ class FWAction(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict: Dict[str, Any]) -> "FWAction":
+    def from_dict(cls, m_dict: FromDict) -> "FWAction":
         d = m_dict
         additions = [Workflow.from_dict(f) for f in d["additions"]]
         detours = [Workflow.from_dict(f) for f in d["detours"]]
@@ -244,7 +244,7 @@ class Firework(FWSerializable):
     def __init__(
         self,
         tasks: Union["FiretaskBase", Sequence["FiretaskBase"]],
-        spec: Optional[Dict[Any, Any]] = None,
+        spec: Optional[Spec] = None,
         name: Optional[str] = None,
         launches: Optional[Sequence["Launch"]] = None,
         archived_launches: Optional[Sequence["Launch"]] = None,
@@ -311,7 +311,7 @@ class Firework(FWSerializable):
         self.updated_on = datetime.utcnow()
 
     @recursive_serialize
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         # put tasks in a special location of the spec
         spec = self.spec
         spec["_tasks"] = [t.to_dict() for t in self.tasks]
@@ -356,7 +356,7 @@ class Firework(FWSerializable):
         self.launches = []
         self.state = "WAITING"
 
-    def to_db_dict(self) -> Dict[str, Any]:
+    def to_db_dict(self) -> ToDict:
         """
         Return firework dict with updated launches and state.
         """
@@ -370,7 +370,7 @@ class Firework(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict: Dict[str, Any]) -> "Firework":
+    def from_dict(cls, m_dict: FromDict) -> "Firework":
         tasks = m_dict["spec"]["_tasks"]
         launches = [Launch.from_dict(tmp) for tmp in m_dict.get("launches", [])]
         archived_launches = [Launch.from_dict(tmp) for tmp in m_dict.get("archived_launches", [])]
@@ -445,14 +445,14 @@ class Tracker(FWSerializable):
             self.content = "\n".join(reversed(lines))
         return self.content
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         m_dict = {"filename": self.filename, "nlines": self.nlines, "allow_zipped": self.allow_zipped}
         if self.content:
             m_dict["content"] = self.content
         return m_dict
 
     @classmethod
-    def from_dict(cls, m_dict: Dict[str, Any]) -> "Tracker":
+    def from_dict(cls, m_dict: FromDict) -> "Tracker":
         return Tracker(
             m_dict["filename"], m_dict["nlines"], m_dict.get("content", ""), m_dict.get("allow_zipped", False)
         )
@@ -604,7 +604,7 @@ class Launch(FWSerializable):
             return int((end - start).total_seconds())
 
     @recursive_serialize
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         return {
             "fworker": self.fworker,
             "fw_id": self.fw_id,
@@ -619,7 +619,7 @@ class Launch(FWSerializable):
         }
 
     @recursive_serialize
-    def to_db_dict(self):
+    def to_db_dict(self) -> ToDict:
         m_d = self.to_dict()
         m_d["time_start"] = self.time_start
         m_d["time_end"] = self.time_end
@@ -630,7 +630,7 @@ class Launch(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict: FromDict) -> "Launch":
         fworker = FWorker.from_dict(m_dict["fworker"]) if m_dict["fworker"] else None
         action = FWAction.from_dict(m_dict["action"]) if m_dict.get("action") else None
         trackers = [Tracker.from_dict(f) for f in m_dict["trackers"]] if m_dict.get("trackers") else None
@@ -789,12 +789,12 @@ class Workflow(FWSerializable):
     def __init__(
         self,
         fireworks: Sequence[Firework],
-        links_dict: Dict[int, List[int]] = None,
-        name: str = None,
+        links_dict: Optional[Dict[int, List[int]]] = None,
+        name: Optional[str] = None,
         metadata: Dict[str, Any] = None,
-        created_on: datetime = None,
-        updated_on: datetime = None,
-        fw_states: Dict[int, str] = None,
+        created_on: Optional[datetime] = None,
+        updated_on: Optional[datetime] = None,
+        fw_states: Optional[Dict[int, str]] = None,
     ) -> None:
         """
         Args:
@@ -1202,7 +1202,7 @@ class Workflow(FWSerializable):
                 leaf_ids.append(id)
         return leaf_ids
 
-    def _reassign_ids(self, old_new: Dict[int, int]) -> None:
+    def _reassign_ids(self, old_new: Mapping[int, int]) -> None:
         """
         Internal method to reassign Firework ids, e.g. due to database insertion.
 
@@ -1227,7 +1227,7 @@ class Workflow(FWSerializable):
             new_fw_states[old_new.get(fwid, fwid)] = fw_state
         self.fw_states = new_fw_states
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ToDict:
         return {
             "fws": [f.to_dict() for f in self.id_fw.values()],
             "links": self.links.to_dict(),
@@ -1237,7 +1237,7 @@ class Workflow(FWSerializable):
             "created_on": self.created_on,
         }
 
-    def to_db_dict(self) -> Dict[str, Any]:
+    def to_db_dict(self) -> ToDict:
         m_dict = self.links.to_db_dict()
         m_dict["metadata"] = self.metadata
         m_dict["state"] = self.state
@@ -1247,7 +1247,7 @@ class Workflow(FWSerializable):
         m_dict["fw_states"] = {str(k): v for (k, v) in self.fw_states.items()}
         return m_dict
 
-    def to_display_dict(self):
+    def to_display_dict(self) -> ToDict:
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict["nodes"])
         m_dict["name--id"] = self.name + "--" + str(nodes[0])
