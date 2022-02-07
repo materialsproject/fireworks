@@ -120,7 +120,7 @@ class DAGFlow(Graph):
 
         return cls(steps=steps, links=links, name=name)
 
-    def _get_links(self, nlinks) -> List[Tuple[x, x]]:
+    def _get_links(self, nlinks) -> List[Tuple[List[str], List[str]]]:
         """Translates named links into links between step ids"""
         links = []
         for link in nlinks:
@@ -129,7 +129,7 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def _get_ctrlflow_links(self) -> List[Tuple[x, x]]:
+    def _get_ctrlflow_links(self) -> List[Tuple[str, str]]:
         """Returns a list of unique tuples of link ids"""
         links = []
         for ilink in {link.tuple for link in list(self.es)}:

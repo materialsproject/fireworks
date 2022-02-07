@@ -33,11 +33,12 @@ import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
 import traceback
-from typing import Any, Mapping, MutableMapping, Optional, Type
+from typing import Any, Mapping, MutableMapping, Optional, Type, TypeVar
 
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 
+from fireworks.core.types import FromDict
 from fireworks.fw_config import (
     DECODE_MONTY,
     ENCODE_MONTY,
@@ -178,6 +179,9 @@ def serialize_fw(func):
     return _decorator
 
 
+T = TypeVar("T", bound="FWSerializable")
+
+
 class FWSerializable(metaclass=abc.ABCMeta):
     """
     To create a serializable object within FireWorks, you should subclass this
@@ -218,7 +222,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def from_dict(cls, m_dict) -> "FWSerializable":
+    def from_dict(cls: Type[T], m_dict: FromDict) -> T:
         raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
     def __repr__(self) -> str:
@@ -240,7 +244,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
             raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
-    def from_format(cls, f_str: str, f_format: str = "json") -> "FWSerializable":
+    def from_format(cls: Type[T], f_str: str, f_format: str = "json") -> T:
         """
         convert from a String representation to its Object.
 
@@ -275,7 +279,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
             f.write(self.to_format(f_format=f_format, **kwargs))
 
     @classmethod
-    def from_file(cls, filename: str, f_format: Optional[str] = None) -> "FWSerializable":
+    def from_file(cls: Type[T], filename: str, f_format: Optional[str] = None) -> T:
         """
         Load a serialization of this object from a file.
 

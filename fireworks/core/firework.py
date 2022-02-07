@@ -116,11 +116,11 @@ class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
 
     # not strictly needed here for pickle/unpickle, but complements __setstate__
     def __getstate__(self) -> ToDict:
-        return self.to_dict()
+        return self.to_dict()  # type: ignore
 
     # added to support pickle/unpickle
     def __setstate__(self, state) -> None:
-        self.__init__(state)
+        self.__init__(state)  # type: ignore
 
     # added to support pickle/unpickle
     def __reduce__(self) -> Tuple:
@@ -140,7 +140,7 @@ class FWAction(FWSerializable):
         stored_data: Optional[Dict[Any, Any]] = None,
         exit: bool = False,
         update_spec: Optional[Mapping[str, Any]] = None,
-        mod_spec: Optional[Mapping[str, Any]] = None,
+        mod_spec: Optional[Sequence[Mapping[str, Any]]] = None,
         additions: Optional[Union[Sequence["Firework"], Sequence["Workflow"]]] = None,
         detours: Optional[Union[Sequence["Firework"], Sequence["Workflow"]]] = None,
         defuse_children: bool = False,
@@ -163,7 +163,7 @@ class FWAction(FWSerializable):
                 not only to direct children, but to all dependent FireWorks
                 down to the Workflow's leaves.
         """
-        mod_spec = mod_spec if mod_spec is not None else []
+        mod_spec = list(mod_spec) if mod_spec is not None else []
         additions = additions if additions is not None else []
         detours = detours if detours is not None else []
 
@@ -217,7 +217,13 @@ class FWAction(FWSerializable):
         Returns:
             bool
         """
-        return self.exit or self.detours or self.additions or self.defuse_children or self.defuse_workflow
+        return (
+            self.exit
+            or bool(self.detours)
+            or bool(self.additions)
+            or bool(self.defuse_children)
+            or bool(self.defuse_workflow)
+        )
 
     def __str__(self) -> str:
         return "FWAction\n" + pprint.pformat(self.to_dict())
@@ -267,9 +273,9 @@ class Firework(FWSerializable):
             updated_on (datetime): last time the STATE was updated.
         """
 
-        self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
+        self.tasks = list(tasks) if isinstance(tasks, Sequence) else [tasks]
 
-        self.spec = spec.copy() if spec else {}
+        self.spec = dict(spec) if spec else {}
 
         self.name = name or "Unnamed FW"  # do it this way to prevent None
         # names
@@ -280,8 +286,8 @@ class Firework(FWSerializable):
             NEGATIVE_FWID_CTR -= 1
             self.fw_id = NEGATIVE_FWID_CTR
 
-        self.launches = launches if launches else []
-        self.archived_launches = archived_launches if archived_launches else []
+        self.launches = list(launches) if launches else []
+        self.archived_launches = list(archived_launches) if archived_launches else []
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
@@ -353,7 +359,7 @@ class Firework(FWSerializable):
 
         self.archived_launches.extend(self.launches)
         self.archived_launches = list(set(self.archived_launches))  # filter duplicates
-        self.launches = []
+        self.launches: List[Launch] = []  # type: ignore
         self.state = "WAITING"
 
     def to_db_dict(self) -> ToDict:
@@ -668,7 +674,7 @@ class Launch(FWSerializable):
             if state in ["RUNNING", "RESERVED"]:
                 self.touch_history()  # add updated_on key
 
-    def _get_time(self, states, use_update_time: bool = False) -> datetime:  # type: ignore
+    def _get_time(self, states, use_update_time: bool = False) -> datetime:
         """
         Internal method to help get the time of various events in the Launch (e.g. RUNNING)
         from the state history.
@@ -684,8 +690,8 @@ class Launch(FWSerializable):
         for data in self.state_history:
             if data["state"] in states:
                 if use_update_time:
-                    return data["updated_on"]
-                return data["created_on"]
+                    return data["updated_on"]  # type: ignore
+                return data["created_on"]  # type: ignore
 
 
 class Workflow(FWSerializable):
@@ -1391,7 +1397,7 @@ class Workflow(FWSerializable):
 
         """
         # not working with the copies, causes spurious behavior
-        wf_dict = deepcopy(self.as_dict())
+        wf_dict = deepcopy(self.as_dict())  # type: ignore
         orig_parent_links = deepcopy(self.links.parent_links)
         fws = wf_dict["fws"]
 
