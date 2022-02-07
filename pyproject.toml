@@ -32,6 +32,7 @@ module = [
     "argcomplete",
     "atomate",
     "atomate.vasp",
+    "atomate.vasp.workflows",
     "fabric",
     "fireworks_schema",
     "flask_paginate",
