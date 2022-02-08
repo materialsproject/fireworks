@@ -629,28 +629,25 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
     def test_detect_lostruns(self):
         # Launch the timed firework in a separate process
         class RocketProcess(Process):
-            def __init__(self):
+            def __init__(self, lpad, fworker):
                 super(self.__class__, self).__init__()
-                self.lpad = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
-                self.fworker = FWorker()
+                self.lpad = lpad
+                self.fworker = fworker
 
             def run(self):
                 launch_rocket(self.lpad, self.fworker)
 
-        rp = RocketProcess()
+        rp = RocketProcess(self.lp, self.fworker)
         rp.start()
 
         # Wait for fw to start
         it = 0
-        while not any([f.state == "RUNNING" for f in
-                       self.lp.get_wf_by_fw_id(self.fw_id).fws]):
+        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
             time.sleep(1)  # Wait 1 sec
             it += 1
             if it == 10:
                 raise ValueError("FW never starts running")
         rp.terminate()  # Kill the rocket
-
-        launch_rocket(self.lp, self.fworker)
 
         l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
         self.assertEqual((l, f), ([1], [1]))
@@ -658,16 +655,13 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         l, f, _ = self.lp.detect_lostruns(2)
         self.assertEqual((l, f), ([1], [1]))
 
-        l, f, _ = self.lp.detect_lostruns(2,
-                                          min_runtime=10)  # script did not run for 10 secs
+        l, f, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f, _ = self.lp.detect_lostruns(2,
-                                          max_runtime=-1)  # script ran more than -1 secs
+        l, f, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
         self.assertEqual((l, f), ([], []))
 
-        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0,
-                                          rerun=True)
+        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, "READY")
 
@@ -733,7 +727,6 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
             self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
             self.assertEqual(wf.fw_states[fw_id], "RUNNING")
         rp.terminate()
-
 
 class WorkflowFireworkStatesTest(unittest.TestCase):
     """
