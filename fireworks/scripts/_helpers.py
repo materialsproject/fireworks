@@ -11,29 +11,31 @@ def _validate_config_file_paths(args: Namespace, cfg_files_to_validate: Sequence
     Args:
         args (argparse.Namespace): The parsed arguments from the CLI.
         cfg_files_to_validate (list[tuple[str, str, bool, str | None]]): config files to validate.
+            Tuple is (config filename, CLI flag, is filepath required, default config file location).
 
     Raises:
         ValueError: If a path to a required config file is not provided.
         FileNotFoundError: If a config file is provided but does not exist.
     """
-    for config_file, cli_flag, required, default_loc in cfg_files_to_validate:
+    for filename, cli_flag, required, default_loc in cfg_files_to_validate:
 
-        file_name = f"{config_file}_file"
-        file_path = getattr(args, file_name)
+        attr_name = f"{filename}_file"
+        file_path = getattr(args, attr_name)
 
         # args.config_dir defaults to '.' if not specified
-        if file_path is None and os.path.exists(os.path.join(args.config_dir, f"my_{file_name}.yaml")):
-            setattr(args, file_name, os.path.join(args.config_dir, f"my_{file_name}.yaml"))
+        file_in_config_dir = os.path.join(args.config_dir, f"my_{filename}.yaml")
+        if file_path is None and os.path.exists(file_in_config_dir):
+            setattr(args, attr_name, file_in_config_dir)
         elif file_path is None:
-            setattr(args, file_name, default_loc)
+            setattr(args, attr_name, default_loc)
 
-        file_path = getattr(args, file_name, None)
+        file_path = getattr(args, attr_name, None)
 
         # throw on missing config files
         if file_path is None and required:
             raise ValueError(
-                f"No path specified for {file_name}. Use the {cli_flag} flag to specify or check the value "
+                f"No path specified for {attr_name}. Use the {cli_flag} flag to specify or check the value "
                 f"of CONFIG_FILE_DIR and make sure it points at where all your config files are."
             )
         if file_path is not None and not os.path.exists(file_path):
-            raise FileNotFoundError(f"{file_name} '{file_path}' does not exist!")
+            raise FileNotFoundError(f"{attr_name} '{file_path}' does not exist!")
