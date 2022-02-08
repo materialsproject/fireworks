@@ -349,7 +349,7 @@ def get_fws_helper(
                 if "launches" in d:
                     del d["launches"]
             fws.append(d)
-    return fws if len(fws) > 1 else fws[0]
+    return fws[0] if len(fws) == 1 else fws
 
 
 def get_fws(args: Namespace) -> None:
