@@ -9,6 +9,7 @@ import filecmp
 import glob
 import os
 import shutil
+import signal
 import time
 import unittest
 from multiprocessing import Process
@@ -18,7 +19,7 @@ from pymongo import MongoClient
 from pymongo.errors import OperationFailure
 
 import fireworks.fw_config
-from fireworks import Firework, FWorker, LaunchPad, Workflow
+from fireworks import Firework, FWorker, LaunchPad, Workflow, FiretaskBase, explicit_serialize
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.core.tests.tasks import (
     DetoursTask,
@@ -29,6 +30,8 @@ from fireworks.core.tests.tasks import (
 )
 from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
+from fireworks.utilities.fw_utilities import explicit_serialize
+
 
 TESTDB_NAME = "fireworks_unittest"
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -570,7 +573,9 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     def setUp(self):
         # Define a timed fireWork
-        fw_timer = Firework(PyTask(func="time.sleep", args=[5]), name="timer")
+        # fw_timer = Firework(PyTask(func="time.sleep", args=[5]), name="timer")
+        fw_timer = Firework(KillThisPIDTask(), name="timer")
+
         self.lp.add_wf(fw_timer)
 
         # Get assigned fwid for timer firework
@@ -590,22 +595,17 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     def test_detect_lostruns(self):
         # Launch the timed firework in a separate process
-        # class RocketProcess(Process):
-        #     def __init__(self):
-        #         super(self.__class__, self).__init__()
-        #         self.lpad = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
-        #         self.fworker = FWorker()
-        # 
-        #     def run(self):
-        #         print("About to run rocketprocess")
-        #         launch_rocket(self.lpad, self.fworker)
-        #         print("Did run rocketprocess")
-        #
-        # rp = RocketProcess()
-        # rp.start()
+        class RocketProcess(Process):
+            def __init__(self):
+                super(self.__class__, self).__init__()
+                self.lpad = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+                self.fworker = FWorker()
 
-        launch_rocket(self.lp, self.fworker)
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
 
+        rp = RocketProcess()
+        rp.start()
 
         # Wait for fw to start
         it = 0
@@ -632,66 +632,66 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         self.assertEqual((l, f), ([1], [1]))
         self.assertEqual(self.lp.get_fw_by_id(1).state, "READY")
 
-    # def test_detect_lostruns_defuse(self):
-    #     # Launch the timed firework in a separate process
-    #     class RocketProcess(Process):
-    #         def __init__(self, lpad, fworker):
-    #             super(self.__class__, self).__init__()
-    #             self.lpad = lpad
-    #             self.fworker = fworker
-    #
-    #         def run(self):
-    #             launch_rocket(self.lpad, self.fworker)
-    #
-    #     rp = RocketProcess(self.lp, self.fworker)
-    #     rp.start()
-    #
-    #     # Wait for fw to start
-    #     it = 0
-    #     while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
-    #         time.sleep(1)  # Wait 1 sec
-    #         it += 1
-    #         if it == 10:
-    #             raise ValueError("FW never starts running")
-    #     rp.terminate()  # Kill the rocket
-    #
-    #     l, f, i = self.lp.detect_lostruns(0.01)
-    #     self.assertEqual((l, f), ([1], [1]))
-    #
-    #     self.lp.defuse_fw(1)
-    #
-    #     l, f, i = self.lp.detect_lostruns(0.01, rerun=True)
-    #     self.assertEqual((l, f), ([1], []))
-    #     self.assertEqual(self.lp.get_fw_by_id(1).state, "DEFUSED")
-    #
-    # def test_state_after_run_start(self):
-    #     # Launch the timed firework in a separate process
-    #     class RocketProcess(Process):
-    #         def __init__(self, lpad, fworker):
-    #             super(self.__class__, self).__init__()
-    #             self.lpad = lpad
-    #             self.fworker = fworker
-    #
-    #         def run(self):
-    #             launch_rocket(self.lpad, self.fworker)
-    #
-    #     rp = RocketProcess(self.lp, self.fworker)
-    #     rp.start()
-    #
-    #     # Wait for running
-    #     it = 0
-    #     while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
-    #         time.sleep(1)  # Wait 1 sec
-    #         it += 1
-    #         if it == 10:
-    #             raise ValueError("FW never starts running")
-    #
-    #     # WF should be running
-    #     wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
-    #     for fw_id in wf.fw_states:
-    #         self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
-    #         self.assertEqual(wf.fw_states[fw_id], "RUNNING")
-    #     rp.terminate()
+    def test_detect_lostruns_defuse(self):
+        # Launch the timed firework in a separate process
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__, self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
+
+        rp = RocketProcess(self.lp, self.fworker)
+        rp.start()
+
+        # Wait for fw to start
+        it = 0
+        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+            time.sleep(1)  # Wait 1 sec
+            it += 1
+            if it == 10:
+                raise ValueError("FW never starts running")
+        rp.terminate()  # Kill the rocket
+
+        l, f, i = self.lp.detect_lostruns(0.01)
+        self.assertEqual((l, f), ([1], [1]))
+
+        self.lp.defuse_fw(1)
+
+        l, f, i = self.lp.detect_lostruns(0.01, rerun=True)
+        self.assertEqual((l, f), ([1], []))
+        self.assertEqual(self.lp.get_fw_by_id(1).state, "DEFUSED")
+
+    def test_state_after_run_start(self):
+        # Launch the timed firework in a separate process
+        class RocketProcess(Process):
+            def __init__(self, lpad, fworker):
+                super(self.__class__, self).__init__()
+                self.lpad = lpad
+                self.fworker = fworker
+
+            def run(self):
+                launch_rocket(self.lpad, self.fworker)
+
+        rp = RocketProcess(self.lp, self.fworker)
+        rp.start()
+
+        # Wait for running
+        it = 0
+        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+            time.sleep(1)  # Wait 1 sec
+            it += 1
+            if it == 10:
+                raise ValueError("FW never starts running")
+
+        # WF should be running
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
+        for fw_id in wf.fw_states:
+            self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
+            self.assertEqual(wf.fw_states[fw_id], "RUNNING")
+        rp.terminate()
 
 
 class WorkflowFireworkStatesTest(unittest.TestCase):
@@ -1389,6 +1389,14 @@ class GridfsStoredDataTest(unittest.TestCase):
         launch_full = self.lp.get_launch_by_id(1)
         self.assertEqual(len(launch_full.action.detours), 2000)
 
+
+@explicit_serialize
+class KillThisPIDTask(FiretaskBase):
+    _fw_name = "KillThisPIDTask"
+
+    def run_task(self, fw_spec):
+        time.sleep(5)
+        os.kill(os.getpid(), signal.SIGKILL)
 
 if __name__ == "__main__":
     unittest.main()
