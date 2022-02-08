@@ -12,7 +12,6 @@ from fireworks import LaunchPad
 
 __author__ = "Wei Chen"
 __copyright__ = "Copyright 2014, The Material Project"
-__version__ = "0.5"
 __maintainer__ = "Wei Chen"
 __email__ = "weichen@lbl.gov"
 __date__ = "Sep 8, 2014"

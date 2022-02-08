@@ -13,7 +13,6 @@ if sys.version_info[0] > 2:
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 18, 2013"
@@ -162,7 +161,7 @@ class PyTask(FiretaskBase):
     required_params = ["func"]
     other_params = ["args", "kwargs", "auto_kwargs", "stored_data_varname", "inputs", "outputs", "chunk_number"]
     # note that we are not using "optional_params" because we do not want to do
-    # strict parameter checking in FireTaskBase due to "auto_kwargs" option
+    # strict parameter checking in FiretaskBase due to "auto_kwargs" option
 
     def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
         toks = self["func"].rsplit(".", 1)

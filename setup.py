@@ -10,7 +10,7 @@ __date__ = "Jan 9, 2013"
 if __name__ == "__main__":
     setup(
         name="FireWorks",
-        version="1.9.8",
+        version="2.0.2",
         description="FireWorks workflow software",
         long_description=open("README.md").read(),
         url="https://github.com/materialsproject/fireworks",
@@ -25,6 +25,7 @@ if __name__ == "__main__":
             "fireworks.flask_site.static.font-awesome-4.0.3": ["css/*", "fonts/*", "less/*", "scss/*"],
         },
         zip_safe=False,
+        python_requires=">=3.7",
         install_requires=[
             "ruamel.yaml>=0.15.35",
             "pymongo>=3.3.0",
@@ -37,7 +38,7 @@ if __name__ == "__main__":
             "flask-paginate>=0.4.5",
             "gunicorn>=19.6.0",
             "tqdm>=4.8.4",
-            "importlib-metadata>=4.8.2"
+            "importlib-metadata>=4.8.2;python_version<'3.8'",
         ],
         extras_require={
             "rtransfer": ["paramiko>=2.4.2"],
@@ -57,8 +58,7 @@ if __name__ == "__main__":
             "Topic :: Other/Nonlisted Topic",
             "Topic :: Scientific/Engineering",
         ],
-        test_suite="nose.collector",
-        tests_require=["nose"],
+        tests_require=["pytest"],
         entry_points={
             "console_scripts": [
                 "lpad = fireworks.scripts.lpad_run:lpad",

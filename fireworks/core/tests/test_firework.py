@@ -5,7 +5,6 @@ TODO: Modify unittest doc.
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "2/26/14"
@@ -156,13 +155,15 @@ class WorkflowTest(unittest.TestCase):
         wflow.remove_fws(wflow.root_fw_ids)
         self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
 
-    def test_iter_and_len(self):
+    def test_iter_len_index(self):
         fws = [self.fw1, self.fw2, self.fw3]
         wflow = Workflow(fws)
         for idx, fw in enumerate(wflow):
             self.assertEqual(fw, fws[idx])
 
         assert len(wflow) == len(fws)
+
+        assert wflow[0] == self.fw1
 
 
 if __name__ == "__main__":

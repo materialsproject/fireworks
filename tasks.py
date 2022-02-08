@@ -3,13 +3,17 @@
 
 import json
 import os
+import sys
 import webbrowser
 
 import requests
 from invoke import task
 from monty.os import cd
 
-from fireworks import __version__
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
 
 """
 Deployment file to facilitate releases.
@@ -18,6 +22,7 @@ Deployment file to facilitate releases.
 __author__ = "Shyue Ping Ong, Anubhav Jain"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "Sep 1, 2014"
+fw_version = f"v{metadata.version('fireworks')}"
 
 
 @task
@@ -40,7 +45,7 @@ def update_doc(ctx):
     make_doc(ctx)
     with cd("docs"):
         ctx.run("git add .")
-        ctx.run(f'git commit -a -m "Update to v{__version__}"')
+        ctx.run(f'git commit -a -m "Update to {fw_version}"')
         ctx.run("git push")
 
 
@@ -52,14 +57,14 @@ def publish(ctx):
 @task
 def release_github(ctx):
     payload = {
-        "tag_name": "v" + __version__,
+        "tag_name": fw_version,
         "target_commitish": "master",
-        "name": "v" + __version__,
+        "name": fw_version,
         "body": "",
         "draft": False,
         "prerelease": False,
     }
-    # For this to work properly, you need to go ti your Github profile, generate
+    # For this to work properly, you need to go to your Github profile, generate
     # a "Personal access token". Then do export GITHUB_RELEASES_TOKEN="xyz1234"
     # (or add it to your bash_profile).
     response = requests.post(

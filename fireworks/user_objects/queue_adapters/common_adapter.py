@@ -16,7 +16,6 @@ from fireworks.utilities.fw_utilities import log_exception, log_fancy
 
 __author__ = "Anubhav Jain, Michael Kocher, Shyue Ping Ong, David Waroquiers, Felix Brockherde"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Dec 12, 2012"

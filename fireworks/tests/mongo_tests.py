@@ -22,15 +22,12 @@ from fireworks.user_objects.firetasks.fileio_tasks import (
     FileWriteTask,
 )
 from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
-from fireworks.user_objects.firetasks.templatewriter_task import (
-    TemplateWriterTask,
-)
+from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 from fw_tutorials.dynamic_wf.fibadd_task import FibonacciAdderTask
 from fw_tutorials.firetask.addition_task import AdditionTask
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Mar 06, 2013"

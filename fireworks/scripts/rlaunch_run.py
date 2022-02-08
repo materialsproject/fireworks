@@ -6,6 +6,7 @@ import os
 import signal
 import sys
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -14,10 +15,14 @@ from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
 
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
+
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
@@ -28,14 +33,18 @@ def handle_interrupt(signum, frame):
     sys.exit(1)
 
 
-def rlaunch():
+def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "This program launches one or more Rockets. A Rocket retrieves a job from the "
         'central database and runs it. The "single-shot" option launches a single Rocket, '
         'whereas the "rapidfire" option loops until all FireWorks are completed.'
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("rlaunch", description=m_description)
+
+    fw_version = metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+
     subparsers = parser.add_subparsers(help="command", dest="command")
     single_parser = subparsers.add_parser("singleshot", help="launch a single Rocket")
     rapid_parser = subparsers.add_parser(
@@ -117,7 +126,7 @@ def rlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     signal.signal(signal.SIGINT, handle_interrupt)  # graceful exit on ^C
 
@@ -184,6 +193,8 @@ def rlaunch():
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
 
+    return 0
+
 
 if __name__ == "__main__":
-    rlaunch()
+    raise SystemExit(rlaunch())

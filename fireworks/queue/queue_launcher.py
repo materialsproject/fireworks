@@ -32,7 +32,6 @@ from fireworks.utilities.fw_utilities import (
 
 __author__ = "Anubhav Jain, Michael Kocher"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Dec 12, 2012"
@@ -305,9 +304,9 @@ def _njobs_in_dir(block_dir):
         block_dir: (str) the block directory we want to count the jobs in
 
     Return:
-        (int)
+        (int): job count
     """
-    return len(glob.glob("%s/launcher_*" % os.path.abspath(block_dir)))
+    return len(glob.glob(f"{os.path.abspath(block_dir)}/launcher_*"))
 
 
 def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):

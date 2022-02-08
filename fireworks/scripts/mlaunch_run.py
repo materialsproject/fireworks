@@ -3,26 +3,35 @@ A runnable script to launch Job Packing (Multiple) Rockets
 """
 
 import os
+import sys
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
+
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"
-__version__ = "0.1"
 __maintainer__ = "Xiaohui Qu"
 __email__ = "xqu@lbl.gov"
 __date__ = "Aug 19, 2013"
 
 
-def mlaunch():
+def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     m_description = "This program launches multiple Rockets simultaneously"
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("mlaunch", description=m_description)
+
+    fw_version = metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
 
     parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     parser.add_argument(
@@ -70,7 +79,7 @@ def mlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if (
         not args.launchpad_file
@@ -111,6 +120,8 @@ def mlaunch():
         exclude_current_node=args.exclude_current_node,
     )
 
+    return 0
+
 
 if __name__ == "__main__":
-    mlaunch()
+    raise SystemExit(mlaunch())
