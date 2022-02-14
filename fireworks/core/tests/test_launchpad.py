@@ -16,9 +16,11 @@ from multiprocessing import Process
 from monty.os import cd
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
+from pymongo import __version__ as PYMONGO_VERSION
 
 import fireworks.fw_config
-from fireworks import Firework, FWorker, LaunchPad, Workflow
+from fireworks import Firework, FWorker, LaunchPad, Workflow, FiretaskBase, \
+    explicit_serialize
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.core.tests.tasks import (
     DetoursTask,
@@ -32,6 +34,7 @@ from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
 
 TESTDB_NAME = "fireworks_unittest"
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+PYMONGO_MAJOR_VERSION = int(PYMONGO_VERSION[0])
 
 
 class AuthenticationTest(unittest.TestCase):
@@ -41,28 +44,33 @@ class AuthenticationTest(unittest.TestCase):
     def setUpClass(cls):
         try:
             client = MongoClient()
-            client.not_the_admin_db.command("createUser", "myuser", pwd="mypassword", roles=["dbOwner"])
+            client.not_the_admin_db.command("createUser", "myuser",
+                                            pwd="mypassword", roles=["dbOwner"])
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     def test_no_admin_privileges_for_plebs(self):
         """Normal users can not authenticate against the admin db."""
         with self.assertRaises(OperationFailure):
-            lp = LaunchPad(name="admin", username="myuser", password="mypassword", authsource="admin")
+            lp = LaunchPad(name="admin", username="myuser",
+                           password="mypassword", authsource="admin")
             lp.db.collection.count_documents({})
 
     def test_authenticating_to_users_db(self):
         """A user should be able to authenticate against a database that they
         are a user of.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="myuser", password="mypassword", authsource="not_the_admin_db")
+        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+                       password="mypassword", authsource="not_the_admin_db")
         lp.db.collection.count_documents({})
 
     def test_authsource_infered_from_db_name(self):
         """The default behavior is to authenticate against the db that the user
         is trying to access.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="myuser", password="mypassword")
+        lp = LaunchPad(name="not_the_admin_db", username="myuser",
+                       password="mypassword")
         lp.db.collection.count_documents({})
 
 
@@ -75,12 +83,14 @@ class LaunchPadTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
+        cls.lp.connection
 
     def setUp(self):
         self.old_wd = os.getcwd()
@@ -88,7 +98,8 @@ class LaunchPadTest(unittest.TestCase):
         self.lp.to_file(self.LP_LOC)
 
     def tearDown(self):
-        self.lp.reset(password=None, require_password=False, max_reset_wo_password=1000)
+        self.lp.reset(password=None, require_password=False,
+                      max_reset_wo_password=1000)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
             os.remove("FW.json")
@@ -119,7 +130,8 @@ class LaunchPadTest(unittest.TestCase):
 
         # test failsafe in a strict way
         for _ in range(30):
-            self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
+            self.lp.add_wf(
+                Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
 
         self.assertRaises(ValueError, self.lp.reset, "")
         self.lp.reset("", False, 100)  # reset back
@@ -152,8 +164,10 @@ class LaunchPadTest(unittest.TestCase):
         wfs = []
         for _ in range(50):
             # Add two workflows with 3 and 5 simple fireworks
-            wf3 = Workflow([Firework(ftask, name="lorem") for _ in range(3)], name="lorem wf")
-            wf5 = Workflow([Firework(ftask, name="lorem") for _ in range(5)], name="lorem wf")
+            wf3 = Workflow([Firework(ftask, name="lorem") for _ in range(3)],
+                           name="lorem wf")
+            wf5 = Workflow([Firework(ftask, name="lorem") for _ in range(5)],
+                           name="lorem wf")
             wfs.extend([wf3, wf5])
         self.lp.bulk_add_wfs(wfs)
         num_fws_total = sum(len(wf) for wf in wfs)
@@ -172,7 +186,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -183,80 +198,96 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # define the individual FireWorks used in the Workflow
         # Parent Firework
         fw_p = Firework(
-            ScriptTask.from_str('echo "Cronus is the ruler of titans"', {"store_stdout": True}), name="parent", fw_id=1
+            ScriptTask.from_str('echo "Cronus is the ruler of titans"',
+                                {"store_stdout": True}), name="parent", fw_id=1
         )
         # Sibling fireworks
         fw_s1 = Firework(
-            ScriptTask.from_str('echo "Zeus is son of Cronus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Zeus is son of Cronus"',
+                                {"store_stdout": True}),
             name="sib1",
             fw_id=2,
             parents=fw_p,
         )
         fw_s2 = Firework(
-            ScriptTask.from_str('echo "Poisedon is brother of Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Poisedon is brother of Zeus"',
+                                {"store_stdout": True}),
             name="sib2",
             fw_id=3,
             parents=fw_p,
         )
         fw_s3 = Firework(
-            ScriptTask.from_str('echo "Hades is brother of Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Hades is brother of Zeus"',
+                                {"store_stdout": True}),
             name="sib3",
             fw_id=4,
             parents=fw_p,
         )
         fw_s4 = Firework(
-            ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"',
+                                {"store_stdout": True}),
             name="sib4",
             fw_id=5,
             parents=fw_p,
         )
         fw_s5 = Firework(
-            ScriptTask.from_str('echo "Lapetus is son of Oceanus"', {"store_stdout": True}), name="cousin1", fw_id=6
+            ScriptTask.from_str('echo "Lapetus is son of Oceanus"',
+                                {"store_stdout": True}), name="cousin1", fw_id=6
         )
         # Children fireworks
         fw_c1 = Firework(
-            ScriptTask.from_str('echo "Ares is son of Zeus"', {"store_stdout": True}), name="c1", fw_id=7, parents=fw_s1
+            ScriptTask.from_str('echo "Ares is son of Zeus"',
+                                {"store_stdout": True}), name="c1", fw_id=7,
+            parents=fw_s1
         )
         fw_c2 = Firework(
             ScriptTask.from_str(
-                'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"', {"store_stdout": True}
+                'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"',
+                {"store_stdout": True}
             ),
             name="c2",
             fw_id=8,
             parents=[fw_s1, fw_s4],
         )
         fw_c3 = Firework(
-            ScriptTask.from_str('echo "Makaria is daughter of Hades & Persephone"', {"store_stdout": True}),
+            ScriptTask.from_str(
+                'echo "Makaria is daughter of Hades & Persephone"',
+                {"store_stdout": True}),
             name="c3",
             fw_id=9,
             parents=[fw_s3, fw_c2],
         )
         fw_c4 = Firework(
-            ScriptTask.from_str('echo "Dione is descendant of Lapetus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Dione is descendant of Lapetus"',
+                                {"store_stdout": True}),
             name="c4",
             fw_id=10,
             parents=fw_s5,
         )
         fw_c5 = Firework(
-            ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"',
+                                {"store_stdout": True}),
             name="c5",
             fw_id=11,
             parents=[fw_s1, fw_c4],
         )
         fw_c6 = Firework(
-            ScriptTask.from_str('echo "Atlas is son of of Lapetus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Atlas is son of of Lapetus"',
+                                {"store_stdout": True}),
             name="c6",
             fw_id=12,
             parents=fw_s5,
         )
         fw_c7 = Firework(
-            ScriptTask.from_str('echo "Maia is daughter of Atlas"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Maia is daughter of Atlas"',
+                                {"store_stdout": True}),
             name="c7",
             fw_id=13,
             parents=fw_c6,
         )
         fw_c8 = Firework(
-            ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"',
+                                {"store_stdout": True}),
             name="c8",
             fw_id=14,
             parents=[fw_s1, fw_c7],
@@ -264,7 +295,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # assemble Workflow from FireWorks and their connections by id
         workflow = Workflow(
-            [fw_p, fw_s1, fw_s2, fw_s3, fw_s4, fw_s5, fw_c1, fw_c2, fw_c3, fw_c4, fw_c5, fw_c6, fw_c7, fw_c8]
+            [fw_p, fw_s1, fw_s2, fw_s3, fw_s4, fw_s5, fw_c1, fw_c2, fw_c3,
+             fw_c4, fw_c5, fw_c6, fw_c7, fw_c8]
         )
         self.lp.add_wf(workflow)
 
@@ -275,11 +307,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.zeus_sib_fw_ids = {3, 4, 5}
         self.par_fw_id = 1
         self.all_ids = (
-            self.zeus_child_fw_ids
-            | self.lapetus_desc_fw_ids
-            | self.zeus_sib_fw_ids
-            | {self.zeus_fw_id}
-            | {self.par_fw_id}
+                self.zeus_child_fw_ids
+                | self.lapetus_desc_fw_ids
+                | self.zeus_sib_fw_ids
+                | {self.zeus_fw_id}
+                | {self.par_fw_id}
         )
 
         self.old_wd = os.getcwd()
@@ -316,7 +348,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertTrue(self.zeus_sib_fw_ids.issubset(completed_ids))
 
             # Check that Zeus and children are subset of incompleted fwids
-            fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
+            fws_no_run = set(
+                self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
             self.assertIn(self.zeus_fw_id, fws_no_run)
             self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
 
@@ -350,7 +383,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertTrue(self.zeus_sib_fw_ids.issubset(completed_ids))
 
             # Check that Zeus and children are subset of incompleted fwids
-            fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
+            fws_no_run = set(
+                self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
             self.assertIn(self.zeus_fw_id, fws_no_run)
             self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
         except Exception:
@@ -551,6 +585,10 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             self.assertFalse(fw_start_t > ts)
 
 
+@unittest.skipIf(
+    PYMONGO_MAJOR_VERSION > 3,
+    "detect lostruns test not supported for pymongo major version > 3"
+)
 class LaunchPadLostRunsDetectTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -560,7 +598,8 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -585,6 +624,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         os.chdir(self.old_wd)
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
+        # self.lp.connection.close()
 
     def test_detect_lostruns(self):
         # Launch the timed firework in a separate process
@@ -641,7 +681,8 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         # Wait for fw to start
         it = 0
-        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+        while not any([f.state == "RUNNING" for f in
+                       self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
             time.sleep(1)  # Wait 1 sec
             it += 1
             if it == 10:
@@ -673,7 +714,8 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         # Wait for running
         it = 0
-        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+        while not any([f.state == "RUNNING" for f in
+                       self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
             time.sleep(1)  # Wait 1 sec
             it += 1
             if it == 10:
@@ -685,7 +727,6 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
             self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
             self.assertEqual(wf.fw_states[fw_id], "RUNNING")
         rp.terminate()
-
 
 class WorkflowFireworkStatesTest(unittest.TestCase):
     """
@@ -701,7 +742,8 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -712,79 +754,95 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         # define the individual FireWorks used in the Workflow
         # Parent Firework
         fw_p = Firework(
-            ScriptTask.from_str('echo "Cronus is the ruler of titans"', {"store_stdout": True}), name="parent", fw_id=1
+            ScriptTask.from_str('echo "Cronus is the ruler of titans"',
+                                {"store_stdout": True}), name="parent", fw_id=1
         )
         # Sibling fireworks
         # fw_s1 = Firework(ScriptTask.from_str(
         #    'echo "Zeus is son of Cronus"',
         #    {'store_stdout':True}), name="sib1", fw_id=2, parents=fw_p)
         # Timed firework
-        fw_s1 = Firework(PyTask(func="time.sleep", args=[5]), name="sib1", fw_id=2, parents=fw_p)
+        fw_s1 = Firework(PyTask(func="time.sleep", args=[5]), name="sib1",
+                         fw_id=2, parents=fw_p)
         fw_s2 = Firework(
-            ScriptTask.from_str('echo "Poisedon is brother of Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Poisedon is brother of Zeus"',
+                                {"store_stdout": True}),
             name="sib2",
             fw_id=3,
             parents=fw_p,
         )
         fw_s3 = Firework(
-            ScriptTask.from_str('echo "Hades is brother of Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Hades is brother of Zeus"',
+                                {"store_stdout": True}),
             name="sib3",
             fw_id=4,
             parents=fw_p,
         )
         fw_s4 = Firework(
-            ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Demeter is sister & wife of Zeus"',
+                                {"store_stdout": True}),
             name="sib4",
             fw_id=5,
             parents=fw_p,
         )
         fw_s5 = Firework(
-            ScriptTask.from_str('echo "Lapetus is son of Oceanus"', {"store_stdout": True}), name="cousin1", fw_id=6
+            ScriptTask.from_str('echo "Lapetus is son of Oceanus"',
+                                {"store_stdout": True}), name="cousin1", fw_id=6
         )
         # Children fireworks
         fw_c1 = Firework(
-            ScriptTask.from_str('echo "Ares is son of Zeus"', {"store_stdout": True}), name="c1", fw_id=7, parents=fw_s1
+            ScriptTask.from_str('echo "Ares is son of Zeus"',
+                                {"store_stdout": True}), name="c1", fw_id=7,
+            parents=fw_s1
         )
         fw_c2 = Firework(
             ScriptTask.from_str(
-                'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"', {"store_stdout": True}
+                'echo "Persephone is daughter of Zeus & Demeter and wife of Hades"',
+                {"store_stdout": True}
             ),
             name="c2",
             fw_id=8,
             parents=[fw_s1, fw_s4],
         )
         fw_c3 = Firework(
-            ScriptTask.from_str('echo "Makaria is daughter of Hades & Persephone"', {"store_stdout": True}),
+            ScriptTask.from_str(
+                'echo "Makaria is daughter of Hades & Persephone"',
+                {"store_stdout": True}),
             name="c3",
             fw_id=9,
             parents=[fw_s3, fw_c2],
         )
         fw_c4 = Firework(
-            ScriptTask.from_str('echo "Dione is descendant of Lapetus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Dione is descendant of Lapetus"',
+                                {"store_stdout": True}),
             name="c4",
             fw_id=10,
             parents=fw_s5,
         )
         fw_c5 = Firework(
-            ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Aphrodite is son of of Zeus and Dione"',
+                                {"store_stdout": True}),
             name="c5",
             fw_id=11,
             parents=[fw_s1, fw_c4],
         )
         fw_c6 = Firework(
-            ScriptTask.from_str('echo "Atlas is son of of Lapetus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Atlas is son of of Lapetus"',
+                                {"store_stdout": True}),
             name="c6",
             fw_id=12,
             parents=fw_s5,
         )
         fw_c7 = Firework(
-            ScriptTask.from_str('echo "Maia is daughter of Atlas"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Maia is daughter of Atlas"',
+                                {"store_stdout": True}),
             name="c7",
             fw_id=13,
             parents=fw_c6,
         )
         fw_c8 = Firework(
-            ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"', {"store_stdout": True}),
+            ScriptTask.from_str('echo "Hermes is daughter of Maia and Zeus"',
+                                {"store_stdout": True}),
             name="c8",
             fw_id=14,
             parents=[fw_s1, fw_c7],
@@ -792,7 +850,8 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         # assemble Workflow from FireWorks and their connections by id
         workflow = Workflow(
-            [fw_p, fw_s1, fw_s2, fw_s3, fw_s4, fw_s5, fw_c1, fw_c2, fw_c3, fw_c4, fw_c5, fw_c6, fw_c7, fw_c8]
+            [fw_p, fw_s1, fw_s2, fw_s3, fw_s4, fw_s5, fw_c1, fw_c2, fw_c3,
+             fw_c4, fw_c5, fw_c6, fw_c7, fw_c8]
         )
         self.lp.add_wf(workflow)
 
@@ -803,11 +862,11 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         self.zeus_sib_fw_ids = {3, 4, 5}
         self.par_fw_id = 1
         self.all_ids = (
-            self.zeus_child_fw_ids
-            | self.lapetus_desc_fw_ids
-            | self.zeus_sib_fw_ids
-            | {self.zeus_fw_id}
-            | {self.par_fw_id}
+                self.zeus_child_fw_ids
+                | self.lapetus_desc_fw_ids
+                | self.zeus_sib_fw_ids
+                | {self.zeus_fw_id}
+                | {self.par_fw_id}
         )
 
         self.old_wd = os.getcwd()
@@ -964,7 +1023,8 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             self.assertEqual(fw_state, fw_cache_state)
 
         # Detect lost runs
-        lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
+        lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(
+            expiration_secs=0.5)
         # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
@@ -1011,7 +1071,8 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -1025,7 +1086,8 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         fw = Firework(
             [
                 ExecutionCounterTask(),
-                ScriptTask.from_str('date +"%s %N"', parameters={"stdout_file": "date_file"}),
+                ScriptTask.from_str('date +"%s %N"',
+                                    parameters={"stdout_file": "date_file"}),
                 ExceptionTestTask(exc_details=self.error_test_dict),
             ]
         )
@@ -1079,7 +1141,8 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         self.assertEqual(self.lp.get_fw_by_id(1).state, "COMPLETED")
         self.assertEqual(ExecutionCounterTask.exec_counter, 1)
         self.assertEqual(ExceptionTestTask.exec_counter, 2)
-        self.assertTrue(filecmp.cmp(os.path.join(dirs[0], "date_file"), os.path.join(dirs[1], "date_file")))
+        self.assertTrue(filecmp.cmp(os.path.join(dirs[0], "date_file"),
+                                    os.path.join(dirs[1], "date_file")))
 
     def test_task_level_rerun_prev_dir(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
@@ -1090,7 +1153,8 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(1)
         self.assertEqual(os.getcwd(), MODULE_DIR)
         self.assertEqual(fw.state, "COMPLETED")
-        self.assertEqual(fw.launches[0].launch_dir, fw.archived_launches[0].launch_dir)
+        self.assertEqual(fw.launches[0].launch_dir,
+                         fw.archived_launches[0].launch_dir)
         self.assertEqual(ExecutionCounterTask.exec_counter, 1)
         self.assertEqual(ExceptionTestTask.exec_counter, 2)
 
@@ -1104,7 +1168,8 @@ class WFLockTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -1113,13 +1178,17 @@ class WFLockTest(unittest.TestCase):
 
     def setUp(self):
         # set the defaults in the init of wflock to break the lock quickly
-        fireworks.core.launchpad.WFLock(3, False).__init__.__func__.__defaults__ = (3, False)
+        fireworks.core.launchpad.WFLock(3,
+                                        False).__init__.__func__.__defaults__ = (
+        3, False)
 
         self.error_test_dict = {"error": "description", "error_code": 1}
         fw_slow = Firework(SlowAdditionTask(), spec={"seconds": 10}, fw_id=1)
-        fw_fast = Firework(WaitWFLockTask(), fw_id=2, spec={"_add_launchpad_and_fw_id": True})
+        fw_fast = Firework(WaitWFLockTask(), fw_id=2,
+                           spec={"_add_launchpad_and_fw_id": True})
         fw_child = Firework(ScriptTask.from_str('echo "child"'), fw_id=3)
-        wf = Workflow([fw_slow, fw_fast, fw_child], {fw_slow: fw_child, fw_fast: fw_child})
+        wf = Workflow([fw_slow, fw_fast, fw_child],
+                      {fw_slow: fw_child, fw_fast: fw_child})
         self.lp.add_wf(wf)
 
         self.old_wd = os.getcwd()
@@ -1157,7 +1226,8 @@ class WFLockTest(unittest.TestCase):
         fast_fw = self.lp.get_fw_by_id(2)
 
         if fast_fw.state == "FIZZLED":
-            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {"action.stored_data._exception._stacktrace": 1})[
+            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {
+                "action.stored_data._exception._stacktrace": 1})[
                 "action"
             ]["stored_data"]["_exception"]["_stacktrace"]
             if "SkipTest" in stacktrace:
@@ -1206,7 +1276,8 @@ class WFLockTest(unittest.TestCase):
         fast_fw = self.lp.get_fw_by_id(2)
 
         if fast_fw.state == "FIZZLED":
-            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {"action.stored_data._exception._stacktrace": 1})[
+            stacktrace = self.lp.launches.find_one({"fw_id": 2}, {
+                "action.stored_data._exception._stacktrace": 1})[
                 "action"
             ]["stored_data"]["_exception"]["_stacktrace"]
             if "SkipTest" in stacktrace:
@@ -1235,7 +1306,8 @@ class LaunchPadOfflineTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):
@@ -1246,7 +1318,9 @@ class LaunchPadOfflineTest(unittest.TestCase):
         fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
 
         self.error_test_dict = {"error": "description", "error_code": 1}
-        fw = Firework(ScriptTask.from_str('echo "test offline"', {"store_stdout": True}), name="offline_fw", fw_id=1)
+        fw = Firework(
+            ScriptTask.from_str('echo "test offline"', {"store_stdout": True}),
+            name="offline_fw", fw_id=1)
         self.lp.add_wf(fw)
 
         self.launch_dir = os.path.join(MODULE_DIR, "launcher_offline")
@@ -1288,14 +1362,17 @@ class LaunchPadOfflineTest(unittest.TestCase):
         shutil.rmtree(self.launch_dir)
 
         # recover ignoring errors
-        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=True, print_errors=True))
+        self.assertIsNotNone(
+            self.lp.recover_offline(launch_id, ignore_errors=True,
+                                    print_errors=True))
 
         fw = self.lp.get_fw_by_id(launch_id)
 
         self.assertEqual(fw.state, "RESERVED")
 
         # fizzle
-        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=False))
+        self.assertIsNotNone(
+            self.lp.recover_offline(launch_id, ignore_errors=False))
 
         fw = self.lp.get_fw_by_id(launch_id)
 
@@ -1316,7 +1393,8 @@ class GridfsStoredDataTest(unittest.TestCase):
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest(
+                "MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
     def tearDownClass(cls):

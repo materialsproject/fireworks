@@ -66,7 +66,7 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
         for old_path, new_path in replacements.items():
             m_str = m_str.replace(old_path, new_path)
         m_bson = loads(m_str)
-        db[f"{tmp_collname}"].insert(m_bson)
+        getattr(db, f"{tmp_collname}").insert_one(m_bson)
 
         modified_docs.append(doc["_id"])
 
