@@ -38,7 +38,8 @@ if __name__ == "__main__":
             "flask-paginate>=0.4.5",
             "gunicorn>=19.6.0",
             "tqdm>=4.8.4",
-            "importlib-metadata>=4.8.2;python_version<'3.8'",
+            "importlib-metadata>=4.8.2; python_version<'3.8'",
+            "typing-extensions; python_version<'3.8'",
         ],
         extras_require={
             "rtransfer": ["paramiko>=2.4.2"],

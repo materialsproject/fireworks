@@ -57,3 +57,13 @@ def test_lpad_report_version(capsys, arg):
 
     assert stdout.startswith("lpad v")
     assert stderr == ""
+
+
+def test_lpad_config_file_flags():
+    """Test lpad CLI throws errors on missing config file flags."""
+
+    with pytest.raises(FileNotFoundError, match="launchpad_file '' does not exist!"):
+        lpad(["-l", "", "get_fws"])
+
+    with pytest.raises(FileNotFoundError, match="fworker_file 'missing_file' does not exist!"):
+        lpad(["recover_offline", "-w", "missing_file"])

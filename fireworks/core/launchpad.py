@@ -182,7 +182,7 @@ class LaunchPad(FWSerializable):
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
             mongoclient_kwargs (dict): A list of any other custom keyword arguments to be
-                passed into the MongoClient connection (non-URI mode only). Use these kwargs to specify SSL/TLS
+                passed into the MongoClient connection. Use these kwargs to specify SSL/TLS or serverSelectionTimeoutMS
                 arguments. Note these arguments are different depending on the major pymongo version used; see
                 pymongo documentation for more details.
         """
@@ -206,7 +206,7 @@ class LaunchPad(FWSerializable):
 
         # get connection
         if uri_mode:
-            self.connection = MongoClient(host)
+            self.connection = MongoClient(host, **self.mongoclient_kwargs)
             dbname = host.split("/")[-1].split("?")[0]  # parse URI to extract dbname
             self.db = self.connection[dbname]
         else:

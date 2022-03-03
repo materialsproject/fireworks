@@ -12,6 +12,8 @@ from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 
+from ._helpers import _validate_config_file_paths
+
 if sys.version_info < (3, 8):
     import importlib_metadata as metadata
 else:
@@ -81,15 +83,11 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     args = parser.parse_args(argv)
 
-    if (
-        not args.launchpad_file
-        and args.config_dir
-        and os.path.exists(os.path.join(args.config_dir, "my_launchpad.yaml"))
-    ):
-        args.launchpad_file = os.path.join(args.config_dir, "my_launchpad.yaml")
-
-    if not args.fworker_file and args.config_dir and os.path.exists(os.path.join(args.config_dir, "my_fworker.yaml")):
-        args.fworker_file = os.path.join(args.config_dir, "my_fworker.yaml")
+    cfg_files_to_check = [
+        ("launchpad", "-l", False, LAUNCHPAD_LOC),
+        ("fworker", "-w", False, FWORKER_LOC),
+    ]
+    _validate_config_file_paths(args, cfg_files_to_check)
 
     args.loglvl = "CRITICAL" if args.silencer else args.loglvl
 

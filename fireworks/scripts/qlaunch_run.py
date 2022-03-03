@@ -28,6 +28,8 @@ from fireworks.fw_config import (
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
+from ._helpers import _validate_config_file_paths
+
 if sys.version_info < (3, 8):
     import importlib_metadata as metadata
 else:
@@ -41,24 +43,17 @@ __date__ = "Jan 14, 2013"
 
 
 def do_launch(args):
-    if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, "my_launchpad.yaml")):
-        args.launchpad_file = os.path.join(args.config_dir, "my_launchpad.yaml")
-    elif not args.launchpad_file:
-        args.launchpad_file = LAUNCHPAD_LOC
 
-    if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, "my_fworker.yaml")):
-        args.fworker_file = os.path.join(args.config_dir, "my_fworker.yaml")
-    elif not args.fworker_file:
-        args.fworker_file = FWORKER_LOC
-
-    if not args.queueadapter_file and os.path.exists(os.path.join(args.config_dir, "my_qadapter.yaml")):
-        args.queueadapter_file = os.path.join(args.config_dir, "my_qadapter.yaml")
-    elif not args.queueadapter_file:
-        args.queueadapter_file = QUEUEADAPTER_LOC
+    cfg_files_to_check = [
+        ("launchpad", "-l", False, LAUNCHPAD_LOC),
+        ("fworker", "-w", False, FWORKER_LOC),
+        ("qadapter", "-q", True, QUEUEADAPTER_LOC),
+    ]
+    _validate_config_file_paths(args, cfg_files_to_check)
 
     launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
     fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
-    queueadapter = load_object_from_file(args.queueadapter_file)
+    queueadapter = load_object_from_file(args.qadapter_file)
     args.loglvl = "CRITICAL" if args.silencer else args.loglvl
 
     if args.command == "rapidfire":
@@ -174,7 +169,7 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("-r", "--reserve", help="reserve a fw", action="store_true")
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
     parser.add_argument("-w", "--fworker_file", help="path to fworker file")
-    parser.add_argument("-q", "--queueadapter_file", help="path to queueadapter file")
+    parser.add_argument("-q", "--queueadapter_file", help="path to qadapter file")
     parser.add_argument(
         "-c",
         "--config_dir",
@@ -213,10 +208,12 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
         pass
 
     args = parser.parse_args(argv)
+    if hasattr(args, "queueadapter_file"):
+        args.qadapter_file = args.queueadapter_file
 
     if args.remote_host and not HAS_FABRIC:
         print("Remote options require the Fabric package v2+ to be installed!")
-        sys.exit(-1)
+        raise SystemExit(-1)
 
     if args.remote_setup and args.remote_host:
         for h in args.remote_host:
@@ -276,7 +273,7 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
         else:
             break
 
-        return 0
+    return 0
 
 
 if __name__ == "__main__":
