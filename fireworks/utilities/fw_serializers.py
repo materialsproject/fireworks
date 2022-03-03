@@ -359,7 +359,7 @@ def load_object(obj_dict):
                 import warnings
 
                 warnings.warn(f"{m_object} in {mod_name} cannot be loaded because of {str(ex)}. Skipping..")
-                traceback.print_exc(ex)
+                traceback.print_exc()
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
