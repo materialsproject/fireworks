@@ -127,6 +127,8 @@ We've set up a test database to see if you can connect to it.
     username: test_user
     password: testing123
 
+Note: If using a MongoDB URI (e.g. mongodb+srv://<username>:<password>@host/MyDBName), provide this as the `host`, exclude the `username` and `password`, and make sure to set `uri_store: true`.
+
 2. Execute the command::
 
     lpad -l my_launchpad_testing.yaml get_wflows
