@@ -1,11 +1,11 @@
 """
 A runnable script for launching rockets (a command-line interface to queue_launcher.py)
 """
-
 import os
 import sys
 import time
 from argparse import ArgumentParser
+from typing import Optional, Sequence
 
 try:
     import fabric
@@ -28,33 +28,32 @@ from fireworks.fw_config import (
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
+from ._helpers import _validate_config_file_paths
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+else:
+    from importlib import metadata
+
 __authors__ = "Anubhav Jain, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
 
 
 def do_launch(args):
-    if not args.launchpad_file and os.path.exists(os.path.join(args.config_dir, "my_launchpad.yaml")):
-        args.launchpad_file = os.path.join(args.config_dir, "my_launchpad.yaml")
-    elif not args.launchpad_file:
-        args.launchpad_file = LAUNCHPAD_LOC
 
-    if not args.fworker_file and os.path.exists(os.path.join(args.config_dir, "my_fworker.yaml")):
-        args.fworker_file = os.path.join(args.config_dir, "my_fworker.yaml")
-    elif not args.fworker_file:
-        args.fworker_file = FWORKER_LOC
-
-    if not args.queueadapter_file and os.path.exists(os.path.join(args.config_dir, "my_qadapter.yaml")):
-        args.queueadapter_file = os.path.join(args.config_dir, "my_qadapter.yaml")
-    elif not args.queueadapter_file:
-        args.queueadapter_file = QUEUEADAPTER_LOC
+    cfg_files_to_check = [
+        ("launchpad", "-l", False, LAUNCHPAD_LOC),
+        ("fworker", "-w", False, FWORKER_LOC),
+        ("qadapter", "-q", True, QUEUEADAPTER_LOC),
+    ]
+    _validate_config_file_paths(args, cfg_files_to_check)
 
     launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
     fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
-    queueadapter = load_object_from_file(args.queueadapter_file)
+    queueadapter = load_object_from_file(args.qadapter_file)
     args.loglvl = "CRITICAL" if args.silencer else args.loglvl
 
     if args.command == "rapidfire":
@@ -87,7 +86,7 @@ def do_launch(args):
         )
 
 
-def qlaunch():
+def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "This program is used to submit jobs to a queueing system. "
         "Details of the job and queue interaction are handled by the "
@@ -99,7 +98,11 @@ def qlaunch():
         "use qlauncher.py rapidfire -h"
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("qlaunch", description=m_description)
+
+    fw_version = metadata.version("fireworks")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s v{fw_version}")
+
     subparsers = parser.add_subparsers(help="command", dest="command")
     single_parser = subparsers.add_parser("singleshot", help="launch a single rocket to the queue")
     rapid_parser = subparsers.add_parser("rapidfire", help="launch multiple rockets to the queue")
@@ -166,7 +169,7 @@ def qlaunch():
     parser.add_argument("-r", "--reserve", help="reserve a fw", action="store_true")
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
     parser.add_argument("-w", "--fworker_file", help="path to fworker file")
-    parser.add_argument("-q", "--queueadapter_file", help="path to queueadapter file")
+    parser.add_argument("-q", "--queueadapter_file", help="path to qadapter file")
     parser.add_argument(
         "-c",
         "--config_dir",
@@ -204,11 +207,13 @@ def qlaunch():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if hasattr(args, "queueadapter_file"):
+        args.qadapter_file = args.queueadapter_file
 
     if args.remote_host and not HAS_FABRIC:
         print("Remote options require the Fabric package v2+ to be installed!")
-        sys.exit(-1)
+        raise SystemExit(-1)
 
     if args.remote_setup and args.remote_host:
         for h in args.remote_host:
@@ -240,7 +245,7 @@ def qlaunch():
     for k in ["silencer", "reserve"]:
         v = getattr(args, k, None)
         if v:
-            pre_non_default.append("--%s" % k)
+            pre_non_default.append(f"--{k}")
     pre_non_default = " ".join(pre_non_default)
 
     interval = args.daemon
@@ -268,6 +273,8 @@ def qlaunch():
         else:
             break
 
+    return 0
+
 
 if __name__ == "__main__":
-    qlaunch()
+    raise SystemExit(qlaunch())

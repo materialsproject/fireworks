@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fireworks.core package &#8212; FireWorks 1.9.8 documentation</title>
+    <title>fireworks.core package &#8212; FireWorks 2.0.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.core package</a></li> 
       </ul>
     </div>  
@@ -764,6 +764,7 @@ for information on how to use this env variable in Firetasks.</p></li>
 </div>
 <div class="section" id="module-fireworks.core.launchpad">
 <span id="fireworks-core-launchpad-module"></span><h2>fireworks.core.launchpad module<a class="headerlink" href="#module-fireworks.core.launchpad" title="Permalink to this headline">¶</a></h2>
+<p>The LaunchPad manages the FireWorks database.</p>
 <dl class="py class">
 <dt id="fireworks.core.launchpad.LaunchPad">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.launchpad.</code><code class="sig-name descname">LaunchPad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">strm_lvl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wf_user_indices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authsource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">uri_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mongoclient_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad" title="Permalink to this definition">¶</a></dt>
@@ -1797,6 +1798,8 @@ document.</p></li>
 </div>
 <div class="section" id="module-fireworks.core.rocket">
 <span id="fireworks-core-rocket-module"></span><h2>fireworks.core.rocket module<a class="headerlink" href="#module-fireworks.core.rocket" title="Permalink to this headline">¶</a></h2>
+<p>A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
+completes the Launch</p>
 <dl class="py class">
 <dt id="fireworks.core.rocket.Rocket">
 <em class="property">class </em><code class="sig-prename descclassname">fireworks.core.rocket.</code><code class="sig-name descname">Rocket</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">launchpad</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad">fireworks.core.launchpad.LaunchPad</a></span></em>, <em class="sig-param"><span class="n">fworker</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker">fireworks.core.fworker.FWorker</a></span></em>, <em class="sig-param"><span class="n">fw_id</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket.Rocket" title="Permalink to this definition">¶</a></dt>
@@ -1994,7 +1997,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 1.9.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.core package</a></li> 
       </ul>
     </div>

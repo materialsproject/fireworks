@@ -137,10 +137,10 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_non_dataflow_tasks(self):
         """non-dataflow tasks using outputs and inputs keys do not fail"""
-        from fireworks.core.firework import FireTaskBase
+        from fireworks.core.firework import FiretaskBase
         from fireworks.utilities.dagflow import DAGFlow
 
-        class NonDataFlowTask(FireTaskBase):
+        class NonDataFlowTask(FiretaskBase):
             """a firetask class for testing"""
 
             _fw_name = "NonDataFlowTask"

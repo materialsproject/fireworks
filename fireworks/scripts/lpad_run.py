@@ -8,15 +8,15 @@ import datetime
 import json
 import os
 import re
+import sys
 import time
-import traceback
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, ArgumentTypeError, Namespace
+from typing import Any, Callable, Dict, List, Optional, Sequence, Union
 
 import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
 
 from fireworks import FW_INSTALL_DIR
-from fireworks import __version__ as FW_VERSION
 from fireworks.core.firework import Firework, Workflow
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, WFLock
@@ -36,10 +36,18 @@ from fireworks.fw_config import (
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
+from ._helpers import _validate_config_file_paths
+
+if sys.version_info < (3, 8):
+    import importlib_metadata as metadata
+    from typing_extensions import Literal
+else:
+    from importlib import metadata
+    from typing import Literal
+
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
@@ -47,7 +55,7 @@ __date__ = "Feb 7, 2013"
 DEFAULT_LPAD_YAML = "my_launchpad.yaml"
 
 
-def pw_check(ids, args, skip_pw=False):
+def pw_check(ids: List[int], args: Namespace, skip_pw: bool = False) -> List[int]:
     if len(ids) > PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime("%Y-%m-%d")
         if not args.password:
@@ -63,17 +71,17 @@ def pw_check(ids, args, skip_pw=False):
     return ids
 
 
-def parse_helper(lp, args, wf_mode=False, skip_pw=False):
+def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw: bool = False) -> List[int]:
     """
     Helper method to parse args that can take either id, name, state or query.
 
     Args:
-        args
-        wf_mode (bool)
-        skip_pw (bool)
+        args: Namespace of parsed CLI arguments.
+        wf_mode (bool): If True, will query lp for workflow instead of fireworks IDs.
+        skip_pw (bool): If True, skip PW check. Defaults to False.
 
     Returns:
-        list of ids
+        list[int]: Firework or Workflow IDs.
     """
     if args.fw_id and sum(bool(x) for x in [args.name, args.state, args.query]) >= 1:
         raise ValueError("Cannot specify both fw_id and name/state/query)")
@@ -103,23 +111,25 @@ def parse_helper(lp, args, wf_mode=False, skip_pw=False):
     return pw_check(lp.get_fw_ids(query, sort=sort, limit=max, launches_mode=args.launches_mode), args, skip_pw)
 
 
-def get_lp(args):
+def get_lp(args: Namespace) -> LaunchPad:
     try:
-        if not args.launchpad_file:
-            if os.path.exists(os.path.join(args.config_dir, DEFAULT_LPAD_YAML)):
-                args.launchpad_file = os.path.join(args.config_dir, DEFAULT_LPAD_YAML)
-            else:
-                args.launchpad_file = LAUNCHPAD_LOC
-
         if args.launchpad_file:
-            return LaunchPad.from_file(args.launchpad_file)
+            lp = LaunchPad.from_file(args.launchpad_file)
         else:
+
             args.loglvl = "CRITICAL" if args.silencer else args.loglvl
-            return LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl)
+            # no lpad file means we try connect to localhost which is fast so use small timeout
+            # (default 30s) for quick response to user if no DB is running
+            mongo_kwds = {"serverSelectionTimeoutMS": 500}
+            lp = LaunchPad(logdir=args.logdir, strm_lvl=args.loglvl, mongoclient_kwargs=mongo_kwds)
+
+        # make sure we can connect to DB, raises pymongo.errors.ServerSelectionTimeoutError if not
+        lp.connection.admin.command("ping")
+        return lp
+
     except Exception:
-        traceback.print_exc()
         err_message = (
-            "FireWorks was not able to connect to MongoDB. Is the server running? "
+            f"FireWorks was not able to connect to MongoDB at {lp.host}:{lp.port}. Is the server running? "
             f"The database file specified was {args.launchpad_file}."
         )
         if not args.launchpad_file:
@@ -128,10 +138,11 @@ def get_lp(args):
                 "location and credentials of your Mongo database (otherwise use default "
                 "localhost configuration)."
             )
-        raise ValueError(err_message)
+        # use from None to hide the pymongo ServerSelectionTimeoutError that otherwise clutters up the stack trace
+        raise ValueError(err_message) from None
 
 
-def init_yaml(args):
+def init_yaml(args: Namespace) -> None:
     if args.uri_mode:
         fields = (
             ("host", None, "Example: mongodb+srv://USER:PASSWORD@CLUSTERNAME.mongodb.net/fireworks"),
@@ -159,19 +170,19 @@ def init_yaml(args):
             ),
         )
 
-    doc = {}
+    doc: Dict[str, Union[str, int, bool, None]] = {}
     if args.uri_mode:
         print(
             "Note 1: You are in URI format mode. This means that all database parameters (username, password, host, "
             "port, database name, etc.) must be present in the URI. See: "
             "https://docs.mongodb.com/manual/reference/connection-string/ for details."
         )
-        print("(Enter your connection URI in under the 'host' parameter)")
+        print("(Enter your connection URI through the 'host' parameter)")
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, default, helptext in fields:
         val = input(f"Enter {k} parameter. (default: {default}). {helptext}: ")
-        doc[k] = val if val else default
+        doc[k] = val or default
     if "port" in doc:
         doc["port"] = int(doc["port"])  # enforce the port as an int
     if args.uri_mode:
@@ -182,7 +193,7 @@ def init_yaml(args):
     print(f"\nConfiguration written to {args.config_file}!")
 
 
-def reset(args):
+def reset(args: Namespace) -> None:
     lp = get_lp(args)
     if not args.password:
         if (
@@ -197,7 +208,7 @@ def reset(args):
     lp.reset(args.password)
 
 
-def add_wf(args):
+def add_wf(args: Namespace) -> None:
     lp = get_lp(args)
     if args.dir:
         files = []
@@ -214,31 +225,31 @@ def add_wf(args):
         lp.add_wf(fwf)
 
 
-def append_wf(args):
+def append_wf(args: Namespace) -> None:
     lp = get_lp(args)
     lp.append_wf(Workflow.from_file(args.wf_file), args.fw_id, detour=args.detour, pull_spec_mods=args.pull_spec_mods)
 
 
-def dump_wf(args):
+def dump_wf(args: Namespace) -> None:
     lp = get_lp(args)
     lp.get_wf_by_fw_id(args.fw_id).to_file(args.wf_file)
 
 
-def check_wf(args):
+def check_wf(args: Namespace) -> None:
     from fireworks.utilities.dagflow import DAGFlow
 
     lp = get_lp(args)
     DAGFlow.from_fireworks(lp.get_wf_by_fw_id(args.fw_id)).check()
 
 
-def add_wf_dir(args):
+def add_wf_dir(args: Namespace) -> None:
     lp = get_lp(args)
     for filename in os.listdir(args.wf_dir):
         fwf = Workflow.from_file(filename)
         lp.add_wf(fwf)
 
 
-def print_fws(ids, lp, args):
+def print_fws(ids, lp, args: Namespace) -> None:
     """Prints results of some FireWorks query to stdout."""
     fws = []
     if args.display_format == "ids":
@@ -264,7 +275,7 @@ def print_fws(ids, lp, args):
     print(args.output(fws))
 
 
-def get_fw_ids_helper(lp, args, count_only=None):
+def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, None] = None) -> Union[List[int], int]:
     """Build fws query from command line options and submit.
 
     Parameters:
@@ -273,7 +284,7 @@ def get_fw_ids_helper(lp, args, count_only=None):
         count_only (bool): if None, then looked up in args.
 
     Returns:
-        [int]: resulting fw_ids or count of fws in query.
+        list[int] | int: resulting fw_ids or count of fws in query.
     """
     if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
@@ -316,7 +327,9 @@ def get_fw_ids_helper(lp, args, count_only=None):
     return ids
 
 
-def get_fws_helper(lp, ids, args):
+def get_fws_helper(
+    lp: LaunchPad, ids: List[int], args: Namespace
+) -> Union[List[int], int, List[Dict[str, Union[str, int, bool]]], Union[str, int, bool]]:
     """Get fws from ids in a representation according to args.display_format."""
     fws = []
     if args.display_format == "ids":
@@ -336,19 +349,17 @@ def get_fws_helper(lp, ids, args):
                 if "launches" in d:
                     del d["launches"]
             fws.append(d)
-    if len(fws) == 1:
-        fws = fws[0]
-    return fws
+    return fws[0] if len(fws) == 1 else fws
 
 
-def get_fws(args):
+def get_fws(args: Namespace) -> None:
     lp = get_lp(args)
     ids = get_fw_ids_helper(lp, args)
     fws = get_fws_helper(lp, ids, args)
     print(args.output(fws))
 
 
-def get_fws_in_wfs(args):
+def get_fws_in_wfs(args: Namespace) -> None:
     # get_wfs
     lp = get_lp(args)
     if sum(bool(x) for x in [args.wf_fw_id, args.wf_name, args.wf_state, args.wf_query]) > 1:
@@ -414,13 +425,13 @@ def get_fws_in_wfs(args):
     print_fws(ids, lp, args)
 
 
-def update_fws(args):
+def update_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     lp.update_spec(fw_ids, json.loads(args.update), args.mongo)
 
 
-def get_wfs(args):
+def get_wfs(args: Namespace) -> None:
     lp = get_lp(args)
     if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
@@ -455,7 +466,7 @@ def get_wfs(args):
         wfs = []
         for i in ids:
             d = lp.get_wf_summary_dict(i, args.display_format)
-            d["name"] += "--%d" % i
+            d["name"] += f"--{int(i)}"
             wfs.append(d)
 
     if args.table:
@@ -473,7 +484,7 @@ def get_wfs(args):
         print(args.output(wfs))
 
 
-def delete_wfs(args):
+def delete_wfs(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -493,7 +504,7 @@ def get_children(links, start, max_depth):
     return data
 
 
-def detect_lostruns(args):
+def detect_lostruns(args: Namespace) -> None:
     lp = get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
     launch_query = ast.literal_eval(args.launch_query) if args.launch_query else None
@@ -520,7 +531,7 @@ def detect_lostruns(args):
         print("You can fix inconsistent FWs using the --refresh argument to the detect_lostruns command")
 
 
-def detect_unreserved(args):
+def detect_unreserved(args: Namespace) -> None:
     lp = get_lp(args)
     if args.display_format is not None and args.display_format != "none":
         unreserved = lp.detect_unreserved(expiration_secs=args.time, rerun=False)
@@ -533,12 +544,12 @@ def detect_unreserved(args):
     print(lp.detect_unreserved(expiration_secs=args.time, rerun=args.rerun))
 
 
-def tuneup(args):
+def tuneup(args: Namespace) -> None:
     lp = get_lp(args)
     lp.tuneup(bkground=not args.full)
 
 
-def defuse_wfs(args):
+def defuse_wfs(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -552,7 +563,7 @@ def defuse_wfs(args):
         )
 
 
-def pause_wfs(args):
+def pause_wfs(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -561,7 +572,7 @@ def pause_wfs(args):
     lp.m_logger.info(f"Finished defusing {len(fw_ids)} FWs.")
 
 
-def archive(args):
+def archive(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -570,7 +581,7 @@ def archive(args):
     lp.m_logger.info(f"Finished archiving {len(fw_ids)} WFs")
 
 
-def reignite_wfs(args):
+def reignite_wfs(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -579,7 +590,7 @@ def reignite_wfs(args):
     lp.m_logger.info(f"Finished reigniting {len(fw_ids)} Workflows")
 
 
-def defuse_fws(args):
+def defuse_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
@@ -588,7 +599,7 @@ def defuse_fws(args):
     lp.m_logger.info(f"Finished defusing {len(fw_ids)} FWs")
 
 
-def pause_fws(args):
+def pause_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
@@ -597,7 +608,7 @@ def pause_fws(args):
     lp.m_logger.info(f"Finished pausing {len(fw_ids)} FWs")
 
 
-def reignite_fws(args):
+def reignite_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
@@ -606,7 +617,7 @@ def reignite_fws(args):
     lp.m_logger.info(f"Finished reigniting {len(fw_ids)} FWs")
 
 
-def resume_fws(args):
+def resume_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
@@ -615,7 +626,7 @@ def resume_fws(args):
     lp.m_logger.info(f"Finished resuming {len(fw_ids)} FWs")
 
 
-def rerun_fws(args):
+def rerun_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     if args.task_level:
@@ -632,7 +643,7 @@ def rerun_fws(args):
     lp.m_logger.info(f"Finished setting {len(fw_ids)} FWs to rerun")
 
 
-def refresh(args):
+def refresh(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -643,7 +654,7 @@ def refresh(args):
     lp.m_logger.info(f"Finished refreshing {len(fw_ids)} Workflows")
 
 
-def unlock(args):
+def unlock(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
     for f in fw_ids:
@@ -653,13 +664,13 @@ def unlock(args):
     lp.m_logger.info(f"Finished unlocking {len(fw_ids)} Workflows")
 
 
-def get_qid(args):
+def get_qid(args: Namespace) -> None:
     lp = get_lp(args)
     for f in args.fw_id:
         print(lp.get_reservation_id_from_fw_id(f))
 
 
-def cancel_qid(args):
+def cancel_qid(args: Namespace) -> None:
     lp = get_lp(args)
     lp.m_logger.warning(
         "WARNING: cancel_qid does not actually remove jobs from the queue "
@@ -668,7 +679,7 @@ def cancel_qid(args):
     lp.cancel_reservation_by_reservation_id(args.qid)
 
 
-def set_priority(args):
+def set_priority(args: Namespace) -> None:
     wf_mode = args.wf
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=wf_mode)
@@ -692,7 +703,7 @@ def _open_webbrowser(url):
     webbrowser.open(url)
 
 
-def webgui(args):
+def webgui(args: Namespace) -> None:
     from fireworks.flask_site.app import app
 
     app.lp = get_lp(args)
@@ -732,7 +743,7 @@ def webgui(args):
         StandaloneApplication(app, options).run()
 
 
-def add_scripts(args):
+def add_scripts(args: Namespace) -> None:
     lp = get_lp(args)
     args.names = args.names if args.names else [None] * len(args.scripts)
     args.wf_name = args.wf_name if args.wf_name else args.names[0]
@@ -746,7 +757,7 @@ def add_scripts(args):
     lp.add_wf(Workflow(fws, links, args.wf_name))
 
 
-def recover_offline(args):
+def recover_offline(args: Namespace) -> None:
     lp = get_lp(args)
     fworker_name = FWorker.from_file(args.fworker_file).name if args.fworker_file else None
     failed_fws = []
@@ -766,7 +777,7 @@ def recover_offline(args):
         lp.m_logger.info(f"FAILED to recover offline fw_ids: {failed_fws}")
 
 
-def forget_offline(args):
+def forget_offline(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args)
     for f in fw_ids:
@@ -775,7 +786,7 @@ def forget_offline(args):
     lp.m_logger.info(f"Finished forget_offine, processed {len(fw_ids)} FWs")
 
 
-def report(args):
+def report(args: Namespace) -> None:
     lp = get_lp(args)
     query = ast.literal_eval(args.query) if args.query else None
     fwr = FWReport(lp)
@@ -790,7 +801,7 @@ def report(args):
     print(fwr.get_stats_str(stats))
 
 
-def introspect(args):
+def introspect(args: Namespace) -> None:
     print("NOTE: This feature is in beta mode...")
     lp = get_lp(args)
     isp = Introspector(lp)
@@ -802,13 +813,13 @@ def introspect(args):
         print("")
 
 
-def get_launchdir(args):
+def get_launchdir(args: Namespace) -> None:
     lp = get_lp(args)
     ld = lp.get_launchdir(args.fw_id, args.launch_idx)
     print(ld)
 
 
-def track_fws(args):
+def track_fws(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, skip_pw=True)
     include = args.include
@@ -832,17 +843,12 @@ def track_fws(args):
             print("\n".join(output))
 
 
-def version(args):
-    print("FireWorks version:", FW_VERSION)
-    print("located in:", FW_INSTALL_DIR)
-
-
-def maintain(args):
+def maintain(args: Namespace) -> None:
     lp = get_lp(args)
     lp.maintain(args.infinite, args.maintain_interval)
 
 
-def orphaned(args):
+def orphaned(args: Namespace) -> None:
     # get_fws
     lp = get_lp(args)
     fw_ids = get_fw_ids_helper(lp, args, count_only=False)
@@ -863,14 +869,14 @@ def orphaned(args):
         print(args.output(fws))
 
 
-def get_output_func(format):
+def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
     else:
         return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
 
 
-def arg_positive_int(value):
+def arg_positive_int(value: str) -> int:
     try:
         ivalue = int(value)
     except ValueError:
@@ -881,12 +887,17 @@ def arg_positive_int(value):
     return ivalue
 
 
-def lpad():
+def lpad(argv: Optional[Sequence[str]] = None) -> int:
     m_description = (
         "A command line interface to FireWorks. For more help on a specific command, type 'lpad <command> -h'."
     )
 
-    parser = ArgumentParser(description=m_description)
+    parser = ArgumentParser("lpad", description=m_description)
+
+    fw_version = metadata.version("fireworks")
+    v_out = f"%(prog)s v{fw_version} located in {FW_INSTALL_DIR}"
+    parser.add_argument("-v", "--version", action="version", version=v_out)
+
     parent_parser = ArgumentParser(add_help=False)
     parser.add_argument(
         "-o",
@@ -968,9 +979,6 @@ def lpad():
         for opt in [*fw_id_args, *wf_prefixed_fw_id_args, *fw_prefixed_fw_id_args]
         if re.match("^--.*$", opt)
     ]
-
-    version_parser = subparsers.add_parser("version", help="Print the version and location of FireWorks")
-    version_parser.set_defaults(func=version)
 
     init_parser = subparsers.add_parser("init", help="Initialize a Fireworks launchpad YAML file.")
     init_parser.add_argument(
@@ -1520,7 +1528,12 @@ def lpad():
     except ImportError:
         pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+
+    cfg_files_to_check = [("launchpad", "-l", False, LAUNCHPAD_LOC)]
+    if hasattr(args, "fworker_file"):
+        cfg_files_to_check.append(("fworker", "-w", False, FWORKER_LOC))
+    _validate_config_file_paths(args, cfg_files_to_check)
 
     args.output = get_output_func(args.output)
 
@@ -1537,6 +1550,8 @@ def lpad():
 
         args.func(args)
 
+    return 0
+
 
 if __name__ == "__main__":
-    lpad()
+    raise SystemExit(lpad())

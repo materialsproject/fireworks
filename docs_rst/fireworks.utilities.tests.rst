@@ -36,6 +36,14 @@ fireworks.utilities.tests.test\_update\_collection module
    :undoc-members:
    :show-inheritance:
 
+fireworks.utilities.tests.test\_visualize module
+------------------------------------------------
+
+.. automodule:: fireworks.utilities.tests.test_visualize
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

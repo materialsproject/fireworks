@@ -5,7 +5,6 @@ TODO: Modify unittest doc.
 
 __author__ = "Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
-__version__ = "0.1"
 __maintainer__ = "Bharat Medasani"
 __email__ = "mbkumar@gmail.com"
 __date__ = "8/7/14"
@@ -13,9 +12,7 @@ __date__ = "8/7/14"
 import os
 import unittest
 
-from fireworks.user_objects.firetasks.templatewriter_task import (
-    TemplateWriterTask,
-)
+from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterTask
 
 
 class TemplateWriterTaskTest(unittest.TestCase):

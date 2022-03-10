@@ -7,7 +7,7 @@ This guide covers in more detail how one can write their own Firetasks (and retu
 A "Hello World Example"
 =======================
 
-If you'd like to see a "Hello World" Example of a custom Firetask, you can go `here <https://github.com/materialsproject/fireworks/tree/master/fireworks/examples/custom_firetasks/hello_world>`_.
+If you'd like to see a "Hello World" Example of a custom Firetask, you can go `here <https://github.com/materialsproject/fireworks/tree/main/fireworks/examples/custom_firetasks/hello_world>`_.
 
 If you are able to run that example and want more details of how to modify and extend it, read on...
 
@@ -96,13 +96,13 @@ Here's an example of a Firetask implementation that includes dynamic actions via
 
         m_sum = smaller + larger
         if m_sum < stop_point:
-            print('The next Fibonacci number is: {}'.format(m_sum))
+            print(f"The next Fibonacci number is: {m_sum}")
             # create a new Fibonacci Adder to add to the workflow
-            new_fw = Firework(FibonacciAdderTask(), {'smaller': larger, 'larger': m_sum, 'stop_point': stop_point})
-            return FWAction(stored_data={'next_fibnum': m_sum}, additions=new_fw)
+            new_fw = Firework(FibonacciAdderTask(), {"smaller": larger, "larger": m_sum, "stop_point": stop_point})
+            return FWAction(stored_data={"next_fibnum": m_sum}, additions=new_fw)
 
         else:
-            print('We have now exceeded our limit; (the next Fibonacci number would have been: {})'.format(m_sum))
+            print(f"We have now exceeded our limit; (the next Fibonacci number would have been: {m_sum})")
             return FWAction()
 
 We discussed running this example in the :doc:`Dynamic Workflow tutorial <dynamic_wf_tutorial>` - if you have not gone through that tutorial, we strongly suggest you do so now (it also includes an example of message passing).
