@@ -67,27 +67,28 @@ To save typing, you can set things up so that the ``-l`` option is automatically
 Add TLS/SSL configuration to your LaunchPad file
 ================================================
 
-If the MongoDB server is configured with TLS/SSL launchpad file
-``my_launchpad.yaml`` (or whatever launchpad file is specified after the ``-l`` option or in the configuration file) has to include further information in the following lines::
+If the MongoDB server is configured with TLS/SSL then the launchpad file
+``my_launchpad.yaml`` (or whatever launchpad file is specified after the ``-l``
+option or in the configuration file) has to include further information in the
+following lines::
 
-    ssl: <bool> # whether to use TLS/SSL for connection to MongoDB, default: false
-    ssl_ca_certs: <string> # path to the CA certificate to be used for connection
-    ssl_certfile: <string> # path to the client certificate (optional)
-    ssl_keyfile: <string> # path to the client private key (optional)
-    ssl_pem_passphrase: <string> # passphrase for the client private key (optional)
     authsource: <string> # alternative authentication database (optional)
     mongoclient_kwargs:
+        tls: <bool> # whether to use TLS/SSL for connection to MongoDB, default: false
+        tlsCAFile: <string> # path to the CA certificate to be used for connection
+        tlsCertificateKeyFile: <string> # path to the client certificate and private key (optional)
+        tlsCertificateKeyFilePassword: <string> # passphrase for the client private key (optional)
         authMechanism: <string> # alternative authentication mechanism (optional)
 
-.. note:: If ``ssl`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``ssl`` is ``true`` then the connection will be encrypted, ``ssl_ca_certs`` must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.
+.. note:: If ``tls`` is ``false`` or omitted then all remaining TLS/SSL settings **must** be omitted. If ``tls`` is ``true`` then the connection will be encrypted, ``tlsCAFile`` must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.
 
-.. note:: If ``ssl_certfile`` is set and ``ssl_keyfile`` is not set then the file specified by ``ssl_certfile`` must contain the private key.
+.. note:: The client certificate file and the private key file (both in PEM format) must be concatenated in ``tlsCertificateKeyFile``.
 
-.. note:: If the private key is encrypted and  ``ssl_pem_passphrase`` is not set then **lpad**, **rlaunch** and **qlaunch** will prompt for the passphase.
+.. note:: If the private key is encrypted and  ``tlsCertificateKeyFilePassword`` is not set then **lpad**, **rlaunch** and **qlaunch** will prompt for the password (passphase) for the private key.
 
-.. note:: If ``authmechanism`` is ``MONGODB-X509`` then ``authsource`` must be set to ``$external``, and ``username`` and ``password`` must not be set.
+.. note:: If ``authMechanism`` is ``MONGODB-X509`` then ``authsource`` must be set to ``$external``, and ``username`` and ``password`` must not be set.
 
-Other Mongoclient options
+Other MongoClient options
 =========================
 
-The ``mongoclient_kwargs`` option can be used to set any other desired options for the MongoClient. The format is a dictionary (see ``authMechanism`` above for an example).
+The ``mongoclient_kwargs`` option can be used to set any other desired options for MongoClient.
