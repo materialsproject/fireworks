@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Configuring Security &#8212; FireWorks 2.0.2 documentation</title>
+    <title>Configuring Security &#8212; FireWorks 2.0.3 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="tracker_tutorial.html" title="Tracking an output file during execution"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Configuring Security</a></li> 
       </ul>
     </div>  
@@ -123,38 +123,39 @@
 </div>
 <div class="section" id="add-tls-ssl-configuration-to-your-launchpad-file">
 <h2>Add TLS/SSL configuration to your LaunchPad file<a class="headerlink" href="#add-tls-ssl-configuration-to-your-launchpad-file" title="Permalink to this headline">¶</a></h2>
-<p>If the MongoDB server is configured with TLS/SSL launchpad file
-<code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code> (or whatever launchpad file is specified after the <code class="docutils literal notranslate"><span class="pre">-l</span></code> option or in the configuration file) has to include further information in the following lines:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssl</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># whether to use TLS/SSL for connection to MongoDB, default: false</span>
-<span class="n">ssl_ca_certs</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the CA certificate to be used for connection</span>
-<span class="n">ssl_certfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the client certificate (optional)</span>
-<span class="n">ssl_keyfile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the client private key (optional)</span>
-<span class="n">ssl_pem_passphrase</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># passphrase for the client private key (optional)</span>
-<span class="n">authsource</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># alternative authentication database (optional)</span>
+<p>If the MongoDB server is configured with TLS/SSL then the launchpad file
+<code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code> (or whatever launchpad file is specified after the <code class="docutils literal notranslate"><span class="pre">-l</span></code>
+option or in the configuration file) has to include further information in the
+following lines:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">authsource</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># alternative authentication database (optional)</span>
 <span class="n">mongoclient_kwargs</span><span class="p">:</span>
+    <span class="n">tls</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># whether to use TLS/SSL for connection to MongoDB, default: false</span>
+    <span class="n">tlsCAFile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the CA certificate to be used for connection</span>
+    <span class="n">tlsCertificateKeyFile</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># path to the client certificate and private key (optional)</span>
+    <span class="n">tlsCertificateKeyFilePassword</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># passphrase for the client private key (optional)</span>
     <span class="n">authMechanism</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="c1"># alternative authentication mechanism (optional)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">ssl</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code> or omitted then all remaining TLS/SSL settings <strong>must</strong> be omitted. If <code class="docutils literal notranslate"><span class="pre">ssl</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code> then the connection will be encrypted, <code class="docutils literal notranslate"><span class="pre">ssl_ca_certs</span></code> must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">tls</span></code> is <code class="docutils literal notranslate"><span class="pre">false</span></code> or omitted then all remaining TLS/SSL settings <strong>must</strong> be omitted. If <code class="docutils literal notranslate"><span class="pre">tls</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code> then the connection will be encrypted, <code class="docutils literal notranslate"><span class="pre">tlsCAFile</span></code> must be set and the remaining TLS/SSL settings are optional, depending on the specific server policies.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">ssl_certfile</span></code> is set and <code class="docutils literal notranslate"><span class="pre">ssl_keyfile</span></code> is not set then the file specified by <code class="docutils literal notranslate"><span class="pre">ssl_certfile</span></code> must contain the private key.</p>
+<p>The client certificate file and the private key file (both in PEM format) must be concatenated in <code class="docutils literal notranslate"><span class="pre">tlsCertificateKeyFile</span></code>.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If the private key is encrypted and  <code class="docutils literal notranslate"><span class="pre">ssl_pem_passphrase</span></code> is not set then <strong>lpad</strong>, <strong>rlaunch</strong> and <strong>qlaunch</strong> will prompt for the passphase.</p>
+<p>If the private key is encrypted and  <code class="docutils literal notranslate"><span class="pre">tlsCertificateKeyFilePassword</span></code> is not set then <strong>lpad</strong>, <strong>rlaunch</strong> and <strong>qlaunch</strong> will prompt for the password (passphase) for the private key.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">authmechanism</span></code> is <code class="docutils literal notranslate"><span class="pre">MONGODB-X509</span></code> then <code class="docutils literal notranslate"><span class="pre">authsource</span></code> must be set to <code class="docutils literal notranslate"><span class="pre">$external</span></code>, and <code class="docutils literal notranslate"><span class="pre">username</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code> must not be set.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">authMechanism</span></code> is <code class="docutils literal notranslate"><span class="pre">MONGODB-X509</span></code> then <code class="docutils literal notranslate"><span class="pre">authsource</span></code> must be set to <code class="docutils literal notranslate"><span class="pre">$external</span></code>, and <code class="docutils literal notranslate"><span class="pre">username</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code> must not be set.</p>
 </div>
 </div>
 <div class="section" id="other-mongoclient-options">
-<h2>Other Mongoclient options<a class="headerlink" href="#other-mongoclient-options" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">mongoclient_kwargs</span></code> option can be used to set any other desired options for the MongoClient. The format is a dictionary (see <code class="docutils literal notranslate"><span class="pre">authMechanism</span></code> above for an example).</p>
+<h2>Other MongoClient options<a class="headerlink" href="#other-mongoclient-options" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">mongoclient_kwargs</span></code> option can be used to set any other desired options for MongoClient.</p>
 </div>
 </div>
 
@@ -171,7 +172,7 @@
 <li><a class="reference internal" href="#create-an-authenticated-user-in-the-admin-database">Create an authenticated user in the admin database</a></li>
 <li><a class="reference internal" href="#add-username-and-password-keys-to-your-launchpad-file">Add username and password keys to your LaunchPad file</a></li>
 <li><a class="reference internal" href="#add-tls-ssl-configuration-to-your-launchpad-file">Add TLS/SSL configuration to your LaunchPad file</a></li>
-<li><a class="reference internal" href="#other-mongoclient-options">Other Mongoclient options</a></li>
+<li><a class="reference internal" href="#other-mongoclient-options">Other MongoClient options</a></li>
 </ul>
 </li>
 </ul>
@@ -218,7 +219,7 @@
         <li class="right" >
           <a href="tracker_tutorial.html" title="Tracking an output file during execution"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Configuring Security</a></li> 
       </ul>
     </div>
