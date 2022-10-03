@@ -11,7 +11,7 @@ __date__ = "12/31/13"
 
 import unittest
 
-from fireworks.user_objects.queue_adapters.common_adapter import *
+from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter, os
 from fireworks.utilities.fw_serializers import load_object, load_object_from_file
 
 

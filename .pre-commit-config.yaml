@@ -2,13 +2,13 @@ exclude: ^docs
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.37.3
+    rev: v2.38.2
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
 
   - repo: https://github.com/PyCQA/autoflake
-    rev: v1.5.3
+    rev: v1.6.1
     hooks:
       - id: autoflake
 
