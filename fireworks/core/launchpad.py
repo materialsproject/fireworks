@@ -207,8 +207,9 @@ class LaunchPad(FWSerializable):
         # get connection
         if uri_mode:
             self.connection = MongoClient(host, **self.mongoclient_kwargs)
-            dbname = host.split("/")[-1].split("?")[0]  # parse URI to extract dbname
-            self.db = self.connection[dbname]
+            if self.name is None:
+                raise ValueError("Must specify a database name when using a MongoDB URI string.")
+            self.db = self.connection[self.name]
         else:
             self.connection = MongoClient(
                 self.host,
