@@ -78,7 +78,7 @@ def rapidfire_process(
         # If the sub job is using GPU, set the CUDA_VISIBLE_DEVICES environment variable
         # This will limit the GPU usage to only the specified GPU
         os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_id)
-    print('CUDA_VISIBLE_DEVICES', os.environ.get('CUDA_VISIBLE_DEVICES', None))
+
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
