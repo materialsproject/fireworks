@@ -78,7 +78,7 @@ def rapidfire_process(
         # If the sub job is using GPU, set the CUDA_VISIBLE_DEVICES environment variable
         # This will limit the GPU usage to only the specified GPU
         os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_id)
-
+    print('CUDA_VISIBLE_DEVICES', os.environ.get('CUDA_VISIBLE_DEVICES', None))
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
@@ -255,7 +255,8 @@ def launch_multiprocess(
         local_redirect (bool): redirect standard input and output to local file
     """
     gpus_per_node = None
-    if use_gpu:
+    cuda_devices = os.environ.get("CUDA_VISIBLE_DEVICES", None)
+    if use_gpu and cuda_devices is not None:
         # Count the number of GPUs on each node
         gpus_per_node = len(os.environ["CUDA_VISIBLE_DEVICES"].split(','))
         num_gpu = gpus_per_node
@@ -265,8 +266,7 @@ def launch_multiprocess(
             num_gpu = gpus_per_node * len(total_node_list)
         if num_jobs > num_gpu:
             raise ValueError(f"More jobs than GPUs requested. num_jobs={num_jobs},"
-                             f" num_gpu={num_gpu * len(total_node_list)}")
-
+                             f" num_gpu={num_gpu}")
     # parse node file contents
     if exclude_current_node:
         host = get_my_host()

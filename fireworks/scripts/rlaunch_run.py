@@ -188,6 +188,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
             timeout=args.timeout,
             exclude_current_node=args.exclude_current_node,
             local_redirect=args.local_redirect,
+            use_gpu=args.use_gpu
         )
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
