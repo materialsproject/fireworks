@@ -200,7 +200,6 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24, gpus_per_node=None)
     Returns:
         (([int],[int])) the node list and processor list for each job
     """
-    gpu_lists = None
     if total_node_list:
         orig_node_list = sorted(list(set(total_node_list)))
         nnodes = len(orig_node_list)
@@ -212,11 +211,15 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24, gpus_per_node=None)
 
         if gpus_per_node is not None:
             gpu_lists = list(range(gpus_per_node)) * nnodes
+        else:
+            gpu_lists = [None] * nnodes
     else:
         sub_nproc_list = [ppn] * num_jobs
         node_lists = [None] * num_jobs
         if gpus_per_node is not None:
             gpu_lists = list(range(gpus_per_node))
+        else:
+            gpu_lists = [None] * num_jobs
     return node_lists, sub_nproc_list, gpu_lists
 
 
