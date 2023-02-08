@@ -104,6 +104,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     multi_parser.add_argument(
         "--local_redirect", help="Redirect stdout and stderr to the launch directory", action="store_true"
     )
+    multi_parser.add_argument("--use_gpu", help="Whether or not the job uses GPU compute", default=False, type=bool)
 
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
     parser.add_argument("-w", "--fworker_file", help="path to fworker file")

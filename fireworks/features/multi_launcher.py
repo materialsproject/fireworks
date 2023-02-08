@@ -20,6 +20,7 @@ from fireworks.utilities.fw_utilities import (
     get_my_host,
     log_multi,
 )
+from warnings import warn
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Material Project & The Electrolyte Genome Project"
@@ -54,7 +55,8 @@ def ping_multilaunch(port, stop_event):
 
 
 def rapidfire_process(
-    fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect
+    fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect,
+    gpu_id=None
 ):
     """
     Initializes shared data with multiprocessing parameters and starts a rapidfire.
@@ -70,7 +72,13 @@ def rapidfire_process(
         sub_nproc (int): number of processors of the sub job
         timeout (int): # of seconds after which to stop the rapidfire process
         local_redirect (bool): redirect standard input and output to local file
+        gpu_id (int): GPU ID to use for the sub job
     """
+    if gpu_id is not None:
+        # If the sub job is using GPU, set the CUDA_VISIBLE_DEVICES environment variable
+        # This will limit the GPU usage to only the specified GPU
+        os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_id)
+
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
@@ -147,6 +155,7 @@ def start_rockets(
     timeout=None,
     running_ids_dict=None,
     local_redirect=False,
+    gpu_lists=None
 ):
     """
     Create each sub job and start a rocket launch in each one
@@ -168,9 +177,10 @@ def start_rockets(
     processes = [
         Process(
             target=rapidfire_process,
-            args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict, local_redirect),
+            args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc,
+                  timeout, running_ids_dict, local_redirect, gpu_id),
         )
-        for nl, sub_nproc in zip(node_lists, sub_nproc_list)
+        for nl, sub_nproc, gpu_id in zip(node_lists, sub_nproc_list, gpu_lists)
     ]
     for p in processes:
         p.start()
@@ -178,7 +188,7 @@ def start_rockets(
     return processes
 
 
-def split_node_lists(num_jobs, total_node_list=None, ppn=24):
+def split_node_lists(num_jobs, total_node_list=None, ppn=24, gpus_per_node=None):
     """
     Parse node list and processor list from nodefile contents
 
@@ -190,6 +200,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     Returns:
         (([int],[int])) the node list and processor list for each job
     """
+    gpu_lists = None
     if total_node_list:
         orig_node_list = sorted(list(set(total_node_list)))
         nnodes = len(orig_node_list)
@@ -198,10 +209,15 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
         sub_nnodes = nnodes // num_jobs
         sub_nproc_list = [sub_nnodes * ppn] * num_jobs
         node_lists = [orig_node_list[i : i + sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
+
+        if gpus_per_node is not None:
+            gpu_lists = list(range(gpus_per_node)) * nnodes
     else:
         sub_nproc_list = [ppn] * num_jobs
         node_lists = [None] * num_jobs
-    return node_lists, sub_nproc_list
+        if gpus_per_node is not None:
+            gpu_lists = list(range(gpus_per_node))
+    return node_lists, sub_nproc_list, gpu_lists
 
 
 # TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??
@@ -217,6 +233,7 @@ def launch_multiprocess(
     timeout=None,
     exclude_current_node=False,
     local_redirect=False,
+    use_gpu=False
 ):
     """
     Launch the jobs in the job packing mode.
@@ -234,6 +251,19 @@ def launch_multiprocess(
         exclude_current_node: Don't use the script launching node as a compute node
         local_redirect (bool): redirect standard input and output to local file
     """
+    if use_gpu:
+        # Count the number of GPUs on each node
+        gpus_per_node = len(os.environ["CUDA_VISIBLE_DEVICES"].split(','))
+        if total_node_list is not None:
+            # If the node list is specified, we need to multiply the number of GPUs by the
+            # number of nodes. Else we assume it is a single node job.
+            num_gpu = gpus_per_node * len(total_node_list)
+        else:
+            num_gpu = gpus_per_node
+        if num_jobs > num_gpu:
+            raise ValueError(f"More jobs than GPUs requested. num_jobs={num_jobs},"
+                             f" num_gpu={num_gpu * len(total_node_list)}")
+            
     # parse node file contents
     if exclude_current_node:
         host = get_my_host()
@@ -244,7 +274,7 @@ def launch_multiprocess(
             total_node_list.remove(host)
         else:
             log_multi(l_logger, "The current node is not in the node list, keep the node list as is")
-    node_lists, sub_nproc_list = split_node_lists(num_jobs, total_node_list, ppn)
+    node_lists, sub_nproc_list, gpu_lists = split_node_lists(num_jobs, total_node_list, ppn, gpus_per_node)
 
     # create shared dataserver
     ds = DataServer.setup(launchpad)
@@ -264,6 +294,7 @@ def launch_multiprocess(
         timeout=timeout,
         running_ids_dict=running_ids_dict,
         local_redirect=local_redirect,
+        gpu_lists=gpu_lists
     )
     FWData().Running_IDs = running_ids_dict
 
