@@ -251,19 +251,19 @@ def launch_multiprocess(
         exclude_current_node: Don't use the script launching node as a compute node
         local_redirect (bool): redirect standard input and output to local file
     """
+    gpus_per_node = None
     if use_gpu:
         # Count the number of GPUs on each node
         gpus_per_node = len(os.environ["CUDA_VISIBLE_DEVICES"].split(','))
+        num_gpu = gpus_per_node
         if total_node_list is not None:
             # If the node list is specified, we need to multiply the number of GPUs by the
             # number of nodes. Else we assume it is a single node job.
             num_gpu = gpus_per_node * len(total_node_list)
-        else:
-            num_gpu = gpus_per_node
         if num_jobs > num_gpu:
             raise ValueError(f"More jobs than GPUs requested. num_jobs={num_jobs},"
                              f" num_gpu={num_gpu * len(total_node_list)}")
-            
+
     # parse node file contents
     if exclude_current_node:
         host = get_my_host()
