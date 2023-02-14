@@ -6,6 +6,7 @@ import os
 import threading
 import time
 from multiprocessing import Manager, Process
+import math
 
 from fireworks.core.rocket_launcher import rapidfire
 from fireworks.fw_config import (
@@ -217,7 +218,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24, gpus_per_node=None)
         sub_nproc_list = [ppn] * num_jobs
         node_lists = [None] * num_jobs
         if gpus_per_node is not None:
-            gpu_lists = list(range(gpus_per_node))
+            gpu_lists = (list(range(gpus_per_node))*math.ceil(num_jobs/gpus_per_node))[:num_jobs]
         else:
             gpu_lists = [None] * num_jobs
     return node_lists, sub_nproc_list, gpu_lists
@@ -264,9 +265,13 @@ def launch_multiprocess(
             # If the node list is specified, we need to multiply the number of GPUs by the
             # number of nodes. Else we assume it is a single node job.
             num_gpu = gpus_per_node * len(total_node_list)
-        if num_jobs > num_gpu:
-            raise ValueError(f"More jobs than GPUs requested. num_jobs={num_jobs},"
-                             f" num_gpu={num_gpu}")
+            if num_jobs > num_gpu:
+                raise ValueError(f"More jobs than GPUs requested. num_jobs={num_jobs},"
+                                f" num_gpu={num_gpu}")
+        else:
+            warn('No node list specified, assuming the number of requested jobs is less'
+                          ' than the number of total GPUs available.')
+
     # parse node file contents
     if exclude_current_node:
         host = get_my_host()
