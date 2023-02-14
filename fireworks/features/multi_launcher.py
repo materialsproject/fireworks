@@ -267,10 +267,10 @@ def launch_multiprocess(
             num_gpu = gpus_per_node * len(total_node_list)
             if num_jobs > num_gpu:
                 raise ValueError(f"More jobs than GPUs requested. num_jobs={num_jobs},"
-                                f" num_gpu={num_gpu}")
+                                 f" num_gpu={num_gpu}")
         else:
             warn('No node list specified, assuming the number of requested jobs is less'
-                          ' than the number of total GPUs available.')
+                 ' than the number of total GPUs available.')
 
     # parse node file contents
     if exclude_current_node:
