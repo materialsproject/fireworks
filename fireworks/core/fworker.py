@@ -3,7 +3,9 @@ This module contains FireWorker, which encapsulates information about a computin
 """
 
 import json
+from typing import Any, Dict, Optional, Sequence, Union
 
+from fireworks.core.types import FromDict, ToDict
 from fireworks.fw_config import FWORKER_LOC
 from fireworks.utilities.fw_serializers import (
     DATETIME_HANDLER,
@@ -21,7 +23,13 @@ __date__ = "Dec 12, 2012"
 
 
 class FWorker(FWSerializable):
-    def __init__(self, name="Automatically generated Worker", category="", query=None, env=None):
+    def __init__(
+        self,
+        name: str = "Automatically generated Worker",
+        category: Union[str, Sequence[str]] = "",
+        query: Optional[Dict[str, Any]] = None,
+        env: Optional[Dict[str, str]] = None,
+    ) -> None:
         """
         Args:
             name (str): the name of the resource, should be unique
@@ -41,7 +49,7 @@ class FWorker(FWSerializable):
         self.env = env if env else {}
 
     @recursive_serialize
-    def to_dict(self):
+    def to_dict(self) -> ToDict:
         return {
             "name": self.name,
             "category": self.category,
@@ -51,11 +59,11 @@ class FWorker(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict: FromDict) -> "FWorker":
         return FWorker(m_dict["name"], m_dict["category"], json.loads(m_dict["query"]), m_dict.get("env"))
 
     @property
-    def query(self):
+    def query(self) -> ToDict:
         """
         Returns updated query dict.
         """
@@ -77,10 +85,10 @@ class FWorker(FWSerializable):
         return q
 
     @classmethod
-    def auto_load(cls):
+    def auto_load(cls) -> "FWorker":
         """
         Returns FWorker object from settings file(my_fworker.yaml).
         """
         if FWORKER_LOC:
-            return FWorker.from_file(FWORKER_LOC)
+            return FWorker.from_file(FWORKER_LOC)  # type: ignore
         return FWorker()

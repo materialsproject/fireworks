@@ -33,10 +33,12 @@ import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
 import traceback
+from typing import Any, Dict, MutableMapping, Optional, Type, TypeVar
 
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
 
+from fireworks.core.types import FromDict
 from fireworks.fw_config import (
     DECODE_MONTY,
     ENCODE_MONTY,
@@ -55,7 +57,7 @@ __date__ = "Dec 13, 2012"
 
 # TODO: consider *somehow* switching FireWorks to monty serialization. e.g., numpy serialization is better handled.
 
-SAVED_FW_MODULES = {}
+SAVED_FW_MODULES: MutableMapping[str, str] = {}
 DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 ENCODING_PARAMS = {"encoding": "utf-8"}
@@ -71,7 +73,7 @@ if JSON_SCHEMA_VALIDATE:
     import fireworks_schema
 
 
-def recursive_dict(obj, preserve_unicode=True):
+def recursive_dict(obj: Any, preserve_unicode: bool = True) -> Any:
     if obj is None:
         return None
 
@@ -93,7 +95,7 @@ def recursive_dict(obj, preserve_unicode=True):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
 
-    if preserve_unicode and isinstance(obj, str) and obj != obj.encode("ascii", "ignore"):
+    if preserve_unicode and isinstance(obj, str) and obj != obj.encode("ascii", "ignore"):  # type: ignore
         return obj
 
     if NUMPY_INSTALLED and isinstance(obj, np.ndarray):
@@ -103,7 +105,7 @@ def recursive_dict(obj, preserve_unicode=True):
 
 
 # TODO: is reconstitute_dates really needed? Can this method just do everything?
-def _recursive_load(obj):
+def _recursive_load(obj: Any) -> Any:
     if obj is None:
         return None
 
@@ -128,7 +130,7 @@ def _recursive_load(obj):
             return reconstitute_dates(obj)
         except Exception:
             # convert unicode to ASCII if not really unicode
-            if obj == obj.encode("ascii", "ignore"):
+            if obj == obj.encode("ascii", "ignore"):  # type: ignore
                 return str(obj)
 
     return obj
@@ -177,6 +179,9 @@ def serialize_fw(func):
     return _decorator
 
 
+T = TypeVar("T", bound="FWSerializable")
+
+
 class FWSerializable(metaclass=abc.ABCMeta):
     """
     To create a serializable object within FireWorks, you should subclass this
@@ -196,20 +201,20 @@ class FWSerializable(metaclass=abc.ABCMeta):
     """
 
     @property
-    def fw_name(self):
+    def fw_name(self) -> str:
         try:
-            return self._fw_name
+            return self._fw_name  # type: ignore
         except AttributeError:
             return get_default_serialization(self.__class__)
 
     @abc.abstractmethod
-    def to_dict(self):
+    def to_dict(self) -> Dict[Any, Any]:
         raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
-    def to_db_dict(self):
+    def to_db_dict(self) -> Dict[Any, Any]:
         return self.to_dict()
 
-    def as_dict(self):
+    def as_dict(self) -> Dict[Any, Any]:
         # strictly for pseudo-compatibility with MSONable
         # Note that FWSerializable is not MSONable, it uses _fw_name instead of __class__ and
         # __module__
@@ -217,13 +222,13 @@ class FWSerializable(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def from_dict(cls, m_dict):
+    def from_dict(cls: Type[T], m_dict: FromDict) -> T:
         raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
-    def to_format(self, f_format="json", **kwargs):
+    def to_format(self, f_format: str = "json", **kwargs) -> str:
         """
         returns a String representation in the given format
 
@@ -234,12 +239,12 @@ class FWSerializable(metaclass=abc.ABCMeta):
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         elif f_format == "yaml":
             # start with the JSON format, and convert to YAML
-            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
+            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)  # type: ignore
         else:
             raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
-    def from_format(cls, f_str, f_format="json"):
+    def from_format(cls: Type[T], f_str: str, f_format: str = "json") -> T:
         """
         convert from a String representation to its Object.
 
@@ -256,11 +261,11 @@ class FWSerializable(metaclass=abc.ABCMeta):
             dct = yaml.safe_load(f_str)
         else:
             raise ValueError(f"Unsupported format {f_format}")
-        if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
+        if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:  # type: ignore
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
 
-    def to_file(self, filename, f_format=None, **kwargs):
+    def to_file(self, filename: str, f_format: Optional[str] = None, **kwargs) -> None:
         """
         Write a serialization of this object to a file.
 
@@ -270,11 +275,11 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "w", **ENCODING_PARAMS) as f:
+        with open(filename, "w", **ENCODING_PARAMS) as f:  # type: ignore
             f.write(self.to_format(f_format=f_format, **kwargs))
 
     @classmethod
-    def from_file(cls, filename, f_format=None):
+    def from_file(cls: Type[T], filename: str, f_format: Optional[str] = None) -> T:
         """
         Load a serialization of this object from a file.
 
@@ -287,20 +292,20 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "r", **ENCODING_PARAMS) as f:
+        with open(filename, "r", **ENCODING_PARAMS) as f:  # type: ignore
             return cls.from_format(f.read(), f_format=f_format)
 
     def __getstate__(self):
         return self.to_dict()
 
-    def __setstate__(self, state):
+    def __setstate__(self, state) -> None:
         fw_obj = self.from_dict(state)
         for k, v in fw_obj.__dict__.items():
             self.__dict__[k] = v
 
 
 # TODO: make this quicker the first time around
-def load_object(obj_dict):
+def load_object(obj_dict: MutableMapping[str, Any]) -> Any:
     """
     Creates an instantiation of a class based on a dictionary representation. We implicitly
     determine the Class through introspection along with information in the dictionary.
@@ -370,7 +375,7 @@ def load_object(obj_dict):
     raise ValueError(f"load_object() could not find a class with cls._fw_name {fw_name}")
 
 
-def load_object_from_file(filename, f_format=None):
+def load_object_from_file(filename: str, f_format: Optional[str] = None) -> Any:
     """
     Implicitly load an object from a file. just a friendly wrapper to
     load_object()
@@ -383,7 +388,7 @@ def load_object_from_file(filename, f_format=None):
     if f_format is None:
         f_format = filename.split(".")[-1]
 
-    with open(filename, "r", **ENCODING_PARAMS) as f:
+    with open(filename, "r", **ENCODING_PARAMS) as f:  # type: ignore
         if f_format == "json":
             dct = json.loads(f.read())
         elif f_format == "yaml":
@@ -392,8 +397,9 @@ def load_object_from_file(filename, f_format=None):
             raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
 
     classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
-    if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
-        fireworks_schema.validate(dct, classname)
+    if JSON_SCHEMA_VALIDATE:
+        if JSON_SCHEMA_VALIDATE_LIST is not None and classname in JSON_SCHEMA_VALIDATE_LIST:
+            fireworks_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
 
 
@@ -413,7 +419,7 @@ def _search_module_for_obj(m_module, obj_dict):
             return obj.from_dict(obj_dict)
 
 
-def reconstitute_dates(obj_dict):
+def reconstitute_dates(obj_dict: Any) -> Any:
     if obj_dict is None:
         return None
 
@@ -434,7 +440,7 @@ def reconstitute_dates(obj_dict):
     return obj_dict
 
 
-def get_default_serialization(cls):
+def get_default_serialization(cls: Type[Any]) -> str:
     root_mod = cls.__module__.split(".")[0]
     if root_mod == "__main__":
         raise ValueError(

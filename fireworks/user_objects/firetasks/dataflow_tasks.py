@@ -5,9 +5,11 @@ __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 
 import sys
+from typing import Any, List, Mapping, Optional
 
 from fireworks import Firework
 from fireworks.core.firework import FiretaskBase, FWAction
+from fireworks.core.types import Spec
 from fireworks.utilities.fw_serializers import load_object
 
 if sys.version_info[0] > 2:
@@ -74,7 +76,7 @@ class CommandLineTask(FiretaskBase):
     required_params = ["command_spec"]
     optional_params = ["inputs", "outputs", "chunk_number"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         cmd_spec = self["command_spec"]
         ilabels = self.get("inputs")
         olabels = self.get("outputs")
@@ -136,7 +138,7 @@ class CommandLineTask(FiretaskBase):
             return FWAction()
 
     @staticmethod
-    def command_line_tool(command, inputs=None, outputs=None):
+    def command_line_tool(command, inputs: Optional[List[Mapping[Any, Any]]] = None, outputs: Optional[Spec] = None):
         """
         This function composes and executes a command from provided
         specifications.
@@ -163,7 +165,7 @@ class CommandLineTask(FiretaskBase):
         from shutil import copyfile
         from subprocess import PIPE, Popen
 
-        def set_binding(arg):
+        def set_binding(arg: Mapping[str, Any]) -> str:
             argstr = ""
             if "binding" in arg:
                 if "prefix" in arg["binding"]:
@@ -283,7 +285,7 @@ class ForeachTask(FiretaskBase):
     required_params = ["task", "split"]
     optional_params = ["number of chunks"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         assert isinstance(self["split"], basestring), self["split"]
         assert isinstance(fw_spec[self["split"]], list)
         if isinstance(self["task"]["inputs"], list):
@@ -321,7 +323,7 @@ class JoinDictTask(FiretaskBase):
     required_params = ["inputs", "output"]
     optional_params = ["rename"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         assert isinstance(self["output"], basestring)
         assert isinstance(self["inputs"], list)
 
@@ -351,7 +353,7 @@ class JoinListTask(FiretaskBase):
     _fw_name = "JoinListTask"
     required_params = ["inputs", "output"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         assert isinstance(self["output"], basestring)
         assert isinstance(self["inputs"], list)
         if self["output"] not in fw_spec:
@@ -377,7 +379,7 @@ class ImportDataTask(FiretaskBase):
     required_params = ["filename", "mapstring"]
     optional_params = []
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         import json
         import operator
         from functools import reduce

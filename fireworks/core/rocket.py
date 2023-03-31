@@ -15,7 +15,7 @@ import shutil
 import traceback
 from datetime import datetime
 from threading import Event, Thread, current_thread
-from typing import Dict, Union
+from typing import Optional
 
 from monty.io import zopen
 from monty.os.path import zpath
@@ -23,6 +23,7 @@ from monty.os.path import zpath
 from fireworks.core.firework import Firework, FWAction
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
+from fireworks.core.types import Checkpoint, Spec
 from fireworks.fw_config import (
     PING_TIME_SECS,
     PRINT_FW_JSON,
@@ -56,7 +57,7 @@ def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_
         stop_event.wait(PING_TIME_SECS)
 
 
-def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Union[Event, None]:
+def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Optional[Event]:
     fd = FWData()
     if fd.MULTIPROCESSING:
         if not launch_id:
@@ -70,7 +71,7 @@ def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Union[Event, None
         return ping_stop
 
 
-def stop_backgrounds(ping_stop, btask_stops):
+def stop_backgrounds(ping_stop: Event, btask_stops) -> None:
     fd = FWData()
     if fd.MULTIPROCESSING:
         fd.Running_IDs[os.getpid()] = None
@@ -81,7 +82,7 @@ def stop_backgrounds(ping_stop, btask_stops):
         b.set()
 
 
-def background_task(btask, spec, stop_event, master_thread):
+def background_task(btask, spec: Spec, stop_event: Event, master_thread: Thread) -> None:
     num_launched = 0
     while not stop_event.is_set() and master_thread.is_alive():
         for task in btask.tasks:
@@ -93,7 +94,7 @@ def background_task(btask, spec, stop_event, master_thread):
             break
 
 
-def start_background_task(btask, spec):
+def start_background_task(btask, spec: Spec) -> Event:
     ping_stop = Event()
     ping_thread = Thread(target=background_task, args=(btask, spec, ping_stop, current_thread()))
     ping_thread.start()
@@ -409,8 +410,9 @@ class Rocket:
                     l_logger.log(logging.DEBUG, traceback.format_exc())
                     l_logger.log(
                         logging.WARNING,
-                        f"Firework {self.fw_id} fizzled but couldn't complete the update of the database. "
-                        f"Reason: {e}\nRefresh the WF to recover the result (lpad admin refresh -i {self.fw_id}).",
+                        "Firework {} fizzled but couldn't complete the update of the database."
+                        " Reason: {}\nRefresh the WF to recover the result "
+                        "(lpad admin refresh -i {}).".format(self.fw_id, e, self.fw_id),
                     )
                     return True
             else:
@@ -426,7 +428,7 @@ class Rocket:
             return True
 
     @staticmethod
-    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: Dict[str, any]) -> None:
+    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: Checkpoint) -> None:
         """
         Helper function to update checkpoint
 
@@ -446,9 +448,7 @@ class Rocket:
                 with zopen(fpath, "wt") as f_out:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
-    def decorate_fwaction(
-        self, fwaction: FWAction, my_spec: Dict[str, any], m_fw: Firework, launch_dir: str
-    ) -> FWAction:
+    def decorate_fwaction(self, fwaction: FWAction, my_spec: Spec, m_fw: Firework, launch_dir: str) -> FWAction:
 
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))

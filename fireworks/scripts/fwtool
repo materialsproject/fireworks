@@ -3,11 +3,12 @@
 import os
 import shutil
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
+from typing import List
 
 import yaml
 
-from fireworks.core.firework import Firework
+from fireworks.core.firework import FiretaskBase, Firework
 from fireworks.core.launchpad import LaunchPad
 from fireworks.user_objects.firetasks.fileio_tasks import FileWriteTask
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -18,9 +19,11 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "ongsp@ucsd.edu"
 __date__ = "1/6/14"
 
+from typing import Sequence
 
-def create_fw_single(args, fnames, yaml_fname):
-    tasks = []
+
+def create_fw_single(args: Namespace, fnames: Sequence[str], yaml_fname: str) -> None:
+    tasks: List[FiretaskBase] = []
     if fnames:
         files = []
         for fname in fnames:
@@ -34,7 +37,7 @@ def create_fw_single(args, fnames, yaml_fname):
         yaml.dump(fw.to_dict(), f, default_flow_style=False)
 
 
-def create_fw(args):
+def create_fw(args: Namespace) -> None:
     if not args.directory_mode:
         create_fw_single(args, args.files_or_dirs, args.output)
     else:
@@ -43,7 +46,7 @@ def create_fw(args):
             create_fw_single(args, [os.path.join(d, f) for f in os.listdir(d)], output_fname.format(i))
 
 
-def do_cleanup(args):
+def do_cleanup(args: Namespace) -> None:
     lp = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
     to_delete = []
     for i in lp.get_fw_ids({}):

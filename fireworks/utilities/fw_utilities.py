@@ -10,7 +10,7 @@ import sys
 import traceback
 from logging import Formatter, Logger
 from multiprocessing.managers import BaseManager
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 from fireworks.fw_config import DS_PASSWORD, FW_BLOCK_FORMAT, FW_LOGGING_FORMAT, FWData
 
@@ -20,14 +20,14 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Dec 12, 2012"
 
-PREVIOUS_STREAM_LOGGERS = []  # contains the name of loggers that have already been initialized
+PREVIOUS_STREAM_LOGGERS: List[Tuple[str, str]] = []  # contains the name of loggers that have already been initialized
 PREVIOUS_FILE_LOGGERS = []  # contains the name of file loggers that have already been initialized
 DEFAULT_FORMATTER = Formatter(FW_LOGGING_FORMAT)
 
 
 def get_fw_logger(
     name: str,
-    l_dir: None = None,
+    l_dir: Optional[str] = None,
     file_levels: Tuple[str, str] = ("DEBUG", "ERROR"),
     stream_level: str = "DEBUG",
     formatter: Formatter = DEFAULT_FORMATTER,
@@ -49,7 +49,7 @@ def get_fw_logger(
 
     stream_level = stream_level if stream_level else "CRITICAL"
     # add handlers for the file_levels
-    if l_dir:
+    if l_dir is not None:
         for lvl in file_levels:
             f_name = os.path.join(l_dir, name.replace(".", "_") + "-" + lvl.lower() + ".log")
             mode = "w" if clear_logs else "a"

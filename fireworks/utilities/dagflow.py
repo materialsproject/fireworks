@@ -5,9 +5,12 @@ __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
 
 from itertools import combinations
+from typing import List, Optional, Tuple
 
 import igraph
 from igraph import Graph
+
+from fireworks import Workflow
 
 DF_TASKS = ["PyTask", "CommandLineTask", "ForeachTask", "JoinDictTask", "JoinListTask"]
 
@@ -42,7 +45,7 @@ class DAGFlow(Graph):
     """The purpose of this class is to help construction, validation and
     visualization of workflows."""
 
-    def __init__(self, steps, links=None, nlinks=None, name=None, **kwargs):
+    def __init__(self, steps, links=None, nlinks=None, name: Optional[str] = None, **kwargs) -> None:
         Graph.__init__(self, directed=True, graph_attrs={"name": name}, **kwargs)
 
         for step in steps:
@@ -56,7 +59,7 @@ class DAGFlow(Graph):
         self._add_dataflow_links()
 
     @classmethod
-    def from_fireworks(cls, fireworkflow):
+    def from_fireworks(cls, fireworkflow: Workflow) -> "DAGFlow":
         """Converts a fireworks workflow object into a new DAGFlow object"""
         wfd = fireworkflow.to_dict()
         if "name" in wfd:
@@ -117,7 +120,7 @@ class DAGFlow(Graph):
 
         return cls(steps=steps, links=links, name=name)
 
-    def _get_links(self, nlinks):
+    def _get_links(self, nlinks) -> List[Tuple[List[str], List[str]]]:
         """Translates named links into links between step ids"""
         links = []
         for link in nlinks:
@@ -126,7 +129,7 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def _get_ctrlflow_links(self):
+    def _get_ctrlflow_links(self) -> List[Tuple[str, str]]:
         """Returns a list of unique tuples of link ids"""
         links = []
         for ilink in {link.tuple for link in list(self.es)}:
@@ -135,7 +138,7 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def _add_ctrlflow_links(self, links):
+    def _add_ctrlflow_links(self, links) -> None:
         """Adds graph edges corresponding to control flow links"""
         for link in links:
             source = self._get_index(link[0])
@@ -262,22 +265,22 @@ class DAGFlow(Graph):
         """Returns all leaves (i.e. vertices without outgoing edges)"""
         return [i for i, v in enumerate(self.degree(mode=igraph.OUT)) if v == 0]
 
-    def delete_ctrlflow_links(self):
+    def delete_ctrlflow_links(self) -> None:
         """Deletes graph edges corresponding to control flow links"""
         lst = [link.index for link in list(self.es) if link["label"] == " "]
         self.delete_edges(lst)
 
-    def delete_dataflow_links(self):
+    def delete_dataflow_links(self) -> None:
         """Deletes graph edges corresponding to data flow links"""
         lst = [link.index for link in list(self.es) if link["label"] != " "]
         self.delete_edges(lst)
 
-    def add_step_labels(self):
+    def add_step_labels(self) -> None:
         """Labels the workflow steps (i.e. graph vertices)"""
         for vertex in list(self.vs):
             vertex["label"] = vertex["name"] + ", id: " + str(vertex["id"])
 
-    def check(self):
+    def check(self) -> None:
         """Correctness check of the workflow"""
         try:
             assert self.is_dag(), "The workflow graph must be a DAG."
@@ -288,7 +291,7 @@ class DAGFlow(Graph):
         assert len(self.vs["id"]) == len(set(self.vs["id"])), "Workflow steps must have unique IDs."
         self.check_dataflow()
 
-    def check_dataflow(self):
+    def check_dataflow(self) -> None:
         """Checks whether all inputs and outputs match"""
 
         # check for shared output data entities

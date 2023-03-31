@@ -2,6 +2,7 @@ import time
 from unittest import SkipTest
 
 from fireworks import FiretaskBase, Firework, FWAction
+from fireworks.core.types import Spec
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 
@@ -95,7 +96,7 @@ class DoNothingTask(FiretaskBase):
 class DetoursTask(FiretaskBase):
     optional_params = ["n_detours", "data_per_detour"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: Spec) -> FWAction:
         data_per_detour = self.get("data_per_detour", None)
         n_detours = self.get("n_detours", 10)
         fws = []

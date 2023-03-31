@@ -14,15 +14,36 @@ repos:
         args: [--in-place, --remove-all-unused-imports, --remove-unused-variable, --ignore-init-module-imports]
 
   - repo: https://github.com/psf/black
-    rev: 22.1.0
+    rev: 22.3.0
     hooks:
       - id: black
         args: [--line-length, '120']
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.1.1
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - jinja2
+          - numpy
+          - pymongo-stubs
+          - ruamel.yaml
+          - types-flask
+          - types-paramiko
+          - types-prettytable
+          - types-python-dateutil
+          - types-pyyaml
+          - types-requests
+          - types-setuptools
+          - types-six
+          - types-tabulate
+          - types-tqdm
+        args: []
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
