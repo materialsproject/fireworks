@@ -275,13 +275,7 @@ def print_fws(ids: Sequence[int], lp: LaunchPad, args: Namespace) -> None:
     print(args.output(fws))
 
 
-<<<<<<< HEAD
-def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, None] = None) -> Union[List[int], int]:
-||||||| parent of a224c6c5 (continue typing)
-def get_fw_ids_helper(lp, args, count_only=None):
-=======
-def get_fw_ids_helper(lp, args, count_only: Optional[bool] = None) -> List[int]:
->>>>>>> a224c6c5 (continue typing)
+def get_fw_ids_helper(lp, args, count_only: Optional[bool] = None) -> Union[List[int], int]:
     """Build fws query from command line options and submit.
 
     Parameters:
