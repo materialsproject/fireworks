@@ -59,7 +59,5 @@ module = [
     "monty.shutil",
     "pymatgen.core",
     "pytest",
-    # https://github.com/tqdm/tqdm/issues/260
-    "tqdm",
 ]
 ignore_missing_imports = true
