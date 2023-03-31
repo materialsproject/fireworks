@@ -53,7 +53,7 @@ __date__ = "Jan 30, 2013"
 # TODO: lots of duplication reduction and cleanup possible
 
 
-def sort_aggregation(sort: Sequence[Tuple[str, int]]) -> List[Mapping[str, Any]]:
+def sort_aggregation(sort: Sequence[Tuple[str, int]]) -> List[Dict[str, Any]]:
     """Build sorting aggregation pipeline.
 
     Args:

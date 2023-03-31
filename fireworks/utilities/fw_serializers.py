@@ -33,7 +33,7 @@ import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
 import traceback
-from typing import Any, Mapping, MutableMapping, Optional, Type, TypeVar
+from typing import Any, Dict, MutableMapping, Optional, Type, TypeVar
 
 import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
@@ -208,13 +208,13 @@ class FWSerializable(metaclass=abc.ABCMeta):
             return get_default_serialization(self.__class__)
 
     @abc.abstractmethod
-    def to_dict(self) -> Mapping[Any, Any]:
+    def to_dict(self) -> Dict[Any, Any]:
         raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
-    def to_db_dict(self) -> Mapping[Any, Any]:
+    def to_db_dict(self) -> Dict[Any, Any]:
         return self.to_dict()
 
-    def as_dict(self) -> Mapping[Any, Any]:
+    def as_dict(self) -> Dict[Any, Any]:
         # strictly for pseudo-compatibility with MSONable
         # Note that FWSerializable is not MSONable, it uses _fw_name instead of __class__ and
         # __module__
