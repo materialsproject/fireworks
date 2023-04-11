@@ -145,10 +145,10 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     if args.json:
         launchpad_generator = lambda x: LaunchPad.from_format(x, f_format="json")
-        fworker_generator   = lambda x: FWorker.from_format(x, f_format="json")
+        fworker_generator = lambda x: FWorker.from_format(x, f_format="json")
     else:
         launchpad_generator = lambda x: LaunchPad.form_file(x)
-        fworker_generator   = lambda x: FWorker.from_file(x)
+        fworker_generator = lambda x: FWorker.from_file(x)
 
     if args.command == "singleshot" and args.offline:
         launchpad = None
