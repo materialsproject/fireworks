@@ -12,6 +12,7 @@
 #PBS -V $${env}
 #PBS -M $${email} -m $${notification_options}
 #PBS -l pmem=$${pmem}
+#PBS -l filesystems=$${filesystems}
 
 $${pre_rocket}
 cd $${launch_dir}
