@@ -4,7 +4,7 @@ Jinja2
 monty==3.0.2
 python-dateutil==2.8.1
 tabulate==0.8.6
-flask==1.1.1
+flask==2.3.2
 flask-paginate==0.5.5
 gunicorn==20.0.4
 tqdm==4.41.0
