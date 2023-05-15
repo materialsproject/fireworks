@@ -300,7 +300,7 @@ class Firework(FWSerializable):
     @state.setter
     def state(self, state):
         """
-        Setter for the the FW state, which triggers updated_on change
+        Setter for the FW state, which triggers updated_on change
 
         Args:
             state (str): the state to set for the FW
@@ -537,7 +537,7 @@ class Launch(FWSerializable):
     @state.setter
     def state(self, state):
         """
-        Setter for the the Launch's state. Automatically triggers an update to state_history.
+        Setter for the Launch's state. Automatically triggers an update to state_history.
 
         Args:
             state (str): the state to set for the Launch
@@ -695,7 +695,7 @@ class Workflow(FWSerializable):
         """
 
         def __init__(self, *args, **kwargs):
-            super(Workflow.Links, self).__init__(*args, **kwargs)
+            super().__init__(*args, **kwargs)
 
             for k, v in list(self.items()):
                 if not isinstance(v, (list, tuple)):

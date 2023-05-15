@@ -31,7 +31,7 @@ To prepare for installation, you should:
 Virtualenv installation option
 ------------------------------
 
-Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. If you're interested in this option, you might consider a :doc:`virtualenv install </virtualenv_tutorial>`. Otherwise, just follow the installation instructions below. A simpler option to setting up virtualenv that accomplishes some of the same goals is to use the ``--user`` flag when running ``python setup.py develop`` in the the Git version of installation (see Installation Method 2).
+Virtualenv is a tool that allows you to separate your FireWorks installation from your other Python installations. If you're interested in this option, you might consider a :doc:`virtualenv install </virtualenv_tutorial>`. Otherwise, just follow the installation instructions below. A simpler option to setting up virtualenv that accomplishes some of the same goals is to use the ``--user`` flag when running ``python setup.py develop`` in the Git version of installation (see Installation Method 2).
 
 Installation Method 1: Use Pip
 ==============================

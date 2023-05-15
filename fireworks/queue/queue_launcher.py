@@ -10,7 +10,7 @@ import os
 import time
 from datetime import datetime
 
-from monty.os import cd, makedirs_p
+from monty.os import cd
 
 from fireworks.core.fworker import FWorker
 from fireworks.fw_config import (
@@ -119,7 +119,7 @@ def launch_rocket_to_queue(
 
                     launcher_dir = fw_launch_dir
 
-                    makedirs_p(launcher_dir)
+                    os.makedirs(launcher_dir, exist_ok=True)
 
                     launchpad.change_launch_dir(launch_id, launcher_dir)
                 elif create_launcher_dir:
