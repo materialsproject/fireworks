@@ -144,6 +144,7 @@ class MongoTests(unittest.TestCase):
                     "additions": [],
                     "defuse_children": False,
                     "defuse_workflow": False,
+                    "propagate": False
                 },
             )
 
