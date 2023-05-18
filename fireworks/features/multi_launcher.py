@@ -253,7 +253,7 @@ def launch_multiprocess(
     port = ds.address[1]
 
     # set an environment variable, so that jobs may look for this server
-    os.environ["FW_DATASERVER_PORT"] = str(port) 
+    os.environ["FW_DATASERVER_PORT"] = str(port)
 
     manager = Manager()
     running_ids_dict = manager.dict()
