@@ -198,15 +198,17 @@ class DataServer(BaseManager):
     """
 
     @classmethod
-    def setup(cls, launchpad):
+    def setup(cls, launchpad, multistore):
         """
         Args:
             launchpad (LaunchPad)
+            multistore (MultiStore)
 
         Returns:
             DataServer
         """
         DataServer.register("LaunchPad", callable=lambda: launchpad)
+        DataServer.register("MultiStore", callable=lambda: multistore)
         m = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
         m.start()
         return m
