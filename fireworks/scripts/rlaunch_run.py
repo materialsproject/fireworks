@@ -104,6 +104,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     multi_parser.add_argument(
         "--local_redirect", help="Redirect stdout and stderr to the launch directory", action="store_true"
     )
+    multi_parser.add_argument("--use_gpu", help="Whether or not the job uses GPU compute", default=False, type=bool)
 
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
     parser.add_argument("-w", "--fworker_file", help="path to fworker file")
@@ -187,6 +188,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
             timeout=args.timeout,
             exclude_current_node=args.exclude_current_node,
             local_redirect=args.local_redirect,
+            use_gpu=args.use_gpu
         )
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)
