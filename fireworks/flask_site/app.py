@@ -162,6 +162,8 @@ def get_fw_details(fw_id):
     fw = app.lp.get_fw_dict_by_id(fw_id)
     for launch in fw["launches"]:
         del launch["_id"]
+    for launch in fw["archived_launches"]:
+        del launch["_id"]
     del fw["_id"]
     return jsonify(fw)
 
