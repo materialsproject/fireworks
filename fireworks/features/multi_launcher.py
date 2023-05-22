@@ -20,6 +20,7 @@ from fireworks.utilities.fw_utilities import (
     get_my_host,
     log_multi,
 )
+from maggma.stores.shared_stores import MultiStore
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Material Project & The Electrolyte Genome Project"
@@ -64,7 +65,7 @@ def rapidfire_process(
         nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
         sleep (int): secs to sleep between rapidfire loop iterations
         loglvl (str): level at which to output logs to stdout
-        port (int): Listening port number of the shared object manage
+        port (int): Listening port number of the shared object manager
         password (str): security password to access the server
         node_list ([str]): computer node list
         sub_nproc (int): number of processors of the sub job
@@ -247,8 +248,12 @@ def launch_multiprocess(
     node_lists, sub_nproc_list = split_node_lists(num_jobs, total_node_list, ppn)
 
     # create shared dataserver
-    ds = DataServer.setup(launchpad)
+    multistore = MultiStore()
+    ds = DataServer.setup(launchpad, multistore)
     port = ds.address[1]
+
+    # set an environment variable, so that jobs may look for this server
+    os.environ["FW_DATASERVER_PORT"] = str(port)
 
     manager = Manager()
     running_ids_dict = manager.dict()
