@@ -6,7 +6,7 @@ __date__ = "2/3/14"
 
 import unittest
 
-from fireworks.fw_config import *
+from fireworks.fw_config import config_to_dict
 
 
 class ConfigTest(unittest.TestCase):
