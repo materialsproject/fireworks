@@ -46,7 +46,7 @@ if __name__ == "__main__":
             "newt": ["requests>=2.01"],
             "daemon_mode": ["fabric>=2.3.1"],
             "flask-plotting": ["matplotlib>=2.0.1"],
-            "workflow-checks": ["python-igraph>=0.7.1"],
+            "workflow-checks": ["igraph>=0.7.1"],
             "graph-plotting": ["graphviz"],
         },
         classifiers=[
