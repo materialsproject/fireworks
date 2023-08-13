@@ -346,9 +346,9 @@ class Firework(FWSerializable):
         """Return firework dict with updated launches and state."""
         m_dict = self.to_dict()
         # the launches are stored separately
-        m_dict["launches"] = [l.launch_id for l in self.launches]
+        m_dict["launches"] = [launch.launch_id for launch in self.launches]
         # the archived launches are stored separately
-        m_dict["archived_launches"] = [l.launch_id for l in self.archived_launches]
+        m_dict["archived_launches"] = [launch.launch_id for launch in self.archived_launches]
         m_dict["state"] = self.state
         return m_dict
 
@@ -418,8 +418,8 @@ class Tracker(FWSerializable):
             m_file = zpath(m_file)
         if os.path.exists(m_file):
             with zopen(m_file, "rt", errors="surrogateescape") as f:
-                for l in reverse_readline(f):
-                    lines.append(l)
+                for line in reverse_readline(f):
+                    lines.append(line)
                     if len(lines) == self.nlines:
                         break
             self.content = "\n".join(reversed(lines))
@@ -1222,7 +1222,9 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict["nodes"])
         m_dict["name--id"] = self.name + "--" + str(nodes[0])
-        m_dict["launch_dirs"] = {self._str_fw(x): [l.launch_dir for l in self.id_fw[x].launches] for x in nodes}
+        m_dict["launch_dirs"] = {
+            self._str_fw(x): [launch.launch_dir for launch in self.id_fw[x].launches] for x in nodes
+        }
         m_dict["states"] = {self._str_fw(x): self.id_fw[x].state for x in nodes}
         m_dict["nodes"] = [self._str_fw(x) for x in nodes]
         m_dict["links"] = {self._str_fw(k): [self._str_fw(v) for v in a] for k, a in m_dict["links"].items()}
@@ -1260,12 +1262,12 @@ class Workflow(FWSerializable):
         max_score = Firework.STATE_RANKS["ARCHIVED"]  # state rank must be greater than this
         m_launch = None
         completed_launches = []
-        for l in fw.launches:
-            if Firework.STATE_RANKS[l.state] > max_score:
-                max_score = Firework.STATE_RANKS[l.state]
-                m_launch = l
-                if l.state == "COMPLETED":
-                    completed_launches.append(l)
+        for launch in fw.launches:
+            if Firework.STATE_RANKS[launch.state] > max_score:
+                max_score = Firework.STATE_RANKS[launch.state]
+                m_launch = launch
+                if launch.state == "COMPLETED":
+                    completed_launches.append(launch)
         if completed_launches:
             return max(completed_launches, key=lambda v: v.time_end)
         return m_launch

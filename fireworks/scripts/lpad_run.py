@@ -488,12 +488,12 @@ def delete_wfs(args: Namespace) -> None:
 
 def get_children(links, start, max_depth):
     data = {}
-    for l, c in links.items():
-        if l == start:
-            if len(c) > 0:
-                data[l] = [get_children(links, i, max_depth) for i in c]
+    for link, child in links.items():
+        if link == start:
+            if len(child) > 0:
+                data[link] = [get_children(links, idx, max_depth) for idx in child]
             else:
-                data[l] = c
+                data[link] = child
     return data
 
 
@@ -630,9 +630,9 @@ def rerun_fws(args: Namespace) -> None:
             raise ValueError("Specify the same number of tasks and launches")
     else:
         launch_ids = [None] * len(fw_ids)
-    for f, l in zip(fw_ids, launch_ids):
-        lp.rerun_fw(int(f), recover_launch=l, recover_mode=args.recover_mode)
-        lp.m_logger.debug(f"Processed fw_id: {f}")
+    for fw_id, l_id in zip(fw_ids, launch_ids):
+        lp.rerun_fw(int(fw_id), recover_launch=l_id, recover_mode=args.recover_mode)
+        lp.m_logger.debug(f"Processed fw_id: {fw_id}")
     lp.m_logger.info(f"Finished setting {len(fw_ids)} FWs to rerun")
 
 
@@ -756,14 +756,14 @@ def recover_offline(args: Namespace) -> None:
     failed_fws = []
     recovered_fws = []
 
-    for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id": 1}):
-        if fworker_name and lp.launches.count({"launch_id": l["launch_id"], "fworker.name": fworker_name}) == 0:
+    for launch in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id": 1}):
+        if fworker_name and lp.launches.count({"launch_id": launch["launch_id"], "fworker.name": fworker_name}) == 0:
             continue
-        fw = lp.recover_offline(l["launch_id"], args.ignore_errors, args.print_errors)
+        fw = lp.recover_offline(launch["launch_id"], args.ignore_errors, args.print_errors)
         if fw:
-            failed_fws.append(l["fw_id"])
+            failed_fws.append(launch["fw_id"])
         else:
-            recovered_fws.append(l["fw_id"])
+            recovered_fws.append(launch["fw_id"])
 
     lp.m_logger.info(f"FINISHED recovering offline runs. {len(recovered_fws)} job(s) recovered: {recovered_fws}")
     if failed_fws:

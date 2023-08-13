@@ -614,20 +614,20 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate()  # Kill the rocket
 
-        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
-        assert (l, f) == ([1], [1])
+        lost_launch_ids, lost_fw_ids, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
+        assert (lost_launch_ids, lost_fw_ids) == ([1], [1])
         time.sleep(4)  # Wait double the expected exec time and test
-        l, f, _ = self.lp.detect_lostruns(2)
-        assert (l, f) == ([1], [1])
+        lost_launch_ids, lost_fw_ids, _ = self.lp.detect_lostruns(2)
+        assert (lost_launch_ids, lost_fw_ids) == ([1], [1])
 
-        l, f, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
-        assert (l, f) == ([], [])
+        lost_launch_ids, lost_fw_ids, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
+        assert (lost_launch_ids, lost_fw_ids) == ([], [])
 
-        l, f, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
-        assert (l, f) == ([], [])
+        lost_launch_ids, lost_fw_ids, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
+        assert (lost_launch_ids, lost_fw_ids) == ([], [])
 
-        l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
-        assert (l, f) == ([1], [1])
+        lost_launch_ids, lost_fw_ids, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
+        assert (lost_launch_ids, lost_fw_ids) == ([1], [1])
         assert self.lp.get_fw_by_id(1).state == "READY"
 
     def test_detect_lostruns_defuse(self):
@@ -653,13 +653,13 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate()  # Kill the rocket
 
-        l, f, i = self.lp.detect_lostruns(0.01)
-        assert (l, f) == ([1], [1])
+        lost_launch_ids, lost_fw_ids, i = self.lp.detect_lostruns(0.01)
+        assert (lost_launch_ids, lost_fw_ids) == ([1], [1])
 
         self.lp.defuse_fw(1)
 
-        l, f, i = self.lp.detect_lostruns(0.01, rerun=True)
-        assert (l, f) == ([1], [])
+        lost_launch_ids, lost_fw_ids, i = self.lp.detect_lostruns(0.01, rerun=True)
+        assert (lost_launch_ids, lost_fw_ids) == ([1], [])
         assert self.lp.get_fw_by_id(1).state == "DEFUSED"
 
     def test_state_after_run_start(self):

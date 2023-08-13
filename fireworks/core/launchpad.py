@@ -488,14 +488,14 @@ class LaunchPad(FWSerializable):
         launches = list(
             self.launches.find({"launch_id": {"$in": fw_dict["launches"]}}, sort=[("launch_id", ASCENDING)])
         )
-        for l in launches:
-            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
+        for launch in launches:
+            launch["action"] = get_action_from_gridfs(launch.get("action"), self.gridfs_fallback)
         fw_dict["launches"] = launches
         launches = list(
             self.launches.find({"launch_id": {"$in": fw_dict["archived_launches"]}}, sort=[("launch_id", ASCENDING)])
         )
-        for l in launches:
-            l["action"] = get_action_from_gridfs(l.get("action"), self.gridfs_fallback)
+        for launch in launches:
+            launch["action"] = get_action_from_gridfs(launch.get("action"), self.gridfs_fallback)
         fw_dict["archived_launches"] = launches
         return fw_dict
 
@@ -664,10 +664,10 @@ class LaunchPad(FWSerializable):
 
         if launch_fields:
             launch_info = defaultdict(list)
-            for l in self.launches.find({"launch_id": {"$in": launch_ids}}, projection=launch_fields):
+            for launch in self.launches.find({"launch_id": {"$in": launch_ids}}, projection=launch_fields):
                 for i, fw in enumerate(fw_data):
-                    if l["launch_id"] in fw["launches"]:
-                        launch_info[i].append(l)
+                    if launch["launch_id"] in fw["launches"]:
+                        launch_info[i].append(launch)
             for k, v in launch_info.items():
                 fw_data[k]["launches"] = v
 
@@ -686,7 +686,7 @@ class LaunchPad(FWSerializable):
             for fw in wf["fw"]:
                 k = f"{fw['name']}--{int(fw['fw_id'])}"
                 wf["states"][k] = fw["state"]
-                wf["launch_dirs"][k] = [l["launch_dir"] for l in fw["launches"]]
+                wf["launch_dirs"][k] = [launch["launch_dir"] for launch in fw["launches"]]
             del wf["nodes"]
 
         if mode == "all":
@@ -1166,8 +1166,8 @@ class LaunchPad(FWSerializable):
             list: all launch ids
         """
         all_launch_ids = []
-        for l in self.fireworks.find({}, {"launches": 1}):
-            all_launch_ids.extend(l["launches"])
+        for launch in self.fireworks.find({}, {"launches": 1}):
+            all_launch_ids.extend(launch["launches"])
         return all_launch_ids
 
     def reserve_fw(self, fworker, launch_dir, host=None, ip=None, fw_id=None):
@@ -1216,8 +1216,8 @@ class LaunchPad(FWSerializable):
         """Given the firework id, return the reservation id."""
         fw = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1})
         if fw:
-            for l in self.launches.find({"launch_id": {"$in": fw["launches"]}}, {"state_history": 1}):
-                for d in l["state_history"]:
+            for launch in self.launches.find({"launch_id": {"$in": fw["launches"]}}, {"state_history": 1}):
+                for d in launch["state_history"]:
                     if "reservation_id" in d:
                         return d["reservation_id"]
             return None
@@ -1414,7 +1414,7 @@ class LaunchPad(FWSerializable):
 
         # If this Launch was previously reserved, overwrite that reservation with this Launch
         # note that adding a new Launch is problematic from a duplicate run standpoint
-        prev_reservations = [l for l in m_fw.launches if l.state == "RESERVED"]
+        prev_reservations = [launch for launch in m_fw.launches if launch.state == "RESERVED"]
         reserved_launch = None if not prev_reservations else prev_reservations[0]
         state_history = reserved_launch.state_history if reserved_launch else None
 
@@ -1444,7 +1444,7 @@ class LaunchPad(FWSerializable):
             m_fw.launches.append(m_launch)
         else:
             # we're updating an existing launch
-            m_fw.launches = [m_launch if l.launch_id == m_launch.launch_id else l for l in m_fw.launches]
+            m_fw.launches = [m_launch if launch.launch_id == m_launch.launch_id else launch for launch in m_fw.launches]
 
         # insert the firework and refresh the workflow
         m_fw.state = state
@@ -1808,8 +1808,10 @@ class LaunchPad(FWSerializable):
                 if verified:
                     # steal the launches
                     victim_fw = self.get_fw_by_id(potential_match["fw_id"])
-                    thief_launches = [l.launch_id for l in thief_fw.launches]
-                    valuable_launches = [l for l in victim_fw.launches if l.launch_id not in thief_launches]
+                    thief_launches = [launch.launch_id for launch in thief_fw.launches]
+                    valuable_launches = [
+                        launch for launch in victim_fw.launches if launch.launch_id not in thief_launches
+                    ]
                     for launch in valuable_launches:
                         thief_fw.launches.append(launch)
                         stolen = True
@@ -1916,10 +1918,10 @@ class LaunchPad(FWSerializable):
                 self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed": True}})
 
             else:
-                l = self.launches.find_one_and_replace(
+                launch = self.launches.find_one_and_replace(
                     {"launch_id": m_launch.launch_id}, m_launch.to_db_dict(), upsert=True
                 )
-                fw_id = l["fw_id"]
+                fw_id = launch["fw_id"]
                 f = self.fireworks.find_one_and_update(
                     {"fw_id": fw_id}, {"$set": {"state": "RUNNING", "updated_on": datetime.datetime.utcnow()}}
                 )
@@ -1969,10 +1971,10 @@ class LaunchPad(FWSerializable):
             [dict]: list tracker dicts
         """
         data = []
-        for l in self.launches.find({"fw_id": fw_id}, {"trackers": 1, "launch_id": 1}):
-            if "trackers" in l:  # backwards compatibility
-                trackers = [Tracker.from_dict(t) for t in l["trackers"]]
-                data.append({"launch_id": l["launch_id"], "trackers": trackers})
+        for launch in self.launches.find({"fw_id": fw_id}, {"trackers": 1, "launch_id": 1}):
+            if "trackers" in launch:  # backwards compatibility
+                trackers = [Tracker.from_dict(t) for t in launch["trackers"]]
+                data.append({"launch_id": launch["launch_id"], "trackers": trackers})
         return data
 
     def get_launchdir(self, fw_id, launch_idx=-1):

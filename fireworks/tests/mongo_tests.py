@@ -146,8 +146,8 @@ class MongoTests(unittest.TestCase):
             fwp = json.load(f)
             assert fwp["ping_time"] is not None
 
-        l = self.lp.offline_runs.find_one({"completed": False, "deprecated": False}, {"launch_id": 1})
-        self.lp.recover_offline(l["launch_id"])
+        launch = self.lp.offline_runs.find_one({"completed": False, "deprecated": False}, {"launch_id": 1})
+        self.lp.recover_offline(launch["launch_id"])
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
 
     def test_offline_fw_passinfo(self):
@@ -177,8 +177,8 @@ class MongoTests(unittest.TestCase):
         launch_rocket(None, self.fworker)
 
         # recover jobs
-        for l in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
-            fw = self.lp.recover_offline(l["launch_id"])
+        for launch in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
+            fw = self.lp.recover_offline(launch["launch_id"])
 
         # launch child job
         os.chdir(os.path.join(cur_dir, "launcher_3"))
@@ -188,8 +188,8 @@ class MongoTests(unittest.TestCase):
         launch_rocket(None, self.fworker)
 
         # recover jobs
-        for l in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
-            fw = self.lp.recover_offline(l["launch_id"])
+        for launch in self.lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1}):
+            fw = self.lp.recover_offline(launch["launch_id"])
 
         # confirm the sum in the child job
         child_fw = self.lp.get_fw_by_id(last_fw_id)

@@ -64,7 +64,8 @@ class FilePadTasksTest(unittest.TestCase):
         t = GetFilesByQueryTask(query={"metadata->key": "value"}, dest_dir=dest_dir, new_file_names=new_file_names)
         t.run_task({})
         test_file_contents, _ = self.fp.get_file("test_idenfifier")
-        assert test_file_contents == open(os.path.join(dest_dir, new_file_names[0])).read().encode()
+        with open(os.path.join(dest_dir, new_file_names[0])) as file:
+            assert test_file_contents == file.read().encode()
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
     def test_getfilesbyquerytask_run(self):

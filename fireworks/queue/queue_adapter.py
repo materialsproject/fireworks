@@ -146,7 +146,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             # might contain unused parameters as leftover $$
             unclean_template = a.safe_substitute(subs_dict)
 
-            clean_template = filter(lambda l: "$$" not in l, unclean_template.split("\n"))
+            clean_template = filter(lambda line: "$$" not in line, unclean_template.split("\n"))
 
             return "\n".join(clean_template)
 

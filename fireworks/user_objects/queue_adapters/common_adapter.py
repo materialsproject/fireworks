@@ -151,18 +151,18 @@ class CommonAdapter(QueueAdapterBase):
         if self.q_type == "SGE":
             # want only lines that include username;
             # this will exclude e.g. header lines
-            return len([l for l in output_str.split("\n") if username in l])
+            return len([line for line in output_str.split("\n") if username in line])
 
         if self.q_type == "MOAB":
             # want only lines that include username;
             # this will exclude e.g. header lines
-            return len([l for l in output_str.split("\n") if username in l])
+            return len([line for line in output_str.split("\n") if username in line])
 
         count = 0
         for line in output_str.split("\n"):
             if line.lower().startswith("job"):
                 if self.q_type == "Cobalt":
-                    # Cobalt capitalzes headers
+                    # Cobalt capitalizes headers
                     line = line.lower()
                 header = line.split()
                 if self.q_type == "PBS":
@@ -172,13 +172,16 @@ class CommonAdapter(QueueAdapterBase):
                 else:
                     state_index = header.index("state")
                     queue_index = header.index("queue")
-            if username in line:
-                toks = line.split()
-                if toks[state_index] != "C":
-                    # note: the entire queue name might be cutoff from the output if long queue name
-                    # so we are only ensuring that our queue matches up until cutoff point
-                    if "queue" in self and self["queue"][0 : len(toks[queue_index])] in toks[queue_index]:
-                        count += 1
+            tokens = line.split()
+            # note: the entire queue name might be cutoff from the output if long queue name
+            # so we are only ensuring that our queue matches up until cutoff point
+            if (
+                username in line
+                and tokens[state_index] != "C"
+                and "queue" in self
+                and self["queue"][0 : len(tokens[queue_index])] in tokens[queue_index]
+            ):
+                count += 1
 
         return count
 

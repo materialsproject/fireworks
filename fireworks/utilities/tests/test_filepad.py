@@ -25,7 +25,9 @@ class FilePadTest(unittest.TestCase):
     def test_get_file(self):
         _, file_identifier = self.fp.add_file(self.chgcar_file, identifier="xxx", metadata={"author": "Kiran Mathew"})
         file_contents, doc = self.fp.get_file(file_identifier)
-        assert file_contents == open(self.chgcar_file).read().encode()
+        with open(self.chgcar_file) as file:
+            assert file_contents == file.read().encode()
+
         assert doc["identifier"] == file_identifier
         assert doc["metadata"]["author"] == "Kiran Mathew"
         abspath = os.path.abspath(self.chgcar_file)
