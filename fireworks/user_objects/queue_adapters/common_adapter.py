@@ -185,7 +185,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def submit_to_queue(self, script_file):
         """
-        submits the job to the queue and returns the job id
+        submits the job to the queue and returns the job id.
 
         :param script_file: (str) name of the script file to use (String)
         :return: (int) job_id
@@ -219,9 +219,7 @@ class CommonAdapter(QueueAdapterBase):
                     return job_id
                 except Exception as ex:
                     # probably error parsing job code
-                    log_exception(
-                        queue_logger, f"Could not parse job id following {submit_cmd} due to error {str(ex)}..."
-                    )
+                    log_exception(queue_logger, f"Could not parse job id following {submit_cmd} due to error {ex!s}...")
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
@@ -236,7 +234,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs currently in the queue for the user
+        returns the number of jobs currently in the queue for the user.
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue

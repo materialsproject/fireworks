@@ -1,4 +1,4 @@
-""" This module includes tasks to integrate scripts and python functions """
+"""This module includes tasks to integrate scripts and python functions."""
 
 import builtins
 import shlex
@@ -19,7 +19,7 @@ __date__ = "Feb 18, 2013"
 
 
 class ScriptTask(FiretaskBase):
-    """Runs a user-defined script"""
+    """Runs a user-defined script."""
 
     required_params = ["script"]
     _fw_name = "ScriptTask"
@@ -213,3 +213,4 @@ class PyTask(FiretaskBase):
             actions["stored_data"] = {self["stored_data_varname"]: output}
         if len(actions) > 0:
             return FWAction(**actions)
+        return None

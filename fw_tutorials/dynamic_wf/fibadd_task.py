@@ -10,7 +10,6 @@ __date__ = "Feb 25, 2013"
 
 
 class FibonacciAdderTask(FiretaskBase):
-
     _fw_name = "Fibonacci Adder Task"
 
     def run_task(self, fw_spec):

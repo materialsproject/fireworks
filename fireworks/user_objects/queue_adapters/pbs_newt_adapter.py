@@ -43,7 +43,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
     def _init_auth_session(max_pw_requests=3):
         """
         Initialize the _session class var with an authorized session. Asks for a /
-        password in new sessions, skips PW check for previously authenticated sessions
+        password in new sessions, skips PW check for previously authenticated sessions.
         """
         # hide import in case optional library not installed
         from requests import Session

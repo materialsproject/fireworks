@@ -26,7 +26,7 @@ class TemplateWriterTask(FiretaskBase):
         - output_file: (str) - output file
     Optional parameters:
         - append: (bool) - append to output file (instead of overwrite)
-        - template_dir: (str) - directory in which to find the template file
+        - template_dir: (str) - directory in which to find the template file.
     """
 
     _fw_name = "TemplateWriterTask"
@@ -46,7 +46,6 @@ class TemplateWriterTask(FiretaskBase):
                 of.write(output)
 
     def _load_params(self, d):
-
         self.context = d["context"]
         self.output_file = d["output_file"]
         self.append_file = d.get("append")  # append to output file?

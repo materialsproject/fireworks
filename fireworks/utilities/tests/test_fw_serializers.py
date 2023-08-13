@@ -1,14 +1,7 @@
 # from __future__ import unicode_literals
 
-from fireworks.user_objects.firetasks.unittest_tasks import (
-    ExportTestSerializer,
-    TestSerializer,
-)
-from fireworks.utilities.fw_serializers import (
-    FWSerializable,
-    load_object,
-    recursive_dict,
-)
+from fireworks.user_objects.firetasks.unittest_tasks import ExportTestSerializer, TestSerializer
+from fireworks.utilities.fw_serializers import FWSerializable, load_object, recursive_dict
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 __author__ = "Anubhav Jain"
@@ -67,53 +60,43 @@ class SerializationTest(unittest.TestCase):
         os.remove("test.yaml")
 
     def test_sanity(self):
-        self.assertEqual(
-            self.obj_1, self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!"
-        )
-        self.assertNotEqual(self.obj_1, self.obj_2, "The __ne__() method of the TestSerializer is not set up properly!")
-        self.assertEqual(
-            self.obj_1,
-            self.obj_1.from_dict(self.obj_1.to_dict()),
-            "The to/from_dict() methods of the TestSerializer are not set up properly!",
-        )
+        assert self.obj_1 == self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!"
+        assert self.obj_1 != self.obj_2, "The __ne__() method of the TestSerializer is not set up properly!"
+        assert self.obj_1 == self.obj_1.from_dict(
+            self.obj_1.to_dict()
+        ), "The to/from_dict() methods of the TestSerializer are not set up properly!"
 
     def test_serialize_fw_decorator(self):
         m_dict = self.obj_1.to_dict()
-        self.assertEqual(m_dict["_fw_name"], "TestSerializer Name")
+        assert m_dict["_fw_name"] == "TestSerializer Name"
 
     def test_json(self):
         obj1_json_string = str(self.obj_1.to_format())  # default format is JSON, make sure this is true
-        self.assertEqual(self.obj_1.from_format(obj1_json_string), self.obj_1, "JSON format export / import fails!")
+        assert self.obj_1.from_format(obj1_json_string) == self.obj_1, "JSON format export / import fails!"
 
     def test_yaml(self):
         obj1_yaml_string = str(self.obj_1.to_format("yaml"))
-        self.assertEqual(
-            self.obj_1.from_format(obj1_yaml_string, "yaml"), self.obj_1, "YAML format export / import fails!"
-        )
+        assert self.obj_1.from_format(obj1_yaml_string, "yaml") == self.obj_1, "YAML format export / import fails!"
 
     def test_complex_json(self):
         obj2_json_string = str(self.obj_2.to_format())  # default format is JSON, make sure this is true
-        self.assertEqual(
-            self.obj_2.from_format(obj2_json_string), self.obj_2, "Complex JSON format export / import fails!"
-        )
+        assert self.obj_2.from_format(obj2_json_string) == self.obj_2, "Complex JSON format export / import fails!"
 
     def test_complex_yaml(self):
         obj2_yaml_string = str(self.obj_2.to_format("yaml"))
-        self.assertEqual(
-            self.obj_2.from_format(obj2_yaml_string, "yaml"), self.obj_2, "Complex YAML format export / import fails!"
-        )
+        assert (
+            self.obj_2.from_format(obj2_yaml_string, "yaml") == self.obj_2
+        ), "Complex YAML format export / import fails!"
 
     def test_unicode_json(self):
         obj3_json_string = str(self.obj_3.to_format())  # default format is JSON, make sure this is true
-        self.assertEqual(
-            self.obj_3.from_format(obj3_json_string), self.obj_3, "Unicode JSON format export / import fails!"
-        )
+        assert self.obj_3.from_format(obj3_json_string) == self.obj_3, "Unicode JSON format export / import fails!"
 
     def test_unicode_yaml(self):
         obj3_yaml_string = str(self.obj_3.to_format("yaml"))
-        self.assertEqual(
-            self.obj_3.from_format(obj3_yaml_string, "yaml"), self.obj_3, "Unicode YAML format export / import fails!"
-        )
+        assert (
+            self.obj_3.from_format(obj3_yaml_string, "yaml") == self.obj_3
+        ), "Unicode YAML format export / import fails!"
 
     def test_unicode_json_file(self):
         with open(os.path.join(self.module_dir, "test_reference.json")) as f, open(
@@ -121,26 +104,24 @@ class SerializationTest(unittest.TestCase):
         ) as f2:
             obj1 = json.load(f)
             obj2 = json.load(f2)
-            self.assertEqual(obj1, obj2, "Unicode JSON file export fails")
+            assert obj1 == obj2, "Unicode JSON file export fails"
 
-        self.assertEqual(self.obj_3.from_file("test.json"), self.obj_3, "Unicode JSON file import fails!")
+        assert self.obj_3.from_file("test.json") == self.obj_3, "Unicode JSON file import fails!"
 
     def test_unicode_yaml_file(self):
         with open(os.path.join(self.module_dir, "test_reference.yaml"), **ENCODING_PARAMS) as f:
             with open("test.yaml", **ENCODING_PARAMS) as f2:
-                self.assertEqual(f.read(), f2.read(), "Unicode JSON file export fails")
+                assert f.read() == f2.read(), "Unicode JSON file export fails"
 
-        self.assertEqual(self.obj_3.from_file("test.yaml"), self.obj_3, "Unicode YAML file import fails!")
+        assert self.obj_3.from_file("test.yaml") == self.obj_3, "Unicode YAML file import fails!"
 
     def test_implicit_serialization(self):
-        self.assertEqual(
-            load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}),
-            self.obj_4,
-            "Implicit import fails!",
-        )
+        assert (
+            load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}) == self.obj_4
+        ), "Implicit import fails!"
 
     def test_as_dict(self):
-        self.assertEqual(self.obj_1.as_dict(), self.obj_1.to_dict())
+        assert self.obj_1.as_dict() == self.obj_1.to_dict()
 
     def test_numpy_array(self):
         try:
@@ -150,7 +131,7 @@ class SerializationTest(unittest.TestCase):
 
         x = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
         x = recursive_dict(x)
-        self.assertEqual(x, [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        assert x == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
 
 class ExplicitSerializationTest(unittest.TestCase):
@@ -159,7 +140,7 @@ class ExplicitSerializationTest(unittest.TestCase):
         self.s_dict = self.s_obj.to_dict()
 
     def test_explicit_serialization(self):
-        self.assertEqual(load_object(self.s_dict), self.s_obj)
+        assert load_object(self.s_dict) == self.s_obj
 
 
 if __name__ == "__main__":

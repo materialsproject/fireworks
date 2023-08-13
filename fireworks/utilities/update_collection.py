@@ -44,7 +44,6 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
     Returns:
          None, but if dry_run==False it replaces the collection with the updated one
     """
-
     extension_name = "_tmp_refactor"
     tmp_collname = f"{collection_name}{extension_name}"
 

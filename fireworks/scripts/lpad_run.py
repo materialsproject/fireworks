@@ -1,6 +1,4 @@
-"""
-A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
-"""
+"""A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)."""
 
 import ast
 import copy
@@ -116,7 +114,6 @@ def get_lp(args: Namespace) -> LaunchPad:
         if args.launchpad_file:
             lp = LaunchPad.from_file(args.launchpad_file)
         else:
-
             args.loglvl = "CRITICAL" if args.silencer else args.loglvl
             # no lpad file means we try connect to localhost which is fast so use small timeout
             # (default 30s) for quick response to user if no DB is running
@@ -265,9 +262,8 @@ def print_fws(ids, lp, args: Namespace) -> None:
                 if "archived_launches" in d:
                     del d["archived_launches"]
                 del d["spec"]
-            if args.display_format == "less":
-                if "launches" in d:
-                    del d["launches"]
+            if args.display_format == "less" and "launches" in d:
+                del d["launches"]
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
@@ -345,9 +341,8 @@ def get_fws_helper(
                 if "archived_launches" in d:
                     del d["archived_launches"]
                 del d["spec"]
-            if args.display_format == "less":
-                if "launches" in d:
-                    del d["launches"]
+            if args.display_format == "less" and "launches" in d:
+                del d["launches"]
             fws.append(d)
     return fws[0] if len(fws) == 1 else fws
 
@@ -1280,7 +1275,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     delete_wfs_parser = subparsers.add_parser(
         "delete_wflows",
-        help='Delete workflows (permanently). Use "archive_wflows" instead if ' 'you want to "soft-remove"',
+        help='Delete workflows (permanently). Use "archive_wflows" instead if you want to "soft-remove"',
     )
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     delete_wfs_parser.add_argument("-n", "--name", help="name")

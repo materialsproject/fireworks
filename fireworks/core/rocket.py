@@ -1,6 +1,6 @@
 """
 A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
-completes the Launch
+completes the Launch.
 """
 
 import distutils.dir_util
@@ -101,9 +101,7 @@ def start_background_task(btask, spec):
 
 
 class Rocket:
-    """
-    The Rocket fetches a workflow step from the FireWorks database and executes it.
-    """
+    """The Rocket fetches a workflow step from the FireWorks database and executes it."""
 
     def __init__(self, launchpad: LaunchPad, fworker: FWorker, fw_id: int) -> None:
         """
@@ -111,7 +109,7 @@ class Rocket:
         launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
             If none, reads FireWorks from FW.json and writes to FWAction.json
         fworker (FWorker): A FWorker object describing the computing resource
-        fw_id (int): id of a specific Firework to run (quit if it cannot be found)
+        fw_id (int): id of a specific Firework to run (quit if it cannot be found).
         """
         self.launchpad = launchpad
         self.fworker = fworker
@@ -119,7 +117,7 @@ class Rocket:
 
     def run(self, pdb_on_exception: bool = False) -> bool:
         """
-        Run the rocket (check out a job from the database and execute it)
+        Run the rocket (check out a job from the database and execute it).
 
         Args:
             pdb_on_exception (bool): whether to invoke the debugger on a caught exception. Default to False.
@@ -357,7 +355,6 @@ class Rocket:
                 final_state = "COMPLETED"
                 lp.complete_launch(launch_id, m_action, final_state)
             else:
-
                 fpath = zpath("FW_offline.json")
                 with zopen(fpath) as f_in:
                     d = json.loads(f_in.read())
@@ -428,7 +425,7 @@ class Rocket:
     @staticmethod
     def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: Dict[str, any]) -> None:
         """
-        Helper function to update checkpoint
+        Helper function to update checkpoint.
 
         Args:
             launchpad (LaunchPad): LaunchPad to ping with checkpoint data
@@ -449,7 +446,6 @@ class Rocket:
     def decorate_fwaction(
         self, fwaction: FWAction, my_spec: Dict[str, any], m_fw: Firework, launch_dir: str
     ) -> FWAction:
-
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
             this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir, "state": m_fw.state}

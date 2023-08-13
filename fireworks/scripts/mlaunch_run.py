@@ -1,6 +1,4 @@
-"""
-A runnable script to launch Job Packing (Multiple) Rockets
-"""
+"""A runnable script to launch Job Packing (Multiple) Rockets."""
 
 import os
 import sys
@@ -27,7 +25,6 @@ __date__ = "Aug 19, 2013"
 
 
 def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
-
     m_description = "This program launches multiple Rockets simultaneously"
 
     parser = ArgumentParser("mlaunch", description=m_description)
@@ -93,10 +90,7 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
 
-    if args.fworker_file:
-        fworker = FWorker.from_file(args.fworker_file)
-    else:
-        fworker = FWorker()
+    fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
 
     total_node_list = None
     if args.nodefile:

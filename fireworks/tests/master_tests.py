@@ -19,9 +19,7 @@ import unittest
 
 
 class TestImports(unittest.TestCase):
-    """
-    Make sure that required external libraries can be imported
-    """
+    """Make sure that required external libraries can be imported."""
 
     def test_imports(self):
         pass
@@ -29,31 +27,31 @@ class TestImports(unittest.TestCase):
 
 
 class BasicTests(unittest.TestCase):
-    """
-    Make sure that required external libraries can be imported
-    """
+    """Make sure that required external libraries can be imported."""
 
     def test_fwconnector(self):
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'))
 
         wf1 = Workflow([fw1, fw2], {fw1.fw_id: fw2.fw_id})
-        self.assertEqual(wf1.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
+        assert wf1.links == {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []}
 
         wf2 = Workflow([fw1, fw2], {fw1: fw2})
-        self.assertEqual(wf2.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
+        assert wf2.links == {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []}
 
         wf3 = Workflow([fw1, fw2])
-        self.assertEqual(wf3.links, {fw1.fw_id: [], fw2.fw_id: []})
+        assert wf3.links == {fw1.fw_id: [], fw2.fw_id: []}
 
     def test_parentconnector(self):
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'), parents=fw1)
         fw3 = Firework(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
 
-        self.assertEqual(
-            Workflow([fw1, fw2, fw3]).links, {fw1.fw_id: [fw2.fw_id, fw3.fw_id], fw2.fw_id: [fw3.fw_id], fw3.fw_id: []}
-        )
+        assert Workflow([fw1, fw2, fw3]).links == {
+            fw1.fw_id: [fw2.fw_id, fw3.fw_id],
+            fw2.fw_id: [fw3.fw_id],
+            fw3.fw_id: [],
+        }
         self.assertRaises(ValueError, Workflow, [fw1, fw3])  # can't make this
 
 
@@ -66,15 +64,16 @@ class SerializationTests(unittest.TestCase):
         if hasattr(mod, classname):
             cls_ = getattr(mod, classname)
             return cls_.from_dict(obj_dict)
+        return None
 
     def test_serialization_details(self):
         # This detects a weird bug found in early version of serializers
 
         pbs = CommonAdapter("PBS")
-        self.assertTrue(isinstance(pbs, CommonAdapter))
-        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))
-        self.assertTrue(isinstance(load_object(pbs.to_dict()), CommonAdapter))
-        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))  # repeated test on purpose!
+        assert isinstance(pbs, CommonAdapter)
+        assert isinstance(self.get_data(pbs.to_dict()), CommonAdapter)
+        assert isinstance(load_object(pbs.to_dict()), CommonAdapter)
+        assert isinstance(self.get_data(pbs.to_dict()), CommonAdapter)  # repeated test on purpose!
 
     def test_recursive_deserialize(self):
         my_dict = {

@@ -56,7 +56,11 @@ __date__ = "Dec 13, 2012"
 # TODO: consider *somehow* switching FireWorks to monty serialization. e.g., numpy serialization is better handled.
 
 SAVED_FW_MODULES = {}
-DATETIME_HANDLER = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+
+
+def DATETIME_HANDLER(obj):
+    return obj.isoformat() if isinstance(obj, datetime.datetime) else None
+
 
 ENCODING_PARAMS = {"encoding": "utf-8"}
 
@@ -87,7 +91,7 @@ def recursive_dict(obj, preserve_unicode=True):
     if isinstance(obj, (list, tuple)):
         return [recursive_dict(v, preserve_unicode) for v in obj]
 
-    if isinstance(obj, int) or isinstance(obj, float):
+    if isinstance(obj, (int, float)):
         return obj
 
     if isinstance(obj, datetime.datetime):
@@ -137,13 +141,12 @@ def _recursive_load(obj):
 def recursive_serialize(func):
     """
     a decorator to add FW serializations keys
-    see documentation of FWSerializable for more details
+    see documentation of FWSerializable for more details.
     """
 
     def _decorator(self, *args, **kwargs):
         m_dict = func(self, *args, **kwargs)
-        m_dict = recursive_dict(m_dict)
-        return m_dict
+        return recursive_dict(m_dict)
 
     return _decorator
 
@@ -151,14 +154,13 @@ def recursive_serialize(func):
 def recursive_deserialize(func):
     """
     a decorator to add FW serializations keys
-    see documentation of FWSerializable for more details
+    see documentation of FWSerializable for more details.
     """
 
     def _decorator(self, *args, **kwargs):
-        new_args = [a for a in args]
+        new_args = list(args)
         new_args[0] = {k: _recursive_load(v) for k, v in args[0].items()}
-        m_dict = func(self, *new_args, **kwargs)
-        return m_dict
+        return func(self, *new_args, **kwargs)
 
     return _decorator
 
@@ -166,7 +168,7 @@ def recursive_deserialize(func):
 def serialize_fw(func):
     """
     a decorator to add FW serializations keys
-    see documentation of FWSerializable for more details
+    see documentation of FWSerializable for more details.
     """
 
     def _decorator(self, *args, **kwargs):
@@ -225,7 +227,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
 
     def to_format(self, f_format="json", **kwargs):
         """
-        returns a String representation in the given format
+        returns a String representation in the given format.
 
         Args:
             f_format (str): the format to output to (default json)
@@ -287,7 +289,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "r", **ENCODING_PARAMS) as f:
+        with open(filename, **ENCODING_PARAMS) as f:
             return cls.from_format(f.read(), f_format=f_format)
 
     def __getstate__(self):
@@ -323,7 +325,6 @@ def load_object(obj_dict):
     Args:
         obj_dict (dict): the dict representation of the class
     """
-
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
     fw_name = FW_NAME_UPDATES.get(obj_dict["_fw_name"], obj_dict["_fw_name"])
     obj_dict["_fw_name"] = fw_name
@@ -349,7 +350,7 @@ def load_object(obj_dict):
     found_objects = []  # used to make sure we don't find multiple hits
     for package in USER_PACKAGES:
         root_module = importlib.import_module(package)
-        for _, mod_name, is_pkg in pkgutil.walk_packages(root_module.__path__, package + "."):
+        for _, mod_name, _is_pkg in pkgutil.walk_packages(root_module.__path__, package + "."):
             try:
                 m_module = importlib.import_module(mod_name)
                 m_object = _search_module_for_obj(m_module, obj_dict)
@@ -358,7 +359,7 @@ def load_object(obj_dict):
             except ImportError as ex:
                 import warnings
 
-                warnings.warn(f"{m_object} in {mod_name} cannot be loaded because of {str(ex)}. Skipping..")
+                warnings.warn(f"{m_object} in {mod_name} cannot be loaded because of {ex!s}. Skipping..")
                 traceback.print_exc()
 
     if len(found_objects) == 1:
@@ -373,7 +374,7 @@ def load_object(obj_dict):
 def load_object_from_file(filename, f_format=None):
     """
     Implicitly load an object from a file. just a friendly wrapper to
-    load_object()
+    load_object().
 
     Args:
         filename (str): the filename to load an object from
@@ -383,7 +384,7 @@ def load_object_from_file(filename, f_format=None):
     if f_format is None:
         f_format = filename.split(".")[-1]
 
-    with open(filename, "r", **ENCODING_PARAMS) as f:
+    with open(filename, **ENCODING_PARAMS) as f:
         if f_format == "json":
             dct = json.loads(f.read())
         elif f_format == "yaml":
@@ -398,9 +399,7 @@ def load_object_from_file(filename, f_format=None):
 
 
 def _search_module_for_obj(m_module, obj_dict):
-    """
-    internal method that looks in a module for a class with a given _fw_name
-    """
+    """Internal method that looks in a module for a class with a given _fw_name."""
     obj_name = obj_dict["_fw_name"]
 
     for _, obj in inspect.getmembers(m_module):
@@ -411,6 +410,7 @@ def _search_module_for_obj(m_module, obj_dict):
             and getattr(obj, "_fw_name", get_default_serialization(obj)) == obj_name
         ):
             return obj.from_dict(obj_dict)
+    return None
 
 
 def reconstitute_dates(obj_dict):

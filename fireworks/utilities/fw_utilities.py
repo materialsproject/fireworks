@@ -76,7 +76,7 @@ def log_multi(m_logger, msg, log_lvl="info"):
     Args:
         m_logger (logger): The logger object
         msg (str): a String to log
-        log_lvl (str): The level to log at
+        log_lvl (str): The level to log at.
     """
     _log_fnc = getattr(m_logger, log_lvl.lower())
     if FWData().MULTIPROCESSING:
@@ -112,7 +112,7 @@ def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False):
 
 def log_exception(m_logger, msgs):
     """
-    A shortcut wrapper around log_fancy for exceptions
+    A shortcut wrapper around log_fancy for exceptions.
 
     Args:
         m_logger (logger): The logger object
@@ -124,7 +124,7 @@ def log_exception(m_logger, msgs):
 def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
     """
     Internal method to create a new block or launcher directory.
-    The dir name is based on the time and the FW_BLOCK_FORMAT
+    The dir name is based on the time and the FW_BLOCK_FORMAT.
 
     Args:
         root_dir: directory to create the new dir in
@@ -201,7 +201,7 @@ class DataServer(BaseManager):
     def setup(cls, launchpad):
         """
         Args:
-            launchpad (LaunchPad)
+            launchpad (LaunchPad).
 
         Returns:
             DataServer
@@ -240,10 +240,7 @@ def explicit_serialize(o):
 
 @contextlib.contextmanager
 def redirect_local(out_file: str = "FW_job.out", err_file: str = "FW_job.error"):
-    """
-    temporarily redirect stdout or stderr to fws.error and fws.out
-    """
-
+    """Temporarily redirect stdout or stderr to fws.error and fws.out."""
     try:
         old_err = os.dup(sys.stderr.fileno())
         old_out = os.dup(sys.stdout.fileno())
@@ -256,7 +253,6 @@ def redirect_local(out_file: str = "FW_job.out", err_file: str = "FW_job.error")
         yield
 
     finally:
-
         os.dup2(old_err, sys.stderr.fileno())
         os.dup2(old_out, sys.stdout.fileno())
 

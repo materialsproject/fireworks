@@ -10,7 +10,7 @@ separator_str = ":%%:"
 
 def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
     """
-    Converts a dictionary into a list of keys, with string values "key1.key2:val"
+    Converts a dictionary into a list of keys, with string values "key1.key2:val".
 
     Args:
         curr_doc
@@ -31,10 +31,10 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
         return my_list
 
-    elif isinstance(curr_doc, list) or isinstance(curr_doc, tuple):
+    elif isinstance(curr_doc, (list, tuple)):
         my_list = []
         for k in curr_doc:
-            if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
+            if isinstance(k, (dict, list, tuple)):
                 return [f"{separator_str}<TRUNCATED_OBJECT>"]
             my_list.append(separator_str + str(k))
         return my_list
@@ -83,7 +83,7 @@ class Introspector:
     def __init__(self, lpad):
         """
         Args:
-            lpad (LaunchPad)
+            lpad (LaunchPad).
         """
         self.lpad = lpad
         self.db = lpad.db
@@ -110,10 +110,7 @@ class Introspector:
             raise ValueError("Unrecognized collection!")
 
         sort_field = "time_end" if coll == "launches" else "updated_on"
-        if rsort:
-            sort_key = [(sort_field, DESCENDING)]
-        else:
-            sort_key = None
+        sort_key = [(sort_field, DESCENDING)] if rsort else None
 
         # get stats on fizzled docs
         fizzled_keys = []
@@ -175,7 +172,6 @@ class Introspector:
 
     @staticmethod
     def print_report(table, coll):
-
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"
         elif coll.lower() in ["tasks"]:

@@ -16,7 +16,7 @@ class MongoJsonEncoder(json.JSONEncoder):
 
 
 def jsonify(*args, **kwargs):
-    """flask.json.jsonify with cls=MongoJsonEncoder passed to flask.json.dumps
+    """flask.json.jsonify with cls=MongoJsonEncoder passed to flask.json.dumps.
 
     Body copied from flask==1.0.2 (latest);
     """

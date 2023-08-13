@@ -1,6 +1,4 @@
-"""
-A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
-"""
+"""A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)."""
 
 import os
 import signal
@@ -145,10 +143,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     else:
         launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
 
-    if args.fworker_file:
-        fworker = FWorker.from_file(args.fworker_file)
-    else:
-        fworker = FWorker()
+    fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
 
     # prime addr lookups
     _log = get_fw_logger("rlaunch", stream_level="INFO")

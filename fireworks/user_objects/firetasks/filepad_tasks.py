@@ -28,7 +28,6 @@ class AddFilesTask(FiretaskBase):
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec):
-
         from glob import glob
 
         directory = os.path.abspath(self.get("directory", "."))
@@ -52,7 +51,7 @@ class AddFilesTask(FiretaskBase):
 class GetFilesTask(FiretaskBase):
     """
     A Firetask to fetch files from the filepad and write it to specified directory (current working
-    directory if not specified)
+    directory if not specified).
 
     Required params:
         - identifiers ([str]): identifiers of files to fetch
@@ -192,7 +191,7 @@ class GetFilesByQueryTask(FiretaskBase):
 
 class DeleteFilesTask(FiretaskBase):
     """
-    A Firetask to delete files from the filepad
+    A Firetask to delete files from the filepad.
 
     Required params:
         - identifiers ([str]): identifiers of files to delete

@@ -1,6 +1,4 @@
-"""
-Tracker unitest
-"""
+"""Tracker unitest."""
 
 
 __author__ = "Bharat medasani"
@@ -63,9 +61,7 @@ class TrackerTest(unittest.TestCase):
                 os.remove(f)
 
     def test_tracker(self):
-        """
-        Launch a workflow and track the files
-        """
+        """Launch a workflow and track the files."""
         self._teardown([self.dest1])
         try:
             fts = []
@@ -78,15 +74,13 @@ class TrackerTest(unittest.TestCase):
             launch_rocket(self.lp, self.fworker)
 
             # print (self.tracker1.track_file())
-            self.assertEqual("98\n99", self.tracker1.track_file())
+            assert self.tracker1.track_file() == "98\n99"
 
         finally:
             self._teardown([self.dest1])
 
     def test_tracker_failed_fw(self):
-        """
-        Add a bad firetask to workflow and test the tracking
-        """
+        """Add a bad firetask to workflow and test the tracking."""
         self._teardown([self.dest1])
         try:
             fts = []
@@ -109,15 +103,13 @@ class TrackerTest(unittest.TestCase):
             except Exception:
                 pass
 
-            self.assertEqual("48\n49", self.tracker1.track_file())
+            assert self.tracker1.track_file() == "48\n49"
 
         finally:
             self._teardown([self.dest1])
 
     def test_tracker_mlaunch(self):
-        """
-        Test the tracker for mlaunch
-        """
+        """Test the tracker for mlaunch."""
         self._teardown([self.dest1, self.dest2])
         try:
 
@@ -144,8 +136,8 @@ class TrackerTest(unittest.TestCase):
             except Exception:
                 pass
 
-            self.assertEqual("48\n49", self.tracker1.track_file())
-            self.assertEqual("98\n99", self.tracker2.track_file())
+            assert self.tracker1.track_file() == "48\n49"
+            assert self.tracker2.track_file() == "98\n99"
 
         finally:
             self._teardown([self.dest1, self.dest2])

@@ -1,4 +1,4 @@
-""" This module includes dataflow firetask tasks """
+"""This module includes dataflow firetask tasks."""
 
 __author__ = "Ivan Kondov"
 __email__ = "ivan.kondov@kit.edu"
@@ -16,7 +16,7 @@ if sys.version_info[0] > 2:
 
 class CommandLineTask(FiretaskBase):
     """
-    A Firetask to execute external commands in a shell
+    A Firetask to execute external commands in a shell.
 
     Required params:
         - command_spec (dict): a dictionary specification of the command
@@ -183,7 +183,8 @@ class CommandLineTask(FiretaskBase):
                 for arg in argl:
                     argstr = set_binding(arg)
                     assert "source" in arg, 'input has no key "source"'
-                    assert arg["source"]["type"] is not None and arg["source"]["value"] is not None
+                    assert arg["source"]["type"] is not None
+                    assert arg["source"]["value"] is not None
                     if "target" in arg:
                         assert arg["target"] is not None
                         assert arg["target"]["type"] == "stdin"
@@ -194,7 +195,7 @@ class CommandLineTask(FiretaskBase):
                             stdininp = str(arg["source"]["value"]).encode()
                         else:
                             # filepad
-                            raise NotImplementedError()
+                            raise NotImplementedError
                     else:
                         if arg["source"]["type"] == "path":
                             argstr += arg["source"]["value"]
@@ -202,7 +203,7 @@ class CommandLineTask(FiretaskBase):
                             argstr += str(arg["source"]["value"])
                         else:
                             # filepad
-                            raise NotImplementedError()
+                            raise NotImplementedError
                     if len(argstr) > 0:
                         arglist.append(argstr)
 
@@ -237,7 +238,7 @@ class CommandLineTask(FiretaskBase):
                     stdout = PIPE
                 else:
                     # filepad
-                    raise NotImplementedError()
+                    raise NotImplementedError
                 if len(argstr) > 0:
                     arglist.append(argstr)
 
@@ -315,7 +316,7 @@ class ForeachTask(FiretaskBase):
 
 
 class JoinDictTask(FiretaskBase):
-    """combines specified spec fields into a dictionary"""
+    """combines specified spec fields into a dictionary."""
 
     _fw_name = "JoinDictTask"
     required_params = ["inputs", "output"]
@@ -370,7 +371,7 @@ class ImportDataTask(FiretaskBase):
     """
     Update the spec with data from file in a nested dictionary at a position
     specified by a mapstring = maplist[0]/maplist[1]/...
-    i.e. spec[maplist[0]][maplist[1]]... = data
+    i.e. spec[maplist[0]][maplist[1]]... = data.
     """
 
     _fw_name = "ImportDataTask"

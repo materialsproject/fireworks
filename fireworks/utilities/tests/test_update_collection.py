@@ -39,11 +39,11 @@ class UpdateCollectionTests(unittest.TestCase):
             force_clear=False,
         )
         ndocs = cls.lp.db.test_coll.count_documents({})
-        cls.assertEqual(ndocs, 1)
+        assert ndocs == 1
         test_doc = cls.lp.db.test_coll.find_one({"foo": "bar"})
-        cls.assertEqual(test_doc["foo_list"][1]["foo2"], "foo/new/path/bar")
+        assert test_doc["foo_list"][1]["foo2"] == "foo/new/path/bar"
         test_doc_archived = cls.lp.db[f"test_coll_xiv_{datetime.date.today()}"].find_one()
-        cls.assertEqual(test_doc_archived["foo_list"][1]["foo2"], "foo/old/path/bar")
+        assert test_doc_archived["foo_list"][1]["foo2"] == "foo/old/path/bar"
 
 
 if __name__ == "__main__":

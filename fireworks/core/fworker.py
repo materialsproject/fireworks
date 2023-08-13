@@ -1,6 +1,4 @@
-"""
-This module contains FireWorker, which encapsulates information about a computing resource
-"""
+"""This module contains FireWorker, which encapsulates information about a computing resource."""
 
 import json
 
@@ -56,9 +54,7 @@ class FWorker(FWSerializable):
 
     @property
     def query(self):
-        """
-        Returns updated query dict.
-        """
+        """Returns updated query dict."""
         q = dict(self._query)
         fworker_check = [{"spec._fworker": {"$exists": False}}, {"spec._fworker": None}, {"spec._fworker": self.name}]
         if "$or" in q:
@@ -78,9 +74,7 @@ class FWorker(FWSerializable):
 
     @classmethod
     def auto_load(cls):
-        """
-        Returns FWorker object from settings file(my_fworker.yaml).
-        """
+        """Returns FWorker object from settings file(my_fworker.yaml)."""
         if FWORKER_LOC:
             return FWorker.from_file(FWORKER_LOC)
         return FWorker()
