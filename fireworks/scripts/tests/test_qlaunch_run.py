@@ -32,6 +32,6 @@ def test_qlaunch_config_file_flags():
     with pytest.raises(FileNotFoundError, match="qadapter_file 'missing_file' does not exist!"):
         qlaunch(["-q", "missing_file"])
 
+    qadapter_file = f"{module_dir}/__init__.py"  # just any file that passes os.path.exists()
     with pytest.raises(FileNotFoundError, match="launchpad_file '' does not exist!"):
-        qadapter_file = f"{module_dir}/__init__.py"  # just any file that passes os.path.exists()
         qlaunch(["-q", qadapter_file, "-l", ""])
