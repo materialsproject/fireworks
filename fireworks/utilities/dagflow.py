@@ -250,8 +250,8 @@ class DAGFlow(Graph):
         for deg in range(2, len(self.vs) + 1):
             lst = self.get_subisomorphisms_vf2(Graph.Ring(deg, directed=True))
 
-            def flatten(l):
-                return [item for sublist in l for item in sublist]
+            def flatten(lst):
+                return [item for sublist in lst for item in sublist]
 
             if flatten(lst):
                 break

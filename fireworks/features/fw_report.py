@@ -47,7 +47,7 @@ class FWReport:
         """
         # confirm interval
         if interval not in DATE_KEYS:
-            raise ValueError(f"Specified interval ({interval}) is not in list of allowed intervals({DATE_KEYS.keys()})")
+            raise ValueError(f"Specified interval ({interval}) is not in list of allowed intervals({[*DATE_KEYS]})")
         # used for querying later
         date_key_idx = DATE_KEYS[interval]
 
@@ -147,7 +147,7 @@ class FWReport:
             matplotlib plot module
         """
         results = self.get_stats(coll, interval, num_intervals, **kwargs)
-        states = states or state_to_color.keys()
+        states = states or [*state_to_color]
 
         from matplotlib.figure import Figure
         from matplotlib.ticker import MaxNLocator

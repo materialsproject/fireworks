@@ -1,13 +1,9 @@
 """Unit tests for the dataflow tasks."""
-from unittest import SkipTest
-
-__author__ = "Ivan Kondov"
-__copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
-__email__ = "ivan.kondov@kit.edu"
 
 import os
 import unittest
 import uuid
+from unittest import SkipTest
 
 from fireworks.user_objects.firetasks.dataflow_tasks import (
     CommandLineTask,
@@ -17,6 +13,10 @@ from fireworks.user_objects.firetasks.dataflow_tasks import (
     JoinListTask,
 )
 
+__author__ = "Ivan Kondov"
+__copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
+__email__ = "ivan.kondov@kit.edu"
+
 
 def afunc(array, power):
     """Return the powers of a list of numbers."""
@@ -24,7 +24,7 @@ def afunc(array, power):
 
 
 class CommandLineTaskTest(unittest.TestCase):
-    """run tests for CimmandLineTask."""
+    """run tests for CommandLineTask."""
 
     def test_command_line_task_1(self):
         """Input from string to stdin, output from stdout to string."""

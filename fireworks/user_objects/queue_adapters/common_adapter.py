@@ -1,9 +1,9 @@
-import copy
-
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
 queues.
 """
+
+import copy
 import getpass
 import os
 import re
@@ -41,20 +41,22 @@ class CommonAdapter(QueueAdapterBase):
 
     def __init__(self, q_type, q_name=None, template_file=None, timeout=None, **kwargs):
         """
-        :param q_type: The type of queue. Right now it should be either PBS,
-                       SGE, SLURM, Cobalt or LoadLeveler.
-        :param q_name: A name for the queue. Can be any string.
-        :param template_file: The path to the template file. Leave it as
-                              None (the default) to use Fireworks' built-in
-                              templates for PBS and SGE, which should work
-                              on most queues.
-        :param timeout: The amount of seconds to wait before raising an error when
-                        checking the number of jobs in the queue. Default 5 seconds.
-        :param **kwargs: Series of keyword args for queue parameters.
+        Initializes a new QueueAdapter object.
+
+        Args:
+            q_type (str): The type of queue. Right now it should be either PBS,
+                SGE, SLURM, Cobalt or LoadLeveler.
+            q_name (str, optional): A name for the queue. Can be any string.
+            template_file (str, optional): The path to the template file. Leave it as
+                None (the default) to use Fireworks' built-in templates for PBS and SGE,
+                which should work on most queues.
+            timeout (int, optional): The amount of seconds to wait before raising an error when
+                checking the number of jobs in the queue. Default 5 seconds.
+            **kwargs: Series of keyword args for queue parameters.
         """
         if q_type not in CommonAdapter.default_q_commands:
             raise ValueError(
-                f"{q_type} is not a supported queue type. CommonAdaptor supports {list(self.default_q_commands.keys())}"
+                f"{q_type} is not a supported queue type. CommonAdaptor supports {list(self.default_q_commands)}"
             )
         self.q_type = q_type
         self.template_file = (
@@ -151,18 +153,18 @@ class CommonAdapter(QueueAdapterBase):
         if self.q_type == "SGE":
             # want only lines that include username;
             # this will exclude e.g. header lines
-            return len([l for l in output_str.split("\n") if username in l])
+            return len([line for line in output_str.split("\n") if username in line])
 
         if self.q_type == "MOAB":
             # want only lines that include username;
             # this will exclude e.g. header lines
-            return len([l for l in output_str.split("\n") if username in l])
+            return len([line for line in output_str.split("\n") if username in line])
 
         count = 0
         for line in output_str.split("\n"):
             if line.lower().startswith("job"):
                 if self.q_type == "Cobalt":
-                    # Cobalt capitalzes headers
+                    # Cobalt capitalizes headers
                     line = line.lower()
                 header = line.split()
                 if self.q_type == "PBS":
@@ -172,13 +174,16 @@ class CommonAdapter(QueueAdapterBase):
                 else:
                     state_index = header.index("state")
                     queue_index = header.index("queue")
-            if username in line:
-                toks = line.split()
-                if toks[state_index] != "C":
-                    # note: the entire queue name might be cutoff from the output if long queue name
-                    # so we are only ensuring that our queue matches up until cutoff point
-                    if "queue" in self and self["queue"][0 : len(toks[queue_index])] in toks[queue_index]:
-                        count += 1
+            tokens = line.split()
+            # note: the entire queue name might be cutoff from the output if long queue name
+            # so we are only ensuring that our queue matches up until cutoff point
+            if (
+                username in line
+                and tokens[state_index] != "C"
+                and "queue" in self
+                and self["queue"][0 : len(tokens[queue_index])] in tokens[queue_index]
+            ):
+                count += 1
 
         return count
 
