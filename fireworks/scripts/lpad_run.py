@@ -930,7 +930,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     enh_disp_kwargs["default"] = None
 
     query_args = ["-q", "--query"]
-    query_kwargs = {"help": "Query (enclose pymongo-style dict in " 'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
+    query_kwargs = {"help": 'Query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
     launches_mode_args = ["-lm", "--launches_mode"]
     launches_mode_kwargs = {
@@ -1187,7 +1187,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
         "-u",
         "--update",
         type=str,
-        help="Doc update (enclose pymongo-style dict in single-quotes, e.g. '{" '"_tasks.1.hello": "world"}\')',
+        help='Doc update (enclose pymongo-style dict in single-quotes, e.g. \'{"_tasks.1.hello": "world"}\')',
     )
     update_fws_parser.add_argument(
         "--mongo",
@@ -1214,7 +1214,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     get_wf_parser.add_argument(
         "-t",
         "--table",
-        help="Print results in table form instead of json. Needs prettytable. Works best " 'with "-d less"',
+        help='Print results in table form instead of json. Needs prettytable. Works best with "-d less"',
         action="store_true",
     )
     get_wf_parser.set_defaults(func=get_wfs)
@@ -1404,7 +1404,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     # admin commands
     admin_parser = subparsers.add_parser(
-        "admin", help="Various db admin commands, " 'type "lpad admin -h" for more.', parents=[parent_parser]
+        "admin", help='Various db admin commands, type "lpad admin -h" for more.', parents=[parent_parser]
     )
     admin_subparser = admin_parser.add_subparsers(title="action", dest="action_command")
 
@@ -1475,7 +1475,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     unlock_parser.set_defaults(func=unlock)
 
     report_parser = subparsers.add_parser(
-        "report", help="Compile a report of runtime stats, " 'type "lpad report -h" for more options.'
+        "report", help='Compile a report of runtime stats, type "lpad report -h" for more options.'
     )
     report_parser.add_argument(
         "-c",

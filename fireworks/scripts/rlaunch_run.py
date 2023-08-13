@@ -57,7 +57,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     single_parser.add_argument("--pdb", help="shortcut to invoke debugger on error", action="store_true")
 
     rapid_parser.add_argument(
-        "--nlaunches", help='num_launches (int or "infinite"; ' "default 0 is all jobs in DB)", default=0
+        "--nlaunches", help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0
     )
     rapid_parser.add_argument(
         "--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int

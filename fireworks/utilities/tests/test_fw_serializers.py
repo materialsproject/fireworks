@@ -109,9 +109,9 @@ class SerializationTest(unittest.TestCase):
         assert self.obj_3.from_file("test.json") == self.obj_3, "Unicode JSON file import fails!"
 
     def test_unicode_yaml_file(self):
-        with open(os.path.join(self.module_dir, "test_reference.yaml"), **ENCODING_PARAMS) as f:
-            with open("test.yaml", **ENCODING_PARAMS) as f2:
-                assert f.read() == f2.read(), "Unicode JSON file export fails"
+        ref_path = os.path.join(self.module_dir, "test_reference.yaml")
+        with open(ref_path, **ENCODING_PARAMS) as f, open("test.yaml", **ENCODING_PARAMS) as f2:
+            assert f.read() == f2.read(), "Unicode JSON file export fails"
 
         assert self.obj_3.from_file("test.yaml") == self.obj_3, "Unicode YAML file import fails!"
 
