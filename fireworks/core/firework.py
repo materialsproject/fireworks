@@ -14,7 +14,7 @@ import pprint
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from typing import Any, Dict, Iterable, List, Optional, Sequence
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
@@ -370,7 +370,7 @@ class Firework(FWSerializable):
     def __str__(self):
         return f"Firework object: (id: {int(self.fw_id)} , name: {self.fw_name})"
 
-    def __iter__(self) -> Iterable[FiretaskBase]:
+    def __iter__(self) -> Iterator[FiretaskBase]:
         return self.tasks.__iter__()
 
     def __len__(self) -> int:
