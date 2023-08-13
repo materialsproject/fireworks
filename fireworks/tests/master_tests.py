@@ -1,21 +1,21 @@
-from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
-from fireworks.utilities.fw_serializers import load_object
-
 """
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.
 """
+
+import unittest
+
 from fireworks import Firework, FWAction
 from fireworks.core.firework import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
+from fireworks.utilities.fw_serializers import load_object
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
-
-import unittest
 
 
 class TestImports(unittest.TestCase):

@@ -1,9 +1,9 @@
-import copy
-
 """
 This module implements a CommonAdaptor that supports standard PBS and SGE
 queues.
 """
+
+import copy
 import getpass
 import os
 import re
