@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from fireworks.core.firework import FiretaskBase
 
 __author__ = "Anubhav Jain"
@@ -10,7 +8,6 @@ __date__ = "Sept 8, 2015"
 
 
 class PrintJobTask(FiretaskBase):
-
     _fw_name = "Print Job Task"
 
     def run_task(self, fw_spec):

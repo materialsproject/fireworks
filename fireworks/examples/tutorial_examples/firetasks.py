@@ -1,6 +1,6 @@
 """
 This code is described in the Firetasks tutorial,
-https://materialsproject.github.io/fireworks/firetask_tutorial.html
+https://materialsproject.github.io/fireworks/firetask_tutorial.html.
 """
 
 from fireworks import Firework, FWorker, LaunchPad

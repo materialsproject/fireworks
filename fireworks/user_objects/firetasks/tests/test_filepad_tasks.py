@@ -27,20 +27,20 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
         write_file_contents, _ = self.fp.get_file("write")
         with open(self.paths[0]) as f:
-            self.assertEqual(write_file_contents, f.read().encode())
+            assert write_file_contents == f.read().encode()
         del_file_contents, _ = self.fp.get_file("delete")
         with open(self.paths[1]) as f:
-            self.assertEqual(del_file_contents, f.read().encode())
+            assert del_file_contents == f.read().encode()
 
     def test_deletefilestask_run(self):
         t = DeleteFilesTask(identifiers=self.identifiers)
         t.run_task({})
         file_contents, doc = self.fp.get_file("write")
-        self.assertIsNone(file_contents)
-        self.assertIsNone(doc)
+        assert file_contents is None
+        assert doc is None
         file_contents, doc = self.fp.get_file("delete")
-        self.assertIsNone(file_contents)
-        self.assertIsNone(doc)
+        assert file_contents is None
+        assert doc is None
 
     def test_getfilestask_run(self):
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
@@ -52,11 +52,11 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
         write_file_contents, _ = self.fp.get_file("write")
         with open(os.path.join(dest_dir, new_file_names[0])) as f:
-            self.assertEqual(write_file_contents, f.read().encode())
+            assert write_file_contents == f.read().encode()
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
     def test_getfilesbyquerytask_run(self):
-        """Tests querying objects from FilePad by metadata"""
+        """Tests querying objects from FilePad by metadata."""
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers, metadata={"key": "value"})
         t.run_task({})
         dest_dir = os.path.abspath(".")
@@ -64,11 +64,11 @@ class FilePadTasksTest(unittest.TestCase):
         t = GetFilesByQueryTask(query={"metadata->key": "value"}, dest_dir=dest_dir, new_file_names=new_file_names)
         t.run_task({})
         test_file_contents, _ = self.fp.get_file("test_idenfifier")
-        self.assertEqual(test_file_contents, open(os.path.join(dest_dir, new_file_names[0])).read().encode())
+        assert test_file_contents == open(os.path.join(dest_dir, new_file_names[0])).read().encode()
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
     def test_getfilesbyquerytask_run(self):
-        """Tests querying objects from FilePad by metadata"""
+        """Tests querying objects from FilePad by metadata."""
         with open("original_test_file.txt", "w") as f:
             f.write("Some file with some content")
         t = AddFilesTask(paths=["original_test_file.txt"], identifiers=["some_identifier"], metadata={"key": "value"})
@@ -82,11 +82,11 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
         test_file_contents, _ = self.fp.get_file("some_identifier")
         with open(os.path.join(dest_dir, "queried_test_file.txt")) as f:
-            self.assertEqual(test_file_contents, f.read().encode())
+            assert test_file_contents == f.read().encode()
         os.remove(os.path.join(dest_dir, "queried_test_file.txt"))
 
     def test_getfilesbyquerytask_metafile_run(self):
-        """Tests writing metadata to a yaml file"""
+        """Tests writing metadata to a yaml file."""
         with open("original_test_file.txt", "w") as f:
             f.write("Some file with some content")
         t = AddFilesTask(paths=["original_test_file.txt"], identifiers=["test_identifier"], metadata={"key": "value"})
@@ -106,13 +106,13 @@ class FilePadTasksTest(unittest.TestCase):
         with open("queried_test_file.txt.meta.yaml") as f:
             yaml = YAML(typ="safe")
             metadata = yaml.load(f)
-        self.assertEqual(metadata["key"], "value")
+        assert metadata["key"] == "value"
 
         os.remove(os.path.join(dest_dir, "queried_test_file.txt"))
         os.remove(os.path.join(dest_dir, "queried_test_file.txt.meta.yaml"))
 
     def test_getfilesbyquerytask_ignore_empty_result_run(self):
-        """Tests on ignoring empty results from FilePad query"""
+        """Tests on ignoring empty results from FilePad query."""
         dest_dir = os.path.abspath(".")
         t = GetFilesByQueryTask(
             query={"metadata->key": "value"},
@@ -124,7 +124,7 @@ class FilePadTasksTest(unittest.TestCase):
         # test successful if no exception raised
 
     def test_getfilesbyquerytask_raise_empty_result_run(self):
-        """Tests on raising exception on empty results from FilePad query"""
+        """Tests on raising exception on empty results from FilePad query."""
         dest_dir = os.path.abspath(".")
         t = GetFilesByQueryTask(
             query={"metadata->key": "value"},
@@ -137,7 +137,7 @@ class FilePadTasksTest(unittest.TestCase):
         # test successful if exception raised
 
     def test_getfilesbyquerytask_ignore_degenerate_file_name(self):
-        """Tests on ignoring degenerate file name in result from FilePad query"""
+        """Tests on ignoring degenerate file name in result from FilePad query."""
         with open("degenerate_file.txt", "w") as f:
             f.write("Some file with some content")
         t = AddFilesTask(paths=["degenerate_file.txt"], identifiers=["some_identifier"], metadata={"key": "value"})
@@ -157,7 +157,7 @@ class FilePadTasksTest(unittest.TestCase):
         # test successful if no exception raised
 
     def test_getfilesbyquerytask_raise_degenerate_file_name(self):
-        """Tests on raising exception on degenerate file name from FilePad query"""
+        """Tests on raising exception on degenerate file name from FilePad query."""
         with open("degenerate_file.txt", "w") as f:
             f.write("Some file with some content")
         t = AddFilesTask(paths=["degenerate_file.txt"], identifiers=["some_identifier"], metadata={"key": "value"})
@@ -178,7 +178,7 @@ class FilePadTasksTest(unittest.TestCase):
         # test successful if exception raised
 
     def test_getfilesbyquerytask_sort_ascending_name_run(self):
-        """Tests on sorting queried files in ascending order"""
+        """Tests on sorting queried files in ascending order."""
         file_contents = ["Some file with some content", "Some other file with some other content"]
 
         with open("degenerate_file.txt", "w") as f:
@@ -205,10 +205,10 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
 
         with open("degenerate_file.txt") as f:
-            self.assertEqual(file_contents[-1], f.read())
+            assert file_contents[-1] == f.read()
 
     def test_getfilesbyquerytask_sort_descending_name_run(self):
-        """Tests on sorting queried files in descending order"""
+        """Tests on sorting queried files in descending order."""
         file_contents = ["Some file with some content", "Some other file with some other content"]
 
         with open("degenerate_file.txt", "w") as f:
@@ -238,7 +238,7 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
 
         with open("degenerate_file.txt") as f:
-            self.assertEqual(file_contents[0], f.read())
+            assert file_contents[0] == f.read()
 
         os.remove("degenerate_file.txt")
 
@@ -247,10 +247,10 @@ class FilePadTasksTest(unittest.TestCase):
         t.run_task({})
         write_file_contents, _ = self.fp.get_file(self.paths[0])
         with open(self.paths[0]) as f:
-            self.assertEqual(write_file_contents, f.read().encode())
+            assert write_file_contents == f.read().encode()
         del_file_contents, wdoc = self.fp.get_file(self.paths[1])
         with open(self.paths[1]) as f:
-            self.assertEqual(del_file_contents, f.read().encode())
+            assert del_file_contents == f.read().encode()
 
     def tearDown(self):
         self.fp.reset()

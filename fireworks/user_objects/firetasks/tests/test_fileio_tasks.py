@@ -20,21 +20,21 @@ module_dir = os.path.abspath(os.path.dirname(__file__))
 
 class FileWriteDeleteTest(unittest.TestCase):
     def test_init(self):
-        t = FileWriteTask(files_to_write="hello")
-        t = FileWriteTask({"files_to_write": "hello"})
+        FileWriteTask(files_to_write="hello")
+        FileWriteTask({"files_to_write": "hello"})
         self.assertRaises(RuntimeError, FileWriteTask)
 
     def test_run(self):
         t = load_object_from_file(os.path.join(module_dir, "write.yaml"))
         t.run_task({})
         for i in range(2):
-            self.assertTrue(os.path.exists(f"myfile{i + 1}"))
+            assert os.path.exists(f"myfile{i + 1}")
 
         # Use delete task to remove the files created.
         t = load_object_from_file(os.path.join(module_dir, "delete.yaml"))
         t.run_task({})
         for i in range(2):
-            self.assertFalse(os.path.exists(f"myfile{i + 1}"))
+            assert not os.path.exists(f"myfile{i + 1}")
 
 
 class CompressDecompressArchiveDirTest(unittest.TestCase):
@@ -45,17 +45,17 @@ class CompressDecompressArchiveDirTest(unittest.TestCase):
     def test_compress_dir(self):
         c = CompressDirTask(compression="gz")
         c.run_task({})
-        self.assertTrue(os.path.exists("delete.yaml.gz"))
-        self.assertFalse(os.path.exists("delete.yaml"))
+        assert os.path.exists("delete.yaml.gz")
+        assert not os.path.exists("delete.yaml")
         c = DecompressDirTask()
         c.run_task({})
-        self.assertFalse(os.path.exists("delete.yaml.gz"))
-        self.assertTrue(os.path.exists("delete.yaml"))
+        assert not os.path.exists("delete.yaml.gz")
+        assert os.path.exists("delete.yaml")
 
     def test_archive_dir(self):
         a = ArchiveDirTask(base_name="archive", format="gztar")
         a.run_task({})
-        self.assertTrue(os.path.exists("archive.tar.gz"))
+        assert os.path.exists("archive.tar.gz")
         os.remove("archive.tar.gz")
 
     def tearDown(self):

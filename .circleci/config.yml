@@ -25,9 +25,6 @@ jobs:
             source activate test-environment
             pip install .[workflow-checks,graph-plotting,flask-plotting]
             pytest fireworks
-            echo "Checking code style..."
-            pycodestyle fireworks
-            echo "Done..."
 
   pytest_pymongo4:
     working_directory: ~/fireworks
@@ -54,9 +51,6 @@ jobs:
             pip install --quiet -e .
             pip install --quiet --upgrade pymongo
             pytest fireworks
-            echo "Checking code style..."
-            pycodestyle fireworks
-            echo "Done..."
 
 workflows:
   version: 2

@@ -10,7 +10,6 @@ __author__ = "Janosh Riebesell <janosh.riebesell@gmail.com>"
 @pytest.mark.parametrize("arg", ["-v", "--version"])
 def test_qlaunch_report_version(capsys, arg):
     """Test qlaunch CLI version flag."""
-
     with pytest.raises(SystemExit):
         qlaunch([arg])
 
@@ -22,7 +21,6 @@ def test_qlaunch_report_version(capsys, arg):
 
 def test_qlaunch_config_file_flags():
     """Test qlaunch CLI throws errors on missing config file flags."""
-
     # qadapter.yaml is mandatory, test for ValueError if missing
     with pytest.raises(ValueError, match="No path specified for qadapter_file."):
         qlaunch([])

@@ -18,7 +18,6 @@ def _validate_config_file_paths(args: Namespace, cfg_files_to_validate: Sequence
         FileNotFoundError: If a config file is provided but does not exist.
     """
     for filename, cli_flag, required, default_loc in cfg_files_to_validate:
-
         attr_name = f"{filename}_file"
         file_path = getattr(args, attr_name)
 

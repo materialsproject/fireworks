@@ -106,7 +106,7 @@ class LaunchPadTest(unittest.TestCase):
         lp = LaunchPad.from_file(self.LP_LOC)
         lp_dict = lp.to_dict()
         new_lp = LaunchPad.from_dict(lp_dict)
-        self.assertIsInstance(new_lp, LaunchPad)
+        assert isinstance(new_lp, LaunchPad)
 
     def test_reset(self):
         # Store some test fireworks
@@ -115,10 +115,10 @@ class LaunchPadTest(unittest.TestCase):
         wf = Workflow([fw], name="test_workflow")
         self.lp.add_wf(wf)
         self.assertRaises(ValueError, self.lp.reset, "", False, 0)
-        self.assertEqual(self.lp.workflows.count_documents({}), 1)
+        assert self.lp.workflows.count_documents({}) == 1
         self.lp.reset("", require_password=False)
-        self.assertFalse(self.lp.get_fw_ids())
-        self.assertFalse(self.lp.get_wf_ids())
+        assert not self.lp.get_fw_ids()
+        assert not self.lp.get_wf_ids()
 
         # test failsafe in a strict way
         for _ in range(30):
@@ -137,17 +137,17 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         wf_id = self.lp.get_wf_ids()
-        self.assertEqual(len(wf_id), 1)
+        assert len(wf_id) == 1
         for fw_id in self.lp.get_wf_ids():
             wf = self.lp.get_wf_by_fw_id_lzyfw(fw_id)
-            self.assertEqual(len(wf.id_fw.keys()), 1)
+            assert len(wf.id_fw.keys()) == 1
         fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name="test_workflow")
         self.lp.add_wf(wf)
         # fw = self.lp.get_fw_ids()
         # self.assertEqual(len(wf.id_fw.keys()), 2)
         fw_ids = self.lp.get_fw_ids()
-        self.assertEqual(len(fw_ids), 3)
+        assert len(fw_ids) == 3
         self.lp.reset("", require_password=False)
 
     def test_add_wfs(self):
@@ -161,9 +161,9 @@ class LaunchPadTest(unittest.TestCase):
         self.lp.bulk_add_wfs(wfs)
         num_fws_total = sum(len(wf) for wf in wfs)
         distinct_fw_ids = self.lp.fireworks.distinct("fw_id", {"name": "lorem"})
-        self.assertEqual(len(distinct_fw_ids), num_fws_total)
+        assert len(distinct_fw_ids) == num_fws_total
         num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem wf"}))
-        self.assertEqual(num_wfs_in_db, len(wfs))
+        assert num_wfs_in_db == len(wfs)
 
 
 class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
@@ -306,7 +306,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.lp.pause_fw(self.zeus_fw_id)
 
         paused_ids = self.lp.get_fw_ids({"state": "PAUSED"})
-        self.assertIn(self.zeus_fw_id, paused_ids)
+        assert self.zeus_fw_id in paused_ids
         try:
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
@@ -314,14 +314,14 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             # Ensure except for Zeus and his children, all other fw are launched
             completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
             # Check that Lapetus and his descendants are subset of  completed fwids
-            self.assertTrue(self.lapetus_desc_fw_ids.issubset(completed_ids))
+            assert self.lapetus_desc_fw_ids.issubset(completed_ids)
             # Check that Zeus siblings are subset of completed fwids
-            self.assertTrue(self.zeus_sib_fw_ids.issubset(completed_ids))
+            assert self.zeus_sib_fw_ids.issubset(completed_ids)
 
             # Check that Zeus and children are subset of incompleted fwids
             fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
-            self.assertIn(self.zeus_fw_id, fws_no_run)
-            self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
+            assert self.zeus_fw_id in fws_no_run
+            assert self.zeus_child_fw_ids.issubset(fws_no_run)
 
             # Setup Zeus to run
             self.lp.resume_fw(self.zeus_fw_id)
@@ -329,8 +329,8 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
             # Check that Zeus and children are all completed now
             completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-            self.assertIn(self.zeus_fw_id, completed_ids)
-            self.assertTrue(self.zeus_child_fw_ids.issubset(completed_ids))
+            assert self.zeus_fw_id in completed_ids
+            assert self.zeus_child_fw_ids.issubset(completed_ids)
 
         except Exception:
             raise
@@ -340,7 +340,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.lp.defuse_fw(self.zeus_fw_id)
 
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
         try:
             # Launch remaining fireworks
             rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
@@ -348,14 +348,14 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             # Ensure except for Zeus and his children, all other fw are launched
             completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
             # Check that Lapetus and his descendants are subset of  completed fwids
-            self.assertTrue(self.lapetus_desc_fw_ids.issubset(completed_ids))
+            assert self.lapetus_desc_fw_ids.issubset(completed_ids)
             # Check that Zeus siblings are subset of completed fwids
-            self.assertTrue(self.zeus_sib_fw_ids.issubset(completed_ids))
+            assert self.zeus_sib_fw_ids.issubset(completed_ids)
 
             # Check that Zeus and children are subset of incompleted fwids
             fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
-            self.assertIn(self.zeus_fw_id, fws_no_run)
-            self.assertTrue(self.zeus_child_fw_ids.issubset(fws_no_run))
+            assert self.zeus_fw_id in fws_no_run
+            assert self.zeus_child_fw_ids.issubset(fws_no_run)
         except Exception:
             raise
 
@@ -366,15 +366,15 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         self.lp.defuse_fw(self.zeus_fw_id)
 
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
         completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertFalse(self.zeus_child_fw_ids.issubset(completed_ids))
+        assert not self.zeus_child_fw_ids.issubset(completed_ids)
 
     def test_reignite_fw(self):
         # Defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
 
         # Launch remaining fireworks
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
@@ -385,34 +385,34 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # Check for the status of Zeus and children in completed fwids
         completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertIn(self.zeus_fw_id, completed_ids)
-        self.assertTrue(self.zeus_child_fw_ids.issubset(completed_ids))
+        assert self.zeus_fw_id in completed_ids
+        assert self.zeus_child_fw_ids.issubset(completed_ids)
 
     def test_pause_wf(self):
         # pause Workflow containing Zeus
         self.lp.pause_wf(self.zeus_fw_id)
         paused_ids = self.lp.get_fw_ids({"state": "PAUSED"})
-        self.assertIn(self.zeus_fw_id, paused_ids)
+        assert self.zeus_fw_id in paused_ids
 
         # Launch remaining fireworks
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
         # Check for the state of all fws in Zeus workflow in incomplete fwids
         fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
-        self.assertEqual(fws_no_run, self.all_ids)
+        assert fws_no_run == self.all_ids
 
     def test_defuse_wf(self):
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
 
         # Launch remaining fireworks
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
         # Check for the state of all fws in Zeus workflow in incomplete fwids
         fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
-        self.assertEqual(fws_no_run, self.all_ids)
+        assert fws_no_run == self.all_ids
 
     def test_defuse_wf_after_partial_run(self):
         # Run a firework before defusing Zeus
@@ -426,21 +426,21 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
         print("def ids", defused_ids)
         print("zeus id", self.zeus_fw_id)
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
 
         fws_no_run = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertEqual(len(fws_no_run), 0)
+        assert len(fws_no_run) == 0
 
         # Try launching fireworks and check if any are launched
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fws_no_run = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertEqual(len(fws_no_run), 0)
+        assert len(fws_no_run) == 0
 
     def test_reignite_wf(self):
         # Defuse workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
 
         # Launch any remaining fireworks
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
@@ -451,7 +451,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # Check for the status of all fireworks Zeus workflow in completed fwids
         fws_completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertEqual(fws_completed, self.all_ids)
+        assert fws_completed == self.all_ids
 
     def test_archive_wf(self):
         # Run a firework before archiving Zeus
@@ -460,16 +460,16 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # archive Workflow containing Zeus. Ensure all are archived
         self.lp.archive_wf(self.zeus_fw_id)
         archived_ids = set(self.lp.get_fw_ids({"state": "ARCHIVED"}))
-        self.assertEqual(archived_ids, self.all_ids)
+        assert archived_ids == self.all_ids
 
         # Try to launch the fireworks and check if any are launched
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fws_completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertFalse(fws_completed)
+        assert not fws_completed
 
         # Query for provenance
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
-        self.assertEqual(fw.state, "ARCHIVED")
+        assert fw.state == "ARCHIVED"
 
     def test_delete_wf(self):
         # Run a firework before deleting Zeus
@@ -479,7 +479,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.lp.get_fw_ids({"state": "COMPLETED"})[0])
         launches = fw.launches
         first_ldir = launches[0].launch_dir
-        self.assertTrue(os.path.isdir(first_ldir))
+        assert os.path.isdir(first_ldir)
 
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id)
@@ -487,11 +487,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.lp.get_wf_by_fw_id(self.zeus_fw_id)
         fw_ids = self.lp.get_fw_ids()
-        self.assertFalse(fw_ids)
+        assert not fw_ids
         wf_ids = self.lp.get_wf_ids()
-        self.assertFalse(wf_ids)
+        assert not wf_ids
         # Check that the launch dir has not been deleted
-        self.assertTrue(os.path.isdir(first_ldir))
+        assert os.path.isdir(first_ldir)
 
     def test_delete_wf_and_files(self):
         # Run a firework before deleting Zeus
@@ -501,7 +501,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.lp.get_fw_ids({"state": "COMPLETED"})[0])
         launches = fw.launches
         first_ldir = launches[0].launch_dir
-        self.assertTrue(os.path.isdir(first_ldir))
+        assert os.path.isdir(first_ldir)
 
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id, delete_launch_dirs=True)
@@ -509,11 +509,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.lp.get_wf_by_fw_id(self.zeus_fw_id)
         fw_ids = self.lp.get_fw_ids()
-        self.assertFalse(fw_ids)
+        assert not fw_ids
         wf_ids = self.lp.get_wf_ids()
-        self.assertFalse(wf_ids)
+        assert not wf_ids
         # Check that the launch dir has not been deleted
-        self.assertFalse(os.path.isdir(first_ldir))
+        assert not os.path.isdir(first_ldir)
 
     def test_rerun_fws2(self):
         # Launch all fireworks
@@ -525,14 +525,14 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         # check that all the zeus children are completed
         completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-        self.assertTrue(completed.issuperset(set(self.zeus_child_fw_ids)))
+        assert completed.issuperset(set(self.zeus_child_fw_ids))
 
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
 
         # now the children should be waiting
         completed = set(self.lp.get_fw_ids({"state": "WAITING"}))
-        self.assertTrue(completed.issuperset(set(self.zeus_child_fw_ids)))
+        assert completed.issuperset(set(self.zeus_child_fw_ids))
 
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
@@ -541,17 +541,17 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw_start_t = launches[0].time_start
         second_ldir = launches[0].launch_dir
 
-        self.assertNotEqual(first_ldir, second_ldir)
+        assert first_ldir != second_ldir
 
-        self.assertTrue(fw_start_t > ts)
+        assert fw_start_t > ts
         for fw_id in self.zeus_child_fw_ids:
             fw = self.lp.get_fw_by_id(fw_id)
             fw_start_t = fw.launches[0].time_start
-            self.assertTrue(fw_start_t > ts)
+            assert fw_start_t > ts
         for fw_id in self.zeus_sib_fw_ids:
             fw = self.lp.get_fw_by_id(fw_id)
             fw_start_t = fw.launches[0].time_start
-            self.assertFalse(fw_start_t > ts)
+            assert not fw_start_t > ts
 
 
 @unittest.skipIf(PYMONGO_MAJOR_VERSION > 3, "detect lostruns test not supported for pymongo major version > 3")
@@ -607,7 +607,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         # Wait for fw to start
         it = 0
-        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+        while not any(f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws):
             time.sleep(1)  # Wait 1 sec
             it += 1
             if it == 10:
@@ -615,20 +615,20 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         rp.terminate()  # Kill the rocket
 
         l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0)
-        self.assertEqual((l, f), ([1], [1]))
+        assert (l, f) == ([1], [1])
         time.sleep(4)  # Wait double the expected exec time and test
         l, f, _ = self.lp.detect_lostruns(2)
-        self.assertEqual((l, f), ([1], [1]))
+        assert (l, f) == ([1], [1])
 
         l, f, _ = self.lp.detect_lostruns(2, min_runtime=10)  # script did not run for 10 secs
-        self.assertEqual((l, f), ([], []))
+        assert (l, f) == ([], [])
 
         l, f, _ = self.lp.detect_lostruns(2, max_runtime=-1)  # script ran more than -1 secs
-        self.assertEqual((l, f), ([], []))
+        assert (l, f) == ([], [])
 
         l, f, _ = self.lp.detect_lostruns(0.01, max_runtime=5, min_runtime=0, rerun=True)
-        self.assertEqual((l, f), ([1], [1]))
-        self.assertEqual(self.lp.get_fw_by_id(1).state, "READY")
+        assert (l, f) == ([1], [1])
+        assert self.lp.get_fw_by_id(1).state == "READY"
 
     def test_detect_lostruns_defuse(self):
         # Launch the timed firework in a separate process
@@ -646,7 +646,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         # Wait for fw to start
         it = 0
-        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+        while not any(f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws):
             time.sleep(1)  # Wait 1 sec
             it += 1
             if it == 10:
@@ -654,13 +654,13 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         rp.terminate()  # Kill the rocket
 
         l, f, i = self.lp.detect_lostruns(0.01)
-        self.assertEqual((l, f), ([1], [1]))
+        assert (l, f) == ([1], [1])
 
         self.lp.defuse_fw(1)
 
         l, f, i = self.lp.detect_lostruns(0.01, rerun=True)
-        self.assertEqual((l, f), ([1], []))
-        self.assertEqual(self.lp.get_fw_by_id(1).state, "DEFUSED")
+        assert (l, f) == ([1], [])
+        assert self.lp.get_fw_by_id(1).state == "DEFUSED"
 
     def test_state_after_run_start(self):
         # Launch the timed firework in a separate process
@@ -678,7 +678,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         # Wait for running
         it = 0
-        while not any([f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws]):
+        while not any(f.state == "RUNNING" for f in self.lp.get_wf_by_fw_id_lzyfw(self.fw_id).fws):
             time.sleep(1)  # Wait 1 sec
             it += 1
             if it == 10:
@@ -687,8 +687,8 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         # WF should be running
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.fw_id)
         for fw_id in wf.fw_states:
-            self.assertEqual(wf.id_fw[fw_id].state, wf.fw_states[fw_id])
-            self.assertEqual(wf.fw_states[fw_id], "RUNNING")
+            assert wf.id_fw[fw_id].state == wf.fw_states[fw_id]
+            assert wf.fw_states[fw_id] == "RUNNING"
         rp.terminate()
 
 
@@ -841,7 +841,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
         try:
             # Launch remaining fireworks
@@ -852,7 +852,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             for fw_id in wf.fw_states:
                 fw_state = fws[fw_id].state
                 fw_cache_state = wf.fw_states[fw_id]
-                self.assertEqual(fw_state, fw_cache_state)
+                assert fw_state == fw_cache_state
         except Exception:
             raise
 
@@ -867,7 +867,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
     def test_reignite_fw(self):
         # Defuse Zeus and launch remaining fireworks
@@ -882,13 +882,13 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
     def test_defuse_wf(self):
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
-        self.assertIn(self.zeus_fw_id, defused_ids)
+        assert self.zeus_fw_id in defused_ids
 
         # Ensure the states are in sync after defusing wf
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
@@ -896,7 +896,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
     def test_reignite_wf(self):
         # Defuse workflow containing Zeus
@@ -913,7 +913,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
     def test_archive_wf(self):
         # Run a firework before archiving Zeus
@@ -926,7 +926,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
     def test_rerun_fws(self):
         # Launch all fireworks
@@ -943,7 +943,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
     def test_rerun_timed_fws(self):
         # Launch all fireworks in a separate process
@@ -966,7 +966,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
         # Detect lost runs
         lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
@@ -976,7 +976,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
 
         # Rerun fizzled runs
         for fw_id in lost_fwids:
@@ -1003,7 +1003,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         for fw_id in wf.fw_states:
             fw_state = fws[fw_id].state
             fw_cache_state = wf.fw_states[fw_id]
-            self.assertEqual(fw_state, fw_cache_state)
+            assert fw_state == fw_cache_state
         rp.terminate()
 
 
@@ -1051,53 +1051,53 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
 
     def test_except_details_on_rerun(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1)
         fw = self.lp.get_fw_by_id(1)
-        self.assertEqual(fw.spec["_exception_details"], self.error_test_dict)
+        assert fw.spec["_exception_details"] == self.error_test_dict
 
     def test_task_level_rerun(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1, recover_launch="last")
         self.lp.update_spec([1], {"skip_exception": True})
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
         dirs = sorted(glob.glob(os.path.join(MODULE_DIR, "launcher_*")))
-        self.assertEqual(self.lp.get_fw_by_id(1).state, "COMPLETED")
-        self.assertEqual(ExecutionCounterTask.exec_counter, 1)
-        self.assertEqual(ExceptionTestTask.exec_counter, 2)
-        self.assertFalse(os.path.exists(os.path.join(dirs[1], "date_file")))
+        assert self.lp.get_fw_by_id(1).state == "COMPLETED"
+        assert ExecutionCounterTask.exec_counter == 1
+        assert ExceptionTestTask.exec_counter == 2
+        assert not os.path.exists(os.path.join(dirs[1], "date_file"))
         # Ensure rerun deletes recovery by default
         self.lp.rerun_fw(1)
         fw = self.lp.get_fw_by_id(1)
-        self.assertFalse("_recovery" in fw.spec)
+        assert "_recovery" not in fw.spec
 
     def test_task_level_rerun_cp(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1, recover_launch="last", recover_mode="cp")
         self.lp.update_spec([1], {"skip_exception": True})
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
         dirs = sorted(glob.glob(os.path.join(MODULE_DIR, "launcher_*")))
-        self.assertEqual(self.lp.get_fw_by_id(1).state, "COMPLETED")
-        self.assertEqual(ExecutionCounterTask.exec_counter, 1)
-        self.assertEqual(ExceptionTestTask.exec_counter, 2)
-        self.assertTrue(filecmp.cmp(os.path.join(dirs[0], "date_file"), os.path.join(dirs[1], "date_file")))
+        assert self.lp.get_fw_by_id(1).state == "COMPLETED"
+        assert ExecutionCounterTask.exec_counter == 1
+        assert ExceptionTestTask.exec_counter == 2
+        assert filecmp.cmp(os.path.join(dirs[0], "date_file"), os.path.join(dirs[1], "date_file"))
 
     def test_task_level_rerun_prev_dir(self):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1, recover_launch="last", recover_mode="prev_dir")
         self.lp.update_spec([1], {"skip_exception": True})
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(1)
-        self.assertEqual(os.getcwd(), MODULE_DIR)
-        self.assertEqual(fw.state, "COMPLETED")
-        self.assertEqual(fw.launches[0].launch_dir, fw.archived_launches[0].launch_dir)
-        self.assertEqual(ExecutionCounterTask.exec_counter, 1)
-        self.assertEqual(ExceptionTestTask.exec_counter, 2)
+        assert os.getcwd() == MODULE_DIR
+        assert fw.state == "COMPLETED"
+        assert fw.launches[0].launch_dir == fw.archived_launches[0].launch_dir
+        assert ExecutionCounterTask.exec_counter == 1
+        assert ExceptionTestTask.exec_counter == 2
 
 
 class WFLockTest(unittest.TestCase):
@@ -1168,22 +1168,22 @@ class WFLockTest(unittest.TestCase):
             if "SkipTest" in stacktrace:
                 self.skipTest("The test didn't run correctly")
 
-        self.assertEqual(fast_fw.state, "RUNNING")
+        assert fast_fw.state == "RUNNING"
 
         child_fw = self.lp.get_fw_by_id(3)
 
-        self.assertTrue("SlowAdditionTask" in child_fw.spec)
-        self.assertFalse("WaitWFLockTask" in child_fw.spec)
+        assert "SlowAdditionTask" in child_fw.spec
+        assert "WaitWFLockTask" not in child_fw.spec
 
         self.lp._refresh_wf(fw_id=2)
 
         child_fw = self.lp.get_fw_by_id(3)
 
-        self.assertTrue("WaitWFLockTask" in child_fw.spec)
+        assert "WaitWFLockTask" in child_fw.spec
 
         fast_fw = self.lp.get_fw_by_id(2)
 
-        self.assertEqual(fast_fw.state, "COMPLETED")
+        assert fast_fw.state == "COMPLETED"
 
     def test_fix_db_inconsistencies_fizzled(self):
         class RocketProcess(Process):
@@ -1217,18 +1217,18 @@ class WFLockTest(unittest.TestCase):
             if "SkipTest" in stacktrace:
                 self.skipTest("The test didn't run correctly")
 
-        self.assertEqual(fast_fw.state, "RUNNING")
+        assert fast_fw.state == "RUNNING"
 
         child_fw = self.lp.get_fw_by_id(3)
 
-        self.assertTrue("SlowAdditionTask" in child_fw.spec)
-        self.assertFalse("WaitWFLockTask" in child_fw.spec)
+        assert "SlowAdditionTask" in child_fw.spec
+        assert "WaitWFLockTask" not in child_fw.spec
 
         self.lp._refresh_wf(fw_id=2)
 
         fast_fw = self.lp.get_fw_by_id(2)
 
-        self.assertEqual(fast_fw.state, "FIZZLED")
+        assert fast_fw.state == "FIZZLED"
 
 
 class LaunchPadOfflineTest(unittest.TestCase):
@@ -1277,11 +1277,11 @@ class LaunchPadOfflineTest(unittest.TestCase):
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
 
-        self.assertIsNone(self.lp.recover_offline(launch_id))
+        assert self.lp.recover_offline(launch_id) is None
 
         fw = self.lp.get_fw_by_id(launch_id)
 
-        self.assertEqual(fw.state, "COMPLETED")
+        assert fw.state == "COMPLETED"
 
     def test_recover_errors(self):
         fw, launch_id = self.lp.reserve_fw(self.fworker, self.launch_dir)
@@ -1293,18 +1293,18 @@ class LaunchPadOfflineTest(unittest.TestCase):
         shutil.rmtree(self.launch_dir)
 
         # recover ignoring errors
-        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=True, print_errors=True))
+        assert self.lp.recover_offline(launch_id, ignore_errors=True, print_errors=True) is not None
 
         fw = self.lp.get_fw_by_id(launch_id)
 
-        self.assertEqual(fw.state, "RESERVED")
+        assert fw.state == "RESERVED"
 
         # fizzle
-        self.assertIsNotNone(self.lp.recover_offline(launch_id, ignore_errors=False))
+        assert self.lp.recover_offline(launch_id, ignore_errors=False) is not None
 
         fw = self.lp.get_fw_by_id(launch_id)
 
-        self.assertEqual(fw.state, "FIZZLED")
+        assert fw.state == "FIZZLED"
 
 
 class GridfsStoredDataTest(unittest.TestCase):
@@ -1349,19 +1349,19 @@ class GridfsStoredDataTest(unittest.TestCase):
 
         fw = self.lp.get_fw_by_id(1)
 
-        self.assertEqual(fw.state, "COMPLETED")
+        assert fw.state == "COMPLETED"
 
         launch_db = self.lp.launches.find_one({"launch_id": 1})
-        self.assertIsNotNone(launch_db["action"]["gridfs_id"])
-        self.assertNotIn("detours", launch_db["action"])
+        assert launch_db["action"]["gridfs_id"] is not None
+        assert "detours" not in launch_db["action"]
 
-        self.assertEqual(self.lp.get_fw_ids(count_only=True), 2001)
+        assert self.lp.get_fw_ids(count_only=True) == 2001
 
         launch_full = self.lp.get_launch_by_id(1)
-        self.assertEqual(len(launch_full.action.detours), 2000)
+        assert len(launch_full.action.detours) == 2000
 
         wf = self.lp.get_wf_by_fw_id_lzyfw(1)
-        self.assertEqual(len(wf.id_fw[1].launches[0].action.detours), 2000)
+        assert len(wf.id_fw[1].launches[0].action.detours) == 2000
 
     def test_many_detours_offline(self):
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
@@ -1378,14 +1378,14 @@ class GridfsStoredDataTest(unittest.TestCase):
             # launch rocket without launchpad to trigger offline mode
             launch_rocket(launchpad=None, fworker=self.fworker, fw_id=1)
 
-        self.assertIsNone(self.lp.recover_offline(launch_id))
+        assert self.lp.recover_offline(launch_id) is None
 
         launch_db = self.lp.launches.find_one({"launch_id": launch_id})
-        self.assertIsNotNone(launch_db["action"]["gridfs_id"])
-        self.assertNotIn("detours", launch_db["action"])
+        assert launch_db["action"]["gridfs_id"] is not None
+        assert "detours" not in launch_db["action"]
 
         launch_full = self.lp.get_launch_by_id(1)
-        self.assertEqual(len(launch_full.action.detours), 2000)
+        assert len(launch_full.action.detours) == 2000
 
 
 if __name__ == "__main__":

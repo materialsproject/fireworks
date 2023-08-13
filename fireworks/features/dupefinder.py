@@ -1,6 +1,4 @@
-"""
-This module contains the base class for implementing Duplicate Finders
-"""
+"""This module contains the base class for implementing Duplicate Finders."""
 
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 
@@ -12,9 +10,7 @@ __date__ = "Mar 01, 2013"
 
 
 class DupeFinderBase(FWSerializable):
-    """
-    This serves an Abstract class for implementing Duplicate Finders
-    """
+    """This serves an Abstract class for implementing Duplicate Finders."""
 
     def __init__(self):
         pass

@@ -1,6 +1,4 @@
-"""
-TODO: Modify unittest doc.
-"""
+"""TODO: Modify unittest doc."""
 
 
 __author__ = "Bharat Medasani"
@@ -28,13 +26,13 @@ class TemplateWriterTaskTest(unittest.TestCase):
             }
         )
         t.run_task({})
-        self.assertTrue(os.path.exists("out_template.txt"))
+        assert os.path.exists("out_template.txt")
         with open("out_template.txt") as fp:
             for line in fp:
                 if "option1" in line:
-                    self.assertTrue("5.0" in line)
+                    assert "5.0" in line
                 if "option2" in line:
-                    self.assertTrue("fast method" in line)
+                    assert "fast method" in line
         os.remove("out_template.txt")
         if os.path.exists("test_template.txt"):
             os.remove("test_template.txt")

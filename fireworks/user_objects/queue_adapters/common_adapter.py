@@ -139,9 +139,8 @@ class CommonAdapter(QueueAdapterBase):
         if self.q_type == "LoadLeveler":
             if "There is currently no job status to report" in output_str:
                 return 0
-            else:
-                # last line is: "1 job step(s) in query, 0 waiting, ..."
-                return int(output_str.split("\n")[-2].split()[0])
+            # last line is: "1 job step(s) in query, 0 waiting, ..."
+            return int(output_str.split("\n")[-2].split()[0])
         if self.q_type == "LoadSharingFacility":
             # Count the number of lines which pertain to the queue
             cnt = 0
@@ -160,12 +159,12 @@ class CommonAdapter(QueueAdapterBase):
             return len([l for l in output_str.split("\n") if username in l])
 
         count = 0
-        for l in output_str.split("\n"):
-            if l.lower().startswith("job"):
+        for line in output_str.split("\n"):
+            if line.lower().startswith("job"):
                 if self.q_type == "Cobalt":
                     # Cobalt capitalzes headers
-                    l = l.lower()
-                header = l.split()
+                    line = line.lower()
+                header = line.split()
                 if self.q_type == "PBS":
                     # PBS has a ridiculous two word "Job ID" in header
                     state_index = header.index("S") - 1
@@ -173,8 +172,8 @@ class CommonAdapter(QueueAdapterBase):
                 else:
                     state_index = header.index("state")
                     queue_index = header.index("queue")
-            if username in l:
-                toks = l.split()
+            if username in line:
+                toks = line.split()
                 if toks[state_index] != "C":
                     # note: the entire queue name might be cutoff from the output if long queue name
                     # so we are only ensuring that our queue matches up until cutoff point
@@ -185,7 +184,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def submit_to_queue(self, script_file):
         """
-        submits the job to the queue and returns the job id
+        submits the job to the queue and returns the job id.
 
         :param script_file: (str) name of the script file to use (String)
         :return: (int) job_id
@@ -219,9 +218,7 @@ class CommonAdapter(QueueAdapterBase):
                     return job_id
                 except Exception as ex:
                     # probably error parsing job code
-                    log_exception(
-                        queue_logger, f"Could not parse job id following {submit_cmd} due to error {str(ex)}..."
-                    )
+                    log_exception(queue_logger, f"Could not parse job id following {submit_cmd} due to error {ex!s}...")
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
@@ -236,7 +233,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def get_njobs_in_queue(self, username=None):
         """
-        returns the number of jobs currently in the queue for the user
+        returns the number of jobs currently in the queue for the user.
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue

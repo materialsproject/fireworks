@@ -23,12 +23,7 @@ from fireworks.fw_config import (
     SUBMIT_SCRIPT_NAME,
 )
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.fw_utilities import (
-    create_datestamp_dir,
-    get_fw_logger,
-    get_slug,
-    log_exception,
-)
+from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception
 
 __author__ = "Anubhav Jain, Michael Kocher"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -135,7 +130,6 @@ def launch_rocket_to_queue(
             l_logger.info(f"moving to launch_dir {launcher_dir}")
 
             with cd(launcher_dir):
-
                 if "--offline" in qadapter["rocket_launch"]:
                     setup_offline_job(launchpad, fw, launch_id)
 
@@ -150,7 +144,7 @@ def launch_rocket_to_queue(
                     raise RuntimeError(
                         "queue script could not be submitted, check queue script/queue adapter/queue server status!"
                     )
-                elif reserve:
+                if reserve:
                     launchpad.set_reservation_id(launch_id, reservation_id)
             return reservation_id
 
@@ -207,7 +201,6 @@ def rapidfire(
         fill_mode (bool): whether to submit jobs even when there is nothing to run (only in
             non-reservation mode)
     """
-
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
     launch_dir = os.path.abspath(launch_dir)
     nlaunches = -1 if nlaunches == "infinite" else int(nlaunches)
@@ -243,7 +236,6 @@ def rapidfire(
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
             while launchpad.run_exists(fworker) or (fill_mode and not reserve):
-
                 if timeout and (datetime.now() - start_time).total_seconds() >= timeout:
                     l_logger.info("Timeout reached.")
                     break
@@ -266,7 +258,7 @@ def rapidfire(
                 if return_code is None:
                     l_logger.info("No READY jobs detected...")
                     break
-                elif not return_code:
+                if not return_code:
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if nlaunches > 0 and num_launched == nlaunches:
@@ -298,7 +290,7 @@ def rapidfire(
 
 def _njobs_in_dir(block_dir):
     """
-    Internal method to count the number of jobs inside a block
+    Internal method to count the number of jobs inside a block.
 
     Args:
         block_dir: (str) the block directory we want to count the jobs in
@@ -324,7 +316,7 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
     """
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
-    for i in range(QUEUE_RETRY_ATTEMPTS):
+    for _i in range(QUEUE_RETRY_ATTEMPTS):
         try:
             jobs_in_queue = qadapter.get_njobs_in_queue()
             if jobs_in_queue is not None:

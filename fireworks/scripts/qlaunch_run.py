@@ -1,6 +1,4 @@
-"""
-A runnable script for launching rockets (a command-line interface to queue_launcher.py)
-"""
+"""A runnable script for launching rockets (a command-line interface to queue_launcher.py)."""
 import os
 import sys
 import time
@@ -19,12 +17,7 @@ else:
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.fw_config import (
-    CONFIG_FILE_DIR,
-    FWORKER_LOC,
-    LAUNCHPAD_LOC,
-    QUEUEADAPTER_LOC,
-)
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, QUEUEADAPTER_LOC
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
@@ -43,7 +36,6 @@ __date__ = "Jan 14, 2013"
 
 
 def do_launch(args):
-
     cfg_files_to_check = [
         ("launchpad", "-l", False, LAUNCHPAD_LOC),
         ("fworker", "-w", False, FWORKER_LOC),

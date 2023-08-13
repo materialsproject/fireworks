@@ -1,6 +1,4 @@
-"""
-A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
-"""
+"""A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)."""
 
 import ast
 import copy
@@ -116,7 +114,6 @@ def get_lp(args: Namespace) -> LaunchPad:
         if args.launchpad_file:
             lp = LaunchPad.from_file(args.launchpad_file)
         else:
-
             args.loglvl = "CRITICAL" if args.silencer else args.loglvl
             # no lpad file means we try connect to localhost which is fast so use small timeout
             # (default 30s) for quick response to user if no DB is running
@@ -265,9 +262,8 @@ def print_fws(ids, lp, args: Namespace) -> None:
                 if "archived_launches" in d:
                     del d["archived_launches"]
                 del d["spec"]
-            if args.display_format == "less":
-                if "launches" in d:
-                    del d["launches"]
+            if args.display_format == "less" and "launches" in d:
+                del d["launches"]
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
@@ -293,8 +289,7 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
         args.display_format = args.display_format if args.display_format else "ids"
     if sum(bool(x) for x in [args.fw_id, args.name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    else:
-        args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format if args.display_format else "more"
 
     if args.fw_id:
         query = {"fw_id": {"$in": args.fw_id}}
@@ -345,9 +340,8 @@ def get_fws_helper(
                 if "archived_launches" in d:
                     del d["archived_launches"]
                 del d["spec"]
-            if args.display_format == "less":
-                if "launches" in d:
-                    del d["launches"]
+            if args.display_format == "less" and "launches" in d:
+                del d["launches"]
             fws.append(d)
     return fws[0] if len(fws) == 1 else fws
 
@@ -384,8 +378,7 @@ def get_fws_in_wfs(args: Namespace) -> None:
         args.display_format = args.display_format if args.display_format else "ids"
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    else:
-        args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format if args.display_format else "more"
 
     if args.fw_fw_id:
         fw_query = {"fw_id": {"$in": args.fw_fw_id}}
@@ -872,8 +865,7 @@ def orphaned(args: Namespace) -> None:
 def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
-    else:
-        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+    return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
 
 
 def arg_positive_int(value: str) -> int:
@@ -938,7 +930,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     enh_disp_kwargs["default"] = None
 
     query_args = ["-q", "--query"]
-    query_kwargs = {"help": "Query (enclose pymongo-style dict in " 'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
+    query_kwargs = {"help": 'Query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
     launches_mode_args = ["-lm", "--launches_mode"]
     launches_mode_kwargs = {
@@ -1195,7 +1187,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
         "-u",
         "--update",
         type=str,
-        help="Doc update (enclose pymongo-style dict in single-quotes, e.g. '{" '"_tasks.1.hello": "world"}\')',
+        help='Doc update (enclose pymongo-style dict in single-quotes, e.g. \'{"_tasks.1.hello": "world"}\')',
     )
     update_fws_parser.add_argument(
         "--mongo",
@@ -1222,7 +1214,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     get_wf_parser.add_argument(
         "-t",
         "--table",
-        help="Print results in table form instead of json. Needs prettytable. Works best " 'with "-d less"',
+        help='Print results in table form instead of json. Needs prettytable. Works best with "-d less"',
         action="store_true",
     )
     get_wf_parser.set_defaults(func=get_wfs)
@@ -1280,7 +1272,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     delete_wfs_parser = subparsers.add_parser(
         "delete_wflows",
-        help='Delete workflows (permanently). Use "archive_wflows" instead if ' 'you want to "soft-remove"',
+        help='Delete workflows (permanently). Use "archive_wflows" instead if you want to "soft-remove"',
     )
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     delete_wfs_parser.add_argument("-n", "--name", help="name")
@@ -1412,7 +1404,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     # admin commands
     admin_parser = subparsers.add_parser(
-        "admin", help="Various db admin commands, " 'type "lpad admin -h" for more.', parents=[parent_parser]
+        "admin", help='Various db admin commands, type "lpad admin -h" for more.', parents=[parent_parser]
     )
     admin_subparser = admin_parser.add_subparsers(title="action", dest="action_command")
 
@@ -1483,7 +1475,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     unlock_parser.set_defaults(func=unlock)
 
     report_parser = subparsers.add_parser(
-        "report", help="Compile a report of runtime stats, " 'type "lpad report -h" for more options.'
+        "report", help='Compile a report of runtime stats, type "lpad report -h" for more options.'
     )
     report_parser.add_argument(
         "-c",
