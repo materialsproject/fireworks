@@ -202,7 +202,7 @@ class Rocket:
                 starting_task = 0
                 files_in = m_fw.spec.get("_files_in", {})
                 prev_files = m_fw.spec.get("_files_prev", {})
-                for f in set(files_in.keys()).intersection(prev_files.keys()):
+                for f in set(files_in).intersection(prev_files):
                     # We use zopen for the file objects for transparent handling
                     # of zipped files. shutil.copyfileobj does the actual copy
                     # in chunks that avoid memory issues.

@@ -697,10 +697,10 @@ class Workflow(FWSerializable):
         @property
         def nodes(self):
             """Return list of all nodes."""
-            allnodes = list(self.keys())
+            all_nodes = list(self)
             for v in self.values():
-                allnodes.extend(v)
-            return list(set(allnodes))
+                all_nodes.extend(v)
+            return list(set(all_nodes))
 
         @property
         def parent_links(self):
@@ -813,7 +813,7 @@ class Workflow(FWSerializable):
 
         # sanity check: make sure the set of nodes from the links_dict is equal to the set
         # of nodes from id_fw
-        if set(self.links.nodes) != set(map(int, self.id_fw.keys())):
+        if set(self.links.nodes) != set(map(int, self.id_fw)):
             raise ValueError("Specified links don't match given FW")
 
         if len(self.links.nodes) == 0:
@@ -1155,7 +1155,7 @@ class Workflow(FWSerializable):
             list[int]: Firework ids of root FWs.
         """
         all_ids = set(self.links.nodes)
-        child_ids = set(self.links.parent_links.keys())
+        child_ids = set(self.links.parent_links)
         root_ids = all_ids.difference(child_ids)
         return list(root_ids)
 
@@ -1350,7 +1350,7 @@ class Workflow(FWSerializable):
         return Workflow([fw], None, name=name, metadata=metadata, created_on=fw.created_on, updated_on=fw.updated_on)
 
     def __str__(self):
-        return f"Workflow object: (fw_ids: {self.id_fw.keys()} , name: {self.name})"
+        return f"Workflow object: (fw_ids: {[*self.id_fw]} , name: {self.name})"
 
     def remove_fws(self, fw_ids):
         """

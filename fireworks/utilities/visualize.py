@@ -47,7 +47,7 @@ def plot_wf(
     except ImportError:
         raise SystemExit("Install matplotlib. Exiting.")
 
-    keys = sorted(wf.links.keys(), reverse=True)
+    keys = sorted(wf.links, reverse=True)
     n_root_nodes = len(wf.root_fw_ids)
 
     # set (x,y) coordinates for each node in the workflow links

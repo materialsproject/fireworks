@@ -464,7 +464,7 @@ def get_wfs(args: Namespace) -> None:
 
     if args.table:
         if wfs:
-            headers = list(wfs[0].keys())
+            headers = list(wfs[0])
             from prettytable import PrettyTable
 
             t = PrettyTable(headers)
@@ -680,7 +680,7 @@ def set_priority(args: Namespace) -> None:
         all_fw_ids = set()
         for fw_id in fw_ids:
             wf = lp.get_wf_by_fw_id_lzyfw(fw_id)
-            all_fw_ids.update(wf.id_fw.keys())
+            all_fw_ids.update(wf.id_fw)
         fw_ids = list(all_fw_ids)
     for f in fw_ids:
         lp.set_priority(f, args.priority)

@@ -140,12 +140,12 @@ class LaunchPadTest(unittest.TestCase):
         assert len(wf_id) == 1
         for fw_id in self.lp.get_wf_ids():
             wf = self.lp.get_wf_by_fw_id_lzyfw(fw_id)
-            assert len(wf.id_fw.keys()) == 1
+            assert len(wf.id_fw) == 1
         fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name="test_workflow")
         self.lp.add_wf(wf)
         # fw = self.lp.get_fw_ids()
-        # self.assertEqual(len(wf.id_fw.keys()), 2)
+        # self.assertEqual(len(wf.id_fw), 2)
         fw_ids = self.lp.get_fw_ids()
         assert len(fw_ids) == 3
         self.lp.reset("", require_password=False)

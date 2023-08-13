@@ -41,20 +41,22 @@ class CommonAdapter(QueueAdapterBase):
 
     def __init__(self, q_type, q_name=None, template_file=None, timeout=None, **kwargs):
         """
-        :param q_type: The type of queue. Right now it should be either PBS,
-                       SGE, SLURM, Cobalt or LoadLeveler.
-        :param q_name: A name for the queue. Can be any string.
-        :param template_file: The path to the template file. Leave it as
-                              None (the default) to use Fireworks' built-in
-                              templates for PBS and SGE, which should work
-                              on most queues.
-        :param timeout: The amount of seconds to wait before raising an error when
-                        checking the number of jobs in the queue. Default 5 seconds.
-        :param **kwargs: Series of keyword args for queue parameters.
+        Initializes a new QueueAdapter object.
+
+        Args:
+            q_type (str): The type of queue. Right now it should be either PBS,
+                SGE, SLURM, Cobalt or LoadLeveler.
+            q_name (str, optional): A name for the queue. Can be any string.
+            template_file (str, optional): The path to the template file. Leave it as
+                None (the default) to use Fireworks' built-in templates for PBS and SGE,
+                which should work on most queues.
+            timeout (int, optional): The amount of seconds to wait before raising an error when
+                checking the number of jobs in the queue. Default 5 seconds.
+            **kwargs: Series of keyword args for queue parameters.
         """
         if q_type not in CommonAdapter.default_q_commands:
             raise ValueError(
-                f"{q_type} is not a supported queue type. CommonAdaptor supports {list(self.default_q_commands.keys())}"
+                f"{q_type} is not a supported queue type. CommonAdaptor supports {list(self.default_q_commands)}"
             )
         self.q_type = q_type
         self.template_file = (
