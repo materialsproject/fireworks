@@ -22,8 +22,7 @@ def jsonify(*args, **kwargs):
     """
     indent = None
     separators = (",", ":")
-
-    if current_app.config["JSONIFY_PRETTYPRINT_REGULAR"] or current_app.debug:
+    if current_app.config.get("JSONIFY_PRETTYPRINT_REGULAR") or current_app.debug:
         indent = 2
         separators = (", ", ": ")
 
@@ -34,5 +33,5 @@ def jsonify(*args, **kwargs):
 
     return current_app.response_class(
         dumps(data, indent=indent, separators=separators, cls=MongoJsonEncoder) + "\n",
-        mimetype=current_app.config["JSONIFY_MIMETYPE"],
+        mimetype=current_app.config.get("JSONIFY_MIMETYPE"),
     )
