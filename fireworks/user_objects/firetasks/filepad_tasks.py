@@ -44,8 +44,10 @@ class AddFilesTask(FiretaskBase):
 
         fpad = get_fpad(self.get("filepad_file", None))
 
-        for p, l in zip(paths, identifiers):
-            fpad.add_file(p, identifier=l, metadata=self.get("metadata", None), compress=self.get("compress", True))
+        for path, ident in zip(paths, identifiers):
+            compress = self.get("compress", True)
+            md = self.get("metadata")
+            fpad.add_file(path, identifier=ident, metadata=md, compress=compress)
 
 
 class GetFilesTask(FiretaskBase):
@@ -70,9 +72,9 @@ class GetFilesTask(FiretaskBase):
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
-        for i, l in enumerate(self["identifiers"]):
-            file_contents, doc = fpad.get_file(identifier=l)
-            file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
+        for idx, ident in enumerate(self["identifiers"]):
+            file_contents, doc = fpad.get_file(identifier=ident)
+            file_name = new_file_names[idx] if new_file_names else doc["original_file_name"]
             if fpad.text_mode:
                 with open(os.path.join(dest_dir, file_name), "w") as f:
                     f.write(file_contents.decode())
@@ -163,18 +165,18 @@ class GetFilesByQueryTask(FiretaskBase):
         assert isinstance(query, dict)
         query = arrow_to_dot(query)
 
-        l = fpad.get_file_by_query(query, sort_key, sort_direction)
-        assert isinstance(l, list)
+        lst = fpad.get_file_by_query(query, sort_key, sort_direction)
+        assert isinstance(lst, list)
 
-        if fizzle_empty_result and (len(l) == 0):
+        if fizzle_empty_result and (len(lst) == 0):
             raise ValueError(f"Query yielded empty result! (query: {json.dumps(query):s})")
 
         unique_file_names = set()  # track all used file names
-        for i, (file_contents, doc) in enumerate(l[:limit]):
+        for i, (file_contents, doc) in enumerate(lst[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             if fizzle_degenerate_file_name and (file_name in unique_file_names):
                 raise ValueError(
-                    f"The local file name {file_name} is used a second time by result {i}/{len(l)}! "
+                    f"The local file name {file_name} is used a second time by result {i}/{len(lst)}! "
                     f"(query: {json.dumps(query)})"
                 )
 
@@ -206,8 +208,8 @@ class DeleteFilesTask(FiretaskBase):
 
     def run_task(self, fw_spec):
         fpad = get_fpad(self.get("filepad_file", None))
-        for l in self["identifiers"]:
-            fpad.delete_file(l)
+        for file in self["identifiers"]:
+            fpad.delete_file(file)
 
 
 def get_fpad(fpad_file):

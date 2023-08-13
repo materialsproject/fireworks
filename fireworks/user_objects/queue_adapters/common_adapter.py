@@ -159,12 +159,12 @@ class CommonAdapter(QueueAdapterBase):
             return len([l for l in output_str.split("\n") if username in l])
 
         count = 0
-        for l in output_str.split("\n"):
-            if l.lower().startswith("job"):
+        for line in output_str.split("\n"):
+            if line.lower().startswith("job"):
                 if self.q_type == "Cobalt":
                     # Cobalt capitalzes headers
-                    l = l.lower()
-                header = l.split()
+                    line = line.lower()
+                header = line.split()
                 if self.q_type == "PBS":
                     # PBS has a ridiculous two word "Job ID" in header
                     state_index = header.index("S") - 1
@@ -172,8 +172,8 @@ class CommonAdapter(QueueAdapterBase):
                 else:
                     state_index = header.index("state")
                     queue_index = header.index("queue")
-            if username in l:
-                toks = l.split()
+            if username in line:
+                toks = line.split()
                 if toks[state_index] != "C":
                     # note: the entire queue name might be cutoff from the output if long queue name
                     # so we are only ensuring that our queue matches up until cutoff point
