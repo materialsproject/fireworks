@@ -185,8 +185,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     def get_qlogger(self, name):
         if "logdir" in self:
             return get_fw_logger(name, self["logdir"])
-        else:
-            return get_fw_logger(name, stream_level="CRITICAL")
+        return get_fw_logger(name, stream_level="CRITICAL")
 
 
 class QScriptTemplate(string.Template):

@@ -139,9 +139,8 @@ class CommonAdapter(QueueAdapterBase):
         if self.q_type == "LoadLeveler":
             if "There is currently no job status to report" in output_str:
                 return 0
-            else:
-                # last line is: "1 job step(s) in query, 0 waiting, ..."
-                return int(output_str.split("\n")[-2].split()[0])
+            # last line is: "1 job step(s) in query, 0 waiting, ..."
+            return int(output_str.split("\n")[-2].split()[0])
         if self.q_type == "LoadSharingFacility":
             # Count the number of lines which pertain to the queue
             cnt = 0

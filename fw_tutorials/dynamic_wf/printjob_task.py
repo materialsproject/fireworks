@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from fireworks.core.firework import FiretaskBase
 
 __author__ = "Anubhav Jain"

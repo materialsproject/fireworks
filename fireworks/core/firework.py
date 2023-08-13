@@ -1329,8 +1329,7 @@ class Workflow(FWSerializable):
                 created_on,
                 updated_on,
             )
-        else:
-            return Workflow.from_Firework(Firework.from_dict(m_dict))
+        return Workflow.from_Firework(Firework.from_dict(m_dict))
 
     @classmethod
     def from_Firework(cls, fw: Firework, name: Optional[str] = None, metadata=None) -> "Workflow":

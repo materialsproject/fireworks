@@ -88,8 +88,7 @@ def datetime(value):
 def pluralize(number, singular="", plural="s"):
     if number == 1:
         return singular
-    else:
-        return plural
+    return plural
 
 
 @app.route("/")
@@ -287,21 +286,20 @@ def wf_metadata_find(key, value, state):
     if wf_count == 0:
         abort(404)
         return None
-    elif wf_count == 1:
+    if wf_count == 1:
         doc = db.find_one(q, {"nodes": 1, "_id": 0})
         fw_id = doc["nodes"][0]
         return redirect(url_for("wf_details", wf_id=fw_id))
-    else:
-        try:
-            page = int(request.args.get("page", 1))
-        except ValueError:
-            page = 1
-        rows = list(db.find(q).sort([("_id", DESCENDING)]).skip(page - 1).limit(PER_PAGE))
-        for r in rows:
-            r["fw_id"] = r["nodes"][0]
-        pagination = Pagination(page=page, total=wf_count, record_name="workflows", per_page=PER_PAGE)
-        all_states = STATES
-        return render_template("wf_metadata.html", **locals())
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        page = 1
+    rows = list(db.find(q).sort([("_id", DESCENDING)]).skip(page - 1).limit(PER_PAGE))
+    for r in rows:
+        r["fw_id"] = r["nodes"][0]
+    pagination = Pagination(page=page, total=wf_count, record_name="workflows", per_page=PER_PAGE)
+    all_states = STATES
+    return render_template("wf_metadata.html", **locals())
 
 
 @app.route("/report/", defaults={"interval": "months", "num_intervals": 6})

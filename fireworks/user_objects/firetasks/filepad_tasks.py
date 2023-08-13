@@ -213,5 +213,4 @@ class DeleteFilesTask(FiretaskBase):
 def get_fpad(fpad_file):
     if fpad_file:
         return FilePad.from_db_file(fpad_file)
-    else:
-        return FilePad.auto_load()
+    return FilePad.auto_load()

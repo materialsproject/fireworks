@@ -144,7 +144,7 @@ def launch_rocket_to_queue(
                     raise RuntimeError(
                         "queue script could not be submitted, check queue script/queue adapter/queue server status!"
                     )
-                elif reserve:
+                if reserve:
                     launchpad.set_reservation_id(launch_id, reservation_id)
             return reservation_id
 
@@ -258,7 +258,7 @@ def rapidfire(
                 if return_code is None:
                     l_logger.info("No READY jobs detected...")
                     break
-                elif not return_code:
+                if not return_code:
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if nlaunches > 0 and num_launched == nlaunches:

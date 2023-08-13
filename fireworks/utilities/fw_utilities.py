@@ -149,16 +149,15 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
 
             time.sleep(random.random() / 3 + 0.1)
             continue
-        else:
-            try:
-                os.mkdir(full_path)
-                break
-            except OSError as e:
-                if ctn > max_try or e.errno != errno.EEXIST:
-                    raise e
-                ctn += 1
-                full_path = None
-                continue
+        try:
+            os.mkdir(full_path)
+            break
+        except OSError as e:
+            if ctn > max_try or e.errno != errno.EEXIST:
+                raise e
+            ctn += 1
+            full_path = None
+            continue
 
     l_logger.info(f"Created new dir {full_path}")
     return full_path
@@ -245,8 +244,8 @@ def redirect_local(out_file: str = "FW_job.out", err_file: str = "FW_job.error")
         old_err = os.dup(sys.stderr.fileno())
         old_out = os.dup(sys.stdout.fileno())
 
-        new_err = open(err_file, "w")
-        new_out = open(out_file, "w")
+        new_err = open(err_file, "w")  # noqa: SIM115
+        new_out = open(out_file, "w")  # noqa: SIM115
 
         os.dup2(new_err.fileno(), sys.stderr.fileno())
         os.dup2(new_out.fileno(), sys.stdout.fileno())

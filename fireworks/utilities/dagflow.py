@@ -103,7 +103,7 @@ class DAGFlow(Graph):
                         # PythonFunctionTask
                         for inp in task["inputs"]:
                             if inp in spec:
-                                inps.append(inp)
+                                inps.append(inp)  # noqa: PERF401
                 return inps
 
             step_data = []
@@ -141,7 +141,7 @@ class DAGFlow(Graph):
         for link in links:
             source = self._get_index(link[0])
             target = self._get_index(link[1])
-            self.add_edge(source, target, **{"label": " "})
+            self.add_edge(source, target, label=" ")
 
     def _add_dataflow_links(self, step_id=None, mode="both"):
         """Adds graph edges corresponding to data flow links."""
@@ -151,18 +151,18 @@ class DAGFlow(Graph):
             if mode in ["out", "both"]:
                 for entity in vertex["outputs"]:
                     for cidx in self._get_targets(vertex, entity):
-                        self.add_edge(vidx, cidx, **{"label": entity})
+                        self.add_edge(vidx, cidx, label=entity)
             if mode in ["in", "both"]:
                 for entity in vertex["inputs"]:
                     for pidx in self._get_sources(vertex, entity):
                         if pidx != vidx:
-                            self.add_edge(pidx, vidx, **{"label": entity})
+                            self.add_edge(pidx, vidx, label=entity)
         else:
             for parent in list(self.vs):
                 pidx = parent.index
                 for entity in parent["outputs"]:
                     for cidx in self._get_targets(parent, entity):
-                        self.add_edge(pidx, cidx, **{"label": entity})
+                        self.add_edge(pidx, cidx, label=entity)
 
     def _get_sources(self, step, entity):
         """Returns a list of steps that act as sources for the data entity
@@ -255,8 +255,8 @@ class DAGFlow(Graph):
 
             if flatten(lst):
                 break
-        cycs = [list(x) for x in {tuple(sorted(l)) for l in lst}]
-        return [[self.vs[ind]["id"] for ind in cycle] for cycle in cycs]
+        cycles = [list(x) for x in {tuple(sorted(inner_lst)) for inner_lst in lst}]
+        return [[self.vs[ind]["id"] for ind in cycle] for cycle in cycles]
 
     def _get_roots(self):
         """Returns all roots (i.e. vertices without incoming edges)."""

@@ -187,14 +187,11 @@ class FilePad(MSONable):
         Returns:
             list: list of all (file content as a string, document dictionary)
         """
-        all_files = []
         if sort_key is None:
             cursor = self.filepad.find(query)
         else:
             cursor = self.filepad.find(query).sort(sort_key, sort_direction)
-        for d in cursor:
-            all_files.append(self._get_file_contents(d))
-        return all_files
+        return [self._get_file_contents(d) for d in cursor]
 
     def delete_file(self, identifier):
         """
@@ -212,7 +209,7 @@ class FilePad(MSONable):
 
     def update_file(self, identifier, path, compress=True):
         """
-        Update the filecontents in the gridfs, update the gfs_id in the document and retain the
+        Update the file contents in the gridfs, update the gfs_id in the document and retain the
         rest.
 
         Args:
@@ -300,8 +297,7 @@ class FilePad(MSONable):
             if doc["compressed"]:
                 file_contents = zlib.decompress(file_contents)
             return file_contents, doc
-        else:
-            return None, None
+        return None, None
 
     def _update_file_contents(self, doc, path, compress):
         """
@@ -318,7 +314,7 @@ class FilePad(MSONable):
         old_gfs_id = doc["gfs_id"]
         self.gridfs.delete(old_gfs_id)
         read_mode = "r" if self.text_mode else "rb"
-        gfs_id = self._insert_to_gridfs(open(path, read_mode).read(), compress)
+        gfs_id = self._insert_to_gridfs(open(path, read_mode).read(), compress)  # noqa: SIM115
         doc["gfs_id"] = gfs_id
         doc["compressed"] = compress
         return old_gfs_id, gfs_id

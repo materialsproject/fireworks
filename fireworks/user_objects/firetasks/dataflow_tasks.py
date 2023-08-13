@@ -127,13 +127,11 @@ class CommandLineTask(FiretaskBase):
                     for out in outlist:
                         mod_spec.append({"_push": {olabels[0]: out}})
                 return FWAction(mod_spec=mod_spec)
-            else:
-                output_dict = {}
-                for olab, out in zip(olabels, outlist):
-                    output_dict[olab] = out
-                return FWAction(update_spec=output_dict)
-        else:
-            return FWAction()
+            output_dict = {}
+            for olab, out in zip(olabels, outlist):
+                output_dict[olab] = out
+            return FWAction(update_spec=output_dict)
+        return FWAction()
 
     @staticmethod
     def command_line_tool(command, inputs=None, outputs=None):

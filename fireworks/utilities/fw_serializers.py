@@ -234,11 +234,10 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
-        elif f_format == "yaml":
+        if f_format == "yaml":
             # start with the JSON format, and convert to YAML
             return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
-        else:
-            raise ValueError(f"Unsupported format {f_format}")
+        raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
     def from_format(cls, f_str, f_format="json"):
@@ -365,7 +364,7 @@ def load_object(obj_dict):
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
         return found_objects[0][0]
-    elif len(found_objects) > 0:
+    if len(found_objects) > 0:
         raise ValueError(f"load_object() found multiple objects with cls._fw_name {fw_name} -- {found_objects}")
 
     raise ValueError(f"load_object() could not find a class with cls._fw_name {fw_name}")

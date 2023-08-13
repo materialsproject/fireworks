@@ -63,11 +63,10 @@ def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Union[Event, None
             raise ValueError("Multiprocessing cannot be run in offline mode!")
         fd.Running_IDs[os.getpid()] = launch_id
         return None
-    else:
-        ping_stop = Event()
-        ping_thread = Thread(target=ping_launch, args=(launchpad, launch_id, ping_stop, current_thread()))
-        ping_thread.start()
-        return ping_stop
+    ping_stop = Event()
+    ping_thread = Thread(target=ping_launch, args=(launchpad, launch_id, ping_stop, current_thread()))
+    ping_thread.start()
+    return ping_stop
 
 
 def stop_backgrounds(ping_stop, btask_stops):

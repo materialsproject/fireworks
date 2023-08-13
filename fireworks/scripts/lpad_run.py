@@ -289,8 +289,7 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
         args.display_format = args.display_format if args.display_format else "ids"
     if sum(bool(x) for x in [args.fw_id, args.name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    else:
-        args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format if args.display_format else "more"
 
     if args.fw_id:
         query = {"fw_id": {"$in": args.fw_id}}
@@ -379,8 +378,7 @@ def get_fws_in_wfs(args: Namespace) -> None:
         args.display_format = args.display_format if args.display_format else "ids"
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    else:
-        args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format if args.display_format else "more"
 
     if args.fw_fw_id:
         fw_query = {"fw_id": {"$in": args.fw_fw_id}}
@@ -867,8 +865,7 @@ def orphaned(args: Namespace) -> None:
 def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
-    else:
-        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+    return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
 
 
 def arg_positive_int(value: str) -> int:

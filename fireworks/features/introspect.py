@@ -31,7 +31,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
         return my_list
 
-    elif isinstance(curr_doc, (list, tuple)):
+    if isinstance(curr_doc, (list, tuple)):
         my_list = []
         for k in curr_doc:
             if isinstance(k, (dict, list, tuple)):

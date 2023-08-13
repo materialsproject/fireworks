@@ -10,7 +10,7 @@ class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, (datetime.datetime, datetime.date)):
             return obj.isoformat()
-        elif isinstance(obj, ObjectId):
+        if isinstance(obj, ObjectId):
             return str(obj)
         return json.JSONEncoder.default(self, obj)
 
@@ -29,10 +29,8 @@ def jsonify(*args, **kwargs):
 
     if args and kwargs:
         raise TypeError("jsonify() behavior undefined when passed both args and kwargs")
-    elif len(args) == 1:  # single args are passed directly to dumps()
-        data = args[0]
-    else:
-        data = args or kwargs
+    # single args are passed directly to dumps()
+    data = args[0] if len(args) == 1 else args or kwargs
 
     return current_app.response_class(
         dumps(data, indent=indent, separators=separators, cls=MongoJsonEncoder) + "\n",

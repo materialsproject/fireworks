@@ -377,7 +377,7 @@ class FWStats:
         Default is 30 days before current time.
         :param end_time: (str) Query end time (exclusive) in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is current time.
-        :param isoformat: (bool) If ruturned Pymongo query uses isoformat for datetime. Default is True.
+        :param isoformat: (bool) If returned Pymongo query uses isoformat for datetime. Default is True.
         :param time_delta: (dict) Time difference to calculate start_time from end_time. Accepts arguments in python
         datetime.timedelta function. time_delta and start_time can not be given at the same time. Default is 30 days.
         :return: (dict) A Mongodb query expression for a datetime range.
@@ -395,5 +395,4 @@ class FWStats:
             raise ValueError("query_start should be earlier than query_end!")
         if isoformat:
             return {"$gte": start_time.isoformat(), "$lt": end_time.isoformat()}
-        else:
-            return {"$gte": start_time, "$lt": end_time}
+        return {"$gte": start_time, "$lt": end_time}
