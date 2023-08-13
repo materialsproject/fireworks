@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from fireworks.core.firework import FiretaskBase, FWAction
 
 __author__ = "Anubhav Jain"
@@ -10,7 +8,6 @@ __date__ = "Feb 25, 2013"
 
 
 class AddModifyTask(FiretaskBase):
-
     _fw_name = "Add and Modify Task"
 
     def run_task(self, fw_spec):

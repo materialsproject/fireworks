@@ -1,6 +1,4 @@
-"""
-TODO: Modify unittest doc.
-"""
+"""TODO: Modify unittest doc."""
 
 
 __author__ = "Shyue Ping Ong"
@@ -19,7 +17,6 @@ from fireworks.utilities.fw_utilities import explicit_serialize
 class FiretaskBaseTest(unittest.TestCase):
     def test_init(self):
         class DummyTask(FiretaskBase):
-
             required_params = ["hello"]
 
             def run_task(self, fw_spec):
@@ -28,12 +25,11 @@ class FiretaskBaseTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             DummyTask()
         d = DummyTask(hello="world")
-        self.assertEqual(d.run_task({}), "world")
+        assert d.run_task({}) == "world"
         d = DummyTask({"hello": "world2"})
-        self.assertEqual(d.run_task({}), "world2")
+        assert d.run_task({}) == "world2"
 
         class DummyTask2(FiretaskBase):
-
             pass
 
         d = DummyTask2()
@@ -67,13 +63,13 @@ class FiretaskPickleTest(unittest.TestCase):
         self.upkl_task = pickle.loads(self.pkl_task)
 
     def test_init(self):
-        self.assertIsInstance(self.upkl_task, PickleTask)
-        self.assertEqual(PickleTask.from_dict(self.task.to_dict()), self.upkl_task)
-        self.assertEqual(dir(self.task), dir(self.upkl_task))
+        assert isinstance(self.upkl_task, PickleTask)
+        assert PickleTask.from_dict(self.task.to_dict()) == self.upkl_task
+        assert dir(self.task) == dir(self.upkl_task)
 
         result_task = self.task.run_task({})
         result_upkl_task = self.upkl_task.run_task({})
-        self.assertEqual(result_task, result_upkl_task)
+        assert result_task == result_upkl_task
 
 
 @explicit_serialize
@@ -97,14 +93,13 @@ class WorkflowTest(unittest.TestCase):
         self.fw3 = Firework(Task1(), parents=self.fw1)
 
     def test_init(self):
-
         fws = []
         for i in range(5):
             fw = Firework([PyTask(func="print", args=[i])], fw_id=i)
 
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
-        self.assertIsInstance(wf, Workflow)
+        assert isinstance(wf, Workflow)
         self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
         self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
@@ -131,7 +126,7 @@ class WorkflowTest(unittest.TestCase):
             orig_children = wf.links.get(orig_id, list())
 
             for child_id, orig_child_id in zip(children, orig_children):
-                self.assertEqual(orig_child_id, wf_copy.id_fw[child_id].name)
+                assert orig_child_id == wf_copy.id_fw[child_id].name
 
     def test_remove_leaf_fws(self):
         fw4 = Firework(Task1(), parents=[self.fw2, self.fw3])
@@ -142,7 +137,7 @@ class WorkflowTest(unittest.TestCase):
         for i in leaf_ids:
             parents.extend(wflow.links.parent_links[i])
         wflow.remove_fws(wflow.leaf_fw_ids)
-        self.assertEqual(wflow.leaf_fw_ids, parents)
+        assert wflow.leaf_fw_ids == parents
 
     def test_remove_root_fws(self):
         fw4 = Firework(Task1(), parents=[self.fw2, self.fw3])
@@ -153,13 +148,13 @@ class WorkflowTest(unittest.TestCase):
         for i in root_ids:
             children.extend(wflow.links[i])
         wflow.remove_fws(wflow.root_fw_ids)
-        self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
+        assert sorted(wflow.root_fw_ids) == sorted(children)
 
     def test_iter_len_index(self):
         fws = [self.fw1, self.fw2, self.fw3]
         wflow = Workflow(fws)
         for idx, fw in enumerate(wflow):
-            self.assertEqual(fw, fws[idx])
+            assert fw == fws[idx]
 
         assert len(wflow) == len(fws)
 

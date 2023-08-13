@@ -1,6 +1,4 @@
-"""
-This code is described in the Workflow tutorial, https://materialsproject.github.io/fireworks/workflow_tutorial.html
-"""
+"""This code is described in the Workflow tutorial, https://materialsproject.github.io/fireworks/workflow_tutorial.html."""
 
 from fireworks import Firework, FWorker, LaunchPad, ScriptTask, Workflow
 from fireworks.core.rocket_launcher import rapidfire

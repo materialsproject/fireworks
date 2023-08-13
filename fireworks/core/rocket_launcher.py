@@ -1,21 +1,15 @@
-"""
-This module contains methods for launching Rockets, both singly and in rapid-fire mode.
-"""
+"""This module contains methods for launching Rockets, both singly and in rapid-fire mode."""
 
 import os
 import time
 from datetime import datetime
+from typing import Optional
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket import Rocket
 from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
-from fireworks.utilities.fw_utilities import (
-    create_datestamp_dir,
-    get_fw_logger,
-    log_multi,
-    redirect_local,
-)
+from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, log_multi, redirect_local
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -62,12 +56,12 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_e
 def rapidfire(
     launchpad: LaunchPad,
     fworker: FWorker = None,
-    m_dir: str = None,
+    m_dir: Optional[str] = None,
     nlaunches: int = 0,
     max_loops: int = -1,
-    sleep_time: int = None,
+    sleep_time: Optional[int] = None,
     strm_lvl: str = "INFO",
-    timeout: int = None,
+    timeout: Optional[int] = None,
     local_redirect: bool = False,
     pdb_on_exception: bool = False,
 ):
@@ -87,7 +81,6 @@ def rapidfire(
         local_redirect (bool): redirect standard input and output to local file
         pdb_on_exception (bool): if True, python will start the debugger on a firework exception
     """
-
     sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
     curdir = m_dir if m_dir else os.getcwd()
     l_logger = get_fw_logger("rocket.launcher", l_dir=launchpad.get_logdir(), stream_level=strm_lvl)

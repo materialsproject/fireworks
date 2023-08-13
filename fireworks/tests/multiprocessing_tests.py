@@ -21,7 +21,7 @@ class TestLinks(TestCase):
         links1 = Workflow.Links({1: 2, 3: [5, 7, 8]})
         s = pickle.dumps(links1)
         links2 = pickle.loads(s)
-        self.assertEqual(str(links1), str(links2))
+        assert str(links1) == str(links2)
 
 
 class TestCheckoutFW(TestCase):
@@ -64,12 +64,12 @@ class TestCheckoutFW(TestCase):
         launch_multiprocess(self.lp, FWorker(), "DEBUG", 0, 2, 10)
         fw1 = self.lp.get_fw_by_id(1)
         fw2 = self.lp.get_fw_by_id(2)
-        self.assertEqual(fw1.launches[0].state_history[-1]["state"], "COMPLETED")
-        self.assertEqual(fw2.launches[0].state_history[-1]["state"], "COMPLETED")
+        assert fw1.launches[0].state_history[-1]["state"] == "COMPLETED"
+        assert fw2.launches[0].state_history[-1]["state"] == "COMPLETED"
         with open(os.path.join(fw1.launches[0].launch_dir, "task.out")) as f:
-            self.assertEqual(f.readlines(), ["hello 1\n"])
+            assert f.readlines() == ["hello 1\n"]
         with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
-            self.assertEqual(f.readlines(), ["hello 2\n"])
+            assert f.readlines() == ["hello 2\n"]
 
 
 class TestEarlyExit(TestCase):
@@ -117,7 +117,7 @@ class TestEarlyExit(TestCase):
             fw2_text = f.read()
         with open(os.path.join(fw3.launches[0].launch_dir, "task.out")) as f:
             fw3_text = f.read()
-        self.assertNotEqual(fw2_text, fw3_text)
+        assert fw2_text != fw3_text
 
 
 if __name__ == "__main__":

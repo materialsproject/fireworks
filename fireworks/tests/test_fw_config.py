@@ -12,7 +12,7 @@ from fireworks.fw_config import config_to_dict
 class ConfigTest(unittest.TestCase):
     def test_config(self):
         d = config_to_dict()
-        self.assertNotIn("NEGATIVE_FWID_CTR", d)
+        assert "NEGATIVE_FWID_CTR" not in d
 
 
 if __name__ == "__main__":

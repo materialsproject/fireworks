@@ -27,7 +27,7 @@ class FWReport:
     def __init__(self, lpad):
         """
         Args:
-        lpad (LaunchPad)
+        lpad (LaunchPad).
         """
         self.db = lpad.db
 
@@ -45,9 +45,8 @@ class FWReport:
         Returns:
             list, with each item being a dictionary of statistics for a given interval
         """
-
         # confirm interval
-        if interval not in DATE_KEYS.keys():
+        if interval not in DATE_KEYS:
             raise ValueError(f"Specified interval ({interval}) is not in list of allowed intervals({DATE_KEYS.keys()})")
         # used for querying later
         date_key_idx = DATE_KEYS[interval]
@@ -63,7 +62,7 @@ class FWReport:
             raise ValueError("Unrecognized collection!")
 
         # whether the collection uses String or Date time dates
-        string_type_dates = True if coll in ["fireworks", "launches"] else False
+        string_type_dates = coll in ["fireworks", "launches"]
         time_field = "updated_on" if coll in ["fireworks", "workflows"] else "time_end"
 
         coll = self.db[coll]
@@ -134,7 +133,7 @@ class FWReport:
 
     def plot_stats(self, coll="fireworks", interval="days", num_intervals=5, states=None, style="bar", **kwargs):
         """
-        Makes a chart with the summary data
+        Makes a chart with the summary data.
 
         Args:
             coll (str): collection, either "fireworks", "workflows", or "launches"

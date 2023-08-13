@@ -43,7 +43,7 @@ class FilePad(MSONable):
             port (int): port number
             database (str): database name
             username (str)
-            password (str)
+            password (str).
 
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
                 not set
@@ -154,7 +154,7 @@ class FilePad(MSONable):
 
     def get_file(self, identifier):
         """
-        Get file by identifier
+        Get file by identifier.
 
         Args:
             identifier (str): the file identifier
@@ -182,19 +182,16 @@ class FilePad(MSONable):
         Args:
             query (dict):                   pymongo query dict
             sort_key (str, optional):       sort key, default None
-            sort_direction (int, optional): default pymongo.DESCENDING
+            sort_direction (int, optional): default pymongo.DESCENDING.
 
         Returns:
             list: list of all (file content as a string, document dictionary)
         """
-        all_files = []
         if sort_key is None:
             cursor = self.filepad.find(query)
         else:
             cursor = self.filepad.find(query).sort(sort_key, sort_direction)
-        for d in cursor:
-            all_files.append(self._get_file_contents(d))
-        return all_files
+        return [self._get_file_contents(d) for d in cursor]
 
     def delete_file(self, identifier):
         """
@@ -212,7 +209,7 @@ class FilePad(MSONable):
 
     def update_file(self, identifier, path, compress=True):
         """
-        Update the filecontents in the gridfs, update the gfs_id in the document and retain the
+        Update the file contents in the gridfs, update the gfs_id in the document and retain the
         rest.
 
         Args:
@@ -229,7 +226,7 @@ class FilePad(MSONable):
     def delete_file_by_id(self, gfs_id):
         """
         Args:
-            gfs_id (str): the file id
+            gfs_id (str): the file id.
         """
         self.gridfs.delete(gfs_id)
         self.filepad.delete_one({"gfs_id": gfs_id})
@@ -237,7 +234,7 @@ class FilePad(MSONable):
     def delete_file_by_query(self, query):
         """
         Args:
-            query (dict): pymongo query dict
+            query (dict): pymongo query dict.
         """
         for d in self.filepad.find(query):
             self.delete_file_by_id(d["gfs_id"])
@@ -259,7 +256,7 @@ class FilePad(MSONable):
 
     def _insert_contents(self, contents, identifier, root_data, compress):
         """
-        Insert the file contents(string) to gridfs and store the file info doc in filepad
+        Insert the file contents(string) to gridfs and store the file info doc in filepad.
 
         Args:
             contents (str): file contents or any arbitrary string to be stored in gridfs
@@ -287,7 +284,7 @@ class FilePad(MSONable):
     def _get_file_contents(self, doc):
         """
         Args:
-            doc (dict)
+            doc (dict).
 
         Returns:
             (str, dict): the file content as a string, document dictionary
@@ -300,15 +297,14 @@ class FilePad(MSONable):
             if doc["compressed"]:
                 file_contents = zlib.decompress(file_contents)
             return file_contents, doc
-        else:
-            return None, None
+        return None, None
 
     def _update_file_contents(self, doc, path, compress):
         """
         Args:
             doc (dict)
             path (str): path to the new file whose contents will replace the existing one.
-            compress (bool): whether or not to compress the contents before inserting to gridfs
+            compress (bool): whether or not to compress the contents before inserting to gridfs.
 
         Returns:
             (str, str): old file id , new file id
@@ -318,7 +314,7 @@ class FilePad(MSONable):
         old_gfs_id = doc["gfs_id"]
         self.gridfs.delete(old_gfs_id)
         read_mode = "r" if self.text_mode else "rb"
-        gfs_id = self._insert_to_gridfs(open(path, read_mode).read(), compress)
+        gfs_id = self._insert_to_gridfs(open(path, read_mode).read(), compress)  # noqa: SIM115
         doc["gfs_id"] = gfs_id
         doc["compressed"] = compress
         return old_gfs_id, gfs_id
@@ -327,7 +323,7 @@ class FilePad(MSONable):
     def from_db_file(cls, db_file, admin=True):
         """
         Args:
-            db_file (str): path to the filepad cred file
+            db_file (str): path to the filepad cred file.
 
         Returns:
             FilePad object
@@ -366,17 +362,13 @@ class FilePad(MSONable):
 
     @classmethod
     def auto_load(cls):
-        """
-        Returns FilePad object
-        """
+        """Returns FilePad object."""
         if LAUNCHPAD_LOC:
             return FilePad.from_db_file(LAUNCHPAD_LOC)
         return FilePad()
 
     def reset(self):
-        """
-        Reset filepad and the gridfs collections
-        """
+        """Reset filepad and the gridfs collections."""
         self.filepad.delete_many({})
         self.db[self.gridfs_coll_name].files.delete_many({})
         self.db[self.gridfs_coll_name].chunks.delete_many({})

@@ -1,6 +1,4 @@
-"""
-Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.
-"""
+"""Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class."""
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -57,7 +55,7 @@ class FWStats:
         Returns:
             (list) A summary of fireworks stats for the specified time range.
         """
-        results = self._get_summary(
+        return self._get_summary(
             coll=self._fireworks,
             query_start=query_start,
             query_end=query_end,
@@ -65,7 +63,6 @@ class FWStats:
             time_field=time_field,
             **args
         )
-        return results
 
     def get_launch_summary(
         self,
@@ -124,7 +121,7 @@ class FWStats:
         datetime.timedelta function. args and query_start can not be given at the same time. Default is 30 days.
         :return: (list) A summary of workflow stats for the specified time range.
         """
-        results = self._get_summary(
+        return self._get_summary(
             coll=self._workflows,
             query_start=query_start,
             query_end=query_end,
@@ -135,7 +132,6 @@ class FWStats:
             isoformat=False,
             **args
         )
-        return results
 
     def get_daily_completion_summary(self, query_start=None, query_end=None, query=None, time_field="time_end", **args):
         """
@@ -381,17 +377,14 @@ class FWStats:
         Default is 30 days before current time.
         :param end_time: (str) Query end time (exclusive) in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is current time.
-        :param isoformat: (bool) If ruturned Pymongo query uses isoformat for datetime. Default is True.
+        :param isoformat: (bool) If returned Pymongo query uses isoformat for datetime. Default is True.
         :param time_delta: (dict) Time difference to calculate start_time from end_time. Accepts arguments in python
         datetime.timedelta function. time_delta and start_time can not be given at the same time. Default is 30 days.
         :return: (dict) A Mongodb query expression for a datetime range.
         """
         if start_time and time_delta:
             raise SyntaxError("Can't specify start_time and time_delta at the same time!")
-        if end_time:
-            end_time = parser.parse(end_time)
-        else:
-            end_time = datetime.utcnow()
+        end_time = parser.parse(end_time) if end_time else datetime.utcnow()
         if not start_time:
             if not time_delta:
                 time_delta = {"days": 30}
@@ -402,5 +395,4 @@ class FWStats:
             raise ValueError("query_start should be earlier than query_end!")
         if isoformat:
             return {"$gte": start_time.isoformat(), "$lt": end_time.isoformat()}
-        else:
-            return {"$gte": start_time, "$lt": end_time}
+        return {"$gte": start_time, "$lt": end_time}

@@ -67,7 +67,7 @@ class FileDeleteTask(FiretaskBase):
 
 class FileTransferTask(FiretaskBase):
     """
-    A Firetask to Transfer files. Note that
+    A Firetask to Transfer files. Note that.
 
     Required params:
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
@@ -147,7 +147,6 @@ class FileTransferTask(FiretaskBase):
             except Exception:
                 traceback.print_exc()
                 if max_retry:
-
                     # we want to avoid hammering either the local or remote machine
                     time.sleep(retry_delay)
                     self["max_retry"] -= 1
@@ -164,9 +163,7 @@ class FileTransferTask(FiretaskBase):
 
     @staticmethod
     def _rexists(sftp, path):
-        """
-        os.path.exists for paramiko's SCP object
-        """
+        """os.path.exists for paramiko's SCP object."""
         try:
             sftp.stat(path)
         except OSError as e:

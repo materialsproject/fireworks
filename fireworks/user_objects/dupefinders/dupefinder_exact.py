@@ -8,9 +8,7 @@ __date__ = "Mar 01, 2013"
 
 
 class DupeFinderExact(DupeFinderBase):
-    """
-    This DupeFinder requires an exact spec match between FireWorks.
-    """
+    """This DupeFinder requires an exact spec match between FireWorks."""
 
     _fw_name = "DupeFinderExact"
 

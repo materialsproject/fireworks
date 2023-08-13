@@ -3,4 +3,3 @@ graphviz
 pytest
 pytest-cov
 coverage
-pycodestyle

@@ -1,9 +1,7 @@
-"""
-A set of global constants for FireWorks (Python code as a config file).
-"""
+"""A set of global constants for FireWorks (Python code as a config file)."""
 
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
@@ -167,7 +165,7 @@ def config_to_dict() -> Dict[str, Any]:
     return d
 
 
-def write_config(path: str = None) -> None:
+def write_config(path: Optional[str] = None) -> None:
     if path is None:
         path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")
     dumpfn(config_to_dict(), path)
@@ -175,9 +173,7 @@ def write_config(path: str = None) -> None:
 
 @singleton
 class FWData:
-    """
-    This class stores data that a Firetask might want to access, e.g. to see the runtime params
-    """
+    """This class stores data that a Firetask might want to access, e.g. to see the runtime params."""
 
     def __init__(self):
         self.MULTIPROCESSING = None  # default single process framework
