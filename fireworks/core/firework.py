@@ -1,12 +1,11 @@
 """
-This module contains some of the most central FireWorks classes:
+This module contains some of the most central FireWorks classes.
 
-    - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
-    - A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
-    - A Launch describes the run of a Firework on a computing resource.
-    - A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
-    - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after
-        a job completes.
+- A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
+- A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
+- A Launch describes the run of a Firework on a computing resource.
+- A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
+- A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after a job completes.
 """
 import abc
 import os
@@ -14,13 +13,14 @@ import pprint
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence
+from typing import Any, Dict, Iterator, List, Optional, Sequence
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 
 from fireworks.core.fworker import FWorker
-from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, NEGATIVE_FWID_CTR, TRACKER_LINES
+from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
+from fireworks.fw_config import NEGATIVE_FWID_CTR as NEGATIVE_FWID_CTR  # noqa: PLC0414
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_deserialize, recursive_serialize, serialize_fw
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
@@ -31,9 +31,6 @@ __copyright__ = "Copyright 2013, The Materials Project"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
-
-# workaround for false positive flake8(F401) (https://git.io/JKZ2x)
-NEGATIVE_FWID_CTR
 
 
 class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
@@ -832,7 +829,7 @@ class Workflow(FWSerializable):
         """Return list of all fireworks."""
         return list(self.id_fw.values())
 
-    def __iter__(self) -> Iterable[Firework]:
+    def __iter__(self) -> Iterator[Firework]:
         """Iterate over all fireworks."""
         return self.id_fw.values().__iter__()
 
